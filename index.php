@@ -4,7 +4,6 @@ use RZ\Renzo\Entities\Node;
 use RZ\Renzo\Entities\NodeType;
 use RZ\Renzo\Entities\NodeTypeField;
 
-define('RENZO_ROOT', dirname(__FILE__));
 
 require_once 'bootstrap.php';
 
