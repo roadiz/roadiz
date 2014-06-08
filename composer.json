@@ -1,0 +1,10 @@
+{
+    "require": {
+        "doctrine/orm": "2.4.*",
+        "symfony/yaml": "2.*"
+    },
+    "autoload": {
+        "psr-4": {"RZ\\": "src/"},
+        "psr-4": {"GeneratedNodeSources\\": "sources/GeneratedNodeSources"}
+    }
+}
