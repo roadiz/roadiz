@@ -1,14 +1,14 @@
 <?php 
 
-namespace RZ\Renzo\Entities;
+namespace RZ\Renzo\Core\Entities;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\AbstractEntities\PersistableObject;
+use RZ\Renzo\Core\AbstractEntities\Persistable;
 /**
  * @Entity
  */
-class NodeType implements PersistableObject
+class NodeType implements Persistable
 {
 	/**
 	 * @Id
@@ -36,6 +36,44 @@ class NodeType implements PersistableObject
 	 */
 	public function setName($name) {
 	    $this->name = $name;
+	
+	    return $this;
+	}
+
+	/**
+	 * @Column(type="string")
+	 */
+	private $displayName;
+	/**
+	 * @return [type] [description]
+	 */
+	public function getDisplayName() {
+	    return $this->displayName;
+	}
+	/**
+	 * @param [type] $newname [description]
+	 */
+	public function setDisplayName($displayName) {
+	    $this->displayName = $displayName;
+	
+	    return $this;
+	}
+
+	/**
+	 * @Column(type="text")
+	 */
+	private $description;
+	/**
+	 * @return [type] [description]
+	 */
+	public function getDescription() {
+	    return $this->description;
+	}
+	/**
+	 * @param [type] $newname [description]
+	 */
+	public function setDescription($description) {
+	    $this->description = $description;
 	
 	    return $this;
 	}
@@ -146,31 +184,38 @@ class NodeType implements PersistableObject
  */
 namespace GeneratedNodeSources;
 
-use RZ\Renzo\AbstractEntities\PersistableObject;
+use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 /**
  * @Entity
  * @Table(name="'.$this->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
  */
-class '.$this->getSourceEntityClassName().' implements PersistableObject
+class '.$this->getSourceEntityClassName().' extends PersistableObject
 {
-	/**
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
-	 */
-	private $id;
-	public function getId()
-	{
-		return $this->id;
-	}
+
 	'.implode('', $fieldsArray).'
 }';
 			file_put_contents($file, $content);
+			return "Source class “".$this->getSourceEntityClassName()."” has been created.".PHP_EOL;
     	}
     	else {
-    		echo "Source class “".$this->getSourceEntityClassName()."” already exists.".PHP_EOL;
+    		return "Source class “".$this->getSourceEntityClassName()."” already exists.".PHP_EOL;
     	}
 
-		return $this;
+		return false;
     }
+
+
+    public function getOneLineSummary()
+	{
+		return $this->getId()." — ".$this->getName().
+			" — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
+	}
+	public function getFieldsSummary()
+	{
+		$text = "|".PHP_EOL;
+		foreach ($this->getFields() as $field) {
+			$text .= "|--- ".$field->getOneLineSummary();
+		}
+		return $text;
+	}
 }

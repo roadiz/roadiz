@@ -1,13 +1,23 @@
 <?php 
 
-use RZ\Renzo\Entities\Node;
-use RZ\Renzo\Entities\NodeType;
-use RZ\Renzo\Entities\NodeTypeField;
-
+use RZ\Renzo\Core\Kernel;
+use RZ\Renzo\Core\Entities\Node;
+use RZ\Renzo\Core\Entities\NodeType;
+use RZ\Renzo\Core\Entities\NodeTypeField;
 
 require_once 'bootstrap.php';
 
-RZ\Renzo\Core\Kernel::getInstance();
+
+if (php_sapi_name() == 'cli' || 
+	(isset($_SERVER['argc']) && 
+		is_numeric($_SERVER['argc']) && 
+	    $_SERVER['argc'] > 0)) {
+
+	Kernel::getInstance()->runConsole();
+}
+else {
+	Kernel::getInstance()->runApp();
+}
 
 /*$pageType = new NodeType();
 $pageType->setName('projet')
@@ -35,8 +45,8 @@ $entityManager->flush();*/
 
 
 
-$types = $entityManager->getRepository('RZ\Renzo\Entities\NodeType')->findAll();
+/*$types = $entityManager->getRepository('RZ\Renzo\Entities\NodeType')->findAll();
 
 foreach ($types as $type) {
 	$type->generateSourceEntityClass();
-}
+}*/

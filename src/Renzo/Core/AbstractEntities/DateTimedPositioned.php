@@ -1,8 +1,7 @@
 <?php
-namespace RZ\Renzo\AbstractEntities;
+namespace RZ\Renzo\Core\AbstractEntities;
 
-
-use RZ\Renzo\AbstractEntities\DateTimed;
+use RZ\Renzo\Core\AbstractEntities\DateTimed;
 /**
 * @MappedSuperclass
 */

@@ -1,11 +1,11 @@
 <?php
-namespace RZ\Renzo\AbstractEntities;
+namespace RZ\Renzo\Core\AbstractEntities;
 
-use RZ\Renzo\AbstractEntities\PersistableObject;
+use RZ\Renzo\Core\AbstractEntities\Persistable;
 /**
 * @MappedSuperclass
 */
-abstract class DateTimed implements PersistableObject
+abstract class DateTimed implements Persistable
 {
 	/**
 	 * @Id
@@ -58,6 +58,11 @@ abstract class DateTimed implements PersistableObject
 	    return $this;
 	}
 	
+	public function __construct()
+	{
+		$this->resetDates();
+	}
+
 	public function resetDates()
 	{
 		$this->setCreatedAt(new \DateTime("now"));

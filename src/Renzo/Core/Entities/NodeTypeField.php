@@ -1,14 +1,14 @@
 <?php 
 
-namespace RZ\Renzo\Entities;
+namespace RZ\Renzo\Core\Entities;
 
-use RZ\Renzo\AbstractEntities\PersistableObject;
-use RZ\Renzo\AbstractEntities\Positioned;
+use RZ\Renzo\Core\AbstractEntities\Persistable;
+use RZ\Renzo\Core\AbstractEntities\Positioned;
 
 /**
  * @Entity
  */
-class NodeTypeField extends Positioned implements PersistableObject {
+class NodeTypeField extends Positioned implements Persistable {
 
 	/**
 	 * @Id
@@ -178,5 +178,11 @@ class NodeTypeField extends Positioned implements PersistableObject {
 	    return $this;
 	}'.PHP_EOL;
 
+	}
+
+	public function getOneLineSummary()
+	{
+		return $this->getId()." — ".$this->getName()." — ".$this->getLabel().
+			" — Indexed : ".($this->isIndexed()?'true':'false').PHP_EOL;
 	}
 }

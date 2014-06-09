@@ -1,9 +1,9 @@
 <?php 
 
-namespace RZ\Renzo\Entities;
+namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\AbstractEntities\DateTimedPositioned;
+use RZ\Renzo\Core\AbstractEntities\DateTimedPositioned;
 
 /**
  * @Entity
@@ -221,11 +221,37 @@ class Node extends DateTimedPositioned
 	}
 
 	/**
+	 * @OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 */
+	private $nodeSources;
+
+	/**
+	 * @return ArrayCollection
+	 */
+	public function getNodeSources() {
+	    return $this->nodeSources;
+	}
+
+	/**
+	 * Node source according to its node-type
+	 * @var PersistableObject
+	 */
+	private $source;
+	/**
+	 * @return PersistableObject
+	 */
+	public function getSource() {
+	    return $this->source;
+	}
+
+
+	/**
 	 * @param NodeType $nodeType [description]
 	 */
 	public function __construct( NodeType $nodeType )
     {
         $this->childrens = new ArrayCollection();
+        $this->nodeSources = new ArrayCollection();
         $this->setNodeType($nodeType);
     }
 }

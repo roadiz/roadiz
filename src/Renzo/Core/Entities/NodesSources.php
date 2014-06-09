@@ -1,9 +1,9 @@
 <?php 
 
-namespace RZ\Renzo\Entities;
+namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\AbstractEntities\PersistableObject;
+use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
 /**
  * @Entity
@@ -27,7 +27,7 @@ class NodesSources {
 
 
 	public function __construct( Node $node, PersistableObject $source, Translation $translation){
-		$this->node = node;
+		$this->node = $node;
 		$this->translation = $translation;
 		// Be careful to use source
 		$this->source_id = $source->getId();
