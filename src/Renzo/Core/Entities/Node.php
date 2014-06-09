@@ -243,6 +243,10 @@ class Node extends DateTimedPositioned
 	public function getSource() {
 	    return $this->source;
 	}
+	public function setSource( $source) {
+	    $this->source = $source;
+	    return $this;
+	}
 
 
 	/**
@@ -250,8 +254,16 @@ class Node extends DateTimedPositioned
 	 */
 	public function __construct( NodeType $nodeType )
     {
+    	parent::__construct();
+
         $this->childrens = new ArrayCollection();
         $this->nodeSources = new ArrayCollection();
         $this->setNodeType($nodeType);
     }
+
+    public function getOneLineSummary()
+	{
+		return $this->getId()." — ".$this->getNodeName()." — ".$this->getNodeType()->getName().
+			" — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
+	}
 }

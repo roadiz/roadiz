@@ -36,6 +36,10 @@ class Kernel {
 		$this->em = $em;
 		return $this;
 	}
+	/**
+	 * 
+	 * @return Doctrine\ORM\EntityManager
+	 */
 	public function getEntityManager()
 	{
 		return $this->em;
@@ -55,6 +59,7 @@ class Kernel {
 		$application = new Application('Renzo Console Application', '0.1');
 		$application->add(new \RZ\Renzo\Console\TranslationsCommand);
 		$application->add(new \RZ\Renzo\Console\NodeTypesCommand);
+		$application->add(new \RZ\Renzo\Console\NodesCommand);
 		$application->run();
 	}
 
