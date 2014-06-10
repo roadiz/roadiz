@@ -164,11 +164,20 @@ class NodeTypeField extends Positioned implements Persistable {
 
 	public function generateSourceField(){
 
+
+		$var = 'private $'.$this->getName().';';
+		if ($this->getType() === static::BOOLEAN_T) {
+			$var = 'private $'.$this->getName().' = false;';
+		}
+		if ($this->getType() === static::INTEGER_T) {
+			$var = 'private $'.$this->getName().' = 0;';
+		}
+
 		return '
 	/**
 	 * @Column(type="'.static::$typeToDoctrine[$this->getType()].'", nullable=true )
 	 */
-	private $'.$this->getName().';
+	'.$var.'
 	public function get'.ucwords($this->getName()).'() {
 	    return $this->'.$this->getName().';
 	}

@@ -239,22 +239,6 @@ class Node extends DateTimedPositioned
 		return null;
 	}
 
-	/**
-	 * Node source according to its node-type
-	 * @var PersistableObject
-	 */
-	private $source;
-	/**
-	 * @return PersistableObject
-	 */
-	public function getSource() {
-	    return $this->source;
-	}
-	public function setSource( $source) {
-	    $this->source = $source;
-	    return $this;
-	}
-
 
 	/**
 	 * @param NodeType $nodeType [description]
@@ -276,10 +260,10 @@ class Node extends DateTimedPositioned
 
 	public function getOneLineSourceSummary()
 	{
-		$text = "Source ".$this->getSource()->getId().PHP_EOL;
+		$text = "Source ".$this->getDefaultNodeSource()->getId().PHP_EOL;
 		foreach ($this->getNodeType()->getFields() as $key => $field) {
 			$getterName = 'get'.ucwords($field->getName());
-			$text .= '['.$field->getLabel().']: '.$this->getSource()->$getterName().PHP_EOL;
+			$text .= '['.$field->getLabel().']: '.$this->getDefaultNodeSource()->$getterName().PHP_EOL;
 		}
 		return $text;
 	}

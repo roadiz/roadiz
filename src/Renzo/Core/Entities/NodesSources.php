@@ -10,35 +10,32 @@ use RZ\Renzo\Core\AbstractEntities\PersistableObject;
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="discr", type="string")
  */
-class NodesSources {
+class NodesSources extends PersistableObject {
 
 	/**
-	 * @Id @ManyToOne(targetEntity="Node")
+	 * @ManyToOne(targetEntity="Node")
 	 */
 	private $node;
 
 	/**
-	 * @Id @Column(type="integer", name="source_id")
+	 * @return Node
 	 */
-	private $source_id;
-
-	/**
-	 * @return [type] [description]
-	 */
-	public function getSourceId() {
-	    return $this->source_id;
+	public function getNode() {
+	    return $this->node;
 	}
+	
 	/**
-	 * @param [type] $newsource_id [description]
+	 * @param Node $newnode 
 	 */
-	public function setSourceId($source_id) {
-	    $this->source_id = $source_id;
+	public function setNode($node) {
+	    $this->node = $node;
 	
 	    return $this;
 	}
 
+
 	/**
-	 * @Id @ManyToOne(targetEntity="Translation")
+	 * @ManyToOne(targetEntity="Translation")
 	 */
 	private $translation;
 	/**
@@ -57,10 +54,8 @@ class NodesSources {
 	}
 
 
-	public function __construct( Node $node, PersistableObject $source, Translation $translation){
+	public function __construct( Node $node, Translation $translation){
 		$this->node = $node;
 		$this->translation = $translation;
-		// Be careful to use source
-		$this->source_id = $source->getId();
 	}
 }

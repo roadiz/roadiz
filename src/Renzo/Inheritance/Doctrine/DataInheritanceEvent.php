@@ -21,19 +21,43 @@ class DataInheritanceEvent {
  
 		if ($class->getName() === 'RZ\Renzo\Core\Entities\NodesSources') {
 
-			/**
-			 *  List node types
-			 */
-			$nodeTypes = Kernel::getInstance()->em()
-				->getRepository('RZ\Renzo\Core\Entities\NodeType')
-				->findAll();
+			try {
+				if ($this->checkTable('NodeType')) {
 
-			$map = array();
-			foreach ($nodeTypes as $type) {
-				$map[$type->getName()] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
+					/**
+					 *  List node types
+					 */
+					$nodeTypes = Kernel::getInstance()->em()
+						->getRepository('RZ\Renzo\Core\Entities\NodeType')
+						->findAll();
+
+					$map = array();
+					foreach ($nodeTypes as $type) {
+						$map[$type->getName()] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
+					}
+
+					$metadata->setDiscriminatorMap($map);
+				}
+
 			}
-
-			$metadata->setDiscriminatorMap($map);
+			catch(Doctrine\DBAL\DBALException $e){
+				echo $e->getMessage();
+			}
 		}
+	}
+
+	public function checkTable($table)
+	{
+	    $conn = Kernel::getInstance()->em()->getConnection();
+	    $sm = $conn->getSchemaManager();
+	    $tables = $sm->listTables();
+
+	    foreach ($tables as $table) {
+	        if ($table->getName() == $table) {
+	        	return true;
+	        }
+	    }
+
+	    return false;
 	}
 }

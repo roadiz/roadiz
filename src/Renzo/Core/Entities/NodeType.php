@@ -198,11 +198,13 @@ class NodeType implements Persistable
 namespace '.static::getGeneratedEntitiesNamespace().';
 
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
+use RZ\Renzo\Core\Entities\NodesSources;
+
 /**
  * @Entity
  * @Table(name="'.$this->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
  */
-class '.$this->getSourceEntityClassName().' extends PersistableObject
+class '.$this->getSourceEntityClassName().' extends NodesSources
 {
 
 	'.implode('', $fieldsArray).'

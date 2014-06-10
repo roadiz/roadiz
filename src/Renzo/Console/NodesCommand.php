@@ -117,7 +117,7 @@ class NodesCommand extends Command
 		elseif($nodeName) {
 			$node = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Node')
-				->findOneWithSourceBy(array('nodeName'=>$nodeName));
+				->findOneBy(array('nodeName'=>$nodeName));
 
 
 			if ($node !== null) {
@@ -162,9 +162,11 @@ class NodesCommand extends Command
 
 		// Source
 		$sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
-		$source = new $sourceClass();
+		$source = new $sourceClass($node, $translation);
 
-		foreach ($type->getFields() as $key => $field) {
+		$fields = $type->getFields();
+
+		foreach ($fields as $field) {
 			$fValue = $this->dialog->ask(
 				$output,
 				'<question>[Field '.$field->getLabel().']</question> : ',
@@ -175,11 +177,7 @@ class NodesCommand extends Command
 		}
 
 		Kernel::getInstance()->em()->persist($source);
-		Kernel::getInstance()->em()->flush();
 
-		// Joint
-		$nodesSourcesJoint = new NodesSources($node, $source, $translation);
-		Kernel::getInstance()->em()->persist($nodesSourcesJoint);
 		Kernel::getInstance()->em()->flush();
 
 		$text = '<info>Node “'.$nodeName.'” created…</info>'.PHP_EOL;
