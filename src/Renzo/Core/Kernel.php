@@ -60,11 +60,24 @@ class Kernel {
 		$application->add(new \RZ\Renzo\Console\TranslationsCommand);
 		$application->add(new \RZ\Renzo\Console\NodeTypesCommand);
 		$application->add(new \RZ\Renzo\Console\NodesCommand);
+		$application->add(new \RZ\Renzo\Console\SchemaCommand);
 		$application->run();
 	}
 
 	public function runApp()
 	{
 		# code...
+	}
+
+	public function updateDatabaseSchema()
+	{	
+		$tool = new \Doctrine\ORM\Tools\SchemaTool( $this->em );
+		$tool->updateSchema();
+
+		/*$application = new Application();
+		$application->setAutoExit(false);
+		//Create de Schema 
+		$options = array('command' => 'orm:schema-tool:update',"--force" => true);
+		$application->run(new \Symfony\Component\Console\Input\ArrayInput($options));*/
 	}
 }

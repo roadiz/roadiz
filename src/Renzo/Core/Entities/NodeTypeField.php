@@ -166,7 +166,7 @@ class NodeTypeField extends Positioned implements Persistable {
 
 		return '
 	/**
-	 * @Column(type="'.static::$typeToDoctrine[$this->getType()].'" )
+	 * @Column(type="'.static::$typeToDoctrine[$this->getType()].'", nullable=true )
 	 */
 	private $'.$this->getName().';
 	public function get'.ucwords($this->getName()).'() {

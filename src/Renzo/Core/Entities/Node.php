@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\DateTimedPositioned;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodeRepository")
  */
 class Node extends DateTimedPositioned
 {
@@ -221,7 +221,7 @@ class Node extends DateTimedPositioned
 	}
 
 	/**
-	 * @OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true)
 	 */
 	private $nodeSources;
 
@@ -230,6 +230,13 @@ class Node extends DateTimedPositioned
 	 */
 	public function getNodeSources() {
 	    return $this->nodeSources;
+	}
+	public function getDefaultNodeSource()
+	{
+		if (count($this->getNodeSources()) > 0) {
+			return $this->getNodeSources()[0];
+		}
+		return null;
 	}
 
 	/**
@@ -265,5 +272,15 @@ class Node extends DateTimedPositioned
 	{
 		return $this->getId()." — ".$this->getNodeName()." — ".$this->getNodeType()->getName().
 			" — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
+	}
+
+	public function getOneLineSourceSummary()
+	{
+		$text = "Source ".$this->getSource()->getId().PHP_EOL;
+		foreach ($this->getNodeType()->getFields() as $key => $field) {
+			$getterName = 'get'.ucwords($field->getName());
+			$text .= '['.$field->getLabel().']: '.$this->getSource()->$getterName().PHP_EOL;
+		}
+		return $text;
 	}
 }

@@ -183,7 +183,6 @@ class NodeTypesCommand extends Command
 		$nt->setDescription($description);
 		Kernel::getInstance()->em()->persist($nt);
 
-
 		$i = 1;
 		while (true){
 			// FIelds
@@ -203,7 +202,7 @@ class NodeTypesCommand extends Command
 			$field->setLabel($fLabel);
 			$fType = $this->dialog->ask(
 				$output,
-				'<question>[Field '.$i.'] Enter field type</question> : (default:STRING_T)',
+				'<question>[Field '.$i.'] Enter field type</question> (default:STRING_T): ',
 				'STRING_T'
 			);
 			$fType = constant('RZ\Renzo\Core\Entities\NodeTypeField::' . $fType);
@@ -216,12 +215,12 @@ class NodeTypesCommand extends Command
 				)) {
 				$field->setIndexed(true);
 			}
-			$field->setNodeType($nt);
+			$nt->addField($field);
 			Kernel::getInstance()->em()->persist($field);
 
 			if (!$this->dialog->askConfirmation(
 					$output,
-					'<question>Do you want to add another field?</question> (Yes|no) : ',
+					'<question>Do you want to add another field?</question> (Yes|no): ',
 					true
 				)) {
 				break;
@@ -230,6 +229,9 @@ class NodeTypesCommand extends Command
 			$i++;
 		}
 		Kernel::getInstance()->em()->flush();
+
+		$nt->generateSourceEntityClass();
+		SchemaCommand::updateSchema();
 
 		return '<question>Node type '.$nt->getName().' has been created.</question>';
 	}
