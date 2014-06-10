@@ -2,9 +2,11 @@
 
 namespace RZ\Renzo\Core;
 
+use RZ\Renzo\Inheritance\Doctrine\DataInheritanceEvent;
+
 use Acme\DemoBundle\Command\GreetCommand;
 use Symfony\Component\Console\Application;
-
+use Doctrine\ORM\Events;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -34,6 +36,13 @@ class Kernel {
 	public function setEntityManager(EntityManager $em)
 	{
 		$this->em = $em;
+
+		$evm = $this->em->getEventManager();
+ 
+        // create and then add our event!
+        $inheritableEntityEvent = new DataInheritanceEvent();
+        $evm->addEventListener(Events::loadClassMetadata, $inheritableEntityEvent);
+
 		return $this;
 	}
 	/**

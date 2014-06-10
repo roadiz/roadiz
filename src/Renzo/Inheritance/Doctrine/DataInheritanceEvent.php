@@ -30,7 +30,7 @@ class DataInheritanceEvent {
 
 			$map = array();
 			foreach ($nodeTypes as $type) {
-				$map[$type->getName()] = NodeType::getGeneratedEntitiesNamespace.'\\'.$type->getSourceEntityClassName();
+				$map[$type->getName()] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
 			}
 
 			$metadata->setDiscriminatorMap($map);
