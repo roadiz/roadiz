@@ -165,10 +165,15 @@ class NodeType implements Persistable
     	return 'NS_'.ucwords($this->getName());
     }
 
+    public static function getGeneratedEntitiesNamespace()
+    {
+    	return 'GeneratedNodeSources';
+    }
+
     public function generateSourceEntityClass()
     {
-    	$folder = RENZO_ROOT.'/sources/GeneratedNodeSources';
-    	$file = RENZO_ROOT.'/sources/GeneratedNodeSources/'.$this->getSourceEntityClassName().'.php';
+    	$folder = RENZO_ROOT.'/sources/'.static::getGeneratedEntitiesNamespace();
+    	$file = $folder.'/'.$this->getSourceEntityClassName().'.php';
 
     	if (!file_exists($folder)) {
     		mkdir($folder, 0755, true);
@@ -190,7 +195,7 @@ class NodeType implements Persistable
 /**
  * THIS IS A GENERATED FILE, DO NOT EDIT IT
  */
-namespace GeneratedNodeSources;
+namespace '.static::getGeneratedEntitiesNamespace().';
 
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 /**
