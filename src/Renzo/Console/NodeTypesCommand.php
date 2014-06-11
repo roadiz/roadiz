@@ -94,6 +94,7 @@ class NodeTypesCommand extends Command
 
 			if ($nodetype !== null) {
 				$text = $nodetype->getOneLineSummary();
+				$text .= $nodetype->getFieldsSummary();
 
 				if ($input->getOption('delete')) {
 					if ($this->dialog->askConfirmation(
@@ -215,7 +216,10 @@ class NodeTypesCommand extends Command
 				)) {
 				$field->setIndexed(true);
 			}
-			$nt->addField($field);
+			// Need to populate each side 
+			$nt->getFields()->add($field);
+			$field->setNodeType($nt);
+
 			Kernel::getInstance()->em()->persist($field);
 
 			if (!$this->dialog->askConfirmation(

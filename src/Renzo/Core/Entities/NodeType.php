@@ -135,7 +135,7 @@ class NodeType implements Persistable
 
 
 	/**
-     * @OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", fetch="EXTRA_LAZY", cascade={"ALL"})
+     * @OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"ALL"})
      */
 	private $fields;
 	/**
@@ -143,9 +143,6 @@ class NodeType implements Persistable
 	 */
 	public function getFields() {
 	    return $this->fields;
-	}
-	public function addField( NodeTypeField $field ) {
-		$this->fields->add($field);
 	}
 
 	/**

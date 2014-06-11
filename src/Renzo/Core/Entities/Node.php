@@ -261,6 +261,7 @@ class Node extends DateTimedPositioned
 	public function getOneLineSourceSummary()
 	{
 		$text = "Source ".$this->getDefaultNodeSource()->getId().PHP_EOL;
+
 		foreach ($this->getNodeType()->getFields() as $key => $field) {
 			$getterName = 'get'.ucwords($field->getName());
 			$text .= '['.$field->getLabel().']: '.$this->getDefaultNodeSource()->$getterName().PHP_EOL;
