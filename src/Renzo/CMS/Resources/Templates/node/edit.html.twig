@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+<section id="manage-node">
+	<h1 id="node-title">{{ node.getNodeSources[0].getTitle }}</h1>
+	<h3 id="node-name">{{ node.getNodeName }}</h3>
+</section>
+{% endblock %}

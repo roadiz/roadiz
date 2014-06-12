@@ -9,6 +9,22 @@ use Symfony\Component\Console\Application;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\EntityManager;
 
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\Routing;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
+
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 /**
 * 
 */
@@ -16,12 +32,26 @@ class Kernel {
 
 	private static $instance = null;
 
-	private $em = null;
+	private $em =           null;
+	private $debug =        true;
+	protected $request =    null;
+	protected $response =   null;
+	protected $context =    null;
+	protected $matcher =    null;
+	protected $resolver =   null;
+	protected $dispatcher = null;
 
 
-	private final function __construct()
-	{
-		
+	public function __construct() {
+		$this->request = Request::createFromGlobals();
+	}
+
+	/**
+	 * Get application debug status.
+	 * @return boolean
+	 */
+	public function isDebug() {
+		return $this->debug;
 	}
 
 	public static function getInstance(){
@@ -75,18 +105,64 @@ class Kernel {
 
 	public function runApp()
 	{
-		# code...
+		/*
+		 * CMS
+		 */
+		try{
+			$cmsCollection = $this->getCMSRouteCollection();
+			$this->matcher = new UrlMatcher($cmsCollection, new Routing\RequestContext());
+
+
+
+
+			$this->dispatcher = new EventDispatcher();
+			$this->dispatcher->addSubscriber(new RouterListener($this->matcher));
+
+			$this->resolver = new ControllerResolver();
+
+			$kernel = new HttpKernel($this->dispatcher, $this->resolver);
+
+			$this->response = $kernel->handle( $this->request );
+			$this->response->send();
+
+			$kernel->terminate( $this->request, $this->response );
+		}
+		catch(Symfony\Component\Routing\Exception\ResourceNotFoundException $e){
+			echo $e->getMessage();
+		}
+		catch(\LogicException $e){
+			echo $e->getMessage();
+		}
+		catch(\Exception $e){
+			echo $e->getMessage();
+		}
 	}
 
-	public function updateDatabaseSchema()
-	{	
-		$tool = new \Doctrine\ORM\Tools\SchemaTool( $this->em );
-		$tool->updateSchema();
+	public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+	{
+		parent::handle($request, $type, $catch);
 
-		/*$application = new Application();
-		$application->setAutoExit(false);
-		//Create de Schema 
-		$options = array('command' => 'orm:schema-tool:update',"--force" => true);
-		$application->run(new \Symfony\Component\Console\Input\ArrayInput($options));*/
+		$this->dispatcher->dispatch('response', new ResponseEvent($response, $request));
+		return $response;
+	}
+
+	private function getCMSRouteCollection()
+	{
+		$locator = new FileLocator(array(
+			RENZO_ROOT.'/src/Renzo/CMS/Resources'
+		));
+		$loader = new YamlFileLoader($locator);
+		$collection = $loader->load('routes.yml');
+
+
+		return $collection;
+	}
+
+	/**
+	 * @return Symfony\Component\HttpFoundation\Request
+	 */
+	public function getRequest()
+	{
+		return $this->request;
 	}
 }

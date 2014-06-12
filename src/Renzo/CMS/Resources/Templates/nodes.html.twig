@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+<section id="manage-nodes">
+	<ul class="nodes">
+		{% for node in nodes %}
+		<li>
+			<p>{{ node.getId }}</p>
+			<p><strong>{{ node.getNodeName }}</strong></p>
+			<p><strong>{{ node.getNodeType.getName }}</strong></p>
+			<p><strong>{{ node.getNodeSources[0].getTitle }}</strong></p>
+		</li>
+		{% endfor %}
+	</ul>
+</section>
+{% endblock %}

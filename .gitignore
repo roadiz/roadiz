@@ -1,5 +1,8 @@
 vendor
+cache
 sources
 .AppleDouble
-.DS_Store
+**/.DS_Store
+**/._*
+._*
 conf/config.json
