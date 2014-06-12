@@ -3,6 +3,7 @@
 namespace RZ\Renzo\Core;
 
 use RZ\Renzo\Inheritance\Doctrine\DataInheritanceEvent;
+use RZ\Renzo\Core\Routing\MixedUrlMatcher;
 
 use Acme\DemoBundle\Command\GreetCommand;
 use Symfony\Component\Console\Application;
@@ -24,6 +25,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
 * 
@@ -34,15 +36,21 @@ class Kernel {
 
 	private $em =           null;
 	private $debug =        true;
+	protected $httpKernel = null;
 	protected $request =    null;
 	protected $response =   null;
 	protected $context =    null;
 	protected $matcher =    null;
 	protected $resolver =   null;
 	protected $dispatcher = null;
+	protected $stopwatch =  null;
 
 
-	public function __construct() {
+	private final function __construct() {
+
+		$this->stopwatch = new Stopwatch();
+		$this->stopwatch->start('global');
+
 		$this->request = Request::createFromGlobals();
 	}
 
@@ -54,6 +62,10 @@ class Kernel {
 		return $this->debug;
 	}
 
+	/**
+	 * Return unique instance of Kernel
+	 * @return Kernel
+	 */
 	public static function getInstance(){
 
 		if (static::$instance === null) {
@@ -63,13 +75,24 @@ class Kernel {
 		return static::$instance;
 	}
 
+	public function getStopwatch()
+	{
+		return $this->stopwatch;
+	}
+
+	/**
+	 * [setEntityManager description]
+	 * @param EntityManager $em 
+	 */
 	public function setEntityManager(EntityManager $em)
 	{
 		$this->em = $em;
 
 		$evm = $this->em->getEventManager();
  
-        // create and then add our event!
+        /*
+         * Create dynamic dicriminator map for our Node system
+         */
         $inheritableEntityEvent = new DataInheritanceEvent();
         $evm->addEventListener(Events::loadClassMetadata, $inheritableEntityEvent);
 
@@ -101,31 +124,56 @@ class Kernel {
 		$application->add(new \RZ\Renzo\Console\NodesCommand);
 		$application->add(new \RZ\Renzo\Console\SchemaCommand);
 		$application->run();
-	}
 
+		$this->stopwatch->stop('global');
+	}
+	/**
+	 * 
+	 * 
+	 * Run main HTTP application
+	 */
 	public function runApp()
 	{
+		$this->dispatcher = new EventDispatcher();
+		$this->resolver =   new ControllerResolver();
+		$this->httpKernel = new HttpKernel($this->dispatcher, $this->resolver);
+		
 		/*
-		 * CMS
+		 * Main routing
 		 */
+		$this->handleBackendFrontend();
+
 		try{
-			$cmsCollection = $this->getCMSRouteCollection();
-			$this->matcher = new UrlMatcher($cmsCollection, new Routing\RequestContext());
+			$this->response = $this->httpKernel->handle( $this->request );
+			$event = $this->stopwatch->stop('global');
+			echo $event->getCategory().' : '.$event->getDuration().'ms - '.$event->getMemory()/1000000.0.'Mo';
 
-
-
-
-			$this->dispatcher = new EventDispatcher();
-			$this->dispatcher->addSubscriber(new RouterListener($this->matcher));
-
-			$this->resolver = new ControllerResolver();
-
-			$kernel = new HttpKernel($this->dispatcher, $this->resolver);
-
-			$this->response = $kernel->handle( $this->request );
 			$this->response->send();
+			$this->httpKernel->terminate( $this->request, $this->response );
+		}
+		catch(\Exception $e){
+			echo $e->getMessage();
+		}
+	}
 
-			$kernel->terminate( $this->request, $this->response );
+	/**
+	 * 
+	 * Handle Backend routes and logic
+	 * @return boolean
+	 */
+	private function handleBackendFrontend()
+	{
+		try{
+			$locator = new FileLocator(array(
+				RENZO_ROOT.'/src/Renzo/CMS/Resources'
+			));
+			$loader = new YamlFileLoader($locator);
+			$cmsCollection = $loader->load('routes.yml');
+
+			$matcher = new MixedUrlMatcher($cmsCollection, new Routing\RequestContext());
+			$this->dispatcher->addSubscriber(new RouterListener($matcher));
+
+			return true;
 		}
 		catch(Symfony\Component\Routing\Exception\ResourceNotFoundException $e){
 			echo $e->getMessage();
@@ -136,26 +184,8 @@ class Kernel {
 		catch(\Exception $e){
 			echo $e->getMessage();
 		}
-	}
 
-	public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
-	{
-		parent::handle($request, $type, $catch);
-
-		$this->dispatcher->dispatch('response', new ResponseEvent($response, $request));
-		return $response;
-	}
-
-	private function getCMSRouteCollection()
-	{
-		$locator = new FileLocator(array(
-			RENZO_ROOT.'/src/Renzo/CMS/Resources'
-		));
-		$loader = new YamlFileLoader($locator);
-		$collection = $loader->load('routes.yml');
-
-
-		return $collection;
+		return false;
 	}
 
 	/**

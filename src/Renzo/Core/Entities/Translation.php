@@ -11,6 +11,38 @@ use RZ\Renzo\Core\AbstractEntities\DateTimed;
  */
 class Translation extends DateTimed {
 
+
+	private static $availableLocales = array(
+		"fr_FR"			=> "fr.png", // France
+		"fr_RE"			=> "re.png", // Réunion
+		"en_GB"			=> "gb.png",
+		"en_US"			=> "us.png",
+		"it_IT"			=> "it.png",
+		"es_ES"			=> "es.png",
+		"nl_NL"			=> "nl.png",
+		"de_DE"			=> "de.png",
+		"zh_HK"			=> "hk.png",
+		"zh_CN"			=> "cn.png",
+		"zh_SG"			=> "sg.png",
+		"zh_TW"			=> "tw.png",
+		"ja_JP"			=> "jp.png"
+	);
+	private static $availableLocalesShortcut = array(
+		'fr' => "fr_FR", // France
+		're' => "fr_RE", // Réunion
+		'en' => "en_GB",
+		'us' => "en_US",
+		'it' => "it_IT",
+		'es' => "es_ES",
+		'nl' => "nl_NL",
+		'de' => "de_DE",
+		'zh' => "zh_CN",
+		'sg' => "zh_SG",
+		'hk' => "zh_HK",
+		'tw' => "zh_TW",
+		'jp' => "ja_JP"
+	);
+
 	/**
 	 * Language locale
 	 * 
@@ -83,5 +115,56 @@ class Translation extends DateTimed {
 	{
 		return $this->getId()." — ".$this->getName()." — ".$this->getLocale().
 			" — Available : ".($this->isAvailable()?'true':'false').PHP_EOL;
+	}
+
+
+	/**
+	 * Return available locales in an array
+	 * @return array
+	 */
+	public static function getAvailableLocales()
+	{
+		return array_keys(static::$availableLocales);
+	}
+
+	/**
+	 * Return available locales shotcuts in an array
+	 * @return array
+	 */
+	public static function getAvailableLocalesShortcuts()
+	{
+		return array_keys(static::$availableLocalesShortcut);
+	}
+
+	/**
+	 * Return complete locale name from short locale.    
+	 * Ex : en => en_GB or us => en_US
+	 * @param  string $shortcut 
+	 * @return string           
+	 */
+	public static function getLocaleFromShortcut( $shortcut )
+	{
+		if (isset(static::$availableLocalesShortcut[$shortcut])) {
+			return static::$availableLocalesShortcut[$shortcut];
+		}
+		else {
+			return "";
+		}
+	}
+
+	/**
+	 * Return short locale name from complete locale.    
+	 * Ex : en_GB => en or en_US => us
+	 * @param  string $locale
+	 * @return string        
+	 */
+	public static function getShortcutFromLocale( $locale )
+	{
+		if (in_array($locale, static::$availableLocalesShortcut)) {
+			return array_search($locale, static::$availableLocalesShortcut);
+		}
+		else {
+			return false;
+		}
 	}
 }
