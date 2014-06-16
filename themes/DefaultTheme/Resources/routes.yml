@@ -1,0 +1,7 @@
+feedRSS:
+    path:     /feed{trailingSlash}
+    defaults: { _controller: Themes\DefaultTheme\Controllers\FeedController::indexAction }
+    requirements: { trailingSlash : "[/]{0,1}" }
+sitemap:
+    path:     /sitemap.xml
+    defaults: { _controller: Themes\DefaultTheme\Controllers\SitemapController::indexAction }

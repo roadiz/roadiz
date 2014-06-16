@@ -9,22 +9,22 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-namespace RZ\Renzo\CMS\Controllers;
+namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
+use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class NodesController extends BackendController {
+class NodesController extends RozierApp {
 	
 	public function indexAction()
 	{
 		$nodes = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Node')
-			->findAll(array(), array('node_name'=>'ASC'));
+			->findAll();
 
 		$this->assignation['nodes'] = $nodes;
-
 
 		return new Response(
 		    $this->getTwig()->render('nodes.html.twig', $this->assignation),

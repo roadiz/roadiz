@@ -13,6 +13,7 @@
     "autoload": {
         "psr-4": {
         	"RZ\\": "src/",
+            "Themes\\": "themes/",
         	"GeneratedNodeSources\\": "sources/GeneratedNodeSources"
         }
     }

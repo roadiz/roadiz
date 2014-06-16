@@ -1,0 +1,28 @@
+homePage:
+    path:     /rz-admin{trailingSlash}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction }
+    requirements: { trailingSlash : "[/]{0,1}" }
+nodesHomePageSlash:
+    path:     /rz-admin/nodes{trailingSlash}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction }
+    requirements: { trailingSlash : "[/]{0,1}" }
+nodesEditTranslatedPage:
+    path:     /rz-admin/nodes/edit/{node_id}/{translation_id}{trailingSlash}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::editAction }
+    requirements: { trailingSlash : "[/]{0,1}" }
+nodesEditPage:
+    path:     /rz-admin/nodes/edit/{node_id}{trailingSlash}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::editAction }
+    requirements: { trailingSlash : "[/]{0,1}" }
+nodesAddPage:
+    path:     /rz-admin/nodes/add/{node_type_id}{trailingSlash}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::addAction }
+    requirements: { trailingSlash : "[/]{0,1}" }
+nodesDeletePage:
+    path:     /rz-admin/nodes/delete/{node_id}{trailingSlash}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::deleteAction }
+    requirements: { trailingSlash : "[/]{0,1}" }
+noAction:
+    path:     /rz-admin/no{trailingSlash}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::noAction }
+    requirements: { trailingSlash : "[/]{0,1}" }

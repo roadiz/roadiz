@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e9487cc2aa9c6afe8cabd7f6d4375553",
+    "hash": "1d8478d4177706e80b8318ea40bb9b7b",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1069,12 +1069,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Stopwatch.git",
-                "reference": "a9b9d810c3244749252722890de6b56713202c8c"
+                "reference": "8f53219a7869b65e4cd1568b22faa36d08bfff15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Stopwatch/zipball/a9b9d810c3244749252722890de6b56713202c8c",
-                "reference": "a9b9d810c3244749252722890de6b56713202c8c",
+                "url": "https://api.github.com/repos/symfony/Stopwatch/zipball/8f53219a7869b65e4cd1568b22faa36d08bfff15",
+                "reference": "8f53219a7869b65e4cd1568b22faa36d08bfff15",
                 "shasum": ""
             },
             "require": {
@@ -1109,7 +1109,7 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "http://symfony.com",
-            "time": "2014-06-06 03:26:07"
+            "time": "2014-06-06 10:36:27"
         },
         {
             "name": "symfony/yaml",

@@ -83,7 +83,6 @@ class SchemaCommand extends Command {
 				else {
 					$text .= '<info>Your database schema is already up to date…</info>'.PHP_EOL;
 				}
-
 			}
 		}
 

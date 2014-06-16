@@ -7,6 +7,7 @@ use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
 /**
  * @Entity
+ * @Table(indexes={@index(name="backendTheme_idx", columns={"backendTheme"})})
  */
 class Theme extends PersistableObject {
 
@@ -32,7 +33,7 @@ class Theme extends PersistableObject {
 	}
 
 	/**
-	 * @Column(type="string")
+	 * @Column(type="string", unique=true)
 	 * @var string
 	 */
 	private $className;
@@ -57,7 +58,7 @@ class Theme extends PersistableObject {
 	 * @Column(type="string")
 	 * @var string
 	 */
-	private $hostname;
+	private $hostname = '*';
 
 	/**
 	 * @return string
@@ -71,6 +72,28 @@ class Theme extends PersistableObject {
 	 */
 	public function setHostname($hostname) {
 	    $this->hostname = $hostname;
+	
+	    return $this;
+	}
+
+	/**
+	 * @Column(type="boolean")
+	 * @var boolean
+	 */
+	private $backendTheme = false;
+
+	/**
+	 * @return boolean
+	 */
+	public function isBackendTheme() {
+	    return $this->backendTheme;
+	}
+	
+	/**
+	 * @param boolean $newbackendTheme
+	 */
+	public function setBackendTheme($backendTheme) {
+	    $this->backendTheme = $backendTheme;
 	
 	    return $this;
 	}

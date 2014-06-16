@@ -43,6 +43,7 @@ class Translation extends DateTimed {
 		'jp' => "ja_JP"
 	);
 
+
 	/**
 	 * Language locale
 	 * 

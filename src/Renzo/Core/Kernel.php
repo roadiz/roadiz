@@ -5,7 +5,6 @@ namespace RZ\Renzo\Core;
 use RZ\Renzo\Inheritance\Doctrine\DataInheritanceEvent;
 use RZ\Renzo\Core\Routing\MixedUrlMatcher;
 
-use Acme\DemoBundle\Command\GreetCommand;
 use Symfony\Component\Console\Application;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\EntityManager;
@@ -20,7 +19,6 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,11 +43,16 @@ class Kernel {
 	protected $dispatcher = null;
 	protected $stopwatch =  null;
 
+	protected $backendClass = null;
+	protected $frontendClass = null;
+
+	protected $rootCollection = null;
 
 	private final function __construct() {
 
 		$this->stopwatch = new Stopwatch();
 		$this->stopwatch->start('global');
+		$this->rootCollection = new RouteCollection();
 
 		$this->request = Request::createFromGlobals();
 	}
@@ -114,7 +117,7 @@ class Kernel {
 
 	/**
 	 * 
-	 * @return [type] [description]
+	 * @return RZ\Renzo\Core\Kernel $this
 	 */
 	public function runConsole()
 	{
@@ -123,14 +126,18 @@ class Kernel {
 		$application->add(new \RZ\Renzo\Console\NodeTypesCommand);
 		$application->add(new \RZ\Renzo\Console\NodesCommand);
 		$application->add(new \RZ\Renzo\Console\SchemaCommand);
+		$application->add(new \RZ\Renzo\Console\ThemesCommand);
 		$application->run();
 
 		$this->stopwatch->stop('global');
+
+		return $this;
 	}
 	/**
 	 * 
-	 * 
 	 * Run main HTTP application
+	 * 
+	 * @return RZ\Renzo\Core\Kernel $this
 	 */
 	public function runApp()
 	{
@@ -154,6 +161,8 @@ class Kernel {
 		catch(\Exception $e){
 			echo $e->getMessage();
 		}
+
+		return $this;
 	}
 
 	/**
@@ -163,29 +172,83 @@ class Kernel {
 	 */
 	private function handleBackendFrontend()
 	{
-		try{
-			$locator = new FileLocator(array(
-				RENZO_ROOT.'/src/Renzo/CMS/Resources'
-			));
-			$loader = new YamlFileLoader($locator);
-			$cmsCollection = $loader->load('routes.yml');
+		$this->backendClass = $this->getBackendClass();
+		$this->frontendClass = $this->getFrontendClass();
 
-			$matcher = new MixedUrlMatcher($cmsCollection, new Routing\RequestContext());
+		try{
+			$beClass = $this->backendClass;
+			$cmsCollection = $beClass::getRoutes();
+
+			if ($cmsCollection !== null) {
+				/*
+				 * Add Backend routes
+				 */
+				$this->rootCollection->addCollection($cmsCollection, '/rz-admin', array('_scheme' => 'https'));
+			}
+
+			$feClass = $this->frontendClass;
+			$feCollection = $feClass::getRoutes();
+			if ($feCollection !== null) {
+				/*
+				 * Add Frontend routes
+				 */
+				$this->rootCollection->addCollection($feCollection);
+			}
+
+			$matcher = new MixedUrlMatcher($this->rootCollection, new Routing\RequestContext());
 			$this->dispatcher->addSubscriber(new RouterListener($matcher));
 
 			return true;
 		}
 		catch(Symfony\Component\Routing\Exception\ResourceNotFoundException $e){
-			echo $e->getMessage();
+			echo $e->getMessage().PHP_EOL;
 		}
 		catch(\LogicException $e){
-			echo $e->getMessage();
+			echo $e->getMessage().PHP_EOL;
 		}
 		catch(\Exception $e){
-			echo $e->getMessage();
+			echo $e->getMessage().PHP_EOL;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get frontend app controller full-qualified classname
+	 * 
+	 * Return 'RZ\Renzo\CMS\Controllers\FrontendController' if none found in database
+	 * @return string
+	 */
+	private function getFrontendClass()
+	{
+		$theme = $this->em()
+			->getRepository('RZ\Renzo\Core\Entities\Theme')
+			->findOneBy(array('available'=>true, 'backendTheme'=>false));
+
+		if ($theme !== null) {
+			return $theme->getClassName();
+		}
+
+		return 'RZ\Renzo\CMS\Controllers\FrontendController';
+	}
+	/**
+	 * Get backend app controller full-qualified classname
+	 * 
+	 * Return 'RZ\Renzo\CMS\Controllers\BackendController' if none found in database
+	 * 
+	 * @return string
+	 */
+	private function getBackendClass()
+	{
+		$theme = $this->em()
+			->getRepository('RZ\Renzo\Core\Entities\Theme')
+			->findOneBy(array('available'=>true, 'backendTheme'=>true));
+
+		if ($theme !== null) {
+			return $theme->getClassName();
+		}
+
+		return 'RZ\Renzo\CMS\Controllers\BackendController';
 	}
 
 	/**
