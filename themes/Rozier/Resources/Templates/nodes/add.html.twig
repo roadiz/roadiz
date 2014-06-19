@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+<section id="add-node">
+	<h1 id="node-title">{% trans %}Add a new node{% endtrans %}: <em>{{ type.getDisplayName }}</em></h1>
+
+	<form action="#" method="post" {{ form_enctype(form) }}>
+	    {{ form_widget(form) }}
+	    {{ form_rest(form) }}
+	    <input type="submit" />
+	</form>
+</section>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+<section id="manage-nodes">
+	<ul class="nodes">
+		{% for node in nodes %}
+		<li>
+			<p><a href="{{ path('nodesEditPage', { node_id: node.getId, trailingSlash:'' }) }}">{{ node.getNodeName }}</a></p>
+			<p><a href="{{ path('nodesTreePage', { node_id: node.getId, trailingSlash:'' }) }}">{% trans %}See tree{% endtrans %}</a></p>
+		</li>
+		{% endfor %}
+	</ul>
+</section>
+{% endblock %}

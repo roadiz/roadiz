@@ -23,6 +23,18 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 
+use Symfony\Component\Form\Forms;
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
+use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Bridge\Twig\Extension\FormExtension;
+use Symfony\Bridge\Twig\Extension\RoutingExtension;
+use Symfony\Bridge\Twig\Form\TwigRenderer;
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
+
 /**
  * Base class for Renzo themes
  */
@@ -100,9 +112,15 @@ class AppController {
 	 */
 	protected $assignation = array();
 
+	protected $csrfProvider = null;
+	protected $session = null;
+	protected $translator = null;
+
 	
 	public function __construct(){
-		$this->initializeTwig()
+		$this->initializeSession()
+			->initializeTwig()
+			->initializeTranslator()
 			->prepareBaseAssignation();
 	}
 
@@ -125,6 +143,45 @@ class AppController {
 	}
 
 	/**
+	 * Create a translator instance and load theme messages
+	 * 
+	 * {{themeDir}}/Resources/translations/messages.{{lang}}.xlf
+	 * 
+	 * @param  string $lang Default: 'en'
+	 * @return [type]       [description]
+	 */
+	private function initializeTranslator( $lang = 'en' )
+	{
+		// instancier un objet de la classe Translator
+		$this->translator = new Translator($lang);
+		// charger, en quelque sorte, des traductions dans ce translator
+		$this->translator->addLoader('xlf', new XliffFileLoader());
+		$this->translator->addResource(
+		    'xlf',
+			RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources/translations/messages.'.$lang.'.xlf',
+		    $lang
+		);
+
+		// ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
+		$this->twig->addExtension(new TranslationExtension($this->translator));
+		return $this;
+	}
+
+	private function initializeSession()
+	{
+		// créer un objet session depuis le composant HttpFoundation
+		$this->session = new Session();
+		$this->session->start();
+
+		// générer le secret CSRF depuis quelque part
+		$csrfSecret = Kernel::getInstance()->getConfig()["security"]['secret'];
+		$this->csrfProvider = new SessionCsrfProvider($this->session, $csrfSecret);
+
+
+		return $this;
+	}
+
+	/**
 	 * Create a Twig Environment instance
 	 */
 	private function initializeTwig()
@@ -140,10 +197,41 @@ class AppController {
 			}
 		}
 
-		$loader = new \Twig_Loader_Filesystem(RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources/Templates');
+		/*
+		 * Enabling forms
+		 */
+		
+		// le fichier Twig contenant toutes les balises pour afficher les formulaires
+		// ce fichier vient avoir le TwigBridge
+		$defaultFormTheme = 'form_div_layout.html.twig';
+
+		$vendorDir = realpath(RENZO_ROOT . '/vendor');
+		// le chemin vers TwigBridge pour que Twig puisse localiser
+		// le fichier form_div_layout.html.twig
+		$vendorTwigBridgeDir =
+		    $vendorDir . '/symfony/twig-bridge/Symfony/Bridge/Twig';
+		// le chemin vers les autres templates
+
+
+		$loader = new \Twig_Loader_Filesystem(array(
+			RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources/Templates', // Theme templates
+			$vendorTwigBridgeDir . '/Resources/views/Form' // Form extension templates
+		));
 		$this->twig = new \Twig_Environment($loader, array(
 		    'cache' => $cacheDir,
 		));
+
+		$formEngine = new TwigRendererEngine(array($defaultFormTheme));
+		$formEngine->setEnvironment($this->twig);
+		// ajoutez à Twig la FormExtension
+		$this->twig->addExtension(
+		    new FormExtension(new TwigRenderer($formEngine, $this->csrfProvider))
+		);
+
+		//RoutingExtension
+		$this->twig->addExtension(
+		    new RoutingExtension(Kernel::getInstance()->getUrlGenerator())
+		);
 
 		return $this;
 	}
@@ -161,6 +249,9 @@ class AppController {
 			'head' => array(
 				'baseUrl' => Kernel::getInstance()->getRequest()->getBaseUrl(),
 				'resourcesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/themes/'.static::$themeDir.'/static/'
+			),
+			'session' => array(
+				'id' => $this->session->getId()
 			)
 		);
 		return $this;

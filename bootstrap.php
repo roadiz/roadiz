@@ -16,12 +16,15 @@ $paths = array(
 $isDevMode = true;
 
 if (file_exists(RENZO_ROOT.'/conf/config.json')) {
-	$config = json_decode(file_get_contents(RENZO_ROOT.'/conf/config.json'), true);
-	// the connection configuration
-	$dbParams = $config["doctrine"];
 
-	$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-	Kernel::getInstance()->setEntityManager(EntityManager::create($dbParams, $config));
+	Kernel::getInstance()->setConfig(
+		json_decode(file_get_contents(RENZO_ROOT.'/conf/config.json'), true)
+	);
+	// the connection configuration
+	$dbParams = Kernel::getInstance()->getConfig()["doctrine"];
+
+	$configDB = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+	Kernel::getInstance()->setEntityManager(EntityManager::create($dbParams, $configDB));
 }
 else {
 	echo "No configuration found (conf/config.json)".PHP_EOL;

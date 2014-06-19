@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
@@ -34,14 +35,34 @@ class Kernel {
 
 	private $em =           null;
 	private $debug =        true;
-	protected $httpKernel = null;
-	protected $request =    null;
-	protected $response =   null;
-	protected $context =    null;
-	protected $matcher =    null;
-	protected $resolver =   null;
-	protected $dispatcher = null;
-	protected $stopwatch =  null;
+	private $config =       null;
+
+	/**
+	 * @return array
+	 */
+	public function getConfig() {
+	    return $this->config;
+	}
+	
+	/**
+	 * @param array $newconfig
+	 */
+	public function setConfig($config) {
+	    $this->config = $config;
+	
+	    return $this;
+	}
+
+	protected $httpKernel =          null;
+	protected $request =             null;
+	protected $requestContext =      null;
+	protected $response =            null;
+	protected $context =             null;
+	protected $matcher =             null;
+	protected $resolver =            null;
+	protected $dispatcher =          null;
+	protected $urlGenerator =        null;
+	protected $stopwatch =           null;
 
 	protected $backendClass = null;
 	protected $frontendClass = null;
@@ -55,6 +76,7 @@ class Kernel {
 		$this->rootCollection = new RouteCollection();
 
 		$this->request = Request::createFromGlobals();
+		$this->requestContext = new Routing\RequestContext($this->getResolvedBaseUrl());
 	}
 
 	/**
@@ -164,6 +186,16 @@ class Kernel {
 
 		return $this;
 	}
+	/**
+	 * Run first installation interface
+	 * 
+	 * @return RZ\Renzo\Core\Kernel $this
+	 */
+	public function runSetup()
+	{
+
+		return $this;
+	}
 
 	/**
 	 * 
@@ -195,7 +227,9 @@ class Kernel {
 				$this->rootCollection->addCollection($feCollection);
 			}
 
-			$matcher = new MixedUrlMatcher($this->rootCollection, new Routing\RequestContext());
+			$matcher = new MixedUrlMatcher($this->rootCollection, $this->requestContext);
+			$this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
+
 			$this->dispatcher->addSubscriber(new RouterListener($matcher));
 
 			return true;
@@ -257,5 +291,46 @@ class Kernel {
 	public function getRequest()
 	{
 		return $this->request;
+	}
+
+	/**
+	 * 
+	 * @return Symfony\Component\Routing\Generator\UrlGenerator
+	 */
+	public function getUrlGenerator()
+	{
+		return $this->urlGenerator;
+	}
+
+	/**
+	 * Resolve current front controller URL
+	 * 
+	 * This method is the base of every URL building methods in RZ-CMS. 
+	 * Be careful with handling it.
+	 * 
+	 * @return string 
+	 */
+	private function getResolvedBaseUrl()
+	{
+		$url = pathinfo($_SERVER['PHP_SELF']);
+
+		// Protocol
+		$pageURL = 'http';
+		if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+		$pageURL .= "://";
+		// Port
+		if (isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") {
+			$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"];
+		} else {
+			$pageURL .= $_SERVER["SERVER_NAME"];
+		}
+		// Non root folder
+		if (!empty($url["dirname"]) && $url["dirname"] != '/') {
+			$pageURL .= $url["dirname"];
+		}
+		// Trailing slash
+		//$pageURL .= '/';
+
+		return $pageURL;
 	}
 }

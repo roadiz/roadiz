@@ -7,7 +7,11 @@
         "symfony/routing": "2.5.*",
         "symfony/config": "2.5.*",
         "symfony/http-kernel": "2.5.*",
-        "symfony/stopwatch": "2.6.*@dev",
+        "symfony/stopwatch": "2.5.*",
+        "symfony/form": "2.5.*",
+        "symfony/validator": "2.5.*",
+        "symfony/security-csrf": "2.5.*",
+        "symfony/twig-bridge": "2.5.*",
         "twig/twig":"1.*"
     },
     "autoload": {

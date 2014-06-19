@@ -129,11 +129,18 @@ class NodeTypeField extends Positioned implements Persistable {
 	const BOOLEAN_T = 4;
 
 	static $typeToDoctrine = array(
-		self::STRING_T => 'string',
+		self::STRING_T =>   'string',
 		self::MARKDOWN_T => 'text',
-		self::TEXT_T => 'text',
-		self::INTEGER_T => 'integer',
-		self::BOOLEAN_T => 'boolean',
+		self::TEXT_T =>     'text',
+		self::INTEGER_T =>  'integer',
+		self::BOOLEAN_T =>  'boolean',
+	);
+	static $typeToForm = array(
+		self::STRING_T =>   'text',
+		self::MARKDOWN_T => 'textarea',
+		self::TEXT_T =>     'textarea',
+		self::INTEGER_T =>  'integer',
+		self::BOOLEAN_T =>  'checkbox',
 	);
 
 	/**

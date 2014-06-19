@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+<section id="manage-node">
+	<p><a href="{{ path('nodesHomePage', { trailingSlash:'' }) }}">{% trans %}Back to nodes{% endtrans %}</a></p>
+	<h1 id="node-title">Edit {{ node.getNodeSources[0].getTitle }}</h1>
+	<h3 id="node-name">{{ node.getNodeName }}</h3>
+
+	<form action="#" method="post" {{ form_enctype(form) }}>
+	    {{ form_widget(form) }}
+	    {{ form_rest(form) }}
+	    <input type="submit" />
+	</form>
+</section>
+{% endblock %}

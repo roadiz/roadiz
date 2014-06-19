@@ -17,4 +17,7 @@ namespace RZ\Renzo\CMS\Controllers;
 class BackendController extends AppController {
 	
 	protected static $backendTheme = true;
+
+
+	
 }

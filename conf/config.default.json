@@ -5,5 +5,8 @@
 		"user":     "",
 		"password": "",
 		"dbname":   ""
+	},
+	"security": {
+		"secret": "change#this#secret#very#important"
 	}
 }
