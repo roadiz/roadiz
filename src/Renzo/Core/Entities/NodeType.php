@@ -4,23 +4,13 @@ namespace RZ\Renzo\Core\Entities;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\AbstractEntities\Persistable;
+use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 /**
  * @Entity
+ * @Table(name="node_types")
  */
-class NodeType implements Persistable
+class NodeType extends PersistableObject
 {
-	/**
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
-	 */
-	private $id;
-	public function getId()
-	{
-		return $this->id;
-	}
-
 	/**
 	 * @Column(type="string", unique=true)
 	 */
@@ -41,7 +31,7 @@ class NodeType implements Persistable
 	}
 
 	/**
-	 * @Column(type="string")
+	 * @Column(name="display_name", type="string")
 	 */
 	private $displayName;
 	/**
@@ -60,7 +50,7 @@ class NodeType implements Persistable
 	}
 
 	/**
-	 * @Column(type="text")
+	 * @Column(type="text", nullable=true)
 	 */
 	private $description;
 	/**
@@ -97,7 +87,7 @@ class NodeType implements Persistable
 	    return $this;
 	}
 	/**
-	 * @Column(type="boolean")
+	 * @Column(name="newsletter_type", type="boolean")
 	 */
 	private $newsletterType = false;
 	/**
@@ -115,7 +105,7 @@ class NodeType implements Persistable
 	    return $this;
 	}
 	/**
-	 * @Column(type="boolean")
+	 * @Column(name="hiding_nodes",type="boolean")
 	 */
 	private $hidingNodes = false;
 	/**
@@ -159,12 +149,28 @@ class NodeType implements Persistable
     }
     public function getSourceEntityTableName()
     {
-    	return 'NS_'.ucwords($this->getName());
+    	return 'ns_'.strtolower($this->getName());
     }
 
     public static function getGeneratedEntitiesNamespace()
     {
     	return 'GeneratedNodeSources';
+    }
+
+    /**
+     * Remove node type entity class file from server
+     * @return boolean
+     */
+    public function removeSourceEntityClass()
+    {
+    	$folder = RENZO_ROOT.'/sources/'.static::getGeneratedEntitiesNamespace();
+    	$file = $folder.'/'.$this->getSourceEntityClassName().'.php';
+
+    	if (file_exists($file)) {
+    		return unlink($file);
+    	}
+
+    	return false;
     }
 
     public function generateSourceEntityClass()
@@ -191,6 +197,7 @@ class NodeType implements Persistable
 	    	$content = '<?php
 /**
  * THIS IS A GENERATED FILE, DO NOT EDIT IT
+ * IT WILL BE RECREATED AT EACH NODE-TYPE UPDATE
  */
 namespace '.static::getGeneratedEntitiesNamespace().';
 

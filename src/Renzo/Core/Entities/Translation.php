@@ -8,6 +8,7 @@ use RZ\Renzo\Core\AbstractEntities\DateTimed;
 
 /**
  * @Entity
+ * @Table(name="translations")
  */
 class Translation extends DateTimed {
 

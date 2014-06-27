@@ -149,6 +149,8 @@ class Kernel {
 		$application->add(new \RZ\Renzo\Console\NodesCommand);
 		$application->add(new \RZ\Renzo\Console\SchemaCommand);
 		$application->add(new \RZ\Renzo\Console\ThemesCommand);
+		$application->add(new \RZ\Renzo\Console\InstallCommand);
+		
 		$application->run();
 
 		$this->stopwatch->stop('global');
@@ -175,7 +177,7 @@ class Kernel {
 		try{
 			$this->response = $this->httpKernel->handle( $this->request );
 			$event = $this->stopwatch->stop('global');
-			echo $event->getCategory().' : '.$event->getDuration().'ms - '.$event->getMemory()/1000000.0.'Mo';
+			//echo $event->getCategory().' : '.$event->getDuration().'ms - '.$event->getMemory()/1000000.0.'Mo';
 
 			$this->response->send();
 			$this->httpKernel->terminate( $this->request, $this->response );
@@ -312,25 +314,30 @@ class Kernel {
 	 */
 	private function getResolvedBaseUrl()
 	{
-		$url = pathinfo($_SERVER['PHP_SELF']);
+		if (isset($_SERVER["SERVER_NAME"])) {
+			$url = pathinfo($_SERVER['PHP_SELF']);
 
-		// Protocol
-		$pageURL = 'http';
-		if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
-		$pageURL .= "://";
-		// Port
-		if (isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") {
-			$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"];
-		} else {
-			$pageURL .= $_SERVER["SERVER_NAME"];
-		}
-		// Non root folder
-		if (!empty($url["dirname"]) && $url["dirname"] != '/') {
-			$pageURL .= $url["dirname"];
-		}
-		// Trailing slash
-		//$pageURL .= '/';
+			// Protocol
+			$pageURL = 'http';
+			if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+			$pageURL .= "://";
+			// Port
+			if (isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") {
+				$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"];
+			} else {
+				$pageURL .= $_SERVER["SERVER_NAME"];
+			}
+			// Non root folder
+			if (!empty($url["dirname"]) && $url["dirname"] != '/') {
+				$pageURL .= $url["dirname"];
+			}
+			// Trailing slash
+			//$pageURL .= '/';
 
-		return $pageURL;
+			return $pageURL;
+		}
+		else {
+			return false;
+		}
 	}
 }

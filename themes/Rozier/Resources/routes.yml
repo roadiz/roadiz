@@ -1,32 +1,71 @@
 homePage:
-    path:     /rz-admin{trailingSlash}
-    defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction }
-    requirements: { trailingSlash : "[/]{0,1}" }
+    path:     /rz-admin
+    defaults: { _controller: Themes\Rozier\RozierApp::indexAction }
+homePageSlash:
+    path:     /rz-admin/
+    defaults: { _controller: Themes\Rozier\RozierApp::indexAction }
+
+#  NODES
 nodesHomePage:
-    path:     /rz-admin/nodes{trailingSlash}
+    path:     /rz-admin/nodes
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction }
-    requirements: { trailingSlash : "[/]{0,1}" }
 nodesEditTranslatedPage:
-    path:     /rz-admin/nodes/edit/{node_id}/{translation_id}{trailingSlash}
+    path:     /rz-admin/nodes/edit/{node_id}/{translation_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::editAction }
-    requirements: { trailingSlash : "[/]{0,1}", node_id : "[0-9]+", translation_id : "[0-9]+" }
+    requirements: { node_id : "[0-9]+", translation_id : "[0-9]+" }
 nodesEditPage:
-    path:     /rz-admin/nodes/edit/{node_id}{trailingSlash}
+    path:     /rz-admin/nodes/edit/{node_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::editAction }
-    requirements: { trailingSlash : "[/]{0,1}", node_id : "[0-9]+" }
+    requirements: { node_id : "[0-9]+" }
 nodesTreePage:
-    path:     /rz-admin/nodes/tree/{node_id}{trailingSlash}
+    path:     /rz-admin/nodes/tree/{node_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::treeAction }
-    requirements: { trailingSlash : "[/]{0,1}", node_id : "[0-9]+" }
+    requirements: { node_id : "[0-9]+" }
 nodesAddPage:
-    path:     /rz-admin/nodes/add/{node_type_id}/{translation_id}{trailingSlash}
+    path:     /rz-admin/nodes/add/{node_type_id}/{translation_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::addAction }
-    requirements: { trailingSlash : "[/]{0,1}", node_type_id : "[0-9]+", translation_id : "[0-9]+" }
+    requirements: { node_type_id : "[0-9]+", translation_id : "[0-9]+" }
 nodesDeletePage:
-    path:     /rz-admin/nodes/delete/{node_id}{trailingSlash}
+    path:     /rz-admin/nodes/delete/{node_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::deleteAction }
-    requirements: { trailingSlash : "[/]{0,1}", node_id : "[0-9]+" }
+    requirements: { node_id : "[0-9]+" }
+
+# Node TYPES
+nodeTypesHomePage:
+    path:     /rz-admin/node-types
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypesController::indexAction }
+nodeTypesEditPage:
+    path:     /rz-admin/node-types/edit/{node_type_id}
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypesController::editAction }
+    requirements: { node_type_id : "[0-9]+" }
+nodeTypesAddPage:
+    path:     /rz-admin/node-types/add
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypesController::addAction }
+nodeTypesDeletePage:
+    path:     /rz-admin/node-types/delete/{node_type_id}
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypesController::deleteAction }
+    requirements: { node_type_id : "[0-9]+" }
+
+# Node type FIELDS
+nodeTypeFieldsListPage:
+    path:     /rz-admin/node-types/fields/{node_type_id}
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::listAction }
+    requirements: { node_type_id : "[0-9]+" }
+nodeTypeFieldsEditPage:
+    path:     /rz-admin/node-types/fields/edit/{node_type_field_id}
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::editAction }
+    requirements: { node_type_field_id : "[0-9]+" }
+nodeTypeFieldsAddPage:
+    path:     /rz-admin/node-types/fields/add/{node_type_id}
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::addAction }
+    requirements: { node_type_id : "[0-9]+" }
+nodeTypeFieldsDeletePage:
+    path:     /rz-admin/node-types/fields/delete/{node_type_field_id}
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::deleteAction }
+    requirements: { node_type_field_id : "[0-9]+" }
+
+
 noAction:
-    path:     /rz-admin/no{trailingSlash}
+    path:     /rz-admin/no
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::noAction }
     requirements: { trailingSlash : "[/]{0,1}" }

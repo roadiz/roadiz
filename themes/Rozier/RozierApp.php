@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Validator\Validation;
 
+use Symfony\Component\HttpFoundation\Response;
+
 
 class RozierApp extends BackendController {
 	
@@ -47,5 +49,15 @@ class RozierApp extends BackendController {
 		}
 
 		return $this->formFactory;
+	}
+
+
+	public function indexAction()
+	{
+		return new Response(
+			$this->getTwig()->render('index.html.twig', $this->assignation),
+			Response::HTTP_OK,
+			array('content-type' => 'text/html')
+		);
 	}
 }

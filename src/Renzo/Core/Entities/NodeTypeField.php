@@ -7,6 +7,7 @@ use RZ\Renzo\Core\AbstractEntities\Positioned;
 
 /**
  * @Entity
+ * @Table(name="node_type_fields")
  */
 class NodeTypeField extends Positioned implements Persistable {
 
@@ -105,29 +106,40 @@ class NodeTypeField extends Positioned implements Persistable {
 	 * @Column(type="boolean")
 	 */
 	private $indexed = false;
-
-	/**
-	 * @return [type] [description]
-	 */
 	public function isIndexed() {
 	    return $this->indexed;
 	}
-	
-	/**
-	 * @param [type] $newindexed [description]
-	 */
 	public function setIndexed($indexed) {
 	    $this->indexed = $indexed;
 	
 	    return $this;
 	}
+	/**
+	 * @Column(type="boolean")
+	 */
+	private $visible = true;
+	public function isVisible() {
+	    return $this->visible;
+	}
+	public function setVisible($visible) {
+	    $this->visible = $visible;
 	
-	const STRING_T = 0;
+	    return $this;
+	}
+	
+	const STRING_T =   0;
 	const MARKDOWN_T = 1;
-	const TEXT_T = 2;
-	const INTEGER_T = 3;
-	const BOOLEAN_T = 4;
+	const TEXT_T =     2;
+	const INTEGER_T =  3;
+	const BOOLEAN_T =  4;
 
+	static $typeToHuman = array(
+		self::STRING_T =>   'string',
+		self::MARKDOWN_T => 'markdown',
+		self::TEXT_T =>     'text',
+		self::INTEGER_T =>  'integer',
+		self::BOOLEAN_T =>  'boolean',
+	);
 	static $typeToDoctrine = array(
 		self::STRING_T =>   'string',
 		self::MARKDOWN_T => 'text',
@@ -146,13 +158,18 @@ class NodeTypeField extends Positioned implements Persistable {
 	/**
 	 * @Column(type="integer")
 	 */
-	private $type;
+	private $type = NodeTypeField::STRING_T;
 
 	/**
 	 * @return [type] [description]
 	 */
 	public function getType() {
 	    return $this->type;
+	}
+
+	public function getTypeName()
+	{
+		return static::$typeToHuman[$this->type];
 	}
 	
 	/**

@@ -7,6 +7,7 @@ use RZ\Renzo\Core\AbstractEntities\DateTimedPositioned;
 
 /**
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodeRepository")
+ * @Table(name="nodes")
  */
 class Node extends DateTimedPositioned
 {

@@ -7,6 +7,7 @@ use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
 /**
  * @Entity
+ * @Table(name="nodes_sources")
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="discr", type="string")
  */

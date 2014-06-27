@@ -23,18 +23,18 @@ class SchemaCommand extends Command {
 		$this
 			->setName('schema')
 			->setDescription('Manage database schema')
-			->addOption(
+			/*->addOption(
 			   'create',
 			   null,
 			   InputOption::VALUE_NONE,
 			   'Create your database schema'
-			)
-			->addOption(
+			)*/
+			/*->addOption(
 			   'drop',
 			   null,
 			   InputOption::VALUE_NONE,
 			   'Drop current database'
-			)
+			)*/
 			->addOption(
 			   'update',
 			   null,
@@ -52,37 +52,41 @@ class SchemaCommand extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-
 		$this->dialog = $this->getHelperSet()->get('dialog');
 		$text="";
 
 		if ($input->getOption('update')) {
-			if ($this->dialog->askConfirmation(
-					$output,
-					'<question>Are you sure to update your database schema?</question> : ',
-					false
-				)) {
-				
-				
-				$sql = static::getUpdateSchema();
-				$count = count($sql);
+			
+			$sql = static::getUpdateSchema();
+			$count = count($sql);
 
-				if ($count > 0) {
-					$text .= '<info>'.$count.'</info> change(s) in your database schema… Use <info>--execute</info> to apply'.PHP_EOL;
+			if ($count > 0) {
+				/*
+				 * Print changes
+				 */
+				for($i=0; $i<$count; $i++) {
+				    $text .= $sql[$i].PHP_EOL;
+				}
+				$text .= '<info>'.$count.'</info> change(s) in your database schema… Use <info>--execute</info> to apply'.PHP_EOL;
 
-					for($i=0; $i<$count; $i++) {
-					    $text .= $sql[$i].PHP_EOL;
-					}
-					
-					if ($input->getOption('execute')) {
+				/*
+				 * If execute option = Perform changes
+				 */
+				if ($input->getOption('execute')) {
+					if ($this->dialog->askConfirmation(
+							$output,
+							'<question>Are you sure to update your database schema?</question> : ',
+							false
+						)) {
+				
 						if (static::updateSchema()) {
 							$text .= '<info>Schema updated…</info>'.PHP_EOL;
 						}
 					}
 				}
-				else {
-					$text .= '<info>Your database schema is already up to date…</info>'.PHP_EOL;
-				}
+			}
+			else {
+				$text .= '<info>Your database schema is already up to date…</info>'.PHP_EOL;
 			}
 		}
 

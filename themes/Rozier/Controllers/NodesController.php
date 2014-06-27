@@ -40,6 +40,8 @@ class NodesController extends RozierApp {
 			->findAll();
 
 		$this->assignation['nodes'] = $nodes;
+		$this->assignation['node_types'] = NodeTypesController::getNodeTypes();
+
 
 		return new Response(
 			$this->getTwig()->render('nodes/list.html.twig', $this->assignation),

@@ -1,13 +1,51 @@
 {% extends 'base.html.twig' %}
+
+
 {% block content %}
 <section id="manage-nodes">
-	<ul class="nodes">
-		{% for node in nodes %}
-		<li>
-			<p><a href="{{ path('nodesEditPage', { node_id: node.getId, trailingSlash:'' }) }}">{{ node.getNodeName }}</a></p>
-			<p><a href="{{ path('nodesTreePage', { node_id: node.getId, trailingSlash:'' }) }}">{% trans %}See tree{% endtrans %}</a></p>
-		</li>
-		{% endfor %}
-	</ul>
+	<h1 id="node-title">{% trans %}Nodes{% endtrans %}</h1>
+
+	{# Add node control #}
+	{% if node_types|length %}
+	<div class="uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
+		<button class="uk-button">{% trans %}Create a node{% endtrans %}<span class="uk-icon-caret-down"></span></button>
+		<div class="uk-dropdown uk-dropdown-small">
+			<ul class="uk-nav uk-nav-dropdown">
+				{% for type in node_types %}
+				<li><a href="{{ path('nodesAddPage', { node_type_id: type.getId, translation_id:'1' }) }}">{{ type.getDisplayName }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	{% endif %}
+
+	<table class="nodes uk-table">
+		<thead>
+	        <tr>
+	            <th>{% trans %}Node name{% endtrans %}</th>
+	            <th>{% trans %}Type{% endtrans %}</th>
+	            <th>{% trans %}Status{% endtrans %}</th>
+	            <th>{% trans %}Actions{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for node in nodes %}
+			<tr>
+				<td><a href="{{ path('nodesEditPage', { node_id: node.getId }) }}">{{ node.getNodeName }}</a></td>
+				<td>{{ node.getNodeType.getDisplayName }}</td>
+				<td>
+					{% if node.isPublished == false %}<div class="uk-badge uk-badge-warning">{% trans %}Not published{% endtrans %}</div>{% endif %}
+					{% if node.isVisible == false %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-eye-slash"></span></div>{% endif %}
+					{% if node.isLocked %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-lock"></span></div>{% endif %}
+					{% if node.isArchived %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-archive"></span></div>{% endif %}
+				</td>
+				<td>
+					<a class="uk-button uk-button-small" href="{{ path('nodesTreePage', { node_id: node.getId }) }}">{% trans %}See tree{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { node_id: node.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 </section>
 {% endblock %}
