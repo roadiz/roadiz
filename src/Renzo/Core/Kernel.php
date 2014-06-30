@@ -165,7 +165,6 @@ class Kernel {
 		$application->run();
 
 		$this->stopwatch->stop('global');
-
 		return $this;
 	}
 	/**
@@ -347,8 +346,6 @@ class Kernel {
 			if (!empty($url["dirname"]) && $url["dirname"] != '/') {
 				$pageURL .= $url["dirname"];
 			}
-			// Trailing slash
-			//$pageURL .= '/';
 
 			return $pageURL;
 		}

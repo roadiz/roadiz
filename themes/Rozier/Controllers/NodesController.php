@@ -164,7 +164,7 @@ class NodesController extends RozierApp {
 				$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate(
 						'nodesEditPage',
-						array('node_id' => $node->getId(), 'trailingSlash'=>'')
+						array('node_id' => $node->getId())
 					)
 				);
 				$response->prepare(Kernel::getInstance()->getRequest());

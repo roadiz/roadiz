@@ -10,6 +10,7 @@
 	        <tr>
 	            <th>{% trans %}Name{% endtrans %}</th>
 	            <th>{% trans %}Display name{% endtrans %}</th>
+	            <th>{% trans %}Entity name{% endtrans %}</th>
 	            <th></th>
 	            <th>{% trans %}Actions{% endtrans %}</th>
 	        </tr>
@@ -19,6 +20,7 @@
 			<tr>
 				<td><a href="{{ path('nodeTypesEditPage', { node_type_id: type.getId }) }}">{{ type.getName }}</a></td>
 				<td>{{ type.getDisplayName }}</td>
+				<td>{{ type.getSourceEntityClassName }}</td>
 				<td><div class="uk-badge">{{ type.getFields|length }} {% trans %}fields{% endtrans %}</div></td>
 				<td>
 					<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { node_type_id: type.getId }) }}">{% trans %}Manage fields{% endtrans %}</a>

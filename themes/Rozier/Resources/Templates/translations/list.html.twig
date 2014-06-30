@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section id="manage-translations">
+	<h1 id="title">{% trans %}Translations{% endtrans %}</h1>
+	<a class="uk-button" href="{{ path('translationsAddPage') }}"><span class="uk-icon-plus"></span>{% trans %}Create a translation{% endtrans %}</a>
+	<table class="translations uk-table">
+		<thead>
+	        <tr>
+	            <th>{% trans %}Name{% endtrans %}</th>
+	            <th>{% trans %}Locale{% endtrans %}</th>
+	            <th>{% trans %}Status{% endtrans %}</th>
+	            <th>{% trans %}Actions{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for translation in translations %}
+			<tr>
+				<td><a href="{{ path('translationsEditPage', { translation_id: translation.getId }) }}">{{ translation.getName }}</a></td>
+				<td>{{ translation.getLocale }}</td>
+				<td>
+				{% if translation.isAvailable == false %}<div class="uk-badge uk-badge-warning">{% trans %}Not available{% endtrans %}</div>{% endif %}
+				{% if translation.isDefaultTranslation == true %}
+				<div class="uk-badge uk-badge-notification"><span class="uk-icon-star"></span></div>
+				{% endif %}
+				</td>
+				<td>
+				{% if translation.isDefaultTranslation == false %}
+					<a class="uk-button uk-button-small" href="{{ path('translationsSetDefaultPage', { translation_id: translation.getId }) }}">{% trans %}Set as default{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('translationsDeletePage', { translation_id: translation.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+				{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}

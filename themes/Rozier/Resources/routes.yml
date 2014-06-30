@@ -80,6 +80,26 @@ settingsDeletePage:
     defaults: { _controller: Themes\Rozier\Controllers\SettingsController::deleteAction }
     requirements: { setting_id : "[0-9]+" }
 
+# TRANSLATIONS
+translationsHomePage:
+    path:     /rz-admin/translations
+    defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::indexAction }
+translationsEditPage:
+    path:     /rz-admin/translations/edit/{translation_id}
+    defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::editAction }
+    requirements: { translation_id : "[0-9]+" }
+translationsSetDefaultPage:
+    path:     /rz-admin/translations/set-default/{translation_id}
+    defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::setDefaultAction }
+    requirements: { translation_id : "[0-9]+" }
+translationsAddPage:
+    path:     /rz-admin/translations/add
+    defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::addAction }
+translationsDeletePage:
+    path:     /rz-admin/translations/delete/{translation_id}
+    defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::deleteAction }
+    requirements: { translation_id : "[0-9]+" }
+
 
 noAction:
     path:     /rz-admin/no

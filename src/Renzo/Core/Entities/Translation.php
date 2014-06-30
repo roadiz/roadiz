@@ -16,9 +16,22 @@ use RZ\Renzo\Core\AbstractEntities\DateTimed;
 class Translation extends DateTimed {
 
 
-	private static $availableLocales = array(
+	public static $availableLocales = array(
+		"fr_FR"			=> "French", // France
+		"en_GB"			=> "British english",
+		"en_US"			=> "American english",
+		"it_IT"			=> "Italian",
+		"es_ES"			=> "Spanish",
+		"nl_NL"			=> "Dutch",
+		"de_DE"			=> "German",
+		"zh_HK"			=> "Chinese (Honk Kong)",
+		"zh_CN"			=> "Chinese (China)",
+		"zh_SG"			=> "Chinese (Singapore)",
+		"zh_TW"			=> "Chinese (Taïwan)",
+		"ja_JP"			=> "Japanese"
+	);
+	public static $availableLocalesFlags = array(
 		"fr_FR"			=> "fr.png", // France
-		"fr_RE"			=> "re.png", // Réunion
 		"en_GB"			=> "gb.png",
 		"en_US"			=> "us.png",
 		"it_IT"			=> "it.png",
@@ -31,9 +44,8 @@ class Translation extends DateTimed {
 		"zh_TW"			=> "tw.png",
 		"ja_JP"			=> "jp.png"
 	);
-	private static $availableLocalesShortcut = array(
+	public static $availableLocalesShortcut = array(
 		'fr' => "fr_FR", // France
-		're' => "fr_RE", // Réunion
 		'en' => "en_GB",
 		'us' => "en_US",
 		'it' => "it_IT",

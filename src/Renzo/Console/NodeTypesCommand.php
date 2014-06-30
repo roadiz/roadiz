@@ -144,7 +144,7 @@ class NodeTypesCommand extends Command
 
 				if ($input->getOption('generateAllEntities')) {
 					foreach ( $nodetypes as $nt) {
-						$text .= '<info>'.$nt->generateSourceEntityClass().'</info>'.PHP_EOL;
+						$text .= '<info>'.$nt->getHandler()->generateSourceEntityClass().'</info>'.PHP_EOL;
 					}
 				}else {
 					$text = '<info>Existing node-types…</info>'.PHP_EOL;

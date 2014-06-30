@@ -40,13 +40,13 @@ class NodesSources extends PersistableObject {
 	 */
 	private $translation;
 	/**
-	 * @return [type] [description]
+	 * @return Translation
 	 */
 	public function getTranslation() {
 	    return $this->translation;
 	}
 	/**
-	 * @param [type] $newtranslation [description]
+	 * @param Translation $newtranslation
 	 */
 	public function setTranslation($translation) {
 	    $this->translation = $translation;
