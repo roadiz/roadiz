@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -35,6 +36,7 @@ class Kernel {
 
 	private $em =           null;
 	private $debug =        true;
+	private $backendDebug = true;
 	private $config =       null;
 
 	/**
@@ -86,6 +88,14 @@ class Kernel {
 	public function isDebug() {
 		return $this->debug;
 	}
+	/**
+	 * Get backend application debug status
+	 * @return boolean
+	 */
+	public function isBackendDebug()
+	{
+		return $this->backendDebug;
+	}
 
 	/**
 	 * Return unique instance of Kernel
@@ -100,10 +110,10 @@ class Kernel {
 		return static::$instance;
 	}
 
-	public function getStopwatch()
-	{
-		return $this->stopwatch;
-	}
+	/**
+	 * @return Symfony\Component\Stopwatch\Stopwatch
+	 */
+	public function getStopwatch() { return $this->stopwatch; }
 
 	/**
 	 * [setEntityManager description]
@@ -136,6 +146,7 @@ class Kernel {
 	 * @return Doctrine\ORM\EntityManager
 	 */
 	public function em() { return $this->em; }
+
 
 	/**
 	 * 
@@ -176,9 +187,7 @@ class Kernel {
 
 		try{
 			$this->response = $this->httpKernel->handle( $this->request );
-			$event = $this->stopwatch->stop('global');
-			//echo $event->getCategory().' : '.$event->getDuration().'ms - '.$event->getMemory()/1000000.0.'Mo';
-
+			
 			$this->response->send();
 			$this->httpKernel->terminate( $this->request, $this->response );
 		}
@@ -233,6 +242,13 @@ class Kernel {
 			$this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
 
 			$this->dispatcher->addSubscriber(new RouterListener($matcher));
+
+			/*
+			 * If debug, alter HTML responses to append Debug panel to view
+			 */
+			if ($this->isDebug()) {
+				$this->dispatcher->addSubscriber(new \RZ\Renzo\Core\Utils\DebugPanel());
+			}
 
 			return true;
 		}
@@ -339,5 +355,23 @@ class Kernel {
 		else {
 			return false;
 		}
+	}
+
+
+	public function onKernelResponse(FilterResponseEvent $event)
+	{
+	   	if ($this->isDebug()) {
+
+	    	$response = $event->getResponse();
+
+	    	if (strpos($response->getContent(), '</body>') !== false) {
+	    		$sw = $this->stopwatch->stop('global');
+	    		$debug = $sw->getCategory().' : '.$sw->getDuration().'ms - '.$sw->getMemory()/1000000.0.'Mo';
+
+	    		$content = str_replace('</body>', $debug."</body>", $response->getContent());
+
+	    		$response->setContent($content);
+	    	}
+	   	}
 	}
 }

@@ -64,6 +64,22 @@ nodeTypeFieldsDeletePage:
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::deleteAction }
     requirements: { node_type_field_id : "[0-9]+" }
 
+# SETTINGS
+settingsHomePage:
+    path:     /rz-admin/settings
+    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::indexAction }
+settingsEditPage:
+    path:     /rz-admin/settings/edit/{setting_id}
+    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::editAction }
+    requirements: { setting_id : "[0-9]+" }
+settingsAddPage:
+    path:     /rz-admin/settings/add
+    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::addAction }
+settingsDeletePage:
+    path:     /rz-admin/settings/delete/{setting_id}
+    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::deleteAction }
+    requirements: { setting_id : "[0-9]+" }
+
 
 noAction:
     path:     /rz-admin/no

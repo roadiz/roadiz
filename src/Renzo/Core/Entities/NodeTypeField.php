@@ -7,7 +7,10 @@ use RZ\Renzo\Core\AbstractEntities\Positioned;
 
 /**
  * @Entity
- * @Table(name="node_type_fields")
+ * @Table(name="node_type_fields",  indexes={
+ *     @index(name="visible_idx", columns={"visible"}), 
+ *     @index(name="indexed_idx", columns={"indexed"})
+ * })
  */
 class NodeTypeField extends Positioned implements Persistable {
 
@@ -58,7 +61,7 @@ class NodeTypeField extends Positioned implements Persistable {
 	 * @param [type] $newname [description]
 	 */
 	public function setName($name) {
-	    $this->name = $name;
+	    $this->name = preg_replace('#([^a-z])#', '_', (trim(strtolower($name))));
 	
 	    return $this;
 	}

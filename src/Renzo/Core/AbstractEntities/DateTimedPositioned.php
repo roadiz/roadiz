@@ -14,4 +14,12 @@ abstract class DateTimedPositioned extends DateTimed
 	public function getPosition() {
 	    return $this->position;
 	}
+
+	public function setPosition($newPosition)
+	{	
+		if ($newPosition > -1) {
+			$this->position = (int)$newPosition;
+		}
+		return $this;
+	}
 }

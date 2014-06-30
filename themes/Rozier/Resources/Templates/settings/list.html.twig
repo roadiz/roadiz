@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section id="manage-settings">
+	<h1 id="title">{% trans %}Settings{% endtrans %}</h1>
+	<a class="uk-button" href="{{ path('settingsAddPage') }}"><span class="uk-icon-plus"></span>{% trans %}Create a setting{% endtrans %}</a>
+	<table class="settings uk-table">
+		<thead>
+	        <tr>
+	            <th>{% trans %}Name{% endtrans %}</th>
+	            <th>{% trans %}Value{% endtrans %}</th>
+	            <th>{% trans %}Actions{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for setting in settings %}
+			<tr>
+				<td><a href="{{ path('settingsEditPage', { setting_id: setting.getId }) }}">{{ setting.getName }}</a></td>
+				<td>{{ setting.getValue }}</td>
+				<td>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('settingsDeletePage', { setting_id: setting.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}

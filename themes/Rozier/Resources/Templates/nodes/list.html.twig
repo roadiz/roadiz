@@ -12,7 +12,7 @@
 		<div class="uk-dropdown uk-dropdown-small">
 			<ul class="uk-nav uk-nav-dropdown">
 				{% for type in node_types %}
-				<li><a href="{{ path('nodesAddPage', { node_type_id: type.getId, translation_id:'1' }) }}">{{ type.getDisplayName }}</a></li>
+				<li><a href="{{ path('nodesAddPage', { node_type_id: type.getId, translation_id:translation.getId }) }}">{{ type.getDisplayName }}</a></li>
 				{% endfor %}
 			</ul>
 		</div>

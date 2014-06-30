@@ -8,7 +8,10 @@ use RZ\Renzo\Core\AbstractEntities\DateTimed;
 
 /**
  * @Entity
- * @Table(name="translations")
+ * @Table(name="translations", indexes={
+ *     @index(name="available_idx", columns={"available"}), 
+ *     @index(name="default_translation_idx", columns={"default_translation"})
+ * })
  */
 class Translation extends DateTimed {
 
@@ -88,6 +91,24 @@ class Translation extends DateTimed {
 	public function setName($name) {
 	    $this->name = $name;
 	
+	    return $this;
+	}
+
+	/**
+	 * @Column(name="default_translation", type="boolean")
+	 */
+	private $defaultTranslation = false;
+	/**
+	 * @return boolean
+	 */
+	public function isDefaultTranslation() {
+	    return $this->defaultTranslation;
+	}
+	/**
+	 * @param boolean $newdefaultTranslation
+	 */
+	public function setDefaultTranslation($defaultTranslation) {
+	    $this->defaultTranslation = (boolean)$defaultTranslation;
 	    return $this;
 	}
 

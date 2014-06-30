@@ -67,8 +67,10 @@ class InstallCommand extends Command {
 				if (!$this->hasDefaultTranslation()) {
 
 					$defaultTrans = new Translation();
-					$defaultTrans->setLocale("en_GB")
-						  ->setName("Default translation")
+					$defaultTrans
+						->setDefaultTranslation(true)
+						->setLocale("en_GB")
+						->setName("Default translation")
 					;
 
 					Kernel::getInstance()->em()->persist($defaultTrans);

@@ -2,14 +2,15 @@
 
 
 {% block content %}
-<section id="manage-node-type-field">
-	<h1 id="node-type-field-title">Edit {{ field.getName }}</h1>
-	<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { node_type_id: field.getNodeType.getId }) }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to node-types fields{% endtrans %}</a>
+<section id="manage-setting">
+	<h1 id="setting-title">{% trans %}Add a new setting{% endtrans %}</h1>
+	<a class="uk-button uk-button-small" href="{{ path('settingsHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to settings{% endtrans %}</a>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}
 
    		<fieldset data-uk-margin>
+   			<legend>{{ setting.getDisplayName }}</legend>
 		    {% for item in form %}
 		    	{# Node fields  #}
 		        {% if item.vars.name != "_token" %}

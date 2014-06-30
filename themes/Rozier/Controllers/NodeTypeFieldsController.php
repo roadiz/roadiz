@@ -153,6 +153,64 @@ class NodeTypeFieldsController extends RozierApp
 		}
 	}
 
+	/**
+	 * Return an deletion form for requested node
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function deleteAction( $node_type_field_id )
+	{
+		$field = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\NodeTypeField', (int)$node_type_field_id);
+
+		if ($field !== null) {
+			$this->assignation['field'] = $field;
+			
+			$form = $this->buildDeleteForm( $field );
+
+			$form->handleRequest();
+
+			if ($form->isValid() && 
+				$form->getData()['node_type_field_id'] == $field->getId() ) {
+
+				$nodeTypeId = $field->getNodeType()->getId();
+
+		 		Kernel::getInstance()->em()->remove($field);
+		 		Kernel::getInstance()->em()->flush();
+
+		 		/*
+		 		 * Update Database
+		 		 */
+		 		$nodeType = Kernel::getInstance()->em()
+					->find('RZ\Renzo\Core\Entities\NodeType', (int)$nodeTypeId);
+
+		 		$nodeType->getHandler()->updateSchema();
+
+		 		/*
+		 		 * Force redirect to avoid resending form when refreshing page
+		 		 */
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'nodeTypeFieldsListPage', 
+						array('node_type_id' => $nodeTypeId)
+					)
+				);
+				$response->prepare(Kernel::getInstance()->getRequest());
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
+			return new Response(
+				$this->getTwig()->render('node-type-fields/delete.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		else {
+			return $this->throw404();
+		}
+	}
 
 	private function editNodeTypeField( $data, NodeTypeField $field)
 	{
@@ -163,9 +221,7 @@ class NodeTypeFieldsController extends RozierApp
 
 		Kernel::getInstance()->em()->flush();
 
-		$field->getNodeType()->removeSourceEntityClass();
-		$field->getNodeType()->generateSourceEntityClass();
-		\RZ\Renzo\Console\SchemaCommand::updateSchema();
+		$field->getNodeType()->getHandler()->updateSchema();
 	}
 
 	private function addNodeTypeField( $data, NodeTypeField $field, NodeType $node_type)
@@ -180,9 +236,7 @@ class NodeTypeFieldsController extends RozierApp
 		Kernel::getInstance()->em()->persist($field);
 		Kernel::getInstance()->em()->flush();
 
-		$node_type->removeSourceEntityClass();
-		$node_type->generateSourceEntityClass();
-		\RZ\Renzo\Console\SchemaCommand::updateSchema();
+		$node_type->getHandler()->updateSchema();
 	}
 
 
@@ -220,6 +274,25 @@ class NodeTypeFieldsController extends RozierApp
 					->add('description',    'text', array('required' => false))
 					->add('visible',  'checkbox', array('required' => false))
 					->add('indexed', 'checkbox', array('required' => false))
+		;
+
+		return $builder->getForm();
+	}
+	/**
+	 * 
+	 * @param  NodeTypeField   $node 
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildDeleteForm( NodeTypeField $field )
+	{
+		$builder = $this->getFormFactory()
+			->createBuilder('form')
+			->add('node_type_field_id', 'hidden', array(
+				'data' => $field->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
 		;
 
 		return $builder->getForm();

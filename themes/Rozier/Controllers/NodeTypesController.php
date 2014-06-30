@@ -140,6 +140,56 @@ class NodeTypesController extends RozierApp
 		}
 	}
 
+	/**
+	 * Return an deletion form for requested node-type
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function deleteAction( $node_type_id )
+	{
+		$node_type = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
+
+		if ($node_type !== null) {
+			$this->assignation['node_type'] = $node_type;
+			
+			$form = $this->buildDeleteForm( $node_type );
+
+			$form->handleRequest();
+
+			if ($form->isValid() && 
+				$form->getData()['node_type_id'] == $node_type->getId() ) {
+
+		 		/*
+		 		 * Delete All node-type association and schema
+		 		 */
+				$node_type->getHandler()->deleteWithAssociations();
+		 		/*
+		 		 * Force redirect to avoid resending form when refreshing page
+		 		 */
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'nodeTypesHomePage'
+					)
+				);
+				$response->prepare(Kernel::getInstance()->getRequest());
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
+			return new Response(
+				$this->getTwig()->render('node-types/delete.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		else {
+			return $this->throw404();
+		}
+	}
+
+
 
 	private function editNodeType( $data, NodeType $node_type)
 	{
@@ -150,9 +200,7 @@ class NodeTypesController extends RozierApp
 
 		Kernel::getInstance()->em()->flush();
 
-		$node_type->removeSourceEntityClass();
-		$node_type->generateSourceEntityClass();
-		\RZ\Renzo\Console\SchemaCommand::updateSchema();
+		$node_type->getHandler()->updateSchema();
 	}
 
 	private function addNodeType( $data, NodeType $node_type)
@@ -164,8 +212,7 @@ class NodeTypesController extends RozierApp
 		Kernel::getInstance()->em()->persist($node_type);
 		Kernel::getInstance()->em()->flush();
 
-		$node_type->generateSourceEntityClass();
-		\RZ\Renzo\Console\SchemaCommand::updateSchema();
+		$node_type->getHandler()->updateSchema();
 	}
 
 
@@ -200,6 +247,25 @@ class NodeTypesController extends RozierApp
 					->add('visible',        'checkbox', array('required' => false))
 					->add('newsletterType', 'checkbox', array('required' => false))
 					->add('hidingNodes',    'checkbox', array('required' => false))
+		;
+
+		return $builder->getForm();
+	}
+	/**
+	 * 
+	 * @param  NodeType   $node_type 
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildDeleteForm( NodeType $node_type )
+	{
+		$builder = $this->getFormFactory()
+			->createBuilder('form')
+			->add('node_type_id', 'hidden', array(
+				'data' => $node_type->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
 		;
 
 		return $builder->getForm();

@@ -124,7 +124,7 @@ class NodeTypesCommand extends Command
 					$text .= $nodetype->getFieldsSummary().PHP_EOL;
 				}
 				else if ($input->getOption('generateEntity')) {
-					$text .= '<info>'.$nodetype->generateSourceEntityClass().'</info>'.PHP_EOL;
+					$text .= '<info>'.$nodetype->getHandler()->generateSourceEntityClass().'</info>'.PHP_EOL;
 				}
 			}
 			else {
@@ -234,8 +234,7 @@ class NodeTypesCommand extends Command
 		}
 		Kernel::getInstance()->em()->flush();
 
-		$nt->generateSourceEntityClass();
-		SchemaCommand::updateSchema();
+		$nt->getHandler()->updateSchema();
 
 		return '<question>Node type '.$nt->getName().' has been created.</question>';
 	}

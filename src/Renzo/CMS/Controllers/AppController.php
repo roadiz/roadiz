@@ -182,25 +182,38 @@ class AppController {
 	}
 
 	/**
-	 * Create a Twig Environment instance
+	 * Get twig cache folder for current Theme
+	 * @return string
 	 */
-	private function initializeTwig()
+	public function getCacheDirectory()
 	{
-		$cacheDir = RENZO_ROOT.'/cache/'.static::$themeDir.'/twig_cache';
+		return RENZO_ROOT.'/cache/'.static::$themeDir.'/twig_cache';
+	}
+
+	/**
+	 * Check if twig cache must be cleared 
+	 */
+	protected function handleTwigCache() {
 
 		if (Kernel::getInstance()->isDebug()) {
 			try {
 				$fs = new Filesystem();
-				$fs->remove(array($cacheDir));
+				$fs->remove(array($this->getCacheDirectory()));
 			} catch (IOExceptionInterface $e) {
 			    echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
 			}
 		}
+	}
 
+	/**
+	 * Create a Twig Environment instance
+	 */
+	private function initializeTwig()
+	{
+		$this->handleTwigCache();
 		/*
 		 * Enabling forms
 		 */
-		
 		// le fichier Twig contenant toutes les balises pour afficher les formulaires
 		// ce fichier vient avoir le TwigBridge
 		$defaultFormTheme = 'form_div_layout.html.twig';
@@ -218,7 +231,7 @@ class AppController {
 			$vendorTwigBridgeDir . '/Resources/views/Form' // Form extension templates
 		));
 		$this->twig = new \Twig_Environment($loader, array(
-		    'cache' => $cacheDir,
+		    'cache' => $this->getCacheDirectory(),
 		));
 
 		$formEngine = new TwigRendererEngine(array($defaultFormTheme));

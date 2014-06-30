@@ -26,7 +26,7 @@ class Setting extends PersistableObject
 	 * @param $newnodeName 
 	 */
 	public function setName($name) {
-	    $this->name = $name;
+	    $this->name = preg_replace('#([^a-z])#', '_', (trim(strtolower($name))));
 	
 	    return $this;
 	}
@@ -90,13 +90,4 @@ class Setting extends PersistableObject
 	
 	    return $this;
 	}
-	
-
-	/**
-	 * 
-	 */
-	public function __construct()
-    {
-    	parent::__construct();
-    }
 }

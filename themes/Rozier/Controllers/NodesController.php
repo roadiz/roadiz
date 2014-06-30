@@ -16,6 +16,8 @@ use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
+use RZ\Renzo\Core\Handlers\NodeHandler;
+
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -39,9 +41,13 @@ class NodesController extends RozierApp {
 			->getRepository('RZ\Renzo\Core\Entities\Node')
 			->findAll();
 
+		$translation = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Translation')
+				->findOneBy(array('defaultTranslation'=>true));
+
 		$this->assignation['nodes'] = $nodes;
 		$this->assignation['node_types'] = NodeTypesController::getNodeTypes();
-
+		$this->assignation['translation'] = $translation;
 
 		return new Response(
 			$this->getTwig()->render('nodes/list.html.twig', $this->assignation),
@@ -62,44 +68,59 @@ class NodesController extends RozierApp {
 	 */
 	public function editAction( $node_id, $translation_id = null )
 	{
-		$node = Kernel::getInstance()->em()
-			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
+		$translation = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Translation')
+				->findOneBy(array('defaultTranslation'=>true));
 
-		if ($node !== null) {
-			$this->assignation['node'] = $node;
-			
-			$form = $this->buildEditForm( $node );
+		if ($translation_id !== null) {
+			$translation = Kernel::getInstance()->em()
+				->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
+		}
 
-			$form->handleRequest();
+		if ($translation !== null) {
 
-			if ($form->isValid()) {
-		 		$this->editNode($form->getData(), $node);
+			$node = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Node')
+				->findWithTranslation((int)$node_id, $translation);
 
-		 		/*
-		 		 * Force redirect to avoid resending form when refreshing page
-		 		 */
-		 		$response = new RedirectResponse(
-					Kernel::getInstance()->getUrlGenerator()->generate(
-						'nodesEditPage',
-						array('node_id' => $node->getId(), 'trailingSlash'=>'')
-					)
+			if ($node !== null && 
+				$translation !== null) {
+
+				$this->assignation['translation'] = $translation;
+				$this->assignation['node'] = $node;
+				
+				$form = $this->buildEditForm( $node, $translation );
+
+				$form->handleRequest();
+
+				if ($form->isValid()) {
+			 		$this->editNode($form->getData(), $node);
+
+			 		/*
+			 		 * Force redirect to avoid resending form when refreshing page
+			 		 */
+			 		$response = new RedirectResponse(
+						Kernel::getInstance()->getUrlGenerator()->generate(
+							'nodesEditTranslatedPage',
+							array('node_id' => $node->getId(), 'translation_id'=>$translation->getId())
+						)
+					);
+					$response->prepare(Kernel::getInstance()->getRequest());
+
+					return $response->send();
+				}
+
+				$this->assignation['form'] = $form->createView();
+
+				return new Response(
+					$this->getTwig()->render('nodes/edit.html.twig', $this->assignation),
+					Response::HTTP_OK,
+					array('content-type' => 'text/html')
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
-
-				return $response->send();
 			}
-
-			$this->assignation['form'] = $form->createView();
-
-			return new Response(
-				$this->getTwig()->render('nodes/edit.html.twig', $this->assignation),
-				Response::HTTP_OK,
-				array('content-type' => 'text/html')
-			);
 		}
-		else {
-			return $this->throw404();
-		}
+
+		return $this->throw404();
 	}
 
 	/**
@@ -107,12 +128,19 @@ class NodesController extends RozierApp {
 	 * @param [type] $node_type_id   [description]
 	 * @param [type] $translation_id [description]
 	 */
-	public function addAction( $node_type_id, $translation_id )
+	public function addAction( $node_type_id, $translation_id = null )
 	{	
 		$type = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\NodeType', $node_type_id);
+
 		$translation = Kernel::getInstance()->em()
-				->find('RZ\Renzo\Core\Entities\Translation', $translation_id);
+				->getRepository('RZ\Renzo\Core\Entities\Translation')
+				->findOneBy(array('defaultTranslation'=>true));
+
+		if ($translation_id != null) {
+			$translation = Kernel::getInstance()->em()
+				->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
+		}
 
 		if ($type !== null &&
 			$translation !== null) {
@@ -144,6 +172,7 @@ class NodesController extends RozierApp {
 				return $response->send();
 			}
 
+			$this->assignation['translation'] = $translation;
 			$this->assignation['form'] = $form->createView();
 			$this->assignation['type'] = $type;
 
@@ -153,6 +182,51 @@ class NodesController extends RozierApp {
 				array('content-type' => 'text/html')
 			);
 		}else {
+			return $this->throw404();
+		}
+	}
+
+	/**
+	 * Return an deletion form for requested node
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function deleteAction( $node_id )
+	{
+		$node = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
+
+		if ($node !== null) {
+			$this->assignation['node'] = $node;
+			
+			$form = $this->buildDeleteForm( $node );
+
+			$form->handleRequest();
+
+			if ($form->isValid() && 
+				$form->getData()['node_id'] == $node->getId() ) {
+
+				$node->getHandler()->removeWithChildrenAndAssociations();
+
+		 		/*
+		 		 * Force redirect to avoid resending form when refreshing page
+		 		 */
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate('nodesHomePage')
+				);
+				$response->prepare(Kernel::getInstance()->getRequest());
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
+			return new Response(
+				$this->getTwig()->render('nodes/delete.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		else {
 			return $this->throw404();
 		}
 	}
@@ -183,7 +257,7 @@ class NodesController extends RozierApp {
 		/*
 		 * edit source
 		 */
-		$source = $node->getDefaultNodeSource();
+		$source = $node->getNodeSources()->first();
 		$sourceData = $data['source'];
 
 		foreach ($sourceData as $key => $value) {
@@ -208,7 +282,7 @@ class NodesController extends RozierApp {
 	private function buildEditForm( Node $node )
 	{
 		$fields = $node->getNodeType()->getFields();
-		$source = $node->getDefaultNodeSource();
+		$source = $node->getNodeSources()->first();
 
 		$defaults = array(
 			'nodeName' =>  $node->getNodeName(),
@@ -255,6 +329,26 @@ class NodesController extends RozierApp {
 		}
 
 		$builder->add($sourceBuilder);
+
+		return $builder->getForm();
+	}
+
+	/**
+	 * 
+	 * @param  Node   $node 
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildDeleteForm( Node $node )
+	{
+		$builder = $this->getFormFactory()
+			->createBuilder('form')
+			->add('node_id', 'hidden', array(
+				'data' => $node->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+		;
 
 		return $builder->getForm();
 	}

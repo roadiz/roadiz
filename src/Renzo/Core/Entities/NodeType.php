@@ -5,9 +5,14 @@ namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
+use RZ\Renzo\Core\Handlers\NodeTypeHandler;
 /**
  * @Entity
- * @Table(name="node_types")
+ * @Table(name="node_types", indexes={
+ *     @index(name="visible_idx", columns={"visible"}), 
+ *     @index(name="newsletter_type_idx", columns={"newsletter_type"}), 
+ *     @index(name="hiding_nodes_idx", columns={"hiding_nodes"})
+ * })
  */
 class NodeType extends PersistableObject
 {
@@ -25,8 +30,7 @@ class NodeType extends PersistableObject
 	 * @param [type] $newname [description]
 	 */
 	public function setName($name) {
-	    $this->name = $name;
-	
+	    $this->name = trim(preg_replace('#([^a-zA-Z])#', '', ucwords($name)));
 	    return $this;
 	}
 
@@ -157,73 +161,6 @@ class NodeType extends PersistableObject
     	return 'GeneratedNodeSources';
     }
 
-    /**
-     * Remove node type entity class file from server
-     * @return boolean
-     */
-    public function removeSourceEntityClass()
-    {
-    	$folder = RENZO_ROOT.'/sources/'.static::getGeneratedEntitiesNamespace();
-    	$file = $folder.'/'.$this->getSourceEntityClassName().'.php';
-
-    	if (file_exists($file)) {
-    		return unlink($file);
-    	}
-
-    	return false;
-    }
-
-    public function generateSourceEntityClass()
-    {
-    	$folder = RENZO_ROOT.'/sources/'.static::getGeneratedEntitiesNamespace();
-    	$file = $folder.'/'.$this->getSourceEntityClassName().'.php';
-
-    	if (!file_exists($folder)) {
-    		mkdir($folder, 0755, true);
-    	}
-
-    	if (!file_exists($file)) {
-
-    		$fields = $this->getFields();
-    		$fieldsArray = array();
-    		$indexes = array();
-    		foreach ($fields as $field) {
-    			$fieldsArray[] = $field->generateSourceField();
-    			if ($field->isIndexed()) {
-    				$indexes[] = $field->generateSourceFieldIndex();
-    			}
-    		}
-
-	    	$content = '<?php
-/**
- * THIS IS A GENERATED FILE, DO NOT EDIT IT
- * IT WILL BE RECREATED AT EACH NODE-TYPE UPDATE
- */
-namespace '.static::getGeneratedEntitiesNamespace().';
-
-use RZ\Renzo\Core\AbstractEntities\PersistableObject;
-use RZ\Renzo\Core\Entities\NodesSources;
-
-/**
- * @Entity
- * @Table(name="'.$this->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
- */
-class '.$this->getSourceEntityClassName().' extends NodesSources
-{
-
-	'.implode('', $fieldsArray).'
-}';
-			file_put_contents($file, $content);
-			return "Source class “".$this->getSourceEntityClassName()."” has been created.".PHP_EOL;
-    	}
-    	else {
-    		return "Source class “".$this->getSourceEntityClassName()."” already exists.".PHP_EOL;
-    	}
-
-		return false;
-    }
-
-
     public function getOneLineSummary()
 	{
 		return $this->getId()." — ".$this->getName().
@@ -236,5 +173,14 @@ class '.$this->getSourceEntityClassName().' extends NodesSources
 			$text .= "|--- ".$field->getOneLineSummary();
 		}
 		return $text;
+	}
+
+	/**
+	 * 
+	 * @return NodeTypeHandler
+	 */
+	public function getHandler()
+	{
+		return new NodeTypeHandler( $this );
 	}
 }
