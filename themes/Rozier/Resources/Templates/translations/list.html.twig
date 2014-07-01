@@ -15,20 +15,29 @@
 	        </tr>
 	    </thead>
 		<tbody>
-			{% for translation in translations %}
+			{% for t in translations %}
 			<tr>
-				<td><a href="{{ path('translationsEditPage', { translation_id: translation.getId }) }}">{{ translation.getName }}</a></td>
-				<td>{{ translation.getLocale }}</td>
+				<td><a href="{{ path('translationsEditPage', { translation_id: t.translation.getId }) }}">{{ t.translation.getName }}</a></td>
+				<td>{{ t.translation.getLocale }}</td>
 				<td>
-				{% if translation.isAvailable == false %}<div class="uk-badge uk-badge-warning">{% trans %}Not available{% endtrans %}</div>{% endif %}
-				{% if translation.isDefaultTranslation == true %}
+				{% if t.translation.isAvailable == false %}<div class="uk-badge uk-badge-warning">{% trans %}Not available{% endtrans %}</div>{% endif %}
+				{% if t.translation.isDefaultTranslation == true %}
 				<div class="uk-badge uk-badge-notification"><span class="uk-icon-star"></span></div>
 				{% endif %}
 				</td>
 				<td>
-				{% if translation.isDefaultTranslation == false %}
-					<a class="uk-button uk-button-small" href="{{ path('translationsSetDefaultPage', { translation_id: translation.getId }) }}">{% trans %}Set as default{% endtrans %}</a>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('translationsDeletePage', { translation_id: translation.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+				{% if t.translation.isDefaultTranslation == false %}
+					<form action="#" method="post" {{ form_enctype(t.defaultForm) }}>
+						{{ form_errors(t.defaultForm) }}
+					    {% for item in t.defaultForm %}
+					        {% if item.vars.name != "_token" %}
+						        {{ form_widget(item) }}
+					        {% endif %}
+						{% endfor %}
+						{{ form_rest(t.defaultForm) }}
+						<input class="uk-button uk-button-small" type="submit" value="{% trans %}Set as default{% endtrans %}" />
+					</form>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('translationsDeletePage', { translation_id: t.translation.getId }) }}">{% trans %}Delete{% endtrans %}</a>
 				{% endif %}
 				</td>
 			</tr>

@@ -37,7 +37,36 @@ class TranslationsController extends RozierApp
 			->getRepository('RZ\Renzo\Core\Entities\Translation')
 			->findAll();
 
-		$this->assignation['translations'] = $translations;
+		$this->assignation['translations'] = array();
+
+		foreach ($translations as $translation) {
+
+			// Make default forms
+			$form = $this->buildMakeDefaultForm( $translation );
+			$form->handleRequest();
+			if ($form->isValid() && 
+				$form->getData()['translation_id'] == $translation->getId()) {
+				
+		 		$translation->getHandler()->makeDefault();
+
+		 		/*
+		 		 * Force redirect to avoid resending form when refreshing page
+		 		 */
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'translationsHomePage'
+					)
+				);
+				$response->prepare(Kernel::getInstance()->getRequest());
+
+				return $response->send();
+		 	}
+
+		 	$this->assignation['translations'][] = array(
+		 		'translation' => $translation,
+		 		'defaultForm' => $form->createView()
+		 	);
+		}
 
 		return new Response(
 			$this->getTwig()->render('translations/list.html.twig', $this->assignation),
@@ -60,7 +89,6 @@ class TranslationsController extends RozierApp
 			$this->assignation['translation'] = $translation;
 			
 			$form = $this->buildEditForm( $translation );
-
 			$form->handleRequest();
 
 			if ($form->isValid()) {
@@ -256,11 +284,23 @@ class TranslationsController extends RozierApp
 		return $builder->getForm();
 	}
 
-
-	public static function getTranslations()
+	/**
+	 * 
+	 * @param  Translation $translation
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildMakeDefaultForm(Translation $translation)
 	{
-		return Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Translation')
-			->findAll();
+		$builder = $this->getFormFactory()
+			->createBuilder('form')
+			->add('translation_id', 'hidden', array(
+				'data' => $translation->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+		;
+
+		return $builder->getForm();
 	}
 }

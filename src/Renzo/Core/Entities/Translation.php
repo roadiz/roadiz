@@ -5,6 +5,7 @@ namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\DateTimed;
+use RZ\Renzo\Core\Handlers\TranslationHandler;
 
 /**
  * @Entity
@@ -225,6 +226,11 @@ class Translation extends DateTimed {
 		else {
 			return false;
 		}
+	}
+
+	public function getHandler()
+	{
+		return new TranslationHandler( $this );
 	}
 
 	public function __construct(){
