@@ -188,6 +188,30 @@ class Translation extends DateTimed {
 	}
 
 	/**
+	 * @OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true)
+	 * @var ArrayCollection
+	 */
+	private $nodeSources = null;
+	/**
+	 * @return ArrayCollection
+	 */
+	public function getNodeSources() {
+	    return $this->nodeSources;
+	}
+
+	/**
+	 * @OneToMany(targetEntity="UrlAlias", mappedBy="translation", orphanRemoval=true)
+	 * @var ArrayCollection
+	 */
+	private $urlAliases = null;
+	/**
+	 * @return ArrayCollection
+	 */
+	public function getUrlAliases() {
+	    return $this->urlAliases;
+	}
+
+	/**
 	 * Return short locale name from complete locale.    
 	 * Ex : en_GB => en or en_US => us
 	 * @param  string $locale
@@ -201,5 +225,13 @@ class Translation extends DateTimed {
 		else {
 			return false;
 		}
+	}
+
+	public function __construct(){
+
+		parent::__construct();
+		
+		$this->nodeSources = new ArrayCollection();
+		$this->urlAliases = new ArrayCollection();
 	}
 }

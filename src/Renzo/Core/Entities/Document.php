@@ -80,26 +80,17 @@ class Document extends PersistableObject
 	}
 
 	/**
-	 * Value types
-	 * Use NodeTypeField types constants
-	 * 
-	 * @Column(type="boolean")
-	 */
-	private $type = true;
-	/**
-	 * @return [type] [description]
-	 */
-	public function getType() {
-	    return $this->type;
-	}
-	/**
-	 * @param [type] $newvisible [description]
-	 */
-	public function setType($type) {
-	    $this->type = (int)$type;
-	
-	    return $this;
-	}
+     * @ManyToMany(targetEntity="Tag", inversedBy="documents")
+     * @JoinTable(name="documents_tags")
+     * @var ArrayCollection
+     */
+    private $tags = null;
+    /**
+     * @return ArrayCollection
+     */
+    public function getTags() {
+        return $this->tags;
+    }
 	
 
 	/**
@@ -108,6 +99,8 @@ class Document extends PersistableObject
 	public function __construct()
     {
     	parent::__construct();
+    	
+        $this->tags = new ArrayCollection();
     }
 
     public function getOneLineSummary()

@@ -68,6 +68,55 @@ class NodesController extends RozierApp {
 	 */
 	public function editAction( $node_id, $translation_id = null )
 	{
+		$node = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
+
+		if ($node !== null) {
+			$this->assignation['node'] = $node;
+			$this->assignation['source'] = $node->getNodeSources()->first();
+			
+			$form = $this->buildEditForm( $node );
+
+			$form->handleRequest();
+
+			if ($form->isValid()) {
+		 		$this->editNode($form->getData(), $node);
+
+		 		/*
+		 		 * Force redirect to avoid resending form when refreshing page
+		 		 */
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'nodesEditPage',
+						array('node_id' => $node->getId())
+					)
+				);
+				$response->prepare(Kernel::getInstance()->getRequest());
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
+			return new Response(
+				$this->getTwig()->render('nodes/edit.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		
+
+		return $this->throw404();
+	}
+
+	/**
+	 * Return an edition form for requested node
+	 * @param  integer $node_id        [description]
+	 * @param  integer $translation_id [description]
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function editSourceAction( $node_id, $translation_id = null )
+	{
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
 				->findOneBy(array('defaultTranslation'=>true));
@@ -86,22 +135,25 @@ class NodesController extends RozierApp {
 			if ($node !== null && 
 				$translation !== null) {
 
+				$source = $node->getNodeSources()->first();
+
 				$this->assignation['translation'] = $translation;
 				$this->assignation['node'] = $node;
+				$this->assignation['source'] = $source;
 				
-				$form = $this->buildEditForm( $node, $translation );
+				$form = $this->buildEditSourceForm( $node, $source );
 
 				$form->handleRequest();
 
 				if ($form->isValid()) {
-			 		$this->editNode($form->getData(), $node);
+			 		$this->editNodeSource($form->getData(), $source);
 
 			 		/*
 			 		 * Force redirect to avoid resending form when refreshing page
 			 		 */
 			 		$response = new RedirectResponse(
 						Kernel::getInstance()->getUrlGenerator()->generate(
-							'nodesEditTranslatedPage',
+							'nodesEditSourcePage',
 							array('node_id' => $node->getId(), 'translation_id'=>$translation->getId())
 						)
 					);
@@ -113,7 +165,7 @@ class NodesController extends RozierApp {
 				$this->assignation['form'] = $form->createView();
 
 				return new Response(
-					$this->getTwig()->render('nodes/edit.html.twig', $this->assignation),
+					$this->getTwig()->render('nodes/editSource.html.twig', $this->assignation),
 					Response::HTTP_OK,
 					array('content-type' => 'text/html')
 				);
@@ -122,6 +174,7 @@ class NodesController extends RozierApp {
 
 		return $this->throw404();
 	}
+
 
 	/**
 	 * Handle node creation pages
@@ -255,20 +308,26 @@ class NodesController extends RozierApp {
 	private function editNode( $data, Node $node)
 	{
 		/*
-		 * edit source
+		 * edit node
 		 */
-		$source = $node->getNodeSources()->first();
-		$sourceData = $data['source'];
-
-		foreach ($sourceData as $key => $value) {
-			$setter = 'set'.ucwords($key);
-			$source->$setter( $value );
-		}
-		unset($data['source']);
 
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$node->$setter( $value );
+		}
+
+		Kernel::getInstance()->em()->flush();
+	}
+
+	private function editNodeSource( $data, $nodeSource )
+	{
+		$fields = $nodeSource->getNode()->getNodeType()->getFields();
+		foreach ($fields as $field) {
+			if (isset($data[$field->getName()])) {
+
+				$setter = $field->getSetterName();
+				$nodeSource->$setter( $data[$field->getName()] );
+			}
 		}
 
 		Kernel::getInstance()->em()->flush();
@@ -282,7 +341,6 @@ class NodesController extends RozierApp {
 	private function buildEditForm( Node $node )
 	{
 		$fields = $node->getNodeType()->getFields();
-		$source = $node->getNodeSources()->first();
 
 		$defaults = array(
 			'nodeName' =>  $node->getNodeName(),
@@ -303,12 +361,18 @@ class NodesController extends RozierApp {
 					->add('published', 'checkbox', array('required' => false))
 					->add('archived',  'checkbox', array('required' => false));
 
+		return $builder->getForm();
+	}
+
+	private function buildEditSourceForm( Node $node, $source )
+	{
+		$fields = $node->getNodeType()->getFields();
 		/*
 		 * Create source default values
 		 */
 		$sourceDefaults = array();
 		foreach ($fields as $field) {
-			$getter = 'get'.ucwords($field->getName());
+			$getter = $field->getGetterName();
 			$sourceDefaults[$field->getName()] = $source->$getter();
 		}	
 
@@ -328,9 +392,8 @@ class NodesController extends RozierApp {
 			);
 		}
 
-		$builder->add($sourceBuilder);
 
-		return $builder->getForm();
+		return $sourceBuilder->getForm();
 	}
 
 	/**

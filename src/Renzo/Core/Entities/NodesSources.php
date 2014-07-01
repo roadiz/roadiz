@@ -54,9 +54,21 @@ class NodesSources extends PersistableObject {
 	    return $this;
 	}
 
+	/**
+	 * @OneToMany(targetEntity="RZ\Renzo\Core\Entities\UrlAlias", mappedBy="nodeSource", orphanRemoval=true)
+	 */
+	private $urlAliases = null;
+	/**
+	 * @return ArrayCollection
+	 */
+	public function getUrlAliases() {
+	    return $this->urlAliases;
+	}
+
 
 	public function __construct( Node $node, Translation $translation){
 		$this->node = $node;
 		$this->translation = $translation;
+		$this->urlAliases = new ArrayCollection();
 	}
 }

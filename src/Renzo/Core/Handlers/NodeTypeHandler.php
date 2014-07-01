@@ -70,9 +70,9 @@ class NodeTypeHandler {
     		$fieldsArray = array();
     		$indexes = array();
     		foreach ($fields as $field) {
-    			$fieldsArray[] = $field->generateSourceField();
+    			$fieldsArray[] = $field->getHandler()->generateSourceField();
     			if ($field->isIndexed()) {
-    				$indexes[] = $field->generateSourceFieldIndex();
+    				$indexes[] = $field->getHandler()->generateSourceFieldIndex();
     			}
     		}
 

@@ -36,7 +36,7 @@ class SettingsController extends RozierApp
 	{
 		$settings = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Setting')
-			->findAll();
+			->findBy(array(), array('name' => 'ASC'));
 
 		$this->assignation['settings'] = $settings;
 

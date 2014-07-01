@@ -55,10 +55,6 @@ class DebugPanel implements EventSubscriberInterface
 		$assignation = array(
 			'stopwatch'=>$sw 
 		);
-		//$debug = $sw->getCategory().' : '.$sw->getDuration().'ms - '.$sw->getMemory()/1000000.0.'Mo';
-
-		//return "<div id=\"rz-debug-panel\">".$debug."</div>";
-
 		return $this->getTwig()->render('debug-panel.html.twig', $assignation);
 	}
 

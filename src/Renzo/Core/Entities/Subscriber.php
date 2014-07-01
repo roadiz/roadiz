@@ -50,20 +50,17 @@ class Subscriber extends Human
 	}
 
 	/**
-	 * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\Tag")
-	 * @JoinTable(name="subscribers_tags",
-     *      joinColumns={@JoinColumn(name="subscriber_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="tag_id", referencedColumnName="id")}
-     * )
-	 * @var Doctrine\Common\Collections\ArrayCollection
-	 */
-	private $tags;
-	/**
-	 * @return Doctrine\Common\Collections\ArrayCollection
-	 */
-	public function getTags() {
-	    return $this->tags;
-	}
+     * @ManyToMany(targetEntity="Tag", inversedBy="subscribers")
+     * @JoinTable(name="subscribers_tags")
+     * @var ArrayCollection
+     */
+    private $tags = null;
+    /**
+     * @return ArrayCollection
+     */
+    public function getTags() {
+        return $this->tags;
+    }
 
 	/**
 	 * 

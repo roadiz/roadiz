@@ -9,13 +9,21 @@ homePageSlash:
 nodesHomePage:
     path:     /rz-admin/nodes
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction }
-nodesEditTranslatedPage:
-    path:     /rz-admin/nodes/edit/{node_id}/{translation_id}
-    defaults: { _controller: Themes\Rozier\Controllers\NodesController::editAction }
-    requirements: { node_id : "[0-9]+", translation_id : "[0-9]+" }
 nodesEditPage:
     path:     /rz-admin/nodes/edit/{node_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::editAction }
+    requirements: { node_id : "[0-9]+" }
+nodesEditSourcePage:
+    path:     /rz-admin/nodes/edit/{node_id}/source/{translation_id}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::editSourceAction }
+    requirements: { node_id : "[0-9]+" }
+nodesEditTagsPage:
+    path:     /rz-admin/nodes/edit/{node_id}/tags
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::editTagAction }
+    requirements: { node_id : "[0-9]+" }
+nodesEditAliasesPage:
+    path:     /rz-admin/nodes/edit/{node_id}/aliases
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::editAliasesAction }
     requirements: { node_id : "[0-9]+" }
 nodesTreePage:
     path:     /rz-admin/nodes/tree/{node_id}

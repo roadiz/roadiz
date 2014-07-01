@@ -32,50 +32,21 @@ class UrlAlias extends PersistableObject
 	}
 
 	/**
-	 * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\Node")
-	 * @JoinColumn(name="node_id", referencedColumnName="id")
+	 * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\NodesSources", inversedBy="urlAliases")
+	 * @JoinColumn(name="ns_id", referencedColumnName="id")
 	 */
-	private $node;
+	private $nodeSource;
 	/**
-	 * @return RZ\Renzo\Core\Entities\Node
+	 * @return RZ\Renzo\Core\Entities\NodesSources
 	 */
-	public function getNode() {
+	public function getNodeSource() {
 	    return $this->node;
 	}
 	/**
-	 * @param RZ\Renzo\Core\Entities\Node $newnode
+	 * @param RZ\Renzo\Core\Entities\NodesSources $newnode
 	 */
-	public function setNode($node) {
-	    $this->node = $node;
-	
+	public function setNodeSource($nodeSource) {
+	    $this->nodeSource = $nodeSource;
 	    return $this;
 	}
-
-	/**
-	 * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\Translation")
-	 * @JoinColumn(name="translation_id", referencedColumnName="id")
-	 */
-	private $translation;
-	/**
-	 * @return RZ\Renzo\Core\Entities\Translation
-	 */
-	public function getTranslation() {
-	    return $this->translation;
-	}
-	/**
-	 * @param RZ\Renzo\Core\Entities\Translation $translation
-	 */
-	public function setTranslation($translation) {
-	    $this->translation = $translation;
-	
-	    return $this;
-	}
-
-	/**
-	 * 
-	 */
-	public function __construct()
-    {
-    	parent::__construct();
-    }
 }

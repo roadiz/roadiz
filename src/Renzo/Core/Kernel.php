@@ -4,6 +4,7 @@ namespace RZ\Renzo\Core;
 
 use RZ\Renzo\Inheritance\Doctrine\DataInheritanceEvent;
 use RZ\Renzo\Core\Routing\MixedUrlMatcher;
+use RZ\Renzo\Core\Bags\SettingsBag;
 
 use Symfony\Component\Console\Application;
 use Doctrine\ORM\Events;
@@ -36,7 +37,7 @@ class Kernel {
 
 	private $em =           null;
 	private $debug =        true;
-	private $backendDebug = true;
+	private $backendDebug = false;
 	private $config =       null;
 
 	/**
@@ -175,6 +176,9 @@ class Kernel {
 	 */
 	public function runApp()
 	{
+		$this->debug = 			(boolean)SettingsBag::get('debug');
+		$this->backendDebug = 	(boolean)SettingsBag::get('backend_debug');
+
 		$this->dispatcher = new EventDispatcher();
 		$this->resolver =   new ControllerResolver();
 		$this->httpKernel = new HttpKernel($this->dispatcher, $this->resolver);

@@ -4,9 +4,11 @@ namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
+use RZ\Renzo\Core\Utils\StringHandler;
+use RZ\Renzo\Core\Entities\NodeTypeField;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\SettingRepository")
  * @Table(name="settings")
  */
 class Setting extends PersistableObject
@@ -26,13 +28,16 @@ class Setting extends PersistableObject
 	 * @param $newnodeName 
 	 */
 	public function setName($name) {
-	    $this->name = preg_replace('#([^a-z])#', '_', (trim(strtolower($name))));
+
+		$this->name = trim(strtolower($name));
+		$this->name = StringHandler::removeDiacritics($this->name);
+	    $this->name = preg_replace('#([^a-z])#', '_', $this->name);
 	
 	    return $this;
 	}
 
 	/**
-	 * @Column(type="text")
+	 * @Column(type="text", nullable=true)
 	 */
 	private $value;
 	/**
@@ -73,9 +78,9 @@ class Setting extends PersistableObject
 	 * Value types
 	 * Use NodeTypeField types constants
 	 * 
-	 * @Column(type="boolean")
+	 * @Column(type="integer")
 	 */
-	private $type = true;
+	private $type = NodeTypeField::STRING_T;
 	/**
 	 * @return [type] [description]
 	 */

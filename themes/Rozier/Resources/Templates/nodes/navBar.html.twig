@@ -1,0 +1,19 @@
+<nav class="node-edit-navigation uk-navbar">
+	<ul class="uk-navbar-nav">
+		<li>
+			<a href="{{ path('nodesHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to nodes{% endtrans %}</a>
+		</li>
+		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
+			<a href="{{ path('nodesEditPage', { node_id: node.getId }) }}">{% trans %}Parameters{% endtrans %}</a>
+		</li>
+		<li class="{% if current == 'source' %}uk-active{% endif %}">
+			<a href="{{ path('nodesEditSourcePage', { node_id: node.getId, translation_id:1 }) }}">{% trans %}Content{% endtrans %}</a>
+		</li>
+		<li class="{% if current == 'tags' %}uk-active{% endif %}">
+			<a href="{{ path('nodesEditTagsPage', { node_id: node.getId}) }}">{% trans %}Tags{% endtrans %}</a>
+		</li>
+		<li class="{% if current == 'aliases' %}uk-active{% endif %}">
+			<a href="{{ path('nodesEditAliasesPage', { node_id: node.getId}) }}">{% trans %}Url aliases{% endtrans %}</a>
+		</li>
+	</ul>
+</nav>

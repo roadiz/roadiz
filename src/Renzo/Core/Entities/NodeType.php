@@ -6,6 +6,7 @@ namespace RZ\Renzo\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 use RZ\Renzo\Core\Handlers\NodeTypeHandler;
+use RZ\Renzo\Core\Utils\StringHandler;
 /**
  * @Entity
  * @Table(name="node_types", indexes={
@@ -30,7 +31,9 @@ class NodeType extends PersistableObject
 	 * @param [type] $newname [description]
 	 */
 	public function setName($name) {
-	    $this->name = trim(preg_replace('#([^a-zA-Z])#', '', ucwords($name)));
+	    $this->name = StringHandler::removeDiacritics($name);
+	    $this->name = trim(preg_replace('#([^a-zA-Z])#', '', ucwords($this->name)));
+	    
 	    return $this;
 	}
 

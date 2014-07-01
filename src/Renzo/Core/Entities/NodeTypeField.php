@@ -4,6 +4,8 @@ namespace RZ\Renzo\Core\Entities;
 
 use RZ\Renzo\Core\AbstractEntities\Persistable;
 use RZ\Renzo\Core\AbstractEntities\Positioned;
+use RZ\Renzo\Core\Utils\StringHandler;
+use RZ\Renzo\Core\Handlers\NodeTypeFieldHandler;
 
 /**
  * @Entity
@@ -13,6 +15,35 @@ use RZ\Renzo\Core\AbstractEntities\Positioned;
  * })
  */
 class NodeTypeField extends Positioned implements Persistable {
+
+	const STRING_T =   0;
+	const MARKDOWN_T = 1;
+	const TEXT_T =     2;
+	const INTEGER_T =  3;
+	const BOOLEAN_T =  4;
+
+	static $typeToHuman = array(
+		self::STRING_T =>   'string',
+		self::MARKDOWN_T => 'markdown',
+		self::TEXT_T =>     'text',
+		self::INTEGER_T =>  'integer',
+		self::BOOLEAN_T =>  'boolean',
+	);
+	static $typeToDoctrine = array(
+		self::STRING_T =>   'string',
+		self::MARKDOWN_T => 'text',
+		self::TEXT_T =>     'text',
+		self::INTEGER_T =>  'integer',
+		self::BOOLEAN_T =>  'boolean',
+	);
+	static $typeToForm = array(
+		self::STRING_T =>   'text',
+		self::MARKDOWN_T => 'textarea',
+		self::TEXT_T =>     'textarea',
+		self::INTEGER_T =>  'integer',
+		self::BOOLEAN_T =>  'checkbox',
+	);
+
 
 	/**
 	 * @Id
@@ -61,7 +92,8 @@ class NodeTypeField extends Positioned implements Persistable {
 	 * @param [type] $newname [description]
 	 */
 	public function setName($name) {
-	    $this->name = preg_replace('#([^a-z])#', '_', (trim(strtolower($name))));
+		$this->name = StringHandler::removeDiacritics($name);
+	    $this->name = preg_replace('#([^a-zA-Z]+)#', '_', (trim(strtolower($this->name))));
 	
 	    return $this;
 	}
@@ -130,34 +162,6 @@ class NodeTypeField extends Positioned implements Persistable {
 	    return $this;
 	}
 	
-	const STRING_T =   0;
-	const MARKDOWN_T = 1;
-	const TEXT_T =     2;
-	const INTEGER_T =  3;
-	const BOOLEAN_T =  4;
-
-	static $typeToHuman = array(
-		self::STRING_T =>   'string',
-		self::MARKDOWN_T => 'markdown',
-		self::TEXT_T =>     'text',
-		self::INTEGER_T =>  'integer',
-		self::BOOLEAN_T =>  'boolean',
-	);
-	static $typeToDoctrine = array(
-		self::STRING_T =>   'string',
-		self::MARKDOWN_T => 'text',
-		self::TEXT_T =>     'text',
-		self::INTEGER_T =>  'integer',
-		self::BOOLEAN_T =>  'boolean',
-	);
-	static $typeToForm = array(
-		self::STRING_T =>   'text',
-		self::MARKDOWN_T => 'textarea',
-		self::TEXT_T =>     'textarea',
-		self::INTEGER_T =>  'integer',
-		self::BOOLEAN_T =>  'checkbox',
-	);
-
 	/**
 	 * @Column(type="integer")
 	 */
@@ -184,36 +188,19 @@ class NodeTypeField extends Positioned implements Persistable {
 	    return $this;
 	}
 
-	public function generateSourceFieldIndex()
+
+	public function getGetterName()
 	{
-		return '@Index(name="'.$this->getName().'_idx", columns={"'.$this->getName().'"})';
+		return 'get'.str_replace('_', '', ucwords($this->getName()));
+	}
+	public function getSetterName()
+	{
+		return 'set'.str_replace('_', '', ucwords($this->getName()));
 	}
 
-	public function generateSourceField(){
-
-
-		$var = 'private $'.$this->getName().';';
-		if ($this->getType() === static::BOOLEAN_T) {
-			$var = 'private $'.$this->getName().' = false;';
-		}
-		if ($this->getType() === static::INTEGER_T) {
-			$var = 'private $'.$this->getName().' = 0;';
-		}
-
-		return '
-	/**
-	 * @Column(type="'.static::$typeToDoctrine[$this->getType()].'", nullable=true )
-	 */
-	'.$var.'
-	public function get'.ucwords($this->getName()).'() {
-	    return $this->'.$this->getName().';
-	}
-	public function set'.ucwords($this->getName()).'($'.$this->getName().') {
-	    $this->'.$this->getName().' = $'.$this->getName().';
-	
-	    return $this;
-	}'.PHP_EOL;
-
+	public function getHandler()
+	{
+		return new NodeTypeFieldHandler( $this );
 	}
 
 	public function getOneLineSummary()

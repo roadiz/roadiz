@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Criteria;
 use RZ\Renzo\Core\AbstractEntities\DateTimedPositioned;
 
 use RZ\Renzo\Core\Entities\Translation;
+use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Entities\NodesSources;
 use RZ\Renzo\Core\Handlers\NodeHandler;
 
@@ -36,7 +37,9 @@ class Node extends DateTimedPositioned
 	 * @param string $newnodeName
 	 */
 	public function setNodeName($nodeName) {
-	    $this->nodeName = preg_replace('#([^a-z0-9])#', '-', (trim(strtolower($nodeName))));
+		$this->nodeName = trim(strtolower($nodeName));
+		$this->nodeName = StringHandler::removeDiacritics($this->nodeName);
+	 	$this->nodeName = preg_replace('#([^a-zA-Z0-9]+)#', '-', $this->nodeName);
 	
 	    return $this;
 	}
@@ -234,6 +237,21 @@ class Node extends DateTimedPositioned
 	    return $this;
     }
 
+    /**
+     * @ManyToMany(targetEntity="Tag", inversedBy="nodes", orphanRemoval=true)
+     * @JoinTable(name="nodes_tags")
+     * @var ArrayCollection
+     */
+    private $tags = null;
+    /**
+     * @return ArrayCollection
+     */
+    public function getTags() {
+        return $this->tags;
+    }
+
+
+
 	/**
 	 * @OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true)
 	 */
@@ -245,42 +263,15 @@ class Node extends DateTimedPositioned
 	public function getNodeSources() {
 	    return $this->nodeSources;
 	}
-	/**
-	 * @return NodesSources
-	 */
-	public function getDefaultNodeSource()
-	{
-		if (count($this->getNodeSources()) > 0) {
-			return $this->getNodeSources()->first();
-		}
-		return null;
-	}
-	/**
-	 * @param  Translation $translation
-	 * @return NodesSources
-	 */
-	public function getNodeSourceByTranslation( Translation $translation )
-	{
-		if (count($this->getNodeSources()) > 0) {
-
-			
-			$criteria = Criteria::create()
-			    ->where(Criteria::expr()->eq("translation", $translation))
-			;
-
-			return $this->getNodeSources()->matching($criteria)->first();
-		}
-		return null;
-	}
-
 
 	/**
 	 * @param NodeType $nodeType [description]
 	 */
-	public function __construct( NodeType $nodeType )
+	public function __construct( NodeType $nodeType = null )
     {
     	parent::__construct();
 
+        $this->tags = new ArrayCollection();
         $this->childrens = new ArrayCollection();
         $this->nodeSources = new ArrayCollection();
         $this->setNodeType($nodeType);

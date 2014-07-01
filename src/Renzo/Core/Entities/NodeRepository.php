@@ -21,16 +21,19 @@ class NodeRepository extends EntityRepository
 	 */
 	public function findWithTranslation($node_id, Translation $translation )
 	{
-		$qb = Kernel::getInstance()->em()->createQueryBuilder();
-	    $qb->select('n, ns')
-	        ->from('RZ\Renzo\Core\Entities\Node', 'n')
-	        ->where('n.id = :node_id')
-	        ->innerJoin('n.nodeSources', 'ns')
-	        ->innerJoin('ns.translation', 't', 'WITH', $qb->expr()->eq('t.id', ':translation_id'));
+	    $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
+            INNER JOIN n.nodeSources ns 
+            INNER JOIN ns.translation t
+            WHERE n.id = :node_id AND t.id = :translation_id'
+                        )->setParameter('node_id', (int)$node_id)
+                        ->setParameter('translation_id', (int)$translation->getId());
 
-	    $qb->setParameter('node_id', (int)$node_id);
-	    $qb->setParameter('translation_id', (int)$translation->getId());
-
-	    return $qb->getQuery()->getSingleResult();
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
 	}
 }

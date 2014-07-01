@@ -53,17 +53,7 @@ class NodeHandler
 
 	public function removeAssociations()
 	{
-		/*
-		 * UrlAliases
-		 */
-		$aliases = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
-			->findBy(array(
-				'node' => $this->getNode()
-			));
-		foreach ($aliases as $alias) {
-			Kernel::getInstance()->em()->remove($alias);
-		}
+		
 	}
 
 	public function removeWithChildrenAndAssociations()
