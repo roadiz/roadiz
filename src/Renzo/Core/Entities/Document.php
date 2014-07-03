@@ -63,18 +63,18 @@ class Document extends PersistableObject
 	/**
 	 * @Column(type="boolean")
 	 */
-	private $visible = true;
+	private $private = true;
 	/**
 	 * @return [type] [description]
 	 */
-	public function isVisible() {
-	    return $this->visible;
+	public function isPrivate() {
+	    return $this->private;
 	}
 	/**
 	 * @param [type] $newvisible [description]
 	 */
-	public function setVisible($visible) {
-	    $this->visible = (boolean)$visible;
+	public function setPrivate($private) {
+	    $this->private = (boolean)$private;
 	
 	    return $this;
 	}

@@ -189,6 +189,7 @@ class SettingsController extends RozierApp
 		}
 
 		Kernel::getInstance()->em()->flush();
+		$this->getSession()->getFlashBag()->add('confirm', 'Setting “'.$setting->getName().'” has been updated');
 	}
 
 	private function addSetting( $data, Setting $setting)
@@ -199,12 +200,14 @@ class SettingsController extends RozierApp
 		}
 		Kernel::getInstance()->em()->persist($setting);
 		Kernel::getInstance()->em()->flush();
+		$this->getSession()->getFlashBag()->add('confirm', 'Setting “'.$setting->getName().'” has been created');
 	}
 
 	private function deleteSetting( $data, Setting $setting)
 	{
 		Kernel::getInstance()->em()->remove($setting);
 		Kernel::getInstance()->em()->flush();
+		$this->getSession()->getFlashBag()->add('confirm', 'Setting “'.$setting->getName().'” has been deleted');
 	}
 
 

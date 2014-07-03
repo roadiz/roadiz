@@ -4,6 +4,7 @@
 	<h1 id="node-title">Edit {{ source.getTitle }}</h1>
 
 	{% include 'nodes/navBar.html.twig' with {"current": 'source'} %}
+	{% include 'nodes/translationBar.html.twig' with {"current": translation.getId} %}
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}

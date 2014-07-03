@@ -216,6 +216,8 @@ class TranslationsController extends RozierApp
 		}
 
 		Kernel::getInstance()->em()->flush();
+
+		$this->getSession()->getFlashBag()->add('confirm', 'Translation “'.$translation->getName().'” has been updated');
 	}
 
 	private function addTranslation( $data, Translation $translation)
@@ -226,12 +228,16 @@ class TranslationsController extends RozierApp
 		}
 		Kernel::getInstance()->em()->persist($translation);
 		Kernel::getInstance()->em()->flush();
+
+		$this->getSession()->getFlashBag()->add('confirm', 'Translation “'.$translation->getName().'” has been created');
 	}
 
 	private function deleteTranslation( $data, Translation $translation)
 	{
 		Kernel::getInstance()->em()->remove($translation);
 		Kernel::getInstance()->em()->flush();
+
+		$this->getSession()->getFlashBag()->add('confirm', 'Translation “'.$translation->getName().'” has been deleted');
 	}
 
 

@@ -75,8 +75,36 @@ class NodesController extends RozierApp {
 			$this->assignation['node'] = $node;
 			$this->assignation['source'] = $node->getNodeSources()->first();
 			
-			$form = $this->buildEditForm( $node );
+			/*
+			 * Handle translation form
+			 */
+			$translation_form = $this->buildTranslateForm( $node );
+			if ($translation_form !== null) {
+				$translation_form->handleRequest();
 
+				if ($translation_form->isValid()) {
+			 		$this->translateNode($translation_form->getData(), $node);
+
+			 		/*
+			 		 * Force redirect to avoid resending form when refreshing page
+			 		 */
+			 		$response = new RedirectResponse(
+						Kernel::getInstance()->getUrlGenerator()->generate(
+							'nodesEditSourcePage',
+							array('node_id' => $node->getId(), 'translation_id'=>$translation_form->getData()['translation_id'])
+						)
+					);
+					$response->prepare(Kernel::getInstance()->getRequest());
+
+					return $response->send();
+				}
+				$this->assignation['translation_form'] = $translation_form->createView();
+			}
+
+			/*
+			 * Handle main form
+			 */
+			$form = $this->buildEditForm( $node );
 			$form->handleRequest();
 
 			if ($form->isValid()) {
@@ -95,7 +123,6 @@ class NodesController extends RozierApp {
 
 				return $response->send();
 			}
-
 			$this->assignation['form'] = $form->createView();
 
 			return new Response(
@@ -138,6 +165,7 @@ class NodesController extends RozierApp {
 				$source = $node->getNodeSources()->first();
 
 				$this->assignation['translation'] = $translation;
+				$this->assignation['available_translations'] = $node->getHandler()->getAvailableTranslations();
 				$this->assignation['node'] = $node;
 				$this->assignation['source'] = $source;
 				
@@ -259,7 +287,7 @@ class NodesController extends RozierApp {
 				$form->getData()['node_id'] == $node->getId() ) {
 
 				$node->getHandler()->removeWithChildrenAndAssociations();
-
+				$this->getSession()->getFlashBag()->add('confirm', 'Node has been deleted');
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -285,7 +313,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * [createNode description]
+	 * 
 	 * @param  array $data 
 	 * @return RZ\Renzo\Core\Entities\Node
 	 */
@@ -301,22 +329,37 @@ class NodesController extends RozierApp {
 		Kernel::getInstance()->em()->persist($source);
 
 		Kernel::getInstance()->em()->flush();
+		$this->getSession()->getFlashBag()->add('confirm', 'Node “'.$node->getNodeName().'” has been created');
 
 		return $node;
 	}
 
 	private function editNode( $data, Node $node)
 	{
-		/*
-		 * edit node
-		 */
-
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$node->$setter( $value );
 		}
 
 		Kernel::getInstance()->em()->flush();
+		$this->getSession()->getFlashBag()->add('confirm', 'Node “'.$node->getNodeName().'” has been updated');
+	}
+
+
+	private function translateNode( $data, Node $node )
+	{
+		$sourceClass = "GeneratedNodeSources\\".$node->getNodeType()->getSourceEntityClassName();
+		$new_translation = Kernel::getInstance()->em()
+				->find('RZ\Renzo\Core\Entities\Translation', (int)$data['translation_id']);
+
+
+		$source = new $sourceClass($node, $new_translation);
+
+
+		Kernel::getInstance()->em()->persist($source);
+		Kernel::getInstance()->em()->flush();
+
+		$this->getSession()->getFlashBag()->add('confirm', 'Node “'.$node->getNodeName().'” has been translated');
 	}
 
 	private function editNodeSource( $data, $nodeSource )
@@ -331,6 +374,39 @@ class NodesController extends RozierApp {
 		}
 
 		Kernel::getInstance()->em()->flush();
+		$this->getSession()->getFlashBag()->add('confirm', 'Node “'.$nodeSource->getNode()->getNodeName().'” content for “'.$nodeSource->getTranslation()->getName().'” has been updated');
+	}
+
+	private function buildTranslateForm( Node $node )
+	{
+		$translations = $node->getHandler()->getUnavailableTranslations();
+		$choices = array();
+
+		foreach ($translations as $translation) {
+			$choices[$translation->getId()] = $translation->getName();
+		}
+
+		if ($translations !== null && count($choices) > 0) {
+
+			$builder = $this->getFormFactory()
+				->createBuilder('form')
+				->add('node_id', 'hidden', array(
+					'data' => $node->getId(),
+					'constraints' => array(
+						new NotBlank()
+					)
+				))
+				->add('translation_id', 'choice', array(
+					'choices' => $choices,
+					'required' => true
+				))
+			;
+
+			return $builder->getForm();
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -391,8 +467,6 @@ class NodesController extends RozierApp {
 				)
 			);
 		}
-
-
 		return $sourceBuilder->getForm();
 	}
 

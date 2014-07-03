@@ -16,7 +16,7 @@ nodesEditPage:
 nodesEditSourcePage:
     path:     /rz-admin/nodes/edit/{node_id}/source/{translation_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::editSourceAction }
-    requirements: { node_id : "[0-9]+" }
+    requirements: { node_id : "[0-9]+", translation_id : "[0-9]+" }
 nodesEditTagsPage:
     path:     /rz-admin/nodes/edit/{node_id}/tags
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::editTagAction }

@@ -185,6 +185,8 @@ class NodeTypeFieldsController extends RozierApp
 
 		 		$nodeType->getHandler()->updateSchema();
 
+		 		$this->getSession()->getFlashBag()->add('confirm', 'Node-type field has been deleted');
+
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -222,6 +224,7 @@ class NodeTypeFieldsController extends RozierApp
 		Kernel::getInstance()->em()->flush();
 
 		$field->getNodeType()->getHandler()->updateSchema();
+		$this->getSession()->getFlashBag()->add('confirm', 'Node-type field and its database schema have been updated');
 	}
 
 	private function addNodeTypeField( $data, NodeTypeField $field, NodeType $node_type)
@@ -237,6 +240,7 @@ class NodeTypeFieldsController extends RozierApp
 		Kernel::getInstance()->em()->flush();
 
 		$node_type->getHandler()->updateSchema();
+		$this->getSession()->getFlashBag()->add('confirm', 'Node-type field and its database schema have been updated');
 	}
 
 

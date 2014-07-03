@@ -163,6 +163,8 @@ class NodeTypesController extends RozierApp
 		 		 * Delete All node-type association and schema
 		 		 */
 				$node_type->getHandler()->deleteWithAssociations();
+
+		 		$this->getSession()->getFlashBag()->add('confirm', 'Node-type has been deleted');
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -201,6 +203,7 @@ class NodeTypesController extends RozierApp
 		Kernel::getInstance()->em()->flush();
 
 		$node_type->getHandler()->updateSchema();
+		$this->getSession()->getFlashBag()->add('confirm', 'Node-type has been updated');
 	}
 
 	private function addNodeType( $data, NodeType $node_type)
@@ -213,6 +216,7 @@ class NodeTypesController extends RozierApp
 		Kernel::getInstance()->em()->flush();
 
 		$node_type->getHandler()->updateSchema();
+		$this->getSession()->getFlashBag()->add('confirm', 'Node-type has been created');
 	}
 
 

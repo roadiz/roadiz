@@ -119,11 +119,18 @@ class AppController {
 	
 	public function __construct(){
 		$this->initializeSession()
-			->initializeTwig()
-			->initializeTranslator()
-			->prepareBaseAssignation();
+			 ->initializeTwig()
+			 ->initializeTranslator()
+			 ->prepareBaseAssignation();
 	}
 
+	/**
+	 * @return Symfony\Component\HttpFoundation\Session\Session
+	 */
+	public function getSession()
+	{
+		return $this->session;
+	}
 	/**
 	 * 
 	 * @return RouteCollection
@@ -171,7 +178,7 @@ class AppController {
 	{
 		// créer un objet session depuis le composant HttpFoundation
 		$this->session = new Session();
-		$this->session->start();
+		//$this->session->start();
 
 		// générer le secret CSRF depuis quelque part
 		$csrfSecret = Kernel::getInstance()->getConfig()["security"]['secret'];
@@ -264,7 +271,8 @@ class AppController {
 				'resourcesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/themes/'.static::$themeDir.'/static/'
 			),
 			'session' => array(
-				'id' => $this->session->getId()
+				'messages' => $this->getSession()->getFlashBag()->all(),
+				'id' => $this->getSession()->getId()
 			)
 		);
 		return $this;

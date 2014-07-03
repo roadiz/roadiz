@@ -1,8 +1,5 @@
 <nav class="node-edit-navigation uk-navbar">
 	<ul class="uk-navbar-nav">
-		<li>
-			<a href="{{ path('nodesHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to nodes{% endtrans %}</a>
-		</li>
 		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
 			<a href="{{ path('nodesEditPage', { node_id: node.getId }) }}">{% trans %}Parameters{% endtrans %}</a>
 		</li>
@@ -16,4 +13,10 @@
 			<a href="{{ path('nodesEditAliasesPage', { node_id: node.getId}) }}">{% trans %}Url aliases{% endtrans %}</a>
 		</li>
 	</ul>
+	<div class="uk-navbar-content">
+		<a class="uk-button" href="{{ path('nodesHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to nodes{% endtrans %}</a>
+	</div>
+	<div class="uk-navbar-content uk-navbar-flip">
+		<a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { node_id: node.getId}) }}"><span class="uk-icon-trash-o"></span>{% trans %}Delete{% endtrans %}</a>
+	</div>
 </nav>
