@@ -188,6 +188,7 @@ class Node extends DateTimedPositioned
 
 	/**
 	 * @ManyToOne(targetEntity="Node", fetch="EXTRA_LAZY")
+	 * @JoinColumn(name="parent_node_id", referencedColumnName="id", onDelete="CASCADE")
 	 * @var Node
 	 */
 	private $parent;
@@ -210,6 +211,7 @@ class Node extends DateTimedPositioned
 
 	/**
 	 * @OneToMany(targetEntity="Node", mappedBy="parent", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @OrderBy({"position" = "ASC"})
 	 * @var ArrayCollection
 	 */
 	private $children;
@@ -238,7 +240,7 @@ class Node extends DateTimedPositioned
     }
 
     /**
-     * @ManyToMany(targetEntity="Tag", inversedBy="nodes", orphanRemoval=true)
+     * @ManyToMany(targetEntity="Tag", inversedBy="nodes", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @JoinTable(name="nodes_tags")
      * @var ArrayCollection
      */

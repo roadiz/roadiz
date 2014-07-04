@@ -16,32 +16,65 @@ use RZ\Renzo\Core\Handlers\NodeTypeFieldHandler;
  */
 class NodeTypeField extends Positioned implements Persistable {
 
-	const STRING_T =   0;
-	const MARKDOWN_T = 1;
-	const TEXT_T =     2;
-	const INTEGER_T =  3;
-	const BOOLEAN_T =  4;
+	const STRING_T = 		0;
+	const DATETIME_T = 		1;
+	const TEXT_T = 			2;
+	const RICHTEXT_T = 		3;
+	const MARKDOWN_T = 		4;
+	const BOOLEAN_T = 		5;
+	const INTEGER_T = 		6;
+	const DECIMAL_T = 		7;
+	const EMAIL_T = 		8;
+	const DOCUMENTS_T = 	9;
+	const PASSWORD_T = 		10;
+	const COLOUR_T = 		11;
+	const GEOTAG_T = 		12;
+	const NODE_T = 			13;
+	const USER_T = 			14;
+	const ENUM_T = 			15;
+	const CHILDREN_T = 		16;
+	const SURVEY_T = 		17;
+	const MULTIPLE_T = 		18;
+	const RADIO_GROUP_T = 	19;
+	const CHECK_GROUP_T = 	20;
+	const MULTI_GEOTAG_T =  21;
+
 
 	static $typeToHuman = array(
-		self::STRING_T =>   'string',
-		self::MARKDOWN_T => 'markdown',
-		self::TEXT_T =>     'text',
-		self::INTEGER_T =>  'integer',
-		self::BOOLEAN_T =>  'boolean',
+		NodeTypeField::STRING_T =>   'string',
+		NodeTypeField::DATETIME_T => 'date-time',
+		NodeTypeField::TEXT_T =>     'text',
+		NodeTypeField::MARKDOWN_T => 'markdown',
+		NodeTypeField::BOOLEAN_T =>  'boolean',
+		NodeTypeField::INTEGER_T =>  'integer',
+		NodeTypeField::DECIMAL_T =>  'decimal',
+		NodeTypeField::EMAIL_T =>    'email',
+		NodeTypeField::ENUM_T =>     'single-choice',
+		NodeTypeField::MULTIPLE_T => 'multiple-choice',
 	);
 	static $typeToDoctrine = array(
-		self::STRING_T =>   'string',
-		self::MARKDOWN_T => 'text',
-		self::TEXT_T =>     'text',
-		self::INTEGER_T =>  'integer',
-		self::BOOLEAN_T =>  'boolean',
+		NodeTypeField::STRING_T =>   'string',
+		NodeTypeField::DATETIME_T => 'datetime',
+		NodeTypeField::TEXT_T =>     'text',
+		NodeTypeField::MARKDOWN_T => 'text',
+		NodeTypeField::BOOLEAN_T =>  'boolean',
+		NodeTypeField::INTEGER_T =>  'integer',
+		NodeTypeField::DECIMAL_T =>  'decimal',
+		NodeTypeField::EMAIL_T =>    'string',
+		NodeTypeField::ENUM_T =>     'string',
+		NodeTypeField::MULTIPLE_T => 'simple_array',
 	);
 	static $typeToForm = array(
-		self::STRING_T =>   'text',
-		self::MARKDOWN_T => 'textarea',
-		self::TEXT_T =>     'textarea',
-		self::INTEGER_T =>  'integer',
-		self::BOOLEAN_T =>  'checkbox',
+		NodeTypeField::STRING_T =>   'text',
+		NodeTypeField::DATETIME_T => 'datetime',
+		NodeTypeField::TEXT_T =>     'textarea',
+		NodeTypeField::MARKDOWN_T => 'markdown',
+		NodeTypeField::BOOLEAN_T =>  'checkbox',
+		NodeTypeField::INTEGER_T =>  'integer',
+		NodeTypeField::DECIMAL_T =>  'decimal',
+		NodeTypeField::EMAIL_T =>    'email',
+		NodeTypeField::ENUM_T =>     'enumeration',
+		NodeTypeField::MULTIPLE_T => 'multiple_enumeration',
 	);
 
 

@@ -19,7 +19,7 @@ nodesEditSourcePage:
     requirements: { node_id : "[0-9]+", translation_id : "[0-9]+" }
 nodesEditTagsPage:
     path:     /rz-admin/nodes/edit/{node_id}/tags
-    defaults: { _controller: Themes\Rozier\Controllers\NodesController::editTagAction }
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::editTagsAction }
     requirements: { node_id : "[0-9]+" }
 nodesEditAliasesPage:
     path:     /rz-admin/nodes/edit/{node_id}/aliases
@@ -87,6 +87,22 @@ settingsDeletePage:
     path:     /rz-admin/settings/delete/{setting_id}
     defaults: { _controller: Themes\Rozier\Controllers\SettingsController::deleteAction }
     requirements: { setting_id : "[0-9]+" }
+
+# TAGS
+tagsHomePage:
+    path:     /rz-admin/tags
+    defaults: { _controller: Themes\Rozier\Controllers\TagsController::indexAction }
+tagsEditPage:
+    path:     /rz-admin/tags/edit/{tag_id}
+    defaults: { _controller: Themes\Rozier\Controllers\TagsController::editAction }
+    requirements: { tag_id : "[0-9]+" }
+tagsAddPage:
+    path:     /rz-admin/tags/add
+    defaults: { _controller: Themes\Rozier\Controllers\TagsController::addAction }
+tagsDeletePage:
+    path:     /rz-admin/tags/delete/{tag_id}
+    defaults: { _controller: Themes\Rozier\Controllers\TagsController::deleteAction }
+    requirements: { tag_id : "[0-9]+" }
 
 # TRANSLATIONS
 translationsHomePage:

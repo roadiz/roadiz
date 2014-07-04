@@ -1,36 +1,28 @@
 <?php
 namespace RZ\Renzo\Core\AbstractEntities;
 
-use RZ\Renzo\Core\AbstractEntities\Persistable;
+use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 /**
 * @MappedSuperclass
+* @HasLifecycleCallbacks
 */
-abstract class DateTimed implements Persistable
+abstract class DateTimed extends PersistableObject
 {
 	/**
-	 * @Id
-	 * @Column(type="integer")
-	 * @GeneratedValue
-	 */
-	private $id;
-	public function getId()
-	{
-		return $this->id;
-	}
-	/**
 	 * @Column(type="datetime", name="created_at")
+	 * @var \DateTime
 	 */
 	private $createdAt;
 
 	/**
-	 * @return [type] [description]
+	 * @return \DateTime
 	 */
 	public function getCreatedAt() {
 	    return $this->createdAt;
 	}
 	
 	/**
-	 * @param [type] $newcreatedAt [description]
+	 * @param \DateTime $newcreatedAt
 	 */
 	public function setCreatedAt($createdAt) {
 	    $this->createdAt = $createdAt;
@@ -39,18 +31,19 @@ abstract class DateTimed implements Persistable
 	}
 	/**
 	 * @Column(type="datetime", name="updated_at")
+	 * @var \DateTime
 	 */
 	private $updatedAt;
 
 	/**
-	 * @return [type] [description]
+	 * @return \DateTime [description]
 	 */
 	public function getUpdatedAt() {
 	    return $this->updatedAt;
 	}
 	
 	/**
-	 * @param [type] $newupdatedAt [description]
+	 * @param \DateTime $newupdatedAt
 	 */
 	public function setUpdatedAt($updatedAt) {
 	    $this->updatedAt = $updatedAt;
@@ -60,9 +53,27 @@ abstract class DateTimed implements Persistable
 	
 	public function __construct()
 	{
-		$this->resetDates();
+		parent::__construct();
+
+		//$this->resetDates();
 	}
 
+	/** 
+	 * @PreUpdate
+	 */
+    public function preUpdate()
+    {
+        $this->setUpdatedAt(new \DateTime("now"));
+    }
+    /** 
+     * @PrePersist
+     */
+    public function prePersist()
+    {
+    	$this->setUpdatedAt(new \DateTime("now"));
+        $this->setCreatedAt(new \DateTime("now"));
+    }
+	
 	public function resetDates()
 	{
 		$this->setCreatedAt(new \DateTime("now"));

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section id="manage-tags">
+	<h1 id="title">{% trans %}Tags{% endtrans %}</h1>
+	<a class="uk-button" href="{{ path('tagsAddPage') }}"><span class="uk-icon-plus"></span>{% trans %}Create a tag{% endtrans %}</a>
+	<table class="tags uk-table">
+		<thead>
+	        <tr>
+	            <th>{% trans %}Id{% endtrans %}</th>
+	            <th>{% trans %}Name{% endtrans %}</th>
+	            <th>{% trans %}Actions{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for tag in tags %}
+			<tr>
+				<td><a href="{{ path('tagsEditPage', { tag_id: tag.getId }) }}">{{ tag.getId }}</a></td>
+				<td><a href="{{ path('tagsEditPage', { tag_id: tag.getId }) }}">{{ tag.getDefaultTranslatedTag.getName }}</a></td>
+				<td>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tag_id: tag.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}

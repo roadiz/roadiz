@@ -3,8 +3,9 @@ namespace RZ\Renzo\Core\AbstractEntities;
 
 use RZ\Renzo\Core\AbstractEntities\DateTimed;
 /**
-* @MappedSuperclass
-*/
+ * @MappedSuperclass
+ * @Table(indexes={@Index(name="position_idx", columns={"position"})})
+ */
 abstract class DateTimedPositioned extends DateTimed
 {
 	/**
@@ -21,5 +22,10 @@ abstract class DateTimedPositioned extends DateTimed
 			$this->position = (int)$newPosition;
 		}
 		return $this;
+	}
+
+	public function __construct()
+	{
+		parent::__construct();
 	}
 }

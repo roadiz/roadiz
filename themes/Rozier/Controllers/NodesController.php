@@ -203,6 +203,67 @@ class NodesController extends RozierApp {
 		return $this->throw404();
 	}
 
+	/**
+	 * Return an edition form for requested node
+	 * @param  integer $node_id        [description]
+	 * @param  integer $translation_id [description]
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function editTagsAction( $node_id )
+	{
+		$translation = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Translation')
+				->findOneBy(array('defaultTranslation'=>true));
+
+		if ($translation !== null) {
+
+			$node = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Node')
+				->findWithTranslation((int)$node_id, $translation);
+
+			if ($node !== null && 
+				$translation !== null) {
+
+				$source = $node->getNodeSources()->first();
+
+				$this->assignation['translation'] = $translation;
+				$this->assignation['node'] = 		$node;
+				$this->assignation['source'] = 		$source;
+				
+				$form = $this->buildEditTagsForm( $node );
+
+				$form->handleRequest();
+
+				if ($form->isValid()) {
+			 		$this->addNodeTag($form->getData(), $node);
+
+			 		/*
+			 		 * Force redirect to avoid resending form when refreshing page
+			 		 */
+			 		$response = new RedirectResponse(
+						Kernel::getInstance()->getUrlGenerator()->generate(
+							'nodesEditTagsPage',
+							array('node_id' => $node->getId())
+						)
+					);
+					$response->prepare(Kernel::getInstance()->getRequest());
+
+					return $response->send();
+				}
+
+				$this->assignation['form'] = $form->createView();
+
+				return new Response(
+					$this->getTwig()->render('nodes/editTags.html.twig', $this->assignation),
+					Response::HTTP_OK,
+					array('content-type' => 'text/html')
+				);
+			}
+		}
+
+		return $this->throw404();
+	}
+
 
 	/**
 	 * Handle node creation pages
@@ -345,6 +406,18 @@ class NodesController extends RozierApp {
 		$this->getSession()->getFlashBag()->add('confirm', 'Node “'.$node->getNodeName().'” has been updated');
 	}
 
+	private function addNodeTag($data, Node $node)
+	{
+		$tag = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Tag')
+				->findWithDefaultTranslation($data['tag_id']);
+
+		$node->getTags()->add($tag);
+		Kernel::getInstance()->em()->flush();
+
+		$this->getSession()->getFlashBag()->add('confirm', 'Tag “'.$tag->getDefaultTranslatedTag()->getName().'” has been linked to node “'.$node->getNodeName().'”.');
+	}
+
 
 	private function translateNode( $data, Node $node )
 	{
@@ -440,6 +513,35 @@ class NodesController extends RozierApp {
 		return $builder->getForm();
 	}
 
+	/**
+	 * 
+	 * @param  Node   $node 
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildEditTagsForm( Node $node )
+	{
+		$defaults = array(
+			'node_id' =>  $node->getId()
+		);
+		$builder = $this->getFormFactory()
+					->createBuilder('form', $defaults)
+					->add('node_id', 'hidden', array(
+						'data' => $node->getId(),
+						'constraints' => array(
+							new NotBlank()
+						)
+					))
+					->add('tag_id', new \RZ\Renzo\CMS\Forms\TagsType() );
+
+		return $builder->getForm();
+	}
+
+	/**
+	 * 
+	 * @param  Node  $node
+	 * @param  NodesSources $source
+	 * @return Symfony\Component\Form\Forms
+	 */
 	private function buildEditSourceForm( Node $node, $source )
 	{
 		$fields = $node->getNodeType()->getFields();
@@ -460,7 +562,7 @@ class NodesController extends RozierApp {
 		foreach ($fields as $field) {
 			$sourceBuilder->add(
 				$field->getName(), 
-				NodeTypeField::$typeToForm[$field->getType()], 
+				static::getFormTypeFromFieldType( $field ), 
 				array(
 					'label'  => $field->getLabel(),
 					'required' => false
@@ -468,6 +570,22 @@ class NodesController extends RozierApp {
 			);
 		}
 		return $sourceBuilder->getForm();
+	}
+
+	/**
+	 * 
+	 * @param  string $type
+	 * @return AbstractType
+	 */
+	public static function getFormTypeFromFieldType( NodeTypeField $field )
+	{
+		switch ($field->getType()) {
+			case NodeTypeField::MARKDOWN_T:
+				return new \RZ\Renzo\CMS\Forms\MarkdownType();
+			
+			default:
+				return NodeTypeField::$typeToForm[$field->getType()];
+		}
 	}
 
 	/**

@@ -18,4 +18,8 @@ abstract class PersistableObject implements Persistable
 	{
 		return $this->id;
 	}
+
+	public function __construct(){
+		
+	}
 }

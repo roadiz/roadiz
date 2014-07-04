@@ -36,4 +36,27 @@ class NodeRepository extends EntityRepository
             return null;
         }
 	}
+
+    /**
+     * 
+     * @param  integer      $node_id     [description]
+     * @return Node or null
+     */
+    public function findWithDefaultTranslation($node_id)
+    {
+        $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
+            INNER JOIN n.nodeSources ns 
+            INNER JOIN ns.translation t
+            WHERE n.id = :node_id AND t.defaultTranslation = :defaultTranslation'
+                        )->setParameter('node_id', (int)$node_id)
+                        ->setParameter('defaultTranslation', true);
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
 }

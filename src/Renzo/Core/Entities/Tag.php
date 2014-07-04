@@ -3,53 +3,14 @@
 namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\AbstractEntities\PersistableObject;
+use RZ\Renzo\Core\AbstractEntities\DateTimedPositioned;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\TagRepository")
  * @Table(name="tags")
  */
-class Tag extends PersistableObject
-{
-	
-	/**
-	 * @Column(type="string", unique=true)
-	 */
-	private $name;
-	/**
-	 * @return
-	 */
-	public function getName() {
-	    return $this->name;
-	}
-	/**
-	 * @param $newnodeName 
-	 */
-	public function setName($name) {
-	    $this->name = $name;
-	
-	    return $this;
-	}
-
-	/**
-	 * @Column(type="text")
-	 */
-	private $description;
-	/**
-	 * @return string
-	 */
-	public function getDescription() {
-	    return $this->description;
-	}
-	/**
-	 * @param string $newnodeName
-	 */
-	public function setDescription($description) {
-	    $this->description = $description;
-	
-	    return $this;
-	}
-	
+class Tag extends DateTimedPositioned
+{	
 	/**
 	 * @Column(type="boolean")
 	 */
@@ -110,7 +71,8 @@ class Tag extends PersistableObject
 	
 	/**
 	 * @ManyToOne(targetEntity="Tag", fetch="EXTRA_LAZY")
-	 * @var Node
+	 * @JoinColumn(name="parent_tag_id", referencedColumnName="id", onDelete="CASCADE")
+	 * @var Tag
 	 */
 	private $parent;
 
@@ -159,9 +121,26 @@ class Tag extends PersistableObject
 	    return $this;
     }
 
-	/**
-	 * @param NodeType $nodeType [description]
+    /**
+	 * @OneToMany(targetEntity="TagTranslation", mappedBy="tag", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @var ArrayCollection
 	 */
+	private $translatedTags = null;
+	/**
+	 * @return ArrayCollection
+	 */
+	public function getTranslatedTags() {
+	    return $this->translatedTags;
+	}
+	/**
+	 * @return TagTranslation
+	 */
+	public function getDefaultTranslatedTag()
+	{
+		return $this->getTranslatedTags()->first();
+	}
+
+
 	public function __construct()
     {
     	parent::__construct();
@@ -169,6 +148,7 @@ class Tag extends PersistableObject
     	$this->nodes = new ArrayCollection();
     	$this->subscribers = new ArrayCollection();
     	$this->documents = new ArrayCollection();
+    	$this->translatedTags = new ArrayCollection();
     }
 
     public function getOneLineSummary()

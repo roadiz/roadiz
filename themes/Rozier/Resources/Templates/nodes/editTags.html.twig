@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+<section id="manage-node-tags">
+	<h1 id="node-title">Edit {{ source.getTitle }} tags</h1>
+
+	{% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
+
+	<h2>{% trans %}Add a tag{% endtrans %}</h2>
+	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+   		{{ form_errors(form) }}
+
+   		<fieldset data-uk-margin>
+		    {% for item in form %}
+			    {% if item.vars.name != "_token" %}
+			    <div class="uk-form-row">
+			    	{# Source fields  #}
+			        <label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.label }}</label>
+			        {{ form_errors(item) }}
+			        {{ form_widget(item) }}
+			    </div>
+			    {% endif %}
+		    {% endfor %}
+   		</fieldset>
+	    {{ form_rest(form) }}
+	    <fieldset data-uk-margin>
+	    	<input class="uk-button uk-button-primary" type="submit" />
+   		</fieldset>
+	</form>
+	<hr />
+	<h2>{% trans %}Tags{% endtrans %}</h2>
+	<table class="tags uk-table">
+		<thead>
+	        <tr>
+	            <th>{% trans %}Id{% endtrans %}</th>
+	            <th>{% trans %}Name{% endtrans %}</th>
+	            <th>{% trans %}Actions{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for tag in node.getTags %}
+			<tr>
+				<td><a href="{{ path('tagsEditPage', { tag_id: tag.getId }) }}">{{ tag.getId }}</a></td>
+				<td><a href="{{ path('tagsEditPage', { tag_id: tag.getId }) }}">{{ tag.getDefaultTranslatedTag.getName }}</a></td>
+				<td>
+					<a class="uk-button uk-button-small uk-button-danger" href="">{% trans %}Unlink{% endtrans %}</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}

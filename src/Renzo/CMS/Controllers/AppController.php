@@ -235,13 +235,18 @@ class AppController {
 
 		$loader = new \Twig_Loader_Filesystem(array(
 			RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources/Templates', // Theme templates
+			RENZO_ROOT . '/src/Renzo/CMS/Resources/Templates/forms', // Form extension templates
 			$vendorTwigBridgeDir . '/Resources/views/Form' // Form extension templates
 		));
 		$this->twig = new \Twig_Environment($loader, array(
 		    'cache' => $this->getCacheDirectory(),
 		));
 
-		$formEngine = new TwigRendererEngine(array($defaultFormTheme));
+		$formEngine = new TwigRendererEngine(array(
+			$defaultFormTheme,
+			'fields.html.twig'
+		));
+		
 		$formEngine->setEnvironment($this->twig);
 		// ajoutez à Twig la FormExtension
 		$this->twig->addExtension(
