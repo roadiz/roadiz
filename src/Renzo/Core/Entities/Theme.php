@@ -7,7 +7,10 @@ use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
 /**
  * @Entity
- * @Table(name="themes", indexes={@index(name="backend_idx", columns={"backend"})})
+ * @Table(name="themes", indexes={
+ * 		@index(name="backend_idx", columns={"backend"}),
+ * 		@index(name="available_idx", columns={"available"})
+ * })
  */
 class Theme extends PersistableObject {
 

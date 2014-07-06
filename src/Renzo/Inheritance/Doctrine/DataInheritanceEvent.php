@@ -37,7 +37,16 @@ class DataInheritanceEvent {
 		}
 	}
 
-/*	public function checkTable($table)
+	/**
+	 * Check if given table exists
+	 * 
+	 * This method must be used at installation not to throw error when 
+	 * creating discriminator map with node-types
+	 * 
+	 * @param  string $table
+	 * @return boolean
+	 */
+	public function checkTable($table)
 	{
 	    $conn = Kernel::getInstance()->em()->getConnection();
 	    $sm = $conn->getSchemaManager();
@@ -50,5 +59,5 @@ class DataInheritanceEvent {
 	    }
 
 	    return false;
-	}*/
+	}
 }

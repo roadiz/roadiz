@@ -8,11 +8,11 @@ use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 use RZ\Renzo\Core\Handlers\NodeTypeHandler;
 use RZ\Renzo\Core\Utils\StringHandler;
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodeTypeRepository")
  * @Table(name="node_types", indexes={
- *     @index(name="visible_idx", columns={"visible"}), 
+ *     @index(name="visible_idx",         columns={"visible"}), 
  *     @index(name="newsletter_type_idx", columns={"newsletter_type"}), 
- *     @index(name="hiding_nodes_idx", columns={"hiding_nodes"})
+ *     @index(name="hiding_nodes_idx",    columns={"hiding_nodes"})
  * })
  */
 class NodeType extends PersistableObject
@@ -42,13 +42,13 @@ class NodeType extends PersistableObject
 	 */
 	private $displayName;
 	/**
-	 * @return [type] [description]
+	 * @return string
 	 */
 	public function getDisplayName() {
 	    return $this->displayName;
 	}
 	/**
-	 * @param [type] $newname [description]
+	 * @param string $newname
 	 */
 	public function setDisplayName($displayName) {
 	    $this->displayName = $displayName;
@@ -61,13 +61,13 @@ class NodeType extends PersistableObject
 	 */
 	private $description;
 	/**
-	 * @return [type] [description]
+	 * @return string
 	 */
 	public function getDescription() {
 	    return $this->description;
 	}
 	/**
-	 * @param [type] $newname [description]
+	 * @param string $newname
 	 */
 	public function setDescription($description) {
 	    $this->description = $description;

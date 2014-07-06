@@ -14,10 +14,10 @@ use RZ\Renzo\Core\Handlers\NodeHandler;
 /**
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodeRepository")
  * @Table(name="nodes", indexes={
- *     @index(name="visible_idx", columns={"visible"}), 
+ *     @index(name="visible_idx",   columns={"visible"}), 
  *     @index(name="published_idx", columns={"published"}), 
- *     @index(name="locked_idx", columns={"locked"}), 
- *     @index(name="archived_idx", columns={"archived"})
+ *     @index(name="locked_idx",    columns={"locked"}), 
+ *     @index(name="archived_idx",  columns={"archived"})
  * })
  */
 class Node extends DateTimedPositioned

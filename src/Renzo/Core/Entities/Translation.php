@@ -189,7 +189,7 @@ class Translation extends DateTimed {
 	}
 
 	/**
-	 * @OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true)
+	 * @OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @var ArrayCollection
 	 */
 	private $nodeSources = null;
@@ -201,7 +201,7 @@ class Translation extends DateTimed {
 	}
 
 	/**
-	 * @OneToMany(targetEntity="UrlAlias", mappedBy="translation", orphanRemoval=true)
+	 * @OneToMany(targetEntity="UrlAlias", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @var ArrayCollection
 	 */
 	private $urlAliases = null;

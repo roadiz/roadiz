@@ -55,7 +55,7 @@ class NodesSources extends PersistableObject {
 	}
 
 	/**
-	 * @OneToMany(targetEntity="RZ\Renzo\Core\Entities\UrlAlias", mappedBy="nodeSource", orphanRemoval=true)
+	 * @OneToMany(targetEntity="RZ\Renzo\Core\Entities\UrlAlias", mappedBy="nodeSource", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 */
 	private $urlAliases = null;
 	/**
