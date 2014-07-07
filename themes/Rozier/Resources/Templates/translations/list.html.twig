@@ -4,7 +4,7 @@
 {% block content %}
 <section id="manage-translations">
 	<h1 id="title">{% trans %}Translations{% endtrans %}</h1>
-	<a class="uk-button" href="{{ path('translationsAddPage') }}"><span class="uk-icon-plus"></span>{% trans %}Create a translation{% endtrans %}</a>
+	<a class="uk-button" href="{{ path('translationsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a translation{% endtrans %}</a>
 	<table class="translations uk-table">
 		<thead>
 	        <tr>
@@ -22,7 +22,7 @@
 				<td>
 				{% if t.translation.isAvailable == false %}<div class="uk-badge uk-badge-warning">{% trans %}Not available{% endtrans %}</div>{% endif %}
 				{% if t.translation.isDefaultTranslation == true %}
-				<div class="uk-badge uk-badge-notification"><span class="uk-icon-star"></span></div>
+				<div class="uk-badge uk-badge-notification"><i class="uk-icon-star"></i></div>
 				{% endif %}
 				</td>
 				<td>

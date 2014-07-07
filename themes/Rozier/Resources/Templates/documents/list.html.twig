@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section id="manage-documents">
+	<h1 id="title">{% trans %}Documents{% endtrans %}</h1>
+	<a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-plus"></i> {% trans %}Upload a document{% endtrans %}</a>
+	<table class="documents uk-table">
+		<thead>
+	        <tr>
+	            <th>{% trans %}Type{% endtrans %}</th>
+	            <th>{% trans %}Name{% endtrans %}</th>
+	            <th>{% trans %}Upload date{% endtrans %}</th>
+	            <th>{% trans %}Actions{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for document in documents %}
+			<tr>
+				<td><i class='uk-icon-small uk-icon-file-{{ document.getShortType }}-o'></i></td>
+				<td>
+					<p>{{ document.getFilename }}</p>
+					<p class="uk-text-small"><a target="_blank" href="{{ head.filesUrl }}/{{ document.getRelativeUrl }}">{{ document.getRelativeUrl }}</a></p>
+				</td>
+				<td>{{ document.getCreatedAt.format('d M Y H:i:s') }}</td>
+				<td>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { document_id: document.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}

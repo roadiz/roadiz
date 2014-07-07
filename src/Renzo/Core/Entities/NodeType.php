@@ -22,13 +22,13 @@ class NodeType extends PersistableObject
 	 */
 	private $name;
 	/**
-	 * @return [type] [description]
+	 * @return string
 	 */
 	public function getName() {
 	    return $this->name;
 	}
 	/**
-	 * @param [type] $newname [description]
+	 * @param string $newname
 	 */
 	public function setName($name) {
 	    $this->name = StringHandler::removeDiacritics($name);

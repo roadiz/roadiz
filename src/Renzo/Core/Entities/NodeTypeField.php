@@ -115,18 +115,17 @@ class NodeTypeField extends Positioned implements Persistable {
 	private $name;
 
 	/**
-	 * @return [type] [description]
+	 * @return string
 	 */
 	public function getName() {
 	    return $this->name;
 	}
 	
 	/**
-	 * @param [type] $newname [description]
+	 * @param string $newname
 	 */
 	public function setName($name) {
-		$this->name = StringHandler::removeDiacritics($name);
-	    $this->name = preg_replace('#([^a-zA-Z]+)#', '_', (trim(strtolower($this->name))));
+		$this->name = StringHandler::variablize($name);
 	
 	    return $this;
 	}
@@ -136,14 +135,14 @@ class NodeTypeField extends Positioned implements Persistable {
 	private $label;
 
 	/**
-	 * @return [type] [description]
+	 * @return string
 	 */
 	public function getLabel() {
 	    return $this->label;
 	}
 	
 	/**
-	 * @param [type] $newlabel [description]
+	 * @param string $newlabel
 	 */
 	public function setLabel($label) {
 	    $this->label = $label;
@@ -156,14 +155,14 @@ class NodeTypeField extends Positioned implements Persistable {
 	private $description;
 
 	/**
-	 * @return [type] [description]
+	 * @return string
 	 */
 	public function getDescription() {
 	    return $this->description;
 	}
 	
 	/**
-	 * @param [type] $newdescription [description]
+	 * @param string $newdescription
 	 */
 	public function setDescription($description) {
 	    $this->description = $description;

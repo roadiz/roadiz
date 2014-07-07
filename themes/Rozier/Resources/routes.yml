@@ -124,6 +124,22 @@ translationsDeletePage:
     defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::deleteAction }
     requirements: { translation_id : "[0-9]+" }
 
+# DOCUMENTS
+documentsHomePage:
+    path:     /rz-admin/documents
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::indexAction }
+documentsEditPage:
+    path:     /rz-admin/documents/edit/{document_id}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::editAction }
+    requirements: { document_id : "[0-9]+" }
+documentsUploadPage:
+    path:     /rz-admin/documents/upload
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::uploadAction }
+documentsDeletePage:
+    path:     /rz-admin/documents/delete/{document_id}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::deleteAction }
+    requirements: { document_id : "[0-9]+" }
+
 
 noAction:
     path:     /rz-admin/no

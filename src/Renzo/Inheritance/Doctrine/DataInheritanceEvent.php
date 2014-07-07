@@ -21,19 +21,29 @@ class DataInheritanceEvent {
  
 		if ($class->getName() === 'RZ\Renzo\Core\Entities\NodesSources') {
 
-			/**
-			 *  List node types
-			 */
-			$nodeTypes = Kernel::getInstance()->em()
-				->getRepository('RZ\Renzo\Core\Entities\NodeType')
-				->findAll();
+			try {
 
-			$map = array();
-			foreach ($nodeTypes as $type) {
-				$map[$type->getName()] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
+				/**
+				 *  List node types
+				 */
+				$nodeTypes = Kernel::getInstance()->em()
+					->getRepository('RZ\Renzo\Core\Entities\NodeType')
+					->findAll();
+
+				$map = array();
+				foreach ($nodeTypes as $type) {
+					$map[$type->getName()] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
+				}
+
+				$metadata->setDiscriminatorMap($map);
 			}
-
-			$metadata->setDiscriminatorMap($map);
+			catch (\PDOException $e){
+				/*
+				 * Database tables don't exist yet
+				 * Need Install
+				 */
+				$this->getSession()->getFlashBag()->add('error', 'Impossible to create discriminator map, make sure your database is fully installed.');
+			}
 		}
 	}
 

@@ -1,0 +1,33 @@
+<tr class="{% if loop.index0 is odd %}odd{% endif %}">
+	<td>
+		{# Update URL alias #}
+		<form class="uk-form" action="#" method="post" {{ form_enctype(urlAlias.editForm) }}>
+			{% for item in urlAlias.editForm %}
+			    {% if item.vars.name != "_token" %}
+			    <span>
+			        {{ form_errors(item) }}
+			        {{ form_widget(item) }}
+			    </span>
+			    {% endif %}
+		    {% endfor %}
+			{{ form_rest(urlAlias.editForm) }}
+			<input class="uk-button uk-button-small uk-button-primary" type="submit" value="{% trans %}Edit{% endtrans %}" />
+		</form>
+	</td>
+	<td>{{ urlAlias.alias.getNodeSource.getTranslation.getName }}</td>
+	<td>
+		{# Delete URL Alias #}
+		<form class="uk-form" action="#" method="post" {{ form_enctype(urlAlias.deleteForm) }}>
+			{% for item in urlAlias.deleteForm %}
+			    {% if item.vars.name != "_token" %}
+			    <span>
+			        {{ form_errors(item) }}
+			        {{ form_widget(item) }}
+			    </span>
+			    {% endif %}
+		    {% endfor %}
+			{{ form_rest(urlAlias.deleteForm) }}
+			<input class="uk-button uk-button-small uk-button-danger" type="submit" value="{% trans %}Delete{% endtrans %}" />
+		</form>
+	</td>
+</tr>

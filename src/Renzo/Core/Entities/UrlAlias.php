@@ -4,9 +4,10 @@ namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
+use RZ\Renzo\Core\Utils\StringHandler;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\UrlAliasRepository")
  * @Table(name="url_aliases")
  */
 class UrlAlias extends PersistableObject
@@ -26,7 +27,7 @@ class UrlAlias extends PersistableObject
 	 * @param $newnodeName 
 	 */
 	public function setAlias($alias) {
-	    $this->alias = $alias;
+		$this->alias = StringHandler::slugify($alias);
 	
 	    return $this;
 	}
@@ -40,7 +41,7 @@ class UrlAlias extends PersistableObject
 	 * @return RZ\Renzo\Core\Entities\NodesSources
 	 */
 	public function getNodeSource() {
-	    return $this->node;
+	    return $this->nodeSource;
 	}
 	/**
 	 * @param RZ\Renzo\Core\Entities\NodesSources $newnode
@@ -48,5 +49,12 @@ class UrlAlias extends PersistableObject
 	public function setNodeSource($nodeSource) {
 	    $this->nodeSource = $nodeSource;
 	    return $this;
+	}
+
+	public function __construct( $nodeSource ){
+		parent::__construct();
+
+
+		$this->setNodeSource( $nodeSource );
 	}
 }

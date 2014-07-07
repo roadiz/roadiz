@@ -59,4 +59,27 @@ class NodeRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * 
+     * @param  \RZ\Renzo\Core\Entities\UrlAlias $urlAlias 
+     * @return Node or null
+     */
+    public function findOneWithUrlAlias( $urlAlias )
+    {
+        $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT n, ns, t FROM RZ\Renzo\Core\Entities\Node n 
+            INNER JOIN n.nodeSources ns 
+            INNER JOIN ns.urlAliases uas
+            INNER JOIN ns.translation t
+            WHERE uas.id = :urlalias_id'
+                        )->setParameter('urlalias_id', (int)$urlAlias->getId());
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
 }

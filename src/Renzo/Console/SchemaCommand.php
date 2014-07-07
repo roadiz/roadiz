@@ -100,11 +100,11 @@ class SchemaCommand extends Command {
 		
 		$sql = $tool->getUpdateSchemaSql($meta);
 
-		$count = count($sql);
+		/*$count = count($sql);
 		for($i=0; $i<$count; $i++) {
-		    if(substr($sql[$i], 0, 4) == 'DROP')
+		    if(substr($sql[$i], 0, 4) == 'DROP TABLE')
 		        unset($sql[$i]);
-		}
+		}*/
 
 		foreach($sql as $statement) {
 		    Kernel::getInstance()->em()->getConnection()->exec( $statement );

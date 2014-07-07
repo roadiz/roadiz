@@ -3,31 +3,104 @@
 namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\AbstractEntities\PersistableObject;
+use RZ\Renzo\Core\AbstractEntities\DateTimed;
+use RZ\Renzo\Core\Utils\StringHandler;
 
 /**
  * @Entity
  * @Table(name="documents")
  */
-class Document extends PersistableObject
+class Document extends DateTimed
 {
+
+	public static $mimeToIcon = array(
+		'text/html' => 'code',
+		'application/javascript' => 'code',
+		'text/css' => 'code',
+		'text/rtf' => 'word',
+		'text/xml' => 'code',
+		'image/png' => 'image',
+		'image/jpeg' => 'image',
+		'image/gif' => 'image',
+		'image/tiff' => 'image',
+		'image/svg+xml' => 'image',
+		'application/pdf' => 'pdf',
+		'application/ogg' => 'video',
+		'video/ogg' => 'video',
+		'audio/mpeg' => 'audio',
+		'audio/x-wav' => 'audio',
+		'audio/wav' => 'audio',
+		'video/mpeg' => 'video',
+		'video/mp4' => 'video',
+		'video/quicktime' => 'video',
+		'video/x-flv'=> 'video',
+		'application/gzip' => 'archive',
+		'application/zip' => 'zip',
+		'application/x-bzip2' => 'archive',
+		'application/x-tar' => 'archive',
+		'application/x-7z-compressed' => 'archive',
+		'application/x-apple-diskimage' => 'archive',
+		'application/x-rar-compressed' => 'archive',
+		'application/msword' => 'word',
+		'application/vnd.ms-excel' => 'excel',
+		'application/vnd.ms-powerpoint' => 'powerpoint',
+		'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'word',
+		'application/vnd.oasis.opendocument.text ' => 'word',
+		'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'excel',
+		'application/vnd.openxmlformats-officedocument.spreadsheetml.template' => 'excel',
+		'application/vnd.oasis.opendocument.spreadsheet' => 'excel',
+		'application/vnd.openxmlformats-officedocument.presentationml.slideshow' => 'powerpoint',
+		'application/vnd.oasis.opendocument.presentation' => 'powerpoint',
+		'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'powerpoint',
+	);
+
 	/**
-	 * @Column(name="relative_url", type="string", unique=true, nullable=false)
+	 * @Column(type="string", nullable=false)
 	 */
-	private $relativeUrl;
+	private $filename;
 	/**
-	 * @return
+	 * @return string
 	 */
-	public function getRelativeUrl() {
-	    return $this->relativeUrl;
+	public function getFilename() {
+	    return $this->filename;
 	}
 	/**
-	 * @param $newrelativeUrl
+	 * @param $filename
 	 */
-	public function setRelativeUrl($relativeUrl) {
-	    $this->relativeUrl = $relativeUrl;
+	public function setFilename($filename) {
+
+	    $this->filename = StringHandler::cleanForFilename($filename);
 	    return $this;
 	}
+
+	/**
+	 * @Column(name="mime_type", type="string", nullable=true)
+	 */
+	private $mimeType;
+	/**
+	 * @return string
+	 */
+	public function getMimeType() {
+	    return $this->mimeType;
+	}
+	/**
+	 * @param string $newmimeType
+	 */
+	public function setMimeType($mimeType) {
+	    $this->mimeType = $mimeType;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get short type name for current document Mime type
+	 * @return string
+	 */
+	public function getShortType()
+	{
+		return static::$mimeToIcon[$this->getMimeType()];
+	}
+
 
 	/**
 	 * @Column(type="string", nullable=true)
@@ -45,6 +118,33 @@ class Document extends PersistableObject
 	public function setName($name) {
 	    $this->name = $name;
 	    return $this;
+	}
+
+	/**
+	 * @Column(type="string")
+	 */
+	private $folder;
+	/**
+	 * @return string
+	 */
+	public function getFolder() {
+	    return $this->folder;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRelativeUrl() {
+	    return $this->getFolder().'/'.$this->getFilename();
+	}
+
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getAbsolutePath()
+	{
+		return static::getFilesFolder().'/'.$this->getRelativeUrl();
 	}
 
 	/**
@@ -93,30 +193,27 @@ class Document extends PersistableObject
     }
 	
 
-	/**
-	 * @param NodeType $nodeType [description]
-	 */
+    /**
+     * 
+     */
 	public function __construct()
     {
     	parent::__construct();
     	
         $this->tags = new ArrayCollection();
+        $this->folder = sha1(date('YmdHis'));
     }
 
-    public function getOneLineSummary()
-	{
-		return $this->getId()." — ".$this->getName()." — ".$this->getNodeType()->getName().
-			" — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
-	}
-
-	public function getOneLineSourceSummary()
-	{
-		$text = "Source ".$this->getDefaultNodeSource()->getId().PHP_EOL;
-
-		foreach ($this->getNodeType()->getFields() as $key => $field) {
-			$getterName = 'get'.ucwords($field->getName());
-			$text .= '['.$field->getLabel().']: '.$this->getDefaultNodeSource()->$getterName().PHP_EOL;
-		}
-		return $text;
-	}
+    /**
+     * 
+     * @return string
+     */
+    public static function getFilesFolder()
+    {
+    	return RENZO_ROOT.'/'.static::getFilesFolderName();
+    }
+    public static function getFilesFolderName()
+    {
+    	return 'files';
+    }
 }

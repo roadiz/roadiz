@@ -1,4 +1,5 @@
 /vendor
+/files/*
 cache
 sources
 .AppleDouble

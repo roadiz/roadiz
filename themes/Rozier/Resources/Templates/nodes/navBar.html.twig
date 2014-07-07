@@ -14,9 +14,9 @@
 		</li>
 	</ul>
 	<div class="uk-navbar-content">
-		<a class="uk-button" href="{{ path('nodesHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to nodes{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('nodesHomePage') }}"><i class="uk-icon-chevron-left"></i> {% trans %}Back to nodes{% endtrans %}</a>
 	</div>
 	<div class="uk-navbar-content uk-navbar-flip">
-		<a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { node_id: node.getId}) }}"><span class="uk-icon-trash-o"></span>{% trans %}Delete{% endtrans %}</a>
+		<a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { node_id: node.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}Delete{% endtrans %}</a>
 	</div>
 </nav>

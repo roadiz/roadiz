@@ -13,6 +13,7 @@ namespace RZ\Renzo\CMS\Controllers;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Theme;
+use RZ\Renzo\Core\Entities\Document;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -258,6 +259,16 @@ class AppController {
 		    new RoutingExtension(Kernel::getInstance()->getUrlGenerator())
 		);
 
+		/*
+		 * ============================================================================
+		 * Dump
+		 * ============================================================================
+		 */
+		$dump = new \Twig_SimpleFilter('dump', function ($object) {
+		    return var_dump($object);
+		});
+		$this->twig->addFilter($dump);
+
 		return $this;
 	}
 	/**
@@ -273,6 +284,7 @@ class AppController {
 		$this->assignation = array(
 			'head' => array(
 				'baseUrl' => Kernel::getInstance()->getRequest()->getBaseUrl(),
+				'filesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/'.Document::getFilesFolderName(),
 				'resourcesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/themes/'.static::$themeDir.'/static/'
 			),
 			'session' => array(

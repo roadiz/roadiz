@@ -59,8 +59,23 @@ class MixedUrlMatcher extends UrlMatcher
     	$tokens = explode('/', $decodedUrl);
     	$tokens = array_values(array_filter($tokens)); // Remove empty tokens (especially when a trailing slash is present)
 
+
     	/*
+    	 * Try with URL Aliases
     	 *
+    	 */
+    	$node = $this->parseFromUrlAlias($tokens);
+    	if ($node !== null) {
+    		return array(
+	    		'_controller' => $this->getThemeController().'::indexAction',
+	    		'node' => $node,
+	    		'urlAlias' => null,
+	    		'translation' => $node->getNodeSources()->first()->getTranslation()
+	    	);
+    	}
+
+    	/*
+    	 * Try with nodeName
     	 */
     	return array(
     		'_controller' => $this->getThemeController().'::indexAction',
@@ -71,22 +86,34 @@ class MixedUrlMatcher extends UrlMatcher
     }
 
     /**
+     * Get Theme front controller class FQN
      * 
-     * @return string
+     * @return string Full qualified Classname
      */
     public function getThemeController()
     {
+    	$theme = Kernel::getInstance()->em()
+						->getRepository('RZ\Renzo\Core\Entities\Theme')
+						->findOneBy(array(
+							'available'=>true, 
+							'backendTheme'=> false
+						));
+
+		if ($theme !== null) {
+			return $theme->getClassName();
+		}
+
     	return 'RZ\Renzo\CMS\Controllers\FrontendController';
     }
 
     /**
-	 * [parseNodeIdentifier description]
-	 * @param  array $tokens [description]
+	 * Parse URL searching nodeName
+	 * 
+	 * @param  array $tokens
 	 * @return RZ\Renzo\Core\Entities\Node
 	 */
 	private function parseNode( &$tokens )
 	{
-		
 		if (!empty($tokens[0])) {
 
 			/*
@@ -100,20 +127,61 @@ class MixedUrlMatcher extends UrlMatcher
 			else {
 				$identifier = strip_tags($tokens[(int)(count($tokens) - 1)]);
 
-				if ($identifier !== null && $identifier != '') {
+				if ($identifier !== null && 
+					$identifier != '') {
+
 					return Kernel::getInstance()->em()
 						->getRepository('RZ\Renzo\Core\Entities\Node')
 						->findOneBy(array('nodeName'=>$identifier));
 				}
 			}
 		}
-		
 		return null;
 	}
 
 	/**
+	 * Parse URL searching UrlAlias 
 	 * 
 	 * @param  array $tokens [description]
+	 * @return RZ\Renzo\Core\Entities\Node
+	 */
+	private function parseFromUrlAlias( &$tokens )
+	{
+		if (!empty($tokens[0])) {
+
+			/*
+			 * If the only url token if for language, return no url alias !
+			 */
+			if (in_array($tokens[0], Translation::getAvailableLocalesShortcuts()) && 
+				count($tokens) == 1) 
+			{
+				return null;
+			}
+			else {
+				$identifier = strip_tags($tokens[(int)(count($tokens) - 1)]);
+
+				if ($identifier !== null && 
+					$identifier != '') {
+
+					$ua = Kernel::getInstance()->em()
+						->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
+						->findOneBy(array('alias'=>$identifier));
+
+					if ($ua !== null) {
+						return Kernel::getInstance()->em()
+							->getRepository('RZ\Renzo\Core\Entities\Node')
+							->findOneWithUrlAlias($ua);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Parse translation from URL tokens
+	 * 
+	 * @param  array $tokens
 	 * @return RZ\Renzo\Core\Entities\Translation
 	 */
 	private function parseTranslation( &$tokens )

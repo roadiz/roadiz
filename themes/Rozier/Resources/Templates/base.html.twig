@@ -14,6 +14,7 @@
 
         {# <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.min.css" /> #}
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.gradient.min.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/dropzone.css">
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/main.css">
         <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
@@ -33,7 +34,11 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
         <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+
+        <script src="{{ head.resourcesUrl }}js/vendor/dropzone.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
         <script src="{{ head.resourcesUrl }}js/main.js"></script>
+
+        {% block customScripts %}{% endblock %}
     </body>
 </html>

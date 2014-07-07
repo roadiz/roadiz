@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section id="upload-document">
+	<h1 id="document-title">{% trans %}Upload a new document{% endtrans %}</h1>
+	<a class="uk-button uk-button-small" href="{{ path('documentsHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to documents{% endtrans %}</a>
+
+	<form id="upload-dropzone-document" class="uk-form uk-form-stacked dropzone" action="#" method="post" {{ form_enctype(form) }}>
+   		{{ form_errors(form) }}
+
+   		<div class="fallback">
+   			<legend>{{ node_type.getDisplayName }}</legend>
+		    {% for item in form %}
+		    	{# Node fields  #}
+		        {% if item.vars.name != "_token" %}
+		    	<div class="uk-form-row">
+		        	<label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.name }}</label>
+			        {{ form_errors(item) }}
+			        {{ form_widget(item) }}
+		    	</div>	
+		        {% endif %}
+		    {% endfor %}
+		     <input class="uk-button uk-button-primary" type="submit" value="{% trans %}Upload{% endtrans %}" />
+   		</div>
+	    {{ form_rest(form) }}
+	</form>
+</section>
+{% endblock %}
+
+{% block customScripts %}
+<script type="text/javascript">
+	Dropzone.options.uploadDropzoneDocument = {
+		// Dropzone class:
+		paramName: "form[attachment]",
+		uploadMultiple: false,
+		maxFilesize:{{ maxUploadSize }}
+	};
+</script>
+{% endblock %}

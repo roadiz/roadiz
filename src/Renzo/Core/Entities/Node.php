@@ -37,9 +37,7 @@ class Node extends DateTimedPositioned
 	 * @param string $newnodeName
 	 */
 	public function setNodeName($nodeName) {
-		$this->nodeName = trim(strtolower($nodeName));
-		$this->nodeName = StringHandler::removeDiacritics($this->nodeName);
-	 	$this->nodeName = preg_replace('#([^a-zA-Z0-9]+)#', '-', $this->nodeName);
+		$this->nodeName = StringHandler::slugify($nodeName);
 	
 	    return $this;
 	}
