@@ -24,6 +24,11 @@ class DocumentsController extends RozierApp {
 			->findAll();
 
 		$this->assignation['documents'] = $documents;
+		$this->assignation['thumbnailFormat'] = array(
+			'width' => 100,
+			'quality' => 50,
+			'crop' => '3x2'
+		);
 
 		return new Response(
 			$this->getTwig()->render('documents/list.html.twig', $this->assignation),

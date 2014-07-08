@@ -1,16 +1,10 @@
+# Home page
 homePage:
     path:     /rz-admin
     defaults: { _controller: Themes\Rozier\RozierApp::indexAction }
 homePageSlash:
     path:     /rz-admin/
     defaults: { _controller: Themes\Rozier\RozierApp::indexAction }
-
-# SLIR
-# 
-SLIRProcess:
-    path:     /assets/{queryString}/{filename}
-    defaults: { _controller: Themes\Rozier\RozierApp::slirAction }
-    requirements: { queryString : "[a-zA-Z0-9\-]+", filename : "[a-zA-Z0-9\-_\.\/]+" }
 
 #  NODES
 nodesHomePage:

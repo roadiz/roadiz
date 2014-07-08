@@ -117,7 +117,9 @@ class Kernel {
 	public function getStopwatch() { return $this->stopwatch; }
 
 	/**
-	 * [setEntityManager description]
+	 * Set kernel Doctrine entity manager and 
+	 * prepare custom data inheritance for Node system
+	 * 
 	 * @param EntityManager $em 
 	 */
 	public function setEntityManager(EntityManager $em)
@@ -225,19 +227,26 @@ class Kernel {
 			$beClass = $this->backendClass;
 			$cmsCollection = $beClass::getRoutes();
 
+			/*
+			 * Add Assets controller routes
+			 */
+			$this->rootCollection->addCollection(\RZ\Renzo\CMS\Controllers\AssetsController::getRoutes());
+
+			/*
+			 * Add Backend routes
+			 */
 			if ($cmsCollection !== null) {
-				/*
-				 * Add Backend routes
-				 */
+				
 				$this->rootCollection->addCollection($cmsCollection, '/rz-admin', array('_scheme' => 'https'));
 			}
 
+			/*
+			 * Add Frontend routes
+			 */
 			$feClass = $this->frontendClass;
 			$feCollection = $feClass::getRoutes();
 			if ($feCollection !== null) {
-				/*
-				 * Add Frontend routes
-				 */
+				
 				$this->rootCollection->addCollection($feCollection);
 			}
 
@@ -358,7 +367,14 @@ class Kernel {
 		}
 	}
 
-
+	/**
+	 * Execute after kernel response
+	 * 
+	 * Build debug panel if debug is ON
+	 * 
+	 * @param  FilterResponseEvent $event
+	 * @return void
+	 */
 	public function onKernelResponse(FilterResponseEvent $event)
 	{
 	   	if ($this->isDebug()) {

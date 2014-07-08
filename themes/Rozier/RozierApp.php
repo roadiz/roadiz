@@ -60,13 +60,4 @@ class RozierApp extends BackendController {
 			array('content-type' => 'text/html')
 		);
 	}
-
-
-	public function slirAction($queryString, $filename)
-	{
-		define('SLIR_CONFIG_CLASSNAME','\RZ\Renzo\Core\Utils\SLIRConfig');
-		
-		$slir = new \SLIR\SLIR();
-		$slir->processRequestFromURL();
-	}
 }

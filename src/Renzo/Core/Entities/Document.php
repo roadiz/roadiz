@@ -5,6 +5,7 @@ namespace RZ\Renzo\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\DateTimed;
 use RZ\Renzo\Core\Utils\StringHandler;
+use RZ\Renzo\Core\Viewers\DocumentViewer;
 
 /**
  * @Entity
@@ -101,6 +102,16 @@ class Document extends DateTimed
 		return static::$mimeToIcon[$this->getMimeType()];
 	}
 
+	/**
+	 * Is current document an image
+	 * 
+	 * @return boolean
+	 */
+	public function isImage()
+	{
+		return static::$mimeToIcon[$this->getMimeType()] == 'image';
+	}
+
 
 	/**
 	 * @Column(type="string", nullable=true)
@@ -191,8 +202,15 @@ class Document extends DateTimed
     public function getTags() {
         return $this->tags;
     }
-	
 
+    /**
+     * @return RZ\Renzo\Core\Viewers\DocumentViewer
+     */
+    public function getViewer()
+    {
+    	return new DocumentViewer( $this );
+    }
+	
     /**
      * 
      */
@@ -201,7 +219,7 @@ class Document extends DateTimed
     	parent::__construct();
     	
         $this->tags = new ArrayCollection();
-        $this->folder = sha1(date('YmdHis'));
+        $this->folder = substr(hash("crc32b", date('YmdHis')), 0, 12);
     }
 
     /**

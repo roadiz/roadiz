@@ -234,10 +234,18 @@ class TranslationsController extends RozierApp
 
 	private function deleteTranslation( $data, Translation $translation)
 	{
-		Kernel::getInstance()->em()->remove($translation);
-		Kernel::getInstance()->em()->flush();
+		if ($data['translation_id'] == $translation->getId()) {
 
-		$this->getSession()->getFlashBag()->add('confirm', 'Translation “'.$translation->getName().'” has been deleted');
+			if ($translation->isDefaultTranslation() === false) {
+				Kernel::getInstance()->em()->remove($translation);
+				Kernel::getInstance()->em()->flush();
+
+				$this->getSession()->getFlashBag()->add('confirm', 'Translation “'.$translation->getName().'” has been deleted');
+			}
+			else {
+				$this->getSession()->getFlashBag()->add('error', 'You cannot delete default translation.');
+			}
+		}
 	}
 
 
