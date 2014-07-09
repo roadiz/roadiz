@@ -1,6 +1,6 @@
 <?php 
 
-namespace RZ\Renzo\Core\Utils;
+namespace RZ\Renzo\CMS\Utils;
 
 /**
  * SLIR Config Class

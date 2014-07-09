@@ -1,25 +1,8 @@
 {
     "name": "rezozero/renzo",
     "version": "0.0.1",
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "rezozero/SLIR",
-                "version": "2.0.4",
-                "source": {
-                    "url": "https://github.com/rezozero/SLIR.git",
-                    "type": "git",
-                    "reference": "rewrite/PSR-4"
-                },
-                "autoload": {
-                    "psr-4":{"SLIR\\" : "core/"}
-                }
-            }
-        }
-    ],
     "require": {
-        "rezozero/SLIR": "*",
+        "rezozero/slir": "2.1.*",
         "doctrine/orm": "2.4.*",
         "symfony/yaml": "2.*",
         "symfony/console": "2.5.0",
@@ -38,8 +21,7 @@
         "psr-4": {
         	"RZ\\": "src/",
             "Themes\\": "themes/",
-        	"GeneratedNodeSources\\": "sources/GeneratedNodeSources",
-            "SLIR\\" : "vendor/rezozero/SLIR/core/"
+        	"GeneratedNodeSources\\": "sources/GeneratedNodeSources"
         }
     }
 }
