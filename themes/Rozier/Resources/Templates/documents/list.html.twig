@@ -4,7 +4,9 @@
 {% block content %}
 <section id="manage-documents">
 	<h1 id="title">{% trans %}Documents{% endtrans %}</h1>
-	<a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-plus"></i> {% trans %}Upload a document{% endtrans %}</a>
+	<nav>
+		<a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-plus"></i> {% trans %}Upload a document{% endtrans %}</a>
+	</nav>
 	<table class="documents uk-table">
 		<thead>
 	        <tr>

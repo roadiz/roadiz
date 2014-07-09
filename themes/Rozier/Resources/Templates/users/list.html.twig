@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section id="manage-users">
+	<h1 id="title">{% trans %}Users{% endtrans %}</h1>
+	<nav><a class="uk-button" href="{{ path('usersAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a user{% endtrans %}</a></nav>
+	<table class="users uk-table">
+		<thead>
+	        <tr>
+	            <th>{% trans %}Username{% endtrans %}</th>
+	            <th>{% trans %}Email{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for user in users %}
+			<tr>
+				<td><a href="{{ path('usersEditPage', { user_id: user.getId }) }}">{{ user.getUsername }}</a></td>
+				<td>{{ user.getEmail }}</td>
+				<td>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersDeletePage', { user_id: user.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}

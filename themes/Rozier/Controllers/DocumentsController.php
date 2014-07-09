@@ -37,10 +37,57 @@ class DocumentsController extends RozierApp {
 		);
 	}
 
+	public function editAction( $document_id )
+	{
+		$document = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Document', (int)$document_id);
+
+		if ($document !== null) {
+			
+			$this->assignation['document'] = $document;
+			$this->assignation['thumbnailFormat'] = array(
+				'width' => 500,
+				'quality' => 70
+			);
+
+			/*
+			 * Handle main form
+			 */
+			$form = $this->buildEditForm( $document );
+			$form->handleRequest();
+
+			if ($form->isValid()) {
+
+				$this->editDocument( $form->getData(), $document );
+				/*
+		 		 * Force redirect to avoid resending form when refreshing page
+		 		 */
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'documentsEditPage',
+						array('document_id' => $document->getId())
+					)
+				);
+				$response->prepare(Kernel::getInstance()->getRequest());
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
+			return new Response(
+				$this->getTwig()->render('documents/edit.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		else {
+			return $this->throw404();
+		}
+	}
 
 	public function uploadAction()
 	{
-
 		/*
 		 * Handle main form
 		 */
@@ -81,6 +128,31 @@ class DocumentsController extends RozierApp {
 		);
 	}
 
+	/**
+	 * 
+	 * @param  Document   $document 
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildEditForm( Document $document )
+	{
+		$defaults = array(
+			'private' => $document->isPrivate(),
+			'name' => $document->getName(),
+			'description' => $document->getDescription(),
+			'copyright' => $document->getCopyright(),
+		);
+
+		$builder = $this->getFormFactory()
+					->createBuilder('form', $defaults)
+					->add('name', 'text', array('required' => false))
+					->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array('required' => false))
+					->add('copyright', 'text', array('required' => false))
+					->add('private', 'checkbox', array('required' => false))
+		;
+
+		return $builder->getForm();
+	}
+
 	private function buildUploadForm()
 	{
 		$builder = $this->getFormFactory()
@@ -90,6 +162,17 @@ class DocumentsController extends RozierApp {
 		return $builder->getForm();
 	}
 
+
+	private function editDocument( $data, Document $document)
+	{
+		foreach ($data as $key => $value) {
+			$setter = 'set'.ucwords($key);
+			$document->$setter( $value );
+		}
+
+		Kernel::getInstance()->em()->flush();
+		$this->getSession()->getFlashBag()->add('confirm', 'Document “'.$document->getFilename().'” has been updated');
+	}
 	/**
 	 * Handle upload form data to create a Document
 	 * @param  array $data

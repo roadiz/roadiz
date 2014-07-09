@@ -3,7 +3,7 @@
 {% block content %}
 <section id="add-node" class="">
 	<h1 id="node-title">{% trans %}Add a new node{% endtrans %}: <em>{{ type.getDisplayName }}</em></h1>
-	<a class="uk-button uk-button-small" href="{{ path('nodesHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to nodes{% endtrans %}</a>
+	<nav><a class="uk-button uk-button-small" href="{{ path('nodesHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to nodes{% endtrans %}</a></nav>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}

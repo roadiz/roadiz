@@ -105,6 +105,22 @@ tagsDeletePage:
     defaults: { _controller: Themes\Rozier\Controllers\TagsController::deleteAction }
     requirements: { tag_id : "[0-9]+" }
 
+# USERS
+usersHomePage:
+    path:     /rz-admin/users
+    defaults: { _controller: Themes\Rozier\Controllers\UsersController::indexAction }
+usersEditPage:
+    path:     /rz-admin/users/edit/{user_id}
+    defaults: { _controller: Themes\Rozier\Controllers\UsersController::editAction }
+    requirements: { user_id : "[0-9]+" }
+usersAddPage:
+    path:     /rz-admin/users/add
+    defaults: { _controller: Themes\Rozier\Controllers\UsersController::addAction }
+usersDeletePage:
+    path:     /rz-admin/users/delete/{user_id}
+    defaults: { _controller: Themes\Rozier\Controllers\UsersController::deleteAction }
+    requirements: { user_id : "[0-9]+" }
+
 # TRANSLATIONS
 translationsHomePage:
     path:     /rz-admin/translations

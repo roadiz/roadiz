@@ -4,7 +4,9 @@
 {% block content %}
 <section id="manage-node-type">
 	<h1 id="node-type-field-title">{% trans %}Add a new field{% endtrans %}</h1>
-	<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { node_type_id: node_type.getId }) }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to fields{% endtrans %}</a>
+	<nav>
+		<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { node_type_id: node_type.getId }) }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to fields{% endtrans %}</a>
+	</nav>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}

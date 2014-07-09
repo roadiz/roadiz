@@ -2,9 +2,17 @@
 
 
 {% block content %}
-<section id="manage-setting">
-	<h1 id="setting-title">Edit {{ setting.getDisplayName }}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('settingsHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to settings{% endtrans %}</a></nav>
+<section id="manage-document">
+	<h1 id="title">{% trans %}Document:{% endtrans %} {{ document.getFilename }}</h1>
+	<nav>
+		<a class="uk-button" href="{{ path('documentsHomePage') }}"><i class="uk-icon-chevron-left"></i> {% trans %}Back to documents{% endtrans %}</a>
+	</nav>
+
+	<div class="uk-thumbnail uk-thumbnail-large">
+		{% if document.isImage %}
+		<img  alt="" src="{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}" />
+		{% endif %}
+	</div>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}

@@ -15,6 +15,7 @@
         "symfony/validator": "2.5.*",
         "symfony/security-csrf": "2.5.*",
         "symfony/twig-bridge": "2.5.*",
+        "symfony/security": "2.5.*",
         "twig/twig":"1.*"
     },
     "autoload": {

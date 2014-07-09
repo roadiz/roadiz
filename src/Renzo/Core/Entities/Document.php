@@ -170,11 +170,24 @@ class Document extends DateTimed
 	
 	    return $this;
 	}
+
+	/**
+	 * @Column(type="text", nullable=true)
+	 */
+	private $copyright;
+	public function getCopyright() {
+	    return $this->copyright;
+	}
+	public function setCopyright($copyright) {
+	    $this->copyright = $copyright;
+	
+	    return $this;
+	}
 	
 	/**
 	 * @Column(type="boolean")
 	 */
-	private $private = true;
+	private $private = false;
 	/**
 	 * @return [type] [description]
 	 */

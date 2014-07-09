@@ -4,7 +4,9 @@
 {% block content %}
 <section id="upload-document">
 	<h1 id="document-title">{% trans %}Upload a new document{% endtrans %}</h1>
-	<a class="uk-button uk-button-small" href="{{ path('documentsHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to documents{% endtrans %}</a>
+	<nav>
+		<a class="uk-button" href="{{ path('documentsHomePage') }}"><span class="uk-icon-chevron-left"></span> {% trans %}Back to documents{% endtrans %}</a>
+	</nav>
 
 	<form id="upload-dropzone-document" class="uk-form uk-form-stacked dropzone" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}
