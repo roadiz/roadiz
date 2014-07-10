@@ -17,6 +17,8 @@ use RZ\Renzo\Core\Entities\Node;
 
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 
 class MixedUrlMatcher extends UrlMatcher
@@ -32,7 +34,9 @@ class MixedUrlMatcher extends UrlMatcher
         $decodedUrl = rawurldecode($pathinfo);
 
         /*
-         * First try matching Backend routes
+         * First try matching Static routes
+         *
+         * Backend and Frontend
          */
         if ($ret = $this->matchCollection($decodedUrl, $this->routes)) {
             return $ret;
@@ -75,14 +79,22 @@ class MixedUrlMatcher extends UrlMatcher
     	}
 
     	/*
-    	 * Try with nodeName
+    	 * Try with node name
     	 */
-    	return array(
-    		'_controller' => $this->getThemeController().'::indexAction',
-    		'node' => $this->parseNode($tokens),
-    		'urlAlias' => null,
-    		'translation' => $this->parseTranslation($tokens)
-    	);
+    	$node = $this->parseNode($tokens);
+    	if ( $node !== null ) {
+	    	/*
+	    	 * Try with nodeName
+	    	 */
+	    	return array(
+	    		'_controller' => $this->getThemeController().'::indexAction',
+	    		'node' => $this->parseNode($tokens),
+	    		'urlAlias' => null,
+	    		'translation' => $this->parseTranslation($tokens)
+	    	);
+    	}
+
+    	return false;
     }
 
     /**

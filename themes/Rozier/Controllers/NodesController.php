@@ -18,11 +18,11 @@ use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\UrlAlias;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Handlers\NodeHandler;
-
 use Themes\Rozier\RozierApp;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -36,7 +36,7 @@ class NodesController extends RozierApp {
 	 * List every nodes
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction()
+	public function indexAction( Request $request )
 	{
 		$nodes = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Node')
@@ -68,7 +68,7 @@ class NodesController extends RozierApp {
 	 * @param  integer $translation_id [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( $node_id, $translation_id = null )
+	public function editAction( Request $request, $node_id, $translation_id = null )
 	{
 		$node = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
@@ -96,7 +96,7 @@ class NodesController extends RozierApp {
 							array('node_id' => $node->getId(), 'translation_id'=>$translation_form->getData()['translation_id'])
 						)
 					);
-					$response->prepare(Kernel::getInstance()->getRequest());
+					$response->prepare($request);
 
 					return $response->send();
 				}
@@ -121,7 +121,7 @@ class NodesController extends RozierApp {
 						array('node_id' => $node->getId())
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -145,7 +145,7 @@ class NodesController extends RozierApp {
 	 * @param  integer $translation_id [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editSourceAction( $node_id, $translation_id = null )
+	public function editSourceAction( Request $request, $node_id, $translation_id = null )
 	{
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
@@ -188,7 +188,7 @@ class NodesController extends RozierApp {
 							array('node_id' => $node->getId(), 'translation_id'=>$translation->getId())
 						)
 					);
-					$response->prepare(Kernel::getInstance()->getRequest());
+					$response->prepare($request);
 
 					return $response->send();
 				}
@@ -213,7 +213,7 @@ class NodesController extends RozierApp {
 	 * @param  integer $translation_id [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editTagsAction( $node_id )
+	public function editTagsAction( Request $request, $node_id )
 	{
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
@@ -250,7 +250,7 @@ class NodesController extends RozierApp {
 							array('node_id' => $node->getId())
 						)
 					);
-					$response->prepare(Kernel::getInstance()->getRequest());
+					$response->prepare($request);
 
 					return $response->send();
 				}
@@ -274,7 +274,7 @@ class NodesController extends RozierApp {
 	 * @param  integer $translation_id [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAliasesAction( $node_id )
+	public function editAliasesAction( Request $request, $node_id )
 	{
 		$node = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
@@ -309,7 +309,7 @@ class NodesController extends RozierApp {
 							array('node_id' => $node->getId())
 						)
 					);
-					$response->prepare(Kernel::getInstance()->getRequest());
+					$response->prepare($request);
 
 					return $response->send();
 				}
@@ -327,7 +327,7 @@ class NodesController extends RozierApp {
 							array('node_id' => $node->getId())
 						)
 					);
-					$response->prepare(Kernel::getInstance()->getRequest());
+					$response->prepare($request);
 
 					return $response->send();
 				}
@@ -358,7 +358,7 @@ class NodesController extends RozierApp {
 						array('node_id' => $node->getId())
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -381,7 +381,7 @@ class NodesController extends RozierApp {
 	 * @param [type] $node_type_id   [description]
 	 * @param [type] $translation_id [description]
 	 */
-	public function addAction( $node_type_id, $translation_id = null )
+	public function addAction( Request $request, $node_type_id, $translation_id = null )
 	{	
 		$type = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\NodeType', $node_type_id);
@@ -420,7 +420,7 @@ class NodesController extends RozierApp {
 							array('node_id' => $node->getId())
 						)
 					);
-					$response->prepare(Kernel::getInstance()->getRequest());
+					$response->prepare($request);
 
 					return $response->send();
 				}
@@ -444,7 +444,7 @@ class NodesController extends RozierApp {
 	 * Return an deletion form for requested node
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( $node_id )
+	public function deleteAction( Request $request, $node_id )
 	{
 		$node = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
@@ -467,7 +467,7 @@ class NodesController extends RozierApp {
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate('nodesHomePage')
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}

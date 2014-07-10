@@ -12,6 +12,7 @@
 namespace Themes\Rozier;
 
 use RZ\Renzo\CMS\Controllers\BackendController;
+use RZ\Renzo\Core\Entities\Role;
 
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
@@ -21,8 +22,11 @@ use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Validator\Validation;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
-
+/**
+ * 
+ */
 class RozierApp extends BackendController {
 	
 	protected static $themeName =      'Rozier administration theme';
@@ -39,11 +43,10 @@ class RozierApp extends BackendController {
 	{
 		if ($this->formFactory === null) {
 
-			// créez le validator - les détails varieront
 			$validator = Validation::createValidator();
 
 			$this->formFactory = Forms::createFormFactoryBuilder()
-			    ->addExtension(new CsrfExtension($this->csrfProvider))
+			    ->addExtension(new CsrfExtension(static::$csrfProvider))
 			    ->addExtension(new ValidatorExtension($validator))
 			    ->getFormFactory();
 		}
@@ -52,8 +55,12 @@ class RozierApp extends BackendController {
 	}
 
 
-	public function indexAction()
+	public function indexAction( Request $request )
 	{
+		if (!static::getSecurityContext()->isGranted(Role::ROLE_BACKEND_USER)) {
+		    throw new AccessDeniedException();
+		}
+
 		return new Response(
 			$this->getTwig()->render('index.html.twig', $this->assignation),
 			Response::HTTP_OK,

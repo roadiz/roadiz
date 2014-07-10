@@ -15,6 +15,8 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Routing;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -28,6 +30,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Stopwatch\Stopwatch;
 
+
+use Symfony\Component\Security\Http\Firewall;
+use Symfony\Component\Security\Http\FirewallMap;
+use Symfony\Component\HttpFoundation\RequestMatcher;
+use Symfony\Component\Security\Http\Firewall\ExceptionListener;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 /**
 * 
 */
@@ -40,37 +48,22 @@ class Kernel {
 	private $backendDebug = false;
 	private $config =       null;
 
-	/**
-	 * @return array
-	 */
-	public function getConfig() {
-	    return $this->config;
-	}
-	
-	/**
-	 * @param array $newconfig
-	 */
-	public function setConfig($config) {
-	    $this->config = $config;
-	
-	    return $this;
-	}
-
 	protected $httpKernel =          null;
 	protected $request =             null;
 	protected $requestContext =      null;
 	protected $response =            null;
+	protected $httpUtils =           null;
 	protected $context =             null;
 	protected $matcher =             null;
 	protected $resolver =            null;
 	protected $dispatcher =          null;
 	protected $urlGenerator =        null;
 	protected $stopwatch =           null;
+	protected $securityContext =     null;
+	protected $backendClass =        null;
+	protected $frontendClass =       null;
+	protected $rootCollection =      null;
 
-	protected $backendClass = null;
-	protected $frontendClass = null;
-
-	protected $rootCollection = null;
 
 	private final function __construct() {
 
@@ -80,6 +73,21 @@ class Kernel {
 
 		$this->request = Request::createFromGlobals();
 		$this->requestContext = new Routing\RequestContext($this->getResolvedBaseUrl());
+
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getConfig() {
+	    return $this->config;
+	}
+	/**
+	 * @param array $newconfig
+	 */
+	public function setConfig($config) {
+	    $this->config = $config;
+	    return $this;
 	}
 
 	/**
@@ -150,7 +158,6 @@ class Kernel {
 	 */
 	public function em() { return $this->em; }
 
-
 	/**
 	 * 
 	 * @return RZ\Renzo\Core\Kernel $this
@@ -178,23 +185,28 @@ class Kernel {
 	 */
 	public function runApp()
 	{
-		$this->debug = 			(boolean)SettingsBag::get('debug');
-		$this->backendDebug = 	(boolean)SettingsBag::get('backend_debug');
-
 		$this->dispatcher = new EventDispatcher();
 		$this->resolver =   new ControllerResolver();
 		$this->httpKernel = new HttpKernel($this->dispatcher, $this->resolver);
 		
-		/*
-		 * Main routing
-		 */
-		$this->handleBackendFrontend();
+		$this->prepareRequestHandling();
 
 		try{
+			/*
+			 * ----------------------------
+			 * Main Framework handle call
+			 * ----------------------------
+			 */
 			$this->response = $this->httpKernel->handle( $this->request );
-			
 			$this->response->send();
+			
 			$this->httpKernel->terminate( $this->request, $this->response );
+		}
+		catch(Symfony\Component\Routing\Exception\ResourceNotFoundException $e){
+			echo $e->getMessage().PHP_EOL;
+		}
+		catch(\LogicException $e){
+			echo $e->getMessage().PHP_EOL;
 		}
 		catch(\Exception $e){
 			echo $e->getMessage();
@@ -209,72 +221,74 @@ class Kernel {
 	 */
 	public function runSetup()
 	{
-
 		return $this;
 	}
 
 	/**
 	 * 
-	 * Handle Backend routes and logic
+	 * Prepare backend and frontend routes and logic
 	 * @return boolean
 	 */
-	private function handleBackendFrontend()
-	{
+	private function prepareRequestHandling()
+	{	
+		$this->debug = 			(boolean)SettingsBag::get('debug');
+		$this->backendDebug = 	(boolean)SettingsBag::get('backend_debug');
 		$this->backendClass = $this->getBackendClass();
 		$this->frontendClass = $this->getFrontendClass();
 
-		try{
-			$beClass = $this->backendClass;
-			$cmsCollection = $beClass::getRoutes();
 
-			/*
-			 * Add Assets controller routes
-			 */
-			$this->rootCollection->addCollection(\RZ\Renzo\CMS\Controllers\AssetsController::getRoutes());
+		/*
+		 * Add Assets controller routes
+		 */
+		$this->rootCollection->addCollection(\RZ\Renzo\CMS\Controllers\AssetsController::getRoutes());
 
-			/*
-			 * Add Backend routes
-			 */
-			if ($cmsCollection !== null) {
-				
-				$this->rootCollection->addCollection($cmsCollection, '/rz-admin', array('_scheme' => 'https'));
-			}
-
-			/*
-			 * Add Frontend routes
-			 */
-			$feClass = $this->frontendClass;
-			$feCollection = $feClass::getRoutes();
-			if ($feCollection !== null) {
-				
-				$this->rootCollection->addCollection($feCollection);
-			}
-
-			$matcher = new MixedUrlMatcher($this->rootCollection, $this->requestContext);
-			$this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
-
-			$this->dispatcher->addSubscriber(new RouterListener($matcher));
-
-			/*
-			 * If debug, alter HTML responses to append Debug panel to view
-			 */
-			if ($this->isDebug()) {
-				$this->dispatcher->addSubscriber(new \RZ\Renzo\Core\Utils\DebugPanel());
-			}
-
-			return true;
-		}
-		catch(Symfony\Component\Routing\Exception\ResourceNotFoundException $e){
-			echo $e->getMessage().PHP_EOL;
-		}
-		catch(\LogicException $e){
-			echo $e->getMessage().PHP_EOL;
-		}
-		catch(\Exception $e){
-			echo $e->getMessage().PHP_EOL;
+		/*
+		 * Add Backend routes
+		 */
+		$beClass = $this->backendClass;
+		$cmsCollection = $beClass::getRoutes();
+		if ($cmsCollection !== null) {
+			
+			$this->rootCollection->addCollection($cmsCollection, '/rz-admin', array('_scheme' => 'https'));
 		}
 
-		return false;
+		/*
+		 * Add Frontend routes
+		 */
+		$feClass = $this->frontendClass;
+		$feCollection = $feClass::getRoutes();
+		if ($feCollection !== null) {
+			
+			$this->rootCollection->addCollection($feCollection);
+		}
+
+		$matcher = new MixedUrlMatcher($this->rootCollection, $this->requestContext);
+		$this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
+		$this->httpUtils = new HttpUtils($this->urlGenerator, $matcher);
+
+		$this->dispatcher->addSubscriber(new RouterListener($matcher));
+
+		/*
+		 * Security
+		 */
+		$map = new FirewallMap();
+		// Register back-end security scheme
+		$beClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils );
+		// Register front-end security scheme
+		$feClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils );
+
+		$firewall = new Firewall($map, $this->dispatcher);
+		$this->dispatcher->addListener(
+		    KernelEvents::REQUEST,
+		    array($firewall, 'onKernelRequest')
+		);
+
+		/*
+		 * If debug, alter HTML responses to append Debug panel to view
+		 */
+		if ($this->isDebug()) {
+			$this->dispatcher->addSubscriber(new \RZ\Renzo\Core\Utils\DebugPanel());
+		}
 	}
 
 	/**

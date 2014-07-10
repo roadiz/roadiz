@@ -14,11 +14,16 @@ namespace RZ\Renzo\CMS\Controllers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Theme;
 use RZ\Renzo\Core\Entities\Document;
+
+use Symfony\Component\Security\Http\Firewall;
+use Symfony\Component\Security\Http\FirewallMap;
+use Symfony\Component\Security\Http\HttpUtils;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-
-
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
@@ -35,6 +40,7 @@ use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
+
 
 /**
  * Base class for Renzo themes
@@ -111,26 +117,15 @@ class AppController {
 	 * Assignation for twig template engine
 	 * @var array
 	 */
-	protected $assignation = array();
-
-	protected $csrfProvider = null;
-	protected $session = null;
-	protected $translator = null;
+	protected $assignation =  array();
+	protected static $csrfProvider = null;
+	protected $translator =   null;
 
 	
 	public function __construct(){
-		$this->initializeSession()
-			 ->initializeTwig()
+		$this->initializeTwig()
 			 ->initializeTranslator()
 			 ->prepareBaseAssignation();
-	}
-
-	/**
-	 * @return Symfony\Component\HttpFoundation\Session\Session
-	 */
-	public function getSession()
-	{
-		return $this->session;
 	}
 	/**
 	 * 
@@ -175,18 +170,22 @@ class AppController {
 		return $this;
 	}
 
-	private function initializeSession()
+	/**
+	 * Create session for current controller before HttpKernel handling.
+	 * 
+	 * @return void
+	 */
+	protected static function initializeSession()
 	{
 		// créer un objet session depuis le composant HttpFoundation
-		$this->session = new Session();
-		//$this->session->start();
+		Kernel::getInstance()->getRequest()->setSession(new Session());
 
 		// générer le secret CSRF depuis quelque part
 		$csrfSecret = Kernel::getInstance()->getConfig()["security"]['secret'];
-		$this->csrfProvider = new SessionCsrfProvider($this->session, $csrfSecret);
-
-
-		return $this;
+		static::$csrfProvider = new SessionCsrfProvider(
+			Kernel::getInstance()->getRequest()->getSession(), 
+			$csrfSecret
+		);
 	}
 
 	/**
@@ -251,7 +250,7 @@ class AppController {
 		$formEngine->setEnvironment($this->twig);
 		// ajoutez à Twig la FormExtension
 		$this->twig->addExtension(
-		    new FormExtension(new TwigRenderer($formEngine, $this->csrfProvider))
+		    new FormExtension(new TwigRenderer($formEngine, static::$csrfProvider))
 		);
 
 		//RoutingExtension
@@ -288,8 +287,8 @@ class AppController {
 				'resourcesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/themes/'.static::$themeDir.'/static/'
 			),
 			'session' => array(
-				'messages' => $this->getSession()->getFlashBag()->all(),
-				'id' => $this->getSession()->getId()
+				'messages' => Kernel::getInstance()->getRequest()->getSession()->getFlashBag()->all(),
+				'id' => Kernel::getInstance()->getRequest()->getSession()->getId()
 			)
 		);
 		return $this;
@@ -369,5 +368,31 @@ class AppController {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Register current AppController security scheme in Kernel firewall map
+	 * 
+	 * @param FirewallMap $firewallMap
+	 * @param HttpKernelInterface $httpKernel
+	 * @param HttpUtils $httpUtils
+	 * 
+	 * @see BackendController::appendToFirewallMap
+	 */
+	public static function appendToFirewallMap( FirewallMap $firewallMap, HttpKernelInterface $httpKernel, HttpUtils $httpUtils )
+	{
+		// Implements this method if your app controller need a security context
+	}
+
+	/**
+	 * @var Symfony\Component\Security\Core\SecurityContext
+	 */
+	public static $securityContext = null;
+	/**
+	 * @return Symfony\Component\Security\Core\SecurityContext
+	 */
+	public static function getSecurityContext()
+	{
+		return static::$securityContext;
 	}
 }

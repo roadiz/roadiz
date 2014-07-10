@@ -17,6 +17,8 @@ use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use Themes\Rozier\RozierApp;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -33,7 +35,7 @@ class NodeTypeFieldsController extends RozierApp
 	 * List every node-type-fields
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function listAction( $node_type_id )
+	public function listAction( Request $request, $node_type_id )
 	{
 		$node_type = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
@@ -60,7 +62,7 @@ class NodeTypeFieldsController extends RozierApp
 	 * @param  integer $node_type_id        [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( $node_type_field_id )
+	public function editAction( Request $request, $node_type_field_id )
 	{
 		$field = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\NodeTypeField', (int)$node_type_field_id);
@@ -86,7 +88,7 @@ class NodeTypeFieldsController extends RozierApp
 						array('node_type_field_id' => $field->getId())
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -108,7 +110,7 @@ class NodeTypeFieldsController extends RozierApp
 	 * Return an creation form for requested node-type
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( $node_type_id )
+	public function addAction( Request $request, $node_type_id )
 	{
 		$field = new NodeTypeField();
 		$node_type = Kernel::getInstance()->em()
@@ -135,7 +137,7 @@ class NodeTypeFieldsController extends RozierApp
 						array('node_type_id' => $field->getNodeType()->getId())
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -157,7 +159,7 @@ class NodeTypeFieldsController extends RozierApp
 	 * Return an deletion form for requested node
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( $node_type_field_id )
+	public function deleteAction( Request $request, $node_type_field_id )
 	{
 		$field = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\NodeTypeField', (int)$node_type_field_id);
@@ -196,7 +198,7 @@ class NodeTypeFieldsController extends RozierApp
 						array('node_type_id' => $nodeTypeId)
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}

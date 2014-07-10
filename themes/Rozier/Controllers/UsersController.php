@@ -14,9 +14,10 @@ namespace Themes\Rozier\Controllers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\User;
 use Themes\Rozier\RozierApp;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -30,7 +31,7 @@ class UsersController extends RozierApp
 	 * List every users
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction()
+	public function indexAction( Request $request )
 	{
 		$users = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\User')
@@ -49,7 +50,7 @@ class UsersController extends RozierApp
 	 * @param  integer $user_id        [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( $user_id )
+	public function editAction( Request $request, $user_id )
 	{
 		$user = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
@@ -72,7 +73,7 @@ class UsersController extends RozierApp
 						array('user_id' => $user->getId())
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -91,10 +92,34 @@ class UsersController extends RozierApp
 	}
 
 	/**
+	 * Return an edition form for requested user
+	 * @param  integer $user_id        [description]
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function editRolesAction( Request $request, $user_id )
+	{
+		$user = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
+
+		if ($user !== null) {
+			$this->assignation['user'] = $user;
+			
+			return new Response(
+				$this->getTwig()->render('users/roles.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		else {
+			return $this->throw404();
+		}
+	}
+
+	/**
 	 * Return an creation form for requested user
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( )
+	public function addAction( Request $request )
 	{
 		$user = new User();
 
@@ -114,7 +139,7 @@ class UsersController extends RozierApp
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate('usersHomePage')
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -136,7 +161,7 @@ class UsersController extends RozierApp
 	 * Return an deletion form for requested user
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( $user_id )
+	public function deleteAction( Request $request, $user_id )
 	{
 		$user = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
@@ -159,7 +184,7 @@ class UsersController extends RozierApp
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate('usersHomePage')
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -236,7 +261,8 @@ class UsersController extends RozierApp
 							new NotBlank()
 						)
 					))
-					->add('plainPassword', 'password', array(
+					->add('plainPassword', 'repeated', array(
+						'type' => 'password',
 						'constraints' => array(
 							new NotBlank()
 						)
@@ -279,7 +305,10 @@ class UsersController extends RozierApp
 							new NotBlank()
 						)
 					))
-					->add('plainPassword', 'password', array('required' => false))
+					->add('plainPassword', 'repeated', array(
+						'type' => 'password',
+						'required' => false
+					))
 					->add('firstName', 'text', array('required' => false))
 					->add('lastName', 'text', array('required' => false))
 					->add('company', 'text', array('required' => false))

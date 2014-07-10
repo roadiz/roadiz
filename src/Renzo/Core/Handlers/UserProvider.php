@@ -2,9 +2,11 @@
 namespace RZ\Renzo\Core\Handlers;
 
 use RZ\Renzo\Core\Entities\User;
+use RZ\Renzo\Core\Kernel;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserProvider implements UserProviderInterface
 {
@@ -24,11 +26,11 @@ class UserProvider implements UserProviderInterface
      * @throws UsernameNotFoundException if the user is not found
      *
      */
-	public function loadUserByUsername( string $username )
+	public function loadUserByUsername( $username )
 	{
 		$user = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\User')
-			->findOneBy('username' => $username);
+			->findOneBy(array('username' => $username));
 
 		if ($user !== null) {
 			return $user;
@@ -52,7 +54,7 @@ class UserProvider implements UserProviderInterface
      *
      * @throws UnsupportedUserException if the account is not supported
      */
-	public function refreshUser( User $user )
+	public function refreshUser( UserInterface $user )
 	{
 		$refreshUser = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\User', (int)$user->getId());
@@ -72,7 +74,7 @@ class UserProvider implements UserProviderInterface
      *
      * @return bool
      */
-	public function supportsClass( string $class )
+	public function supportsClass( $class )
 	{
 		if ($class == "RZ\Renzo\Core\Entities\User") {
 			return true;

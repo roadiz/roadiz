@@ -8,6 +8,7 @@ use RZ\Renzo\Core\Entities\Translation;
 
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Symfony\Component\Form\Forms;
@@ -17,7 +18,7 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class DocumentsController extends RozierApp {
 
-	public function indexAction() {
+	public function indexAction( Request $request ) {
 
 		$documents = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Document')
@@ -37,7 +38,7 @@ class DocumentsController extends RozierApp {
 		);
 	}
 
-	public function editAction( $document_id )
+	public function editAction( Request $request, $document_id )
 	{
 		$document = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Document', (int)$document_id);
@@ -68,7 +69,7 @@ class DocumentsController extends RozierApp {
 						array('document_id' => $document->getId())
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -86,7 +87,7 @@ class DocumentsController extends RozierApp {
 		}
 	}
 
-	public function uploadAction()
+	public function uploadAction( Request $request )
 	{
 		/*
 		 * Handle main form
@@ -104,7 +105,7 @@ class DocumentsController extends RozierApp {
 	 			)));
 	 			$response->headers->set('Content-Type', 'application/json');
 	 			$response->setStatusCode(200);
-	 			$response->prepare(Kernel::getInstance()->getRequest());
+	 			$response->prepare($request);
 				return $response->send();
 	 		}
 	 		else {
@@ -114,7 +115,7 @@ class DocumentsController extends RozierApp {
 	 			)));
 	 			$response->headers->set('Content-Type', 'application/json');
 	 			$response->setStatusCode(400);
-	 			$response->prepare(Kernel::getInstance()->getRequest());
+	 			$response->prepare($request);
 				return $response->send();
 	 		}
 		}

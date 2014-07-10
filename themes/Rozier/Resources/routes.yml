@@ -6,6 +6,16 @@ homePageSlash:
     path:     /rz-admin/
     defaults: { _controller: Themes\Rozier\RozierApp::indexAction }
 
+loginPage:
+    path:     /login
+    defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
+loginFailedPage:
+    path:     /login_failed
+    defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
+loginCheckPage:
+    path:     /rz-admin/login_check
+    defaults: { _controller: Themes\Rozier\Controllers\LoginController::checkAction }
+
 #  NODES
 nodesHomePage:
     path:     /rz-admin/nodes
@@ -112,6 +122,10 @@ usersHomePage:
 usersEditPage:
     path:     /rz-admin/users/edit/{user_id}
     defaults: { _controller: Themes\Rozier\Controllers\UsersController::editAction }
+    requirements: { user_id : "[0-9]+" }
+usersEditRolesPage:
+    path:     /rz-admin/users/edit/{user_id}/roles
+    defaults: { _controller: Themes\Rozier\Controllers\UsersController::editRolesAction }
     requirements: { user_id : "[0-9]+" }
 usersAddPage:
     path:     /rz-admin/users/add

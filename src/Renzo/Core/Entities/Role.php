@@ -11,6 +11,29 @@ use RZ\Renzo\Core\AbstractEntities\PersistableObject;
  */
 class Role extends PersistableObject
 {
+	const ROLE_DEFAULT =      'ROLE_USER';
+	const ROLE_SUPER_ADMIN =  'ROLE_SUPER_ADMIN';
+	const ROLE_BACKEND_USER = 'ROLE_BACKEND_USER';
+ 
+	/**
+	 * @Column(type="string", unique=true)
+	 * @var string
+	 */
+	private $name;
+	/**
+	 * @return string
+	 */
+	public function getName() {
+	    return $this->name;
+	}
+	/**
+	 * @param string $newname
+	 */
+	public function setName($name) {
+	    $this->name = $name;
+	
+	    return $this;
+	}
 	
 	public function __construct()
     {

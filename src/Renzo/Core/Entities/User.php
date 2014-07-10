@@ -5,6 +5,7 @@ namespace RZ\Renzo\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\Human;	
 use RZ\Renzo\Core\Entities\Role;
+use RZ\Renzo\Core\Entities\Group;
 use RZ\Renzo\Core\Handlers\UserHandler;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -15,11 +16,6 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  */
 class User extends Human implements AdvancedUserInterface
 {
-	const ANONYMOUS =           0;
-	const SUPER_ADMINISTRATOR = 10;
-	const BACKEND_USER =        20;
-	const FRONTEND_USER =       30;
-
 	/**
 	 * @Column(type="string", unique=true)
 	 */
@@ -108,7 +104,7 @@ class User extends Human implements AdvancedUserInterface
      * @var boolean
      * @Column(type="boolean")         
      */
-    protected $enabled = 1;
+    protected $enabled = true;
     /**
      * Checks whether the user is enabled.
      *
@@ -132,25 +128,6 @@ class User extends Human implements AdvancedUserInterface
     }
 
 	/**
-	 * @Column(type="integer")
-	 */
-	private $rank = User::ANONYMOUS;
-	/**
-	 * @return [type] [description]
-	 */
-	public function getRank() {
-	    return $this->rank;
-	}
-	/**
-	 * @param [type] $newnodeName [description]
-	 */
-	public function setRank($rank) {
-	    $this->rank = $rank;
-	
-	    return $this;
-	}
-
-	/**
      * @var \DateTime
      * @Column(name="last_login", type="datetime", nullable=true)       
      */
@@ -166,7 +143,6 @@ class User extends Human implements AdvancedUserInterface
      */
     public function setLastLogin($lastLogin) {
         $this->lastLogin = $lastLogin;
-    
         return $this;
     }
 	
@@ -178,12 +154,67 @@ class User extends Human implements AdvancedUserInterface
      * )
 	 */
 	private $roles;
+    /**
+     * Names of current User roles
+     * to be compatible with symfony security scheme
+     * @var Array
+     */
+    private $rolesNames = null;
+
 	/**
+     * Get roles entities
 	 * @return ArrayCollection
 	 */
-	public function getRoles() {
+	public function getRolesEntities() {
 	    return $this->roles;
 	}
+    /**
+     * Get roles names as a simple array, combining groups roles
+     * @return array
+     */
+    public function getRoles() {
+
+        if ($this->rolesNames === null) {
+            $this->rolesNames = array();
+            foreach ($this->getRolesEntities() as $role) {
+                $rolesNames[] = $role->getName();
+            }
+
+            foreach ($this->getGroups() as $group) {
+                // User roles > Groups roles
+                $this->rolesNames = array_merge($group->getRoles(), $this->rolesNames);
+            }
+
+            // we need to make sure to have at least one role
+            $this->rolesNames[] = Role::ROLE_DEFAULT;
+            $this->rolesNames = array_unique($this->rolesNames);
+        }
+
+        return $this->rolesNames;
+    }
+    public function addRole(Role $role)
+    {
+        if (!$this->getRolesEntities()->contains($role)) {
+            $this->getRolesEntities()->add($role);
+        }
+        return $this;
+    }
+    public function removeRole(Role $role)
+    {
+        if ($this->getRolesEntities()->contains($role)) {
+            $this->getRolesEntities()->removeElement($role);
+        }
+        return $this;
+    }
+    public function setSuperAdmin($boolean)
+    {
+        if (true === $boolean) {
+            $this->addRole(Role::ROLE_SUPER_ADMIN);
+        } else {
+            $this->removeRole(Role::ROLE_SUPER_ADMIN);
+        }
+        return $this;
+    }
 
 	/**
 	 * Removes sensitive data from the user.
@@ -195,19 +226,45 @@ class User extends Human implements AdvancedUserInterface
 	}
 
 	/**
-	 * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\Permission")
-	 * @JoinTable(name="users_permissions",
+	 * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\Group", inversedBy="users")
+	 * @JoinTable(name="users_groups",
      *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
      * )
+     * @var ArrayCollection
 	 */
-	private $permissions;
+	private $groups;
 	/**
 	 * @return ArrayCollection
 	 */
-	public function getPermissions() {
-	    return $this->permissions;
+	public function getGroups() {
+	    return $this->groups;
 	}
+    public function addGroup(Group $group)
+    {
+        if (!$this->getGroups()->contains($group)) {
+            $this->getGroups()->add($group);
+        }
+
+        return $this;
+    }
+    public function removeGroup(Group $group)
+    {
+        if ($this->getGroups()->contains($group)) {
+            $this->getGroups()->removeElement($group);
+        }
+
+        return $this;
+    }
+    public function getGroupNames()
+    {
+        $names = array();
+        foreach ($this->getGroups() as $group) {
+            $names[] = $group->getName();
+        }
+
+        return $names;
+    }
 
 	/**
      * @var boolean
@@ -225,6 +282,12 @@ class User extends Human implements AdvancedUserInterface
      * @see AccountExpiredException
      */
     public function isAccountNonExpired(){
+
+        if ($this->expiresAt !== null && 
+            $this->expiresAt->getTimestamp() < time()) {
+            return false;
+        }
+
     	return !$this->expired;
     }
 
@@ -266,6 +329,28 @@ class User extends Human implements AdvancedUserInterface
     	return !$this->credentialsExpired;
     }
 
+    /**
+     * @Column(name="expires_at", type="datetime", nullable=true)     
+     * @var \DateTime
+     */
+    private $expiresAt;
+    /**
+     * @param \DateTime $date
+     * @return User
+     */
+    public function setExpiresAt(\DateTime $date = null)
+    {
+        $this->expiresAt = $date;
+        return $this;
+    }
+    /**
+     * @return \DateTime
+     */
+    public function getExpiresAt()
+    {
+        return $this->expiresAt;
+    }
+
     /** 
      * @PrePersist
      */
@@ -304,9 +389,10 @@ class User extends Human implements AdvancedUserInterface
     	parent::__construct();
 
     	$this->roles = new ArrayCollection();
-    	$this->permissions = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+    	//$this->permissions = new ArrayCollection();
 
-    	$this->salt = sha1(uniqid(rand(), true));
+    	$this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
 
     /**

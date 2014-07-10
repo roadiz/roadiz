@@ -15,9 +15,10 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use Themes\Rozier\RozierApp;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -31,7 +32,7 @@ class TranslationsController extends RozierApp
 	 * List every translations
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction()
+	public function indexAction( Request $request )
 	{
 		$translations = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Translation')
@@ -57,7 +58,7 @@ class TranslationsController extends RozierApp
 						'translationsHomePage'
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 		 	}
@@ -80,7 +81,7 @@ class TranslationsController extends RozierApp
 	 * @param  integer $translation_id        [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( $translation_id )
+	public function editAction( Request $request, $translation_id )
 	{
 		$translation = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
@@ -103,7 +104,7 @@ class TranslationsController extends RozierApp
 						array('translation_id' => $translation->getId())
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -125,7 +126,7 @@ class TranslationsController extends RozierApp
 	 * Return an creation form for requested translation
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( )
+	public function addAction( Request $request )
 	{
 		$translation = new Translation();
 
@@ -145,7 +146,7 @@ class TranslationsController extends RozierApp
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate('translationsHomePage')
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -167,7 +168,7 @@ class TranslationsController extends RozierApp
 	 * Return an deletion form for requested translation
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( $translation_id )
+	public function deleteAction( Request $request, $translation_id )
 	{
 		$translation = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
@@ -190,7 +191,7 @@ class TranslationsController extends RozierApp
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate('translationsHomePage')
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}

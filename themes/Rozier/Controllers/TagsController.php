@@ -17,6 +17,8 @@ use RZ\Renzo\Core\Entities\TagTranslation;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use Themes\Rozier\RozierApp;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -33,7 +35,7 @@ class TagsController extends RozierApp
 	 * List every tags
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction()
+	public function indexAction( Request $request )
 	{
 		$tags = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Tag')
@@ -52,7 +54,7 @@ class TagsController extends RozierApp
 	 * @param  integer $tag_id        [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( $tag_id )
+	public function editAction( Request $request, $tag_id )
 	{
 		$tag = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Tag')
@@ -77,7 +79,7 @@ class TagsController extends RozierApp
 						array('tag_id' => $tag->getId())
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -99,7 +101,7 @@ class TagsController extends RozierApp
 	 * Return an creation form for requested tag
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( )
+	public function addAction( Request $request )
 	{
 		$tag = new Tag();
 
@@ -124,7 +126,7 @@ class TagsController extends RozierApp
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate('tagsHomePage')
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -146,7 +148,7 @@ class TagsController extends RozierApp
 	 * Return an deletion form for requested tag
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( $tag_id )
+	public function deleteAction( Request $request, $tag_id )
 	{
 		$tag = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Tag', (int)$tag_id);
@@ -169,7 +171,7 @@ class TagsController extends RozierApp
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate('tagsHomePage')
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}

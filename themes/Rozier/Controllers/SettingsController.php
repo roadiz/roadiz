@@ -16,9 +16,10 @@ use RZ\Renzo\Core\Entities\Setting;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use Themes\Rozier\RozierApp;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -32,7 +33,7 @@ class SettingsController extends RozierApp
 	 * List every settings
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction()
+	public function indexAction( Request $request )
 	{
 		$settings = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Setting')
@@ -52,7 +53,7 @@ class SettingsController extends RozierApp
 	 * @param  integer $setting_id        [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( $setting_id )
+	public function editAction( Request $request, $setting_id )
 	{
 		$setting = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Setting', (int)$setting_id);
@@ -76,7 +77,7 @@ class SettingsController extends RozierApp
 						array('setting_id' => $setting->getId())
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -98,7 +99,7 @@ class SettingsController extends RozierApp
 	 * Return an creation form for requested setting
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( )
+	public function addAction( Request $request )
 	{
 		$setting = new Setting();
 
@@ -118,7 +119,7 @@ class SettingsController extends RozierApp
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate('settingsHomePage')
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -140,7 +141,7 @@ class SettingsController extends RozierApp
 	 * Return an deletion form for requested setting
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( $setting_id )
+	public function deleteAction( Request $request, $setting_id )
 	{
 		$setting = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Setting', (int)$setting_id);
@@ -163,7 +164,7 @@ class SettingsController extends RozierApp
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate('settingsHomePage')
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}

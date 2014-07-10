@@ -17,6 +17,7 @@ use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use Themes\Rozier\RozierApp;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -33,7 +34,7 @@ class NodeTypesController extends RozierApp
 	 * List every node-types
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction()
+	public function indexAction( Request $request )
 	{
 		$node_types = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\NodeType')
@@ -53,7 +54,7 @@ class NodeTypesController extends RozierApp
 	 * @param  integer $node_type_id        [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( $node_type_id )
+	public function editAction( Request $request, $node_type_id )
 	{
 		$node_type = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
@@ -77,7 +78,7 @@ class NodeTypesController extends RozierApp
 						array('node_type_id' => $node_type->getId())
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -99,7 +100,7 @@ class NodeTypesController extends RozierApp
 	 * Return an creation form for requested node-type
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( )
+	public function addAction( Request $request )
 	{
 		$node_type = new NodeType();
 
@@ -122,7 +123,7 @@ class NodeTypesController extends RozierApp
 						array('node_type_id' => $node_type->getId())
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}
@@ -144,7 +145,7 @@ class NodeTypesController extends RozierApp
 	 * Return an deletion form for requested node-type
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( $node_type_id )
+	public function deleteAction( Request $request, $node_type_id )
 	{
 		$node_type = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
@@ -173,7 +174,7 @@ class NodeTypesController extends RozierApp
 						'nodeTypesHomePage'
 					)
 				);
-				$response->prepare(Kernel::getInstance()->getRequest());
+				$response->prepare($request);
 
 				return $response->send();
 			}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section id="manage-user-roles">
+	<h1 id="user-title">Edit {{ user.getDefaultTranslatedTag.getName }} roles</h1>
+	<nav><a class="uk-button uk-button-small" href="{{ path('usersHomePage') }}"><span class="uk-icon-chevron-left"></span> {% trans %}Back to users{% endtrans %}</a></nav>
+
+	<table class="users-roles uk-table">
+		<thead>
+	        <tr>
+	            <th>{% trans %}Role{% endtrans %}</th>
+	            <th>{% trans %}Actions{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for role in user.getRolesEntities %}
+			<tr>
+				<td>{{ role.getName }}</td>
+				<td></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}
