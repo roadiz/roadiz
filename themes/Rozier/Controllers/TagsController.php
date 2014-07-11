@@ -18,6 +18,8 @@ use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use Themes\Rozier\RozierApp;
 
+use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -70,6 +72,9 @@ class TagsController extends RozierApp
 			if ($form->isValid()) {
 		 		$this->editTag($form->getData(), $tag);
 
+		 		$msg = $this->getTranslator()->trans('tag.updated', array('%name%'=>$tag->getDefaultTranslatedTag()->getName()));
+		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -113,13 +118,16 @@ class TagsController extends RozierApp
 			$translation !== null) {
 
 			$this->assignation['tag'] = $tag;
-			$form = $this->buildAddForm( $tag );
+			$form = $this->buildAddForm($tag );
 
 			$form->handleRequest();
 
 			if ($form->isValid()) {
 		 		$this->addTag($form->getData(), $tag, $translation);
 
+		 		$msg = $this->getTranslator()->trans('tag.created', array('%name%'=>$tag->getDefaultTranslatedTag()->getName()));
+		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -164,6 +172,9 @@ class TagsController extends RozierApp
 				$form->getData()['tag_id'] == $tag->getId() ) {
 
 		 		$this->deleteTag($form->getData(), $tag);
+		 		$msg = $this->getTranslator()->trans('tag.deleted', array('%name%'=>$tag->getDefaultTranslatedTag()->getName()));
+		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
 
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
@@ -197,7 +208,6 @@ class TagsController extends RozierApp
 		}
 
 		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'Tag “'.$tag->getDefaultTranslatedTag()->getName().'” has been updated');
 	}
 
 	private function addTag( $data, Tag $tag, Translation $translation )
@@ -215,19 +225,17 @@ class TagsController extends RozierApp
 				$tag->$setter( $value );
 			}
 		}
-
+		$tag->getTranslatedTags()->add($translatedTag); 
 
 		Kernel::getInstance()->em()->persist($translatedTag);
 		Kernel::getInstance()->em()->persist($tag);
 		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'Tag “'.$translatedTag->getName().'” has been created');
 	}
 
 	private function deleteTag( $data, Tag $tag )
 	{
 		Kernel::getInstance()->em()->remove($tag);
 		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'Tag “'.$tag->getDefaultTranslatedTag()->getName().'” has been deleted');
 	}
 
 

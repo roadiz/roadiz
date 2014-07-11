@@ -17,6 +17,8 @@ use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use Themes\Rozier\RozierApp;
 
+use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -68,6 +70,15 @@ class SettingsController extends RozierApp
 			if ($form->isValid()) {
 		 		$this->editSetting($form->getData(), $setting);
 
+		 		try {
+		 			$msg = $this->getTranslator()->trans('setting.updated', array('%name%'=>$setting->getName()));
+					$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 				$this->getLogger()->info($msg);
+	 			}
+				catch(EntityAlreadyExistsException $e){
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+		 			$this->getLogger()->warning($e->getMessage());
+				}
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -111,7 +122,18 @@ class SettingsController extends RozierApp
 			$form->handleRequest();
 
 			if ($form->isValid()) {
-		 		$this->addSetting($form->getData(), $setting);
+
+				try {
+			 		$this->addSetting($form->getData(), $setting);
+			 		$msg = $this->getTranslator()->trans('setting.created', array('%name%'=>$setting->getName()));
+					$request->getSession()->getFlashBag()->add('confirm', $msg);
+		 			$this->getLogger()->info($msg);
+		 			
+				}
+				catch(EntityAlreadyExistsException $e){
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+		 			$this->getLogger()->warning($e->getMessage());
+				}
 
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
@@ -158,6 +180,10 @@ class SettingsController extends RozierApp
 
 		 		$this->deleteSetting($form->getData(), $setting);
 
+		 		$msg = $this->getTranslator()->trans('setting.deleted', array('%name%'=>$setting->getName()));
+				$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
+
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -184,31 +210,42 @@ class SettingsController extends RozierApp
 
 	private function editSetting( $data, Setting $setting)
 	{
-		foreach ($data as $key => $value) {
-			$setter = 'set'.ucwords($key);
-			$setting->$setter( $value );
-		}
+		try {
+			foreach ($data as $key => $value) {
+				$setter = 'set'.ucwords($key);
+				$setting->$setter( $value );
+			}
 
-		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'Setting “'.$setting->getName().'” has been updated');
+			Kernel::getInstance()->em()->flush();
+			return true;
+		}
+		catch(\Exception $e) {
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
+		}
 	}
 
 	private function addSetting( $data, Setting $setting)
 	{
-		foreach ($data as $key => $value) {
-			$setter = 'set'.ucwords($key);
-			$setting->$setter( $value );
+		try{
+			foreach ($data as $key => $value) {
+				$setter = 'set'.ucwords($key);
+				$setting->$setter( $value );
+			}
+
+			Kernel::getInstance()->em()->persist($setting);
+			Kernel::getInstance()->em()->flush();
+			return true;
 		}
-		Kernel::getInstance()->em()->persist($setting);
-		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'Setting “'.$setting->getName().'” has been created');
+		catch(\Exception $e) {
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
+		}
 	}
 
 	private function deleteSetting( $data, Setting $setting)
 	{
 		Kernel::getInstance()->em()->remove($setting);
 		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'Setting “'.$setting->getName().'” has been deleted');
+		return true;
 	}
 
 

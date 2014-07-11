@@ -15,6 +15,9 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\User;
 use Themes\Rozier\RozierApp;
 
+
+use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -62,8 +65,17 @@ class UsersController extends RozierApp
 			$form->handleRequest();
 
 			if ($form->isValid()) {
-		 		$this->editUser($form->getData(), $user);
 
+				try {
+		 			$this->editUser($form->getData(), $user);
+		 			$msg = $this->getTranslator()->trans('user.updated', array('%name%'=>$user->getUsername()));
+			 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+		 			$this->getLogger()->info($msg);
+		 		}
+				catch( EntityAlreadyExistsException $e ){
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+			 		$this->getLogger()->warning($e->getMessage());
+				}
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -131,8 +143,18 @@ class UsersController extends RozierApp
 			$form->handleRequest();
 
 			if ($form->isValid()) {
-		 		$this->addUser($form->getData(), $user);
 
+				try {
+			 		$this->addUser($form->getData(), $user);
+
+			 		$msg = $this->getTranslator()->trans('user.created', array('%name%'=>$user->getUsername()));
+				 	$request->getSession()->getFlashBag()->add('confirm', $msg);
+			 		$this->getLogger()->info($msg);
+				}
+				catch( EntityAlreadyExistsException $e ){
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+			 		$this->getLogger()->warning($e->getMessage());
+				}
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -176,8 +198,17 @@ class UsersController extends RozierApp
 			if ($form->isValid() && 
 				$form->getData()['user_id'] == $user->getId() ) {
 
-		 		$this->deleteUser($form->getData(), $user);
+				try {
+			 		$this->deleteUser($form->getData(), $user);
 
+			 		$msg = $this->getTranslator()->trans('user.deleted', array('%name%'=>$user->getUsername()));
+				 	$request->getSession()->getFlashBag()->add('confirm', $msg);
+			 		$this->getLogger()->info($msg);
+				}
+				catch( EntityAlreadyExistsException $e ){
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+			 		$this->getLogger()->warning($e->getMessage());
+				}
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -203,33 +234,50 @@ class UsersController extends RozierApp
 	}
 
 	private function editUser( $data, User $user )
-	{
+	{	
+		if (($data['username'] != $user->getUsername() ||
+			$data['email'] != $user->getEmail()) && 
+			(Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\User')
+				->usernameExists($data['username']) || 
+			Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\User')
+				->emailExists($data['email']))) {
+
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('user.cannot_update_already_exists', array('%name%'=>$data['username'])), 1);
+		}
+
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$user->$setter( $value );
 		}
-
 		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'User “'.$user->getUsername().'” has been updated');
 	}
 
 	private function addUser( $data, User $user )
-	{
+	{	
+		if (Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\User')
+				->usernameExists($data['username']) || 
+			Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\User')
+				->emailExists($data['email'])) {
+
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('user.cannot_create_already_exists', array('%name%'=>$data['username'])), 1);
+		}
+	
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$user->$setter( $value );
 		}
-
 		Kernel::getInstance()->em()->persist($user);
 		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'User “'.$user->getUsername().'” has been created');
 	}
 
 	private function deleteUser( $data, User $user )
 	{
 		Kernel::getInstance()->em()->remove($user);
 		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'User “'.$user->getUsername().'” has been deleted');
 	}
 
 	/**

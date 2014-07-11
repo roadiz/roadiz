@@ -82,4 +82,24 @@ class NodeRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * 
+     * @param  string $alias
+     * @return boolean
+     */
+    public function exists( $nodeName )
+    {
+        $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT COUNT(n.nodeName) FROM RZ\Renzo\Core\Entities\Node n 
+            WHERE n.nodeName = :node_name
+        ')->setParameter('node_name', $nodeName);
+
+        try {
+            return (boolean)$query->getSingleScalarResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return false;
+        }
+    }
 }

@@ -60,6 +60,11 @@ class DocumentsController extends RozierApp {
 			if ($form->isValid()) {
 
 				$this->editDocument( $form->getData(), $document );
+				$msg = $this->getTranslator()->trans('document.updated', array(
+		 			'%name%'=>$document->getFilename()
+		 		));
+				$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
 				/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -97,7 +102,13 @@ class DocumentsController extends RozierApp {
 
 		if ($form->isValid()) {
 
-	 		if ($this->uploadDocument( $form ) === true) {
+	 		if (false !== $document = $this->uploadDocument( $form )) {
+
+	 			$msg = $this->getTranslator()->trans('document.uploaded', array(
+		 			'%name%'=>$document->getFilename()
+		 		));
+	 			$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
 
 	 			$response = new Response();
 	 			$response->setContent(json_encode(array(
@@ -109,9 +120,13 @@ class DocumentsController extends RozierApp {
 				return $response->send();
 	 		}
 	 		else {
+	 			$msg = $this->getTranslator()->trans('document.cannot_persist');
+	 			$request->getSession()->getFlashBag()->add('error', $msg);
+	 			$this->getLogger()->error($msg);
+
 	 			$response = new Response();
 	 			$response->setContent(json_encode(array(
-	 			    "error" => "File could not be saved"
+	 			    "error" => $this->getTranslator()->trans('document.cannot_persist')
 	 			)));
 	 			$response->headers->set('Content-Type', 'application/json');
 	 			$response->setStatusCode(400);
@@ -172,7 +187,6 @@ class DocumentsController extends RozierApp {
 		}
 
 		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'Document “'.$document->getFilename().'” has been updated');
 	}
 	/**
 	 * Handle upload form data to create a Document
@@ -207,17 +221,14 @@ class DocumentsController extends RozierApp {
 					Kernel::getInstance()->em()->flush();
 
 					$uploadedFile->move(Document::getFilesFolder().'/'.$document->getFolder(), $document->getFilename());
-
-					$this->getSession()->getFlashBag()->add('confirm', 'Document “'.$document->getFilename().'” has been uploaded.');
-					return true;
+					return $document;
 				}
 				catch(\Exception $e){
-					$this->getSession()->getFlashBag()->add('error', 'Document cannot be persisted.');
+					
 					return false;
 				}
 			}
 		}
-		$this->getSession()->getFlashBag()->add('error', 'Document cannot be uploaded.');
 		return false;
 	}
 }

@@ -18,6 +18,8 @@ use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use Themes\Rozier\RozierApp;
 
+use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -79,6 +81,9 @@ class NodeTypeFieldsController extends RozierApp
 			if ($form->isValid()) {
 		 		$this->editNodeTypeField($form->getData(), $field);
 
+		 		$msg = $this->getTranslator()->trans('node_type_field.updated', array('%name%'=>$field->getName()));
+		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -128,6 +133,9 @@ class NodeTypeFieldsController extends RozierApp
 			if ($form->isValid()) {
 		 		$this->addNodeTypeField($form->getData(), $field, $node_type);
 
+		 		$msg = $this->getTranslator()->trans('node_type_field.created', array('%name%'=>$field->getName()));
+		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -187,7 +195,9 @@ class NodeTypeFieldsController extends RozierApp
 
 		 		$nodeType->getHandler()->updateSchema();
 
-		 		$this->getSession()->getFlashBag()->add('confirm', 'Node-type field has been deleted');
+		 		$msg = $this->getTranslator()->trans('node_type_field.deleted', array('%name%'=>$field->getName()));
+		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
 
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
@@ -215,20 +225,16 @@ class NodeTypeFieldsController extends RozierApp
 			return $this->throw404();
 		}
 	}
-
 	private function editNodeTypeField( $data, NodeTypeField $field)
 	{
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$field->$setter( $value );
 		}
-
 		Kernel::getInstance()->em()->flush();
-
 		$field->getNodeType()->getHandler()->updateSchema();
-		$this->getSession()->getFlashBag()->add('confirm', 'Node-type field and its database schema have been updated');
-	}
 
+	}
 	private function addNodeTypeField( $data, NodeTypeField $field, NodeType $node_type)
 	{
 		foreach ($data as $key => $value) {
@@ -242,12 +248,10 @@ class NodeTypeFieldsController extends RozierApp
 		Kernel::getInstance()->em()->flush();
 
 		$node_type->getHandler()->updateSchema();
-		$this->getSession()->getFlashBag()->add('confirm', 'Node-type field and its database schema have been updated');
 	}
 
 
 	/**
-	 * 
 	 * @param  NodeTypeField   $field 
 	 * @return Symfony\Component\Form\Forms
 	 */

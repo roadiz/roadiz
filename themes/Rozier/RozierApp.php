@@ -23,6 +23,7 @@ use Symfony\Component\Validator\Validation;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * 
@@ -57,10 +58,6 @@ class RozierApp extends BackendController {
 
 	public function indexAction( Request $request )
 	{
-		if (!static::getSecurityContext()->isGranted(Role::ROLE_BACKEND_USER)) {
-		    throw new AccessDeniedException();
-		}
-
 		return new Response(
 			$this->getTwig()->render('index.html.twig', $this->assignation),
 			Response::HTTP_OK,

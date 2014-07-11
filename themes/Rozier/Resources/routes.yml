@@ -1,14 +1,17 @@
 # Home page
-homePage:
+adminHomePage:
     path:     /rz-admin
     defaults: { _controller: Themes\Rozier\RozierApp::indexAction }
-homePageSlash:
+adminHomePageSlash:
     path:     /rz-admin/
     defaults: { _controller: Themes\Rozier\RozierApp::indexAction }
 
 loginPage:
     path:     /login
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
+logoutPage:
+    path:     /rz-admin/logout
+    defaults: { _controller: Themes\Rozier\Controllers\LoginController::logoutAction }
 loginFailedPage:
     path:     /login_failed
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }

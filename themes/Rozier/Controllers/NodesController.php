@@ -18,7 +18,11 @@ use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\UrlAlias;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Handlers\NodeHandler;
+use RZ\Renzo\Core\Utils\StringHandler;
 use Themes\Rozier\RozierApp;
+
+use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Renzo\Core\Exceptions\NoTranslationAvailableException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,8 +89,19 @@ class NodesController extends RozierApp {
 				$translation_form->handleRequest();
 
 				if ($translation_form->isValid()) {
-			 		$this->translateNode($translation_form->getData(), $node);
 
+					try {
+				 		$this->translateNode($translation_form->getData(), $node);
+				 		$msg = $this->getTranslator()->trans('node.translated', array(
+				 			'%name%'=>$node->getNodeName()
+				 		));
+				 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 					$this->getLogger()->info($msg);
+					}
+					catch( EntityAlreadyExistsException $e ){
+						$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+	 					$this->getLogger()->warning($e->getMessage());
+					}
 			 		/*
 			 		 * Force redirect to avoid resending form when refreshing page
 			 		 */
@@ -97,7 +112,6 @@ class NodesController extends RozierApp {
 						)
 					);
 					$response->prepare($request);
-
 					return $response->send();
 				}
 				$this->assignation['translation_form'] = $translation_form->createView();
@@ -110,8 +124,18 @@ class NodesController extends RozierApp {
 			$form->handleRequest();
 
 			if ($form->isValid()) {
-		 		$this->editNode($form->getData(), $node);
-
+				try {
+		 			$this->editNode($form->getData(), $node);
+		 			$msg = $this->getTranslator()->trans('node.updated', array(
+			 			'%name%'=>$node->getNodeName()
+			 		));
+		 			$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 				$this->getLogger()->info($msg);
+				}
+		 		catch( EntityAlreadyExistsException $e ){
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+	 				$this->getLogger()->warning($e->getMessage());
+				}
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -172,13 +196,21 @@ class NodesController extends RozierApp {
 				$this->assignation['node'] = $node;
 				$this->assignation['source'] = $source;
 				
+				/*
+				 * Form
+				 */
 				$form = $this->buildEditSourceForm( $node, $source );
-
 				$form->handleRequest();
 
 				if ($form->isValid()) {
 			 		$this->editNodeSource($form->getData(), $source);
 
+			 		$msg = $this->getTranslator()->trans('node_source.updated', array(
+			 			'%node_source%'=>$source->getNode()->getNodeName(), 
+			 			'%translation%'=>$source->getTranslation()->getName()
+			 		));
+			 		$request->getSession()->getFlashBag()->add('confirm',$msg);
+	 				$this->getLogger()->info($msg);
 			 		/*
 			 		 * Force redirect to avoid resending form when refreshing page
 			 		 */
@@ -239,8 +271,14 @@ class NodesController extends RozierApp {
 				$form->handleRequest();
 
 				if ($form->isValid()) {
-			 		$this->addNodeTag($form->getData(), $node);
+			 		$tag = $this->addNodeTag($form->getData(), $node);
 
+			 		$msg = $this->getTranslator()->trans('node.tag_linked', array(
+			 			'%node%'=>$node->getNodeName(), 
+			 			'%tag%'=>$tag->getDefaultTranslatedTag()->getName()
+			 		));
+			 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 				$this->getLogger()->info($msg);
 			 		/*
 			 		 * Force redirect to avoid resending form when refreshing page
 			 		 */
@@ -299,7 +337,18 @@ class NodesController extends RozierApp {
 				$editForm->handleRequest();
 				if ($editForm->isValid()) {
 
-					$this->editUrlAlias($editForm->getData(), $alias);
+					if ($this->editUrlAlias($editForm->getData(), $alias)) {
+
+						$msg = $this->getTranslator()->trans('url_alias.updated', array('%alias%'=>$alias->getAlias()));
+						$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 					$this->getLogger()->info($msg);
+					}
+					else {
+						$msg = $this->getTranslator()->trans('url_alias.no_update.already_exists', array('%alias%'=>$alias->getAlias()));
+						$request->getSession()->getFlashBag()->add('error', $msg);
+	 					$this->getLogger()->warning($msg);
+					}
+
 					/*
 			 		 * Force redirect to avoid resending form when refreshing page
 			 		 */
@@ -318,6 +367,9 @@ class NodesController extends RozierApp {
 				if ($deleteForm->isValid()) {
 
 					$this->deleteUrlAlias($editForm->getData(), $alias);
+					$msg = $this->getTranslator()->trans('url_alias.deleted', array('%alias%'=>$alias->getAlias()));
+					$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 				$this->getLogger()->info($msg);
 					/*
 			 		 * Force redirect to avoid resending form when refreshing page
 			 		 */
@@ -347,9 +399,26 @@ class NodesController extends RozierApp {
 			$form->handleRequest();
 
 			if ($form->isValid()) {
-		 		$this->addNodeUrlAlias($form->getData(), $node);
 
-		 		/*
+				try {
+		 			$ua = $this->addNodeUrlAlias($form->getData(), $node);
+		 			$msg = $this->getTranslator()->trans('url_alias.created', array(
+		 				'%alias%'=>$ua->getAlias(), 
+		 				'%translation%'=>$ua->getNodeSource()->getTranslation()->getName()
+		 			));
+		 			$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 				$this->getLogger()->info($msg);
+
+				}
+				catch( EntityAlreadyExistsException $e ){
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+					$this->getLogger()->warning($e->getMessage());
+				}
+				catch( NoTranslationAvailableException $e ){
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+					$this->getLogger()->warning($e->getMessage());
+				}
+	 			/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
 		 		$response = new RedirectResponse(
@@ -359,7 +428,6 @@ class NodesController extends RozierApp {
 					)
 				);
 				$response->prepare($request);
-
 				return $response->send();
 			}
 
@@ -406,14 +474,17 @@ class NodesController extends RozierApp {
 							)
 						))
 						->getForm();
-
-
 			$form->handleRequest();
 
 			if ($form->isValid()) {
 
-				$node = $this->createNode($form->getData(), $type, $translation);
-				if ($node !== null) {
+				try {
+					$node = $this->createNode($form->getData(), $type, $translation);
+
+					$msg = $this->getTranslator()->trans('node.created', array('%name%'=>$node->getNodeName()));
+					$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 				$this->getLogger()->info($msg);
+
 					$response = new RedirectResponse(
 						Kernel::getInstance()->getUrlGenerator()->generate(
 							'nodesEditPage',
@@ -421,7 +492,20 @@ class NodesController extends RozierApp {
 						)
 					);
 					$response->prepare($request);
+					return $response->send();
+				}
+				catch(EntityAlreadyExistsException $e) {
 
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+	 				$this->getLogger()->warning($e->getMessage());
+
+					$response = new RedirectResponse(
+						Kernel::getInstance()->getUrlGenerator()->generate(
+							'nodesAddPage',
+							array('node_type_id' => $node_type_id, 'translation_id' => $translation_id)
+						)
+					);
+					$response->prepare($request);
 					return $response->send();
 				}
 			}
@@ -460,7 +544,10 @@ class NodesController extends RozierApp {
 				$form->getData()['node_id'] == $node->getId() ) {
 
 				$node->getHandler()->removeWithChildrenAndAssociations();
-				$this->getSession()->getFlashBag()->add('confirm', 'Node has been deleted');
+
+				$msg = $this->getTranslator()->trans('node.deleted', array('%name%'=>$node->getNodeName()));
+				$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -492,8 +579,12 @@ class NodesController extends RozierApp {
 	 */
 	private function createNode( $data, NodeType $type, Translation $translation )
 	{
-		try {
+		if ($this->urlAliasExists( StringHandler::slugify($data['nodeName']) )) {
+			$msg = $this->getTranslator()->trans('node.no_creation.url_alias.already_exists', array('%name%'=>$data['nodeName']));
+			throw new EntityAlreadyExistsException($msg, 1);
+		}
 
+		try {
 			$node = new Node( $type );
 			$node->setNodeName($data['nodeName']);
 			Kernel::getInstance()->em()->persist($node);
@@ -501,16 +592,26 @@ class NodesController extends RozierApp {
 			$sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
 			$source = new $sourceClass($node, $translation);
 			Kernel::getInstance()->em()->persist($source);
-
 			Kernel::getInstance()->em()->flush();
-			$this->getSession()->getFlashBag()->add('confirm', 'Node “'.$node->getNodeName().'” has been created');
-
 			return $node;
 		}
 		catch( \Exception $e ){
-			$this->getSession()->getFlashBag()->add('error', 'Node “'.$node->getNodeName().'” already exists.');
-			return null;
+			$msg = $this->getTranslator()->trans('node.no_creation.already_exists', array('%name%'=>$node->getNodeName()));
+			throw new EntityAlreadyExistsException($msg, 1);
 		}
+	}
+
+	private function urlAliasExists( $name )
+	{
+		return (boolean)Kernel::getInstance()->em()
+			->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
+			->exists( $name );
+	}
+	private function nodeNameExists( $name )
+	{
+		return (boolean)Kernel::getInstance()->em()
+			->getRepository('RZ\Renzo\Core\Entities\Node')
+			->exists( $name );
 	}
 
 	/**
@@ -521,14 +622,21 @@ class NodesController extends RozierApp {
 	 * @return void
 	 */
 	private function editNode( $data, Node $node)
-	{
+	{	
+		$testingNodeName = StringHandler::slugify($data['nodeName']);
+		if ($testingNodeName != $node->getNodeName() && 
+				($this->nodeNameExists($testingNodeName) || 
+				$this->urlAliasExists($testingNodeName))) {
+
+			$msg = $this->getTranslator()->trans('node.no_update.already_exists', array('%name%'=>$data['nodeName']));
+			throw new EntityAlreadyExistsException($msg , 1);
+		}
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$node->$setter( $value );
 		}
 
 		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'Node “'.$node->getNodeName().'” has been updated');
 	}
 
 	/**
@@ -536,7 +644,7 @@ class NodesController extends RozierApp {
 	 * 
 	 * @param  array $data Form data
 	 * @param  Node   $node [description]
-	 * @return void
+	 * @return Tag $linkedTag
 	 */
 	private function addNodeTag($data, Node $node)
 	{
@@ -547,7 +655,7 @@ class NodesController extends RozierApp {
 		$node->getTags()->add($tag);
 		Kernel::getInstance()->em()->flush();
 
-		$this->getSession()->getFlashBag()->add('confirm', 'Tag “'.$tag->getDefaultTranslatedTag()->getName().'” has been linked to node “'.$node->getNodeName().'”.');
+		return $tag;
 	}
 
 	/**
@@ -567,11 +675,8 @@ class NodesController extends RozierApp {
 
 		$source = new $sourceClass($node, $new_translation);
 
-
 		Kernel::getInstance()->em()->persist($source);
 		Kernel::getInstance()->em()->flush();
-
-		$this->getSession()->getFlashBag()->add('confirm', 'Node “'.$node->getNodeName().'” has been translated');
 	}
 
 	/**
@@ -594,14 +699,13 @@ class NodesController extends RozierApp {
 		}
 
 		Kernel::getInstance()->em()->flush();
-		$this->getSession()->getFlashBag()->add('confirm', 'Node “'.$nodeSource->getNode()->getNodeName().'” content for “'.$nodeSource->getTranslation()->getName().'” has been updated');
 	}
 
 	/**
 	 * [addNodeUrlAlias description]
 	 * @param [type] $data [description]
 	 * @param Node   $node
-	 * @return void 
+	 * @return UrlAlias
 	 */
 	private function addNodeUrlAlias( $data, Node $node )
 	{
@@ -616,23 +720,33 @@ class NodesController extends RozierApp {
 
 			if ($translation !== null && 
 				$nodeSource !== null) {
+
+				$testingAlias = StringHandler::slugify($data['alias']);
+				if ($this->nodeNameExists($testingAlias) || 
+						$this->urlAliasExists($testingAlias)) {
+
+					$msg = $this->getTranslator()->trans('url_alias.no_creation.already_exists', array('%alias%'=>$data['alias']));
+					throw new EntityAlreadyExistsException($msg, 1);
+				}
 				
 				try {
-
 					$ua = new UrlAlias( $nodeSource );
 					$ua->setAlias($data['alias']);
 					Kernel::getInstance()->em()->persist($ua);
 					Kernel::getInstance()->em()->flush();
-					$this->getSession()->getFlashBag()->add('confirm', 'Url alias “'.$ua->getAlias().'” for “'.$translation->getName().'” translation has been created');
+					return $ua;
 				}
 				catch(\Exception $e){
-					$this->getSession()->getFlashBag()->add('error', 'Url alias can’t be created, it already exists.');
+					$msg = $this->getTranslator()->trans('url_alias.no_creation.already_exists', array('%alias%'=>$testingAlias));
+					throw new EntityAlreadyExistsException($msg, 1);
 				}
 			}
 			else{
-				$this->getSession()->getFlashBag()->add('error', 'Url alias can’t be created, node has no “'.$translation->getName().'” translation.');
+				$msg = $this->getTranslator()->trans('url_alias.no_translation', array('%translation%'=>$translation->getName()));
+				throw new NoTranslationAvailableException($msg, 1);
 			}
 		}
+		return null;
 	}
 
 	/**
@@ -643,15 +757,24 @@ class NodesController extends RozierApp {
 	 */
 	private function editUrlAlias( $data, UrlAlias $ua )
 	{
+		$testingAlias = StringHandler::slugify($data['alias']);
+		if ($testingAlias != $ua->getAlias() && 
+				($this->nodeNameExists($testingAlias) || 
+				$this->urlAliasExists($testingAlias))) {
+
+			$msg = $this->getTranslator()->trans('url_alias.no_update.already_exists', array('%alias%'=>$data['alias']));
+			throw new EntityAlreadyExistsException($msg, 1);
+		}
+
 		if ($data['urlalias_id'] == $ua->getId()) {
 			
 			try {
 				$ua->setAlias($data['alias']);
 				Kernel::getInstance()->em()->flush();
-				$this->getSession()->getFlashBag()->add('confirm', 'Url alias “'.$ua->getAlias().'” has been updated.');
+				return true;
 			}
 			catch(\Exception $e){
-				$this->getSession()->getFlashBag()->add('error', 'Url alias can’t be updated, alias already exists.');
+				return false;
 			}
 		}
 	}
@@ -667,7 +790,6 @@ class NodesController extends RozierApp {
 			
 			Kernel::getInstance()->em()->remove($ua);
 			Kernel::getInstance()->em()->flush();
-			$this->getSession()->getFlashBag()->add('confirm', 'Url alias “'.$ua->getAlias().'” has been removed.');
 		}
 	}
 
@@ -714,15 +836,15 @@ class NodesController extends RozierApp {
 			'node_id' =>  $node->getId()
 		);
 		$builder = $this->getFormFactory()
-					->createBuilder('form', $defaults)
-					->add('node_id', 'hidden', array(
-						'data' => $node->getId(),
-						'constraints' => array(
-							new NotBlank()
-						)
-					))
-					->add('alias', 'text' )
-					->add('translation_id', new \RZ\Renzo\CMS\Forms\TranslationsType() );
+			->createBuilder('form', $defaults)
+			->add('node_id', 'hidden', array(
+				'data' => $node->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+			->add('alias', 'text' )
+			->add('translation_id', new \RZ\Renzo\CMS\Forms\TranslationsType() );
 
 		return $builder->getForm();
 	}

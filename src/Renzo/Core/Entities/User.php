@@ -10,7 +10,7 @@ use RZ\Renzo\Core\Handlers\UserHandler;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\UserRepository")
  * @Table(name="users")
  * @HasLifecycleCallbacks
  */
@@ -174,22 +174,20 @@ class User extends Human implements AdvancedUserInterface
      */
     public function getRoles() {
 
-        if ($this->rolesNames === null) {
-            $this->rolesNames = array();
-            foreach ($this->getRolesEntities() as $role) {
-                $rolesNames[] = $role->getName();
-            }
-
-            foreach ($this->getGroups() as $group) {
-                // User roles > Groups roles
-                $this->rolesNames = array_merge($group->getRoles(), $this->rolesNames);
-            }
-
-            // we need to make sure to have at least one role
-            $this->rolesNames[] = Role::ROLE_DEFAULT;
-            $this->rolesNames = array_unique($this->rolesNames);
+        $this->rolesNames = array();
+        foreach ($this->getRolesEntities() as $role) {
+            $this->rolesNames[] = $role->getName();
         }
 
+        foreach ($this->getGroups() as $group) {
+            // User roles > Groups roles
+            $this->rolesNames = array_merge($group->getRoles(), $this->rolesNames);
+        }
+
+        // we need to make sure to have at least one role
+        $this->rolesNames[] = Role::ROLE_DEFAULT;
+        $this->rolesNames = array_unique($this->rolesNames);
+        
         return $this->rolesNames;
     }
     public function addRole(Role $role)

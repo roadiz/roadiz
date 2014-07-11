@@ -17,6 +17,9 @@ use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use Themes\Rozier\RozierApp;
+
+use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -67,8 +70,17 @@ class NodeTypesController extends RozierApp
 			$form->handleRequest();
 
 			if ($form->isValid()) {
-		 		$this->editNodeType($form->getData(), $node_type);
+				try{
+			 		$this->editNodeType($form->getData(), $node_type);
 
+			 		$msg = $this->getTranslator()->trans('node_type.updated', array('%name%'=>$node_type->getName()));
+			 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 				$this->getLogger()->info($msg);
+				}
+				catch (EntityAlreadyExistsException $e) {
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+	 				$this->getLogger()->warning($e->getMessage());
+				}
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -107,24 +119,36 @@ class NodeTypesController extends RozierApp
 		if ($node_type !== null) {
 			$this->assignation['node_type'] = $node_type;
 			
-			$form = $this->buildEditForm( $node_type );
-
+			/*
+			 * form
+			 */
+			$form = $this->buildAddForm( $node_type );
 			$form->handleRequest();
-
 			if ($form->isValid()) {
-		 		$this->addNodeType($form->getData(), $node_type);
+				try {
+			 		$this->addNodeType($form->getData(), $node_type);
 
-		 		/*
-		 		 * Force redirect to avoid resending form when refreshing page
-		 		 */
-		 		$response = new RedirectResponse(
-					Kernel::getInstance()->getUrlGenerator()->generate(
-						'nodeTypesEditPage',
-						array('node_type_id' => $node_type->getId())
-					)
-				);
+			 		$msg = $this->getTranslator()->trans('node_type.created', array('%name%'=>$node_type->getName()));
+				 	$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 				$this->getLogger()->info($msg);
+
+			 		$response = new RedirectResponse(
+						Kernel::getInstance()->getUrlGenerator()->generate(
+							'nodeTypesEditPage',
+							array('node_type_id' => $node_type->getId())
+						)
+					);
+					
+				} catch (EntityAlreadyExistsException $e) {
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+	 				$this->getLogger()->warning($e->getMessage());
+					$response = new RedirectResponse(
+						Kernel::getInstance()->getUrlGenerator()->generate(
+							'nodeTypesAddPage'
+						)
+					);
+				}
 				$response->prepare($request);
-
 				return $response->send();
 			}
 
@@ -165,7 +189,9 @@ class NodeTypesController extends RozierApp
 		 		 */
 				$node_type->getHandler()->deleteWithAssociations();
 
-		 		$this->getSession()->getFlashBag()->add('confirm', 'Node-type has been deleted');
+				$msg = $this->getTranslator()->trans('node_type.deleted', array('%name%'=>$node_type->getName()));
+		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -192,19 +218,18 @@ class NodeTypesController extends RozierApp
 		}
 	}
 
-
-
 	private function editNodeType( $data, NodeType $node_type)
 	{
 		foreach ($data as $key => $value) {
+			if (isset($data['name'])) {
+				throw new EntityAlreadyExistsException($this->getTranslator()->trans('node_type.cannot_rename_already_exists', array('%name%'=>$node_type->getName())), 1);
+			}
 			$setter = 'set'.ucwords($key);
 			$node_type->$setter( $value );
 		}
-
 		Kernel::getInstance()->em()->flush();
-
 		$node_type->getHandler()->updateSchema();
-		$this->getSession()->getFlashBag()->add('confirm', 'Node-type has been updated');
+		return true;
 	}
 
 	private function addNodeType( $data, NodeType $node_type)
@@ -213,20 +238,23 @@ class NodeTypesController extends RozierApp
 			$setter = 'set'.ucwords($key);
 			$node_type->$setter( $value );
 		}
-		Kernel::getInstance()->em()->persist($node_type);
-		Kernel::getInstance()->em()->flush();
-
-		$node_type->getHandler()->updateSchema();
-		$this->getSession()->getFlashBag()->add('confirm', 'Node-type has been created');
+		try {
+			Kernel::getInstance()->em()->persist($node_type);
+			Kernel::getInstance()->em()->flush();
+			$node_type->getHandler()->updateSchema();
+			return true;
+		}
+		catch(\Exception $e){
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('node_type.already_exists', array('%name%'=>$node_type->getName())), 1);
+		}
 	}
-
 
 	/**
 	 * 
 	 * @param  NodeType   $node_type 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditForm( NodeType $node_type )
+	private function buildAddForm( NodeType $node_type )
 	{
 		$defaults = array(
 			'name' =>           $node_type->getName(),
@@ -243,6 +271,35 @@ class NodeTypesController extends RozierApp
 							new NotBlank()
 						)
 					))
+					->add('displayName',  'text', array(
+						'constraints' => array(
+							new NotBlank()
+						)
+					))
+					->add('description',    'text', array('required' => false))
+					->add('visible',        'checkbox', array('required' => false))
+					->add('newsletterType', 'checkbox', array('required' => false))
+					->add('hidingNodes',    'checkbox', array('required' => false))
+		;
+
+		return $builder->getForm();
+	}
+	/**
+	 * 
+	 * @param  NodeType   $node_type 
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildEditForm( NodeType $node_type )
+	{
+		$defaults = array(
+			'displayName' =>    $node_type->getDisplayName(),
+			'description' =>    $node_type->getDescription(),
+			'visible' =>        $node_type->isVisible(),
+			'newsletterType' => $node_type->isNewsletterType(),
+			'hidingNodes' =>    $node_type->isHidingNodes(),
+		);
+		$builder = $this->getFormFactory()
+					->createBuilder('form', $defaults)
 					->add('displayName',  'text', array(
 						'constraints' => array(
 							new NotBlank()

@@ -11,6 +11,9 @@
  */
 namespace RZ\Renzo\CMS\Controllers;
 
+use RZ\Renzo\Core\Entities\Node;
+use RZ\Renzo\Core\Entities\Translation;
+
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -33,7 +36,7 @@ class FrontendController extends AppController {
 	 * @param  RZ\Renzo\Core\Entities\Translation $translation
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction( $node, $translation )
+	public function indexAction( Node $node = null, Translation $translation = null)
 	{
 		$this->assignation['node'] = $node;
 		$this->assignation['translation'] = $translation;

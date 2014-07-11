@@ -71,19 +71,23 @@ class Translation extends DateTimed {
 	private $locale;
 
 	/**
-	 * @return [type] [description]
+	 * @return string
 	 */
 	public function getLocale() {
 	    return $this->locale;
 	}
 	
 	/**
-	 * @param [type] $newlocale [description]
+	 * @param string $newlocale
 	 */
 	public function setLocale($locale) {
 	    $this->locale = $locale;
-	
 	    return $this;
+	}
+	public function getShortLocale()
+	{
+		$shorts = array_flip(static::$availableLocalesShortcut);
+		return $shorts[$this->getLocale()];
 	}
 
 	/**

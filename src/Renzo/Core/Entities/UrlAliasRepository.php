@@ -35,4 +35,24 @@ class UrlAliasRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * 
+     * @param  string $alias
+     * @return boolean
+     */
+    public function exists( $alias )
+    {
+        $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT COUNT(ua.alias) FROM RZ\Renzo\Core\Entities\UrlAlias ua 
+            WHERE ua.alias = :alias
+        ')->setParameter('alias', $alias);
+
+        try {
+            return (boolean)$query->getSingleScalarResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return false;
+        }
+    }
 }

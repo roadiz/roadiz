@@ -34,6 +34,17 @@ class MixedUrlMatcher extends UrlMatcher
         $decodedUrl = rawurldecode($pathinfo);
 
         /*
+         * set default locale
+         */
+        $translation = Kernel::getInstance()->em()
+        	->getRepository('RZ\Renzo\Core\Entities\Translation')
+        	->findOneBy(array('defaultTranslation'=>true, 'available'=>true));
+
+        if ($translation !== null) {
+        	Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
+        }
+
+        /*
          * First try matching Static routes
          *
          * Backend and Frontend
@@ -70,11 +81,15 @@ class MixedUrlMatcher extends UrlMatcher
     	 */
     	$node = $this->parseFromUrlAlias($tokens);
     	if ($node !== null) {
+
+    		$translation = $node->getNodeSources()->first()->getTranslation();
+			Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
+
     		return array(
 	    		'_controller' => $this->getThemeController().'::indexAction',
 	    		'node' => $node,
 	    		'urlAlias' => null,
-	    		'translation' => $node->getNodeSources()->first()->getTranslation()
+	    		'translation' => $translation
 	    	);
     	}
 
@@ -86,11 +101,14 @@ class MixedUrlMatcher extends UrlMatcher
 	    	/*
 	    	 * Try with nodeName
 	    	 */
+	    	$translation = $this->parseTranslation($tokens);
+	    	Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
+
 	    	return array(
 	    		'_controller' => $this->getThemeController().'::indexAction',
 	    		'node' => $this->parseNode($tokens),
 	    		'urlAlias' => null,
-	    		'translation' => $this->parseTranslation($tokens)
+	    		'translation' => $translation
 	    	);
     	}
 

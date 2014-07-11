@@ -202,14 +202,14 @@ class Kernel {
 			
 			$this->httpKernel->terminate( $this->request, $this->response );
 		}
-		catch(Symfony\Component\Routing\Exception\ResourceNotFoundException $e){
+		catch(\Symfony\Component\Routing\Exception\ResourceNotFoundException $e){
 			echo $e->getMessage().PHP_EOL;
 		}
 		catch(\LogicException $e){
 			echo $e->getMessage().PHP_EOL;
 		}
-		catch(\Exception $e){
-			echo $e->getMessage();
+		catch(\PDOException $e){
+			echo $e->getMessage().PHP_EOL;
 		}
 
 		return $this;
@@ -273,9 +273,9 @@ class Kernel {
 		 */
 		$map = new FirewallMap();
 		// Register back-end security scheme
-		$beClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils );
+		$beClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils, $this->dispatcher );
 		// Register front-end security scheme
-		$feClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils );
+		$feClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils, $this->dispatcher );
 
 		$firewall = new Firewall($map, $this->dispatcher);
 		$this->dispatcher->addListener(

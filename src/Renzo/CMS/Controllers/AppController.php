@@ -28,6 +28,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
@@ -119,13 +120,37 @@ class AppController {
 	 */
 	protected $assignation =  array();
 	protected static $csrfProvider = null;
-	protected $translator =   null;
 
-	
+	/**
+	 * @var Symfony\Component\Translation\Translator
+	 */
+	protected $translator = null;
+	/**
+	 * @return Symfony\Component\Translation\Translator
+	 */
+	public function getTranslator()
+	{
+		return $this->translator;
+	}
+
+	/**
+	 * @var Psr\Log\LoggerInterface
+	 */
+	protected $logger = null;
+	/**
+	 * @return Psr\Log\LoggerInterface
+	 */
+	public function getLogger()
+	{
+		return $this->logger;
+	}
+
 	public function __construct(){
 		$this->initializeTwig()
 			 ->initializeTranslator()
 			 ->prepareBaseAssignation();
+
+		$this->logger = new \RZ\Renzo\Core\Log\Logger();
 	}
 	/**
 	 * 
@@ -150,11 +175,11 @@ class AppController {
 	 * 
 	 * {{themeDir}}/Resources/translations/messages.{{lang}}.xlf
 	 * 
-	 * @param  string $lang Default: 'en'
-	 * @return [type]       [description]
+	 * @todo  [Cache] Need to write XLF catalog to PHP using \Symfony\Component\Translation\Writer\TranslationWriter 
 	 */
-	private function initializeTranslator( $lang = 'en' )
+	private function initializeTranslator()
 	{
+		$lang = Kernel::getInstance()->getRequest()->getLocale();
 		// instancier un objet de la classe Translator
 		$this->translator = new Translator($lang);
 		// charger, en quelque sorte, des traductions dans ce translator
@@ -291,6 +316,13 @@ class AppController {
 				'id' => Kernel::getInstance()->getRequest()->getSession()->getId()
 			)
 		);
+
+		if (static::getSecurityContext() !== null && 
+			static::getSecurityContext()->getToken() !== null ) {
+			
+			$this->assignation['session']['user'] = static::getSecurityContext()->getToken()->getUser();
+		}
+
 		return $this;
 	}
 
@@ -379,7 +411,7 @@ class AppController {
 	 * 
 	 * @see BackendController::appendToFirewallMap
 	 */
-	public static function appendToFirewallMap( FirewallMap $firewallMap, HttpKernelInterface $httpKernel, HttpUtils $httpUtils )
+	public static function appendToFirewallMap( FirewallMap $firewallMap, HttpKernelInterface $httpKernel, HttpUtils $httpUtils, EventDispatcher $dispatcher = null )
 	{
 		// Implements this method if your app controller need a security context
 	}

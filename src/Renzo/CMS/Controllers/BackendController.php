@@ -12,7 +12,8 @@
 namespace RZ\Renzo\CMS\Controllers;
 
 use RZ\Renzo\Core\Kernel;
-
+use RZ\Renzo\Core\Log\Logger;
+use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Handlers\UserProvider;
 use RZ\Renzo\Core\Handlers\UserHandler;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -22,13 +23,19 @@ use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
+use Symfony\Component\Security\Http\Firewall\ContextListener;
+use Symfony\Component\Security\Http\Firewall\LogoutListener;
+use Symfony\Component\Security\Http\Firewall\AccessListener;
+use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
+use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
+use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -36,6 +43,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserChecker;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -49,6 +57,13 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 class BackendController extends AppController {
 	
 	protected static $backendTheme = true;
+
+
+	public function __construct(){
+		parent::__construct();
+		
+		$this->logger->setSecurityContext( static::$securityContext );
+	}
 
 	/**
 	 * Check if twig cache must be cleared 
@@ -66,28 +81,28 @@ class BackendController extends AppController {
 	}
 	
 	/**
-	 * Register current AppController security scheme in Kernel firewall map
-	 * 
-	 * @param FirewallMap $firewallMap
-	 * @param HttpKernelInterface $httpKernel
-	 * @param HttpUtils $httpUtils
+	 * {@inheritdoc}
 	 */
-	public static function appendToFirewallMap( FirewallMap $firewallMap, HttpKernelInterface $httpKernel, HttpUtils $httpUtils )
+	public static function appendToFirewallMap( FirewallMap $firewallMap, HttpKernelInterface $httpKernel, HttpUtils $httpUtils, EventDispatcher $dispatcher = null )
 	{
 		/*
 		 * Need session for security
 		 */
 		static::initializeSession();
 
+		$areaName = 'rz_admin';
+
+		$renzoUserProvider = new UserProvider();
+
 		$authenticationManager = new DaoAuthenticationProvider(
-			new UserProvider(),
+			$renzoUserProvider,
 			new UserChecker(),
-			'rz-admin',
+			$areaName,
 			UserHandler::getEncoderFactory()
 		);
 		$accessDecisionManager = new AccessDecisionManager(
 			array(
-				new RoleVoter()
+				new RoleVoter('ROLE_')
 			)
 		);
 		static::$securityContext = new SecurityContext(
@@ -95,50 +110,81 @@ class BackendController extends AppController {
 			$accessDecisionManager
 		);
 
-		/*
-		 * Listener
-		 */
-		$usernamePasswordListener = new UsernamePasswordFormAuthenticationListener(
-			static::getSecurityContext(), 
-			$authenticationManager, 
-			new SessionAuthenticationStrategy(SessionAuthenticationStrategy::INVALIDATE), 
-			$httpUtils, 
-			'rz-admin',
-			new DefaultAuthenticationSuccessHandler($httpUtils, array(
-				'always_use_default_target_path' => false,
-				'default_target_path'            => '/rz-admin',
-				'login_path'                     => '/login',
-				'target_path_parameter'          => '_target_path',
-				'use_referer'                    => false,
-			)), 
-			new DefaultAuthenticationFailureHandler($httpKernel, $httpUtils, array(
-	            'failure_path'           => '/login_failed',
-	            'failure_forward'        => false,
-	            'login_path'             => '/login',
-	            'failure_path_parameter' => '_failure_path'
-	        )), 
-			array(
-				'check_path' => '/rz-admin/login_check',
-			), 
-			null, 
-			null, 
-			null //csrfTokenManager
-		);
 
 		/*
 		 * Prepare app firewall
 		 */
-		$requestMatcher = new RequestMatcher('^/rz-admin');  
+		$requestMatcher = new RequestMatcher('^/rz-admin'); 
+		// allows configuration of different access control rules for specific parts of the website.
+		$accessMap = new AccessMap($requestMatcher, array(Role::ROLE_BACKEND_USER)); 
 
-		// instances of Symfony\Component\Security\Http\Firewall\ListenerInterface
-		$listeners = array(
-			$usernamePasswordListener
+		/*
+		 * Listener
+		 */
+		$logoutListener = new LogoutListener(
+			static::getSecurityContext(),
+			$httpUtils,
+			new DefaultLogoutSuccessHandler( $httpUtils ), //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
+			array(
+	            'logout_path'    => '/rz-admin/logout',
+	        )
 		);
+		$logoutListener->addHandler( new \Symfony\Component\Security\Http\Logout\SessionLogoutHandler() ); //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
+
+		$listeners = array(
+			// manages the SecurityContext persistence through a session
+			new ContextListener(
+				static::getSecurityContext(),
+				array($renzoUserProvider),
+				$areaName,
+				new Logger(),
+				$dispatcher
+			),
+			// logout users
+			$logoutListener,
+			// authentication via a simple form composed of a username and a password
+			new UsernamePasswordFormAuthenticationListener(
+				static::getSecurityContext(), 
+				$authenticationManager, 
+				new SessionAuthenticationStrategy(SessionAuthenticationStrategy::INVALIDATE), 
+				$httpUtils, 
+				$areaName,
+				new DefaultAuthenticationSuccessHandler($httpUtils, array(
+					'always_use_default_target_path' => false,
+					'default_target_path'            => '/rz-admin',
+					'login_path'                     => '/login',
+					'target_path_parameter'          => '_target_path',
+					'use_referer'                    => false,
+				)), 
+				new DefaultAuthenticationFailureHandler($httpKernel, $httpUtils, array(
+					'failure_path'           => '/login_failed',
+					'failure_forward'        => false,
+					'login_path'             => '/login',
+					'failure_path_parameter' => '_failure_path'
+				)), 
+				array(
+					'check_path' => '/rz-admin/login_check',
+				), 
+				new Logger(), // A LoggerInterface instance
+				$dispatcher,
+				null //csrfTokenManager
+			),
+			// enforces access control rules
+			new AccessListener(
+				static::getSecurityContext(),
+				$accessDecisionManager,
+				$accessMap,
+				$authenticationManager
+			),
+			// automatically adds a Token if none is already present.
+			//new AnonymousAuthenticationListener(static::getSecurityContext(), '') // $key
+		); 
+
 		$exceptionListener = new ExceptionListener(
 			static::getSecurityContext(), 
-			new AuthenticationTrustResolver('ROLE_ANONYMOUS', 'ROLE_REMEMBER_ME'), 
+			new AuthenticationTrustResolver('', ''), 
 			$httpUtils, 
-			'rz-admin',
+			$areaName,
 			new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint(
 				$httpKernel, 
 				$httpUtils, 
@@ -147,7 +193,7 @@ class BackendController extends AppController {
 			),
 			null, //$errorPage
 			null, //AccessDeniedHandlerInterface $accessDeniedHandler
-			null //LoggerInterface $logger
+			new Logger() //LoggerInterface $logger
 		);
 
 		/*

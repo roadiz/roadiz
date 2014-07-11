@@ -16,6 +16,8 @@ use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use Themes\Rozier\RozierApp;
 
+use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -50,6 +52,9 @@ class TranslationsController extends RozierApp
 				
 		 		$translation->getHandler()->makeDefault();
 
+		 		$msg = $this->getTranslator()->trans('translation.made_default', array('%name%'=>$translation->getName()));
+		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -93,7 +98,18 @@ class TranslationsController extends RozierApp
 			$form->handleRequest();
 
 			if ($form->isValid()) {
-		 		$this->editTranslation($form->getData(), $translation);
+
+				try {
+			 		$this->editTranslation($form->getData(), $translation);
+
+			 		$msg = $this->getTranslator()->trans('translation.updated', array('%name%'=>$translation->getName()));
+			 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+		 			$this->getLogger()->info($msg);
+	 			}
+				catch (EntityAlreadyExistsException $e) {
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+		 			$this->getLogger()->warning($e->getMessage());
+				}
 
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
@@ -138,8 +154,18 @@ class TranslationsController extends RozierApp
 			$form->handleRequest();
 
 			if ($form->isValid()) {
-		 		$this->addTranslation($form->getData(), $translation);
 
+				try {
+			 		$this->addTranslation($form->getData(), $translation);
+
+			 		$msg = $this->getTranslator()->trans('translation.created', array('%name%'=>$translation->getName()));
+			 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+		 			$this->getLogger()->info($msg);
+				}
+				catch (EntityAlreadyExistsException $e) {
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+		 			$this->getLogger()->warning($e->getMessage());
+				}
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -183,8 +209,18 @@ class TranslationsController extends RozierApp
 			if ($form->isValid() && 
 				$form->getData()['translation_id'] == $translation->getId() ) {
 
-		 		$this->deleteTranslation($form->getData(), $translation);
+				try {
 
+			 		$this->deleteTranslation($form->getData(), $translation);
+
+			 		$msg = $this->getTranslator()->trans('translation.deleted', array('%name%'=>$translation->getName()));
+			 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+		 			$this->getLogger()->info($msg);
+				}
+				catch( \Exception $e ) {
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+		 			$this->getLogger()->warning($e->getMessage());
+				}
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
@@ -211,26 +247,34 @@ class TranslationsController extends RozierApp
 
 	private function editTranslation( $data, Translation $translation)
 	{
-		foreach ($data as $key => $value) {
-			$setter = 'set'.ucwords($key);
-			$translation->$setter( $value );
+		try {
+			foreach ($data as $key => $value) {
+				$setter = 'set'.ucwords($key);
+				$translation->$setter( $value );
+			}
+
+			Kernel::getInstance()->em()->flush();
 		}
-
-		Kernel::getInstance()->em()->flush();
-
-		$this->getSession()->getFlashBag()->add('confirm', 'Translation “'.$translation->getName().'” has been updated');
+		catch( \Exception $e ){
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('translation.cannot_update_already_exists', 
+				array('%locale%'=>$translation->getLocale())), 1);	
+		}
 	}
 
 	private function addTranslation( $data, Translation $translation)
 	{
-		foreach ($data as $key => $value) {
-			$setter = 'set'.ucwords($key);
-			$translation->$setter( $value );
+		try {
+			foreach ($data as $key => $value) {
+				$setter = 'set'.ucwords($key);
+				$translation->$setter( $value );
+			}
+			Kernel::getInstance()->em()->persist($translation);
+			Kernel::getInstance()->em()->flush();
 		}
-		Kernel::getInstance()->em()->persist($translation);
-		Kernel::getInstance()->em()->flush();
-
-		$this->getSession()->getFlashBag()->add('confirm', 'Translation “'.$translation->getName().'” has been created');
+		catch( \Exception $e ){
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('translation.cannot_create_already_exists', 
+				array('%locale%'=>$translation->getLocale())), 1);	
+		}
 	}
 
 	private function deleteTranslation( $data, Translation $translation)
@@ -240,15 +284,12 @@ class TranslationsController extends RozierApp
 			if ($translation->isDefaultTranslation() === false) {
 				Kernel::getInstance()->em()->remove($translation);
 				Kernel::getInstance()->em()->flush();
-
-				$this->getSession()->getFlashBag()->add('confirm', 'Translation “'.$translation->getName().'” has been deleted');
 			}
 			else {
-				$this->getSession()->getFlashBag()->add('error', 'You cannot delete default translation.');
+				throw new \Exception($this->getTranslator()->trans('translation.cannot_delete_default_translation', array('%name%'=>$translation->getName())), 1);
 			}
 		}
 	}
-
 
 	/**
 	 * 
