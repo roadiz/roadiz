@@ -241,6 +241,11 @@ class MixedUrlMatcher extends UrlMatcher
 						->findOneBy(array('locale'=>$locale));
 				}
 			}
+			else {
+				return Kernel::getInstance()->em()
+						->getRepository('RZ\Renzo\Core\Entities\Translation')
+						->findOneBy(array('defaultTranslation'=>true));
+			}
 		}
 		return null;
 	}
