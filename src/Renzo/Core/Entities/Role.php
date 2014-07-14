@@ -35,8 +35,13 @@ class Role extends PersistableObject
 	    return $this;
 	}
 	
-	public function __construct()
+	/**
+	 * @param string $name Role name
+	 */
+	public function __construct( $name )
     {
     	parent::__construct();
+
+    	$this->setName($name);
     }
 }

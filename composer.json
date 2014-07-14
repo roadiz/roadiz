@@ -16,7 +16,8 @@
         "symfony/security-csrf": "2.5.*",
         "symfony/twig-bridge": "2.5.*",
         "symfony/security": "2.5.*",
-        "twig/twig":"1.*"
+        "twig/twig":"1.*",
+        "guzzle/http":"3.9.*"
     },
     "autoload": {
         "psr-4": {

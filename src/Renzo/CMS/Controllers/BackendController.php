@@ -16,9 +16,11 @@ use RZ\Renzo\Core\Log\Logger;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Handlers\UserProvider;
 use RZ\Renzo\Core\Handlers\UserHandler;
+use RZ\Renzo\Core\Authentification\AuthenticationSuccessHandler;
+use RZ\Renzo\Core\Authorization\AccessDeniedHandler;
+
+
 use Symfony\Component\Security\Http\HttpUtils;
-
-
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
@@ -33,7 +35,6 @@ use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 
-use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 
@@ -117,6 +118,7 @@ class BackendController extends AppController {
 		$requestMatcher = new RequestMatcher('^/rz-admin'); 
 		// allows configuration of different access control rules for specific parts of the website.
 		$accessMap = new AccessMap($requestMatcher, array(Role::ROLE_BACKEND_USER)); 
+		$accessMap->add(new RequestMatcher('^/rz-admin'), array(Role::ROLE_BACKEND_USER));
 
 		/*
 		 * Listener
@@ -149,7 +151,7 @@ class BackendController extends AppController {
 				new SessionAuthenticationStrategy(SessionAuthenticationStrategy::INVALIDATE), 
 				$httpUtils, 
 				$areaName,
-				new DefaultAuthenticationSuccessHandler($httpUtils, array(
+				new AuthenticationSuccessHandler($httpUtils, array(
 					'always_use_default_target_path' => false,
 					'default_target_path'            => '/rz-admin',
 					'login_path'                     => '/login',
@@ -192,7 +194,7 @@ class BackendController extends AppController {
 				true // bool $useForward
 			),
 			null, //$errorPage
-			null, //AccessDeniedHandlerInterface $accessDeniedHandler
+			new AccessDeniedHandler(), //AccessDeniedHandlerInterface $accessDeniedHandler
 			new Logger() //LoggerInterface $logger
 		);
 

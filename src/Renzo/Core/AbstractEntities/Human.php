@@ -4,8 +4,9 @@ namespace RZ\Renzo\Core\AbstractEntities;
 
 use RZ\Renzo\Core\AbstractEntities\DateTimed;
 /**
-* @MappedSuperclass
-*/
+ * @MappedSuperclass
+ * @HasLifecycleCallbacks
+ */
 abstract class Human extends DateTimed
 {
 	/**

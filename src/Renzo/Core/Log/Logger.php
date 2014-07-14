@@ -146,6 +146,13 @@ class Logger implements LoggerInterface {
             $log->setUser( $this->getSecurityContext()->getToken()->getUser() );
         }
 
+        /*
+         * Add client IP to log if it’s an HTTP request
+         */
+        if (Kernel::getInstance()->getRequest() !== null) {
+            $log->setClientIp( Kernel::getInstance()->getRequest()->getClientIp() );
+        }
+
 		Kernel::getInstance()->em()->persist( $log );
 		Kernel::getInstance()->em()->flush();
     }

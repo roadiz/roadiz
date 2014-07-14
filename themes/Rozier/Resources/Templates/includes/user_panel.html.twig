@@ -1,5 +1,5 @@
 <section class="uk-width-2-10" id="user-panel">
-	<img width="200" height="200" class="uk-thumbnail" src="" alt="">
+	<img width="200" height="200" class="uk-thumbnail" src="{{ session.user.getPictureUrl }}" alt="{{ session.user.getUsername }}">
 	<h3>{{ session.user.getUsername }}</h3>
 	<h4>{{ session.user.getFirstName }}</h4>
 

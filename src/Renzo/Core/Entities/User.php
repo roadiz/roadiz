@@ -17,7 +17,8 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 class User extends Human implements AdvancedUserInterface
 {
 	/**
-	 * @Column(type="string", unique=true)
+	 * @Column(type="string", unique=true)     
+     * @var string
 	 */
 	private $username;
 	/**
@@ -35,11 +36,51 @@ class User extends Human implements AdvancedUserInterface
 	    return $this;
 	}
 
+    /**
+     * @Column(type="string", name="facebook_name", unique=false, nullable=true)
+     */
+    protected $facebookName = null;
+    
+    /**
+     * Get facebook profile name to grab public infos such as picture
+     *
+     * @return string
+     */
+    public function getFacebookName() {
+        return $this->facebookName;
+    }
+    /**
+     * @param string $newfacebookName
+     */
+    public function setFacebookName($facebookName) {
+        $this->facebookName = $facebookName;
+        return $this;
+    }
+
+    /**
+     * @Column(type="text", name="picture_url")
+     */
+    protected $pictureUrl = '';
+    /**
+     * @return string
+     */
+    public function getPictureUrl() {
+        return $this->pictureUrl;
+    }
+    /**
+     * @param string $newpictureUrl
+     */
+    public function setPictureUrl($pictureUrl) {
+        $this->pictureUrl = $pictureUrl;
+        return $this;
+    }
+    
+
 	/**
      * The salt to use for hashing
      *
+     * @Column(name="salt", type="string")     
      * @var string
-     * @ORM\Column(name="salt", type="string")     
      */
     private $salt;
     /**
@@ -96,6 +137,9 @@ class User extends Human implements AdvancedUserInterface
      */
     public function setPlainPassword($plainPassword) {
         $this->plainPassword = $plainPassword;
+        if ($plainPassword != '') {
+            $this->getHandler()->encodePassword();
+        }
     
         return $this;
     }
@@ -201,15 +245,6 @@ class User extends Human implements AdvancedUserInterface
     {
         if ($this->getRolesEntities()->contains($role)) {
             $this->getRolesEntities()->removeElement($role);
-        }
-        return $this;
-    }
-    public function setSuperAdmin($boolean)
-    {
-        if (true === $boolean) {
-            $this->addRole(Role::ROLE_SUPER_ADMIN);
-        } else {
-            $this->removeRole(Role::ROLE_SUPER_ADMIN);
         }
         return $this;
     }
@@ -365,22 +400,6 @@ class User extends Human implements AdvancedUserInterface
             throw new Exception("No password has been filled for user.", 1);   
         }
     }
-	/** 
-     * @PrePersist
-     */
-    public function preUpdate()
-    {   
-        parent::preUpdate();
-        /*
-         * If a plain password is present, we must encode it before persisting entity
-         */
-        if ($this->getPlainPassword() != '') {
-            $this->getHandler()->encodePassword();
-        }
-        else {
-            // Do not change password if no plain password filled
-        }
-    }
 
 	public function __construct()
     {
@@ -388,7 +407,6 @@ class User extends Human implements AdvancedUserInterface
 
     	$this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
-    	//$this->permissions = new ArrayCollection();
 
     	$this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
@@ -399,5 +417,13 @@ class User extends Human implements AdvancedUserInterface
     public function getHandler()
     {
     	return new UserHandler( $this );
+    }
+
+    public function __toString()
+    {
+        $text = $this->getUsername().' <'.$this->getEmail().'>'.PHP_EOL;
+        $text .= "Roles: ".implode(', ', $this->getRoles());
+
+        return $text;
     }
 }

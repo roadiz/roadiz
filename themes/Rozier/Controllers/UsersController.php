@@ -14,9 +14,12 @@ namespace Themes\Rozier\Controllers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\User;
 use Themes\Rozier\RozierApp;
+use RZ\Renzo\Core\Utils\FacebookPictureFinder;
 
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Renzo\Core\Exceptions\FacebookUsernameNotFoundException;
+
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -72,6 +75,10 @@ class UsersController extends RozierApp
 			 		$request->getSession()->getFlashBag()->add('confirm', $msg);
 		 			$this->getLogger()->info($msg);
 		 		}
+				catch( FacebookUsernameNotFoundException $e){
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+			 		$this->getLogger()->warning($e->getMessage());
+				}
 				catch( EntityAlreadyExistsException $e ){
 					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
 			 		$this->getLogger()->warning($e->getMessage());
@@ -150,6 +157,10 @@ class UsersController extends RozierApp
 			 		$msg = $this->getTranslator()->trans('user.created', array('%name%'=>$user->getUsername()));
 				 	$request->getSession()->getFlashBag()->add('confirm', $msg);
 			 		$this->getLogger()->info($msg);
+				}
+				catch( FacebookUsernameNotFoundException $e){
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+			 		$this->getLogger()->warning($e->getMessage());
 				}
 				catch( EntityAlreadyExistsException $e ){
 					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
@@ -232,25 +243,40 @@ class UsersController extends RozierApp
 			return $this->throw404();
 		}
 	}
-
+	/**
+	 * 
+	 * @param  [type] $data [description]
+	 * @param  User   $user [description]
+	 * @return [type]       [description]
+	 */
 	private function editUser( $data, User $user )
 	{	
-		if (($data['username'] != $user->getUsername() ||
-			$data['email'] != $user->getEmail()) && 
-			(Kernel::getInstance()->em()
+		if ($data['username'] != $user->getUsername() && 
+				Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\User')
-				->usernameExists($data['username']) || 
+				->usernameExists($data['username'])
+			) {
+
+			throw new EntityAlreadyExistsException(
+				$this->getTranslator()->trans('user.cannot_update.name_already_exists', 
+				array('%name%'=>$data['username'])), 1);
+		}
+		if ($data['email'] != $user->getEmail() && 
 			Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\User')
-				->emailExists($data['email']))) {
+				->emailExists($data['email'])) {
 
-			throw new EntityAlreadyExistsException($this->getTranslator()->trans('user.cannot_update_already_exists', array('%name%'=>$data['username'])), 1);
+			throw new EntityAlreadyExistsException(
+				$this->getTranslator()->trans('user.cannot_update.email_already_exists', 
+				array('%email%'=>$data['email'])), 1);
 		}
 
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$user->$setter( $value );
 		}
+
+		$this->updateProfileImage( $user );
 		Kernel::getInstance()->em()->flush();
 	}
 
@@ -270,8 +296,26 @@ class UsersController extends RozierApp
 			$setter = 'set'.ucwords($key);
 			$user->$setter( $value );
 		}
+
+		$this->updateProfileImage( $user );
 		Kernel::getInstance()->em()->persist($user);
 		Kernel::getInstance()->em()->flush();
+	}
+
+	private function updateProfileImage( User $user )
+	{
+		if ($user->getFacebookName() != '') {
+			$facebook = new FacebookPictureFinder($user->getFacebookName());
+	        if (false !== $url = $facebook->getPictureUrl()) {
+	            $user->setPictureUrl($url);
+	        }
+	        else {
+	        	throw new FacebookUsernameNotFoundException(
+	        		$this->getTranslator()->trans('user.facebook_name_does_not_exist', 
+	        		array('%name%'=>$user->getFacebookName())), 1);
+	        	
+	        }
+		}
 	}
 
 	private function deleteUser( $data, User $user )
@@ -295,6 +339,7 @@ class UsersController extends RozierApp
 			'company' => $user->getCompany(),
 			'job' => $user->getJob(),
 			'birthday' => $user->getBirthday(),
+			'facebookName' => $user->getFacebookName(),
 		);
 
 		$builder = $this->getFormFactory()
@@ -320,6 +365,7 @@ class UsersController extends RozierApp
 					->add('company', 'text', array('required' => false))
 					->add('job', 'text', array('required' => false))
 					->add('birthday', 'date', array('required' => false))
+					->add('facebookName', 'text', array('required' => false))
 		;
 
 		return $builder->getForm();
@@ -339,6 +385,7 @@ class UsersController extends RozierApp
 			'company' => $user->getCompany(),
 			'job' => $user->getJob(),
 			'birthday' => $user->getBirthday(),
+			'facebookName' => $user->getFacebookName(),
 		);
 
 		$builder = $this->getFormFactory()
@@ -362,6 +409,7 @@ class UsersController extends RozierApp
 					->add('company', 'text', array('required' => false))
 					->add('job', 'text', array('required' => false))
 					->add('birthday', 'date', array('required' => false))
+					->add('facebookName', 'text', array('required' => false))
 		;
 
 		return $builder->getForm();

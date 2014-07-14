@@ -26,7 +26,6 @@ abstract class DateTimed extends PersistableObject
 	 */
 	public function setCreatedAt($createdAt) {
 	    $this->createdAt = $createdAt;
-	
 	    return $this;
 	}
 	/**
@@ -47,15 +46,12 @@ abstract class DateTimed extends PersistableObject
 	 */
 	public function setUpdatedAt($updatedAt) {
 	    $this->updatedAt = $updatedAt;
-	
 	    return $this;
 	}
 	
 	public function __construct()
 	{
 		parent::__construct();
-
-		//$this->resetDates();
 	}
 
 	/** 

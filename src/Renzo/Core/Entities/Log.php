@@ -2,6 +2,7 @@
 
 namespace RZ\Renzo\Core\Entities;
 
+use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
 /**
@@ -31,7 +32,6 @@ class Log extends PersistableObject
 
 		$this->level = $level;
 		$this->message = $message;
-		$this->context = $context;
 	}
 
 	/**
@@ -88,9 +88,25 @@ class Log extends PersistableObject
 	}
 
 	/**
-	 * @Column(type="array", name="context", nullable=false)
+	 * @Column(type="string", name="client_ip", unique=false, nullable=true)
 	 */
-	protected $context = array();
+	protected $clientIp = null;
+
+	/**
+	 * @return string
+	 */
+	public function getClientIp() {
+	    return $this->clientIp;
+	}
+	
+	/**
+	 * @param string $newclientIp
+	 */
+	public function setClientIp($clientIp) {
+	    $this->clientIp = $clientIp;
+	    return $this;
+	}
+	
 	
 
 	/** 
