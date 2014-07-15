@@ -61,10 +61,6 @@ class NodesController extends RozierApp {
 		);
 	}
 
-	public function noAction()
-	{
-		return $this->throw404();
-	}
 	/**
 	 * Return an edition form for requested node
 	 * 
@@ -74,12 +70,16 @@ class NodesController extends RozierApp {
 	 */
 	public function editAction( Request $request, $node_id, $translation_id = null )
 	{
+		$translation = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Translation')
+				->findOneBy(array('defaultTranslation'=>true));
 		$node = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
 
 		if ($node !== null) {
 			$this->assignation['node'] = $node;
 			$this->assignation['source'] = $node->getNodeSources()->first();
+			$this->assignation['translation'] = $translation;
 			
 			/*
 			 * Handle translation form
@@ -174,7 +174,6 @@ class NodesController extends RozierApp {
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
 				->findOneBy(array('defaultTranslation'=>true));
-
 		if ($translation_id !== null) {
 			$translation = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
@@ -305,143 +304,6 @@ class NodesController extends RozierApp {
 		return $this->throw404();
 	}
 
-	/**
-	 * Return aliases form for requested node
-	 * 
-	 * @param  integer $node_id        [description]
-	 * @param  integer $translation_id [description]
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function editAliasesAction( Request $request, $node_id )
-	{
-		$node = Kernel::getInstance()->em()
-			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
-
-		if ($node !== null) {
-
-			$uas = Kernel::getInstance()->em()
-							->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
-							->findAllFromNode($node->getId());
-
-			$this->assignation['node'] = $node;
-			$this->assignation['aliases'] = array();
-
-			/*
-			 * each url alias edit form
-			 */
-			foreach ($uas as $alias) {
-				$editForm = $this->buildEditUrlAliasForm($alias);
-				$deleteForm = $this->buildDeleteUrlAliasForm($alias);
-
-				// Match edit
-				$editForm->handleRequest();
-				if ($editForm->isValid()) {
-
-					if ($this->editUrlAlias($editForm->getData(), $alias)) {
-
-						$msg = $this->getTranslator()->trans('url_alias.updated', array('%alias%'=>$alias->getAlias()));
-						$request->getSession()->getFlashBag()->add('confirm', $msg);
-	 					$this->getLogger()->info($msg);
-					}
-					else {
-						$msg = $this->getTranslator()->trans('url_alias.no_update.already_exists', array('%alias%'=>$alias->getAlias()));
-						$request->getSession()->getFlashBag()->add('error', $msg);
-	 					$this->getLogger()->warning($msg);
-					}
-
-					/*
-			 		 * Force redirect to avoid resending form when refreshing page
-			 		 */
-			 		$response = new RedirectResponse(
-						Kernel::getInstance()->getUrlGenerator()->generate(
-							'nodesEditAliasesPage',
-							array('node_id' => $node->getId())
-						)
-					);
-					$response->prepare($request);
-
-					return $response->send();
-				}
-				// Match delete
-				$deleteForm->handleRequest();
-				if ($deleteForm->isValid()) {
-
-					$this->deleteUrlAlias($editForm->getData(), $alias);
-					$msg = $this->getTranslator()->trans('url_alias.deleted', array('%alias%'=>$alias->getAlias()));
-					$request->getSession()->getFlashBag()->add('confirm', $msg);
-	 				$this->getLogger()->info($msg);
-					/*
-			 		 * Force redirect to avoid resending form when refreshing page
-			 		 */
-			 		$response = new RedirectResponse(
-						Kernel::getInstance()->getUrlGenerator()->generate(
-							'nodesEditAliasesPage',
-							array('node_id' => $node->getId())
-						)
-					);
-					$response->prepare($request);
-
-					return $response->send();
-				}
-
-				$this->assignation['aliases'][] = array(
-					'alias'=>$alias,
-					'editForm'=>$editForm->createView(),
-					'deleteForm'=>$deleteForm->createView()
-				);
-			}
-
-			/* 
-			 * =======================
-			 * Main ADD url alias form
-			 */
-			$form = $this->buildAddUrlAliasForm( $node );
-			$form->handleRequest();
-
-			if ($form->isValid()) {
-
-				try {
-		 			$ua = $this->addNodeUrlAlias($form->getData(), $node);
-		 			$msg = $this->getTranslator()->trans('url_alias.created', array(
-		 				'%alias%'=>$ua->getAlias(), 
-		 				'%translation%'=>$ua->getNodeSource()->getTranslation()->getName()
-		 			));
-		 			$request->getSession()->getFlashBag()->add('confirm', $msg);
-	 				$this->getLogger()->info($msg);
-
-				}
-				catch( EntityAlreadyExistsException $e ){
-					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
-					$this->getLogger()->warning($e->getMessage());
-				}
-				catch( NoTranslationAvailableException $e ){
-					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
-					$this->getLogger()->warning($e->getMessage());
-				}
-	 			/*
-		 		 * Force redirect to avoid resending form when refreshing page
-		 		 */
-		 		$response = new RedirectResponse(
-					Kernel::getInstance()->getUrlGenerator()->generate(
-						'nodesEditAliasesPage',
-						array('node_id' => $node->getId())
-					)
-				);
-				$response->prepare($request);
-				return $response->send();
-			}
-
-			$this->assignation['form'] = $form->createView();
-
-			return new Response(
-				$this->getTwig()->render('nodes/editAliases.html.twig', $this->assignation),
-				Response::HTTP_OK,
-				array('content-type' => 'text/html')
-			);
-		}
-		
-		return $this->throw404();
-	}
 
 
 	/**
@@ -525,6 +387,78 @@ class NodesController extends RozierApp {
 	}
 
 	/**
+	 * Handle node creation pages
+	 * @param [type] $node_type_id   [description]
+	 * @param [type] $translation_id [description]
+	 */
+	public function addChildAction( Request $request, $node_id, $translation_id = null )
+	{	
+		$translation = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Translation')
+				->findOneBy(array('defaultTranslation'=>true));
+
+		if ($translation_id != null) {
+			$translation = Kernel::getInstance()->em()
+				->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
+		}
+		$parentNode = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
+
+		if ($translation !== null && 
+			$parentNode !== null) {
+
+			$form = $this->buildAddChildForm( $parentNode, $translation );
+			$form->handleRequest();
+
+			if ($form->isValid()) {
+
+				try {
+					$node = $this->createChildNode($form->getData(), $parentNode, $translation);
+
+					$msg = $this->getTranslator()->trans('node.created', array('%name%'=>$node->getNodeName()));
+					$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 				$this->getLogger()->info($msg);
+
+					$response = new RedirectResponse(
+						Kernel::getInstance()->getUrlGenerator()->generate(
+							'nodesEditPage',
+							array('node_id' => $node->getId())
+						)
+					);
+					$response->prepare($request);
+					return $response->send();
+				}
+				catch(EntityAlreadyExistsException $e) {
+
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+	 				$this->getLogger()->warning($e->getMessage());
+
+					$response = new RedirectResponse(
+						Kernel::getInstance()->getUrlGenerator()->generate(
+							'nodesAddChildPage',
+							array('node_id' => $node_id, 'translation_id' => $translation_id)
+						)
+					);
+					$response->prepare($request);
+					return $response->send();
+				}
+			}
+
+			$this->assignation['translation'] = $translation;
+			$this->assignation['form'] = $form->createView();
+			$this->assignation['parentNode'] = $parentNode;
+
+			return new Response(
+				$this->getTwig()->render('nodes/add.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}else {
+			return $this->throw404();
+		}
+	}
+
+	/**
 	 * Return an deletion form for requested node
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -586,6 +520,48 @@ class NodesController extends RozierApp {
 
 		try {
 			$node = new Node( $type );
+			$node->setNodeName($data['nodeName']);
+			Kernel::getInstance()->em()->persist($node);
+
+			$sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
+			$source = new $sourceClass($node, $translation);
+			Kernel::getInstance()->em()->persist($source);
+			Kernel::getInstance()->em()->flush();
+			return $node;
+		}
+		catch( \Exception $e ){
+			$msg = $this->getTranslator()->trans('node.no_creation.already_exists', array('%name%'=>$node->getNodeName()));
+			throw new EntityAlreadyExistsException($msg, 1);
+		}
+	}
+
+	/**
+	 * 
+	 * @param  array $data 
+	 * @return RZ\Renzo\Core\Entities\Node
+	 */
+	private function createChildNode( $data, Node $parentNode, Translation $translation )
+	{
+		if ($this->urlAliasExists( StringHandler::slugify($data['nodeName']) )) {
+			$msg = $this->getTranslator()->trans('node.no_creation.url_alias.already_exists', array('%name%'=>$data['nodeName']));
+			throw new EntityAlreadyExistsException($msg, 1);
+		}
+		$type = null;
+
+		if (!empty($data['node_type_id'])) {
+			$type = Kernel::getInstance()->em()
+						->find('RZ\Renzo\Core\Entities\NodeType', (int)$data['node_type_id']);
+		}
+		if ($type === null) {
+			throw new \Exception("Cannot create a node without a valid node-type", 1);
+		}
+		if ($data['parent_id'] != $parentNode->getId()) {
+			throw new \Exception("Requested parent node does not match form values", 1);
+		}
+
+		try {
+			$node = new Node( $type );
+			$node->setParent($parentNode);
 			$node->setNodeName($data['nodeName']);
 			Kernel::getInstance()->em()->persist($node);
 
@@ -701,97 +677,7 @@ class NodesController extends RozierApp {
 		Kernel::getInstance()->em()->flush();
 	}
 
-	/**
-	 * [addNodeUrlAlias description]
-	 * @param [type] $data [description]
-	 * @param Node   $node
-	 * @return UrlAlias
-	 */
-	private function addNodeUrlAlias( $data, Node $node )
-	{
-		if ($data['node_id'] == $node->getId()) {
-
-			$translation = Kernel::getInstance()->em()
-						->find('RZ\Renzo\Core\Entities\Translation', (int)$data['translation_id']);
-
-			$nodeSource = Kernel::getInstance()->em()
-						->getRepository('RZ\Renzo\Core\Entities\NodesSources')
-						->findOneBy(array('node'=>$node, 'translation'=>$translation));
-
-			if ($translation !== null && 
-				$nodeSource !== null) {
-
-				$testingAlias = StringHandler::slugify($data['alias']);
-				if ($this->nodeNameExists($testingAlias) || 
-						$this->urlAliasExists($testingAlias)) {
-
-					$msg = $this->getTranslator()->trans('url_alias.no_creation.already_exists', array('%alias%'=>$data['alias']));
-					throw new EntityAlreadyExistsException($msg, 1);
-				}
-				
-				try {
-					$ua = new UrlAlias( $nodeSource );
-					$ua->setAlias($data['alias']);
-					Kernel::getInstance()->em()->persist($ua);
-					Kernel::getInstance()->em()->flush();
-					return $ua;
-				}
-				catch(\Exception $e){
-					$msg = $this->getTranslator()->trans('url_alias.no_creation.already_exists', array('%alias%'=>$testingAlias));
-					throw new EntityAlreadyExistsException($msg, 1);
-				}
-			}
-			else{
-				$msg = $this->getTranslator()->trans('url_alias.no_translation', array('%translation%'=>$translation->getName()));
-				throw new NoTranslationAvailableException($msg, 1);
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param  array   $data Form data
-	 * @param  UrlAlias $ua 
-	 * @return void
-	 */
-	private function editUrlAlias( $data, UrlAlias $ua )
-	{
-		$testingAlias = StringHandler::slugify($data['alias']);
-		if ($testingAlias != $ua->getAlias() && 
-				($this->nodeNameExists($testingAlias) || 
-				$this->urlAliasExists($testingAlias))) {
-
-			$msg = $this->getTranslator()->trans('url_alias.no_update.already_exists', array('%alias%'=>$data['alias']));
-			throw new EntityAlreadyExistsException($msg, 1);
-		}
-
-		if ($data['urlalias_id'] == $ua->getId()) {
-			
-			try {
-				$ua->setAlias($data['alias']);
-				Kernel::getInstance()->em()->flush();
-				return true;
-			}
-			catch(\Exception $e){
-				return false;
-			}
-		}
-	}
-	/**
-	 * 
-	 * @param  array   $data Form data
-	 * @param  UrlAlias $ua 
-	 * @return void
-	 */
-	private function deleteUrlAlias( $data, UrlAlias $ua )
-	{
-		if ($data['urlalias_id'] == $ua->getId()) {
-			
-			Kernel::getInstance()->em()->remove($ua);
-			Kernel::getInstance()->em()->flush();
-		}
-	}
+	
 
 	private function buildTranslateForm( Node $node )
 	{
@@ -827,74 +713,29 @@ class NodesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  Node   $node [description]
+	 * @param  Node   $parentNode 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildAddUrlAliasForm( Node $node )
+	private function buildAddChildForm( Node $parentNode )
 	{
 		$defaults = array(
-			'node_id' =>  $node->getId()
+			
 		);
 		$builder = $this->getFormFactory()
 			->createBuilder('form', $defaults)
-			->add('node_id', 'hidden', array(
-				'data' => $node->getId(),
+			->add('nodeName', 'text', array(
 				'constraints' => array(
 					new NotBlank()
 				)
 			))
-			->add('alias', 'text' )
-			->add('translation_id', new \RZ\Renzo\CMS\Forms\TranslationsType() );
-
-		return $builder->getForm();
-	}
-
-	/**
-	 * 
-	 * @param  UrlAlias $ua
-	 * @return Symfony\Component\Form\Forms
-	 */
-	private function buildEditUrlAliasForm( UrlAlias $ua )
-	{
-		$defaults = array(
-			'urlalias_id' =>  $ua->getId(),
-			'alias' =>  $ua->getAlias()
-		);
-		$builder = $this->getFormFactory()
-					->createBuilder('form', $defaults)
-					->add('urlalias_id', 'hidden', array(
-						'data' => $ua->getId(),
-						'constraints' => array(
-							new NotBlank()
-						)
-					))
-					->add('alias', 'text', array(
-						'constraints' => array(
-							new NotBlank()
-						)
-					));
-
-		return $builder->getForm();
-	}
-
-	/**
-	 * 
-	 * @param  UrlAlias $ua
-	 * @return Symfony\Component\Form\Forms
-	 */
-	private function buildDeleteUrlAliasForm( UrlAlias $ua )
-	{
-		$defaults = array(
-			'urlalias_id' =>  $ua->getId()
-		);
-		$builder = $this->getFormFactory()
-					->createBuilder('form', $defaults)
-					->add('urlalias_id', 'hidden', array(
-						'data' => $ua->getId(),
-						'constraints' => array(
-							new NotBlank()
-						)
-					));
+			->add('parent_id', 'hidden', array(
+				'data'=>(int)$parentNode->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+			->add('node_type_id', new \RZ\Renzo\CMS\Forms\NodeTypesType())
+		;
 
 		return $builder->getForm();
 	}

@@ -1,0 +1,32 @@
+{% set name = node.getNodeSources.first.getTitle ~ node.getNodeName %}
+<li data-node-id="{{ node.getId }}" class="node-tree-element">
+	<a href="{{ path('nodesEditPage', { node_id:node.getId }) }}">{{ name }}</a>
+	
+	<div class="uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
+	    <button class="uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></button>
+
+	    <!-- This is the dropdown -->
+	    <div class="uk-dropdown uk-dropdown-small">
+	        <ul class="uk-nav uk-nav-dropdown">
+	            <li>
+	            	<a title="{% trans %}add.child.node.%name%{% endtrans %}" href="{{ path('nodesAddChildPage', { node_id:node.getId }) }}">
+	            		<i class="uk-icon-plus"></i> {% trans %}add.child.node{% endtrans %}
+	            	</a>
+	            </li>
+	            <li>
+	            	<a title="{% trans %}delete.node.%name%{% endtrans %}" href="{{ path('nodesDeletePage', { node_id:node.getId }) }}">
+	            		<i class="uk-icon-trash-o"></i> {% trans %}delete.node{% endtrans %}
+	            	</a>
+	            </li>
+	        </ul>
+	    </div>
+	</div>
+
+	{% if node.getChildren|length %}
+	<ul class="sub-tree">
+		{% for subNode in node.getChildren %}
+			{% include 'widgets/nodeTree.singleNode.html.twig' with {"node":subNode} %}
+		{% endfor %}
+	</ul>
+	{% endif %}
+</li>

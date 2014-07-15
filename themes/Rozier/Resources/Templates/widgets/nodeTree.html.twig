@@ -1,0 +1,9 @@
+{% if nodeTree %}
+<nav class="node-tree-widget uk-width-2-10">
+	<ul class="root-tree">
+		{% for node in nodeTree.nodes %}
+			{% include 'widgets/nodeTree.singleNode.html.twig' with {"node":node} %}
+		{% endfor %}
+	</ul>
+</nav>
+{% endif %}

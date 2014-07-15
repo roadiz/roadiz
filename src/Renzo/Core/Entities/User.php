@@ -7,6 +7,7 @@ use RZ\Renzo\Core\AbstractEntities\Human;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Entities\Group;
 use RZ\Renzo\Core\Handlers\UserHandler;
+use RZ\Renzo\Core\Viewers\UserViewer;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
@@ -417,6 +418,13 @@ class User extends Human implements AdvancedUserInterface
     public function getHandler()
     {
     	return new UserHandler( $this );
+    }
+    /**
+     * @return RZ\Renzo\Core\Viewers\UserViewer
+     */
+    public function getViewer()
+    {
+        return new UserViewer( $this );
     }
 
     public function __toString()

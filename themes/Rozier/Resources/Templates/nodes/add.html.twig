@@ -2,7 +2,9 @@
 
 {% block content %}
 <section id="add-node" class="">
-	<h1 id="node-title">{% trans %}Add a new node{% endtrans %}: <em>{{ type.getDisplayName }}</em></h1>
+	<h1 id="node-title">{% trans %}Add a new node{% endtrans %}</h1>
+	{% if type %}<h2><em>{{ type.getDisplayName }}</em></h2>{% endif %}
+	{% if parentNode %}<h2><em>{% trans %}In{% endtrans %}</em> {{ parentNode.getNodeName }}</h2>{% endif %}
 	<nav><a class="uk-button uk-button-small" href="{{ path('nodesHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to nodes{% endtrans %}</a></nav>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
@@ -10,11 +12,16 @@
 
 	    {% for item in form %}
 	    	{% if item.vars.name != "_token" %}
+	    		{% if item.vars.block_prefixes.1 != 'hidden' %}
 			    <div class="uk-form-row">
-			        <label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.name }}</label>
+			    	<label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.name }}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
 			    </div>
+			    {% else %}
+			    	{{ form_errors(item) }}
+			    	{{ form_widget(item) }}
+			    {% endif %}
 	    	{% endif %}
 	    {% endfor %}
 	    {{ form_rest(form) }}

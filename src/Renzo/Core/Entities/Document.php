@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\DateTimed;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Viewers\DocumentViewer;
+use RZ\Renzo\Core\Handlers\DocumentHandler;
 
 /**
  * @Entity
@@ -222,6 +223,13 @@ class Document extends DateTimed
     public function getViewer()
     {
     	return new DocumentViewer( $this );
+    }
+    /**
+     * @return RZ\Renzo\Core\Handlers\DocumentHandler
+     */
+    public function getHandler()
+    {
+    	return new DocumentHandler( $this );
     }
 	
     /**

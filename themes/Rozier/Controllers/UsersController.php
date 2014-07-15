@@ -153,6 +153,7 @@ class UsersController extends RozierApp
 
 				try {
 			 		$this->addUser($form->getData(), $user);
+        			$user->getViewer()->sendSignInConfirmation();
 
 			 		$msg = $this->getTranslator()->trans('user.created', array('%name%'=>$user->getUsername()));
 				 	$request->getSession()->getFlashBag()->add('confirm', $msg);

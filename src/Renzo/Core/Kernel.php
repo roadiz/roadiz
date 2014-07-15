@@ -57,6 +57,7 @@ class Kernel {
 	protected $matcher =             null;
 	protected $resolver =            null;
 	protected $dispatcher =          null;
+	protected $urlMatcher =          null;
 	protected $urlGenerator =        null;
 	protected $stopwatch =           null;
 	protected $securityContext =     null;
@@ -73,7 +74,6 @@ class Kernel {
 
 		$this->request = Request::createFromGlobals();
 		$this->requestContext = new Routing\RequestContext($this->getResolvedBaseUrl());
-
 	}
 
 	/**
@@ -164,6 +164,12 @@ class Kernel {
 	 */
 	public function runConsole()
 	{
+		$this->debug = 			(boolean)SettingsBag::get('debug');
+		$this->backendDebug = 	(boolean)SettingsBag::get('backend_debug');
+		
+		$this->prepareRouteCollection()
+			->prepareUrlHandling();
+
 		$application = new Application('Renzo Console Application', '0.1');
 		$application->add(new \RZ\Renzo\Console\TranslationsCommand);
 		$application->add(new \RZ\Renzo\Console\NodeTypesCommand);
@@ -186,6 +192,9 @@ class Kernel {
 	 */
 	public function runApp()
 	{
+		$this->debug = 			(boolean)SettingsBag::get('debug');
+		$this->backendDebug = 	(boolean)SettingsBag::get('backend_debug');
+
 		$this->dispatcher = new EventDispatcher();
 		$this->resolver =   new ControllerResolver();
 		$this->httpKernel = new HttpKernel($this->dispatcher, $this->resolver);
@@ -225,18 +234,10 @@ class Kernel {
 		return $this;
 	}
 
-	/**
-	 * 
-	 * Prepare backend and frontend routes and logic
-	 * @return boolean
-	 */
-	private function prepareRequestHandling()
-	{	
-		$this->debug = 			(boolean)SettingsBag::get('debug');
-		$this->backendDebug = 	(boolean)SettingsBag::get('backend_debug');
+	private function prepareRouteCollection()
+	{
 		$this->backendClass = $this->getBackendClass();
 		$this->frontendClass = $this->getFrontendClass();
-
 
 		/*
 		 * Add Assets controller routes
@@ -263,19 +264,43 @@ class Kernel {
 			$this->rootCollection->addCollection($feCollection);
 		}
 
-		$matcher = new MixedUrlMatcher($this->rootCollection, $this->requestContext);
-		$this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
-		$this->httpUtils = new HttpUtils($this->urlGenerator, $matcher);
+		return $this;
+	}
 
-		$this->dispatcher->addSubscriber(new RouterListener($matcher));
+	/**
+	 * Prepare URL generation tools
+	 * @return this
+	 */
+	private function prepareUrlHandling()
+	{
+		$this->urlMatcher = new MixedUrlMatcher($this->rootCollection, $this->requestContext);
+		$this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
+		$this->httpUtils = new HttpUtils($this->urlGenerator, $this->urlMatcher);
+
+		return $this;
+	}
+
+	/**
+	 * 
+	 * Prepare backend and frontend routes and logic
+	 * @return boolean
+	 */
+	private function prepareRequestHandling()
+	{	
+		$this->prepareRouteCollection()
+			->prepareUrlHandling();
+
+		$this->dispatcher->addSubscriber(new RouterListener($this->urlMatcher));
 
 		/*
 		 * Security
 		 */
 		$map = new FirewallMap();
 		// Register back-end security scheme
+		$beClass = $this->backendClass;
 		$beClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils, $this->dispatcher );
 		// Register front-end security scheme
+		$feClass = $this->frontendClass;
 		$feClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils, $this->dispatcher );
 
 		$firewall = new Firewall($map, $this->dispatcher);

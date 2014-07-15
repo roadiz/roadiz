@@ -1,13 +1,28 @@
 {% extends 'base_email.html.twig' %}
 
-{% block title %}<title>Welcome to …</title>{% endblock %}
+{% block title %}<title>{% trans %}welcome.user.email{% endtrans %}</title>{% endblock %}
 
 {% block content_table %}
 <table cellpadding="0" cellspacing="0" border="0" align="center">
 	<tr>
-		<td width="200" valign="top"></td>
-		<td width="200" valign="top"></td>
-		<td width="200" valign="top"></td>
+		<td colspan="2" width=""><h2>{% trans %}welcome.user.email.%site%{% endtrans %}</h2></td>
 	</tr>
+	<tr>
+		<td colspan="2" width=""><a href="{{ path('homePage') }}">{{ path('homePage') }}</a></td>
+	</tr>
+	<tr>
+		<td width="">{% trans %}Username{% endtrans %}</td>
+		<td width="">{{ user.getUsername }}</td>
+	</tr>
+	<tr>
+		<td width="">{% trans %}Email{% endtrans %}</td>
+		<td width="">{{ user.getEmail }}</td>
+	</tr>
+	{% if user.getPlainPassword %}
+	<tr>
+		<td width="">{% trans %}Password{% endtrans %}</td>
+		<td width=""><code>{{ user.getPlainPassword }}</code></td>
+	</tr>
+	{% endif %}
 </table>
 {% endblock %}

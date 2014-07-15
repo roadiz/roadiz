@@ -24,4 +24,18 @@ class SettingRepository extends EntityRepository
 			return null;
 		}
 	}
+	public function exists($name)
+	{
+		$query = Kernel::getInstance()->em()
+						->createQuery('
+			SELECT COUNT(s.value) FROM RZ\Renzo\Core\Entities\Setting s 
+			WHERE s.name = :name'
+						)->setParameter('name', $name);
+
+		try {
+			return (boolean)$query->getSingleScalarResult();
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			return false;
+		}
+	}
 }

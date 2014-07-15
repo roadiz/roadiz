@@ -37,7 +37,7 @@ nodesEditTagsPage:
     requirements: { node_id : "[0-9]+" }
 nodesEditAliasesPage:
     path:     /rz-admin/nodes/edit/{node_id}/aliases
-    defaults: { _controller: Themes\Rozier\Controllers\NodesController::editAliasesAction }
+    defaults: { _controller: Themes\Rozier\Controllers\UrlAliasesController::editAliasesAction }
     requirements: { node_id : "[0-9]+" }
 nodesTreePage:
     path:     /rz-admin/nodes/tree/{node_id}
@@ -47,6 +47,10 @@ nodesAddPage:
     path:     /rz-admin/nodes/add/{node_type_id}/{translation_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::addAction }
     requirements: { node_type_id : "[0-9]+", translation_id : "[0-9]+" }
+nodesAddChildPage:
+    path:     /rz-admin/nodes/add-child/{node_id}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::addChildAction }
+    requirements: { node_id : "[0-9]+" }
 nodesDeletePage:
     path:     /rz-admin/nodes/delete/{node_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::deleteAction }
@@ -173,9 +177,3 @@ documentsDeletePage:
     path:     /rz-admin/documents/delete/{document_id}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::deleteAction }
     requirements: { document_id : "[0-9]+" }
-
-
-noAction:
-    path:     /rz-admin/no
-    defaults: { _controller: Themes\Rozier\Controllers\NodesController::noAction }
-    requirements: { trailingSlash : "[/]{0,1}" }

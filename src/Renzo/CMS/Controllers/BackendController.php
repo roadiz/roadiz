@@ -69,7 +69,7 @@ class BackendController extends AppController {
 	/**
 	 * Check if twig cache must be cleared 
 	 */
-	protected function handleTwigCache() {
+	public function handleTwigCache() {
 
 		if (Kernel::getInstance()->isBackendDebug()) {
 			try {

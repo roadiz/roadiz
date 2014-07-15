@@ -91,6 +91,58 @@ class DocumentsController extends RozierApp {
 			return $this->throw404();
 		}
 	}
+	/**
+	 * Return an deletion form for requested document
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function deleteAction( Request $request, $document_id )
+	{
+		$document = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Document', (int)$document_id);
+
+		if ($document !== null) {
+			$this->assignation['document'] = $document;
+			
+			$form = $this->buildDeleteForm( $document );
+			$form->handleRequest();
+
+			if ($form->isValid() && 
+				$form->getData()['document_id'] == $document->getId() ) {
+
+				try{
+					$document->getHandler()->removeWithAssets();
+					$msg = $this->getTranslator()->trans('document.deleted', array('%name%'=>$document->getFilename()));
+					$request->getSession()->getFlashBag()->add('confirm', $msg);
+		 			$this->getLogger()->info($msg);
+				}
+				catch(\Exception $e){
+					$msg = $this->getTranslator()->trans('document.cannot_delete', array('%name%'=>$document->getFilename()));
+					$request->getSession()->getFlashBag()->add('error', $msg);
+		 			$this->getLogger()->warning($msg);
+				}
+		 		/*
+		 		 * Force redirect to avoid resending form when refreshing page
+		 		 */
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate('documentsHomePage')
+				);
+				$response->prepare($request);
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
+			return new Response(
+				$this->getTwig()->render('documents/delete.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		else {
+			return $this->throw404();
+		}
+	}
 
 	public function uploadAction( Request $request )
 	{
@@ -144,6 +196,27 @@ class DocumentsController extends RozierApp {
 		);
 	}
 
+	/**
+	 * 
+	 * @param  Document $ua
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildDeleteForm( Document $doc )
+	{
+		$defaults = array(
+			'document_id' =>  $doc->getId()
+		);
+		$builder = $this->getFormFactory()
+					->createBuilder('form', $defaults)
+					->add('document_id', 'hidden', array(
+						'data' => $doc->getId(),
+						'constraints' => array(
+							new NotBlank()
+						)
+					));
+
+		return $builder->getForm();
+	}
 	/**
 	 * 
 	 * @param  Document   $document 

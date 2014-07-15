@@ -68,9 +68,8 @@ class SettingsController extends RozierApp
 			$form->handleRequest();
 
 			if ($form->isValid()) {
-		 		$this->editSetting($form->getData(), $setting);
-
 		 		try {
+		 			$this->editSetting($form->getData(), $setting);
 		 			$msg = $this->getTranslator()->trans('setting.updated', array('%name%'=>$setting->getName()));
 					$request->getSession()->getFlashBag()->add('confirm', $msg);
 	 				$this->getLogger()->info($msg);
@@ -210,6 +209,12 @@ class SettingsController extends RozierApp
 
 	private function editSetting( $data, Setting $setting)
 	{
+		if ($data['name'] != $setting->getName() && 
+			Kernel::getInstance()->em()
+			->getRepository('RZ\Renzo\Core\Entities\Setting')
+			->exists($data['name'])) {
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
+		}
 		try {
 			foreach ($data as $key => $value) {
 				$setter = 'set'.ucwords($key);
@@ -226,6 +231,12 @@ class SettingsController extends RozierApp
 
 	private function addSetting( $data, Setting $setting)
 	{
+		if (Kernel::getInstance()->em()
+			->getRepository('RZ\Renzo\Core\Entities\Setting')
+			->exists($data['name'])) {
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
+		}
+
 		try{
 			foreach ($data as $key => $value) {
 				$setter = 'set'.ucwords($key);

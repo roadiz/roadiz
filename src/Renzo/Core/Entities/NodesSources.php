@@ -14,7 +14,7 @@ use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 class NodesSources extends PersistableObject {
 
 	/**
-	 * @ManyToOne(targetEntity="Node")
+	 * @ManyToOne(targetEntity="Node", inversedBy="nodeSources")
 	 */
 	private $node;
 

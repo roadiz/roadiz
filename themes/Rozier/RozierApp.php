@@ -13,6 +13,9 @@ namespace Themes\Rozier;
 
 use RZ\Renzo\CMS\Controllers\BackendController;
 use RZ\Renzo\Core\Entities\Role;
+use RZ\Renzo\Core\Kernel;
+
+use Themes\Rozier\Widgets\NodeTreeWidget;
 
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
@@ -37,6 +40,19 @@ class RozierApp extends BackendController {
 
 	protected $formFactory = null;
 
+
+	public function prepareBaseAssignation()
+	{
+		parent::prepareBaseAssignation();
+
+		// Node tree
+		$nodeTreeWidget = new NodeTreeWidget(Kernel::getInstance()->getRequest(), $this);
+		$this->assignation['nodeTree'] = array(
+			'nodes' => $nodeTreeWidget->getNodeTreeAssignationForParent()
+		);
+
+		return $this;
+	}
 	/**
 	 * 
 	 */

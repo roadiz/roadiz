@@ -6,6 +6,7 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\User;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Handlers\UserHandler;
+use RZ\Renzo\Core\Bags\RolesBag;
 use RZ\Renzo\Core\Utils\FacebookPictureFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -39,6 +40,12 @@ class UsersCommand extends Command
                null,
                InputOption::VALUE_NONE,
                'Delete an user'
+            )
+            ->addOption(
+               'add-roles',
+               null,
+               InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+               'Add roles to a user'
             )
             ->addOption(
                'regenerate',
@@ -147,6 +154,16 @@ class UsersCommand extends Command
                         $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
                     }
                 }
+                elseif ($input->getOption('add-roles') && $user !== null) {
+                    $text = '<info>Adding roles to '.$user->getUsername().'</info>'.PHP_EOL;
+
+                    foreach ($input->getOption('add-roles') as $role) {
+                        $user->addRole(RolesBag::get($role));
+                        $text .= '<info>Role: '.$role.'</info>'.PHP_EOL;
+                    }
+
+                    Kernel::getInstance()->em()->flush();
+                }
                 else {
                     $text = '<info>'.$user.'</info>'.PHP_EOL;
                 }
@@ -236,6 +253,7 @@ class UsersCommand extends Command
         $user->setPlainPassword( UserHandler::generatePassword() );
 
         Kernel::getInstance()->em()->persist($user);
+        $user->getViewer()->sendSignInConfirmation();
         Kernel::getInstance()->em()->flush();
 
         $text = '<info>User “'.$username.'”<'.$email.'> created…</info>'.PHP_EOL;

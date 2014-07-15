@@ -5,6 +5,7 @@ namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\ORM\EntityRepository;
 
+use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Kernel;
 
@@ -55,6 +56,85 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * [findByParentWithTranslation description]
+     * @param  Node        $parent      [description]
+     * @param  Translation $translation [description]
+     * @return array Doctrine result array
+     */
+    public function findByParentWithTranslation( Node $parent = null, Translation $translation )
+    {
+        $query = null;
+
+        if ($parent === null) {
+            $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
+            INNER JOIN n.nodeSources ns 
+            INNER JOIN ns.translation t
+            WHERE n.parent IS NULL AND t.id = :translation_id
+            ORDER BY n.position ASC'
+                        )->setParameter('translation_id', (int)$translation->getId());
+        }
+        else {
+            $query = Kernel::getInstance()->em()
+                            ->createQuery('
+                SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
+                INNER JOIN n.nodeSources ns 
+                INNER JOIN ns.translation t
+                INNER JOIN n.parent pn
+                WHERE pn.id = :parent AND t.id = :translation_id
+                ORDER BY n.position ASC'
+                            )->setParameter('parent', $parent->getId())
+                            ->setParameter('translation_id', (int)$translation->getId());
+        }
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * 
+     * @param  Node        $parent      [description]
+     * @param  Translation $translation [description]
+     * @return array Doctrine result array
+     */
+    public function findByParentWithDefaultTranslation( Node $parent = null )
+    {
+        $query = null;
+        if ($parent === null) {
+            $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
+            INNER JOIN n.nodeSources ns 
+            INNER JOIN ns.translation t
+            WHERE n.parent IS NULL AND t.defaultTranslation = :defaultTranslation
+            ORDER BY n.position ASC'
+                        )->setParameter('defaultTranslation', true);
+        }
+        else {
+            $query = Kernel::getInstance()->em()
+                            ->createQuery('
+                SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
+                INNER JOIN n.nodeSources ns 
+                INNER JOIN ns.translation t
+                INNER JOIN n.parent pn
+                WHERE pn.id = :parent AND t.defaultTranslation = :defaultTranslation
+                ORDER BY n.position ASC'
+                            )->setParameter('parent', $parent->getId())
+                            ->setParameter('defaultTranslation', true);
+        }
+
+        try {
+            return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
             return null;
         }

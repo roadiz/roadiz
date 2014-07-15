@@ -169,14 +169,14 @@ class Node extends DateTimedPositioned
 	private $nodeType;
 
 	/**
-	 * @return [type] [description]
+	 * @return NodeType
 	 */
 	public function getNodeType() {
 	    return $this->nodeType;
 	}
 	
 	/**
-	 * @param [type] $newnodeType [description]
+	 * @param NodeType $newnodeType
 	 */
 	public function setNodeType($nodeType) {
 	    $this->nodeType = $nodeType;
@@ -185,7 +185,7 @@ class Node extends DateTimedPositioned
 	}
 
 	/**
-	 * @ManyToOne(targetEntity="Node", fetch="EXTRA_LAZY")
+	 * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\Node", inversedBy="children", fetch="EXTRA_LAZY")
 	 * @JoinColumn(name="parent_node_id", referencedColumnName="id", onDelete="CASCADE")
 	 * @var Node
 	 */
@@ -208,7 +208,7 @@ class Node extends DateTimedPositioned
 	}
 
 	/**
-	 * @OneToMany(targetEntity="Node", mappedBy="parent", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @OneToMany(targetEntity="RZ\Renzo\Core\Entities\Node", mappedBy="parent", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @OrderBy({"position" = "ASC"})
 	 * @var ArrayCollection
 	 */

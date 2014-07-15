@@ -15,6 +15,8 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Theme;
 use RZ\Renzo\Core\Entities\Document;
 
+use RZ\Renzo\Core\Viewers\ViewableInterface;
+
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -43,10 +45,11 @@ use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 
 
+
 /**
  * Base class for Renzo themes
  */
-class AppController {
+class AppController implements ViewableInterface {
 	
 	/**
 	 * Theme name
@@ -177,9 +180,18 @@ class AppController {
 	 * 
 	 * @todo  [Cache] Need to write XLF catalog to PHP using \Symfony\Component\Translation\Writer\TranslationWriter 
 	 */
-	private function initializeTranslator()
+	public function initializeTranslator()
 	{
 		$lang = Kernel::getInstance()->getRequest()->getLocale();
+		$msgPath = RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources/translations/messages.'.$lang.'.xlf';
+
+		/*
+		 * fallback to english, if message catalog absent
+		 */
+		if (!file_exists($msgPath)) {
+			$lang = 'en';
+		}
+
 		// instancier un objet de la classe Translator
 		$this->translator = new Translator($lang);
 		// charger, en quelque sorte, des traductions dans ce translator
@@ -189,9 +201,9 @@ class AppController {
 			RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources/translations/messages.'.$lang.'.xlf',
 		    $lang
 		);
-
 		// ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
 		$this->twig->addExtension(new TranslationExtension($this->translator));
+		
 		return $this;
 	}
 
@@ -225,7 +237,7 @@ class AppController {
 	/**
 	 * Check if twig cache must be cleared 
 	 */
-	protected function handleTwigCache() {
+	public function handleTwigCache() {
 
 		if (Kernel::getInstance()->isDebug()) {
 			try {
@@ -240,7 +252,7 @@ class AppController {
 	/**
 	 * Create a Twig Environment instance
 	 */
-	private function initializeTwig()
+	public function initializeTwig()
 	{
 		$this->handleTwigCache();
 		/*

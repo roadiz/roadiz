@@ -4,7 +4,7 @@
 			<a href="{{ path('nodesEditPage', { node_id: node.getId }) }}">{% trans %}Parameters{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'source' %}uk-active{% endif %}">
-			<a href="{{ path('nodesEditSourcePage', { node_id: node.getId, translation_id:1 }) }}">{% trans %}Content{% endtrans %}</a>
+			<a href="{{ path('nodesEditSourcePage', { node_id: node.getId, translation_id:translation.getId }) }}">{% trans %}Content{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'tags' %}uk-active{% endif %}">
 			<a href="{{ path('nodesEditTagsPage', { node_id: node.getId}) }}">{% trans %}Tags{% endtrans %}</a>

@@ -17,7 +17,9 @@
         "symfony/twig-bridge": "2.5.*",
         "symfony/security": "2.5.*",
         "twig/twig":"1.*",
-        "guzzle/http":"3.9.*"
+        "guzzle/http":"3.9.*",
+        "swiftmailer/swiftmailer": "@stable",
+        "symfony/finder": "@stable"
     },
     "autoload": {
         "psr-4": {
