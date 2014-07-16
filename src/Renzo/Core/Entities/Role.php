@@ -34,6 +34,10 @@ class Role extends PersistableObject
 	
 	    return $this;
 	}
+	public function getClassName()
+	{
+		return str_replace('_', '-', strtolower($this->getName()));
+	}
 	
 	/**
 	 * @param string $name Role name

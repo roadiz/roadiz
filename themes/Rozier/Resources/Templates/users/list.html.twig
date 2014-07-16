@@ -8,13 +8,32 @@
 	<table class="users uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Username{% endtrans %}</th>
-	            <th>{% trans %}Email{% endtrans %}</th>
+	            <th>{% trans %}user.roles{% endtrans %}</th>
+	            <th>{% trans %}user.username{% endtrans %} 
+	            	{% if request.query.get("field") == 'username' and request.query.get("ordering") == "DESC" %}
+	            		<a href="?field=username&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
+	            	{% else %}
+	            		<a href="?field=username&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
+	            	{% endif %}
+	            </th>
+	            <th>{% trans %}user.email{% endtrans %} 
+	            	{% if request.query.get("field") == 'email' and request.query.get("ordering") == "DESC" %}
+	            		<a href="?field=email&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
+	            	{% else %}
+	            		<a href="?field=email&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
+	            	{% endif %}
+	            </th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
 			{% for user in users %}
 			<tr>
+				<td>
+					{% for role in user.getRolesEntities %}
+						<i data-uk-tooltip title="{{ role.getName }}" data-role="{{ role.getName }}" class="uk-icon-user uk-icon-{{ role.getClassName }}"></i>
+					{% endfor %}
+				</td>
 				<td><a href="{{ path('usersEditPage', { user_id: user.getId }) }}">{{ user.getUsername }}</a></td>
 				<td>{{ user.getEmail }}</td>
 				<td>

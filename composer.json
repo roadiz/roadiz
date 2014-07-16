@@ -19,7 +19,9 @@
         "twig/twig":"1.*",
         "guzzle/http":"3.9.*",
         "swiftmailer/swiftmailer": "@stable",
-        "symfony/finder": "@stable"
+        "symfony/finder": "@stable",
+        "symfony/intl": "@stable",
+        "twig/extensions": "@stable"
     },
     "autoload": {
         "psr-4": {

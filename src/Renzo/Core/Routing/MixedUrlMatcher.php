@@ -42,6 +42,7 @@ class MixedUrlMatcher extends UrlMatcher
 
         if ($translation !== null) {
         	Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
+        	\Locale::setDefault($translation->getShortLocale());
         }
 
         /*

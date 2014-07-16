@@ -39,9 +39,26 @@ class UsersController extends RozierApp
 	 */
 	public function indexAction( Request $request )
 	{
-		$users = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\User')
-			->findAll();
+		/*
+		 * Apply ordering or not
+		 */
+		try {
+			if ($request->query->get('field') && 
+				$request->query->get('ordering')) {
+				$users = Kernel::getInstance()->em()
+					->getRepository('RZ\Renzo\Core\Entities\User')
+					->findBy(array(), array($request->query->get('field') => $request->query->get('ordering')));
+			}
+			else {
+				$users = Kernel::getInstance()->em()
+					->getRepository('RZ\Renzo\Core\Entities\User')
+					->findAll();
+			}
+		}
+		catch(\Doctrine\ORM\ORMException $e){
+			return $this->throw404();
+		}
+
 		$this->assignation['users'] = $users;
 
 		return new Response(

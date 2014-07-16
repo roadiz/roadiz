@@ -14,6 +14,7 @@ namespace Themes\Rozier;
 use RZ\Renzo\CMS\Controllers\BackendController;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Kernel;
+use RZ\Renzo\Core\Bags\SettingsBag;
 
 use Themes\Rozier\Widgets\NodeTreeWidget;
 
@@ -47,6 +48,7 @@ class RozierApp extends BackendController {
 
 		// Node tree
 		$nodeTreeWidget = new NodeTreeWidget(Kernel::getInstance()->getRequest(), $this);
+		$this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' back-office';
 		$this->assignation['nodeTree'] = array(
 			'nodes' => $nodeTreeWidget->getNodeTreeAssignationForParent()
 		);

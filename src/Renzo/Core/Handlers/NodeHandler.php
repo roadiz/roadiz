@@ -161,4 +161,39 @@ class NodeHandler
             return null;
         }
 	}
+
+	/**
+	 * Reset current node children positions
+	 * @return void
+	 */
+	public function cleanChildrenPositions()
+	{
+		$children = $this->getNode()->getChildren();
+		$i = 0;
+		foreach ($children as $child) {
+			$child->setPosition($i);
+			$i++;
+		}
+
+		Kernel::getInstance()->em()->flush();
+	}
+
+	/**
+	 * Reset every root nodes positions
+	 * @return void
+	 */
+	public static function cleanRootNodesPositions()
+	{
+		$nodes = Kernel::getInstance()->em()
+			->getRepository('RZ\Renzo\Core\Entities\Node')
+			->findBy(array('parent' => null), array('position'=>'ASC'));
+
+		$i = 0;
+		foreach ($nodes as $child) {
+			$child->setPosition($i);
+			$i++;
+		}
+
+		Kernel::getInstance()->em()->flush();
+	}	
 }

@@ -55,6 +55,11 @@ nodesDeletePage:
     path:     /rz-admin/nodes/delete/{node_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::deleteAction }
     requirements: { node_id : "[0-9]+" }
+## Ajax
+nodeAjaxEdit:
+    path:     /rz-admin/ajax/node/edit/{node_id}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::editAction }
+    requirements: { node_id : "[0-9]+" }
 
 # Node TYPES
 nodeTypesHomePage:
@@ -120,6 +125,11 @@ tagsAddPage:
 tagsDeletePage:
     path:     /rz-admin/tags/delete/{tag_id}
     defaults: { _controller: Themes\Rozier\Controllers\TagsController::deleteAction }
+    requirements: { tag_id : "[0-9]+" }
+## Ajax
+tagAjaxEdit:
+    path:     /rz-admin/ajax/tag/edit/{tag_id}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::editAction }
     requirements: { tag_id : "[0-9]+" }
 
 # USERS

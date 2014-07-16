@@ -51,6 +51,8 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
  */
 class AppController implements ViewableInterface {
 	
+	const AJAX_TOKEN_INTENTION = 'ajax';
+
 	/**
 	 * Theme name
 	 * @var string
@@ -203,6 +205,7 @@ class AppController implements ViewableInterface {
 		);
 		// ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
 		$this->twig->addExtension(new TranslationExtension($this->translator));
+		$this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
 		
 		return $this;
 	}
@@ -318,10 +321,12 @@ class AppController implements ViewableInterface {
 	public function prepareBaseAssignation()
 	{
 		$this->assignation = array(
+			'request' => Kernel::getInstance()->getRequest(),
 			'head' => array(
 				'baseUrl' => Kernel::getInstance()->getRequest()->getBaseUrl(),
 				'filesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/'.Document::getFilesFolderName(),
-				'resourcesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/themes/'.static::$themeDir.'/static/'
+				'resourcesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/themes/'.static::$themeDir.'/static/',
+				'ajaxToken' => static::$csrfProvider->generateCsrfToken(static::AJAX_TOKEN_INTENTION)
 			),
 			'session' => array(
 				'messages' => Kernel::getInstance()->getRequest()->getSession()->getFlashBag()->all(),

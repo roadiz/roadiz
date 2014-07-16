@@ -1,8 +1,8 @@
 {% if nodeTree %}
-<nav class="node-tree-widget uk-width-2-10">
-	<ul class="root-tree">
+<nav class="nodetree-widget uk-width-2-10 ">
+	<ul class="root-tree uk-nestable" data-uk-nestable>
 		{% for node in nodeTree.nodes %}
-			{% include 'widgets/nodeTree.singleNode.html.twig' with {"node":node} %}
+			{% include 'widgets/nodeTree.singleNode.html.twig' with { "node":node, "level" : 0} %}
 		{% endfor %}
 	</ul>
 </nav>

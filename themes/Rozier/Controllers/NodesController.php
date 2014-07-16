@@ -42,9 +42,25 @@ class NodesController extends RozierApp {
 	 */
 	public function indexAction( Request $request )
 	{
-		$nodes = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Node')
-			->findAll();
+		/*
+		 * Apply ordering or not
+		 */
+		try {
+			if ($request->query->get('field') && 
+				$request->query->get('ordering')) {
+				$nodes = Kernel::getInstance()->em()
+					->getRepository('RZ\Renzo\Core\Entities\Node')
+					->findBy(array(), array($request->query->get('field') => $request->query->get('ordering')));
+			}
+			else {
+				$nodes = Kernel::getInstance()->em()
+					->getRepository('RZ\Renzo\Core\Entities\Node')
+					->findAll();
+			}
+		}
+		catch(\Doctrine\ORM\ORMException $e){
+			return $this->throw404();
+		}
 
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')

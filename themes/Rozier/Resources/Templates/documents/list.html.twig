@@ -10,10 +10,10 @@
 	<table class="documents uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Thumbnail{% endtrans %}</th>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Upload date{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}document.thumbnail{% endtrans %}</th>
+	            <th>{% trans %}document.filename{% endtrans %}</th>
+	            <th>{% trans %}document.createdAt{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -33,7 +33,7 @@
 				<td>
 					<p>{{ document.getFilename }}</p>
 				</td>
-				<td>{{ document.getCreatedAt.format('d M Y H:i:s') }}</td>
+				<td>{{ document.getCreatedAt|localizeddate('full', 'none') }}</td>
 				<td>
 					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { document_id: document.getId }) }}">{% trans %}Delete{% endtrans %}</a>
 				</td>
