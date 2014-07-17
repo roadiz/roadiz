@@ -17,8 +17,10 @@ use RZ\Renzo\Core\Handlers\NodeHandler;
  *     @index(name="visible_idx",   columns={"visible"}), 
  *     @index(name="published_idx", columns={"published"}), 
  *     @index(name="locked_idx",    columns={"locked"}), 
- *     @index(name="archived_idx",  columns={"archived"})
+ *     @index(name="archived_idx",  columns={"archived"}),
+ *     @index(name="position_idx", columns={"position"})
  * })
+ * @HasLifecycleCallbacks
  */
 class Node extends DateTimedPositioned
 {
@@ -292,6 +294,21 @@ class Node extends DateTimedPositioned
 			$text .= '['.$field->getLabel().']: '.$this->getDefaultNodeSource()->$getterName().PHP_EOL;
 		}
 		return $text;
+	}
+
+	/**
+	 * @PrePersist
+	 * 
+	 * @return void
+	 */
+	public function prePersist()
+	{
+		parent::prePersist();
+
+		/*
+		 * Get the last index after last node in parent
+		 */
+		$this->setPosition($this->getHandler()->cleanPositions());
 	}
 
 	/**

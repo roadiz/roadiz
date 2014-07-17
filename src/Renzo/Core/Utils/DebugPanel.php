@@ -51,9 +51,10 @@ class DebugPanel implements EventSubscriberInterface
 
 	private function getDebugView()
 	{
-		$sw = Kernel::getInstance()->getStopwatch()->stop('global');
+		Kernel::getInstance()->getStopwatch()->stop('global');
+		
 		$assignation = array(
-			'stopwatch'=>$sw 
+			'stopwatch'=>Kernel::getInstance()->getStopwatch() 
 		);
 		return $this->getTwig()->render('debug-panel.html.twig', $assignation);
 	}

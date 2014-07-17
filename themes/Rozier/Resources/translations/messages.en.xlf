@@ -19,6 +19,10 @@
                 <target>Password</target>
             </trans-unit>
 
+            <trans-unit id="delete">
+                <source>delete</source>
+                <target>Supprimer</target>
+            </trans-unit>
 
             <!-- Documents -->
             <trans-unit id="document.updated">

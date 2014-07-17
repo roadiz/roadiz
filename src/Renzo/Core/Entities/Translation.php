@@ -205,18 +205,6 @@ class Translation extends DateTimed {
 	}
 
 	/**
-	 * @OneToMany(targetEntity="UrlAlias", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
-	 * @var ArrayCollection
-	 */
-	private $urlAliases = null;
-	/**
-	 * @return ArrayCollection
-	 */
-	public function getUrlAliases() {
-	    return $this->urlAliases;
-	}
-
-	/**
 	 * Return short locale name from complete locale.    
 	 * Ex : en_GB => en or en_US => us
 	 * @param  string $locale

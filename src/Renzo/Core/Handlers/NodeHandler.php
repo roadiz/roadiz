@@ -163,24 +163,40 @@ class NodeHandler
 	}
 
 	/**
+	 * Clean position for current node according to its
+	 * @return int Return the next position after the **last** node
+	 */
+	public function cleanPositions()
+	{
+		if ($this->getNode()->getParent() !== null) {
+			return $this->getNode()->getParent()->getHandler()->cleanChildrenPositions();
+		}
+		else {
+			return static::cleanRootNodesPositions();
+		}
+	}
+
+	/**
 	 * Reset current node children positions
-	 * @return void
+	 * @return int Return the next position after the **last** node
 	 */
 	public function cleanChildrenPositions()
 	{
 		$children = $this->getNode()->getChildren();
-		$i = 0;
+		$i = 1;
 		foreach ($children as $child) {
 			$child->setPosition($i);
 			$i++;
 		}
 
 		Kernel::getInstance()->em()->flush();
+
+		return $i;
 	}
 
 	/**
 	 * Reset every root nodes positions
-	 * @return void
+	 * @return int Return the next position after the **last** node
 	 */
 	public static function cleanRootNodesPositions()
 	{
@@ -188,12 +204,14 @@ class NodeHandler
 			->getRepository('RZ\Renzo\Core\Entities\Node')
 			->findBy(array('parent' => null), array('position'=>'ASC'));
 
-		$i = 0;
+		$i = 1;
 		foreach ($nodes as $child) {
 			$child->setPosition($i);
 			$i++;
 		}
 
 		Kernel::getInstance()->em()->flush();
+
+		return $i;
 	}	
 }

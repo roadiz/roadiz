@@ -5,6 +5,7 @@ namespace RZ\Renzo\Core;
 use RZ\Renzo\Inheritance\Doctrine\DataInheritanceEvent;
 use RZ\Renzo\Core\Routing\MixedUrlMatcher;
 use RZ\Renzo\Core\Bags\SettingsBag;
+use RZ\Renzo\Core\Entities\Theme;
 
 use Symfony\Component\Console\Application;
 use Doctrine\ORM\Events;
@@ -62,7 +63,7 @@ class Kernel {
 	protected $stopwatch =           null;
 	protected $securityContext =     null;
 	protected $backendClass =        null;
-	protected $frontendClass =       null;
+	protected $frontendThemes =      null;
 	protected $rootCollection =      null;
 
 
@@ -207,10 +208,13 @@ class Kernel {
 			 * Main Framework handle call
 			 * ----------------------------
 			 */
+			$this->stopwatch->start('requestHandling');
 			$this->response = $this->httpKernel->handle( $this->request );
+
 			$this->response->send();
 			
 			$this->httpKernel->terminate( $this->request, $this->response );
+			$this->stopwatch->stop('requestHandling');
 		}
 		catch(\Symfony\Component\Routing\Exception\ResourceNotFoundException $e){
 			echo $e->getMessage().PHP_EOL;
@@ -237,7 +241,7 @@ class Kernel {
 	private function prepareRouteCollection()
 	{
 		$this->backendClass = $this->getBackendClass();
-		$this->frontendClass = $this->getFrontendClass();
+		$this->frontendThemes = $this->getFrontendThemes();
 
 		/*
 		 * Add Assets controller routes
@@ -256,12 +260,22 @@ class Kernel {
 
 		/*
 		 * Add Frontend routes
+		 *
+		 * return 'RZ\Renzo\CMS\Controllers\FrontendController';
 		 */
-		$feClass = $this->frontendClass;
-		$feCollection = $feClass::getRoutes();
-		if ($feCollection !== null) {
-			
-			$this->rootCollection->addCollection($feCollection);
+		foreach ($this->frontendThemes as $theme) {
+			$feClass = $theme->getClassName();
+			$feCollection = $feClass::getRoutes();
+			if ($feCollection !== null) {
+
+				// set host pattern if defined
+				if ($theme->getHostname() != '*' && 
+					$theme->getHostname() != '') {
+
+					$feCollection->setHost($theme->getHostname());
+				}
+				$this->rootCollection->addCollection($feCollection);
+			}
 		}
 
 		return $this;
@@ -273,9 +287,9 @@ class Kernel {
 	 */
 	private function prepareUrlHandling()
 	{
-		$this->urlMatcher = new MixedUrlMatcher($this->rootCollection, $this->requestContext);
+		$this->urlMatcher =   new MixedUrlMatcher($this->rootCollection, $this->requestContext);
 		$this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
-		$this->httpUtils = new HttpUtils($this->urlGenerator, $this->urlMatcher);
+		$this->httpUtils =    new HttpUtils($this->urlGenerator, $this->urlMatcher);
 
 		return $this;
 	}
@@ -287,27 +301,36 @@ class Kernel {
 	 */
 	private function prepareRequestHandling()
 	{	
+		$this->stopwatch->start('prepareRouting');
 		$this->prepareRouteCollection()
 			->prepareUrlHandling();
+		$this->stopwatch->stop('prepareRouting');
 
 		$this->dispatcher->addSubscriber(new RouterListener($this->urlMatcher));
 
 		/*
 		 * Security
 		 */
+		$this->stopwatch->start('firewall');
+		
 		$map = new FirewallMap();
 		// Register back-end security scheme
 		$beClass = $this->backendClass;
 		$beClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils, $this->dispatcher );
+
 		// Register front-end security scheme
-		$feClass = $this->frontendClass;
-		$feClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils, $this->dispatcher );
+		foreach ($this->frontendThemes as $theme) {
+			$feClass = $theme->getClassName();
+			$feClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils, $this->dispatcher );
+		}
 
 		$firewall = new Firewall($map, $this->dispatcher);
 		$this->dispatcher->addListener(
 		    KernelEvents::REQUEST,
 		    array($firewall, 'onKernelRequest')
 		);
+
+		$this->stopwatch->stop('firewall');
 
 		/*
 		 * If debug, alter HTML responses to append Debug panel to view
@@ -318,22 +341,30 @@ class Kernel {
 	}
 
 	/**
-	 * Get frontend app controller full-qualified classname
+	 * Get frontend app themes
 	 * 
-	 * Return 'RZ\Renzo\CMS\Controllers\FrontendController' if none found in database
-	 * @return string
+	 * 
+	 * @return ArrayCollection of RZ\Renzo\Core\Entities\Theme
 	 */
-	private function getFrontendClass()
+	private function getFrontendThemes()
 	{
-		$theme = $this->em()
+		$themes = $this->em()
 			->getRepository('RZ\Renzo\Core\Entities\Theme')
-			->findOneBy(array('available'=>true, 'backendTheme'=>false));
+			->findBy(array('available'=>true, 'backendTheme'=>false));
 
-		if ($theme !== null) {
-			return $theme->getClassName();
+		if (count($themes) < 1) {
+
+			$defaultTheme = new Theme();
+			$defaultTheme->setClassName('RZ\Renzo\CMS\Controllers\FrontendController');
+			$defaultTheme->setAvailable(true);
+
+			return array(
+				$defaultTheme
+			);
 		}
-
-		return 'RZ\Renzo\CMS\Controllers\FrontendController';
+		else{
+			return $themes; 
+		}
 	}
 	/**
 	 * Get backend app controller full-qualified classname

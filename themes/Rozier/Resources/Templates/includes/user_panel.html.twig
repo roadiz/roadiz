@@ -1,7 +1,7 @@
 <section class="uk-width-1-10" id="user-panel">
-	<img width="200" height="200" class="uk-thumbnail" src="{{ session.user.getPictureUrl }}" alt="{{ session.user.getUsername }}">
+	<img width="200" height="200" class="uk-thumbnail" src="{{ session.user.getPictureUrl }}" alt="{{ session.user.getUsername }}" />
 	<h3>{{ session.user.getUsername }}</h3>
 	<h4>{{ session.user.getFirstName }}</h4>
-
-	<p><a class="uk-button" href="{{ path('logoutPage') }}"><i class="uk-icon-sign-out"></i> {% trans %}Logout{% endtrans %}</a></p>
+	<p><a class="uk-button" href="{{ path('usersEditPage', {'user_id':session.user.getId }) }}"><i class="uk-icon-user"></i> {% trans %}edit.account{% endtrans %}</a></p>
+	<p><a class="uk-button" href="{{ path('logoutPage') }}"><i class="uk-icon-sign-out"></i> {% trans %}logout{% endtrans %}</a></p>
 </section>

@@ -1,0 +1,27 @@
+#rz-debug-panel {
+
+	display: block;
+	position: fixed;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	font-size: 12px;
+	height: 50px;
+	padding: 5px;
+	.box-sizing();
+	background-color: rgba(0,0,0,0.05);
+
+
+	h4, dl, dt, dd {
+		display: inline-block;
+		padding: 5px;
+		margin: 0px;
+		.box-sizing();
+	}
+	dd {
+		padding-left: 0px;
+	}
+	dt {
+		border-left: 1px solid rgba(0,0,0,0.1);
+	}
+}

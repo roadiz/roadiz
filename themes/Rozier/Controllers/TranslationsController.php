@@ -210,7 +210,6 @@ class TranslationsController extends RozierApp
 				$form->getData()['translation_id'] == $translation->getId() ) {
 
 				try {
-
 			 		$this->deleteTranslation($form->getData(), $translation);
 
 			 		$msg = $this->getTranslator()->trans('translation.deleted', array('%name%'=>$translation->getName()));

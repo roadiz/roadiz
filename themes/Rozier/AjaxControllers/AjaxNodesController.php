@@ -122,7 +122,7 @@ class AjaxNodesController extends AbstractAjaxController
 			$nextNode = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\Node', (int)$parameters['nextNodeId']);
 			if ($nextNode !== null) {
-				$node->setPosition($nextNode->getPosition() - 1);
+				$node->setPosition($nextNode->getPosition() - 0.5);
 			}
 		}
 		elseif (!empty($parameters['prevNodeId']) && 
@@ -130,7 +130,7 @@ class AjaxNodesController extends AbstractAjaxController
 			$prevNode = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\Node', (int)$parameters['prevNodeId']);
 			if ($prevNode !== null) {
-				$node->setPosition($prevNode->getPosition() + 1);
+				$node->setPosition($prevNode->getPosition() + 0.5);
 			}
 		}
 		// Apply position update before cleaning

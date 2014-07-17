@@ -7,7 +7,10 @@ use RZ\Renzo\Core\AbstractEntities\DateTimedPositioned;
 
 /**
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\TagRepository")
- * @Table(name="tags")
+ * @Table(name="tags", indexes={
+ *     @index(name="visible_idx", columns={"visible"}), 
+ *     @index(name="position_idx", columns={"position"})
+ * })
  */
 class Tag extends DateTimedPositioned
 {	

@@ -1,22 +1,22 @@
 <nav class="node-edit-navigation uk-navbar">
 	<ul class="uk-navbar-nav">
 		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
-			<a href="{{ path('nodesEditPage', { node_id: node.getId }) }}">{% trans %}Parameters{% endtrans %}</a>
+			<a href="{{ path('nodesEditPage', { node_id: node.getId }) }}">{% trans %}node.parameters{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'source' %}uk-active{% endif %}">
-			<a href="{{ path('nodesEditSourcePage', { node_id: node.getId, translation_id:translation.getId }) }}">{% trans %}Content{% endtrans %}</a>
+			<a href="{{ path('nodesEditSourcePage', { node_id: node.getId, translation_id:translation.getId }) }}">{% trans %}node.content{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'tags' %}uk-active{% endif %}">
-			<a href="{{ path('nodesEditTagsPage', { node_id: node.getId}) }}">{% trans %}Tags{% endtrans %}</a>
+			<a href="{{ path('nodesEditTagsPage', { node_id: node.getId}) }}">{% trans %}tags{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'aliases' %}uk-active{% endif %}">
-			<a href="{{ path('nodesEditAliasesPage', { node_id: node.getId}) }}">{% trans %}Url aliases{% endtrans %}</a>
+			<a href="{{ path('nodesEditAliasesPage', { node_id: node.getId}) }}">{% trans %}urlaliases{% endtrans %}</a>
 		</li>
 	</ul>
 	<div class="uk-navbar-content">
-		<a class="uk-button" href="{{ path('nodesHomePage') }}"><i class="uk-icon-chevron-left"></i> {% trans %}Back to nodes{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('nodesHomePage') }}"><i class="uk-icon-chevron-left"></i> {% trans %}back.to.nodes{% endtrans %}</a>
 	</div>
 	<div class="uk-navbar-content uk-navbar-flip">
-		<a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { node_id: node.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}Delete{% endtrans %}</a>
+		<a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { node_id: node.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 	</div>
 </nav>

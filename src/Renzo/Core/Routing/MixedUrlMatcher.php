@@ -29,6 +29,7 @@ class MixedUrlMatcher extends UrlMatcher
      */
     public function match($pathinfo)
     {
+    	Kernel::getInstance()->getStopwatch()->start('matchingRoute');
         $this->allow = array();
 
         $decodedUrl = rawurldecode($pathinfo);
@@ -51,15 +52,18 @@ class MixedUrlMatcher extends UrlMatcher
          * Backend and Frontend
          */
         if ($ret = $this->matchCollection($decodedUrl, $this->routes)) {
+        	Kernel::getInstance()->getStopwatch()->stop('matchingRoute');
             return $ret;
         }
         /*
          * Then match Frontend node routes
          */
         elseif ($ret = $this->matchNode($decodedUrl)) {
+        	Kernel::getInstance()->getStopwatch()->stop('matchingRoute');
         	return $ret;
         }
 
+       	Kernel::getInstance()->getStopwatch()->stop('matchingRoute');
         throw 0 < count($this->allow)
             ? new MethodNotAllowedException(array_unique(array_map('strtoupper', $this->allow)))
             : new ResourceNotFoundException();
