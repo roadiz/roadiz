@@ -242,6 +242,8 @@ class NodesController extends RozierApp {
 
 				$this->assignation['form'] = $form->createView();
 
+				Kernel::getInstance()->em()->detach($node);
+
 				return new Response(
 					$this->getTwig()->render('nodes/editSource.html.twig', $this->assignation),
 					Response::HTTP_OK,

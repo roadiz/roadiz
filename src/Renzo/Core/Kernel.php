@@ -126,8 +126,8 @@ class Kernel {
 		$dbParams = $this->getConfig()["doctrine"];
 		$configDB = Setup::createAnnotationMetadataConfiguration($paths, $this->isDebug());
 
-		// $configDB->setProxyDir(RENZO_ROOT . '/sources/Proxies');
-		// $configDB->setProxyNamespace('Proxies');
+		$configDB->setProxyDir(RENZO_ROOT . '/sources/Proxies');
+		$configDB->setProxyNamespace('Proxies');
 
 		$this->setEntityManager(EntityManager::create($dbParams, $configDB));
 

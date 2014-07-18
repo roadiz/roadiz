@@ -105,14 +105,14 @@ class SchemaCommand extends Command {
 
 	public static function refreshMetadata()
 	{
-		$cacheDriver = Kernel::getInstance()->em()->getMetadataFactory()->getCacheDriver();
+		/*$cacheDriver = Kernel::getInstance()->em()->getMetadataFactory()->getCacheDriver();
         if ($cacheDriver !== null) {
             $cacheDriver->flushAll();
-        }
+        }*/
 
-  //       $meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
-		// $proxyFactory = Kernel::getInstance()->em()->getProxyFactory();
-		// $proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/sources/Proxies');
+        $meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
+		$proxyFactory = Kernel::getInstance()->em()->getProxyFactory();
+		$proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/sources/Proxies');
 	}
 
 	/**
