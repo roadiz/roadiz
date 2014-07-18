@@ -12,6 +12,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+
+use Doctrine\ORM\Events;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
+
 /**
 * 
 */
@@ -23,12 +28,12 @@ class SchemaCommand extends Command {
 		$this
 			->setName('schema')
 			->setDescription('Manage database schema')
-			/*->addOption(
-			   'create',
+			->addOption(
+			   'refresh',
 			   null,
 			   InputOption::VALUE_NONE,
-			   'Create your database schema'
-			)*/
+			   'Refresh doctrine metadata cache'
+			)
 			/*->addOption(
 			   'drop',
 			   null,
@@ -54,6 +59,11 @@ class SchemaCommand extends Command {
 	{
 		$this->dialog = $this->getHelperSet()->get('dialog');
 		$text="";
+
+		if ($input->getOption('refresh')) {
+			static::refreshMetadata();
+			$text .= '<info>Your database metadata cache has been purged…</info>'.PHP_EOL;
+		}
 
 		if ($input->getOption('update')) {
 			
@@ -93,18 +103,38 @@ class SchemaCommand extends Command {
 		$output->writeln($text);
 	}
 
+	public static function refreshMetadata()
+	{
+		$cacheDriver = Kernel::getInstance()->em()->getMetadataFactory()->getCacheDriver();
+        if ($cacheDriver !== null) {
+            $cacheDriver->flushAll();
+        }
+
+  //       $meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
+		// $proxyFactory = Kernel::getInstance()->em()->getProxyFactory();
+		// $proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/sources/Proxies');
+	}
+
+	/**
+	 * Update database schema
+	 * 
+	 * @return 
+	 */
 	public static function updateSchema()
 	{
+		static::refreshMetadata();
+
+		//Kernel::getInstance()->em()->getMetadataFactory()->setMetadataFor( 
+		//	'RZ\Renzo\Core\Entities\NodesSources', 
+		//	\RZ\Renzo\Inheritance\Doctrine\DataInheritanceEvent::getNodesSourcesMetadata() );
+
 		$tool = new \Doctrine\ORM\Tools\SchemaTool( Kernel::getInstance()->em() );
 		$meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
-		
-		$sql = $tool->getUpdateSchemaSql($meta);
 
-		/*$count = count($sql);
-		for($i=0; $i<$count; $i++) {
-		    if(substr($sql[$i], 0, 4) == 'DROP TABLE')
-		        unset($sql[$i]);
-		}*/
+		$proxyFactory = Kernel::getInstance()->em()->getProxyFactory();
+		$proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/sources/Proxies');
+
+		$sql = $tool->getUpdateSchemaSql($meta);
 
 		foreach($sql as $statement) {
 		    Kernel::getInstance()->em()->getConnection()->exec( $statement );
@@ -114,6 +144,8 @@ class SchemaCommand extends Command {
 	}
 	public static function getUpdateSchema()
 	{
+		static::refreshMetadata();
+
 		$tool = new \Doctrine\ORM\Tools\SchemaTool( Kernel::getInstance()->em() );
 		$meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
 		return $tool->getUpdateSchemaSql($meta);

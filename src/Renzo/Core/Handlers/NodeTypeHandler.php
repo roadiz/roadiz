@@ -111,9 +111,10 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
      */
     public function updateSchema()
     {
-    	$this->removeSourceEntityClass();
-    	$this->generateSourceEntityClass();
-    	\RZ\Renzo\Console\SchemaCommand::updateSchema();
+        $this->removeSourceEntityClass();
+        $this->generateSourceEntityClass();
+
+        \RZ\Renzo\Console\SchemaCommand::updateSchema();
 
     	return $this;
     }

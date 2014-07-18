@@ -34,7 +34,7 @@ class UrlAlias extends PersistableObject
 
 	/**
 	 * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\NodesSources", inversedBy="urlAliases")
-	 * @JoinColumn(name="ns_id", referencedColumnName="id")
+	 * @JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
 	 */
 	private $nodeSource;
 	/**

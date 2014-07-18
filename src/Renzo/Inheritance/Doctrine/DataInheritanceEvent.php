@@ -6,6 +6,7 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\NodeType;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Mapping\ClassMetadata;
  
 class DataInheritanceEvent {
  
@@ -22,7 +23,6 @@ class DataInheritanceEvent {
 		if ($class->getName() === 'RZ\Renzo\Core\Entities\NodesSources') {
 
 			try {
-
 				/**
 				 *  List node types
 				 */
@@ -32,7 +32,7 @@ class DataInheritanceEvent {
 
 				$map = array();
 				foreach ($nodeTypes as $type) {
-					$map[$type->getName()] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
+					$map[strtolower($type->getName())] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
 				}
 
 				$metadata->setDiscriminatorMap($map);
@@ -46,6 +46,42 @@ class DataInheritanceEvent {
 			}
 		}
 	}
+
+	/**
+	 * Get NodesSources class metadata
+	 * @return Doctrine\ORM\Mapping\ClassMetadata
+	 */
+	public static function getNodesSourcesMetadata()
+	{
+		$metadata = new ClassMetadata( 'RZ\Renzo\Core\Entities\NodesSources' );
+		$class = $metadata->getReflectionClass();
+
+		try {
+			/**
+			 *  List node types
+			 */
+			$nodeTypes = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\NodeType')
+				->findAll();
+
+			$map = array();
+			foreach ($nodeTypes as $type) {
+				$map[strtolower($type->getName())] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
+			}
+
+			$metadata->setDiscriminatorMap($map);
+			return $metadata;
+		}
+		catch (\PDOException $e){
+			/*
+			 * Database tables don't exist yet
+			 * Need Install
+			 */
+			$this->getSession()->getFlashBag()->add('error', 'Impossible to create discriminator map, make sure your database is fully installed.');
+			return null;
+		}
+	}
+
 
 	/**
 	 * Check if given table exists

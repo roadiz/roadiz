@@ -12,7 +12,8 @@ use RZ\Renzo\Core\Handlers\NodeTypeFieldHandler;
  * @Table(name="node_type_fields",  indexes={
  *     @index(name="visible_idx", columns={"visible"}), 
  *     @index(name="indexed_idx", columns={"indexed"})
- * })
+ * },
+ * uniqueConstraints={@UniqueConstraint(columns={"name", "node_type_id"})})
  */
 class NodeTypeField extends Positioned implements Persistable {
 
@@ -91,6 +92,7 @@ class NodeTypeField extends Positioned implements Persistable {
 
 	/**
      * @ManyToOne(targetEntity="NodeType", inversedBy="fields")
+     * @JoinColumn(name="node_type_id", onDelete="CASCADE")
      */
 	private $nodeType;
 

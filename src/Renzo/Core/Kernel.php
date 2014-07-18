@@ -10,6 +10,7 @@ use RZ\Renzo\Core\Entities\Theme;
 use Symfony\Component\Console\Application;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -17,7 +18,7 @@ use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Security\Http\HttpUtils;
+
 use Symfony\Component\Routing;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -25,16 +26,20 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
+use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
+
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Stopwatch\Stopwatch;
 
+use Symfony\Component\HttpFoundation\RequestMatcher;
 
+use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
-use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 /**
@@ -45,7 +50,6 @@ class Kernel {
 	private static $instance = null;
 
 	private $em =           null;
-	private $debug =        true;
 	private $backendDebug = false;
 	private $config =       null;
 
@@ -69,12 +73,65 @@ class Kernel {
 
 	private final function __construct() {
 
+		$this->parseConfig()
+			 ->setupEntityManager();
+
 		$this->stopwatch = new Stopwatch();
 		$this->stopwatch->start('global');
 		$this->rootCollection = new RouteCollection();
 
 		$this->request = Request::createFromGlobals();
 		$this->requestContext = new Routing\RequestContext($this->getResolvedBaseUrl());
+	}
+
+	/**
+	 * 
+	 * @return $this
+	 */
+	public function parseConfig()
+	{
+		$configFile = RENZO_ROOT.'/conf/config.json';
+		if (file_exists($configFile)) {
+
+			$this->setConfig(
+				json_decode(file_get_contents($configFile), true)
+			);
+			return $this;
+		}
+		else {
+			throw new \RuntimeException('No configuration found ('.$configFile.')');
+		}
+	}
+	/**
+	 * get entities search paths
+	 * @return array
+	 */
+	public function getEntitiesPaths()
+	{
+		return array(
+			"src/Renzo/Core/Entities", 
+			"src/Renzo/Core/AbstractEntities", 
+			"sources/GeneratedNodeSources"
+		);
+	}
+	/**
+	 * Initialize Doctrine entity manager
+	 * @return $this
+	 */
+	public function setupEntityManager()
+	{
+		// the connection configuration
+		$paths = $this->getEntitiesPaths();
+
+		$dbParams = $this->getConfig()["doctrine"];
+		$configDB = Setup::createAnnotationMetadataConfiguration($paths, $this->isDebug());
+
+		// $configDB->setProxyDir(RENZO_ROOT . '/sources/Proxies');
+		// $configDB->setProxyNamespace('Proxies');
+
+		$this->setEntityManager(EntityManager::create($dbParams, $configDB));
+
+		return $this;
 	}
 
 	/**
@@ -96,7 +153,8 @@ class Kernel {
 	 * @return boolean
 	 */
 	public function isDebug() {
-		return $this->debug;
+		$conf = $this->getConfig();
+		return (boolean)$conf['devMode'];
 	}
 	/**
 	 * Get backend application debug status
@@ -165,11 +223,9 @@ class Kernel {
 	 */
 	public function runConsole()
 	{
-		$this->debug = 			(boolean)SettingsBag::get('debug');
 		$this->backendDebug = 	(boolean)SettingsBag::get('backend_debug');
 		
-		$this->prepareRouteCollection()
-			->prepareUrlHandling();
+		$this->prepareUrlHandling();
 
 		$application = new Application('Renzo Console Application', '0.1');
 		$application->add(new \RZ\Renzo\Console\TranslationsCommand);
@@ -240,9 +296,6 @@ class Kernel {
 
 	private function prepareRouteCollection()
 	{
-		$this->backendClass = $this->getBackendClass();
-		$this->frontendThemes = $this->getFrontendThemes();
-
 		/*
 		 * Add Assets controller routes
 		 */
@@ -278,8 +331,32 @@ class Kernel {
 			}
 		}
 
+		if (!file_exists(RENZO_ROOT.'/sources/Compiled')) {
+			mkdir(RENZO_ROOT.'/sources/Compiled', 0755, true);
+		}
+
+		/*
+		 * Generate custom UrlMatcher
+		 */
+		$dumper = new PhpMatcherDumper($this->rootCollection);
+		$class = $dumper->dump(array(
+			'class' => 'GlobalUrlMatcher'
+		));
+		file_put_contents(RENZO_ROOT.'/sources/Compiled/GlobalUrlMatcher.php', $class);
+		
+		/*
+		 * Generate custom UrlGenerator
+		 */
+		$dumper = new PhpGeneratorDumper($this->rootCollection);
+		$class = $dumper->dump(array(
+			'class' => 'GlobalUrlGenerator'
+		));
+		file_put_contents(RENZO_ROOT.'/sources/Compiled/GlobalUrlGenerator.php', $class);
+
+
 		return $this;
 	}
+
 
 	/**
 	 * Prepare URL generation tools
@@ -287,11 +364,41 @@ class Kernel {
 	 */
 	private function prepareUrlHandling()
 	{
-		$this->urlMatcher =   new MixedUrlMatcher($this->rootCollection, $this->requestContext);
-		$this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
+		$this->backendClass = $this->getBackendClass();
+		$this->frontendThemes = $this->getFrontendThemes();
+
+		if ($this->isDebug() || 
+			!file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlMatcher.php') || 
+			!file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlGenerator.php')) {
+
+			$this->prepareRouteCollection();
+		}
+
+		//$this->urlMatcher =   new \GlobalUrlMatcher($this->requestContext);
+		$this->urlMatcher =   new MixedUrlMatcher($this->requestContext);
+		$this->urlGenerator = new \GlobalUrlGenerator($this->requestContext);
 		$this->httpUtils =    new HttpUtils($this->urlGenerator, $this->urlMatcher);
 
 		return $this;
+	}
+
+	private function prepareTranslation()
+	{
+        /*
+         * set default locale
+         */
+        $translation = Kernel::getInstance()->em()
+        	->getRepository('RZ\Renzo\Core\Entities\Translation')
+        	->findOneBy(array(
+        		'defaultTranslation'=>true, 
+        		'available'=>true
+        	));
+
+        if ($translation !== null) {
+        	$shortLocale = $translation->getShortLocale();
+        	Kernel::getInstance()->getRequest()->setLocale($shortLocale);
+        	\Locale::setDefault($shortLocale);
+        }
 	}
 
 	/**
@@ -301,9 +408,12 @@ class Kernel {
 	 */
 	private function prepareRequestHandling()
 	{	
+		$this->stopwatch->start('prepareTranslation');
+		$this->prepareTranslation();
+		$this->stopwatch->stop('prepareTranslation');
+
 		$this->stopwatch->start('prepareRouting');
-		$this->prepareRouteCollection()
-			->prepareUrlHandling();
+		$this->prepareUrlHandling();
 		$this->stopwatch->stop('prepareRouting');
 
 		$this->dispatcher->addSubscriber(new RouterListener($this->urlMatcher));
@@ -330,14 +440,32 @@ class Kernel {
 		    array($firewall, 'onKernelRequest')
 		);
 
+		/*
+		 * Register after controller matched listener
+		 */
+		$this->dispatcher->addListener(
+		    KernelEvents::CONTROLLER,
+		    array($this, 'onControllerMatched')
+		);
+
 		$this->stopwatch->stop('firewall');
 
 		/*
 		 * If debug, alter HTML responses to append Debug panel to view
 		 */
-		if ($this->isDebug()) {
+		if ((boolean)SettingsBag::get('display_debug_panel')) {
 			$this->dispatcher->addSubscriber(new \RZ\Renzo\Core\Utils\DebugPanel());
 		}
+	}
+
+	/**
+	 * After a controller has been matched
+	 * @param  SymfonyComponentHttpKernelEventFilterControllerEvent $event 
+	 * @return void
+	 */
+	public function onControllerMatched(\Symfony\Component\HttpKernel\Event\FilterControllerEvent $event)
+	{
+		$this->stopwatch->stop('matchingRoute');
 	}
 
 	/**

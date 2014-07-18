@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 
-class MixedUrlMatcher extends UrlMatcher
+class MixedUrlMatcher extends \GlobalUrlMatcher
 {
 
 	/**
@@ -30,43 +30,25 @@ class MixedUrlMatcher extends UrlMatcher
     public function match($pathinfo)
     {
     	Kernel::getInstance()->getStopwatch()->start('matchingRoute');
-        $this->allow = array();
-
         $decodedUrl = rawurldecode($pathinfo);
 
-        /*
-         * set default locale
-         */
-        $translation = Kernel::getInstance()->em()
-        	->getRepository('RZ\Renzo\Core\Entities\Translation')
-        	->findOneBy(array('defaultTranslation'=>true, 'available'=>true));
-
-        if ($translation !== null) {
-        	Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
-        	\Locale::setDefault($translation->getShortLocale());
+        try {
+        	/*
+        	 * Try STATIC routes
+        	 */
+        	return parent::match($pathinfo);
         }
-
-        /*
-         * First try matching Static routes
-         *
-         * Backend and Frontend
-         */
-        if ($ret = $this->matchCollection($decodedUrl, $this->routes)) {
-        	Kernel::getInstance()->getStopwatch()->stop('matchingRoute');
-            return $ret;
+        catch( ResourceNotFoundException $e ) {
+        	/*
+        	 * Try nodes routes
+        	 */
+        	if (false !== $ret = $this->matchNode($decodedUrl)) {
+	        	return $ret;
+	        }
+	        else {
+	        	throw new ResourceNotFoundException();
+	        }
         }
-        /*
-         * Then match Frontend node routes
-         */
-        elseif ($ret = $this->matchNode($decodedUrl)) {
-        	Kernel::getInstance()->getStopwatch()->stop('matchingRoute');
-        	return $ret;
-        }
-
-       	Kernel::getInstance()->getStopwatch()->stop('matchingRoute');
-        throw 0 < count($this->allow)
-            ? new MethodNotAllowedException(array_unique(array_map('strtoupper', $this->allow)))
-            : new ResourceNotFoundException();
     }
 
     /**
@@ -79,10 +61,8 @@ class MixedUrlMatcher extends UrlMatcher
     	$tokens = explode('/', $decodedUrl);
     	$tokens = array_values(array_filter($tokens)); // Remove empty tokens (especially when a trailing slash is present)
 
-
     	/*
     	 * Try with URL Aliases
-    	 *
     	 */
     	$node = $this->parseFromUrlAlias($tokens);
     	if ($node !== null) {
@@ -97,27 +77,30 @@ class MixedUrlMatcher extends UrlMatcher
 	    		'translation' => $translation
 	    	);
     	}
-
-    	/*
-    	 * Try with node name
-    	 */
-    	$node = $this->parseNode($tokens);
-    	if ( $node !== null ) {
+    	else{
 	    	/*
-	    	 * Try with nodeName
+	    	 * Try with node name
 	    	 */
-	    	$translation = $this->parseTranslation($tokens);
-	    	Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
+	    	$node = $this->parseNode($tokens);
+	    	if ( $node !== null ) {
+		    	/*
+		    	 * Try with nodeName
+		    	 */
+		    	$translation = $this->parseTranslation($tokens);
+		    	Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
 
-	    	return array(
-	    		'_controller' => $this->getThemeController().'::indexAction',
-	    		'node' => $this->parseNode($tokens),
-	    		'urlAlias' => null,
-	    		'translation' => $translation
-	    	);
+		    	return array(
+		    		'_controller' => $this->getThemeController().'::indexAction',
+		    		'node' => $this->parseNode($tokens),
+		    		'urlAlias' => null,
+		    		'translation' => $translation
+		    	);
+	    	}
+	    	else {
+
+    			return false;
+	    	}
     	}
-
-    	return false;
     }
 
     /**
@@ -195,8 +178,7 @@ class MixedUrlMatcher extends UrlMatcher
 			else {
 				$identifier = strip_tags($tokens[(int)(count($tokens) - 1)]);
 
-				if ($identifier !== null && 
-					$identifier != '') {
+				if ($identifier != '') {
 
 					$ua = Kernel::getInstance()->em()
 						->getRepository('RZ\Renzo\Core\Entities\UrlAlias')

@@ -232,6 +232,7 @@ class NodeTypeFieldsController extends RozierApp
 			$field->$setter( $value );
 		}
 		Kernel::getInstance()->em()->flush();
+		
 		$field->getNodeType()->getHandler()->updateSchema();
 
 	}

@@ -252,10 +252,8 @@ class Node extends DateTimedPositioned
         return $this->tags;
     }
 
-
-
 	/**
-	 * @OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true)
+	 * @OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 */
 	private $nodeSources;
 

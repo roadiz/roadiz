@@ -1,4 +1,5 @@
 {
+	"devMode": true,
 	"doctrine": {
 		"driver":   "",
 		"host":     "",

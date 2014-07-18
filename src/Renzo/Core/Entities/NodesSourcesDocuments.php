@@ -27,7 +27,7 @@ class NodesSourcesDocuments extends Positioned implements Persistable
 
 	/**
 	 * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\NodesSources")
-	 * @JoinColumn(name="ns_id", referencedColumnName="id")
+	 * @JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
 	 * @var RZ\Renzo\Core\Entities\NodesSources
 	 */
 	private $nodeSource;
@@ -35,14 +35,14 @@ class NodesSourcesDocuments extends Positioned implements Persistable
 
 	/**
 	 * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\Document")
-	 * @JoinColumn(name="document_id", referencedColumnName="id")
+	 * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
 	 * @var RZ\Renzo\Core\Entities\Document
 	 */
 	private $document;
 
 	/**
 	 * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\NodeTypeField")
-	 * @JoinColumn(name="node_type_field_id", referencedColumnName="id")
+	 * @JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
 	 * @var RZ\Renzo\Core\Entities\NodeTypeField
 	 */
 	private $field;

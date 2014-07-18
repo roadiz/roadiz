@@ -238,15 +238,18 @@ class NodeTypesController extends RozierApp
 			$setter = 'set'.ucwords($key);
 			$node_type->$setter( $value );
 		}
-		try {
-			Kernel::getInstance()->em()->persist($node_type);
-			Kernel::getInstance()->em()->flush();
-			$node_type->getHandler()->updateSchema();
-			return true;
-		}
-		catch(\Exception $e){
+
+		$existing = Kernel::getInstance()->em()
+			->getRepository('RZ\Renzo\Core\Entities\NodeType')
+			->findOneBy(array('name'=>$node_type->getName()));
+		if ($existing !== null) {
 			throw new EntityAlreadyExistsException($this->getTranslator()->trans('node_type.already_exists', array('%name%'=>$node_type->getName())), 1);
 		}
+		
+		Kernel::getInstance()->em()->persist($node_type);
+		Kernel::getInstance()->em()->flush();
+		$node_type->getHandler()->updateSchema();
+		return true;
 	}
 
 	/**

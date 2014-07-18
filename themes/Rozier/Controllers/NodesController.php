@@ -86,17 +86,19 @@ class NodesController extends RozierApp {
 	 */
 	public function editAction( Request $request, $node_id, $translation_id = null )
 	{
+		$node = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
+		Kernel::getInstance()->em()->refresh($node);
+
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
 				->findOneBy(array('defaultTranslation'=>true));
-		$node = Kernel::getInstance()->em()
-			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
-
+		
 		if ($node !== null) {
 			$this->assignation['node'] = $node;
 			$this->assignation['source'] = $node->getNodeSources()->first();
 			$this->assignation['translation'] = $translation;
-			
+
 			/*
 			 * Handle translation form
 			 */
@@ -185,18 +187,16 @@ class NodesController extends RozierApp {
 	 * @param  integer $translation_id [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editSourceAction( Request $request, $node_id, $translation_id = null )
+	public function editSourceAction( Request $request, $node_id, $translation_id)
 	{
 		$translation = Kernel::getInstance()->em()
-				->getRepository('RZ\Renzo\Core\Entities\Translation')
-				->findOneBy(array('defaultTranslation'=>true));
-		if ($translation_id !== null) {
-			$translation = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
-		}
 
 		if ($translation !== null) {
 
+			$gnode = Kernel::getInstance()->em()
+				->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
+			Kernel::getInstance()->em()->refresh($gnode);
 			$node = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Node')
 				->findWithTranslation((int)$node_id, $translation);
@@ -207,10 +207,10 @@ class NodesController extends RozierApp {
 				$source = $node->getNodeSources()->first();
 
 				$this->assignation['translation'] = $translation;
-				$this->assignation['available_translations'] = $node->getHandler()->getAvailableTranslations();
+				$this->assignation['available_translations'] = $gnode->getHandler()->getAvailableTranslations();
 				$this->assignation['node'] = $node;
 				$this->assignation['source'] = $source;
-				
+
 				/*
 				 * Form
 				 */

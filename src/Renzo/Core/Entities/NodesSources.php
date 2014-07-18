@@ -7,7 +7,7 @@ use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
 /**
  * @Entity
- * @Table(name="nodes_sources")
+ * @Table(name="nodes_sources", uniqueConstraints={@UniqueConstraint(columns={"id","node_id", "translation_id"})})
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="discr", type="string")
  */
@@ -15,6 +15,7 @@ class NodesSources extends PersistableObject {
 
 	/**
 	 * @ManyToOne(targetEntity="Node", inversedBy="nodeSources")
+	 * @JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
 	 */
 	private $node;
 
@@ -37,6 +38,7 @@ class NodesSources extends PersistableObject {
 
 	/**
 	 * @ManyToOne(targetEntity="Translation")
+	 * @JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
 	 */
 	private $translation;
 	/**

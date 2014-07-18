@@ -1,10 +1,10 @@
 <div id="rz-debug-panel">
 	<h4>Debug panel</h4>
 	<dl>
-		<dt><i class="uk-icon-clock-o"></i> Global time</dt>
-		<dd>{{ stopwatch.getEvent('global').getDuration }}ms</dd>
 		<dt><i class="uk-icon-truck"></i> Global memory</dt>
 		<dd>{{ stopwatch.getEvent('global').getMemory / 1000000 }}Mo</dd>
+		<dt><i class="uk-icon-clock-o"></i> Global time</dt>
+		<dd>{{ stopwatch.getEvent('global').getDuration }}ms</dd>
 		<dt><i class="uk-icon-clock-o"></i> Request handling time</dt>
 		<dd>{{ stopwatch.getEvent('requestHandling').getDuration }}ms</dd>
 		<dt><i class="uk-icon-clock-o"></i> Prepare routing time</dt>
@@ -13,5 +13,7 @@
 		<dd>{{ stopwatch.getEvent('firewall').getDuration }}ms</dd>
 		<dt><i class="uk-icon-clock-o"></i> Matching route time</dt>
 		<dd>{{ stopwatch.getEvent('matchingRoute').getDuration }}ms</dd>
+		<dt><i class="uk-icon-clock-o"></i> Prepare translation</dt>
+		<dd>{{ stopwatch.getEvent('prepareTranslation').getDuration }}ms</dd>
 	</dl>
 </div>

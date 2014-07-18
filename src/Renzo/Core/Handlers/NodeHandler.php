@@ -38,14 +38,8 @@ class NodeHandler
 
 	private function removeChildren()
 	{
-		$nodes = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Node')
-			->findBy(array(
-				'parent' => $this->getNode()
-			));
-
-		foreach ($nodes as $node) {
-			Kernel::getInstance()->em()->remove($node);
+		foreach ($this->getNode()->getChildren() as $node) {
+			$node->getHandler()->removeWithChildrenAndAssociations();
 		}
 
 		return $this;
@@ -53,7 +47,9 @@ class NodeHandler
 
 	public function removeAssociations()
 	{
-		
+		foreach ($this->getNode()->getNodeSources() as $ns) {
+			Kernel::getInstance()->em()->remove($ns);
+		}
 	}
 
 	public function removeWithChildrenAndAssociations()

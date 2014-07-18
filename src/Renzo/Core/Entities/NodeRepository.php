@@ -26,10 +26,9 @@ class NodeRepository extends EntityRepository
                         ->createQuery('
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
             INNER JOIN n.nodeSources ns 
-            INNER JOIN ns.translation t
-            WHERE n.id = :node_id AND t.id = :translation_id'
+            WHERE n.id = :node_id AND ns.translation = :translation'
                         )->setParameter('node_id', (int)$node_id)
-                        ->setParameter('translation_id', (int)$translation->getId());
+                        ->setParameter('translation', $translation);
 
         try {
             return $query->getSingleResult();
