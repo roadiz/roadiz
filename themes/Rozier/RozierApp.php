@@ -49,9 +49,7 @@ class RozierApp extends BackendController {
 		// Node tree
 		$nodeTreeWidget = new NodeTreeWidget(Kernel::getInstance()->getRequest(), $this);
 		$this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' back-office';
-		$this->assignation['nodeTree'] = array(
-			'nodes' => $nodeTreeWidget->getNodeTreeAssignationForParent()
-		);
+		$this->assignation['nodeTree'] = new NodeTreeWidget(Kernel::getInstance()->getRequest(), $this);
 
 		return $this;
 	}

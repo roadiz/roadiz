@@ -17,6 +17,8 @@ use RZ\Renzo\Core\Entities\Document;
 
 use RZ\Renzo\Core\Viewers\ViewableInterface;
 
+use \Michelf\Markdown;
+
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -307,6 +309,16 @@ class AppController implements ViewableInterface {
 		    return var_dump($object);
 		});
 		$this->twig->addFilter($dump);
+
+		/*
+		 * ============================================================================
+		 * Markdown
+		 * ============================================================================
+		 */
+		$markdown = new \Twig_SimpleFilter('markdown', function ($object) {
+		    return Markdown::defaultTransform($object);
+		}, array('is_safe' => array('html')));
+		$this->twig->addFilter($markdown);
 
 		return $this;
 	}

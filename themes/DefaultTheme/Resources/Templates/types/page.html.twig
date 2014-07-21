@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+
+<h1>{{ node.getNodeSources.first.getTitle }}</h1>
+<div>{{ node.getNodeSources.first.getContent|markdown }}</div>
+
+{% endblock %}

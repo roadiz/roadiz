@@ -61,6 +61,75 @@ class NodeRepository extends EntityRepository
     }
 
     /**
+     * 
+     * @param  string      $node_name     [description]
+     * @param  Translation $translation [description]
+     * @return Node or null
+     */
+    public function findByNodeNameWithTranslation($node_name, Translation $translation )
+    {
+        $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
+            INNER JOIN n.nodeSources ns 
+            WHERE n.nodeName = :node_name AND ns.translation = :translation'
+                        )->setParameter('node_name', $node_name)
+                        ->setParameter('translation', $translation);
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * 
+     * @param  string      $node_name     [description]
+     * @return Node or null
+     */
+    public function findByNodeNameWithDefaultTranslation($node_name)
+    {
+        $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
+            INNER JOIN n.nodeSources ns 
+            INNER JOIN ns.translation t
+            WHERE n.nodeName = :node_name AND t.defaultTranslation = :defaultTranslation'
+                        )->setParameter('node_name', $node_name)
+                        ->setParameter('defaultTranslation', true);
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * 
+     * @param  Node $node     [description]
+     * @param  Translation $translation [description]
+     * @return Node or null
+     */
+    public function getChildrenWithTranslation( Node $node, Translation $translation )
+    {
+        $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
+            INNER JOIN n.nodeSources ns 
+            WHERE n.parent = :node AND ns.translation = :translation'
+                        )->setParameter('node', $node)
+                        ->setParameter('translation', $translation);
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
      * [findByParentWithTranslation description]
      * @param  Node        $parent      [description]
      * @param  Translation $translation [description]

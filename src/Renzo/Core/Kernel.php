@@ -131,6 +131,19 @@ class Kernel {
 
 		$this->setEntityManager(EntityManager::create($dbParams, $configDB));
 
+		if ($this->em()->getConfiguration()->getResultCacheImpl() !== null) {
+			$this->em()->getConfiguration()->getResultCacheImpl()->setNamespace($this->getConfig()["appNamespace"]);
+		}
+		if ($this->em()->getConfiguration()->getHydrationCacheImpl() !== null) {
+			$this->em()->getConfiguration()->getHydrationCacheImpl()->setNamespace($this->getConfig()["appNamespace"]);
+		}
+		if ($this->em()->getConfiguration()->getQueryCacheImpl() !== null) {
+			$this->em()->getConfiguration()->getQueryCacheImpl()->setNamespace($this->getConfig()["appNamespace"]);
+		}
+		if ($this->em()->getConfiguration()->getMetadataCacheImpl()) {
+			$this->em()->getConfiguration()->getMetadataCacheImpl()->setNamespace($this->getConfig()["appNamespace"]);
+		}
+
 		return $this;
 	}
 

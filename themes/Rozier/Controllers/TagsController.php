@@ -165,7 +165,6 @@ class TagsController extends RozierApp
 			$this->assignation['tag'] = $tag;
 			
 			$form = $this->buildDeleteForm( $tag );
-
 			$form->handleRequest();
 
 			if ($form->isValid() && 

@@ -31,8 +31,7 @@ class NodeType extends PersistableObject
 	 * @param string $newname
 	 */
 	public function setName($name) {
-	    $this->name = StringHandler::removeDiacritics($name);
-	    $this->name = trim(preg_replace('#([^a-zA-Z])#', '', ucwords($this->name)));
+	    $this->name = StringHandler::classify($name);
 	    
 	    return $this;
 	}

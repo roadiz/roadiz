@@ -38,6 +38,18 @@ abstract class StringHandler
 	 	return $string;
 	}
 	/**
+	 * Transform a string for use as a classname
+	 * @param  string $string
+	 * @return string Classified string
+	 */
+	public static function classify( $string )
+	{
+		$string = static::removeDiacritics($string);
+	    $string = trim(preg_replace('#([^a-zA-Z])#', '', ucwords($string)));
+
+	    return $string;
+	}
+	/**
 	 * Transform to lowercase and remplace every non-alpha character with an underscore
 	 * 
 	 * @param  string $string

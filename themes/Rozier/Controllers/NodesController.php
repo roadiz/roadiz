@@ -196,15 +196,15 @@ class NodesController extends RozierApp {
 
 			$gnode = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
-			Kernel::getInstance()->em()->refresh($gnode);
-			$node = Kernel::getInstance()->em()
-				->getRepository('RZ\Renzo\Core\Entities\Node')
-				->findWithTranslation((int)$node_id, $translation);
 
-			if ($node !== null && 
+			$source = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+				->findOneBy(array('translation'=>$translation, 'node'=>array('id'=>(int)$node_id)));
+
+			if ($source !== null && 
 				$translation !== null) {
 
-				$source = $node->getNodeSources()->first();
+				$node = $source->getNode();
 
 				$this->assignation['translation'] = $translation;
 				$this->assignation['available_translations'] = $gnode->getHandler()->getAvailableTranslations();
@@ -241,8 +241,7 @@ class NodesController extends RozierApp {
 				}
 
 				$this->assignation['form'] = $form->createView();
-
-				Kernel::getInstance()->em()->detach($node);
+				//Kernel::getInstance()->em()->detach($node);
 
 				return new Response(
 					$this->getTwig()->render('nodes/editSource.html.twig', $this->assignation),
@@ -270,14 +269,14 @@ class NodesController extends RozierApp {
 
 		if ($translation !== null) {
 
-			$node = Kernel::getInstance()->em()
-				->getRepository('RZ\Renzo\Core\Entities\Node')
-				->findWithTranslation((int)$node_id, $translation);
+			$source = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+				->findOneBy(array('translation'=>$translation, 'node'=>array('id'=>(int)$node_id)));
 
-			if ($node !== null && 
+			if ($source !== null && 
 				$translation !== null) {
 
-				$source = $node->getNodeSources()->first();
+				$node = $source->getNode();
 
 				$this->assignation['translation'] = $translation;
 				$this->assignation['node'] = 		$node;

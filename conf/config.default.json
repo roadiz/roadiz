@@ -1,4 +1,5 @@
 {
+	"appNamespace": "chooseAnUniqueNameForYourApp",
 	"devMode": true,
 	"doctrine": {
 		"driver":   "",

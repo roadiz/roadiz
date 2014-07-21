@@ -21,7 +21,8 @@
         "swiftmailer/swiftmailer": "@stable",
         "symfony/finder": "@stable",
         "symfony/intl": "@stable",
-        "twig/extensions": "@stable"
+        "twig/extensions": "@stable",
+        "michelf/php-markdown": "@stable"
     },
     "autoload": {
         "psr-4": {

@@ -4,4 +4,5 @@
 	<h4>{{ session.user.getFirstName }}</h4>
 	<p><a class="uk-button" href="{{ path('usersEditPage', {'user_id':session.user.getId }) }}"><i class="uk-icon-user"></i> {% trans %}edit.account{% endtrans %}</a></p>
 	<p><a class="uk-button" href="{{ path('logoutPage') }}"><i class="uk-icon-sign-out"></i> {% trans %}logout{% endtrans %}</a></p>
+	<p><a class="uk-button" href="{{ path('deleteDoctrineCache') }}"><i class="uk-icon-flash"></i> {% trans %}delete.caches{% endtrans %}</a></p>
 </section>

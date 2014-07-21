@@ -1,6 +1,6 @@
 homePage:
     path:     /
-    defaults: { _controller: Themes\DefaultTheme\Controllers\DefaultController::indexAction }
+    defaults: { _controller: Themes\DefaultTheme\Controllers\DefaultController::homeAction }
 feedRSS:
     path:     /feed{trailingSlash}
     defaults: { _controller: Themes\DefaultTheme\Controllers\FeedController::indexAction }

@@ -81,23 +81,22 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
 	    	/*
 	    	 * Try with node name
 	    	 */
-	    	$node = $this->parseNode($tokens);
+	    	$translation = $this->parseTranslation($tokens);
+	    	Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
+
+	    	$node = $this->parseNode($tokens, $translation);
 	    	if ( $node !== null ) {
 		    	/*
 		    	 * Try with nodeName
 		    	 */
-		    	$translation = $this->parseTranslation($tokens);
-		    	Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
-
 		    	return array(
 		    		'_controller' => $this->getThemeController().'::indexAction',
-		    		'node' => $this->parseNode($tokens),
+		    		'node' => $node,
 		    		'urlAlias' => null,
 		    		'translation' => $translation
 		    	);
 	    	}
 	    	else {
-
     			return false;
 	    	}
     	}
@@ -130,7 +129,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
 	 * @param  array $tokens
 	 * @return RZ\Renzo\Core\Entities\Node
 	 */
-	private function parseNode( &$tokens )
+	private function parseNode( &$tokens, Translation $translation )
 	{
 		if (!empty($tokens[0])) {
 
@@ -150,7 +149,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
 
 					return Kernel::getInstance()->em()
 						->getRepository('RZ\Renzo\Core\Entities\Node')
-						->findOneBy(array('nodeName'=>$identifier));
+						->findByNodeNameWithTranslation($identifier, $translation);
 				}
 			}
 		}
