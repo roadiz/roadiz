@@ -13,14 +13,16 @@ use Symfony\Component\HttpFoundation\Request;
 */
 class NodeTreeWidget extends AbstractWidget
 {
-	protected $parentNode = null;
-	protected $nodes = null;
+	protected $parentNode =  null;
+	protected $nodes =       null;
 	protected $translation = null;
 
 
 	/**
-	 * @param Symfony\Component\HttpFoundation\Request
-	 * @param RZ\Renzo\CMS\Controller\AppController Referee controller to get Twig, security context from.
+	 * @param Request $request
+	 * @param AppController  $refereeController 
+	 * @param Node  $parent 
+	 * @param Translation  $translation
 	 */
 	public function __construct(  Request $request, $refereeController, Node $parent = null, Translation $translation = null )
 	{
@@ -47,6 +49,25 @@ class NodeTreeWidget extends AbstractWidget
 		$this->nodes = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Node')
 				->findByParentWithTranslation($this->parentNode, $this->translation);
+	}
+
+	/**
+	 * @param  RZ\Renzo\Core\Entities\Node $parent
+	 * @return array
+	 */
+	public function getChildrenNodes( Node $parent )
+	{
+		if ($this->translation === null) {
+			$this->translation = Kernel::getInstance()->em()
+					->getRepository('RZ\Renzo\Core\Entities\Translation')
+					->findOneBy(array('defaultTranslation'=>true));
+		}
+		if ($parent !== null) {
+			return $this->nodes = Kernel::getInstance()->em()
+					->getRepository('RZ\Renzo\Core\Entities\Node')
+					->findByParentWithTranslation($parent, $this->translation);
+		}
+		return null;
 	}
 
 	public function getTranslation()

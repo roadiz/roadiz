@@ -685,9 +685,7 @@ class NodesController extends RozierApp {
 		$fields = $nodeSource->getNode()->getNodeType()->getFields();
 		foreach ($fields as $field) {
 			if (isset($data[$field->getName()])) {
-
-				$setter = $field->getSetterName();
-				$nodeSource->$setter( $data[$field->getName()] );
+				static::setValueFromFieldType($data, $nodeSource, $field);
 			}
 		}
 
@@ -768,6 +766,7 @@ class NodesController extends RozierApp {
 
 		$defaults = array(
 			'nodeName' =>  $node->getNodeName(),
+			'home' =>      $node->isHome(),
 			'visible' =>   $node->isVisible(),
 			'locked' =>    $node->isLocked(),
 			'published' => $node->isPublished(),
@@ -780,6 +779,7 @@ class NodesController extends RozierApp {
 							new NotBlank()
 						)
 					))
+					->add('home',      'checkbox', array('required' => false))
 					->add('visible',   'checkbox', array('required' => false))
 					->add('locked',    'checkbox', array('required' => false))
 					->add('published', 'checkbox', array('required' => false))
@@ -825,8 +825,10 @@ class NodesController extends RozierApp {
 		 */
 		$sourceDefaults = array();
 		foreach ($fields as $field) {
-			$getter = $field->getGetterName();
-			$sourceDefaults[$field->getName()] = $source->$getter();
+			if (!$field->isVirtual()) {
+				$getter = $field->getGetterName();
+				$sourceDefaults[$field->getName()] = $source->$getter();
+			}
 		}	
 
 		/*
@@ -837,7 +839,7 @@ class NodesController extends RozierApp {
 		foreach ($fields as $field) {
 			$sourceBuilder->add(
 				$field->getName(), 
-				static::getFormTypeFromFieldType( $field ), 
+				static::getFormTypeFromFieldType( $source, $field ), 
 				array(
 					'label'  => $field->getLabel(),
 					'required' => false
@@ -852,14 +854,45 @@ class NodesController extends RozierApp {
 	 * @param  string $type
 	 * @return AbstractType
 	 */
-	public static function getFormTypeFromFieldType( NodeTypeField $field )
+	public static function getFormTypeFromFieldType( $nodeSource, NodeTypeField $field )
 	{
 		switch ($field->getType()) {
+			case NodeTypeField::DOCUMENTS_T:
+				$documents = $nodeSource->getHandler()->getDocumentsFromFieldName( $field->getName() );
+				return new \RZ\Renzo\CMS\Forms\DocumentsType( $documents );
+
 			case NodeTypeField::MARKDOWN_T:
 				return new \RZ\Renzo\CMS\Forms\MarkdownType();
 			
 			default:
 				return NodeTypeField::$typeToForm[$field->getType()];
+		}
+	}
+
+	/**
+	 * Fill node-source content according to field type
+	 * @param array        $data       
+	 * @param NodesSources $nodeSource 
+	 * @param NodeTypeField $field 
+	 */
+	public static function setValueFromFieldType( $data, $nodeSource, NodeTypeField $field )
+	{
+		switch ($field->getType()) {
+			case NodeTypeField::DOCUMENTS_T:
+				$nodeSource->getHandler()->cleanDocumentsFromField($field);
+
+				foreach ($data[$field->getName()] as $documentId) {
+					$tempDoc = Kernel::getInstance()->em()
+						->find('RZ\Renzo\Core\Entities\Document', (int)$documentId);
+					if ($tempDoc !== null) {
+						$nodeSource->getHandler()->addDocumentForField($tempDoc, $field);
+					}
+				}
+				break;
+			default:
+				$setter = $field->getSetterName();
+				$nodeSource->$setter( $data[$field->getName()] );
+				break;
 		}
 	}
 

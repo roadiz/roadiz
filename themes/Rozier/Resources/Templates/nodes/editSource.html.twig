@@ -11,13 +11,18 @@
 
    		<fieldset data-uk-margin>
 		    {% for item in form %}
-			    {% if item.vars.name != "_token" %}
-			    <div class="uk-form-row">
-			    	{# Source fields  #}
-			        <label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.label }}</label>
-			        {{ form_errors(item) }}
+		    	{% if item.vars.block_prefixes[2] == 'documents' %}
+		    		{{ form_errors(item) }}
 			        {{ form_widget(item) }}
-			    </div>
+		    	{% else %}
+				    {% if item.vars.name != "_token" %}
+				    <div class="uk-form-row">
+				    	{# Source fields  #}
+				        <label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.label }}</label>
+				        {{ form_errors(item) }}
+				        {{ form_widget(item) }}
+				    </div>
+				    {% endif %}
 			    {% endif %}
 		    {% endfor %}
    		</fieldset>

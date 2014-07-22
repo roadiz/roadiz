@@ -15,10 +15,10 @@ class AbstractAjaxController extends RozierApp {
 	 * @param  Request $request [description]
 	 * @return bool | array  Return true if request is valid, else return error array
 	 */
-	protected function validateRequest( Request $request )
+	protected function validateRequest( Request $request, $method = 'POST' )
 	{
 		if ($request->get('_action') == "" ||
-			$request->getMethod() != 'POST' ||
+			$request->getMethod() != $method ||
 			!static::$csrfProvider->isCsrfTokenValid(static::AJAX_TOKEN_INTENTION, $request->get('_token'))) {
 			
 			return array(

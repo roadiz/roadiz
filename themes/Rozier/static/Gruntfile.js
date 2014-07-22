@@ -8,6 +8,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				src: [
+					"js/documentwidget.js",
 					"js/plugins.js",
 					"js/main.js"
 				],

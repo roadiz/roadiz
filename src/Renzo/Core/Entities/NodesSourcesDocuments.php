@@ -9,7 +9,7 @@ use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodesSourcesDocumentsRepository")
  * @Table(name="nodes_sources_documents")
  */
 class NodesSourcesDocuments extends Positioned implements Persistable
@@ -26,7 +26,7 @@ class NodesSourcesDocuments extends Positioned implements Persistable
 	}
 
 	/**
-	 * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\NodesSources")
+	 * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\NodesSources", inversedBy="documentsByFields")
 	 * @JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
 	 * @var RZ\Renzo\Core\Entities\NodesSources
 	 */
@@ -54,10 +54,9 @@ class NodesSourcesDocuments extends Positioned implements Persistable
 	 * @param NodeTypeField $field 
 	 */
 	public function __construct( $nodeSource, Document $document, NodeTypeField $field ){
-		parent::__construct();
 
-		$this->setNodeSource($nodeSource);
-		$this->setDocument($document);
-		$this->setField($field);
+		$this->nodeSource = $nodeSource;
+		$this->document = $document;
+		$this->field = $field;
 	}
 }

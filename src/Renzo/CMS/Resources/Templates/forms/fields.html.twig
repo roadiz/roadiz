@@ -4,3 +4,31 @@
         <textarea {{ block('widget_attributes') }} data-uk-htmleditor="{markdown:true, mode:'tab'}">{{ value }}</textarea>
     {% endspaceless %}
 {% endblock markdown_widget %}
+
+{% block documents_widget %}
+    {% spaceless %}
+    <div class="uk-form-row uk-margin-small-top documents-widget" data-document-widget>
+    	<nav class="documents-widget-nav uk-navbar">
+    		<ul class="uk-navbar-nav">
+    			<li class="uk-navbar-brand">{{ label }}</li>
+    		</ul>
+    		<div class="uk-navbar-content uk-navbar-flip">
+                <div class="uk-button-group">
+                    <a class="uk-button" href="#" data-document-widget-toggle-explorer><i class="uk-icon-folder-open-o"></i> {% trans %}documents.toggle-explorer{% endtrans %}</a>
+                    <a class="uk-button" href="#"data-document-widget-toggle-uploader><i class="uk-icon-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
+                </div>
+            </div>
+    	</nav>
+	    <ul class="uk-nestable documents-widget-nestable" data-uk-nestable="{group:'documents-widget',maxDepth:1}" data-input-name="{{ name }}">
+		    {% for doc in data %}
+		    <li class="uk-nestable-item" data-document-id="{{ doc.getId }}">
+		    	<div class="uk-nestable-handle"></div>&nbsp;
+		    	<a><img src="{{ doc.getViewer.getDocumentUrlByArray({"width":40, "crop":"1x1", "quality":50}) }}" /></a>
+		    	<span class="document-name">{{ doc.getFilename }}</span>
+		    	<input type="hidden" {{ block('widget_attributes') }} value="{{ doc.getId }}" />
+		    </li>
+		    {% endfor %}
+	    </ul>
+    </div>
+    {% endspaceless %}
+{% endblock documents_widget %}

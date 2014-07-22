@@ -1,0 +1,207 @@
+/**
+ * 
+ */
+var DocumentWidget = function () {
+	var _this = this;
+
+	_this.widgets = $('[data-document-widget]');
+	_this.toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
+
+	_this.init();
+};
+DocumentWidget.prototype.explorer = null;
+DocumentWidget.prototype.widgets = null;
+DocumentWidget.prototype.toggleExplorerButtons = null;
+DocumentWidget.prototype.init = function() {
+	var _this = this;
+
+	$('.documents-widget-nestable').on('nestable-change', $.proxy(_this.onNestableDocumentWidgetChange, _this) );
+	_this.toggleExplorerButtons.on('click', $.proxy(_this.onExplorerToggle, _this));
+};
+
+/**
+ * Update document widget input values after being sorted
+ * @param  {[type]} event   [description]
+ * @param  {[type]} element [description]
+ * @return {[type]}         [description]
+ */
+DocumentWidget.prototype.onNestableDocumentWidgetChange = function (event, element) {
+	var _this = this;
+
+	console.log("Document: "+element.data('document-id'));
+
+	var nestable = element.parent();
+
+	var inputName = 'source['+nestable.data('input-name')+']';
+
+	nestable.find('li').each(function (index) {
+		$(this).find('input').attr('name', inputName+'['+index+']');
+	});
+};
+
+/**
+ * Create document explorer
+ * 
+ * @param  {[type]} event [description]
+ * @return false
+ */
+DocumentWidget.prototype.onExplorerToggle = function(event) {
+	var _this = this;
+
+	if (_this.explorer === null) {
+
+		_this.toggleExplorerButtons.addClass('uk-active');
+
+		$.ajax({
+			url: Rozier.routes.documentsAjaxExplorer,
+			type: 'GET',
+			dataType: 'json',
+			data: {
+				_action:'toggleExplorer',
+				_token: Rozier.ajaxToken
+			},
+		})
+		.done(function(data ) {
+			console.log(data);
+			_this.createExplorer(data);
+			console.log("success");
+		})
+		.fail(function(data ) {
+			console.log(data);
+			console.log("error");
+		})
+		.always(function() {
+			console.log("complete");
+		});
+	}
+	else {
+		_this.toggleExplorerButtons.removeClass('uk-active');
+		_this.explorer.remove();
+		_this.explorer = null;
+	}
+
+	return false;
+};
+
+/**
+ * Populate explorer with documents thumbnails
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
+DocumentWidget.prototype.createExplorer = function( data ) {
+	var _this = this;
+
+	$("body").append('<div class="document-widget-explorer"><ul class="uk-nestable" data-uk-nestable="{group:\'documents-widget\',maxDepth:1}"></ul></div>');
+	_this.explorer = $('.document-widget-explorer');
+
+	for (var i = 0; i < data.documents.length; i++) {
+		var doc = data.documents[i];
+		_this.explorer.find('ul').append('<li class="uk-nestable-item" data-document-id="'+doc.id+'"><div class="uk-nestable-handle"></div>&nbsp;<a><img src="'+doc.thumbnail+'" /></a><span class="document-name">'+doc.filename+'</span><input type="hidden" value="'+doc.id+'" /></li>');
+	}
+};;// Avoid `console` errors in browsers that lack a console.
+(function() {
+    var method;
+    var noop = function () {};
+    var methods = [
+        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+        'timeStamp', 'trace', 'warn'
+    ];
+    var length = methods.length;
+    var console = (window.console = window.console || {});
+
+    while (length--) {
+        method = methods[length];
+
+        // Only stub undefined methods.
+        if (!console[method]) {
+            console[method] = noop;
+        }
+    }
+}());
+
+// Place any jQuery/helper plugins in here.
+;/*
+ * ============================================================================
+ * Rozier entry point
+ * ============================================================================
+ */
+var Rozier = {};
+
+Rozier.onDocumentReady = function( event ) {
+	/*
+	 * Store Rozier configuration
+	 */
+	for( var index in temp ){
+		Rozier[index] = temp[index];
+	}
+
+	new DocumentWidget();
+
+	$('.root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );
+	
+};
+Rozier.onNestableNodeTreeChange = function (event, element) {
+	console.log("Node: "+element.data('node-id'));
+
+	var node_id = parseInt(element.data('node-id'));
+	var parent_node_id = parseInt(element.parents('li').first().data('node-id'));
+
+	var postData = {
+		_token: Rozier.ajaxToken,
+		_action: 'updatePosition',
+		nodeId: node_id
+	};
+
+	/*
+	 * Get node siblings id to compute new position
+	 */
+	if (element.next().length) {
+		postData.nextNodeId = parseInt(element.next().data('node-id'));
+	}
+	else if(element.prev().length) {
+		postData.prevNodeId = parseInt(element.prev().data('node-id'));
+	}
+
+	/*
+	 * When dropping to route
+	 * set parentNodeId to NULL
+	 */
+	if(isNaN(parent_node_id)){
+		parent_node_id = null;
+	}
+	postData.newParent = parent_node_id;
+
+	console.log(postData);
+	$.ajax({
+		url: Rozier.routes.nodeAjaxEdit.replace("%node_id%", node_id),
+		type: 'POST',
+		dataType: 'json',
+		data: postData
+	})
+	.done(function( data ) {
+		console.log(data);
+		$.UIkit.notify({
+			message : data.responseText,
+			status  : data.status,
+			timeout : 3000,
+			pos     : 'top-center'
+		});
+
+	})
+	.fail(function( data ) {
+		console.log(data);
+	})
+	.always(function() {
+		console.log("complete");
+	});
+};
+
+
+/*
+ * ============================================================================
+ * Plug into jQuery standard events
+ * ============================================================================
+ */
+$(document).ready(Rozier.onDocumentReady);

@@ -4,6 +4,7 @@ cache
 sources
 .AppleDouble
 node_modules
+npm-debug.log
 **/.DS_Store
 **/._*
 ._*

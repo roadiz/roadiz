@@ -9,7 +9,7 @@ use RZ\Renzo\Core\Viewers\DocumentViewer;
 use RZ\Renzo\Core\Handlers\DocumentHandler;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\DocumentRepository")
  * @Table(name="documents")
  */
 class Document extends DateTimed
@@ -231,6 +231,12 @@ class Document extends DateTimed
     {
     	return new DocumentHandler( $this );
     }
+
+    /**
+	 * @OneToMany(targetEntity="RZ\Renzo\Core\Entities\NodesSourcesDocuments", mappedBy="document")
+	 * @var ArrayCollection
+	 */
+    protected $nodesSourcesByFields = null;
 	
     /**
      * 
@@ -240,6 +246,7 @@ class Document extends DateTimed
     	parent::__construct();
     	
         $this->tags = new ArrayCollection();
+        $this->nodesSourcesByFields = new ArrayCollection();
         $this->folder = substr(hash("crc32b", date('YmdHis')), 0, 12);
     }
 

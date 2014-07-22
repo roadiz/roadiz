@@ -43,6 +43,24 @@ class Node extends DateTimedPositioned
 	
 	    return $this;
 	}
+
+	/**
+	 * @Column(type="boolean", name="home")
+	 */
+	private $home = false;
+	/**
+	 * @return boolean
+	 */
+	public function isHome() {
+	    return (boolean)$this->home;
+	}
+	/**
+	 * @param boolean $home
+	 */
+	public function setHome($home) {
+		$this->home = (boolean)$home;
+	    return $this;
+	}
 	
 	/**
 	 * @Column(type="boolean")

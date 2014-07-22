@@ -52,6 +52,7 @@ class NodeTypeField extends Positioned implements Persistable {
 		NodeTypeField::EMAIL_T =>    'email',
 		NodeTypeField::ENUM_T =>     'single-choice',
 		NodeTypeField::MULTIPLE_T => 'multiple-choice',
+		NodeTypeField::DOCUMENTS_T =>'documents',
 	);
 	static $typeToDoctrine = array(
 		NodeTypeField::STRING_T =>   'string',
@@ -64,6 +65,7 @@ class NodeTypeField extends Positioned implements Persistable {
 		NodeTypeField::EMAIL_T =>    'string',
 		NodeTypeField::ENUM_T =>     'string',
 		NodeTypeField::MULTIPLE_T => 'simple_array',
+		NodeTypeField::DOCUMENTS_T => null,
 	);
 	static $typeToForm = array(
 		NodeTypeField::STRING_T =>   'text',
@@ -76,6 +78,7 @@ class NodeTypeField extends Positioned implements Persistable {
 		NodeTypeField::EMAIL_T =>    'email',
 		NodeTypeField::ENUM_T =>     'enumeration',
 		NodeTypeField::MULTIPLE_T => 'multiple_enumeration',
+		NodeTypeField::DOCUMENTS_T =>'documents',
 	);
 
 
@@ -222,6 +225,13 @@ class NodeTypeField extends Positioned implements Persistable {
 	    return $this;
 	}
 
+	/**
+	 * @return boolean Is node type field virtual, it's just an association, no doctrine field created
+	 */
+	public function isVirtual()
+	{
+		return static::$typeToDoctrine[$this->getType()] === null ? true : false;
+	}
 
 	public function getGetterName()
 	{

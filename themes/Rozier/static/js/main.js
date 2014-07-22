@@ -13,9 +13,11 @@ Rozier.onDocumentReady = function( event ) {
 		Rozier[index] = temp[index];
 	}
 
-	$('.root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );
-};
+	new DocumentWidget();
 
+	$('.root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );
+	
+};
 Rozier.onNestableNodeTreeChange = function (event, element) {
 	console.log("Node: "+element.data('node-id'));
 

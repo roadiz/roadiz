@@ -192,3 +192,7 @@ documentsDeletePage:
     path:     /rz-admin/documents/delete/{document_id}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::deleteAction }
     requirements: { document_id : "[0-9]+" }
+# Ajax
+documentsAjaxExplorerPage:
+    path:     /rz-admin/ajax/documents/explore
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::indexAction }

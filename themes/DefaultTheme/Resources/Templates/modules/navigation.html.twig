@@ -1,0 +1,8 @@
+<nav class="uk-navbar uk-navbar-attached" id="main-navigation" data-active-node="{{ node.getId }}">
+	<ul class="uk-navbar-nav ">
+		{% for cnode in navigation %}
+			{% set source = cnode.getNodeSources.first %}
+			{% include 'modules/navigationElement.html.twig' with { "source" : source, "activeId" : node.getId } %}
+		{% endfor %}
+	</ul>
+</nav>

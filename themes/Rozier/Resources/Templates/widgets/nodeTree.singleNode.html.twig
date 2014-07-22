@@ -9,7 +9,10 @@
 	<div class="nodetree-element-inner uk-nestable-item">
 		<div class="uk-nestable-handle"></div>
 		<div data-nestable-action="toggle"></div>
-		<div class="nodetree-element-name"><a href="{{ path('nodesEditPage', { node_id:node.getId }) }}">{{ name }}</a></div>
+		<div class="nodetree-element-name">
+			{% if node.isHome %}<i class="uk-icon-home"></i> {% endif %}
+			<a href="{{ path('nodesEditPage', { node_id:node.getId }) }}">{{ name }}</a>
+		</div>
 
 		<div class="nodetree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
 		    <button class="uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></button>
@@ -34,8 +37,8 @@
 	 # For drag&drop ease, we don't create nested lists
 	 # We will have to check after OR inside drag status
 	 #}
-	{% for subNode in node.getChildren %}
-		{% include 'widgets/nodeTree.singleNode.html.twig' with {"node":subNode, "parent":node} %}
+	{% for subNode in nodeTree.getChildrenNodes(node) %}
+		{% include 'widgets/nodeTree.singleNode.html.twig' with {"node":subNode, "parent":node, "nodeTree":nodeTree} %}
 	{% endfor %}
 	</ul>
 </li>

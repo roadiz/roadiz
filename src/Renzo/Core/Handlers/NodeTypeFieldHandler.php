@@ -28,21 +28,26 @@ class NodeTypeFieldHandler {
 
 	public function generateSourceFieldIndex()
 	{
-		return '@Index(name="'.$this->getNodeTypeField()->getName().'_idx", columns={"'.$this->getNodeTypeField()->getName().'"})';
+		if (NodeTypeField::$typeToDoctrine[$this->getNodeTypeField()->getType()] !== null) {
+			return '@Index(name="'.$this->getNodeTypeField()->getName().'_idx", columns={"'.$this->getNodeTypeField()->getName().'"})';
+		}
+		else {
+			return '';
+		}
 	}
 
 	public function generateSourceField(){
 
+		if (NodeTypeField::$typeToDoctrine[$this->getNodeTypeField()->getType()] !== null) {
+			$var = 'private $'.$this->getNodeTypeField()->getName().';';
+			if ($this->getNodeTypeField()->getType() === NodeTypeField::BOOLEAN_T) {
+				$var = 'private $'.$this->getNodeTypeField()->getName().' = false;';
+			}
+			if ($this->getNodeTypeField()->getType() === NodeTypeField::INTEGER_T) {
+				$var = 'private $'.$this->getNodeTypeField()->getName().' = 0;';
+			}
 
-		$var = 'private $'.$this->getNodeTypeField()->getName().';';
-		if ($this->getNodeTypeField()->getType() === NodeTypeField::BOOLEAN_T) {
-			$var = 'private $'.$this->getNodeTypeField()->getName().' = false;';
-		}
-		if ($this->getNodeTypeField()->getType() === NodeTypeField::INTEGER_T) {
-			$var = 'private $'.$this->getNodeTypeField()->getName().' = 0;';
-		}
-
-		return '
+			return '
 	/**
 	 * @Column(type="'.NodeTypeField::$typeToDoctrine[$this->getNodeTypeField()->getType()].'", nullable=true )
 	 */
@@ -56,6 +61,9 @@ class NodeTypeFieldHandler {
 	    return $this;
 	}'.PHP_EOL;
 
+		}
+
+		return '';
 	}
 
 

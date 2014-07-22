@@ -59,6 +59,8 @@ class AssetsController extends AppController {
 	public function slirAction($queryString, $filename)
 	{
 		define('SLIR_CONFIG_CLASSNAME','\RZ\Renzo\CMS\Utils\SLIRConfig');
+
+		Kernel::getInstance()->em()->close();
 		
 		$slir = new \SLIR\SLIR();
 		$slir->processRequestFromURL();

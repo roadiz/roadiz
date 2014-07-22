@@ -87,8 +87,12 @@ class FrontendController extends AppController {
 		$this->node = $node;
 		$this->translation = $translation;
 
-		$this->assignation['node'] = $node;
 		$this->assignation['translation'] = $translation;
+
+		if ($node !== null) {
+			$this->assignation['node'] = $node;
+			$this->assignation['nodeSource'] = $node->getNodeSources()->first();
+		}
 	}
 
 	/**

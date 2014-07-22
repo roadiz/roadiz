@@ -35,6 +35,7 @@
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/addons/sortable.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/addons/nestable.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/addons/notify.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/codemirror.js"></script>
@@ -48,16 +49,18 @@
         <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
 
         <script src="{{ head.resourcesUrl }}js/vendor/dropzone.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/documentwidget.js"></script>
         <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
         <script src="{{ head.resourcesUrl }}js/main.js"></script>
         <script type="text/javascript">
             var temp = {
-                'baseUrl': '{{ head.baseUrl }}',
+                'baseUrl':      '{{ head.baseUrl }}',
                 'resourcesUrl': '{{ head.resourcesUrl }}',
-                'ajaxToken': '{{ head.ajaxToken }}',
+                'ajaxToken':    '{{ head.ajaxToken }}',
                 'routes': {
-                    'nodeAjaxEdit' : '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%node_id%',
-                    'tagAjaxEdit' : '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tag_id%'
+                    'nodeAjaxEdit' :          '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%node_id%',
+                    'tagAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tag_id%',
+                    'documentsAjaxExplorer' : '{{ head.baseUrl }}/rz-admin/ajax/documents/explore',
                 }
             };
         </script>

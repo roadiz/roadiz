@@ -2,6 +2,7 @@
 
 namespace RZ\Renzo\Core\Entities;
 
+use RZ\Renzo\Core\Handlers\NodesSourcesHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
@@ -67,10 +68,28 @@ class NodesSources extends PersistableObject {
 	    return $this->urlAliases;
 	}
 
+	/**
+	 * @OneToMany(targetEntity="RZ\Renzo\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 */
+	private $documentsByFields = null;
+	public function getDocumentsByFields()
+	{
+		return $this->documentsByFields;
+	}
+
+	/**
+	 * @return NodesSourcesHandler
+	 */
+	public function getHandler()
+	{
+		return new NodesSourcesHandler( $this );
+	}
+
 
 	public function __construct( Node $node, Translation $translation){
 		$this->node = $node;
 		$this->translation = $translation;
 		$this->urlAliases = new ArrayCollection();
+		$this->documentsByFields = new ArrayCollection();
 	}
 }

@@ -1,7 +1,24 @@
 {% extends 'base.html.twig' %}
+
+{% set headerImages = nodeSource.getHandler.getDocumentsFromFieldName('header_image') %}
+{% block header %}
+<header>
+	{% for headerImage in headerImages %}
+	<figure>
+		<img src="{{ headerImage.getViewer.getDocumentUrlByArray(headerImageFilter) }}" />
+	</figure>
+	{% endfor %}
+</header>
+{% endblock %}
+
 {% block content %}
-
-<h1>{{ node.getNodeSources.first.getTitle }}</h1>
-<div>{{ node.getNodeSources.first.getContent|markdown }}</div>
-
+<h1>{{ nodeSource.getTitle }}</h1>
+<div>{{ nodeSource.getContent|markdown }}</div>
+<div class="image">
+	{% for document in nodeSource.getHandler.getDocumentsFromFieldName('images') %}
+		<figure class="uk-thumbnail">
+			<img src="{{ document.getViewer.getDocumentUrlByArray(imageFilter) }}" />
+		</figure>	
+	{% endfor %}
+</div>
 {% endblock %}
