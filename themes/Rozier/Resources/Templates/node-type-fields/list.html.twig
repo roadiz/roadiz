@@ -5,7 +5,7 @@
 <section id="manage-node-type-fields">
 	<h1 id="title">{% trans %}Fields: {% endtrans %}{{ node_type.getDisplayName }}</h1>
 	<nav>
-		<a class="uk-button" href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-chevron-left"></i> {% trans %}Back to node-types{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to node-types{% endtrans %}</a>
 		<a class="uk-button" href="{{ path('nodeTypeFieldsAddPage', { node_type_id: node_type.getId }) }}"><i class="uk-icon-plus"></i> {% trans %}Add a field{% endtrans %}</a>
 	</nav>
 	<table class="node-type-fields uk-table">

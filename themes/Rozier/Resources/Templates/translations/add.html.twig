@@ -4,7 +4,7 @@
 {% block content %}
 <section id="manage-translation">
 	<h1 id="translation-title">{% trans %}Add a new translation{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('translationsHomePage') }}"><i class="uk-icon-chevron-left"></i> {% trans %}Back to translations{% endtrans %}</a></nav>
+	<nav><a class="uk-button uk-button-small" href="{{ path('translationsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to translations{% endtrans %}</a></nav>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}

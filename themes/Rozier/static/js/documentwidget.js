@@ -6,17 +6,20 @@ var DocumentWidget = function () {
 
 	_this.widgets = $('[data-document-widget]');
 	_this.toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
+	_this.unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
 
 	_this.init();
 };
 DocumentWidget.prototype.explorer = null;
 DocumentWidget.prototype.widgets = null;
 DocumentWidget.prototype.toggleExplorerButtons = null;
+DocumentWidget.prototype.unlinkDocumentButtons = null;
 DocumentWidget.prototype.init = function() {
 	var _this = this;
 
 	$('.documents-widget-nestable').on('nestable-change', $.proxy(_this.onNestableDocumentWidgetChange, _this) );
 	_this.toggleExplorerButtons.on('click', $.proxy(_this.onExplorerToggle, _this));
+	_this.unlinkDocumentButtons.on('click', $.proxy(_this.onUnlinkDocument, _this));
 };
 
 /**
@@ -31,9 +34,7 @@ DocumentWidget.prototype.onNestableDocumentWidgetChange = function (event, eleme
 	console.log("Document: "+element.data('document-id'));
 
 	var nestable = element.parent();
-
 	var inputName = 'source['+nestable.data('input-name')+']';
-
 	nestable.find('li').each(function (index) {
 		$(this).find('input').attr('name', inputName+'['+index+']');
 	});
@@ -83,6 +84,17 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
 	return false;
 };
 
+DocumentWidget.prototype.onUnlinkDocument = function( event ) {
+	var _this = this;
+
+	var $element = $(event.currentTarget);
+
+	$element.parent('li').remove();
+	$element.parents().find('.documents-widget-nestable').first().trigger('nestable-change');
+
+	return false;
+};
+
 /**
  * Populate explorer with documents thumbnails
  * @param  {[type]} data [description]
@@ -96,6 +108,6 @@ DocumentWidget.prototype.createExplorer = function( data ) {
 
 	for (var i = 0; i < data.documents.length; i++) {
 		var doc = data.documents[i];
-		_this.explorer.find('ul').append('<li class="uk-nestable-item" data-document-id="'+doc.id+'"><div class="uk-nestable-handle"></div>&nbsp;<a><img src="'+doc.thumbnail+'" /></a><span class="document-name">'+doc.filename+'</span><input type="hidden" value="'+doc.id+'" /></li>');
+		_this.explorer.find('ul').append(doc.html);
 	}
 };

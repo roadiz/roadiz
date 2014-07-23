@@ -77,6 +77,70 @@ class NodesSources extends PersistableObject {
 		return $this->documentsByFields;
 	}
 
+
+	/**
+	 * @Column(type="string", name="meta_title", unique=false)
+	 */
+	protected $metaTitle = '';
+
+	/**
+	 * @return string
+	 */
+	public function getMetaTitle() {
+	    return $this->metaTitle;
+	}
+	
+	/**
+	 * 
+	 * @param String $newmetaTitle 
+	 */
+	public function setMetaTitle($metaTitle) {
+	    $this->metaTitle = $metaTitle;
+	
+	    return $this;
+	}
+	/**
+	 * @Column(type="text", name="meta_keywords")
+	 */
+	protected $metaKeywords = '';
+
+	/**
+	 * @return string
+	 */
+	public function getMetaKeywords() {
+	    return $this->metaKeywords;
+	}
+	
+	/**
+	 * @param string
+	 */
+	public function setMetaKeywords($metaKeywords) {
+	    $this->metaKeywords = $metaKeywords;
+	
+	    return $this;
+	}
+	/**
+	 * @Column(type="text", name="meta_description")
+	 */
+	protected $metaDescription = '';
+
+	/**
+	 * @return string 
+	 */
+	public function getMetaDescription() {
+	    return $this->metaDescription;
+	}
+	
+	/**
+	 * @param String $newmetaDescription 
+	 */
+	public function setMetaDescription($metaDescription) {
+	    $this->metaDescription = $metaDescription;
+	
+	    return $this;
+	}
+
+
 	/**
 	 * @return NodesSourcesHandler
 	 */

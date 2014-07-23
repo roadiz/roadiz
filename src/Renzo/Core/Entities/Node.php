@@ -18,7 +18,9 @@ use RZ\Renzo\Core\Handlers\NodeHandler;
  *     @index(name="published_idx", columns={"published"}), 
  *     @index(name="locked_idx",    columns={"locked"}), 
  *     @index(name="archived_idx",  columns={"archived"}),
- *     @index(name="position_idx", columns={"position"})
+ *     @index(name="position_idx", columns={"position"}),
+ *     @index(name="hide_children_idx", columns={"hide_children"}),
+ *     @index(name="home_idx", columns={"home"})
  * })
  * @HasLifecycleCallbacks
  */
@@ -122,6 +124,27 @@ class Node extends DateTimedPositioned
 	
 	    return $this;
 	}
+
+	/**
+	 * @Column(type="boolean", name="hide_children", nullable=false)
+	 */
+	protected $hideChildren = false;
+
+	/**
+	 * @return boolean
+	 */
+	public function isHidingChildren() {
+	    return $this->hideChildren;
+	}
+	
+	/**
+	 * @param boolean
+	 */
+	public function setHidingChildren($hideChildren) {
+	    $this->hideChildren = $hideChildren;
+	    return $this;
+	}
+
 	/**
 	 * @Column(type="boolean")
 	 */

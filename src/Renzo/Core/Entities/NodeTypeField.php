@@ -57,6 +57,7 @@ class NodeTypeField extends Positioned implements Persistable {
 	static $typeToDoctrine = array(
 		NodeTypeField::STRING_T =>   'string',
 		NodeTypeField::DATETIME_T => 'datetime',
+		NodeTypeField::RICHTEXT_T => 'text',
 		NodeTypeField::TEXT_T =>     'text',
 		NodeTypeField::MARKDOWN_T => 'text',
 		NodeTypeField::BOOLEAN_T =>  'boolean',
@@ -70,6 +71,7 @@ class NodeTypeField extends Positioned implements Persistable {
 	static $typeToForm = array(
 		NodeTypeField::STRING_T =>   'text',
 		NodeTypeField::DATETIME_T => 'datetime',
+		NodeTypeField::RICHTEXT_T => 'textarea',
 		NodeTypeField::TEXT_T =>     'textarea',
 		NodeTypeField::MARKDOWN_T => 'markdown',
 		NodeTypeField::BOOLEAN_T =>  'checkbox',

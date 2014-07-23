@@ -44,13 +44,26 @@ class Setting extends PersistableObject
 	 * @return [type] [description]
 	 */
 	public function getValue() {
+
+		if ($this->getType() == NodeTypeField::BOOLEAN_T) {
+			return (boolean)$this->value;
+		}
+		if ($this->getType() == NodeTypeField::DATETIME_T) {
+			return new \DateTime($this->value);
+		}
 	    return $this->value;
 	}
 	/**
 	 * @param [type] $newnodeName [description]
 	 */
 	public function setValue($value) {
-	    $this->value = $value;
+
+		if ($this->getType() == NodeTypeField::DATETIME_T) {
+			$this->value = $value->format('Y-m-d H:i:s'); // $value is instance of \DateTime
+		}
+		else {
+	    	$this->value = $value;
+		}
 	
 	    return $this;
 	}

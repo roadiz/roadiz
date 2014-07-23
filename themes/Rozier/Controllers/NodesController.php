@@ -77,6 +77,23 @@ class NodesController extends RozierApp {
 		);
 	}
 
+	public function treeAction( Request $request, $node_id, $translation_id = null )
+	{
+		$node = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
+		Kernel::getInstance()->em()->refresh($node);
+
+		$translation = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Translation')
+				->findOneBy(array('defaultTranslation'=>true));
+
+		return new Response(
+				$this->getTwig()->render('nodes/tree.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+	}
+
 	/**
 	 * Return an edition form for requested node
 	 * 
@@ -175,8 +192,6 @@ class NodesController extends RozierApp {
 				array('content-type' => 'text/html')
 			);
 		}
-		
-
 		return $this->throw404();
 	}
 
@@ -767,6 +782,7 @@ class NodesController extends RozierApp {
 		$defaults = array(
 			'nodeName' =>  $node->getNodeName(),
 			'home' =>      $node->isHome(),
+			'hidingChildren' => $node->isHidingChildren(),
 			'visible' =>   $node->isVisible(),
 			'locked' =>    $node->isLocked(),
 			'published' => $node->isPublished(),
@@ -780,6 +796,7 @@ class NodesController extends RozierApp {
 						)
 					))
 					->add('home',      'checkbox', array('required' => false))
+					->add('hidingChildren', 'checkbox', array('required' => false))
 					->add('visible',   'checkbox', array('required' => false))
 					->add('locked',    'checkbox', array('required' => false))
 					->add('published', 'checkbox', array('required' => false))

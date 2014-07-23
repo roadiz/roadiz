@@ -4,7 +4,8 @@
 {% block content %}
 <section id="manage-user-roles">
 	<h1 id="user-title">Edit {{ user.getDefaultTranslatedTag.getName }} roles</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('usersHomePage') }}"><span class="uk-icon-chevron-left"></span> {% trans %}Back to users{% endtrans %}</a></nav>
+	
+	{% include 'users/navBar.html.twig' with {'user':user, current:'roles'} %}
 
 	<table class="users-roles uk-table">
 		<thead>

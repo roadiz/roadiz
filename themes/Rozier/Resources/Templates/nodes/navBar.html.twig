@@ -12,11 +12,17 @@
 		<li class="{% if current == 'aliases' %}uk-active{% endif %}">
 			<a href="{{ path('nodesEditAliasesPage', { node_id: node.getId}) }}">{% trans %}urlaliases{% endtrans %}</a>
 		</li>
+		{% if node.isHidingChildren %}
+		<li class="{% if current == 'tree' %}uk-active{% endif %}">
+			<a href="{{ path('nodesTreePage', { node_id: node.getId}) }}">{% trans %}tree{% endtrans %}</a>
+		</li>
+		{% endif %}
 	</ul>
 	<div class="uk-navbar-content">
-		<a class="uk-button" href="{{ path('nodesHomePage') }}"><i class="uk-icon-chevron-left"></i> {% trans %}back.to.nodes{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('nodesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.nodes{% endtrans %}</a>
 	</div>
 	<div class="uk-navbar-content uk-navbar-flip">
+		<a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-eye"></i> {% trans %}see.page{% endtrans %}</a>
 		<a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { node_id: node.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 	</div>
 </nav>

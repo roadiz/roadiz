@@ -17,7 +17,7 @@
 	    {{ form_rest(form) }}
 	    <fieldset data-uk-margin>
 	    	<legend>{% trans %}Are you sure you want to delete this user?{% endtrans %}</legend>
-	    	<a href="{{ path('usersHomePage') }}" class="uk-button">{% trans %}Cancel{% endtrans %}</a>
+	    	<a href="{{ path('usersHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

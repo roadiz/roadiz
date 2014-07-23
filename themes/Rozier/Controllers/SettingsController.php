@@ -41,7 +41,39 @@ class SettingsController extends RozierApp
 			->getRepository('RZ\Renzo\Core\Entities\Setting')
 			->findBy(array(), array('name' => 'ASC'));
 
-		$this->assignation['settings'] = $settings;
+		$this->assignation['settings'] = array();
+
+		foreach ($settings as $setting) {
+			$form = $this->buildShortEditForm( $setting );
+			$form->handleRequest();
+			if ($form->isValid() && 
+				$form->getData()['id'] == $setting->getId()) {
+		 		try {
+		 			$this->editSetting($form->getData(), $setting);
+		 			$msg = $this->getTranslator()->trans('setting.updated', array('%name%'=>$setting->getName()));
+					$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 				$this->getLogger()->info($msg);
+	 			}
+				catch(EntityAlreadyExistsException $e){
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+		 			$this->getLogger()->warning($e->getMessage());
+				}
+		 		/*
+		 		 * Force redirect to avoid resending form when refreshing page
+		 		 */
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'settingsHomePage'
+					)
+				);
+				$response->prepare($request);
+				return $response->send();
+			}
+			$this->assignation['settings'][] = array(
+				'setting' => $setting,
+				'form' => $form->createView()
+			);
+		}
 
 		return new Response(
 			$this->getTwig()->render('settings/list.html.twig', $this->assignation),
@@ -64,7 +96,6 @@ class SettingsController extends RozierApp
 			$this->assignation['setting'] = $setting;
 			
 			$form = $this->buildEditForm( $setting );
-
 			$form->handleRequest();
 
 			if ($form->isValid()) {
@@ -116,7 +147,7 @@ class SettingsController extends RozierApp
 		if ($setting !== null) {
 			$this->assignation['setting'] = $setting;
 			
-			$form = $this->buildEditForm( $setting );
+			$form = $this->buildAddForm( $setting );
 
 			$form->handleRequest();
 
@@ -209,23 +240,28 @@ class SettingsController extends RozierApp
 
 	private function editSetting( $data, Setting $setting)
 	{
-		if ($data['name'] != $setting->getName() && 
-			Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Setting')
-			->exists($data['name'])) {
-			throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
-		}
-		try {
-			foreach ($data as $key => $value) {
-				$setter = 'set'.ucwords($key);
-				$setting->$setter( $value );
-			}
+		if ($data['id'] == $setting->getId()) {
+			unset($data['id']);
 
-			Kernel::getInstance()->em()->flush();
-			return true;
-		}
-		catch(\Exception $e) {
-			throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
+			if (isset($data['name']) && 
+				$data['name'] != $setting->getName() && 
+				Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Setting')
+				->exists($data['name'])) {
+				throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
+			}
+			try {
+				foreach ($data as $key => $value) {
+					$setter = 'set'.ucwords($key);
+					$setting->$setter( $value );
+				}
+
+				Kernel::getInstance()->em()->flush();
+				return true;
+			}
+			catch(\Exception $e) {
+				throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
+			}
 		}
 	}
 
@@ -268,10 +304,11 @@ class SettingsController extends RozierApp
 	private function buildEditForm( Setting $setting )
 	{
 		$defaults = array(
-			'name' =>           $setting->getName(),
-			'value' =>    		$setting->getValue(),
-			'visible' =>        $setting->isVisible(),
-			'type' =>    		$setting->getType(),
+			'id' =>      $setting->getId(),
+			'name' =>    $setting->getName(),
+			'value' =>   $setting->getValue(),
+			'visible' => $setting->isVisible(),
+			'type' =>    $setting->getType(),
 		);
 		$builder = $this->getFormFactory()
 					->createBuilder('form', $defaults)
@@ -280,12 +317,70 @@ class SettingsController extends RozierApp
 							new NotBlank()
 						)
 					))
-					->add('value',    		'text', array('required' => false))
-					->add('visible',        'checkbox', array('required' => false))
+					->add('id', 'hidden', array(
+						'data'=>$setting->getId(),
+						'required' => true
+					))
+					->add('value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false))
+					->add('visible', 'checkbox', array('required' => false))
 					->add('type', 'choice', array(
 						'required' => true,
 						'choices' => NodeTypeField::$typeToHuman
 					))
+		;
+
+		return $builder->getForm();
+	}
+
+	/**
+	 * 
+	 * @param  Setting   $setting 
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildAddForm( Setting $setting )
+	{
+		$defaults = array(
+			'name' =>    $setting->getName(),
+			'value' =>   $setting->getValue(),
+			'visible' => $setting->isVisible(),
+			'type' =>    $setting->getType(),
+		);
+		$builder = $this->getFormFactory()
+					->createBuilder('form', $defaults)
+					->add('name', 'text', array(
+						'constraints' => array(
+							new NotBlank()
+						)
+					))
+					->add('value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false))
+					->add('visible', 'checkbox', array('required' => false))
+					->add('type', 'choice', array(
+						'required' => true,
+						'choices' => NodeTypeField::$typeToHuman
+					))
+		;
+
+		return $builder->getForm();
+	}
+
+	/**
+	 * 
+	 * @param  Setting   $setting 
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildShortEditForm( Setting $setting )
+	{
+		$defaults = array(
+			'id' =>      $setting->getId(),
+			'value' =>   $setting->getValue()
+		);
+		$builder = $this->getFormFactory()
+			->createBuilder('form', $defaults)
+			->add('id', 'hidden', array(
+				'data'=>$setting->getId(),
+				'required' => true
+			))
+			->add('value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false))
 		;
 
 		return $builder->getForm();

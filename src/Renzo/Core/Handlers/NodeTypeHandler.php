@@ -111,10 +111,9 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
      */
     public function updateSchema()
     {
+        \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
         $this->removeSourceEntityClass();
         $this->generateSourceEntityClass();
-
-        \RZ\Renzo\Console\SchemaCommand::updateSchema();
 
     	return $this;
     }
@@ -126,8 +125,7 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
     public function deleteSchema()
     {
         $this->removeSourceEntityClass();
-        \RZ\Renzo\Console\SchemaCommand::updateSchema();
-
+        \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
         return $this;
     }
     /**

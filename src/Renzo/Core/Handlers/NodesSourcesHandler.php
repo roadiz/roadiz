@@ -72,6 +72,10 @@ class NodesSourcesHandler
 	 */
 	public function getUrl()
 	{
+		if ($this->nodeSource->getNode()->isHome()) {
+			return Kernel::getInstance()->getRequest()->getBaseUrl();
+		}
+		
 		$urlTokens = array();
 		$urlTokens[] = $this->getIdentifier();
 

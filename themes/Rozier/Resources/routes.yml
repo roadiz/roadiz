@@ -81,6 +81,10 @@ nodeTypesDeletePage:
     path:     /rz-admin/node-types/delete/{node_type_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypesController::deleteAction }
     requirements: { node_type_id : "[0-9]+" }
+nodeTypesSchemaUpdate:
+    path:     /rz-admin/node-types/update-schema/{_token}
+    defaults: { _controller: Themes\Rozier\Controllers\SchemaController::updateNodeTypesSchemaAction }
+    requirements: { _token : "[A-z0-9\-\_\$]+" }
 
 # Node type FIELDS
 nodeTypeFieldsListPage:
@@ -99,6 +103,10 @@ nodeTypeFieldsDeletePage:
     path:     /rz-admin/node-types/fields/delete/{node_type_field_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::deleteAction }
     requirements: { node_type_field_id : "[0-9]+" }
+nodeTypesFieldSchemaUpdate:
+    path:     /rz-admin/node-types/fields/update-schema/{node_type_id}/{_token}
+    defaults: { _controller: Themes\Rozier\Controllers\SchemaController::updateNodeTypeFieldsSchemaAction }
+    requirements: { node_type_id : "[0-9]+", _token: "[A-z0-9\-\_\$]+" }
 
 # SETTINGS
 settingsHomePage:

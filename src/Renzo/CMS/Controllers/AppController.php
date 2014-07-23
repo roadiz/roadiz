@@ -54,6 +54,7 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 class AppController implements ViewableInterface {
 	
 	const AJAX_TOKEN_INTENTION = 'ajax';
+	const SCHEMA_TOKEN_INTENTION = 'update_schema';
 
 	/**
 	 * Theme name
@@ -335,6 +336,7 @@ class AppController implements ViewableInterface {
 		$this->assignation = array(
 			'request' => Kernel::getInstance()->getRequest(),
 			'head' => array(
+				'devMode' => (boolean)Kernel::getInstance()->getConfig()['devMode'],
 				'baseUrl' => Kernel::getInstance()->getRequest()->getBaseUrl(),
 				'filesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/'.Document::getFilesFolderName(),
 				'resourcesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/themes/'.static::$themeDir.'/static/',

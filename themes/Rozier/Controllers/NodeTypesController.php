@@ -82,12 +82,14 @@ class NodeTypesController extends RozierApp
 	 				$this->getLogger()->warning($e->getMessage());
 				}
 		 		/*
-		 		 * Force redirect to avoid resending form when refreshing page
+		 		 * Redirect to update schema page
 		 		 */
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate(
-						'nodeTypesEditPage',
-						array('node_type_id' => $node_type->getId())
+						'nodeTypesSchemaUpdate', 
+						array(
+							'_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+						)
 					)
 				);
 				$response->prepare($request);
@@ -126,16 +128,23 @@ class NodeTypesController extends RozierApp
 			$form->handleRequest();
 			if ($form->isValid()) {
 				try {
+					echo "Before add node type";
 			 		$this->addNodeType($form->getData(), $node_type);
-
+			 		echo "After add node type";
+			 		
 			 		$msg = $this->getTranslator()->trans('node_type.created', array('%name%'=>$node_type->getName()));
 				 	$request->getSession()->getFlashBag()->add('confirm', $msg);
 	 				$this->getLogger()->info($msg);
 
+			 		/*
+			 		 * Redirect to update schema page
+			 		 */
 			 		$response = new RedirectResponse(
 						Kernel::getInstance()->getUrlGenerator()->generate(
-							'nodeTypesEditPage',
-							array('node_type_id' => $node_type->getId())
+							'nodeTypesSchemaUpdate', 
+							array(
+								'_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+							)
 						)
 					);
 					
@@ -193,11 +202,14 @@ class NodeTypesController extends RozierApp
 		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
 	 			$this->getLogger()->info($msg);
 		 		/*
-		 		 * Force redirect to avoid resending form when refreshing page
+		 		 * Redirect to update schema page
 		 		 */
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate(
-						'nodeTypesHomePage'
+						'nodeTypesSchemaUpdate', 
+						array(
+							'_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+						)
 					)
 				);
 				$response->prepare($request);
@@ -217,6 +229,7 @@ class NodeTypesController extends RozierApp
 			return $this->throw404();
 		}
 	}
+	
 
 	private function editNodeType( $data, NodeType $node_type)
 	{

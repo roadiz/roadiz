@@ -194,7 +194,7 @@ class DocumentsController extends RozierApp {
 			Response::HTTP_OK,
 			array('content-type' => 'text/html')
 		);
-	}
+	}	
 
 	/**
 	 * 

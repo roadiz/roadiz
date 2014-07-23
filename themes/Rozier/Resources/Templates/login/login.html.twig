@@ -7,7 +7,7 @@
 	{% if error %}
 	    <div data-uk-alert class="uk-alert uk-alert-danger">{{ error.message }}</div>
 	{% endif %}
-	<form class="uk-form uk-form-stacked" action="{{ path('loginCheckPage') }}" method="post" {{ form_enctype(form) }}>
+	<form class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" action="{{ path('loginCheckPage') }}" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}
 
    		<fieldset data-uk-margin>

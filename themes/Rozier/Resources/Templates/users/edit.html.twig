@@ -3,8 +3,8 @@
 
 {% block content %}
 <section id="manage-user">
-	<h1 id="user-title">Edit {{ user.getDefaultTranslatedTag.getName }}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('usersHomePage') }}"><span class="uk-icon-chevron-left"></span> {% trans %}Back to users{% endtrans %}</a></nav>
+	<h1 id="user-title">Edit {{ user.getFirstname }}</h1>
+	{% include 'users/navBar.html.twig' with {'user':user, current:'edit'} %}
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}

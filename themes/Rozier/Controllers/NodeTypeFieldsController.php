@@ -84,13 +84,17 @@ class NodeTypeFieldsController extends RozierApp
 		 		$msg = $this->getTranslator()->trans('node_type_field.updated', array('%name%'=>$field->getName()));
 		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
 	 			$this->getLogger()->info($msg);
+		 		
 		 		/*
-		 		 * Force redirect to avoid resending form when refreshing page
+		 		 * Redirect to update schema page
 		 		 */
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate(
-						'nodeTypeFieldsEditPage',
-						array('node_type_field_id' => $field->getId())
+						'nodeTypesFieldSchemaUpdate', 
+						array(
+							'node_type_id' => $field->getNodeType()->getId(),
+							'_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+						)
 					)
 				);
 				$response->prepare($request);
@@ -136,13 +140,18 @@ class NodeTypeFieldsController extends RozierApp
 		 		$msg = $this->getTranslator()->trans('node_type_field.created', array('%name%'=>$field->getName()));
 		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
 	 			$this->getLogger()->info($msg);
+
+
 		 		/*
-		 		 * Force redirect to avoid resending form when refreshing page
+		 		 * Redirect to update schema page
 		 		 */
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate(
-						'nodeTypeFieldsListPage',
-						array('node_type_id' => $field->getNodeType()->getId())
+						'nodeTypesFieldSchemaUpdate', 
+						array(
+							'node_type_id' => $node_type_id,
+							'_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+						)
 					)
 				);
 				$response->prepare($request);
@@ -200,12 +209,15 @@ class NodeTypeFieldsController extends RozierApp
 	 			$this->getLogger()->info($msg);
 
 		 		/*
-		 		 * Force redirect to avoid resending form when refreshing page
+		 		 * Redirect to update schema page
 		 		 */
 		 		$response = new RedirectResponse(
 					Kernel::getInstance()->getUrlGenerator()->generate(
-						'nodeTypeFieldsListPage', 
-						array('node_type_id' => $nodeTypeId)
+						'nodeTypesFieldSchemaUpdate', 
+						array(
+							'node_type_id' => $nodeTypeId,
+							'_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+						)
 					)
 				);
 				$response->prepare($request);
@@ -225,6 +237,7 @@ class NodeTypeFieldsController extends RozierApp
 			return $this->throw404();
 		}
 	}
+
 	private function editNodeTypeField( $data, NodeTypeField $field)
 	{
 		foreach ($data as $key => $value) {
