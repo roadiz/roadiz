@@ -57,6 +57,18 @@ class Theme extends PersistableObject {
 	    return $this;
 	}
 
+	public function getInformations()
+	{
+		$class = $this->getClassName();
+
+		return array(
+			'name'=> $class::getThemeName(),
+			'author'=> $class::getThemeAuthor(),
+			'copyright'=> $class::getThemeCopyright(),
+			'dir'=> $class::getThemeDir()
+		);
+	}
+
 	/**
 	 * @Column(name="hostname",type="string")
 	 * @var string

@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="uk-panel-title">{% trans %}welcome.title{% endtrans %}</h1>
+    <p>{% trans %}welcome.message{% endtrans %}</p>
+    <p><a class="uk-button uk-button-success" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a></p>
+{% endblock %}

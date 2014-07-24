@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
  * This class must be inherited in order to create a new theme
  * 
  */
-class PageController extends DefaultController {
+class PageController extends DefaultApp {
 
 	/**
 	 * Default action for any Page node

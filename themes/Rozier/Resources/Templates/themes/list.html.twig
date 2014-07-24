@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section id="manage-themes">
+	<h1 id="title">{% trans %}themes{% endtrans %}</h1>
+	<nav>
+		<a class="uk-button" href="{{ path('themesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.theme{% endtrans %}</a>
+	</nav>
+	<table class="themes uk-table">
+		<thead>
+	        <tr>
+	            <th class="informations">{% trans %}theme{% endtrans %}</th>
+	            <th>{% trans %}theme.classname{% endtrans %}</th>
+	            <th>{% trans %}theme.host{% endtrans %}</th>
+	            <th>{% trans %}status{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for theme in themes %}
+			<tr>
+				<td class="informations">
+					{% for type, info in theme.getInformations %}
+						<p class="{{type}}">{{ info }}</p>
+					{% endfor %}
+				</td>
+				<td>
+					<a href="{{ path('themesEditPage', { theme_id: theme.getId }) }}">{{ theme.getClassName }}</a>
+				</td>
+				<td><div class="uk-badge uk-badge-success">
+					{% if theme.getHostname != "*" %}
+					{{ theme.getHostname }}
+					{% else %}
+					{% trans %}all.hostnames{% endtrans %}
+					{% endif %}
+				</div></td>
+				<td>
+				{% if not theme.isAvailable %}<div class="uk-badge uk-badge-warning"><span class="uk-icon-eye-slash"></span> {% trans %}theme.disabled{% endtrans %}</div>{% endif %}
+				{% if theme.isBackendTheme %}<div class="uk-badge uk-badge-success"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
+				</td>
+				<td>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('themesDeletePage', { theme_id: theme.getId }) }}">{% trans %}delete{% endtrans %}</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}

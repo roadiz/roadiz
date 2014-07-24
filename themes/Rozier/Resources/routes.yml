@@ -204,3 +204,19 @@ documentsDeletePage:
 documentsAjaxExplorerPage:
     path:     /rz-admin/ajax/documents/explore
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::indexAction }
+
+# THEMES
+themesHomePage:
+    path:     /rz-admin/themes
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::indexAction }
+themesEditPage:
+    path:     /rz-admin/themes/edit/{theme_id}
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::editAction }
+    requirements: { theme_id : "[0-9]+" }
+themesAddPage:
+    path:     /rz-admin/themes/add
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::uploadAction }
+themesDeletePage:
+    path:     /rz-admin/themes/delete/{theme_id}
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::deleteAction }
+    requirements: { theme_id : "[0-9]+" }

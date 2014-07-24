@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="uk-panel-title">{% trans %}install.success{% endtrans %}</h1>
+    <p>{% trans %}install.success.message{% endtrans %}</p>
+
+    {% if error %}
+    <div class="uk-alert uk-alert-danger">
+    	<a href="#" class="uk-alert-close uk-close"></a>
+   		<p>{{ errorMessage }}</p>
+    </div>
+    {% endif %}
+
+    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(doneForm) }}>
+   		{{ form_errors(doneForm) }}
+
+	    {% for item in doneForm %}
+			    {{ form_errors(item) }}
+			    {{ form_widget(item) }}
+	    {% endfor %}
+	    {{ form_rest(doneForm) }}
+  		<p><button class="uk-button uk-button-primary"><i class="uk-icon-check"></i> {% trans %}quit.install{% endtrans %}</button></p>
+	</form>
+    <p><a class="uk-button uk-button-success" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.informations{% endtrans %}</a></p>
+{% endblock %}

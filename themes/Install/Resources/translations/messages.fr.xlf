@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="fr" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>Node name</source>
+                <target>Nom du nœud</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>See tree</source>
+                <target>Voir l’arborescence</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>_username</source>
+                <target>Nom d’utilisateur</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>_password</source>
+                <target>Mot de passe</target>
+            </trans-unit>
+
+            <trans-unit id="delete">
+                <source>delete</source>
+                <target>Supprimer</target>
+            </trans-unit>
+
+
+            <!-- Documents -->
+            <trans-unit id="document.updated">
+                <source>document.updated</source>
+                <target>Le document “%name%” a été mis à jour</target>
+            </trans-unit>
+            <trans-unit id="document.uploaded">
+                <source>document.uploaded</source>
+                <target>Le document “%name%” a été téléversé</target>
+            </trans-unit>
+            <trans-unit id="document.cannot_persist">
+                <source>document.cannot_persist</source>
+                <target>Le document “%name%” n’a pas pu être créé</target>
+            </trans-unit>
+
+            <!-- Nodes -->
+            <trans-unit id="node.created">
+                <source>node.created</source>
+                <target>Le nœud “%name%” a été créé</target>
+            </trans-unit>
+            <trans-unit id="node.no_creation.already_exists">
+                <source>node.no_creation.already_exists</source>
+                <target>Le nœud “%name%” ne peut être crée, il existe déjà.</target>
+            </trans-unit>
+            <trans-unit id="node.no_update.already_exists">
+                <source>node.no_update.already_exists</source>
+                <target>Le nœud “%name%” ne peut être mis à jour, il existe déjà.</target>
+            </trans-unit>
+            <trans-unit id="node.updated">
+                <source>node.updated</source>
+                <target>Le nœud “%name%” a été mis à jour.</target>
+            </trans-unit>
+            <!-- node.deleted -->
+            <!-- node.translated -->
+            <!-- node_source.updated node_source translation -->
+            <!-- node.tag_linked node tag -->
+
+            <!-- url_alias.updated alias -->
+            <!-- url_alias.no_update.already_exists alias -->
+            <!-- url_alias.no_creation.already_exists -->
+            <!-- url_alias.no_translation translation -->
+            <!-- url_alias.deleted -->
+            <!-- url_alias.created -->
+        </body>
+    </file>
+</xliff>

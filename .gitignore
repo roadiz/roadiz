@@ -9,3 +9,4 @@ npm-debug.log
 **/._*
 ._*
 conf/config.json
+conf/*.config.json

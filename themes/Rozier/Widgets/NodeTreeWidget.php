@@ -70,6 +70,10 @@ class NodeTreeWidget extends AbstractWidget
 		return null;
 	}
 
+	public function getRootNode()
+	{
+		return $this->parentNode;
+	}
 	public function getTranslation()
 	{
 		return $this->translation;

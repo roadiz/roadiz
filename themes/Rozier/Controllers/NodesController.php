@@ -19,6 +19,8 @@ use RZ\Renzo\Core\Entities\UrlAlias;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Handlers\NodeHandler;
 use RZ\Renzo\Core\Utils\StringHandler;
+
+use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\RozierApp;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
@@ -83,15 +85,32 @@ class NodesController extends RozierApp {
 			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
 		Kernel::getInstance()->em()->refresh($node);
 
-		$translation = Kernel::getInstance()->em()
+		$translation = null;
+		if ($translation_id !== null) {
+			$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
-				->findOneBy(array('defaultTranslation'=>true));
+				->findOneBy(array('id'=>(int)$translation_id));
+		}
+		else {
+			$translation = Kernel::getInstance()->em()
+					->getRepository('RZ\Renzo\Core\Entities\Translation')
+					->findOneBy(array('defaultTranslation'=>true));
+		}
+
+		if ($node !== null) {
+			$widget = new NodeTreeWidget( $request, $this, $node, $translation );
+			$this->assignation['node'] = $node;
+			$this->assignation['source'] = $node->getNodeSources()->first();
+			$this->assignation['translation'] = $translation;
+			$this->assignation['specificNodeTree'] = $widget;
+		}
+
 
 		return new Response(
-				$this->getTwig()->render('nodes/tree.html.twig', $this->assignation),
-				Response::HTTP_OK,
-				array('content-type' => 'text/html')
-			);
+			$this->getTwig()->render('nodes/tree.html.twig', $this->assignation),
+			Response::HTTP_OK,
+			array('content-type' => 'text/html')
+		);
 	}
 
 	/**

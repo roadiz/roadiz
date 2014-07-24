@@ -1,0 +1,25 @@
+# Home page
+installHomePage:
+    path:     /
+    defaults: { _controller: Themes\Install\InstallApp::indexAction }
+installCheckPage:
+    path:     /install/check-requirements
+    defaults: { _controller: Themes\Install\InstallApp::requirementsAction }
+installDatabasePage:
+    path:     /install/database
+    defaults: { _controller: Themes\Install\InstallApp::databaseAction }
+installDatabaseDonePage:
+    path:     /install/database/done
+    defaults: { _controller: Themes\Install\InstallApp::databaseDoneAction }
+installUserPage:
+    path:     /install/user
+    defaults: { _controller: Themes\Install\InstallApp::userAction }
+installThemesPage:
+    path:     /install/themes
+    defaults: { _controller: Themes\Install\InstallApp::themesAction }
+installDonePage:
+    path:     /install/done
+    defaults: { _controller: Themes\Install\InstallApp::doneAction }
+installFailedPage:
+    path:     /install/failed
+    defaults: { _controller: Themes\Install\InstallApp::failedAction }

@@ -3,6 +3,7 @@
 <section id="manage-node">
 	<h1 id="node-title">Edit {{ source.getTitle }}</h1>
 
+	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
 	{% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
@@ -13,7 +14,7 @@
 		    	{# Node fields  #}
 		        {% if item.vars.name != "_token" %}
 		    	<div class="uk-form-row">
-		        	<label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.name }}</label>
+		        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
 		    	</div>	
@@ -37,7 +38,7 @@
 		    	{# Node fields  #}
 		        {% if item.vars.name != "_token" and item.vars.name != "node_id" %}
 		    	<div class="uk-form-row">
-		        	<label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.name }}</label>
+		        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
 		    	</div>	

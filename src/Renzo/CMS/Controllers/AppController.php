@@ -167,10 +167,10 @@ class AppController implements ViewableInterface {
 	public static function getRoutes()
 	{
 		$locator = new FileLocator(array(
-			RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources'
+			static::getResourcesFolder()
 		));
 
-		if (file_exists(RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources/routes.yml')) {
+		if (file_exists(static::getResourcesFolder().'/routes.yml')) {
 			$loader = new YamlFileLoader($locator);
 			return $loader->load('routes.yml');
 		}
@@ -188,7 +188,7 @@ class AppController implements ViewableInterface {
 	public function initializeTranslator()
 	{
 		$lang = Kernel::getInstance()->getRequest()->getLocale();
-		$msgPath = RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources/translations/messages.'.$lang.'.xlf';
+		$msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
 
 		/*
 		 * fallback to english, if message catalog absent
@@ -203,7 +203,7 @@ class AppController implements ViewableInterface {
 		$this->translator->addLoader('xlf', new XliffFileLoader());
 		$this->translator->addResource(
 		    'xlf',
-			RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources/translations/messages.'.$lang.'.xlf',
+			static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf',
 		    $lang
 		);
 		// ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
@@ -230,16 +230,6 @@ class AppController implements ViewableInterface {
 			$csrfSecret
 		);
 	}
-
-	/**
-	 * Get twig cache folder for current Theme
-	 * @return string
-	 */
-	public function getCacheDirectory()
-	{
-		return RENZO_ROOT.'/cache/'.static::$themeDir.'/twig_cache';
-	}
-
 	/**
 	 * Check if twig cache must be cleared 
 	 */
@@ -253,6 +243,27 @@ class AppController implements ViewableInterface {
 			    echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
 			}
 		}
+	}
+
+	/**
+	 * Get twig cache folder for current Theme
+	 * @return string
+	 */
+	public function getCacheDirectory()
+	{
+		return RENZO_ROOT.'/cache/'.static::$themeDir.'/twig_cache';
+	}
+	public static function getResourcesFolder()
+	{
+		return RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources';
+	}
+	public static function getTemplatesFolder()
+	{
+		return static::getResourcesFolder().'/Templates';
+	}
+	public function getStaticResourcesUrl()
+	{
+		return Kernel::getInstance()->getRequest()->getBaseUrl().'/themes/'.static::$themeDir.'/static/';
 	}
 
 	/**
@@ -277,7 +288,7 @@ class AppController implements ViewableInterface {
 
 
 		$loader = new \Twig_Loader_Filesystem(array(
-			RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources/Templates', // Theme templates
+			static::getTemplatesFolder(), // Theme templates
 			RENZO_ROOT . '/src/Renzo/CMS/Resources/Templates/forms', // Form extension templates
 			$vendorTwigBridgeDir . '/Resources/views/Form' // Form extension templates
 		));
@@ -339,7 +350,7 @@ class AppController implements ViewableInterface {
 				'devMode' => (boolean)Kernel::getInstance()->getConfig()['devMode'],
 				'baseUrl' => Kernel::getInstance()->getRequest()->getBaseUrl(),
 				'filesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/'.Document::getFilesFolderName(),
-				'resourcesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/themes/'.static::$themeDir.'/static/',
+				'resourcesUrl' => $this->getStaticResourcesUrl(),
 				'ajaxToken' => static::$csrfProvider->generateCsrfToken(static::AJAX_TOKEN_INTENTION)
 			),
 			'session' => array(

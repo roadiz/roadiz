@@ -1,8 +1,8 @@
 {% if nodeTree %}
-<nav class="nodetree-widget uk-width-2-10 ">
-	<ul class="root-tree uk-nestable" data-uk-nestable>
-		{% for node in nodeTree.getNodes %}
-			{% include 'widgets/nodeTree.singleNode.html.twig' with { "node":node, "nodeTree":nodeTree } %}
+<nav class="nodetree-widget {% if mainNodeTree %}uk-width-2-10{% endif %} ">
+	<ul class="root-tree uk-nestable" data-uk-nestable="{'group':'nodeTree'}" data-parent-node-id="{{ node.getId }}">
+		{% for cnode in nodeTree.getNodes %}
+			{% include 'widgets/nodeTree.singleNode.html.twig' with { "node":cnode, "nodeTree":nodeTree } only %}
 		{% endfor %}
 	</ul>
 </nav>

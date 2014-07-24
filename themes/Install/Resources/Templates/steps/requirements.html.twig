@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="uk-panel-title">{% trans %}install.requirements{% endtrans %}</h1>
+    <p>{% trans %}requirements.message{% endtrans %}</p>
+    <p>
+    <a class="uk-button uk-button-success" href="{{ path('installHomePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.welcome{% endtrans %}</a>
+    <a class="uk-button uk-button-success" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+    </p>
+{% endblock %}

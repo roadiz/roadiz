@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="uk-panel-title">{% trans %}install.user{% endtrans %}</h1>
+    <p>{% trans %}user.message{% endtrans %}</p>
+
+    {% if error %}
+    <div class="uk-alert uk-alert-danger">
+    	<a href="#" class="uk-alert-close uk-close"></a>
+    	<p>{% trans %}cannot.create.user{% endtrans %}</p>
+   		<p>{{ errorMessage }}</p>
+    </div>
+    {% endif %}
+
+    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(userForm) }}>
+   		{{ form_errors(userForm) }}
+
+	    {% for item in userForm %}
+	    	{% if item.vars.name != "_token" %}
+			    <div class="uk-form-row">
+			    	<label class="uk-form-label" for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
+			        {{ form_errors(item) }}
+			        {{ form_widget(item) }}
+			    </div>
+	    	{% endif %}
+	    {% endfor %}
+	    {{ form_rest(userForm) }}
+  		<p><button class="uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}create.user{% endtrans %}</button></p>
+	</form>
+
+    <p><a class="uk-button uk-button-success" href="{{ path('installDatabasePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a></p>
+{% endblock %}

@@ -20,7 +20,7 @@
 			{% if node.isHidingChildren %}
 				<a href="{{ path('nodesTreePage', { node_id:node.getId }) }}">{{ name }}</a>
 			{% else %}
-				<a href="{{ path('nodesEditPage', { node_id:node.getId }) }}">{{ name }}</a>
+				<a href="{{ path('nodesEditSourcePage', { node_id:node.getId, translation_id:nodeTree.getTranslation.getId}) }}">{{ name }}</a>
 			{% endif %}
 		</div>
 
@@ -47,7 +47,7 @@
 		    </nav>
 		</div>
 	</div>
-	<ul class="uk-nestable-list">
+	<ul class="uk-nestable-list" data-parent-node-id="{{ node.getId }}">
 	{# 
 	 # For drag&drop ease, we don't create nested lists
 	 # We will have to check after OR inside drag status

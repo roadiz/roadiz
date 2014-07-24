@@ -14,7 +14,7 @@
 	    	{% if item.vars.name != "_token" %}
 	    		{% if item.vars.block_prefixes.1 != 'hidden' %}
 			    <div class="uk-form-row">
-			    	<label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.name }}</label>
+			    	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
 			    </div>

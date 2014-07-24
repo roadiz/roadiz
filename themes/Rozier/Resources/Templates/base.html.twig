@@ -24,7 +24,7 @@
         <div id="main-container" class="uk-grid">
             {% include 'includes/user_panel.html.twig' %}
             {% include 'includes/admin_menu.html.twig' %}
-            {% include 'widgets/nodeTree.html.twig' %}
+            {% include 'widgets/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':true} only %}
             <!-- Add your site or application content here -->
             <div class="uk-width-6-10" id="main_content">
             {% block content %}

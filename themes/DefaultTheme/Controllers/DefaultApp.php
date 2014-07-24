@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 /**
 * 
 */
-class DefaultController extends FrontendController
+class DefaultApp extends FrontendController
 {
 	protected static $specificNodesControllers = array(
 		'home',

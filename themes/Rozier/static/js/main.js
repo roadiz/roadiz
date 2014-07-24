@@ -16,13 +16,38 @@ Rozier.onDocumentReady = function( event ) {
 	new DocumentWidget();
 
 	$('.root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );
-	
 };
-Rozier.onNestableNodeTreeChange = function (event, element) {
-	console.log("Node: "+element.data('node-id'));
+
+/**
+ * [onNestableNodeTreeChange description]
+ * @param  Event event
+ * @param  jQueryNode element
+ * @param  string status  added, moved or removed
+ * @return boolean
+ */
+Rozier.onNestableNodeTreeChange = function (event, element, status) {
+	console.log("Node: "+element.data('node-id')+ " status : "+status);
+
+	/*
+	 * If node removed, do not do anything, the other nodeTree will be triggered
+	 */
+	if (status == 'removed') {
+		return false;
+	}
 
 	var node_id = parseInt(element.data('node-id'));
-	var parent_node_id = parseInt(element.parents('li').first().data('node-id'));
+	var parent_node_id = parseInt(element.parents('ul').first().data('parent-node-id'));
+
+	/*
+	 * User dragged node inside itself
+	 * It will destroy the Internet !
+	 */
+	if (node_id === parent_node_id) {
+		console.log("You cannot move a node inside itself!");
+		alert("You cannot move a node inside itself!");
+		window.location.reload();
+		return false;
+	}
 
 	var postData = {
 		_token: Rozier.ajaxToken,

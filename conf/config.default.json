@@ -1,9 +1,10 @@
 {
 	"appNamespace": "chooseAnUniqueNameForYourApp",
+	"install": true,
 	"devMode": true,
 	"doctrine": {
-		"driver":   "",
-		"host":     "",
+		"driver":   "pdo_mysql",
+		"host":     "localhost",
 		"user":     "",
 		"password": "",
 		"dbname":   ""

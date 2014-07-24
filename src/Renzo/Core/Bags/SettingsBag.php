@@ -18,13 +18,20 @@ abstract class SettingsBag
 	 */
 	public static function get( $settingName )
 	{
-		if (!isset(static::$settings[$settingName])) {
-			static::$settings[$settingName] = 
-						Kernel::getInstance()->em()
-            			->getRepository('RZ\Renzo\Core\Entities\Setting')
-            			->getValue($settingName);
+		if (!isset(static::$settings[$settingName]) && 
+			Kernel::getInstance()->em() !== null) {
+
+			try {
+				static::$settings[$settingName] = 
+							Kernel::getInstance()->em()
+	            			->getRepository('RZ\Renzo\Core\Entities\Setting')
+	            			->getValue($settingName);
+			}
+			catch (\Exception $e){
+				return false;
+			}
 		}
 
-		return static::$settings[$settingName];
+		return isset(static::$settings[$settingName]) ? static::$settings[$settingName] : false;
 	}
 }

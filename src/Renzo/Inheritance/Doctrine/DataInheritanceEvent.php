@@ -37,12 +37,12 @@ class DataInheritanceEvent {
 
 				$metadata->setDiscriminatorMap($map);
 			}
-			catch (\PDOException $e){
+			catch (\Exception $e){
 				/*
 				 * Database tables don't exist yet
 				 * Need Install
 				 */
-				$this->getSession()->getFlashBag()->add('error', 'Impossible to create discriminator map, make sure your database is fully installed.');
+				//$this->getSession()->getFlashBag()->add('error', 'Impossible to create discriminator map, make sure your database is fully installed.');
 			}
 		}
 	}

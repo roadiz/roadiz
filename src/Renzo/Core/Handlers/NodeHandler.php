@@ -159,6 +159,26 @@ class NodeHandler
 	}
 
 	/**
+	 * Return every node’s parents
+	 * @return array
+	 */
+	public function getParents()
+	{
+		$parentsArray = array();
+		$parent = $this->getNode();
+
+		do {
+			$parent = $parent->getParent();
+			if ($parent !== null) {
+				$parentsArray[] = $parent;
+			}
+			else break;
+		} while ($parent !== null);
+
+		return array_reverse($parentsArray);
+	}
+
+	/**
 	 * Clean position for current node according to its
 	 * @return int Return the next position after the **last** node
 	 */

@@ -3,6 +3,7 @@
 <section id="manage-node">
 	<h1 id="node-title">Edit {{ source.getTitle }}</h1>
 
+	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
 	{% include 'nodes/navBar.html.twig' with {"current": 'source'} %}
 	{% include 'nodes/translationBar.html.twig' with {"current": translation.getId} %}
 

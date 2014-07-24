@@ -2,7 +2,8 @@
 {% block content %}
 <section id="manage-node-tags">
 	<h1 id="node-title">Edit {{ source.getTitle }} tags</h1>
-
+	
+	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
 	{% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
 
 	<h2>{% trans %}Add a tag{% endtrans %}</h2>
@@ -14,7 +15,7 @@
 			    {% if item.vars.name != "_token" %}
 			    <div class="uk-form-row">
 			    	{# Source fields  #}
-			        <label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.label }}</label>
+			        <label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
 			    </div>

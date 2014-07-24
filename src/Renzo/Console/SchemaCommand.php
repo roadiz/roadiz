@@ -37,12 +37,6 @@ class SchemaCommand extends Command {
 			   InputOption::VALUE_NONE,
 			   'Refresh doctrine metadata cache'
 			)
-			/*->addOption(
-			   'drop',
-			   null,
-			   InputOption::VALUE_NONE,
-			   'Drop current database'
-			)*/
 			->addOption(
 			   'update',
 			   null,
@@ -182,6 +176,17 @@ class SchemaCommand extends Command {
 
 		return true;
 	}
+	public static function createSchema()
+	{
+		$tool = new \Doctrine\ORM\Tools\SchemaTool( Kernel::getInstance()->em() );
+		$meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
+		$sql = $tool->getUpdateSchemaSql($meta);
+
+		foreach($sql as $statement) {
+		    Kernel::getInstance()->em()->getConnection()->exec( $statement );
+		}
+	}
+
 	public static function getUpdateSchema()
 	{
 		static::refreshMetadata();

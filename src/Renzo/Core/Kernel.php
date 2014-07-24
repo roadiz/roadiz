@@ -74,7 +74,7 @@ class Kernel {
 	private final function __construct() {
 
 		$this->parseConfig()
-			 ->setupEntityManager();
+			 ->setupEntityManager( $this->getConfig() );
 
 		$this->stopwatch = new Stopwatch();
 		$this->stopwatch->start('global');
@@ -82,6 +82,9 @@ class Kernel {
 
 		$this->request = Request::createFromGlobals();
 		$this->requestContext = new Routing\RequestContext($this->getResolvedBaseUrl());
+
+		$this->dispatcher = new EventDispatcher();
+		$this->resolver =   new ControllerResolver();
 	}
 
 	/**
@@ -96,11 +99,12 @@ class Kernel {
 			$this->setConfig(
 				json_decode(file_get_contents($configFile), true)
 			);
-			return $this;
 		}
 		else {
-			throw new \RuntimeException('No configuration found ('.$configFile.')');
+			$this->setConfig(null);
 		}
+
+		return $this;
 	}
 	/**
 	 * get entities search paths
@@ -116,32 +120,35 @@ class Kernel {
 	}
 	/**
 	 * Initialize Doctrine entity manager
+	 * @param  array $config
 	 * @return $this
 	 */
-	public function setupEntityManager()
+	public function setupEntityManager( $config )
 	{
 		// the connection configuration
-		$paths = $this->getEntitiesPaths();
+		if ($config !== null) {
+			$paths = $this->getEntitiesPaths();
 
-		$dbParams = $this->getConfig()["doctrine"];
-		$configDB = Setup::createAnnotationMetadataConfiguration($paths, $this->isDebug());
+			$dbParams = $config["doctrine"];
+			$configDB = Setup::createAnnotationMetadataConfiguration($paths, $this->isDebug());
 
-		$configDB->setProxyDir(RENZO_ROOT . '/sources/Proxies');
-		$configDB->setProxyNamespace('Proxies');
+			$configDB->setProxyDir(RENZO_ROOT . '/sources/Proxies');
+			$configDB->setProxyNamespace('Proxies');
 
-		$this->setEntityManager(EntityManager::create($dbParams, $configDB));
+			$this->setEntityManager(EntityManager::create($dbParams, $configDB));
 
-		if ($this->em()->getConfiguration()->getResultCacheImpl() !== null) {
-			$this->em()->getConfiguration()->getResultCacheImpl()->setNamespace($this->getConfig()["appNamespace"]);
-		}
-		if ($this->em()->getConfiguration()->getHydrationCacheImpl() !== null) {
-			$this->em()->getConfiguration()->getHydrationCacheImpl()->setNamespace($this->getConfig()["appNamespace"]);
-		}
-		if ($this->em()->getConfiguration()->getQueryCacheImpl() !== null) {
-			$this->em()->getConfiguration()->getQueryCacheImpl()->setNamespace($this->getConfig()["appNamespace"]);
-		}
-		if ($this->em()->getConfiguration()->getMetadataCacheImpl()) {
-			$this->em()->getConfiguration()->getMetadataCacheImpl()->setNamespace($this->getConfig()["appNamespace"]);
+			if ($this->em()->getConfiguration()->getResultCacheImpl() !== null) {
+				$this->em()->getConfiguration()->getResultCacheImpl()->setNamespace($config["appNamespace"]);
+			}
+			if ($this->em()->getConfiguration()->getHydrationCacheImpl() !== null) {
+				$this->em()->getConfiguration()->getHydrationCacheImpl()->setNamespace($config["appNamespace"]);
+			}
+			if ($this->em()->getConfiguration()->getQueryCacheImpl() !== null) {
+				$this->em()->getConfiguration()->getQueryCacheImpl()->setNamespace($config["appNamespace"]);
+			}
+			if ($this->em()->getConfiguration()->getMetadataCacheImpl()) {
+				$this->em()->getConfiguration()->getMetadataCacheImpl()->setNamespace($config["appNamespace"]);
+			}
 		}
 
 		return $this;
@@ -238,7 +245,16 @@ class Kernel {
 	{
 		$this->backendDebug = 	(boolean)SettingsBag::get('backend_debug');
 		
-		$this->prepareUrlHandling();
+		if ($this->getConfig() === null || 
+			(isset($this->getConfig()['install']) && 
+			 $this->getConfig()['install'] == true)) {
+
+			$this->prepareSetup();
+		}
+		else {
+			$this->prepareUrlHandling();
+		}
+		
 
 		$application = new Application('Renzo Console Application', '0.1');
 		$application->add(new \RZ\Renzo\Console\TranslationsCommand);
@@ -265,11 +281,17 @@ class Kernel {
 		$this->debug = 			(boolean)SettingsBag::get('debug');
 		$this->backendDebug = 	(boolean)SettingsBag::get('backend_debug');
 
-		$this->dispatcher = new EventDispatcher();
-		$this->resolver =   new ControllerResolver();
 		$this->httpKernel = new HttpKernel($this->dispatcher, $this->resolver);
 		
-		$this->prepareRequestHandling();
+		if ($this->getConfig() === null || 
+			(isset($this->getConfig()['install']) && 
+			 $this->getConfig()['install'] == true)) {
+
+			$this->prepareSetup();
+		}
+		else {
+			$this->prepareRequestHandling();
+		}
 
 		try{
 			/*
@@ -302,8 +324,19 @@ class Kernel {
 	 * 
 	 * @return RZ\Renzo\Core\Kernel $this
 	 */
-	public function runSetup()
+	public function prepareSetup()
 	{
+		$feCollection = \Themes\Install\InstallApp::getRoutes();
+		if ($feCollection !== null) {
+
+			$this->rootCollection->addCollection($feCollection);
+			$this->urlMatcher =   new UrlMatcher($this->rootCollection, $this->requestContext);
+			$this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
+			$this->httpUtils =    new HttpUtils($this->urlGenerator, $this->urlMatcher);
+
+			$this->dispatcher->addSubscriber(new RouterListener($this->urlMatcher));
+		}
+
 		return $this;
 	}
 
