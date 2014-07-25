@@ -18,14 +18,13 @@ class Fixtures {
 
 	public function installFixtures()
 	{
-		$this->createFolders();
 		$this->installDefaultTranslation();
 		$this->installBackofficeTheme();
 
 		Kernel::getInstance()->em()->flush();
 	}
 
-	protected function createFolders()
+	public function createFolders()
 	{
 		$folders = array(
 			RENZO_ROOT . '/cache',

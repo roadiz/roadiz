@@ -145,13 +145,15 @@ class InstallApp extends FrontendController {
 				 * Test connexion
 				 */
 				try{
+				    $fixtures = new Fixtures();
+				    $fixtures->createFolders();
+
 					Kernel::getInstance()->setupEntityManager( $config->getConfiguration() );
 				    Kernel::getInstance()->em()->getConnection()->connect();
 
 				    \RZ\Renzo\Console\SchemaCommand::createSchema();
 				    \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
 
-				    $fixtures = new Fixtures();
 				    $fixtures->installFixtures();
 			 		/*
 			 		 * Force redirect to avoid resending form when refreshing page
