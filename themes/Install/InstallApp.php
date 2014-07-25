@@ -5,6 +5,7 @@ namespace Themes\Install;
 
 use Themes\Install\Controllers\Configuration;
 use Themes\Install\Controllers\Fixtures;
+use Themes\Install\Controllers\Requirements;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\CMS\Controllers\FrontendController;
@@ -108,6 +109,10 @@ class InstallApp extends FrontendController {
 	{
 		$config = new Configuration();
 		$config->writeConfiguration();
+
+		$requ = new Requirements();
+		$this->assignation['requirements'] = $requ->getRequirements();
+		$this->assignation['totalSuccess'] = $requ->isTotalSuccess();
 
 		return new Response(
 			$this->getTwig()->render('steps/requirements.html.twig', $this->assignation),
@@ -460,11 +465,13 @@ class InstallApp extends FrontendController {
 		$siteName = \RZ\Renzo\Core\Bags\SettingsBag::get('site_name');
 		$metaDescription = \RZ\Renzo\Core\Bags\SettingsBag::get('meta_description');
 		$emailSender = \RZ\Renzo\Core\Bags\SettingsBag::get('email_sender');
+		$emailSenderName = \RZ\Renzo\Core\Bags\SettingsBag::get('email_sender_name');
 
 		$defaults = array(
 			'site_name' => $siteName != '' ? $siteName : "My website",
 			'meta_description' => $metaDescription != '' ? $metaDescription : "My website is beautiful!",
 			'email_sender' => $emailSender != '' ? $emailSender : "",
+			'email_sender_name' => $emailSenderName != '' ? $emailSenderName : "",
 			'install_frontend' => true
 		);
 		$builder = $this->getFormFactory()
@@ -476,6 +483,12 @@ class InstallApp extends FrontendController {
 						)
 					))
 					->add('email_sender', 'email', array(
+						'required' => true,
+						'constraints' => array(
+							new NotBlank()
+						)
+					))
+					->add('email_sender_name', 'text', array(
 						'required' => true,
 						'constraints' => array(
 							new NotBlank()

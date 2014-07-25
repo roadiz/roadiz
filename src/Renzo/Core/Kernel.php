@@ -264,6 +264,8 @@ class Kernel {
 		$application->add(new \RZ\Renzo\Console\ThemesCommand);
 		$application->add(new \RZ\Renzo\Console\InstallCommand);
 		$application->add(new \RZ\Renzo\Console\UsersCommand);
+		$application->add(new \RZ\Renzo\Console\RequirementsCommand);
+		
 		
 		$application->run();
 

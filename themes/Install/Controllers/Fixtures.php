@@ -151,10 +151,20 @@ class Fixtures {
     	$set2->setValue($data['email_sender']);
     	$set2->setType(NodeTypeField::EMAIL_T);
         Kernel::getInstance()->em()->flush();
+        
+        $set2 = $this->getSetting('email_sender_name');
+    	$set2->setValue($data['email_sender_name']);
+    	$set2->setType(NodeTypeField::STRING_T);
+        Kernel::getInstance()->em()->flush();
 
         $set2 = $this->getSetting('meta_description');
     	$set2->setValue($data['meta_description']);
     	$set2->setType(NodeTypeField::TEXT_T);
+        Kernel::getInstance()->em()->flush();
+
+        $set2 = $this->getSetting('display_debug_panel');
+    	$set2->setValue(false);
+    	$set2->setType(NodeTypeField::BOOLEAN_T);
         Kernel::getInstance()->em()->flush();
 
         /*

@@ -3,8 +3,45 @@
 {% block content %}
     <h1 class="uk-panel-title">{% trans %}install.requirements{% endtrans %}</h1>
     <p>{% trans %}requirements.message{% endtrans %}</p>
+
+    <table class="uk-table">
+    	<tr>
+    		<th></th>
+    		<th>{% trans %}requirement{% endtrans %}</th>
+    		<th>{% trans %}actual.value{% endtrans %}</th>
+    		<th>{% trans %}status{% endtrans %}</th>
+    	</tr>
+    	{% for name, require in requirements %}
+    		<tr>
+    			<td>{{ name|trans }}</td>
+    			<td>
+    				{% if require.value_minimum %}<div class="uk-badge">{{ require.value_minimum }}</div>{% endif %}
+    				{% if require.version_minimum %}<div class="uk-badge">{{ require.version_minimum }}</div>{% endif %}
+    			</td>
+    			<td>
+    				{% if require.found %}<div class="uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.found }}</div>{% endif %}
+    				{% if require.folder %}<div class="uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.folder }}</div>{% endif %}
+    			</td>
+    			<td>
+    			{% if require.status %}
+    				<div class="uk-badge uk-badge-notification uk-badge-success"><i class="uk-icon-check"></i></div>
+    			{% else %}
+    				<div class="uk-badge uk-badge-notification uk-badge-danger"><i class="uk-icon-ban"></i></div>
+    			{% endif %}
+    			</td>
+
+    			{% if not require.status and require.message %}
+    		</tr>
+    		<tr>
+    			<td colspan="4" class="message uk-alert uk-alert-danger">{{ require.message }}</td>
+    			{% endif %}
+    		</tr>
+    	{% endfor %}
+    </table>
     <p>
-    <a class="uk-button uk-button-success" href="{{ path('installHomePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.welcome{% endtrans %}</a>
-    <a class="uk-button uk-button-success" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+    	<a class="uk-button uk-button-success" href="{{ path('installHomePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.welcome{% endtrans %}</a>
+    	{% if totalSuccess %}
+    	<a class="uk-button uk-button-success" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+    	{% endif %}
     </p>
 {% endblock %}
