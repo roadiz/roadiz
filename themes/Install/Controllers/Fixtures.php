@@ -34,8 +34,10 @@ class Fixtures {
 		);
 
 		foreach ($folders as $folder) {
-			if (!mkdir($folder, 0755, true)){
-				throw( new \Exception('Impossible to create “'.$folder.'” folder.'));
+			if (!file_exists($folder)) {
+				if (!mkdir($folder, 0755, true)){
+					throw( new \Exception('Impossible to create “'.$folder.'” folder.'));
+				}
 			}
 		}
 	}
