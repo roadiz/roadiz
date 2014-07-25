@@ -18,10 +18,26 @@ class Fixtures {
 
 	public function installFixtures()
 	{
+		$this->createFolders();
 		$this->installDefaultTranslation();
 		$this->installBackofficeTheme();
 
 		Kernel::getInstance()->em()->flush();
+	}
+
+	protected function createFolders()
+	{
+		$folders = array(
+			RENZO_ROOT . '/cache',
+			RENZO_ROOT . '/sources',
+			RENZO_ROOT . '/sources/Compiled',
+			RENZO_ROOT . '/sources/Proxies',
+			RENZO_ROOT . '/sources/GeneratedNodeSources',
+		);
+
+		foreach ($folders as $folder) {
+			mkdir($folder, 0755, true);
+		}
 	}
 
 	protected function installBackofficeTheme()
