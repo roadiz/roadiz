@@ -128,9 +128,9 @@ class NodeTypesController extends RozierApp
 			$form->handleRequest();
 			if ($form->isValid()) {
 				try {
-					echo "Before add node type";
+					//echo "Before add node type";
 			 		$this->addNodeType($form->getData(), $node_type);
-			 		echo "After add node type";
+			 		//echo "After add node type";
 			 		
 			 		$msg = $this->getTranslator()->trans('node_type.created', array('%name%'=>$node_type->getName()));
 				 	$request->getSession()->getFlashBag()->add('confirm', $msg);

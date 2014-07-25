@@ -29,14 +29,15 @@ class Fixtures {
 	{
 		$folders = array(
 			RENZO_ROOT . '/cache',
-			RENZO_ROOT . '/sources',
 			RENZO_ROOT . '/sources/Compiled',
 			RENZO_ROOT . '/sources/Proxies',
 			RENZO_ROOT . '/sources/GeneratedNodeSources',
 		);
 
 		foreach ($folders as $folder) {
-			mkdir($folder, 0755, true);
+			if (!mkdir($folder, 0755, true)){
+				throw( new \Exception('Impossible to create “'.$folder.'” folder.'));
+			}
 		}
 	}
 
