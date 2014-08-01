@@ -8,7 +8,7 @@ use RZ\Renzo\Core\AbstractEntities\DateTimed;
 use RZ\Renzo\Core\Handlers\TranslationHandler;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\TranslationRepository")
  * @Table(name="translations", indexes={
  *     @index(name="available_idx", columns={"available"}), 
  *     @index(name="default_translation_idx", columns={"default_translation"})

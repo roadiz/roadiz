@@ -25,11 +25,6 @@ class PageController extends DefaultApp {
 	public function indexAction( Request $request, Node $node = null, Translation $translation = null)
 	{
 		$this->prepareThemeAssignation($node, $translation);
-
-		$this->assignation['imageFilter'] = array(
-			'width'=>300,
-			'crop'=>'16x9'
-		);
 		
 		return new Response(
 			$this->getTwig()->render('types/page.html.twig', $this->assignation),

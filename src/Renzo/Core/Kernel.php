@@ -421,8 +421,6 @@ class Kernel {
 
 			$this->prepareRouteCollection();
 		}
-
-		//$this->urlMatcher =   new \GlobalUrlMatcher($this->requestContext);
 		$this->urlMatcher =   new MixedUrlMatcher($this->requestContext);
 		$this->urlGenerator = new \GlobalUrlGenerator($this->requestContext);
 		$this->httpUtils =    new HttpUtils($this->urlGenerator, $this->urlMatcher);
@@ -437,10 +435,7 @@ class Kernel {
          */
         $translation = Kernel::getInstance()->em()
         	->getRepository('RZ\Renzo\Core\Entities\Translation')
-        	->findOneBy(array(
-        		'defaultTranslation'=>true, 
-        		'available'=>true
-        	));
+        	->findDefault();
 
         if ($translation !== null) {
         	$shortLocale = $translation->getShortLocale();

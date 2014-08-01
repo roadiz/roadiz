@@ -47,7 +47,7 @@ class UrlAliasesController extends RozierApp {
 	{
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
-				->findOneBy(array('defaultTranslation'=>true));
+        		->findDefault();
 		$node = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
 

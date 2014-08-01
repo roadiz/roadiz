@@ -138,8 +138,44 @@ class UsersController extends RozierApp
 			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
 
 		if ($user !== null) {
+
+			$role = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Role')
+				->findAll();
+
 			$this->assignation['user'] = $user;
+			$this->assignation['role'] = $role;
+
+			$form = $this->buildEditRolesForm( $user );
+
+			$form->handleRequest();
+
+			if ($form->isValid()) {
+				$role = $this->addRole($form->getData(), $user);
 			
+				$msg = $this->getTranslator()->trans('user.role_linked', array(
+				 			'%user%'=>$user->getUserName(), 
+				 			'%role%'=>$role->getName()
+				 		));
+	 			$request->getSession()->getFlashBag()->add('confirm', $msg);
+				$this->getLogger()->info($msg);
+
+				/*
+	 		 	* Force redirect to avoid resending form when refreshing page
+		 		*/
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'usersEditRolesPage',
+						array('user_id' => $user->getId())
+						)
+					);
+				$response->prepare($request);
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
 			return new Response(
 				$this->getTwig()->render('users/roles.html.twig', $this->assignation),
 				Response::HTTP_OK,
@@ -342,6 +378,29 @@ class UsersController extends RozierApp
 		Kernel::getInstance()->em()->flush();
 	}
 
+	private function addRole( $data, User $user ) {
+		if ($data['user_id'] == $user->getId()) {
+			$role = Kernel::getInstance()->em()
+				->find('RZ\Renzo\Core\Entities\Role', $data['role_id']);
+			
+			$user->addRole($role);
+			Kernel::getInstance()->em()->flush();
+			
+			return ($role);
+		}
+	}
+
+	// TODO
+	public function removeRoleAction( Request $request, $user_id, $role_id ) {
+
+		$user = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
+
+
+		
+		$user->removeRole($role_id);
+	}
+
 	/**
 	 * 
 	 * @param  User   $user 
@@ -388,6 +447,31 @@ class UsersController extends RozierApp
 
 		return $builder->getForm();
 	}
+
+	/**
+	 * 
+	 * @param  User   $user 
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildEditRolesForm( User $user )
+	{
+		$defaults = array(
+			'user_id' =>  $user->getId()
+		);
+		$builder = $this->getFormFactory()
+					->createBuilder('form', $defaults)
+					->add('user_id', 'hidden', array(
+						'data' => $user->getId(),
+						'constraints' => array(
+							new NotBlank()
+						)
+					))
+					->add('role_id', new \RZ\Renzo\CMS\Forms\RolesType(),
+						array('label' => 'Role'));
+
+		return $builder->getForm();
+	}
+
 	/**
 	 * 
 	 * @param  User   $user 

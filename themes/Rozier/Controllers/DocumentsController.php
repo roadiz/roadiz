@@ -20,9 +20,13 @@ class DocumentsController extends RozierApp {
 
 	public function indexAction( Request $request ) {
 
-		$documents = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Document')
-			->findAll();
+		$page = $request->query->get('page');
+		if (!($page > 1)) {
+			$page = 1;
+		}
+
+		$paginator =  new \RZ\Renzo\Core\Utils\Paginator( Kernel::getInstance()->em(), 'RZ\Renzo\Core\Entities\Document', 10);
+		$documents = $paginator->findByAtPage(array(), array(), $page);
 
 		$this->assignation['documents'] = $documents;
 		$this->assignation['thumbnailFormat'] = array(

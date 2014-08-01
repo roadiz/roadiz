@@ -66,7 +66,7 @@ class NodesController extends RozierApp {
 
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
-				->findOneBy(array('defaultTranslation'=>true));
+        		->findDefault();
 
 		$this->assignation['nodes'] = $nodes;
 		$this->assignation['node_types'] = NodeTypesController::getNodeTypes();
@@ -94,7 +94,7 @@ class NodesController extends RozierApp {
 		else {
 			$translation = Kernel::getInstance()->em()
 					->getRepository('RZ\Renzo\Core\Entities\Translation')
-					->findOneBy(array('defaultTranslation'=>true));
+        			->findDefault();
 		}
 
 		if ($node !== null) {
@@ -128,7 +128,7 @@ class NodesController extends RozierApp {
 
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
-				->findOneBy(array('defaultTranslation'=>true));
+        		->findDefault();
 		
 		if ($node !== null) {
 			$this->assignation['node'] = $node;
@@ -299,7 +299,7 @@ class NodesController extends RozierApp {
 	{
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
-				->findOneBy(array('defaultTranslation'=>true));
+        		->findDefault();
 
 		if ($translation !== null) {
 
@@ -369,7 +369,7 @@ class NodesController extends RozierApp {
 
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
-				->findOneBy(array('defaultTranslation'=>true));
+        		->findDefault();
 
 		if ($translation_id != null) {
 			$translation = Kernel::getInstance()->em()
@@ -446,7 +446,7 @@ class NodesController extends RozierApp {
 	{	
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
-				->findOneBy(array('defaultTranslation'=>true));
+        		->findDefault();
 
 		if ($translation_id != null) {
 			$translation = Kernel::getInstance()->em()
