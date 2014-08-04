@@ -194,8 +194,8 @@ class User extends Human implements AdvancedUserInterface
 	/**
 	 * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\Role")
 	 * @JoinTable(name="users_roles",
-     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")}
+     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")}
      * )
 	 */
 	private $roles;
@@ -235,6 +235,10 @@ class User extends Human implements AdvancedUserInterface
         
         return $this->rolesNames;
     }
+    /**
+     * Add a role object to current user
+     * @param RZ\Renzo\Core\Entities\Role $role
+     */
     public function addRole(Role $role)
     {
         if (!$this->getRolesEntities()->contains($role)) {
@@ -242,6 +246,11 @@ class User extends Human implements AdvancedUserInterface
         }
         return $this;
     }
+    /**
+     * Remove role from current user
+     * @param  RZ\Renzo\Core\Entities\Role   $role [description]
+     * @return $this
+     */
     public function removeRole(Role $role)
     {
         if ($this->getRolesEntities()->contains($role)) {
@@ -274,6 +283,10 @@ class User extends Human implements AdvancedUserInterface
 	public function getGroups() {
 	    return $this->groups;
 	}
+    /**
+     * Insert user into group
+     * @param RZ\Renzo\Core\Entities\Group $group
+     */
     public function addGroup(Group $group)
     {
         if (!$this->getGroups()->contains($group)) {
@@ -282,6 +295,11 @@ class User extends Human implements AdvancedUserInterface
 
         return $this;
     }
+    /**
+     * Remove user from group
+     * @param  RZ\Renzo\Core\Entities\Group  $group [description]
+     * @return $this
+     */
     public function removeGroup(Group $group)
     {
         if ($this->getGroups()->contains($group)) {
@@ -290,6 +308,10 @@ class User extends Human implements AdvancedUserInterface
 
         return $this;
     }
+    /**
+     * Get current user groups name
+     * @return array Array of strings
+     */
     public function getGroupNames()
     {
         $names = array();

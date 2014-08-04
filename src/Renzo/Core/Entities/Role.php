@@ -38,6 +38,16 @@ class Role extends PersistableObject
 	{
 		return str_replace('_', '-', strtolower($this->getName()));
 	}
+
+	public function required()
+	{
+		if ($this->getName() == static::ROLE_DEFAULT ||
+			$this->getName() == static::ROLE_SUPER_ADMIN ||
+			$this->getName() == static::ROLE_BACKEND_USER) {
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * @param string $name Role name

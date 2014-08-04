@@ -35,3 +35,15 @@
     </div>
     {% endspaceless %}
 {% endblock documents_widget %}
+
+
+{# Override default error block #}
+{% block form_errors -%}
+    {% if errors|length > 0 -%}
+    <ul class="errors">
+        {%- for error in errors -%}
+        <li class="uk-alert uk-alert-danger">{{ error.message }}</li>
+        {%- endfor -%}
+    </ul>
+    {%- endif %}
+{%- endblock form_errors %}

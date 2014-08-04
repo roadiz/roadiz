@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Criteria;
 use RZ\Renzo\Core\AbstractEntities\DateTimedPositioned;
 
 use RZ\Renzo\Core\Entities\Translation;
+use RZ\Renzo\Core\Entities\Tag;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Entities\NodesSources;
 use RZ\Renzo\Core\Handlers\NodeHandler;
@@ -291,6 +292,14 @@ class Node extends DateTimedPositioned
      */
     public function getTags() {
         return $this->tags;
+    }
+
+    public function removeTag(Tag $tag)
+    {
+        if ($this->getTags()->contains($tag)) {
+            $this->getTags()->removeElement($tag);
+        }
+        return $this;
     }
 
 	/**

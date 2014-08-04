@@ -40,6 +40,10 @@ nodesEditTagsPage:
     path:     /rz-admin/nodes/edit/{node_id}/tags
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::editTagsAction }
     requirements: { node_id : "[0-9]+" }
+nodesRemoveTagsPage:
+    path:     /rz-admin/nodes/edit/{node_id}/tags/{tag_id}/remove
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::removeTagAction }
+    requirements: { node_id : "[0-9]+", tag_id : "[0-9]+" }
 nodesEditAliasesPage:
     path:     /rz-admin/nodes/edit/{node_id}/aliases
     defaults: { _controller: Themes\Rozier\Controllers\UrlAliasesController::editAliasesAction }
@@ -60,6 +64,7 @@ nodesDeletePage:
     path:     /rz-admin/nodes/delete/{node_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::deleteAction }
     requirements: { node_id : "[0-9]+" }
+
 ## Ajax
 nodeAjaxEdit:
     path:     /rz-admin/ajax/node/edit/{node_id}
@@ -158,7 +163,7 @@ usersEditRolesPage:
     defaults: { _controller: Themes\Rozier\Controllers\UsersController::editRolesAction }
     requirements: { user_id : "[0-9]+" }
 usersRemoveRolesPage:
-    path:     /rz-admin/users/remove/{user_id}/role/{role_id}
+    path:     /rz-admin/users/edit/{user_id}/role/{role_id}/remove
     defaults: { _controller: Themes\Rozier\Controllers\UsersController::removeRoleAction }
     requirements: { user_id : "[0-9]+", role_id : "[0-9]+" }
 usersAddPage:
@@ -219,8 +224,48 @@ themesEditPage:
     requirements: { theme_id : "[0-9]+" }
 themesAddPage:
     path:     /rz-admin/themes/add
-    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::uploadAction }
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::addAction }
 themesDeletePage:
     path:     /rz-admin/themes/delete/{theme_id}
     defaults: { _controller: Themes\Rozier\Controllers\ThemesController::deleteAction }
     requirements: { theme_id : "[0-9]+" }
+
+# ROLES
+rolesHomePage:
+    path:     /rz-admin/roles
+    defaults: { _controller: Themes\Rozier\Controllers\RolesController::indexAction }
+rolesEditPage:
+    path:     /rz-admin/roles/edit/{role_id}
+    defaults: { _controller: Themes\Rozier\Controllers\RolesController::editAction }
+    requirements: { role_id : "[0-9]+" }
+rolesAddPage:
+    path:     /rz-admin/roles/add
+    defaults: { _controller: Themes\Rozier\Controllers\RolesController::addAction }
+rolesDeletePage:
+    path:     /rz-admin/roles/delete/{role_id}
+    defaults: { _controller: Themes\Rozier\Controllers\RolesController::deleteAction }
+    requirements: { role_id : "[0-9]+" }
+
+# GROUPS
+groupsHomePage:
+    path:     /rz-admin/groups
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::indexAction }
+groupsEditPage:
+    path:     /rz-admin/groups/edit/{group_id}
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::editAction }
+    requirements: { group_id : "[0-9]+" }
+groupsEditRolesPage:
+    path:     /rz-admin/groups/edit/{group_id}/roles
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::editRolesAction }
+    requirements: { group_id : "[0-9]+" }
+groupsRemoveRolesPage:
+    path:     /rz-admin/groups/edit/{group_id}/roles/{role_id}/remove
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::removeRolesAction }
+    requirements: { group_id : "[0-9]+", role_id : "[0-9]+" }
+groupsAddPage:
+    path:     /rz-admin/groups/add
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::addAction }
+groupsDeletePage:
+    path:     /rz-admin/groups/delete/{group_id}
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::deleteAction }
+    requirements: { group_id : "[0-9]+" }

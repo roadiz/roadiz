@@ -74,6 +74,21 @@ class Group extends PersistableObject
         }
         return $this->rolesNames;
     }
+    public function addRole(Role $role)
+    {
+        if (!$this->getRolesEntities()->contains($role)) {
+            $this->getRolesEntities()->add($role);
+        }
+        return $this;
+    }
+
+    public function removeRole(Role $role)
+    {
+        if ($this->getRolesEntities()->contains($role)) {
+            $this->getRolesEntities()->removeElement($role);
+        }
+        return $this;
+    }
 	
 	public function __construct()
     {

@@ -13,6 +13,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Node;
+use RZ\Renzo\Core\Entities\Tag;
 use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\UrlAlias;
@@ -686,6 +687,70 @@ class NodesController extends RozierApp {
 	}
 
 	/**
+	 * Return a deletion form for requested tag depending on the node
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function removeTagAction(Request $request, $node_id, $tag_id) {
+		$node = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
+		$tag = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Tag', (int)$tag_id);
+
+		if ($node !== null && $tag !== null) {
+			$this->assignation['node'] = $node;
+			$this->assignation['tag'] = $tag;
+
+			$form = $this->buildDeleteTagForm($node, $tag);
+			$form->handleRequest();
+
+			if ($form->isValid()) {
+
+		 		$this->removeTag($form->getData(), $node);
+		 		$msg = $this->getTranslator()->trans('tag.deleted', array('%name%' => $tag->getDefaultTranslatedTag()->getName()));
+		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
+
+		 		/*
+		 		 * Force redirect to avoid resending form when refreshing page
+		 		 */
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'nodesEditTagsPage',
+						array('node_id' => $node->getId())
+					)
+				);
+				$response->prepare($request);
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
+			return new Response(
+				$this->getTwig()->render('nodes/deleteTag.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		else {
+			return $this->throw404();
+		}
+	}
+
+	private function removeTag($data, Node $node) {
+		if ($data['node_id'] == $node->getId()) {
+			$tag = Kernel::getInstance()->em()
+				->find('RZ\Renzo\Core\Entities\Tag', $data['node_id']);
+			
+			if ($tag !== null) {
+				$node->removeTag($tag);
+				Kernel::getInstance()->em()->flush();	
+			}
+			return ($tag);
+		}
+	}
+
+	/**
 	 * Create a new node-source for given translation
 	 * 
 	 * 
@@ -725,8 +790,6 @@ class NodesController extends RozierApp {
 
 		Kernel::getInstance()->em()->flush();
 	}
-
-	
 
 	private function buildTranslateForm( Node $node )
 	{
@@ -943,6 +1006,33 @@ class NodesController extends RozierApp {
 			->createBuilder('form')
 			->add('node_id', 'hidden', array(
 				'data' => $node->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+		;
+
+		return $builder->getForm();
+	}
+
+	/**
+	 * 
+	 * @param Node $node
+	 * @param Tag $tag
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildDeleteTagForm(Node $node, Tag $tag)
+	{
+		$builder = $this->getFormFactory()
+			->createBuilder('form')
+			->add('node_id', 'hidden', array(
+				'data' => $node->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+			->add('tag_id', 'hidden', array(
+				'data' => $tag->getId(),
 				'constraints' => array(
 					new NotBlank()
 				)

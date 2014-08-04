@@ -13,13 +13,13 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\User;
+use RZ\Renzo\Core\Entities\Role;
+
 use Themes\Rozier\RozierApp;
 use RZ\Renzo\Core\Utils\FacebookPictureFinder;
 
-
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Renzo\Core\Exceptions\FacebookUsernameNotFoundException;
-
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -188,6 +188,57 @@ class UsersController extends RozierApp
 	}
 
 	/**
+	 * Return a deletion form for requested role depending on the user
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function removeRoleAction(Request $request, $user_id, $role_id) {	
+		$user = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
+		$role = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Role', (int)$role_id);
+			
+		if ($user !== null && $role !== null) {
+			$this->assignation['user'] = $user;
+			$this->assignation['role'] = $role;
+
+			$form = $this->buildDeleteRoleForm($user, $role);
+			$form->handleRequest();
+
+			if ($form->isValid()) {
+
+		 		$this->removeRole($form->getData(), $user);
+		 		$msg = $this->getTranslator()->trans('role.deleted', array('%name%'=>$role->getName()));
+		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
+
+		 		/*
+		 		 * Force redirect to avoid resending form when refreshing page
+		 		 */
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'usersEditRolesPage',
+						array('user_id' => $user->getId())
+					)
+				);
+				$response->prepare($request);
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
+			return new Response(
+				$this->getTwig()->render('users/deleteRole.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		else {
+			return $this->throw404();
+		}
+	}
+
+	/**
 	 * Return an creation form for requested user
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -245,7 +296,7 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * Return an deletion form for requested user
+	 * Return a deletion form for requested user
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function deleteAction( Request $request, $user_id )
@@ -390,15 +441,17 @@ class UsersController extends RozierApp
 		}
 	}
 
-	// TODO
-	public function removeRoleAction( Request $request, $user_id, $role_id ) {
-
-		$user = Kernel::getInstance()->em()
-			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
-
-
-		
-		$user->removeRole($role_id);
+	private function removeRole($data, User $user) {
+		if ($data['user_id'] == $user->getId()) {
+			$role = Kernel::getInstance()->em()
+				->find('RZ\Renzo\Core\Entities\Role', $data['role_id']);
+			
+			if ($role !== null) {
+				$user->removeRole($role);
+				Kernel::getInstance()->em()->flush();	
+			}
+			return ($role);
+		}
 	}
 
 	/**
@@ -528,6 +581,33 @@ class UsersController extends RozierApp
 			->createBuilder('form')
 			->add('user_id', 'hidden', array(
 				'data' => $user->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+		;
+
+		return $builder->getForm();
+	}
+
+	/**
+	 * 
+	 * @param User $user
+	 * @param Role $role
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildDeleteRoleForm(User $user, Role $role)
+	{
+		$builder = $this->getFormFactory()
+			->createBuilder('form')
+			->add('user_id', 'hidden', array(
+				'data' => $user->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+			->add('role_id', 'hidden', array(
+				'data' => $role->getId(),
 				'constraints' => array(
 					new NotBlank()
 				)

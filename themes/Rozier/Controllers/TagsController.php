@@ -153,7 +153,7 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * Return an deletion form for requested tag
+	 * Return a deletion form for requested tag
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function deleteAction( Request $request, $tag_id )
@@ -233,8 +233,13 @@ class TagsController extends RozierApp
 
 	private function deleteTag( $data, Tag $tag )
 	{
-		Kernel::getInstance()->em()->remove($tag);
-		Kernel::getInstance()->em()->flush();
+		if (!$role->required()) {
+			Kernel::getInstance()->em()->remove($tag);
+			Kernel::getInstance()->em()->flush();
+		}
+		else {
+			throw new EntityRequiredException($this->getTranslator()->trans("tag.is.required"), 1);
+		}
 	}
 
 

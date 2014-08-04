@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section id="manage-roles">
+	<h1 id="title">{% trans %}Roles{% endtrans %}</h1>
+	<nav><a class="uk-button" href="{{ path('rolesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a role{% endtrans %}</a></nav>
+	<table class="roles uk-table">
+		<thead>
+	        <tr>
+	            <th>{% trans %}Name{% endtrans %}</th>
+	            <th>{% trans %}Actions{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for role in roles %}
+			<tr>
+				<td>
+					{% if not role.required %}<a href="{{ path('rolesEditPage', { role_id: role.getId }) }}">{{ role.getName }}</a>{% else %}
+					{{ role.getName }}{% endif %}
+				</td>
+				<td>
+					{% if not role.required %}
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('rolesDeletePage', { role_id: role.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}Delete{% endtrans %}</a>
+					{% else %}
+					<div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}role.required{% endtrans %}</div>
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}

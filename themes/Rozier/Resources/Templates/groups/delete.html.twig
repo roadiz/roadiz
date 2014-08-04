@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section id="manage-group">
+	<h1 id="group-title">{% trans %}Delete group:{% endtrans %} {{ group.getName }}</h1>
+
+	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+   		{{ form_errors(form) }}
+	    {% for item in form %}
+	    	{# Node fields  #}
+	        {% if item.vars.name != "_token" %}
+		        {{ form_errors(item) }}
+		        {{ form_widget(item) }}
+	        {% endif %}
+	    {% endfor %}
+	    {{ form_rest(form) }}
+	    <fieldset data-uk-margin>
+	    	<legend>{% trans %}Are you sure you want to delete this group?{% endtrans %}</legend>
+	    	<a href="{{ path('groupsHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<input class="uk-button uk-button-danger" type="submit" />
+   		</fieldset>
+	</form>
+</section>
+{% endblock %}

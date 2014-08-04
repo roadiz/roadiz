@@ -43,7 +43,7 @@
 				<td><a href="{{ path('tagsEditPage', { tag_id: tag.getId }) }}">{{ tag.getId }}</a></td>
 				<td><a href="{{ path('tagsEditPage', { tag_id: tag.getId }) }}">{{ tag.getDefaultTranslatedTag.getName }}</a></td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="">{% trans %}Unlink{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesRemoveTagsPage', { node_id: node.getId, tag_id: tag.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}
