@@ -43,7 +43,7 @@ class Group extends PersistableObject
 	public function getUsers() {
 	    return $this->users;
 	}
-
+	
 	/**
 	 * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\Role")
 	 * @JoinTable(name="groups_roles",
@@ -53,7 +53,7 @@ class Group extends PersistableObject
 	 * @var ArrayCollection
 	 */
 	private $roles;
-	private $rolesNames;
+	private $rolesNames = null;
 	/**
      * Get roles entities
 	 * @return ArrayCollection
@@ -69,7 +69,7 @@ class Group extends PersistableObject
         if ($this->rolesNames === null) {
             $this->rolesNames = array();
             foreach ($this->getRolesEntities() as $role) {
-                $rolesNames[] = $role->getName();
+                $this->rolesNames[] = $role->getName();
             }
         }
         return $this->rolesNames;

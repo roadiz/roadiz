@@ -10,6 +10,7 @@
 	        <tr>
 	            <th>{% trans %}Name{% endtrans %}</th>
 	            <th>{% trans %}Roles{% endtrans %}</th>
+	            <th>{% trans %}Users{% endtrans %}</th>
 	            <th>{% trans %}Actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
@@ -24,6 +25,9 @@
 					{% for role in group.getRolesEntities %}
 						<i data-uk-tooltip title="{{ role.getName }}" data-role="{{ role.getName }}" class="uk-icon-star"></i>
 					{% endfor %}
+				</td>
+				<td>
+					<i class="uk-icon-user"></i> {% transchoice group.getUsers.count %}{0} No users|{1} 1 user|]1,Inf] %count% user{% endtranschoice %}
 				</td>
 				<td>
 					{% if not group.required %}

@@ -14,6 +14,8 @@ namespace Themes\Rozier\Controllers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\User;
 use RZ\Renzo\Core\Entities\Role;
+use RZ\Renzo\Core\Entities\Group;
+
 
 use Themes\Rozier\RozierApp;
 use RZ\Renzo\Core\Utils\FacebookPictureFinder;
@@ -139,14 +141,9 @@ class UsersController extends RozierApp
 
 		if ($user !== null) {
 
-			$role = Kernel::getInstance()->em()
-				->getRepository('RZ\Renzo\Core\Entities\Role')
-				->findAll();
-
 			$this->assignation['user'] = $user;
-			$this->assignation['role'] = $role;
 
-			$form = $this->buildEditRolesForm( $user );
+			$form = $this->buildEditRolesForm($user);
 
 			$form->handleRequest();
 
@@ -197,7 +194,7 @@ class UsersController extends RozierApp
 		$role = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Role', (int)$role_id);
 			
-		if ($user !== null && $role !== null) {
+		if ($user !== null && $role !== null ) {
 			$this->assignation['user'] = $user;
 			$this->assignation['role'] = $role;
 
@@ -229,6 +226,61 @@ class UsersController extends RozierApp
 
 			return new Response(
 				$this->getTwig()->render('users/deleteRole.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		else {
+			return $this->throw404();
+		}
+	}
+
+	/**
+	 * 
+	 * @param  integer $user_id        [description]
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function editGroupsAction(Request $request, $user_id)
+	{
+		$user = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
+
+		if ($user !== null) {
+
+			$this->assignation['user'] = $user;
+
+			$form = $this->buildEditGroupsForm($user);
+
+			$form->handleRequest();
+
+			if ($form->isValid()) {
+				$group = $this->addGroup($form->getData(), $user);
+			
+				$msg = $this->getTranslator()->trans('user.group_linked', array(
+				 			'%user%'=>$user->getUserName(), 
+				 			'%group%'=>$group->getName()
+				 		));
+	 			$request->getSession()->getFlashBag()->add('confirm', $msg);
+				$this->getLogger()->info($msg);
+
+				/*
+	 		 	* Force redirect to avoid resending form when refreshing page
+		 		*/
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'usersEditGroupsPage',
+						array('user_id' => $user->getId())
+						)
+					);
+				$response->prepare($request);
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
+			return new Response(
+				$this->getTwig()->render('users/groups.html.twig', $this->assignation),
 				Response::HTTP_OK,
 				array('content-type' => 'text/html')
 			);
@@ -519,7 +571,7 @@ class UsersController extends RozierApp
 							new NotBlank()
 						)
 					))
-					->add('role_id', new \RZ\Renzo\CMS\Forms\RolesType(),
+					->add('role_id', new \RZ\Renzo\CMS\Forms\RolesType($user->getRolesEntities()),
 						array('label' => 'Role'));
 
 		return $builder->getForm();
@@ -613,6 +665,30 @@ class UsersController extends RozierApp
 				)
 			))
 		;
+
+		return $builder->getForm();
+	}
+
+	/**
+	 *
+	 * @param User $user
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildEditGroupsForm(User $user)
+	{
+		$defaults = array(
+			'user_id' =>  $user->getId()
+		);
+		$builder = $this->getFormFactory()
+					->createBuilder('form', $defaults)
+					->add('user_id', 'hidden', array(
+						'data' => $user->getId(),
+						'constraints' => array(
+							new NotBlank()
+						)
+					))
+					->add('group', new \RZ\Renzo\CMS\Forms\GroupsType($user->getGroups()),
+						array('label' => 'Group'));
 
 		return $builder->getForm();
 	}

@@ -12,25 +12,24 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
 * 
 */
-class TagsType extends AbstractType
+class UsersType extends AbstractType
 {
-    protected $tags;
+    protected $users;
 
-    public function __construct ($tags = null) {
-
-        $this->tags = $tags;
+    public function __construct ($users = null) {
+        $this->users = $users;
     }
 
 	public function setDefaultOptions(OptionsResolverInterface $resolver)
     {	
-    	$tags = Kernel::getInstance()->em()
-    		->getRepository('RZ\Renzo\Core\Entities\Tag')
-    		->findAllWithDefaultTranslation();
+    	$users = Kernel::getInstance()->em()
+    		->getRepository('RZ\Renzo\Core\Entities\User')
+    		->findAll();
 
     	$choices = array();
-        foreach ($tags as $tag) {
-            if (!$this->tags->contains($tag)) {
-                $choices[$tag->getId()] = $tag->getDefaultTranslatedTag()->getName();
+        foreach ($users as $user) {
+            if (!$this->users->contains($user)) {
+                $choices[$user->getId()] = $user->getUserName();
             }
     	}
 
@@ -46,6 +45,6 @@ class TagsType extends AbstractType
 
     public function getName()
     {
-        return 'tags';
+        return 'users';
     }
 }

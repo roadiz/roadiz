@@ -6,6 +6,9 @@
 		<li class="{% if current == 'roles' %}uk-active{% endif %}">
 			<a href="{{ path('usersEditRolesPage', { user_id: user.getId }) }}">{% trans %}user.roles{% endtrans %}</a>
 		</li>
+		<li class="{% if current == 'groups' %}uk-active{% endif %}">
+			<a href="{{ path('usersEditGroupsPage', { user_id: user.getId }) }}">{% trans %}user.groups{% endtrans %}</a>
+		</li>
 	</ul>
 	<div class="uk-navbar-content">
 		<a class="uk-button" href="{{ path('usersHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.users{% endtrans %}</a>

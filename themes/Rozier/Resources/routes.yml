@@ -162,6 +162,10 @@ usersEditRolesPage:
     path:     /rz-admin/users/edit/{user_id}/roles
     defaults: { _controller: Themes\Rozier\Controllers\UsersController::editRolesAction }
     requirements: { user_id : "[0-9]+" }
+usersEditGroupsPage:
+    path:     /rz-admin/users/edit/{user_id}/groups
+    defaults: { _controller: Themes\Rozier\Controllers\UsersController::editGroupsAction }
+    requirements: { user_id : "[0-9]+" }
 usersRemoveRolesPage:
     path:     /rz-admin/users/edit/{user_id}/role/{role_id}/remove
     defaults: { _controller: Themes\Rozier\Controllers\UsersController::removeRoleAction }
@@ -269,3 +273,11 @@ groupsDeletePage:
     path:     /rz-admin/groups/delete/{group_id}
     defaults: { _controller: Themes\Rozier\Controllers\GroupsController::deleteAction }
     requirements: { group_id : "[0-9]+" }
+groupsEditUsersPage:
+    path:     /rz-admin/groups/edit/{group_id}/users
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::editUsersAction }
+    requirements: { group_id : "[0-9]+" }
+groupsRemoveUsersPage:
+    path:     /rz-admin/groups/edit/{group_id}/users/{user_id}/remove
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::removeUsersAction }
+    requirements: { group_id : "[0-9]+", user_id : "[0-9]+" }

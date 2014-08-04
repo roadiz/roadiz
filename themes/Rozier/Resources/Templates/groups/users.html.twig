@@ -1,50 +1,36 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-user-roles">
-	<h1 id="user-title">Edit {{ user.getDefaultTranslatedTag.getName }} roles</h1>
+<section id="manage-group-users">
+	<h1 id="group-title">Edit {{ group.getName }} users</h1>
 	
-	{% include 'users/navBar.html.twig' with {'user':user, current:'roles'} %}
+	{% include 'groups/navBar.html.twig' with {'group':group, current:'users'} %}
 
-	<table class="users-roles uk-table">
+	<table class="groups-users uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Specific roles{% endtrans %}</th>
+	            <th>{% trans %}User{% endtrans %}</th>
 	            <th>{% trans %}Actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
-			{% for role in user.getRolesEntities %}
+			{% for user in group.getUsers %}
 			<tr>
-				<td>{{ role.getName }}</td>
+				<td>{{ user.getUserName }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveRolesPage', { user_id: user.getId, role_id: role.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsRemoveUsersPage', { group_id: group.getId, user_id: user.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
-	<table class="users--inherited-roles uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}Inherited roles{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for role in user.getRoles %}
-			<tr>
-				<td>{{ role }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	<h2>{% trans %}Add a specific role{% endtrans %}</h2>
+	<h2>{% trans %}Add a user{% endtrans %}</h2>
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}
 
    		<fieldset data-uk-margin>
 		    {% for item in form %}
-			    {% if item.vars.name != "_token" and item.vars.name != 'user_id' %}
+			    {% if item.vars.name != "_token" and item.vars.name != 'group_id' %}
 			    <div class="uk-form-row">
 			    	{# Source fields  #}
 			        <label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>

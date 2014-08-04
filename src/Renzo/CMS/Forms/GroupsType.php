@@ -5,32 +5,32 @@ namespace RZ\Renzo\CMS\Forms;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Tag;
+use RZ\Renzo\Core\Entities\Group;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
 * 
 */
-class TagsType extends AbstractType
+class GroupsType extends AbstractType
 {
-    protected $tags;
+    protected $groups;
 
-    public function __construct ($tags = null) {
+    public function __construct ($groups = null) {
 
-        $this->tags = $tags;
+        $this->groups = $groups;
     }
 
 	public function setDefaultOptions(OptionsResolverInterface $resolver)
     {	
-    	$tags = Kernel::getInstance()->em()
-    		->getRepository('RZ\Renzo\Core\Entities\Tag')
-    		->findAllWithDefaultTranslation();
+    	$groups = Kernel::getInstance()->em()
+    		->getRepository('RZ\Renzo\Core\Entities\Group')
+    		->findAll();
 
     	$choices = array();
-        foreach ($tags as $tag) {
-            if (!$this->tags->contains($tag)) {
-                $choices[$tag->getId()] = $tag->getDefaultTranslatedTag()->getName();
+    	foreach ($groups as $group) {
+            if (!$this->groups->contains($group)) {
+                $choices[$group->getId()] = $group->getName();
             }
     	}
 
@@ -46,6 +46,6 @@ class TagsType extends AbstractType
 
     public function getName()
     {
-        return 'tags';
+        return 'groups';
     }
 }

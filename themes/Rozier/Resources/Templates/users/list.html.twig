@@ -31,8 +31,8 @@
 			{% for user in users %}
 			<tr>
 				<td>
-					{% for role in user.getRolesEntities %}
-						<i data-uk-tooltip title="{{ role.getName }}" data-role="{{ role.getName }}" class="uk-icon-star"></i>
+					{% for role in user.getRoles %}
+						<i data-uk-tooltip title="{{ role }}" data-role="{{ role }}" class="uk-icon-star"></i>
 					{% endfor %}
 				</td>
 				<td><img width="50" height="50" class="uk-thumbnail" src="{{ user.getPictureUrl }}" alt="{{ user.getUsername }}" /></td>

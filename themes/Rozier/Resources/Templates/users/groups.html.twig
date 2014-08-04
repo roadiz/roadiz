@@ -1,44 +1,30 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-user-roles">
-	<h1 id="user-title">Edit {{ user.getDefaultTranslatedTag.getName }} roles</h1>
+<section id="manage-user-groups">
+	<h1 id="user-title">Edit {{ user.getDefaultTranslatedTag.getName }} groups</h1>
 	
-	{% include 'users/navBar.html.twig' with {'user':user, current:'roles'} %}
+	{% include 'users/navBar.html.twig' with {'user':user, current:'groups'} %}
 
-	<table class="users-roles uk-table">
+	<table class="users-groups uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Specific roles{% endtrans %}</th>
+	            <th>{% trans %}Group{% endtrans %}</th>
 	            <th>{% trans %}Actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
-			{% for role in user.getRolesEntities %}
+			{% for group in user.getGroups %}
 			<tr>
-				<td>{{ role.getName }}</td>
+				<td>{{ group.getName }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveRolesPage', { user_id: user.getId, role_id: role.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{#{{ path('usersRemoveRolesPage', { user_id: user.getId, role_id: role.getId }) }}#}">{% trans %}Unlink{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
-	<table class="users--inherited-roles uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}Inherited roles{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for role in user.getRoles %}
-			<tr>
-				<td>{{ role }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	<h2>{% trans %}Add a specific role{% endtrans %}</h2>
+	<h2>{% trans %}Add a group{% endtrans %}</h2>
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}
 
