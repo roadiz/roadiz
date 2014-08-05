@@ -73,7 +73,7 @@ class Tag extends DateTimedPositioned
     }
 	
 	/**
-	 * @ManyToOne(targetEntity="Tag", fetch="EXTRA_LAZY")
+	 * @ManyToOne(targetEntity="Tag", inversedBy="children", fetch="EXTRA_LAZY")
 	 * @JoinColumn(name="parent_tag_id", referencedColumnName="id", onDelete="CASCADE")
 	 * @var Tag
 	 */
@@ -112,16 +112,20 @@ class Tag extends DateTimedPositioned
 	 * @return Tag
 	 */
 	public function addChild( Tag $child ) {
-	    $this->children[] = $child;
-	    return $this;
+	    if (!$this->getChildren()->contains($child)) {
+            $this->getChildren()->add($child);
+        }
+        return $this;
 	}
 	/**
 	 * @param  Tag   $child 
 	 * @return Tag
 	 */
 	public function removeChild( Tag $child ) {
-        $this->children->removeElement($child);
-	    return $this;
+	    if ($this->getChildren()->contains($child)) {
+            $this->getChildren()->removeElement($child);
+        }
+        return $this;
     }
 
     /**
@@ -152,6 +156,7 @@ class Tag extends DateTimedPositioned
     	$this->subscribers = new ArrayCollection();
     	$this->documents = new ArrayCollection();
     	$this->translatedTags = new ArrayCollection();
+    	$this->children = new ArrayCollection();
     }
 
     public function getOneLineSummary()

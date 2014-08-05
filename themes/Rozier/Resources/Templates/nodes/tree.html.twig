@@ -4,6 +4,6 @@
 	<h1 id="node-title">Tree {{ source.getTitle }}</h1>
 	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
 	{% include 'nodes/navBar.html.twig' with {"current": 'tree'} %}
-	{% include 'widgets/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
+	{% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
 </section>
 {% endblock %}

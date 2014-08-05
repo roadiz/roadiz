@@ -17,6 +17,7 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Bags\SettingsBag;
 
 use Themes\Rozier\Widgets\NodeTreeWidget;
+use Themes\Rozier\Widgets\TagTreeWidget;
 
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
@@ -50,6 +51,7 @@ class RozierApp extends BackendController {
 		$nodeTreeWidget = new NodeTreeWidget(Kernel::getInstance()->getRequest(), $this);
 		$this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' back-office';
 		$this->assignation['nodeTree'] = new NodeTreeWidget(Kernel::getInstance()->getRequest(), $this);
+		$this->assignation['tagTree'] = new TagTreeWidget(Kernel::getInstance()->getRequest(), $this);
 
 		return $this;
 	}

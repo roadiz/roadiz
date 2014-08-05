@@ -141,9 +141,25 @@ tagsEditPage:
     path:     /rz-admin/tags/edit/{tag_id}
     defaults: { _controller: Themes\Rozier\Controllers\TagsController::editAction }
     requirements: { tag_id : "[0-9]+" }
+tagsEditNodesPage:
+    path:     /rz-admin/tags/edit/{tag_id}/nodes
+    defaults: { _controller: Themes\Rozier\Controllers\TagsController::editNodesAction }
+    requirements: { tag_id : "[0-9]+" }
+tagsTreePage:
+    path:     /rz-admin/tags/tree/{tag_id}
+    defaults: { _controller: Themes\Rozier\Controllers\TagsController::treeAction }
+    requirements: { tag_id : "[0-9]+" }
+tagsEditTranslatedPage:
+    path:     /rz-admin/tags/edit/{tag_id}/translation/{translation_id}
+    defaults: { _controller: Themes\Rozier\Controllers\TagsController::editTranslatedAction }
+    requirements: { tag_id : "[0-9]+", translation_id : "[0-9]+" }
 tagsAddPage:
     path:     /rz-admin/tags/add
     defaults: { _controller: Themes\Rozier\Controllers\TagsController::addAction }
+tagsAddChildPage:
+    path:     /rz-admin/tags/add-child/{tag_id}
+    defaults: { _controller: Themes\Rozier\Controllers\TagsController::addChildAction }
+    requirements: { tag_id : "[0-9]+" }
 tagsDeletePage:
     path:     /rz-admin/tags/delete/{tag_id}
     defaults: { _controller: Themes\Rozier\Controllers\TagsController::deleteAction }

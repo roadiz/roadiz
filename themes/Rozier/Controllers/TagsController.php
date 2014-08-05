@@ -207,6 +207,80 @@ class TagsController extends RozierApp
 
 	/**
 	 * 
+	 * Handle tag creation pages
+	 * @param Symfony\Component\HttpFoundation\Request  $request
+	 * @param int  $tag_id
+	 * @param int  $translation_id
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function addChildAction(Request $request, $tag_id, $translation_id = null) {	
+		$translation = Kernel::getInstance()->em()
+				->getRepository('RZ\Renzo\Core\Entities\Translation')
+        		->findDefault();
+
+		if ($translation_id != null) {
+			$translation = Kernel::getInstance()->em()
+				->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
+		}
+		$parentTag = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Tag', (int)$tag_id);
+
+		if ($translation !== null && 
+			$parentTag !== null) {
+
+			$form = $this->buildAddChildForm( $parentTag );
+			$form->handleRequest();
+
+			if ($form->isValid()) {
+
+				try {
+					$tag = $this->addChildTag($form->getData(), $parentTag, $translation);
+
+					$msg = $this->getTranslator()->trans('tag.created', array('%name%'=>$tag->getId()));
+					$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 				$this->getLogger()->info($msg);
+
+					$response = new RedirectResponse(
+						Kernel::getInstance()->getUrlGenerator()->generate(
+							'tagsEditPage',
+							array('tag_id' => $tag->getId())
+						)
+					);
+					$response->prepare($request);
+					return $response->send();
+				}
+				catch(EntityAlreadyExistsException $e) {
+
+					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
+	 				$this->getLogger()->warning($e->getMessage());
+
+					$response = new RedirectResponse(
+						Kernel::getInstance()->getUrlGenerator()->generate(
+							'tagsAddChildPage',
+							array('tag_id' => $tag_id, 'translation_id' => $translation_id)
+						)
+					);
+					$response->prepare($request);
+					return $response->send();
+				}
+			}
+
+			$this->assignation['translation'] = $translation;
+			$this->assignation['form'] = $form->createView();
+			$this->assignation['parentTag'] = $parentTag;
+
+			return new Response(
+				$this->getTwig()->render('tags/add.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}else {
+			return $this->throw404();
+		}
+	}
+
+	/**
+	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\Tag  $tag
 	 * @return void
@@ -245,6 +319,44 @@ class TagsController extends RozierApp
 		Kernel::getInstance()->em()->persist($translatedTag);
 		Kernel::getInstance()->em()->persist($tag);
 		Kernel::getInstance()->em()->flush();
+
+		return $tag;
+	}
+
+	/**
+	 * 
+	 * @param array  $data
+	 * @param RZ\Renzo\Core\Entities\Tag $tag
+	 * @param RZ\Renzo\Core\Entities\Translation  $translation
+	 */
+	private function addChildTag($data, Tag $parentTag, Translation $translation) {
+
+		if ($parentTag->getId() != $data['parent_tag_id']) {
+			throw new \RuntimeException("Parent tag Ids do not match", 1);
+		}
+
+		$tag = new Tag();
+		$tag->setParent($parentTag);
+		$translatedTag = new TagTranslation( $tag, $translation );
+
+		foreach ($data as $key => $value) {
+
+			$setter = 'set'.ucwords($key);
+
+			if ($key == 'name' || $key == 'description') {
+				$translatedTag->$setter( $value );
+			}
+			elseif($key != 'parent_tag_id') {
+				$tag->$setter( $value );
+			}
+		}
+		$tag->getTranslatedTags()->add($translatedTag); 
+
+		Kernel::getInstance()->em()->persist($translatedTag);
+		Kernel::getInstance()->em()->persist($tag);
+		Kernel::getInstance()->em()->flush();
+
+		return $tag;
 	}
 
 	/**
@@ -255,13 +367,8 @@ class TagsController extends RozierApp
 	 */
 	private function deleteTag( $data, Tag $tag )
 	{
-		if (!$role->required()) {
-			Kernel::getInstance()->em()->remove($tag);
-			Kernel::getInstance()->em()->flush();
-		}
-		else {
-			throw new EntityRequiredException($this->getTranslator()->trans("tag.is.required"), 1);
-		}
+		Kernel::getInstance()->em()->remove($tag);
+		Kernel::getInstance()->em()->flush();
 	}
 
 	/**
@@ -283,6 +390,33 @@ class TagsController extends RozierApp
 					))
 					->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType() , array('required' => false))
 					->add('visible', 'checkbox', array('required' => false))
+		;
+		return $builder->getForm();
+	}
+
+	/**
+	 * 
+	 * @param RZ\Renzo\Core\Entities\Tag  $tag
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildAddChildForm(Tag $tag) {
+		$defaults = array(
+			'visible' => $tag->isVisible()
+		);
+
+		$builder = $this->getFormFactory()
+					->createBuilder('form', $defaults)
+					->add('name', 'text', array(
+						'constraints' => array(
+							new NotBlank()
+						)
+					))
+					->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType() , array('required' => false))
+					->add('visible', 'checkbox', array('required' => false))
+					->add('parent_tag_id', 'hidden', array(
+						"data" => $tag->getId(),
+						'required' => true
+					))
 		;
 		return $builder->getForm();
 	}

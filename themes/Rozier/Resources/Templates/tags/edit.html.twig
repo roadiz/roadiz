@@ -4,7 +4,8 @@
 {% block content %}
 <section id="manage-tag">
 	<h1 id="tag-title">Edit {{ tag.getDefaultTranslatedTag.getName }}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('tagsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to tags{% endtrans %}</a></nav>
+	
+	{% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'edit'} %}
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}

@@ -269,17 +269,23 @@ class Node extends DateTimedPositioned
 	 * @return Node
 	 */
 	public function addChild( Node $child ) {
-	    $this->children[] = $child;
-	    return $this;
+	    if (!$this->getChildren()->contains($child)) {
+            $this->getChildren()->add($child);
+        }
+        return $this;
 	}
 	/**
 	 * @param  Node   $child 
 	 * @return Node
 	 */
 	public function removeChild( Node $child ) {
-        $this->children->removeElement($child);
-	    return $this;
+	    if ($this->getChildren()->contains($child)) {
+            $this->getChildren()->removeElement($child);
+        }
+        return $this;
     }
+
+
 
     /**
      * @ManyToMany(targetEntity="Tag", inversedBy="nodes", orphanRemoval=true, fetch="EXTRA_LAZY")

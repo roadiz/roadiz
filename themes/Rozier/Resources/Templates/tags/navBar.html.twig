@@ -1,0 +1,19 @@
+<nav class="tag-edit-navigation uk-navbar">
+	<ul class="uk-navbar-nav">
+		<li class="{% if current == 'tree' %}uk-active{% endif %}">
+			<a href="{{ path('tagsTreePage', { tag_id: tag.getId }) }}">{% trans %}tag.tree{% endtrans %}</a>
+		</li>
+		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
+			<a href="{{ path('tagsEditPage', { tag_id: tag.getId }) }}">{% trans %}tag.parameters{% endtrans %}</a>
+		</li>
+		<li class="{% if current == 'nodes' %}uk-active{% endif %}" >
+			<a href="{{ path('tagsEditNodesPage', { tag_id: tag.getId }) }}">{% trans %}tag.nodes{% endtrans %}</a>
+		</li>
+	</ul>
+	<div class="uk-navbar-content">
+		<a class="uk-button" href="{{ path('tagsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.tags{% endtrans %}</a>
+	</div>
+	<div class="uk-navbar-content uk-navbar-flip">
+		<a class="uk-button uk-button-danger" href="{{ path('tagsDeletePage', { tag_id: tag.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+	</div>
+</nav>

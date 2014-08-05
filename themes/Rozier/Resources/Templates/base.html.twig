@@ -24,7 +24,18 @@
         <div id="main-container" class="uk-grid">
             {% include 'includes/user_panel.html.twig' %}
             {% include 'includes/admin_menu.html.twig' %}
-            {% include 'widgets/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':true} only %}
+
+            <div id="main-trees" class="uk-width-2-10">  
+                <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
+                    <li><a href=""><i class="uk-icon-code-fork"></i> {% trans %}nodes{% endtrans %}</a></li>
+                    <li><a href=""><i class="uk-icon-tags"></i> {% trans %}tags{% endtrans %}</a></li>
+                </ul>
+                <!-- This is the container of the content items -->
+                <ul id="tree-container" class="uk-switcher uk-margin">
+                    <li>{% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':true} only %}</li>
+                    <li>{% include 'widgets/tagTree/tagTree.html.twig' with {"tagTree":tagTree, "tag":tagTree.getRootTag, 'mainTagTree':true} only %}</li>
+                </ul>
+            </div>
             <!-- Add your site or application content here -->
             <div class="uk-width-6-10" id="main_content">
             {% block content %}

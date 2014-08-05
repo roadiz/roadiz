@@ -99,4 +99,83 @@ class TagRepository extends EntityRepository
             return null;
         }
 	}
+
+    /**
+     * 
+     * @param  Tag        $parent      [description]
+     * @param  Translation $translation [description]
+     * @return array Doctrine result array
+     */
+    public function findByParentWithTranslation( Tag $parent = null, Translation $translation )
+    {
+        $query = null;
+
+        if ($parent === null) {
+            $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
+            INNER JOIN t.translatedTags tt 
+            INNER JOIN tt.translation tr
+            WHERE t.parent IS NULL AND tr.id = :translation_id
+            ORDER BY t.position ASC'
+                        )->setParameter('translation_id', (int)$translation->getId());
+        }
+        else {
+            $query = Kernel::getInstance()->em()
+                            ->createQuery('
+                SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
+                INNER JOIN t.translatedTags tt 
+                INNER JOIN tt.translation tr
+                INNER JOIN t.parent pt
+                WHERE pt.id = :parent AND tr.id = :translation_id
+                ORDER BY t.position ASC'
+                            )->setParameter('parent', $parent->getId())
+                            ->setParameter('translation_id', (int)$translation->getId());
+        }
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * 
+     * @param  Tag        $parent      [description]
+     * @param  Translation $translation [description]
+     * @return array Doctrine result array
+     */
+    public function findByParentWithDefaultTranslation( Tag $parent = null )
+    {
+        $query = null;
+        if ($parent === null) {
+            $query = Kernel::getInstance()->em()
+                        ->createQuery('
+            SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
+            INNER JOIN t.translatedTags tt 
+            INNER JOIN tt.translation tr
+            WHERE t.parent IS NULL AND tr.defaultTranslation = :defaultTranslation
+            ORDER BY t.position ASC'
+                        )->setParameter('defaultTranslation', true);
+        }
+        else {
+            $query = Kernel::getInstance()->em()
+                            ->createQuery('
+                SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
+                INNER JOIN t.translatedTags tt 
+                INNER JOIN tt.translation tr
+                INNER JOIN t.parent pt
+                WHERE pt.id = :parent AND tr.id = :translation_id
+                ORDER BY t.position ASC'
+                            )->setParameter('parent', $parent->getId())
+                            ->setParameter('defaultTranslation', true);
+        }
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
 }
