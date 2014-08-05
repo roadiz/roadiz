@@ -24,10 +24,12 @@ use Symfony\Component\Validator\Constraints\Type;
  */
 class ThemesController extends RozierApp {
 
-
-	public function indexAction( Request $request )
-	{
-
+	/**
+	 * 
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function indexAction(Request $request) {
 		$this->assignation['themes'] = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Theme')
 				->findAll();

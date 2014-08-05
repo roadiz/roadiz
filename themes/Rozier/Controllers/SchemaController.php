@@ -31,13 +31,17 @@ class SchemaController extends RozierApp {
 	 * No preparation for this blind controller
 	 * @return $this
 	 */
-	public function prepareBaseAssignation()
-	{
+	public function prepareBaseAssignation() {
 		return $this;
 	}
 
-	public function updateNodeTypesSchemaAction( Request $request, $_token )
-	{	
+	/**
+	 * 
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  string  $_token
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function updateNodeTypesSchemaAction(Request $request, $_token) {	
 		if (static::$csrfProvider->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
 
 			\RZ\Renzo\Console\SchemaCommand::updateSchema();
@@ -64,8 +68,14 @@ class SchemaController extends RozierApp {
 		return $response->send();
 	}
 
-	public function updateNodeTypeFieldsSchemaAction( Request $request, $_token, $node_type_id )
-	{	
+	/**
+	 * [updateNodeTypeFieldsSchemaAction description]
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  string  $_token
+	 * @param  int  $node_type_id
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $node_type_id) {	
 		if (static::$csrfProvider->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
 			\RZ\Renzo\Console\SchemaCommand::updateSchema();
 

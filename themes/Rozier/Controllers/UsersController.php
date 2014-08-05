@@ -9,13 +9,13 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
+
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\User;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Entities\Group;
-
 
 use Themes\Rozier\RozierApp;
 use RZ\Renzo\Core\Utils\FacebookPictureFinder;
@@ -30,17 +30,20 @@ use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+
 /**
 * 
 */
 class UsersController extends RozierApp
 {
+
 	/**
+	 * 
 	 * List every users
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction( Request $request )
-	{
+	public function indexAction(Request $request) {
 		/*
 		 * Apply ordering or not
 		 */
@@ -71,12 +74,13 @@ class UsersController extends RozierApp
 	}
 
 	/**
+	 * 
 	 * Return an edition form for requested user
-	 * @param  integer $user_id        [description]
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $user_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( Request $request, $user_id )
-	{
+	public function editAction(Request $request, $user_id) {
 		$user = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
 
@@ -131,11 +135,11 @@ class UsersController extends RozierApp
 
 	/**
 	 * Return an edition form for requested user
-	 * @param  integer $user_id        [description]
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $user_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editRolesAction( Request $request, $user_id )
-	{
+	public function editRolesAction(Request $request, $user_id) {
 		$user = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
 
@@ -186,6 +190,9 @@ class UsersController extends RozierApp
 
 	/**
 	 * Return a deletion form for requested role depending on the user
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $user_id
+	 * @param  int  $role_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function removeRoleAction(Request $request, $user_id, $role_id) {	
@@ -236,12 +243,11 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * @param  integer $user_id        [description]
+	 * @param  Symfony\Component\HttpFoundation\Request $request
+	 * @param  int  $user_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editGroupsAction(Request $request, $user_id)
-	{
+	public function editGroupsAction(Request $request, $user_id) {
 		$user = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
 
@@ -289,13 +295,13 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 *
 	 * Return a deletion form for requested group depending on the user
-	 * @param  integer $user_id        [description]
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $user_id
+	 * @param  int  $group_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function removeGroupAction(Request $request, $user_id, $group_id)
-	{
+	public function removeGroupAction(Request $request, $user_id, $group_id) {
 		$user = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
 		$group = Kernel::getInstance()->em()
@@ -347,10 +353,10 @@ class UsersController extends RozierApp
 
 	/**
 	 * Return an creation form for requested user
+	 * @param Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( Request $request )
-	{
+	public function addAction(Request $request) {
 		$user = new User();
 
 		if ($user !== null) {
@@ -404,10 +410,11 @@ class UsersController extends RozierApp
 
 	/**
 	 * Return a deletion form for requested user
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $user_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( Request $request, $user_id )
-	{
+	public function deleteAction(Request $request, $user_id) {
 		$user = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
 
@@ -456,13 +463,11 @@ class UsersController extends RozierApp
 		}
 	}
 	/**
-	 * 
-	 * @param  [type] $data [description]
-	 * @param  User   $user [description]
-	 * @return [type]       [description]
+	 * @param  array  $data 
+	 * @param  RZ\Renzo\Core\Entities\User  $user 
+	 * @return void
 	 */
-	private function editUser( $data, User $user )
-	{	
+	private function editUser($data, User $user) {	
 		if ($data['username'] != $user->getUsername() && 
 				Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\User')
@@ -492,8 +497,11 @@ class UsersController extends RozierApp
 		Kernel::getInstance()->em()->flush();
 	}
 
-	private function addUser( $data, User $user )
-	{	
+	/**
+	 * @param array $data
+	 * @param RZ\Renzo\Core\Entities\User   $user
+	 */
+	private function addUser($data, User $user) {	
 		if (Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\User')
 				->usernameExists($data['username']) || 
@@ -514,8 +522,11 @@ class UsersController extends RozierApp
 		Kernel::getInstance()->em()->flush();
 	}
 
-	private function updateProfileImage( User $user )
-	{
+	/**
+	 * @param  RZ\Renzo\Core\Entities\User  $user
+	 * @return void
+	 */
+	private function updateProfileImage(User $user) {
 		if ($user->getFacebookName() != '') {
 			$facebook = new FacebookPictureFinder($user->getFacebookName());
 	        if (false !== $url = $facebook->getPictureUrl()) {
@@ -530,13 +541,21 @@ class UsersController extends RozierApp
 		}
 	}
 
-	private function deleteUser( $data, User $user )
-	{
+	/**
+	 * @param  array $data
+	 * @param  RZ\Renzo\Core\Entities\User  $user
+	 * @return void
+	 */
+	private function deleteUser($data, User $user) {
 		Kernel::getInstance()->em()->remove($user);
 		Kernel::getInstance()->em()->flush();
 	}
 
-	private function addUserRole( $data, User $user ) {
+	/**
+	 * @param array $data
+	 * @param RZ\Renzo\Core\Entities\User  $user
+	 */
+	private function addUserRole($data, User $user) {
 		if ($data['user_id'] == $user->getId()) {
 			$role = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\Role', $data['role_id']);
@@ -548,6 +567,11 @@ class UsersController extends RozierApp
 		}
 	}
 
+	/**
+	 * @param  array $data
+	 * @param  RZ\Renzo\Core\Entities\User  $user
+	 * @return RZ\Renzo\Core\Entities\Role
+	 */
 	private function removeUserRole($data, User $user) {
 		if ($data['user_id'] == $user->getId()) {
 			$role = Kernel::getInstance()->em()
@@ -561,6 +585,10 @@ class UsersController extends RozierApp
 		}
 	}
 
+	/**
+	 * @param array $data
+	 * @param RZ\Renzo\Core\Entities\User  $user
+	 */
 	private function addUserGroup($data, User $user) {
 		if ($data['user_id'] == $user->getId()) {
 			$group = Kernel::getInstance()->em()
@@ -574,6 +602,11 @@ class UsersController extends RozierApp
 		}
 	}
 
+	/**
+	 * @param  array $data
+	 * @param  RZ\Renzo\Core\Entities\User  $user
+	 * @return RZ\Renzo\Core\Entities\Group
+	 */
 	private function removeUserGroup($data, User $user) {
 		if ($data['user_id'] == $user->getId()) {
 			$group = Kernel::getInstance()->em()
@@ -588,12 +621,10 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * @param  User   $user 
+	 * @param  RZ\Renzo\Core\Entities\User  $user 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildAddForm( User $user )
-	{
+	private function buildAddForm(User $user) {
 		$defaults = array(
 			'email' => $user->getEmail(),
 			'username' => $user->getUsername(),
@@ -635,12 +666,10 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * @param  User   $user 
+	 * @param  RZ\Renzo\Core\Entities\User  $user 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditRolesForm( User $user )
-	{
+	private function buildEditRolesForm(User $user) {
 		$defaults = array(
 			'user_id' =>  $user->getId()
 		);
@@ -659,12 +688,10 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * @param  User   $user 
+	 * @param  RZ\Renzo\Core\Entities\User  $user 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditForm( User $user )
-	{
+	private function buildEditForm(User $user) {
 		$defaults = array(
 			'email' => $user->getEmail(),
 			'username' => $user->getUsername(),
@@ -704,12 +731,10 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * @param  User   $user 
+	 * @param  RZ\Renzo\Core\Entities\User  $user 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildDeleteForm( User $user )
-	{
+	private function buildDeleteForm(User $user) {
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
 			->add('user_id', 'hidden', array(
@@ -724,13 +749,11 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * @param User $user
-	 * @param Role $role
+	 * @param RZ\Renzo\Core\Entities\User  $user
+	 * @param RZ\Renzo\Core\Entities\Role  $role
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildRemoveRoleForm(User $user, Role $role)
-	{
+	private function buildRemoveRoleForm(User $user, Role $role) {
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
 			->add('user_id', 'hidden', array(
@@ -751,12 +774,10 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 *
-	 * @param User $user
+	 * @param RZ\Renzo\Core\Entities\User  $user
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditGroupsForm(User $user)
-	{
+	private function buildEditGroupsForm(User $user) {
 		$defaults = array(
 			'user_id' =>  $user->getId()
 		);
@@ -775,13 +796,11 @@ class UsersController extends RozierApp
 	}
 	
 	/**
-	 * 
-	 * @param User $user
-	 * @param Group $group
+	 * @param RZ\Renzo\Core\Entities\User  $user
+	 * @param RZ\Renzo\Core\Entities\Group  $group
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildRemoveGroupForm(User $user, Group $group)
-	{
+	private function buildRemoveGroupForm(User $user, Group $group) {
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
 			->add('user_id', 'hidden', array(

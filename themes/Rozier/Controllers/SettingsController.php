@@ -26,17 +26,19 @@ use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+
 /**
 * 
 */
 class SettingsController extends RozierApp
 {
 	/**
+	 * 
 	 * List every settings
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction( Request $request )
-	{
+	public function indexAction(Request $request) {
 		$settings = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Setting')
 			->findBy(array(), array('name' => 'ASC'));
@@ -83,12 +85,13 @@ class SettingsController extends RozierApp
 	}
 
 	/**
+	 * 
 	 * Return an edition form for requested setting
-	 * @param  integer $setting_id        [description]
+	 * @param int  $setting_id
+	 * @param Symfony\Component\HttpFoundation\Request $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( Request $request, $setting_id )
-	{
+	public function editAction(Request $request, $setting_id) {
 		$setting = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Setting', (int)$setting_id);
 
@@ -137,11 +140,12 @@ class SettingsController extends RozierApp
 	}
 
 	/**
+	 * 
 	 * Return an creation form for requested setting
+	 * @param Symfony\Component\HttpFoundation\Request $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( Request $request )
-	{
+	public function addAction(Request $request) {
 		$setting = new Setting();
 
 		if ($setting !== null) {
@@ -193,8 +197,13 @@ class SettingsController extends RozierApp
 	 * Return an deletion form for requested setting
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( Request $request, $setting_id )
-	{
+	/**
+	 * Return an deletion form for requested setting
+	 * @param  Symfony\Component\HttpFoundation\Request $request
+	 * @param  int  $setting_id
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function deleteAction(Request $request, $setting_id) {
 		$setting = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Setting', (int)$setting_id);
 
@@ -238,8 +247,13 @@ class SettingsController extends RozierApp
 		}
 	}
 
-	private function editSetting( $data, Setting $setting)
-	{
+	/**
+	 * 
+	 * @param  array  $data
+	 * @param  RZ\Renzo\Core\Entities\Setting  $setting
+	 * @return 
+	 */
+	private function editSetting($data, Setting $setting) {
 		if ($data['id'] == $setting->getId()) {
 			unset($data['id']);
 
@@ -265,8 +279,13 @@ class SettingsController extends RozierApp
 		}
 	}
 
-	private function addSetting( $data, Setting $setting)
-	{
+	/**
+	 * 
+	 * @param array  $data
+	 * @param RZ\Renzo\Core\Entities\Setting $setting
+	 * @return 
+	 */
+	private function addSetting($data, Setting $setting) {
 		if (Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Setting')
 			->exists($data['name'])) {
@@ -288,21 +307,24 @@ class SettingsController extends RozierApp
 		}
 	}
 
-	private function deleteSetting( $data, Setting $setting)
-	{
+	/**
+	 * 
+	 * @param  array  $data
+	 * @param  RZ\Renzo\Core\Entities\Setting $setting
+	 * @return bool
+	 */
+	private function deleteSetting($data, Setting $setting) {
 		Kernel::getInstance()->em()->remove($setting);
 		Kernel::getInstance()->em()->flush();
 		return true;
 	}
 
-
 	/**
 	 * 
-	 * @param  Setting   $setting 
+	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditForm( Setting $setting )
-	{
+	private function buildEditForm(Setting $setting) {
 		$defaults = array(
 			'id' =>      $setting->getId(),
 			'name' =>    $setting->getName(),
@@ -334,11 +356,10 @@ class SettingsController extends RozierApp
 
 	/**
 	 * 
-	 * @param  Setting   $setting 
+	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildAddForm( Setting $setting )
-	{
+	private function buildAddForm(Setting $setting) {
 		$defaults = array(
 			'name' =>    $setting->getName(),
 			'value' =>   $setting->getValue(),
@@ -365,11 +386,10 @@ class SettingsController extends RozierApp
 
 	/**
 	 * 
-	 * @param  Setting   $setting 
+	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildShortEditForm( Setting $setting )
-	{
+	private function buildShortEditForm(Setting $setting) {
 		$defaults = array(
 			'id' =>      $setting->getId(),
 			'value' =>   $setting->getValue()
@@ -388,11 +408,10 @@ class SettingsController extends RozierApp
 
 	/**
 	 * 
-	 * @param  Setting   $setting 
+	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildDeleteForm( Setting $setting )
-	{
+	private function buildDeleteForm(Setting $setting) {
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
 			->add('setting_id', 'hidden', array(
@@ -406,9 +425,11 @@ class SettingsController extends RozierApp
 		return $builder->getForm();
 	}
 
-
-	public static function getSettings()
-	{
+	/**
+	 * 
+	 * @return \Doctrine\Common\Collections\ArrayCollection
+	 */
+	public static function getSettings() {
 		return Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Setting')
 			->findAll();

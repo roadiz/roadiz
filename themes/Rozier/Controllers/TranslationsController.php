@@ -9,6 +9,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
+
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -31,11 +32,12 @@ use Symfony\Component\Validator\Constraints\Type;
 class TranslationsController extends RozierApp
 {
 	/**
+	 * 
 	 * List every translations
+	 * @param Symfony\Component\HttpFoundation\Request $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction( Request $request )
-	{
+	public function indexAction(Request $request) {
 		$translations = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Translation')
 			->findAll();
@@ -82,12 +84,13 @@ class TranslationsController extends RozierApp
 	}
 
 	/**
+	 * 
 	 * Return an edition form for requested translation
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  integer $translation_id        [description]
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( Request $request, $translation_id )
-	{
+	public function editAction(Request $request, $translation_id) {
 		$translation = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
 
@@ -139,6 +142,7 @@ class TranslationsController extends RozierApp
 	}
 
 	/**
+	 * 
 	 * Return an creation form for requested translation
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -191,11 +195,13 @@ class TranslationsController extends RozierApp
 	}
 
 	/**
+	 * 
 	 * Return an deletion form for requested translation
+	 * @param Symfony\Component\HttpFoundation\Request  $request
+	 * @param int  $translation_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( Request $request, $translation_id )
-	{
+	public function deleteAction(Request $request, $translation_id) {
 		$translation = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
 
@@ -244,8 +250,7 @@ class TranslationsController extends RozierApp
 		}
 	}
 
-	private function editTranslation( $data, Translation $translation)
-	{
+	private function editTranslation($data, Translation $translation) {
 		try {
 			foreach ($data as $key => $value) {
 				$setter = 'set'.ucwords($key);
@@ -260,8 +265,7 @@ class TranslationsController extends RozierApp
 		}
 	}
 
-	private function addTranslation( $data, Translation $translation)
-	{
+	private function addTranslation($data, Translation $translation) {
 		try {
 			foreach ($data as $key => $value) {
 				$setter = 'set'.ucwords($key);
@@ -276,8 +280,7 @@ class TranslationsController extends RozierApp
 		}
 	}
 
-	private function deleteTranslation( $data, Translation $translation)
-	{
+	private function deleteTranslation($data, Translation $translation) {
 		if ($data['translation_id'] == $translation->getId()) {
 
 			if ($translation->isDefaultTranslation() === false) {
@@ -292,11 +295,10 @@ class TranslationsController extends RozierApp
 
 	/**
 	 * 
-	 * @param  Translation   $translation 
+	 * @param  RZ\Renzo\Core\Entities\Translation  $translation 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditForm( Translation $translation )
-	{
+	private function buildEditForm(Translation $translation) {
 		$defaults = array(
 			'name' =>           $translation->getName(),
 			'locale' =>    		$translation->getLocale(),
@@ -321,11 +323,10 @@ class TranslationsController extends RozierApp
 
 	/**
 	 * 
-	 * @param  Translation   $translation 
+	 * @param  RZ\Renzo\Core\Entities\Translation  $translation 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildDeleteForm( Translation $translation )
-	{
+	private function buildDeleteForm(Translation $translation) {
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
 			->add('translation_id', 'hidden', array(
@@ -341,11 +342,10 @@ class TranslationsController extends RozierApp
 
 	/**
 	 * 
-	 * @param  Translation $translation
+	 * @param  RZ\Renzo\Core\Entities\Translation  $translation
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildMakeDefaultForm(Translation $translation)
-	{
+	private function buildMakeDefaultForm(Translation $translation) {
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
 			->add('translation_id', 'hidden', array(

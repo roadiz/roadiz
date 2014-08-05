@@ -11,6 +11,9 @@ use RZ\Renzo\Core\Viewers\UserViewer;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
+ * 
+ * 
+ * 
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\UserRepository")
  * @Table(name="users")
  * @HasLifecycleCallbacks

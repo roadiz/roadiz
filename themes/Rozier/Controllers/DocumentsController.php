@@ -18,7 +18,12 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class DocumentsController extends RozierApp {
 
-	public function indexAction( Request $request ) {
+	/**
+	 * 
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function indexAction(Request $request) {
 
 		$page = $request->query->get('page');
 		if (!($page > 1)) {
@@ -41,9 +46,14 @@ class DocumentsController extends RozierApp {
 			array('content-type' => 'text/html')
 		);
 	}
-
-	public function editAction( Request $request, $document_id )
-	{
+ 
+ 	/**
+ 	 * 
+ 	 * @param  Symfony\Component\HttpFoundation\Request  $request
+ 	 * @param  int  $document_id
+ 	 * @return Symfony\Component\HttpFoundation\Response
+ 	 */
+	public function editAction(Request $request, $document_id) {
 		$document = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Document', (int)$document_id);
 
@@ -95,12 +105,14 @@ class DocumentsController extends RozierApp {
 			return $this->throw404();
 		}
 	}
+
 	/**
 	 * Return an deletion form for requested document
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $document_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( Request $request, $document_id )
-	{
+	public function deleteAction(Request $request, $document_id) {
 		$document = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Document', (int)$document_id);
 
@@ -148,8 +160,12 @@ class DocumentsController extends RozierApp {
 		}
 	}
 
-	public function uploadAction( Request $request )
-	{
+	/**
+	 * 
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function uploadAction(Request $request) {
 		/*
 		 * Handle main form
 		 */
@@ -202,11 +218,10 @@ class DocumentsController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  Document $ua
+	 * @param  RZ\Renzo\Core\Entities\Document  $doc
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildDeleteForm( Document $doc )
-	{
+	private function buildDeleteForm(Document $doc) {
 		$defaults = array(
 			'document_id' =>  $doc->getId()
 		);
@@ -223,11 +238,10 @@ class DocumentsController extends RozierApp {
 	}
 	/**
 	 * 
-	 * @param  Document   $document 
+	 * @param  RZ\Renzo\Core\Entities\Document  $document 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditForm( Document $document )
-	{
+	private function buildEditForm(Document $document) {
 		$defaults = array(
 			'private' => $document->isPrivate(),
 			'name' => $document->getName(),
@@ -246,8 +260,11 @@ class DocumentsController extends RozierApp {
 		return $builder->getForm();
 	}
 
-	private function buildUploadForm()
-	{
+ 	/**
+ 	 * 
+ 	 * @return Symfony\Component\Form\Forms
+ 	 */
+	private function buildUploadForm() {
 		$builder = $this->getFormFactory()
 					->createBuilder('form')
 					->add('attachment', 'file');
@@ -255,9 +272,13 @@ class DocumentsController extends RozierApp {
 		return $builder->getForm();
 	}
 
-
-	private function editDocument( $data, Document $document)
-	{
+	/**
+	 * 
+	 * @param  array   $data
+	 * @param  RZ\Renzo\Core\Entities\Document $document
+	 * @return void
+	 */
+	private function editDocument($data, Document $document) {
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$document->$setter( $value );
@@ -265,13 +286,14 @@ class DocumentsController extends RozierApp {
 
 		Kernel::getInstance()->em()->flush();
 	}
+
 	/**
+	 * 
 	 * Handle upload form data to create a Document
-	 * @param  array $data
+	 * @param  array  $data
 	 * @return void
 	 */
-	private function uploadDocument( $data )
-	{
+	private function uploadDocument($data) {
 		if (!empty($data['attachment'])) {
 
 			$file = $data['attachment']->getData();

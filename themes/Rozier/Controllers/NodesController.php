@@ -9,6 +9,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
+
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -35,16 +36,14 @@ use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-
-
 class NodesController extends RozierApp {
-	
+
 	/**
 	 * List every nodes
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction( Request $request )
-	{
+	public function indexAction(Request $request) {
 		/*
 		 * Apply ordering or not
 		 */
@@ -80,8 +79,14 @@ class NodesController extends RozierApp {
 		);
 	}
 
-	public function treeAction( Request $request, $node_id, $translation_id = null )
-	{
+	/**
+	 * 
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $node_id
+	 * @param  int  $translation_id
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function treeAction(Request $request, $node_id, $translation_id = null) {
 		$node = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
 		Kernel::getInstance()->em()->refresh($node);
@@ -115,14 +120,14 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * Return an edition form for requested node
 	 * 
-	 * @param  integer $node_id        [description]
-	 * @param  integer $translation_id [description]
+	 * Return an edition form for requested node
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $node_id
+	 * @param  int  $translation_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( Request $request, $node_id, $translation_id = null )
-	{
+	public function editAction(Request $request, $node_id, $translation_id = null) {
 		$node = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
 		Kernel::getInstance()->em()->refresh($node);
@@ -216,14 +221,14 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * Return an edition form for requested node
 	 * 
-	 * @param  integer $node_id        [description]
-	 * @param  integer $translation_id [description]
+	 * Return an edition form for requested node
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $node_id
+	 * @param  int  $translation_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editSourceAction( Request $request, $node_id, $translation_id)
-	{
+	public function editSourceAction(Request $request, $node_id, $translation_id) {
 		$translation = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
 
@@ -290,14 +295,13 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * Return tags form for requested node
 	 * 
-	 * @param  integer $node_id        [description]
-	 * @param  integer $translation_id [description]
+	 * Return tags form for requested node
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $node_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editTagsAction( Request $request, $node_id )
-	{
+	public function editTagsAction(Request $request, $node_id) {
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
         		->findDefault();
@@ -357,7 +361,11 @@ class NodesController extends RozierApp {
 	}
 
 	/**
+	 * 
 	 * Return a deletion form for requested tag depending on the node
+	 * @param  Symfony\Component\HttpFoundation\Requet  $request
+	 * @param  int  $node_id
+	 * @param  int  $tag_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function removeTagAction(Request $request, $node_id, $tag_id) {
@@ -408,12 +416,14 @@ class NodesController extends RozierApp {
 	}
 
 	/**
+	 * 
 	 * Handle node creation pages
-	 * @param [type] $node_type_id   [description]
-	 * @param [type] $translation_id [description]
+	 * @param Symfony\Component\HttpFoundation\Request  $request
+	 * @param int  $node_type_id
+	 * @param int  $translation_id
+	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( Request $request, $node_type_id, $translation_id = null )
-	{	
+	public function addAction(Request $request, $node_type_id, $translation_id = null) {	
 		$type = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\NodeType', $node_type_id);
 
@@ -488,12 +498,14 @@ class NodesController extends RozierApp {
 	}
 
 	/**
+	 * 
 	 * Handle node creation pages
-	 * @param [type] $node_type_id   [description]
-	 * @param [type] $translation_id [description]
+	 * @param Symfony\Component\HttpFoundation\Request  $request
+	 * @param int  $node_id
+	 * @param int  $translation_id
+	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addChildAction( Request $request, $node_id, $translation_id = null )
-	{	
+	public function addChildAction(Request $request, $node_id, $translation_id = null) {	
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
         		->findDefault();
@@ -560,11 +572,13 @@ class NodesController extends RozierApp {
 	}
 
 	/**
+	 * 
 	 * Return an deletion form for requested node
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $node_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( Request $request, $node_id )
-	{
+	public function deleteAction(Request $request, $node_id) {
 		$node = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
 
@@ -609,11 +623,12 @@ class NodesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  array $data 
+	 * @param  array  $data
+	 * @param  RZ\Renzo\Core\Entities\NodeType  $type
+	 * @param  RZ\Renzo\Core\Entities\Translation  $translation
 	 * @return RZ\Renzo\Core\Entities\Node
 	 */
-	private function createNode( $data, NodeType $type, Translation $translation )
-	{
+	private function createNode($data, NodeType $type, Translation $translation) {
 		if ($this->urlAliasExists( StringHandler::slugify($data['nodeName']) )) {
 			$msg = $this->getTranslator()->trans('node.no_creation.url_alias.already_exists', array('%name%'=>$data['nodeName']));
 			throw new EntityAlreadyExistsException($msg, 1);
@@ -638,11 +653,10 @@ class NodesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  array $data 
+	 * @param  array  $data 
 	 * @return RZ\Renzo\Core\Entities\Node
 	 */
-	private function createChildNode( $data, Node $parentNode, Translation $translation )
-	{
+	private function createChildNode($data, Node $parentNode, Translation $translation) {
 		if ($this->urlAliasExists( StringHandler::slugify($data['nodeName']) )) {
 			$msg = $this->getTranslator()->trans('node.no_creation.url_alias.already_exists', array('%name%'=>$data['nodeName']));
 			throw new EntityAlreadyExistsException($msg, 1);
@@ -678,28 +692,36 @@ class NodesController extends RozierApp {
 		}
 	}
 
-	private function urlAliasExists( $name )
-	{
+	/**
+	 * 
+	 * @param  string  $name
+	 * @return void
+	 */
+	private function urlAliasExists($name) {
 		return (boolean)Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
 			->exists( $name );
 	}
-	private function nodeNameExists( $name )
-	{
+
+	/**
+	 * 
+	 * @param  string $name
+	 * @return void
+	 */
+	private function nodeNameExists($name) {
 		return (boolean)Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Node')
 			->exists( $name );
 	}
 
 	/**
-	 * Edit node base parameters
 	 * 
-	 * @param  array $data Form data
-	 * @param  Node   $node [description]
+	 * Edit node base parameters
+	 * @param  array  $data 
+	 * @param  Node   $node 
 	 * @return void
 	 */
-	private function editNode( $data, Node $node)
-	{	
+	private function editNode($data, Node $node) {	
 		$testingNodeName = StringHandler::slugify($data['nodeName']);
 		if ($testingNodeName != $node->getNodeName() && 
 				($this->nodeNameExists($testingNodeName) || 
@@ -717,14 +739,13 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * Link a node with a tag 
 	 * 
+	 * Link a node with a tag 
 	 * @param  array $data Form data
-	 * @param  Node   $node [description]
-	 * @return Tag $linkedTag
+	 * @param  RZ\Renzo\Core\Entities\Node  $node 
+	 * @return RZ\Renzo\Core\Entities\Tag  $linkedTag
 	 */
-	private function addNodeTag($data, Node $node)
-	{
+	private function addNodeTag($data, Node $node) {
 		$tag = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Tag')
 				->findWithDefaultTranslation($data['tag_id']);
@@ -735,6 +756,13 @@ class NodesController extends RozierApp {
 		return $tag;
 	}
 
+	/**
+	 * 
+	 * @param  array  $data
+	 * @param  RZ\Renzo\Core\Entities\Node  $node
+	 * @param  RZ\Renzo\Core\Entities\Tag  $tag
+	 * @return RZ\Renzo\Core\Entities\Tag
+	 */
 	private function removeNodeTag($data, Node $node, Tag $tag) {
 		if ($data['node_id'] == $node->getId() && 
 			$data['tag_id'] == $tag->getId()) {
@@ -747,15 +775,13 @@ class NodesController extends RozierApp {
 	}
 
 	/**
+	 * 
 	 * Create a new node-source for given translation
-	 * 
-	 * 
-	 * @param  array $data Form data
-	 * @param  Node   $node [description]
+	 * @param  array  $data 
+	 * @param  RZ\Renzo\Core\Entities\Node  $node 
 	 * @return void
 	 */
-	private function translateNode( $data, Node $node )
-	{
+	private function translateNode($data, Node $node) {
 		$sourceClass = "GeneratedNodeSources\\".$node->getNodeType()->getSourceEntityClassName();
 		$new_translation = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\Translation', (int)$data['translation_id']);
@@ -768,15 +794,13 @@ class NodesController extends RozierApp {
 	}
 
 	/**
+	 * 
 	 * Edit node source parameters
-	 * 
-	 * 
-	 * @param  array $data Form data
-	 * @param  $nodeSource
+	 * @param  array  $data 
+	 * @param  RZ\Renzo\Core\Entities\NodesSources  $nodeSource
 	 * @return void    
 	 */
-	private function editNodeSource( $data, $nodeSource )
-	{
+	private function editNodeSource($data, $nodeSource) {
 		$fields = $nodeSource->getNode()->getNodeType()->getFields();
 		foreach ($fields as $field) {
 			if (isset($data[$field->getName()])) {
@@ -787,8 +811,12 @@ class NodesController extends RozierApp {
 		Kernel::getInstance()->em()->flush();
 	}
 
-	private function buildTranslateForm( Node $node )
-	{
+	/**
+	 * 
+	 * @param  RZ\Renzo\Core\Entities\Node  $node
+	 * @return 
+	 */
+	private function buildTranslateForm(Node $node) {
 		$translations = $node->getHandler()->getUnavailableTranslations();
 		$choices = array();
 
@@ -821,11 +849,10 @@ class NodesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  Node   $parentNode 
+	 * @param  RZ\Renzo\Core\Entities\Node  $parentNode 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildAddChildForm( Node $parentNode )
-	{
+	private function buildAddChildForm(Node $parentNode) {
 		$defaults = array(
 			
 		);
@@ -850,11 +877,10 @@ class NodesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  Node   $node 
+	 * @param  RZ\Renzo\Core\Entities\Node  $node 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditForm( Node $node )
-	{
+	private function buildEditForm(Node $node) {
 		$fields = $node->getNodeType()->getFields();
 
 		$defaults = array(
@@ -885,11 +911,10 @@ class NodesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  Node   $node 
+	 * @param  RZ\Renzo\Core\Entities\Node  $node 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditTagsForm( Node $node )
-	{
+	private function buildEditTagsForm(Node $node) {
 		$defaults = array(
 			'node_id' =>  $node->getId()
 		);
@@ -908,12 +933,11 @@ class NodesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  Node  $node
-	 * @param  NodesSources $source
+	 * @param  RZ\Renzo\Core\Entities\Node  $node
+	 * @param  RZ\Renzo\Core\Entities\NodesSources $source
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditSourceForm( Node $node, $source )
-	{
+	private function buildEditSourceForm(Node $node, $source) {
 		$fields = $node->getNodeType()->getFields();
 		/*
 		 * Create source default values
@@ -946,11 +970,10 @@ class NodesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  string $type
+	 * @param  string  $type
 	 * @return AbstractType
 	 */
-	public static function getFormTypeFromFieldType( $nodeSource, NodeTypeField $field )
-	{
+	public static function getFormTypeFromFieldType($nodeSource, NodeTypeField $field) {
 		switch ($field->getType()) {
 			case NodeTypeField::DOCUMENTS_T:
 				$documents = $nodeSource->getHandler()->getDocumentsFromFieldName( $field->getName() );
@@ -965,13 +988,14 @@ class NodesController extends RozierApp {
 	}
 
 	/**
+	 * 
 	 * Fill node-source content according to field type
-	 * @param array        $data       
-	 * @param NodesSources $nodeSource 
-	 * @param NodeTypeField $field 
+	 * @param array  $data       
+	 * @param NodesSources  $nodeSource 
+	 * @param NodeTypeField  $field 
+	 * @return void
 	 */
-	public static function setValueFromFieldType( $data, $nodeSource, NodeTypeField $field )
-	{
+	public static function setValueFromFieldType($data, $nodeSource, NodeTypeField $field) {
 		switch ($field->getType()) {
 			case NodeTypeField::DOCUMENTS_T:
 				$nodeSource->getHandler()->cleanDocumentsFromField($field);
@@ -993,11 +1017,10 @@ class NodesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  Node   $node 
+	 * @param  RZ\Renzo\Core\Entities\Node  $node 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildDeleteForm( Node $node )
-	{
+	private function buildDeleteForm(Node $node) {
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
 			->add('node_id', 'hidden', array(
@@ -1013,12 +1036,11 @@ class NodesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param Node $node
-	 * @param Tag $tag
+	 * @param RZ\Renzo\Core\Entities\Node  $node
+	 * @param RZ\Renzo\Core\Entities\Tag  $tag
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildRemoveTagForm(Node $node, Tag $tag)
-	{
+	private function buildRemoveTagForm(Node $node, Tag $tag) {
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
 			->add('node_id', 'hidden', array(

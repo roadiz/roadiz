@@ -19,8 +19,12 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class LoginController extends RozierApp {
 
-	public function indexAction( Request $request )
-	{	
+	/**
+	 * 
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function indexAction(Request $request) {	
 		$form = $this->buildLoginForm();
 
 		$this->assignation['form'] = $form->createView();
@@ -43,17 +47,12 @@ class LoginController extends RozierApp {
 		);
 	}
 
-	public function checkAction( Request $request )
-	{	
-		return new Response(
-			$this->getTwig()->render('login/check.html.twig', $this->assignation),
-			Response::HTTP_OK,
-			array('content-type' => 'text/html')
-		);
-	}
-
-	public function logoutAction( Request $request )
-	{
+	/**
+	 * 
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function checkAction(Request $request) {	
 		return new Response(
 			$this->getTwig()->render('login/check.html.twig', $this->assignation),
 			Response::HTTP_OK,
@@ -63,11 +62,23 @@ class LoginController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  Document   $document 
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function logoutAction(Request $request) {
+		return new Response(
+			$this->getTwig()->render('login/check.html.twig', $this->assignation),
+			Response::HTTP_OK,
+			array('content-type' => 'text/html')
+		);
+	}
+
+	/**
+	 * 
+	 * @param  RZ\Renzo\Core\Entities\Document  $document 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildLoginForm(  )
-	{
+	private function buildLoginForm() {
 		$defaults = array();
 
 		$builder = $this->getFormFactory()

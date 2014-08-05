@@ -9,6 +9,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
+
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -28,6 +29,7 @@ use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+
 /**
 * 
 */
@@ -35,10 +37,10 @@ class NodeTypesController extends RozierApp
 {
 	/**
 	 * List every node-types
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction( Request $request )
-	{
+	public function indexAction(Request $request) {
 		$node_types = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\NodeType')
 			->findAll();
@@ -54,11 +56,11 @@ class NodeTypesController extends RozierApp
 
 	/**
 	 * Return an edition form for requested node-type
-	 * @param  integer $node_type_id        [description]
+	 * @param  Symfony\Component\HttpFoundation\Request $request
+	 * @param  int  $node_type_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( Request $request, $node_type_id )
-	{
+	public function editAction(Request $request, $node_type_id) {
 		$node_type = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
 
@@ -111,11 +113,12 @@ class NodeTypesController extends RozierApp
 	}
 
 	/**
+	 * 
 	 * Return an creation form for requested node-type
-	 * @return Symfony\Component\HttpFoundation\Response
+	 * @param Symfony\Component\HttpFoundation\Request $request
+ 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( Request $request )
-	{
+	public function addAction(Request $request) {
 		$node_type = new NodeType();
 
 		if ($node_type !== null) {
@@ -176,10 +179,11 @@ class NodeTypesController extends RozierApp
 
 	/**
 	 * Return an deletion form for requested node-type
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $node_type_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( Request $request, $node_type_id )
-	{
+	public function deleteAction(Request $request, $node_type_id) {
 		$node_type = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
 
@@ -230,9 +234,13 @@ class NodeTypesController extends RozierApp
 		}
 	}
 	
-
-	private function editNodeType( $data, NodeType $node_type)
-	{
+	/**
+	 * 
+	 * @param  array  $data
+	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type
+	 * @return bool
+	 */
+	private function editNodeType($data, NodeType $node_type) {
 		foreach ($data as $key => $value) {
 			if (isset($data['name'])) {
 				throw new EntityAlreadyExistsException($this->getTranslator()->trans('node_type.cannot_rename_already_exists', array('%name%'=>$node_type->getName())), 1);
@@ -245,8 +253,13 @@ class NodeTypesController extends RozierApp
 		return true;
 	}
 
-	private function addNodeType( $data, NodeType $node_type)
-	{
+	/**
+	 * 
+	 * @param  array  $data
+	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type
+	 * @return bool
+	 */
+	private function addNodeType($data, NodeType $node_type) {
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$node_type->$setter( $value );
@@ -267,11 +280,10 @@ class NodeTypesController extends RozierApp
 
 	/**
 	 * 
-	 * @param  NodeType   $node_type 
+	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildAddForm( NodeType $node_type )
-	{
+	private function buildAddForm(NodeType $node_type) {
 		$defaults = array(
 			'name' =>           $node_type->getName(),
 			'displayName' =>    $node_type->getDisplayName(),
@@ -300,13 +312,13 @@ class NodeTypesController extends RozierApp
 
 		return $builder->getForm();
 	}
+
 	/**
 	 * 
-	 * @param  NodeType   $node_type 
+	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditForm( NodeType $node_type )
-	{
+	private function buildEditForm(NodeType $node_type) {
 		$defaults = array(
 			'displayName' =>    $node_type->getDisplayName(),
 			'description' =>    $node_type->getDescription(),
@@ -329,13 +341,13 @@ class NodeTypesController extends RozierApp
 
 		return $builder->getForm();
 	}
+
 	/**
 	 * 
-	 * @param  NodeType   $node_type 
+	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildDeleteForm( NodeType $node_type )
-	{
+	private function buildDeleteForm(NodeType $node_type) {
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
 			->add('node_type_id', 'hidden', array(
@@ -349,15 +361,21 @@ class NodeTypesController extends RozierApp
 		return $builder->getForm();
 	}
 
-
-	public static function getNodeTypes()
-	{
+	/**
+	 * 
+	 * @return \Doctrine\Common\Collections\ArrayCollection
+	 */
+	public static function getNodeTypes() {
 		return Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\NodeType')
 			->findBy(array('newsletterType' => false));
 	}
-	public static function getNewsletterNodeTypes()
-	{
+
+	/**
+	 * 
+	 * @return \Doctrine\Common\Collections\ArrayCollection
+	 */
+	public static function getNewsletterNodeTypes() {
 		return Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\NodeType')
 			->findBy(array('newsletterType' => true));

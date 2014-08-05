@@ -9,6 +9,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
+
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -28,17 +29,20 @@ use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+
 /**
 * 
 */
 class NodeTypeFieldsController extends RozierApp
 {
 	/**
+	 * 
 	 * List every node-type-fields
+	 * @param  Symfony\Component\HttpFoundation\Request $request
+	 * @param  int  $node_type_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function listAction( Request $request, $node_type_id )
-	{
+	public function listAction(Request $request, $node_type_id) {
 		$node_type = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
 
@@ -60,12 +64,13 @@ class NodeTypeFieldsController extends RozierApp
 	}
 
 	/**
+	 * 
 	 * Return an edition form for requested node-type
-	 * @param  integer $node_type_id        [description]
+	 * @param  Symfony\Component\HttpFoundation\Request $request
+	 * @param  int  $node_type_field_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( Request $request, $node_type_field_id )
-	{
+	public function editAction(Request $request, $node_type_field_id) {
 		$field = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\NodeTypeField', (int)$node_type_field_id);
 
@@ -116,11 +121,13 @@ class NodeTypeFieldsController extends RozierApp
 	}
 
 	/**
+	 * 
 	 * Return an creation form for requested node-type
+	 * @param Symfony\Component\HttpFoundation\Request  $request
+	 * @param int  $node_type_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( Request $request, $node_type_id )
-	{
+	public function addAction(Request $request, $node_type_id) {
 		$field = new NodeTypeField();
 		$node_type = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
@@ -174,10 +181,11 @@ class NodeTypeFieldsController extends RozierApp
 
 	/**
 	 * Return an deletion form for requested node
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
+	 * @param  int  $node_type_field_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( Request $request, $node_type_field_id )
-	{
+	public function deleteAction(Request $request, $node_type_field_id) {
 		$field = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\NodeTypeField', (int)$node_type_field_id);
 
@@ -238,8 +246,13 @@ class NodeTypeFieldsController extends RozierApp
 		}
 	}
 
-	private function editNodeTypeField( $data, NodeTypeField $field)
-	{
+	/**
+	 * 
+	 * @param  array  $data
+	 * @param  RZ\Renzo\Core\Entities\NodeTypeField  $field
+	 * @return void
+	 */
+	private function editNodeTypeField($data, NodeTypeField $field) {
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$field->$setter( $value );
@@ -249,8 +262,15 @@ class NodeTypeFieldsController extends RozierApp
 		$field->getNodeType()->getHandler()->updateSchema();
 
 	}
-	private function addNodeTypeField( $data, NodeTypeField $field, NodeType $node_type)
-	{
+
+	/**
+	 * 
+	 * @param array  $data
+	 * @param RZ\Renzo\Core\Entities\NodeTypeField  $field
+	 * @param RZ\Renzo\Core\Entities\NodeType  $node_type
+	 * @return void
+	 */
+	private function addNodeTypeField($data, NodeTypeField $field, NodeType $node_type) {
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$field->$setter( $value );
@@ -264,13 +284,11 @@ class NodeTypeFieldsController extends RozierApp
 		$node_type->getHandler()->updateSchema();
 	}
 
-
 	/**
-	 * @param  NodeTypeField   $field 
+	 * @param  RZ\Renzo\Core\Entities\NodeTypeField   $field 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditForm( NodeTypeField $field )
-	{
+	private function buildEditForm(NodeTypeField $field) {
 		$defaults = array(
 			'name' =>           $field->getName(),
 			'label' =>    		$field->getLabel(),
@@ -302,13 +320,13 @@ class NodeTypeFieldsController extends RozierApp
 
 		return $builder->getForm();
 	}
+
 	/**
 	 * 
-	 * @param  NodeTypeField   $node 
+	 * @param  RZ\Renzo\Core\Entities\NodeTypeField  $node 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildDeleteForm( NodeTypeField $field )
-	{
+	private function buildDeleteForm(NodeTypeField $field) {
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
 			->add('node_type_field_id', 'hidden', array(

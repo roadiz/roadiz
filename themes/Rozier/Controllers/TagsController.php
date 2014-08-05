@@ -9,6 +9,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
+
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -34,11 +35,12 @@ use Symfony\Component\Validator\Constraints\Type;
 class TagsController extends RozierApp
 {
 	/**
+	 * 
 	 * List every tags
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function indexAction( Request $request )
-	{
+	public function indexAction(Request $request) {
 		$tags = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Tag')
 			->findAllWithDefaultTranslation();
@@ -52,12 +54,13 @@ class TagsController extends RozierApp
 	}
 
 	/**
+	 * 
 	 * Return an edition form for requested tag
-	 * @param  integer $tag_id        [description]
+	 * @param  int  $tag_id        
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAction( Request $request, $tag_id )
-	{
+	public function editAction(Request $request, $tag_id) {
 		$tag = Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Tag')
 			->findWithDefaultTranslation((int)$tag_id);
@@ -103,11 +106,12 @@ class TagsController extends RozierApp
 	}
 
 	/**
+	 * 
 	 * Return an creation form for requested tag
+	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function addAction( Request $request )
-	{
+	public function addAction(Request $request) {
 		$tag = new Tag();
 
 		$translation = Kernel::getInstance()->em()
@@ -153,11 +157,13 @@ class TagsController extends RozierApp
 	}
 
 	/**
+	 *
 	 * Return a deletion form for requested tag
+	 * @param Symfony\Component\HttpFoundation\Request $request
+	 * @param int  $tag_id
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function deleteAction( Request $request, $tag_id )
-	{
+	public function deleteAction(Request $request, $tag_id) {
 		$tag = Kernel::getInstance()->em()
 			->find('RZ\Renzo\Core\Entities\Tag', (int)$tag_id);
 
@@ -199,8 +205,13 @@ class TagsController extends RozierApp
 		}
 	}
 
-	private function editTag( $data, Tag $tag )
-	{
+	/**
+	 * 
+	 * @param  array  $data
+	 * @param  RZ\Renzo\Core\Entities\Tag  $tag
+	 * @return void
+	 */
+	private function editTag($data, Tag $tag) {
 		foreach ($data as $key => $value) {
 			$setter = 'set'.ucwords($key);
 			$tag->$setter( $value );
@@ -209,8 +220,13 @@ class TagsController extends RozierApp
 		Kernel::getInstance()->em()->flush();
 	}
 
-	private function addTag( $data, Tag $tag, Translation $translation )
-	{
+	/**
+	 * 
+	 * @param array  $data
+	 * @param RZ\Renzo\Core\Entities\Tag $tag
+	 * @param RZ\Renzo\Core\Entities\Translation  $translation
+	 */
+	private function addTag($data, Tag $tag, Translation $translation) {
 		$translatedTag = new TagTranslation( $tag, $translation );
 
 		foreach ($data as $key => $value) {
@@ -231,6 +247,12 @@ class TagsController extends RozierApp
 		Kernel::getInstance()->em()->flush();
 	}
 
+	/**
+	 * 
+	 * @param  array  $data
+	 * @param  RZ\Renzo\Core\Entities\Tag  $tag
+	 * @return 
+	 */
 	private function deleteTag( $data, Tag $tag )
 	{
 		if (!$role->required()) {
@@ -242,9 +264,12 @@ class TagsController extends RozierApp
 		}
 	}
 
-
-	private function buildAddForm( Tag $tag )
-	{
+	/**
+	 * 
+	 * @param RZ\Renzo\Core\Entities\Tag  $tag
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildAddForm(Tag $tag) {
 		$defaults = array(
 			'visible' => $tag->isVisible()
 		);
@@ -264,11 +289,10 @@ class TagsController extends RozierApp
 
 	/**
 	 * 
-	 * @param  Tag   $tag 
+	 * @param RZ\Renzo\Core\Entities\Tag  $tag 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditForm( Tag $tag )
-	{
+	private function buildEditForm(Tag $tag) {
 		$translation = $tag->getDefaultTranslatedTag();
 
 		$defaults = array(
@@ -293,11 +317,10 @@ class TagsController extends RozierApp
 
 	/**
 	 * 
-	 * @param  Tag   $tag 
+	 * @param  RZ\Renzo\Core\Entities\Tag  $tag 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildDeleteForm( Tag $tag )
-	{
+	private function buildDeleteForm(Tag $tag) {
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
 			->add('tag_id', 'hidden', array(
@@ -311,9 +334,11 @@ class TagsController extends RozierApp
 		return $builder->getForm();
 	}
 
-
-	public static function getTags()
-	{
+	/**
+	 * 
+	 * @return \Doctrine\Common\Collections\ArrayCollection
+	 */
+	public static function getTags() {
 		return Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Tag')
 			->findAll();

@@ -9,6 +9,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
+
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -37,14 +38,14 @@ use Symfony\Component\Validator\Constraints\Type;
 class UrlAliasesController extends RozierApp {
 
 	/**
-	 * Return aliases form for requested node
 	 * 
-	 * @param  integer $node_id        [description]
-	 * @param  integer $translation_id [description]
+	 * Return aliases form for requested node
+	 * @param  Symfony\Component\HttpFoundation\Request $request
+	 * @param  int  $node_id        
+	 * @param  int  $translation_id 
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
-	public function editAliasesAction( Request $request, $node_id )
-	{
+	public function editAliasesAction(Request $request, $node_id) {
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
         		->findDefault();
@@ -180,13 +181,12 @@ class UrlAliasesController extends RozierApp {
 
 
 	/**
-	 * [addNodeUrlAlias description]
-	 * @param [type] $data [description]
-	 * @param Node   $node
-	 * @return UrlAlias
+	 *
+	 * @param array  $data 
+	 * @param RZ\Renzo\Core\Entities\Node  $node
+	 * @return RZ\Renzo\Core\Entities\UrlAlias
 	 */
-	private function addNodeUrlAlias( $data, Node $node )
-	{
+	private function addNodeUrlAlias($data, Node $node) {
 		if ($data['node_id'] == $node->getId()) {
 
 			$translation = Kernel::getInstance()->em()
@@ -227,14 +227,18 @@ class UrlAliasesController extends RozierApp {
 		return null;
 	}
 
-	private function urlAliasExists( $name )
-	{
+	/**
+	 * 
+	 * @param  string $name
+	 * @return bool
+	 */
+	private function urlAliasExists($name) {
 		return (boolean)Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
 			->exists( $name );
 	}
-	private function nodeNameExists( $name )
-	{
+
+	private function nodeNameExists($name) {
 		return (boolean)Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Node')
 			->exists( $name );
@@ -242,12 +246,11 @@ class UrlAliasesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  array   $data Form data
-	 * @param  UrlAlias $ua 
+	 * @param  array  $data
+	 * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua 
 	 * @return void
 	 */
-	private function editUrlAlias( $data, UrlAlias $ua )
-	{
+	private function editUrlAlias( $data, UrlAlias $ua) {
 		$testingAlias = StringHandler::slugify($data['alias']);
 		if ($testingAlias != $ua->getAlias() && 
 				($this->nodeNameExists($testingAlias) || 
@@ -269,14 +272,14 @@ class UrlAliasesController extends RozierApp {
 			}
 		}
 	}
+
 	/**
 	 * 
-	 * @param  array   $data Form data
-	 * @param  UrlAlias $ua 
+	 * @param  array  $data
+	 * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua 
 	 * @return void
 	 */
-	private function deleteUrlAlias( $data, UrlAlias $ua )
-	{
+	private function deleteUrlAlias($data, UrlAlias $ua) {
 		if ($data['urlalias_id'] == $ua->getId()) {
 			
 			Kernel::getInstance()->em()->remove($ua);
@@ -286,11 +289,10 @@ class UrlAliasesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  Node   $node [description]
+	 * @param  RZ\Renzo\Core\Entities\Node  $node 
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildAddUrlAliasForm( Node $node )
-	{
+	private function buildAddUrlAliasForm(Node $node) {
 		$defaults = array(
 			'node_id' =>  $node->getId()
 		);
@@ -310,11 +312,10 @@ class UrlAliasesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  UrlAlias $ua
+	 * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildEditUrlAliasForm( UrlAlias $ua )
-	{
+	private function buildEditUrlAliasForm(UrlAlias $ua) {
 		$defaults = array(
 			'urlalias_id' =>  $ua->getId(),
 			'alias' =>  $ua->getAlias()
@@ -338,11 +339,10 @@ class UrlAliasesController extends RozierApp {
 
 	/**
 	 * 
-	 * @param  UrlAlias $ua
+	 * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildDeleteUrlAliasForm( UrlAlias $ua )
-	{
+	private function buildDeleteUrlAliasForm(UrlAlias $ua) {
 		$defaults = array(
 			'urlalias_id' =>  $ua->getId()
 		);
