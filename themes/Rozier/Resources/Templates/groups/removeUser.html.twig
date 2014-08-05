@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
+
 {% block content %}
-<section id="manage-role">
-	<h1 id="role-title">{% trans %}Remove role:{% endtrans %} {{ role.getName }}</h1>
+<section id="manage-user">
+	<h1 id="user-title">{% trans %}Unlink user:{% endtrans %} {{ user.getUserName }}</h1>
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}
 	    {% for item in form %}
@@ -14,8 +15,8 @@
 	    {% endfor %}
 	    {{ form_rest(form) }}
 	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to remove this role?{% endtrans %}</legend>
-	    	<a href="{{ path('usersEditRolesPage', { user_id: user.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<legend>{% trans %}Are you sure you want to remove this user from group?{% endtrans %}</legend>
+	    	<a href="{{ path('groupsEditUsersPage', { group_id: group.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

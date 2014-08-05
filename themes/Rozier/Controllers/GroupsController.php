@@ -5,6 +5,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Entities\Group;
+use RZ\Renzo\Core\Entities\User;
 use RZ\Renzo\Core\Entities\Translation;
 
 
@@ -93,7 +94,7 @@ class GroupsController extends RozierApp
 	public function deleteAction( Request $request, $group_id )
 	{
 		$group = Kernel::getInstance()->em()
-					->find('RZ\Renzo\Core\Entities\Group', (int)$group_id);
+			->find('RZ\Renzo\Core\Entities\Group', (int)$group_id);
 		if ($group !== null) {
 
 			$form = $this->buildDeleteForm( $group );
@@ -104,12 +105,12 @@ class GroupsController extends RozierApp
 
 				try {
 			 		$this->deleteGroup($form->getData(), $group);
-			 		$msg = $this->getTranslator()->trans('group.deleted', array('%name%'=>$group->getName()));
+			 		$msg = $this->getTranslator()->trans('group.deleted', array('%name%' => $group->getName()));
 					$request->getSession()->getFlashBag()->add('confirm', $msg);
 		 			$this->getLogger()->info($msg);
 		 			
 				}
-				catch(\RuntimeException $e){
+				catch (\RuntimeException $e) {
 					$request->getSession()->getFlashBag()->add('error', $e->getMessage());
 		 			$this->getLogger()->warning($e->getMessage());
 				}
@@ -117,7 +118,7 @@ class GroupsController extends RozierApp
 		 		/*
 		 		 * Force redirect to avoid resending form when refreshing page
 		 		 */
-		 		$response = new RedirectResponse(
+		 		$response = new RedirectResponse (
 					Kernel::getInstance()->getUrlGenerator()->generate('groupsHomePage')
 				);
 				$response->prepare($request);
@@ -250,6 +251,7 @@ class GroupsController extends RozierApp
 			return $this->throw404();
 		}
 	}
+
 	/**
 	 * Return a deletion form for requested role depending on the group
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -265,7 +267,7 @@ class GroupsController extends RozierApp
 			$this->assignation['group'] = $group;
 			$this->assignation['role'] = $role;
 
-			$form = $this->buildDeleteRoleForm($group, $role);
+			$form = $this->buildRemoveRoleForm($group, $role);
 			$form->handleRequest();
 
 			if ($form->isValid()) {
@@ -292,7 +294,7 @@ class GroupsController extends RozierApp
 			$this->assignation['form'] = $form->createView();
 
 			return new Response(
-				$this->getTwig()->render('groups/deleteRole.html.twig', $this->assignation),
+				$this->getTwig()->render('groups/removeRole.html.twig', $this->assignation),
 				Response::HTTP_OK,
 				array('content-type' => 'text/html')
 			);
@@ -348,6 +350,59 @@ class GroupsController extends RozierApp
 
 			return new Response(
 				$this->getTwig()->render('groups/users.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		else {
+			return $this->throw404();
+		}
+	}
+
+	/**
+	 * Return a deletion form for requested user depending on the group
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function removeUsersAction(Request $request, $group_id, $user_id) {	
+		$group = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Group', (int)$group_id);
+		$user = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
+			
+		if ($group !== null && 
+			$user !== null ) {
+			$this->assignation['group'] = $group;
+			$this->assignation['user'] = $user;
+
+			$form = $this->buildRemoveUserForm($group, $user);
+			$form->handleRequest();
+
+			if ($form->isValid()) {
+
+		 		$this->removeUser($form->getData(), $group, $user);
+		 		$msg = $this->getTranslator()->trans('user.removed_from_group', array('%name%'=>$user->getUserName()));
+		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
+	 			$this->getLogger()->info($msg);
+
+		 		/*
+		 		 * Force redirect to avoid resending form when refreshing page
+		 		 */
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'groupsEditUsersPage',
+						array('group_id' => $group->getId(),
+							'user_id' => $user->getId())
+					)
+				);
+				$response->prepare($request);
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
+			return new Response(
+				$this->getTwig()->render('groups/removeUser.html.twig', $this->assignation),
 				Response::HTTP_OK,
 				array('content-type' => 'text/html')
 			);
@@ -480,7 +535,7 @@ class GroupsController extends RozierApp
 	 * @param Role $role
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildDeleteRoleForm( Group $group, Role $role )
+	private function buildRemoveRoleForm( Group $group, Role $role )
 	{
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
@@ -500,6 +555,34 @@ class GroupsController extends RozierApp
 
 		return $builder->getForm();
 	}
+
+	/**
+	 * 
+	 * @param Group $group
+	 * @param User $user
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildRemoveUserForm( Group $group, User $user )
+	{
+		$builder = $this->getFormFactory()
+			->createBuilder('form')
+			->add('group_id', 'hidden', array(
+				'data' => $group->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+			->add('user_id', 'hidden', array(
+				'data' => $user->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+		;
+
+		return $builder->getForm();
+	}
+
 	/**
 	 *
 	 * @param array $data [description]

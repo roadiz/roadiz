@@ -375,7 +375,7 @@ class NodesController extends RozierApp {
 
 			if ($form->isValid()) {
 
-		 		$this->removeTag($form->getData(), $node, $tag);
+		 		$this->removeNodeTag($form->getData(), $node, $tag);
 		 		$msg = $this->getTranslator()->trans('tag.removed', array('%name%' => $tag->getDefaultTranslatedTag()->getName()));
 		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
 	 			$this->getLogger()->info($msg);
@@ -735,9 +735,7 @@ class NodesController extends RozierApp {
 		return $tag;
 	}
 
-	
-
-	private function removeTag($data, Node $node, Tag $tag) {
+	private function removeNodeTag($data, Node $node, Tag $tag) {
 		if ($data['node_id'] == $node->getId() && 
 			$data['tag_id'] == $tag->getId()) {
 

@@ -18,7 +18,7 @@
 			<tr>
 				<td>{{ group.getName }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{#{{ path('usersRemoveRolesPage', { user_id: user.getId, role_id: role.getId }) }}#}">{% trans %}Unlink{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveGroupsPage', { user_id: user.getId, group_id: group.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}

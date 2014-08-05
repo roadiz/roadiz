@@ -148,7 +148,7 @@ class UsersController extends RozierApp
 			$form->handleRequest();
 
 			if ($form->isValid()) {
-				$role = $this->addRole($form->getData(), $user);
+				$role = $this->addUserRole($form->getData(), $user);
 			
 				$msg = $this->getTranslator()->trans('user.role_linked', array(
 				 			'%user%'=>$user->getUserName(), 
@@ -198,12 +198,12 @@ class UsersController extends RozierApp
 			$this->assignation['user'] = $user;
 			$this->assignation['role'] = $role;
 
-			$form = $this->buildDeleteRoleForm($user, $role);
+			$form = $this->buildRemoveRoleForm($user, $role);
 			$form->handleRequest();
 
 			if ($form->isValid()) {
 
-		 		$this->removeRole($form->getData(), $user);
+		 		$this->removeUserRole($form->getData(), $user);
 		 		$msg = $this->getTranslator()->trans('role.deleted', array('%name%'=>$role->getName()));
 		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
 	 			$this->getLogger()->info($msg);
@@ -225,7 +225,7 @@ class UsersController extends RozierApp
 			$this->assignation['form'] = $form->createView();
 
 			return new Response(
-				$this->getTwig()->render('users/deleteRole.html.twig', $this->assignation),
+				$this->getTwig()->render('users/removeRole.html.twig', $this->assignation),
 				Response::HTTP_OK,
 				array('content-type' => 'text/html')
 			);
@@ -246,15 +246,13 @@ class UsersController extends RozierApp
 			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
 
 		if ($user !== null) {
-
 			$this->assignation['user'] = $user;
 
 			$form = $this->buildEditGroupsForm($user);
-
 			$form->handleRequest();
 
 			if ($form->isValid()) {
-				$group = $this->addGroup($form->getData(), $user);
+				$group = $this->addUserGroup($form->getData(), $user);
 			
 				$msg = $this->getTranslator()->trans('user.group_linked', array(
 				 			'%user%'=>$user->getUserName(), 
@@ -281,6 +279,63 @@ class UsersController extends RozierApp
 
 			return new Response(
 				$this->getTwig()->render('users/groups.html.twig', $this->assignation),
+				Response::HTTP_OK,
+				array('content-type' => 'text/html')
+			);
+		}
+		else {
+			return $this->throw404();
+		}
+	}
+
+	/**
+	 *
+	 * Return a deletion form for requested group depending on the user
+	 * @param  integer $user_id        [description]
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function removeGroupAction(Request $request, $user_id, $group_id)
+	{
+		$user = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
+		$group = Kernel::getInstance()->em()
+			->find('RZ\Renzo\Core\Entities\Group', (int)$group_id);
+
+		if ($user !== null) {
+			$this->assignation['user'] = $user;
+			$this->assignation['group'] = $group;
+
+			$form = $this->buildRemoveGroupForm($user, $group);
+			$form->handleRequest();
+
+			if ($form->isValid()) {
+				$group = $this->removeUserGroup($form->getData(), $user);
+			
+				$msg = $this->getTranslator()->trans('user.group_removed', array(
+				 			'%user%'=>$user->getUserName(), 
+				 			'%group%'=>$group->getName()
+				 		));
+	 			$request->getSession()->getFlashBag()->add('confirm', $msg);
+				$this->getLogger()->info($msg);
+
+				/*
+	 		 	* Force redirect to avoid resending form when refreshing page
+		 		*/
+		 		$response = new RedirectResponse(
+					Kernel::getInstance()->getUrlGenerator()->generate(
+						'usersEditGroupsPage',
+						array('user_id' => $user->getId())
+					)
+				);
+				$response->prepare($request);
+
+				return $response->send();
+			}
+
+			$this->assignation['form'] = $form->createView();
+
+			return new Response(
+				$this->getTwig()->render('users/removeGroup.html.twig', $this->assignation),
 				Response::HTTP_OK,
 				array('content-type' => 'text/html')
 			);
@@ -481,7 +536,7 @@ class UsersController extends RozierApp
 		Kernel::getInstance()->em()->flush();
 	}
 
-	private function addRole( $data, User $user ) {
+	private function addUserRole( $data, User $user ) {
 		if ($data['user_id'] == $user->getId()) {
 			$role = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\Role', $data['role_id']);
@@ -493,7 +548,7 @@ class UsersController extends RozierApp
 		}
 	}
 
-	private function removeRole($data, User $user) {
+	private function removeUserRole($data, User $user) {
 		if ($data['user_id'] == $user->getId()) {
 			$role = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\Role', $data['role_id']);
@@ -503,6 +558,32 @@ class UsersController extends RozierApp
 				Kernel::getInstance()->em()->flush();	
 			}
 			return ($role);
+		}
+	}
+
+	private function addUserGroup($data, User $user) {
+		if ($data['user_id'] == $user->getId()) {
+			$group = Kernel::getInstance()->em()
+				->find('RZ\Renzo\Core\Entities\Group', $data['group']);
+
+			if ($group !== null) {
+				$user->addGroup($group);
+				Kernel::getInstance()->em()->flush();
+			}
+			return ($group);
+		}
+	}
+
+	private function removeUserGroup($data, User $user) {
+		if ($data['user_id'] == $user->getId()) {
+			$group = Kernel::getInstance()->em()
+				->find('RZ\Renzo\Core\Entities\Group', $data['group_id']);
+
+			if ($group !== null) {
+				$user->removeGroup($group);
+				Kernel::getInstance()->em()->flush();
+			}
+			return ($group);
 		}
 	}
 
@@ -648,7 +729,7 @@ class UsersController extends RozierApp
 	 * @param Role $role
 	 * @return Symfony\Component\Form\Forms
 	 */
-	private function buildDeleteRoleForm(User $user, Role $role)
+	private function buildRemoveRoleForm(User $user, Role $role)
 	{
 		$builder = $this->getFormFactory()
 			->createBuilder('form')
@@ -689,6 +770,33 @@ class UsersController extends RozierApp
 					))
 					->add('group', new \RZ\Renzo\CMS\Forms\GroupsType($user->getGroups()),
 						array('label' => 'Group'));
+
+		return $builder->getForm();
+	}
+	
+	/**
+	 * 
+	 * @param User $user
+	 * @param Group $group
+	 * @return Symfony\Component\Form\Forms
+	 */
+	private function buildRemoveGroupForm(User $user, Group $group)
+	{
+		$builder = $this->getFormFactory()
+			->createBuilder('form')
+			->add('user_id', 'hidden', array(
+				'data' => $user->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+			->add('group_id', 'hidden', array(
+				'data' => $group->getId(),
+				'constraints' => array(
+					new NotBlank()
+				)
+			))
+		;
 
 		return $builder->getForm();
 	}
