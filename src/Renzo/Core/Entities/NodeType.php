@@ -140,6 +140,26 @@ class NodeType extends PersistableObject
 	public function getFields() {
 	    return $this->fields;
 	}
+	/**
+	 * @param NodeTypeField $field
+	 * @return NodeTypeField
+	 */
+	public function addField( NodeTypeField $field ) {
+	    if (!$this->getFields()->contains($field)) {
+            $this->getFields()->add($field);
+        }
+        return $this;
+	}
+	/**
+	 * @param  NodeTypeField   $field 
+	 * @return NodeTypeField
+	 */
+	public function removeField( NodeTypeField $field ) {
+	    if ($this->getFields()->contains($field)) {
+            $this->getFields()->removeElement($field);
+        }
+        return $this;
+    }
 
 	/**
 	 * 

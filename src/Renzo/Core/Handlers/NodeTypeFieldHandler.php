@@ -7,6 +7,7 @@ use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
+use RZ\Renzo\Core\Handlers\NodeTypeHandler;
 
 
 class NodeTypeFieldHandler {
@@ -66,9 +67,27 @@ class NodeTypeFieldHandler {
 		return '';
 	}
 
+	/**
+     * Serializes data 
+     * @return array         
+     */
+    public function serialize() {
+        $data = array();
+        // Reports information about the class NodeType
+        $nodeTypeInfos = new \ReflectionClass($this->getNodeTypeField());
 
-	public function __construct(NodeTypeField $field)
-	{
+        $data['name'] = $this->getNodeTypeField()->getName();
+        $data['label'] = $this->getNodeTypeField()->getLabel();
+        $data['description'] = $this->getNodeTypeField()->getDescription();
+        $data['visible'] = $this->getNodeTypeField()->isVisible();
+        $data['type'] = $this->getNodeTypeField()->getType();
+        $data['indexed'] = $this->getNodeTypeField()->isIndexed();
+        $data['virtual'] = $this->getNodeTypeField()->isVirtual();
+
+       	return $data;
+    }
+
+	public function __construct(NodeTypeField $field) {
 		$this->nodeTypeField = $field;
 	}
 }

@@ -7,6 +7,12 @@ use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
+
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+
 /**
 * 	
 */
@@ -163,4 +169,136 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
         return $this;
     }
 
+    /**
+     * Serializes data into Json
+     * @return string         
+     */
+    public function serializeToJson() {
+        $data = array();
+        // Reports information about the class NodeType
+        $nodeTypeInfos = new \ReflectionClass($this->getNodeType());
+        $data['node_type'] = array();
+
+        $data['node_type']['name'] = $this->getNodeType()->getName();
+        $data['node_type']['displayName'] = $this->getNodeType()->getDisplayName();
+        $data['node_type']['description'] = $this->getNodeType()->getDescription();
+        $data['node_type']['visible'] = $this->getNodeType()->isVisible();
+        $data['node_type']['newsletterType'] = $this->getNodeType()->isNewsletterType();
+        $data['node_type']['hidingNodes'] = $this->getNodeType()->isHidingNodes();
+        $data['node_type']['fields'] = array();
+
+        foreach ($this->getNodeType()->getFields() as $ntf) {
+            $data['node_type']['fields'][] = $ntf->getHandler()->serialize();
+        }
+
+        if (defined(JSON_PRETTY_PRINT)) {
+            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
+        else {
+            return json_encode($data, JSON_NUMERIC_CHECK);
+        }
+    }
+
+    /**
+     * Export Json into a .rzt file
+     * @return void
+     */
+    public function exportIntoFile() {
+        if ($this->getObject()->exists()) {
+            $serialized = $this->serializeToJson();
+            $file = $this->getObject()->name.".rzt";
+
+            if (file_put_contents($file, $serialized, LOCK_EX)) {
+                $size = filesize($file); 
+
+                header('Content-Type: application/force-download; name=' . $this->getObject()->name . '.rzt');
+                header("Content-Transfer-Encoding: binary");
+                header("Content-Length: ".$size);
+                header('Content-Disposition: attachment; filename='.$this->getObject()->name.'.rzt');
+                header("Expires: 0"); 
+                header("Cache-Control: no-cache, must-revalidate"); 
+                readfile($file);
+                exit();
+            }
+        }
+    }
+
+    /**
+     * Import Node Type datas from a .rzt file
+     * @param  string  $url
+     * @return void
+     */
+    public function importFromFile($url) {
+        
+    }
+
+    /**
+     * Update an existing Node Type 
+     * @param string  $url
+     * @return bool
+     */
+    public function updateFromFile($url) {
+        if (file_exists($url)) {
+            if ($serialized = file_get_contents($url)) {
+                if ($node_type = json_decode($serialized, true)) {
+                    
+                    $exists = new NodeType(array('name'=>$node_type["name"]));
+                   
+                    if ($exists->exists()) {
+                        $NEWnode_types = $node_type["node_type_fields"];
+                        $OLDnode_types_names = $exists->getFields();
+
+                        try {
+
+                            Kernel::getInstance()->em()
+                                ->find('RZ\Renzo\Core\Entities\NodeType');
+
+                            db_controller::getDriver()->beginTransaction();
+
+                            foreach ($NEWnode_types as $key => $field) {
+                                if (!in_array($field["name"], $OLDnode_types_names)) {
+
+                                    $newField = new rz_node_type_field();
+                                    $newField->node_type_id = $exists->node_type_id;
+
+                                    foreach ($field as $key => $value) {
+                                        $newField->$key = $value;
+                                    }
+
+                                    if ($newField->insertIntoDB() !== false) {
+                                        $newField->persistField();
+                                        rz_log::register_message(sprintf(_("New field “%s” for “%s” node type!"), 
+                                            $newField->name, $exists->name), 
+                                        CONFIRM);
+                                    }
+                                }
+                            }
+
+                            return true;
+                        }
+                        catch (PDOException $e) {
+                            db_controller::getDriver()->rollBack();
+                            return false;
+                        }
+                    }
+                    else {
+                        rz_log::register_message(sprintf(_("Node type “%s” does not exist!"), $node_type["name"]), WARNING);
+                        return false;
+                    }
+                }
+                else {
+                    rz_log::register_message(_("Node type file cannot be unserialized."), ERROR);
+                    return false;
+                }
+            }
+            else {
+                rz_log::register_message(_("Node type file cannot be read."), ERROR);
+                return false;
+            }
+        }
+        else {
+            rz_log::register_message(_("Node type file cannot be found."), ERROR);
+            return false;
+        }
+    }
 }
