@@ -257,9 +257,9 @@ class AppController implements ViewableInterface {
 	{
 		return RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources';
 	}
-	public static function getTemplatesFolder()
+	public static function getViewsFolder()
 	{
-		return static::getResourcesFolder().'/Templates';
+		return static::getResourcesFolder().'/views';
 	}
 	public function getStaticResourcesUrl()
 	{
@@ -288,8 +288,8 @@ class AppController implements ViewableInterface {
 
 
 		$loader = new \Twig_Loader_Filesystem(array(
-			static::getTemplatesFolder(), // Theme templates
-			RENZO_ROOT . '/src/Renzo/CMS/Resources/Templates/forms', // Form extension templates
+			static::getViewsFolder(), // Theme templates
+			RENZO_ROOT . '/src/Renzo/CMS/Resources/views/forms', // Form extension templates
 			$vendorTwigBridgeDir . '/Resources/views/Form' // Form extension templates
 		));
 		$this->twig = new \Twig_Environment($loader, array(

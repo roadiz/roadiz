@@ -17,6 +17,13 @@ Rozier.onDocumentReady = function( event ) {
 
 	$('.nodetree-widget .root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );
 	$('.tagtree-widget .root-tree').on('nestable-change', Rozier.onNestableTagTreeChange );
+
+	/*
+	 * TEMP
+	 */
+	$('[data-uk-pagination]').on('uk-select-page', function(e, pageIndex){
+	    document.location.href = document.location.origin + document.location.pathname + '?page='+(pageIndex+1);
+	});
 };
 
 /**

@@ -18,19 +18,35 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class DocumentsController extends RozierApp {
 
+	const ITEM_PER_PAGE = 10;
 	/**
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function indexAction(Request $request) {
 
+		// ------- Testing pagination
+
 		$page = $request->query->get('page');
 		if (!($page > 1)) {
 			$page = 1;
 		}
 
-		$paginator =  new \RZ\Renzo\Core\Utils\Paginator( Kernel::getInstance()->em(), 'RZ\Renzo\Core\Entities\Document', 10);
-		$documents = $paginator->findByAtPage(array(), array(), $page);
+		$criteria = array();
+
+		$paginator =  new \RZ\Renzo\Core\Utils\Paginator( 
+			Kernel::getInstance()->em(), 
+			'RZ\Renzo\Core\Entities\Document', 
+			static::ITEM_PER_PAGE,
+			$criteria
+		);
+		$documents = $paginator->findByAtPage(array(), $page);
+
+		$this->assignation['currentPage'] = $page;
+		$this->assignation['itemPerPage'] = static::ITEM_PER_PAGE;
+		$this->assignation['documentsCount'] = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\Document')->countBy($criteria);
+
+		// ------ testings end
 
 		$this->assignation['documents'] = $documents;
 		$this->assignation['thumbnailFormat'] = array(

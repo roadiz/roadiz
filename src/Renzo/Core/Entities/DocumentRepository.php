@@ -3,7 +3,7 @@
 
 namespace RZ\Renzo\Core\Entities;
 
-use Doctrine\ORM\EntityRepository;
+use RZ\Renzo\Core\Utils\EntityRepository;
 
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Entities\NodeTypeField;
@@ -24,8 +24,7 @@ class DocumentRepository extends EntityRepository
      */
     public function findByNodeSourceAndField( $nodeSource, NodeTypeField $field )
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT d FROM RZ\Renzo\Core\Entities\Document d 
             INNER JOIN d.nodesSourcesByFields nsf
             WHERE nsf.field = :field AND nsf.nodeSource = :nodeSource
@@ -47,8 +46,7 @@ class DocumentRepository extends EntityRepository
      */
     public function findByNodeSourceAndFieldName( $nodeSource, $fieldName )
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT d FROM RZ\Renzo\Core\Entities\Document d 
             INNER JOIN d.nodesSourcesByFields nsf
             INNER JOIN nsf.field f

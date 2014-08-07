@@ -2,6 +2,7 @@
 
 namespace RZ\Renzo\Core\Entities;
 
+use RZ\Renzo\Core\Handlers\TagHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\DateTimedPositioned;
 
@@ -139,14 +140,6 @@ class Tag extends DateTimedPositioned
 	public function getTranslatedTags() {
 	    return $this->translatedTags;
 	}
-	/**
-	 * @return TagTranslation
-	 */
-	public function getDefaultTranslatedTag()
-	{
-		return $this->getTranslatedTags()->first();
-	}
-
 
 	public function __construct()
     {
@@ -163,5 +156,14 @@ class Tag extends DateTimedPositioned
 	{
 		return $this->getId()." — ".$this->getName()." — ".$this->getNodeType()->getName().
 			" — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
+	}
+
+	/**
+	 * 
+	 * @return RZ\Renzo\Core\Handlers\TagHandler
+	 */
+	public function getHandler()
+	{
+		return new TagHandler( $this );
 	}
 }

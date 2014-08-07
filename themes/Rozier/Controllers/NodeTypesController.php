@@ -245,8 +245,11 @@ class NodeTypesController extends RozierApp
 			$setter = 'set'.ucwords($key);
 			$node_type->$setter( $value );
 		}
+		
 		Kernel::getInstance()->em()->flush();
+
 		$node_type->getHandler()->updateSchema();
+
 		return true;
 	}
 
@@ -270,7 +273,9 @@ class NodeTypesController extends RozierApp
 		
 		Kernel::getInstance()->em()->persist($node_type);
 		Kernel::getInstance()->em()->flush();
+
 		$node_type->getHandler()->updateSchema();
+
 		return true;
 	}
 

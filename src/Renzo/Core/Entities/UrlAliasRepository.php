@@ -3,7 +3,7 @@
 
 namespace RZ\Renzo\Core\Entities;
 
-use Doctrine\ORM\EntityRepository;
+use RZ\Renzo\Core\Utils\EntityRepository;
 
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Kernel;
@@ -21,8 +21,7 @@ class UrlAliasRepository extends EntityRepository
      */
 	public function findAllFromNode( $node_id )
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT ua FROM RZ\Renzo\Core\Entities\UrlAlias ua 
             INNER JOIN ua.nodeSource ns 
             INNER JOIN ns.node n 
@@ -43,8 +42,7 @@ class UrlAliasRepository extends EntityRepository
      */
     public function exists( $alias )
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT COUNT(ua.alias) FROM RZ\Renzo\Core\Entities\UrlAlias ua 
             WHERE ua.alias = :alias
         ')->setParameter('alias', $alias);

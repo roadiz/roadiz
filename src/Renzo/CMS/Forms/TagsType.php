@@ -30,7 +30,7 @@ class TagsType extends AbstractType
     	$choices = array();
         foreach ($tags as $tag) {
             if (!$this->tags->contains($tag)) {
-                $choices[$tag->getId()] = $tag->getDefaultTranslatedTag()->getName();
+                $choices[$tag->getId()] = $tag->getTranslatedTags()->first()->getName();
             }
     	}
 

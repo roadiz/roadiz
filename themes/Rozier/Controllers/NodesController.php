@@ -326,7 +326,7 @@ class NodesController extends RozierApp {
 
 			 		$msg = $this->getTranslator()->trans('node.tag_linked', array(
 			 			'%node%'=>$node->getNodeName(), 
-			 			'%tag%'=>$tag->getDefaultTranslatedTag()->getName()
+			 			'%tag%'=>$tag->getTranslatedTags()->first()->getName()
 			 		));
 			 		$request->getSession()->getFlashBag()->add('confirm', $msg);
 	 				$this->getLogger()->info($msg);
@@ -379,7 +379,7 @@ class NodesController extends RozierApp {
 			if ($form->isValid()) {
 
 		 		$this->removeNodeTag($form->getData(), $node, $tag);
-		 		$msg = $this->getTranslator()->trans('tag.removed', array('%name%' => $tag->getDefaultTranslatedTag()->getName()));
+		 		$msg = $this->getTranslator()->trans('tag.removed', array('%name%' => $tag->getTranslatedTags()->first()->getName()));
 		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
 	 			$this->getLogger()->info($msg);
 
@@ -913,7 +913,7 @@ class NodesController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Node  $node
-	 * @param  RZ\Renzo\Core\Entities\NodesSources $source
+	 * @param  RZ\Renzo\Core\Entities\NodesSources  $source
 	 * @return Symfony\Component\Form\Forms
 	 */
 	private function buildEditSourceForm(Node $node, $source) {

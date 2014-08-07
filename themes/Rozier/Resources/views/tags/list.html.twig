@@ -15,9 +15,10 @@
 	    </thead>
 		<tbody>
 			{% for tag in tags %}
+			{% set ttag = tag.getTranslatedTags.first %}
 			<tr>
-				<td><a href="{{ path('tagsEditPage', { tag_id: tag.getId }) }}">{{ tag.getId }}</a></td>
-				<td><a href="{{ path('tagsEditPage', { tag_id: tag.getId }) }}">{{ tag.getDefaultTranslatedTag.getName }}</a></td>
+				<td><a href="{{ path('tagsEditTranslatedPage', { tag_id: tag.getId, translation_id: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
+				<td><a href="{{ path('tagsEditTranslatedPage', { tag_id: tag.getId, translation_id: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
 				<td>
 					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tag_id: tag.getId }) }}">{% trans %}Delete{% endtrans %}</a>
 				</td>

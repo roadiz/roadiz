@@ -75,7 +75,7 @@ class TagHandler
                         ->createQuery('
             SELECT tr 
             FROM RZ\Renzo\Core\Entities\Translation tr 
-            INNER JOIN tr.translatedTags tt 
+            INNER JOIN tr.tagTranslations tt 
             INNER JOIN tt.tag t
             WHERE t.id = :tag_id'
                         )->setParameter('tag_id', $this->getTag()->getId());

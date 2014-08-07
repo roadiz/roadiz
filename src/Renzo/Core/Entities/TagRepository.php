@@ -2,7 +2,7 @@
 
 namespace RZ\Renzo\Core\Entities;
 
-use Doctrine\ORM\EntityRepository;
+use RZ\Renzo\Core\Utils\EntityRepository;
 
 use RZ\Renzo\Core\Entities\Tag;
 use RZ\Renzo\Core\Kernel;
@@ -19,14 +19,13 @@ class TagRepository extends EntityRepository
 	 */
 	public function findWithTranslation($tag_id, Translation $translation )
 	{
-	    $query = Kernel::getInstance()->em()
-                        ->createQuery('
+	    $query = $this->_em->createQuery('
             SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
             INNER JOIN t.translatedTags tt 
-            INNER JOIN tt.translation tr
-            WHERE t.id = :tag_id AND tr.id = :translation_id'
+            WHERE t.id = :tag_id 
+            AND tt.translation = :translation'
                         )->setParameter('tag_id', (int)$tag_id)
-                        ->setParameter('translation_id', (int)$translation->getId());
+                        ->setParameter('translation', $translation);
 
         try {
             return $query->getSingleResult();
@@ -42,13 +41,11 @@ class TagRepository extends EntityRepository
 	 */
 	public function findAllWithTranslation( Translation $translation )
 	{
-	    $query = Kernel::getInstance()->em()
-                        ->createQuery('
+	    $query = $this->_em->createQuery('
             SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
             INNER JOIN t.translatedTags tt 
-            INNER JOIN tt.translation tr
-            WHERE tr.id = :translation_id'
-                        )->setParameter('translation_id', (int)$translation->getId());
+            WHERE tt.translation = :translation'
+                        )->setParameter('translation', $translation);
 
         try {
             return $query->getResult();
@@ -64,14 +61,13 @@ class TagRepository extends EntityRepository
 	 */
 	public function findWithDefaultTranslation($tag_id)
 	{
-	    $query = Kernel::getInstance()->em()
-                        ->createQuery('
+	    $query = $this->_em->createQuery('
             SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
             INNER JOIN t.translatedTags tt 
             INNER JOIN tt.translation tr
-            WHERE t.id = :tag_id AND tr.defaultTranslation = :defaultTranslation'
-                        )->setParameter('tag_id', (int)$tag_id)
-                        ->setParameter('defaultTranslation', true);
+            WHERE t.id = :tag_id 
+            AND tr.defaultTranslation = 1'
+                        )->setParameter('tag_id', (int)$tag_id);
 
         try {
             return $query->getSingleResult();
@@ -86,13 +82,11 @@ class TagRepository extends EntityRepository
 	 */
 	public function findAllWithDefaultTranslation(  )
 	{
-	    $query = Kernel::getInstance()->em()
-                        ->createQuery('
+	    $query = $this->_em->createQuery('
             SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
             INNER JOIN t.translatedTags tt 
             INNER JOIN tt.translation tr
-            WHERE tr.defaultTranslation = :defaultTranslation'
-                        )->setParameter('defaultTranslation', true);
+            WHERE tr.defaultTranslation = 1');
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -111,8 +105,7 @@ class TagRepository extends EntityRepository
         $query = null;
 
         if ($parent === null) {
-            $query = Kernel::getInstance()->em()
-                        ->createQuery('
+            $query = $this->_em->createQuery('
             SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
             INNER JOIN t.translatedTags tt 
             INNER JOIN tt.translation tr
@@ -121,8 +114,7 @@ class TagRepository extends EntityRepository
                         )->setParameter('translation_id', (int)$translation->getId());
         }
         else {
-            $query = Kernel::getInstance()->em()
-                            ->createQuery('
+            $query = $this->_em->createQuery('
                 SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
                 INNER JOIN t.translatedTags tt 
                 INNER JOIN tt.translation tr
@@ -150,26 +142,23 @@ class TagRepository extends EntityRepository
     {
         $query = null;
         if ($parent === null) {
-            $query = Kernel::getInstance()->em()
-                        ->createQuery('
+            $query = $this->_em->createQuery('
             SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
             INNER JOIN t.translatedTags tt 
             INNER JOIN tt.translation tr
-            WHERE t.parent IS NULL AND tr.defaultTranslation = :defaultTranslation
+            WHERE t.parent IS NULL AND tr.defaultTranslation = 1
             ORDER BY t.position ASC'
-                        )->setParameter('defaultTranslation', true);
+                        );
         }
         else {
-            $query = Kernel::getInstance()->em()
-                            ->createQuery('
+            $query = $this->_em->createQuery('
                 SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t 
                 INNER JOIN t.translatedTags tt 
                 INNER JOIN tt.translation tr
                 INNER JOIN t.parent pt
-                WHERE pt.id = :parent AND tr.id = :translation_id
+                WHERE pt.id = :parent AND tr.defaultTranslation = 1
                 ORDER BY t.position ASC'
-                            )->setParameter('parent', $parent->getId())
-                            ->setParameter('defaultTranslation', true);
+                            )->setParameter('parent', $parent->getId());
         }
 
         try {

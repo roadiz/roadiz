@@ -136,6 +136,7 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
         \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
         return $this;
     }
+
     /**
      * Delete node-type inherited nodes and its database schema
      * before removing it from node-types table.
@@ -179,18 +180,18 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
         $data = array();
         // Reports information about the class NodeType
         $nodeTypeInfos = new \ReflectionClass($this->getNodeType());
-        $data['node_type'] = array();
+        $data = array();
 
-        $data['node_type']['name'] = $this->getNodeType()->getName();
-        $data['node_type']['displayName'] = $this->getNodeType()->getDisplayName();
-        $data['node_type']['description'] = $this->getNodeType()->getDescription();
-        $data['node_type']['visible'] = $this->getNodeType()->isVisible();
-        $data['node_type']['newsletterType'] = $this->getNodeType()->isNewsletterType();
-        $data['node_type']['hidingNodes'] = $this->getNodeType()->isHidingNodes();
-        $data['node_type']['fields'] = array();
+        $data['name'] = $this->getNodeType()->getName();
+        $data['displayName'] = $this->getNodeType()->getDisplayName();
+        $data['description'] = $this->getNodeType()->getDescription();
+        $data['visible'] = $this->getNodeType()->isVisible();
+        $data['newsletterType'] = $this->getNodeType()->isNewsletterType();
+        $data['hidingNodes'] = $this->getNodeType()->isHidingNodes();
+        $data['fields'] = array();
 
         foreach ($this->getNodeType()->getFields() as $ntf) {
-            $data['node_type']['fields'][] = $ntf->getHandler()->serialize();
+            $data['node_type_fields'][] = $ntf->getHandler()->serialize();
         }
 
         if (defined(JSON_PRETTY_PRINT)) {
@@ -202,159 +203,10 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
     }
 
     /**
-     * Export Json into a .rzt file
-     * @return void
+     * Deserializes a Json into readable datas
+     * @return mixed[] array
      */
-    public function exportIntoFile() {
-        if ($this->getObject()->exists()) {
-            $serialized = $this->serializeToJson();
-            $file = $this->getObject()->name.".rzt";
-
-            if (file_put_contents($file, $serialized, LOCK_EX)) {
-                $size = filesize($file); 
-
-                header('Content-Type: application/force-download; name=' . $this->getObject()->name . '.rzt');
-                header("Content-Transfer-Encoding: binary");
-                header("Content-Length: ".$size);
-                header('Content-Disposition: attachment; filename='.$this->getObject()->name.'.rzt');
-                header("Expires: 0"); 
-                header("Cache-Control: no-cache, must-revalidate"); 
-                readfile($file);
-                exit();
-            }
-        }
-    }
-
-    /**
-     * Import Node Type datas from a .rzt file.
-     * @param  string  $url
-     * @return void
-     */
-    public function importFromFile($url) {
-        if (file_exists($url)) {
-            if ($serialized = file_get_contents($url)) {
-                if ($nodeType = json_decode($serialized, true)) {
-
-                    $exists = new NodeType(array('name'=>$nodeType["name"]));
-
-                    if (!$exists->exists()) {
-                        foreach (NodeType::listTableColumns() as $column) {
-                            if (isset($nodeType[$column])) {
-                                $exists->$column = $nodeType[$column];
-                            }
-                        }
-
-                        if ($exists->insertIntoDB() !== false) {   // ?
-                            foreach ($nodeType["node_type_fields"] as $field)  {
-                                $newField = new NodeTypeField();
-                                $newField->getId() = $exists->getId(); // ?
-
-                                foreach ($field as $key => $value) {
-                                    $newField->$key = $value;
-                                }
-
-                                if ($newField->insertIntoDB() !== false) { // ?
-                                    Kernel::getInstance()->em()->persist($newField);
-                                    Kernel::getInstance()->em()->flush();
-                                }
-                            }
-                            /*
-                            rz_log::register_message(sprintf(_("Node type “%s” has been succesfully imported"), $exists->name), CONFIRM);
-                            rz_log::postUserLog(sprintf(_("Node type “%s” has been succesfully imported."), $exists->name));
-                            */
-                            Kernel::getInstance()->em()->flush();
-                            return true;
-                        }
-                        else {
-                            return false;
-                        }
-                    }
-                     else {
-                        throw new Exception("Node type file cannot be unserialized.!", 1);
-                        return false;
-                    }
-                }
-                else {
-                    throw new Exception("Node type file cannot be unserialized.", 1);
-                    return false;
-                }
-            }
-            else {
-                throw new Exception("Node type file cannot be read.", 1);
-                return false;
-            }
-        }
-        else {
-            throw new Exception("Node type file cannot be found.", 1);
-            return false;
-        }
-    }
-
-    /**
-     * Update an existing Node Type.
-     * @param string  $url
-     * @return bool
-     */
-    public function updateFromFile($url) {
-        if (file_exists($url)) {
-            if ($serialized = file_get_contents($url)) {
-                if ($nodeType = json_decode($serialized, true)) {
-                    
-                    $exists = new NodeType(array('name'=>$nodeType["name"]));
-                   
-                    if ($exists->exists()) {
-                        $NewNodeTypes = $nodeType["node_type_fields"];
-                        $OldNodeTypesNames = $exists->getFields();
-
-                        try {
-
-                            Kernel::getInstance()->em()
-                                ->find('RZ\Renzo\Core\Entities\NodeType', (int)$exists->getId());
-
-                            foreach ($NewNodeTypes as $key => $field) {
-                                if (!in_array($field["name"], $OldNodeTypesNames)) {
-
-                                    $newField = new NodeTypeField();
-                                    $newField->getId() = $exists->getId(); // ?
-
-                                    foreach ($field as $key => $value) {
-                                        $newField->$key = $value;
-                                    }
-
-                                    if ($newField->insertIntoDB() !== false) { // ?
-                                        Kernel::getInstance()->em()->persist($newField);
-                                        Kernel::getInstance()->em()->flush();
-                                        rz_log::register_message(sprintf(_("New field “%s” for “%s” node type!"), 
-                                            $newField->name, $exists->name), CONFIRM); // ?
-                                    }
-                                }
-                            }
-
-                            return true;
-                        }
-                        catch (PDOException $e) {
-                            Kernel::getInstance()->em()->flush();
-                            return false;
-                        }
-                    }
-                    else {
-                        throw new Exception("Node type “%s” does not exist!", 1);
-                        return false;
-                    }
-                }
-                else {
-                    throw new Exception("Node type file cannot be unserialized.", 1);
-                    return false;
-                }
-            }
-            else {
-                throw new Exception("Node type file cannot be read.", 1);
-                return false;
-            }
-        }
-        else {
-            throw new Exception("Node type file cannot be found.", 1);
-            return false;
-        }
+    public function deserializeFromJson() {
+        
     }
 }

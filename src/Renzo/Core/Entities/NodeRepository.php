@@ -3,7 +3,7 @@
 
 namespace RZ\Renzo\Core\Entities;
 
-use Doctrine\ORM\EntityRepository;
+use RZ\Renzo\Core\Utils\EntityRepository;
 
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
@@ -22,8 +22,7 @@ class NodeRepository extends EntityRepository
 	 */
 	public function findWithTranslation($node_id, Translation $translation )
 	{
-	    $query = Kernel::getInstance()->em()
-                        ->createQuery('
+	    $query = $this->_em->createQuery('
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
             INNER JOIN n.nodeSources ns 
             WHERE n.id = :node_id AND ns.translation = :translation'
@@ -44,14 +43,12 @@ class NodeRepository extends EntityRepository
      */
     public function findWithDefaultTranslation($node_id)
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
             INNER JOIN n.nodeSources ns 
             INNER JOIN ns.translation t
-            WHERE n.id = :node_id AND t.defaultTranslation = :defaultTranslation'
-                        )->setParameter('node_id', (int)$node_id)
-                        ->setParameter('defaultTranslation', true);
+            WHERE n.id = :node_id AND t.defaultTranslation = 1'
+                        )->setParameter('node_id', (int)$node_id);
 
         try {
             return $query->getSingleResult();
@@ -68,8 +65,7 @@ class NodeRepository extends EntityRepository
      */
     public function findByNodeNameWithTranslation($node_name, Translation $translation )
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
             INNER JOIN n.nodeSources ns 
             WHERE n.nodeName = :node_name AND ns.translation = :translation'
@@ -90,14 +86,12 @@ class NodeRepository extends EntityRepository
      */
     public function findByNodeNameWithDefaultTranslation($node_name)
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
             INNER JOIN n.nodeSources ns 
             INNER JOIN ns.translation t
-            WHERE n.nodeName = :node_name AND t.defaultTranslation = :defaultTranslation'
-                        )->setParameter('node_name', $node_name)
-                        ->setParameter('defaultTranslation', true);
+            WHERE n.nodeName = :node_name AND t.defaultTranslation = 1'
+                        )->setParameter('node_name', $node_name);
 
         try {
             return $query->getSingleResult();
@@ -114,8 +108,7 @@ class NodeRepository extends EntityRepository
      */
     public function getChildrenWithTranslation( Node $node, Translation $translation )
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
             INNER JOIN n.nodeSources ns 
             WHERE n.parent = :node AND ns.translation = :translation'
@@ -140,8 +133,7 @@ class NodeRepository extends EntityRepository
         $query = null;
 
         if ($parent === null) {
-            $query = Kernel::getInstance()->em()
-                        ->createQuery('
+            $query = $this->_em->createQuery('
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
             INNER JOIN n.nodeSources ns 
             INNER JOIN ns.translation t
@@ -150,8 +142,7 @@ class NodeRepository extends EntityRepository
                         )->setParameter('translation_id', (int)$translation->getId());
         }
         else {
-            $query = Kernel::getInstance()->em()
-                            ->createQuery('
+            $query = $this->_em->createQuery('
                 SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
                 INNER JOIN n.nodeSources ns 
                 INNER JOIN ns.translation t
@@ -179,26 +170,23 @@ class NodeRepository extends EntityRepository
     {
         $query = null;
         if ($parent === null) {
-            $query = Kernel::getInstance()->em()
-                        ->createQuery('
+            $query = $this->_em->createQuery('
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
             INNER JOIN n.nodeSources ns 
             INNER JOIN ns.translation t
-            WHERE n.parent IS NULL AND t.defaultTranslation = :defaultTranslation
+            WHERE n.parent IS NULL AND t.defaultTranslation = 1
             ORDER BY n.position ASC'
-                        )->setParameter('defaultTranslation', true);
+                        );
         }
         else {
-            $query = Kernel::getInstance()->em()
-                            ->createQuery('
+            $query = $this->_em->createQuery('
                 SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n 
                 INNER JOIN n.nodeSources ns 
                 INNER JOIN ns.translation t
                 INNER JOIN n.parent pn
-                WHERE pn.id = :parent AND t.defaultTranslation = :defaultTranslation
+                WHERE pn.id = :parent AND t.defaultTranslation = 1
                 ORDER BY n.position ASC'
-                            )->setParameter('parent', $parent->getId())
-                            ->setParameter('defaultTranslation', true);
+                            )->setParameter('parent', $parent->getId());
         }
 
         try {
@@ -215,8 +203,7 @@ class NodeRepository extends EntityRepository
      */
     public function findOneWithUrlAlias( $urlAlias )
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT n, ns, t FROM RZ\Renzo\Core\Entities\Node n 
             INNER JOIN n.nodeSources ns 
             INNER JOIN ns.urlAliases uas
@@ -238,8 +225,7 @@ class NodeRepository extends EntityRepository
      */
     public function exists( $nodeName )
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT COUNT(n.nodeName) FROM RZ\Renzo\Core\Entities\Node n 
             WHERE n.nodeName = :node_name
         ')->setParameter('node_name', $nodeName);

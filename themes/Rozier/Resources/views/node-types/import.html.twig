@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section id="manage-node-types">
+	<h1 id="title">{% trans %}Import Node types{% endtrans %}</h1>
+	
+	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		{{ form_widget(form) }}
+		<a class="uk-button" type="submit" ><i class="uk-icon-plus"></i> {% trans %}Import a node type (.rzt){% endtrans %}</a>
+	</form>
+</section>
+{% endblock %}
+

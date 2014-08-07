@@ -203,6 +203,17 @@ class Translation extends DateTimed {
 	public function getNodeSources() {
 	    return $this->nodeSources;
 	}
+	/**
+	 * @OneToMany(targetEntity="TagTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @var ArrayCollection
+	 */
+	private $tagTranslations = null;
+	/**
+	 * @return Translation
+	 */
+	public function getTagTranslations() {
+	    return $this->tagTranslations;
+	}
 
 	/**
 	 * Return short locale name from complete locale.    
@@ -230,6 +241,6 @@ class Translation extends DateTimed {
 		parent::__construct();
 		
 		$this->nodeSources = new ArrayCollection();
-		$this->urlAliases = new ArrayCollection();
+		$this->tagTranslations = new ArrayCollection();
 	}
 }

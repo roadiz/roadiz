@@ -86,9 +86,16 @@ nodeTypesEditPage:
 nodeTypesAddPage:
     path:     /rz-admin/node-types/add
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypesController::addAction }
+nodeTypesImportPage:
+    path:     /rz-admin/node-types/import
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypesUtilsController::importJsonFileAction }
 nodeTypesDeletePage:
     path:     /rz-admin/node-types/delete/{node_type_id}
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypesController::deleteAction }
+    requirements: { node_type_id : "[0-9]+" }
+nodesTypesExportPage:
+    path:     /rz-admin/node-types/export/{node_type_id}
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypesUtilsController::exportJsonFileAction }
     requirements: { node_type_id : "[0-9]+" }
 nodeTypesSchemaUpdate:
     path:     /rz-admin/node-types/update-schema/{_token}
@@ -137,10 +144,6 @@ settingsDeletePage:
 tagsHomePage:
     path:     /rz-admin/tags
     defaults: { _controller: Themes\Rozier\Controllers\TagsController::indexAction }
-tagsEditPage:
-    path:     /rz-admin/tags/edit/{tag_id}
-    defaults: { _controller: Themes\Rozier\Controllers\TagsController::editAction }
-    requirements: { tag_id : "[0-9]+" }
 tagsEditNodesPage:
     path:     /rz-admin/tags/edit/{tag_id}/nodes
     defaults: { _controller: Themes\Rozier\Controllers\TagsController::editNodesAction }

@@ -2,7 +2,7 @@
 
 namespace RZ\Renzo\Core\Entities;
 
-use Doctrine\ORM\EntityRepository;
+use RZ\Renzo\Core\Utils\EntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 use RZ\Renzo\Core\Utils\StringHandler;
@@ -12,8 +12,7 @@ class SettingRepository extends EntityRepository
 {
 	public function getValue($name)
 	{
-		$query = Kernel::getInstance()->em()
-						->createQuery('
+		$query = $this->_em->createQuery('
 			SELECT s.value FROM RZ\Renzo\Core\Entities\Setting s 
 			WHERE s.name = :name'
 						)->setParameter('name', $name);
@@ -26,8 +25,7 @@ class SettingRepository extends EntityRepository
 	}
 	public function exists($name)
 	{
-		$query = Kernel::getInstance()->em()
-						->createQuery('
+		$query = $this->_em->createQuery('
 			SELECT COUNT(s.value) FROM RZ\Renzo\Core\Entities\Setting s 
 			WHERE s.name = :name'
 						)->setParameter('name', $name);

@@ -3,9 +3,10 @@
 
 {% block content %}
 <section id="manage-tag">
-	<h1 id="tag-title">Edit {{ tag.getDefaultTranslatedTag.getName }}</h1>
+	<h1 id="tag-title">Edit {{ tag.getTranslatedTags.first.getName }}</h1>
 	
 	{% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'edit'} %}
+	{% include 'tags/translationBar.html.twig' with {"tag": tag, "current":translation.getId} %}
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}

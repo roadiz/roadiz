@@ -3,7 +3,7 @@
 
 namespace RZ\Renzo\Core\Entities;
 
-use Doctrine\ORM\EntityRepository;
+use RZ\Renzo\Core\Utils\EntityRepository;
 
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\NodesSourcesDocuments;
@@ -17,8 +17,7 @@ class NodesSourcesDocumentsRepository extends EntityRepository
 
     public function getLatestPosition( $nodeSource, NodeTypeField $field )
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT MAX(nsd.position) FROM RZ\Renzo\Core\Entities\NodesSourcesDocuments nsd 
             WHERE nsd.nodeSource = :nodeSource AND nsd.field = :field
         ')->setParameter('nodeSource', $nodeSource)

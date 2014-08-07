@@ -2,7 +2,7 @@
 
 namespace RZ\Renzo\Core\Entities;
 
-use Doctrine\ORM\EntityRepository;
+use RZ\Renzo\Core\Utils\EntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 use RZ\Renzo\Core\Utils\StringHandler;
@@ -12,8 +12,7 @@ class UserRepository extends EntityRepository
 {
 	public function usernameExists($username)
 	{
-		$query = Kernel::getInstance()->em()
-						->createQuery('
+		$query = $this->_em->createQuery('
 			SELECT COUNT(u.username) FROM RZ\Renzo\Core\Entities\User u 
 			WHERE u.username = :username'
 						)->setParameter('username', $username);
@@ -27,8 +26,7 @@ class UserRepository extends EntityRepository
 
 	public function emailExists($email)
 	{
-		$query = Kernel::getInstance()->em()
-						->createQuery('
+		$query = $this->_em->createQuery('
 			SELECT COUNT(u.email) FROM RZ\Renzo\Core\Entities\User u 
 			WHERE u.email = :email'
 						)->setParameter('email', $email);

@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="manage-tag">
-	<h1 id="tag-title">{% trans %}Delete tag:{% endtrans %} {{ tag.getDefaultTranslatedTag.getName }}</h1>
+	<h1 id="tag-title">{% trans %}Delete tag:{% endtrans %} {{ tag.getTranslatedTags.first.getName }}</h1>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}

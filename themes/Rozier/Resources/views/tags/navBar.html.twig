@@ -1,10 +1,11 @@
+{% set tTag = tag.getTranslatedTags.first %}
 <nav class="tag-edit-navigation uk-navbar">
 	<ul class="uk-navbar-nav">
 		<li class="{% if current == 'tree' %}uk-active{% endif %}">
 			<a href="{{ path('tagsTreePage', { tag_id: tag.getId }) }}">{% trans %}tag.tree{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
-			<a href="{{ path('tagsEditPage', { tag_id: tag.getId }) }}">{% trans %}tag.parameters{% endtrans %}</a>
+			<a href="{{ path('tagsEditTranslatedPage', { tag_id: tag.getId, translation_id: tTag.getTranslation.getId }) }}">{% trans %}tag.parameters{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'nodes' %}uk-active{% endif %}" >
 			<a href="{{ path('tagsEditNodesPage', { tag_id: tag.getId }) }}">{% trans %}tag.nodes{% endtrans %}</a>

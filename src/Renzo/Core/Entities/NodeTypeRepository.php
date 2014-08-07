@@ -3,7 +3,7 @@
 
 namespace RZ\Renzo\Core\Entities;
 
-use Doctrine\ORM\EntityRepository;
+use RZ\Renzo\Core\Utils\EntityRepository;
 
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Kernel;
@@ -21,8 +21,7 @@ class NodeTypeRepository extends EntityRepository
      */
 	public function findAllNames()
     {
-        $query = Kernel::getInstance()->em()
-                        ->createQuery('
+        $query = $this->_em->createQuery('
             SELECT partial nt.{id,name} FROM RZ\Renzo\Core\Entities\NodeType nt'
                         );
         try {
