@@ -23,7 +23,6 @@ class RolesController extends RozierApp
 {
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -42,7 +41,7 @@ class RolesController extends RozierApp
 	}
 
 	/**
-	 * Return an creation form for requested role
+	 * Return an creation form for requested role.
 	 * @param Symfony\Component\HttpFoundation\Request $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -89,7 +88,7 @@ class RolesController extends RozierApp
 	}
 
 	/**
-	 * eturn an creation form for requested role
+	 * Return an creation form for requested role.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $role_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -146,7 +145,7 @@ class RolesController extends RozierApp
 	}
 
 	/**
-	 * Return an edition form for requested role
+	 * Return an edition form for requested role.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $role_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -205,7 +204,7 @@ class RolesController extends RozierApp
 	}
 
 	/**
-	 * Build add role form with name constraint
+	 * Build add role form with name constraint.
 	 * @return Symfony\Component\Form\Forms
 	 */
 	protected function buildAddForm() {
@@ -226,8 +225,7 @@ class RolesController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Build delete role form with name constraint
+	 * Build delete role form with name constraint.
 	 * @param RZ\Renzo\Core\Entities\Role  $role
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -246,8 +244,7 @@ class RolesController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Build edit role form with name constraint
+	 * Build edit role form with name constraint.
 	 * @param  RZ\Renzo\Core\Entities\Role  $role
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -278,7 +275,6 @@ class RolesController extends RozierApp
 	}
 
 	/**
-	 *
 	 * @param array  $data
 	 * @return RZ\Renzo\Core\Entities\Role
 	 */
@@ -304,7 +300,6 @@ class RolesController extends RozierApp
 	}
 
 	/**
-	 *
 	 * @param array  $data
 	 * @return RZ\Renzo\Core\Entities\Role
 	 */
@@ -334,7 +329,6 @@ class RolesController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\Role  $role
 	 * @return void

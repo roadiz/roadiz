@@ -32,8 +32,7 @@ use Symfony\Component\Validator\Constraints\Type;
 class TranslationsController extends RozierApp
 {
 	/**
-	 * 
-	 * List every translations
+	 * List every translations.
 	 * @param Symfony\Component\HttpFoundation\Request $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -84,8 +83,7 @@ class TranslationsController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Return an edition form for requested translation
+	 * Return an edition form for requested translation.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  integer $translation_id        [description]
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -142,8 +140,7 @@ class TranslationsController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Return an creation form for requested translation
+	 * Return an creation form for requested translation.
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function addAction( Request $request )
@@ -195,8 +192,7 @@ class TranslationsController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Return an deletion form for requested translation
+	 * Return an deletion form for requested translation.
 	 * @param Symfony\Component\HttpFoundation\Request  $request
 	 * @param int  $translation_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -250,6 +246,11 @@ class TranslationsController extends RozierApp
 		}
 	}
 
+	/**
+	 * @param  array  $data        
+	 * @param  RZ\Renzo\Core\Entities\Translation  $translation 
+	 * @return void                 
+	 */
 	private function editTranslation($data, Translation $translation) {
 		try {
 			foreach ($data as $key => $value) {
@@ -265,6 +266,11 @@ class TranslationsController extends RozierApp
 		}
 	}
 
+	/**
+	 * @param array  $data        
+	 * @param RZ\Renzo\Core\Entities\Translation  $translation
+	 * @return void 
+	 */
 	private function addTranslation($data, Translation $translation) {
 		try {
 			foreach ($data as $key => $value) {
@@ -280,6 +286,11 @@ class TranslationsController extends RozierApp
 		}
 	}
 
+	/**
+	 * @param  array  $data        
+	 * @param  RZ\Renzo\Core\Entities\Translation  $translation 
+	 * @return void                   
+	 */
 	private function deleteTranslation($data, Translation $translation) {
 		if ($data['translation_id'] == $translation->getId()) {
 
@@ -294,7 +305,6 @@ class TranslationsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Translation  $translation 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -322,7 +332,6 @@ class TranslationsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Translation  $translation 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -341,7 +350,6 @@ class TranslationsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Translation  $translation
 	 * @return Symfony\Component\Form\Forms
 	 */

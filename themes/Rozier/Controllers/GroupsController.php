@@ -24,7 +24,7 @@ use RZ\Renzo\Core\Exceptions\EntityRequiredException;
 class GroupsController extends RozierApp
 {
 	/**
-	 * List groups action
+	 * List groups action.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -44,7 +44,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -92,7 +91,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $group_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -145,7 +143,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $group_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -204,7 +201,7 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * Return an edition form for requested group
+	 * Return an edition form for requested group.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $group_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -259,7 +256,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $group_id
 	 * @param  int  $role_id
@@ -314,7 +310,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $group_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -369,7 +364,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $group_id
 	 * @param  int  $user_id
@@ -425,7 +419,7 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * Build add group form with name constraint
+	 * Build add group form with name constraint.
 	 * @return Symfony\Component\Form\Forms
 	 */
 	protected function buildAddForm() {
@@ -443,7 +437,7 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * Build delete group form with name constraint
+	 * Build delete group form with name constraint.
 	 * @param  RZ\Renzo\Core\Entities\Group  $group
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -462,7 +456,7 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * Build edit group form with name constraint
+	 * Build edit group form with name constraint.
 	 * @param  RZ\Renzo\Core\Entities\Group  $group
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -541,7 +535,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param RZ\Renzo\Core\Entities\Group $group
 	 * @param RZ\Renzo\Core\Entities\Role $role
 	 * @return Symfony\Component\Form\Forms
@@ -568,7 +561,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param RZ\Renzo\Core\Entities\Group $group
 	 * @param RZ\Renzo\Core\Entities\User $user
 	 * @return Symfony\Component\Form\Forms
@@ -595,7 +587,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 *
 	 * @param array  $data 
 	 * @return RZ\Renzo\Core\Entities\Group 
 	 */
@@ -622,7 +613,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 *
 	 * @param array $data
 	 * @return RZ\Renzo\Core\Entities\Group
 	 */
@@ -648,7 +638,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\Group  $group
 	 * @return void
@@ -659,7 +648,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param array  $data
 	 * @param RZ\Renzo\Core\Entities\Group  $group
 	 * @return RZ\Renzo\Core\Entities\User
@@ -678,7 +666,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\Group  $group
 	 * @param  RZ\Renzo\Core\Entities\Role  $role
@@ -697,7 +684,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param array $data
 	 * @param RZ\Renzo\Core\Entities\Group  $group
 	 * @return RZ\Renzo\Core\Entities\User
@@ -718,7 +704,6 @@ class GroupsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  array $data
 	 * @param  RZ\Renzo\Core\Entities\Group  $group
 	 * @param  RZ\Renzo\Core\EntitiesUser  $user

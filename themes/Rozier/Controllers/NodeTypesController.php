@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints\Type;
 class NodeTypesController extends RozierApp
 {
 	/**
-	 * List every node-types
+	 * List every node-types.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -54,7 +54,7 @@ class NodeTypesController extends RozierApp
 	}
 
 	/**
-	 * Return an edition form for requested node-type
+	 * Return an edition form for requested node-type.
 	 * @param  Symfony\Component\HttpFoundation\Request $request
 	 * @param  int  $node_type_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -112,8 +112,7 @@ class NodeTypesController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Return an creation form for requested node-type
+	 * Return an creation form for requested node-type.
 	 * @param Symfony\Component\HttpFoundation\Request $request
  	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -177,7 +176,7 @@ class NodeTypesController extends RozierApp
 	}
 
 	/**
-	 * Return an deletion form for requested node-type
+	 * Return an deletion form for requested node-type.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $node_type_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -234,7 +233,6 @@ class NodeTypesController extends RozierApp
 	}
 	
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type
 	 * @return bool
@@ -253,7 +251,6 @@ class NodeTypesController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type
 	 * @return bool
@@ -278,7 +275,6 @@ class NodeTypesController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -313,7 +309,6 @@ class NodeTypesController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -342,7 +337,6 @@ class NodeTypesController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -361,7 +355,6 @@ class NodeTypesController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @return \Doctrine\Common\Collections\ArrayCollection
 	 */
 	public static function getNodeTypes() {
@@ -371,7 +364,6 @@ class NodeTypesController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @return \Doctrine\Common\Collections\ArrayCollection
 	 */
 	public static function getNewsletterNodeTypes() {

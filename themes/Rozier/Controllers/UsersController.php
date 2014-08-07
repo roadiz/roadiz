@@ -38,8 +38,7 @@ class UsersController extends RozierApp
 {
 
 	/**
-	 * 
-	 * List every users
+	 * List every users.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -74,8 +73,7 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Return an edition form for requested user
+	 * Return an edition form for requested user.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $user_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -134,7 +132,7 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * Return an edition form for requested user
+	 * Return an edition form for requested user.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $user_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -189,7 +187,7 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * Return a deletion form for requested role depending on the user
+	 * Return a deletion form for requested role depending on the user.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $user_id
 	 * @param  int  $role_id
@@ -295,7 +293,7 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * Return a deletion form for requested group depending on the user
+	 * Return a deletion form for requested group depending on the user.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $user_id
 	 * @param  int  $group_id
@@ -352,7 +350,7 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * Return an creation form for requested user
+	 * Return an creation form for requested user.
 	 * @param Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -409,7 +407,7 @@ class UsersController extends RozierApp
 	}
 
 	/**
-	 * Return a deletion form for requested user
+	 * Return a deletion form for requested user.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $user_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -499,7 +497,7 @@ class UsersController extends RozierApp
 
 	/**
 	 * @param array $data
-	 * @param RZ\Renzo\Core\Entities\User   $user
+	 * @param RZ\Renzo\Core\Entities\User  $user
 	 */
 	private function addUser($data, User $user) {	
 		if (Kernel::getInstance()->em()

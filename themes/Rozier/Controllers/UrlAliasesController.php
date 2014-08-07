@@ -38,8 +38,7 @@ use Symfony\Component\Validator\Constraints\Type;
 class UrlAliasesController extends RozierApp {
 
 	/**
-	 * 
-	 * Return aliases form for requested node
+	 * Return aliases form for requested node.
 	 * @param  Symfony\Component\HttpFoundation\Request $request
 	 * @param  int  $node_id        
 	 * @param  int  $translation_id 
@@ -181,7 +180,6 @@ class UrlAliasesController extends RozierApp {
 
 
 	/**
-	 *
 	 * @param array  $data 
 	 * @param RZ\Renzo\Core\Entities\Node  $node
 	 * @return RZ\Renzo\Core\Entities\UrlAlias
@@ -228,8 +226,7 @@ class UrlAliasesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * @param  string $name
+	 * @param  string  $name
 	 * @return bool
 	 */
 	private function urlAliasExists($name) {
@@ -245,7 +242,6 @@ class UrlAliasesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua 
 	 * @return void
@@ -274,7 +270,6 @@ class UrlAliasesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua 
 	 * @return void
@@ -288,7 +283,6 @@ class UrlAliasesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Node  $node 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -311,7 +305,6 @@ class UrlAliasesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -338,7 +331,6 @@ class UrlAliasesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua
 	 * @return Symfony\Component\Form\Forms
 	 */

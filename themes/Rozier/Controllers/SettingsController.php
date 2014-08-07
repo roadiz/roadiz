@@ -33,8 +33,7 @@ use Symfony\Component\Validator\Constraints\Type;
 class SettingsController extends RozierApp
 {
 	/**
-	 * 
-	 * List every settings
+	 * List every settings.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -85,8 +84,7 @@ class SettingsController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Return an edition form for requested setting
+	 * Return an edition form for requested setting.
 	 * @param int  $setting_id
 	 * @param Symfony\Component\HttpFoundation\Request $request
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -140,8 +138,7 @@ class SettingsController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Return an creation form for requested setting
+	 * Return an creation form for requested setting.
 	 * @param Symfony\Component\HttpFoundation\Request $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -194,11 +191,7 @@ class SettingsController extends RozierApp
 	}
 
 	/**
-	 * Return an deletion form for requested setting
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	/**
-	 * Return an deletion form for requested setting
+	 * Return an deletion form for requested setting.
 	 * @param  Symfony\Component\HttpFoundation\Request $request
 	 * @param  int  $setting_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -248,7 +241,6 @@ class SettingsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\Setting  $setting
 	 * @return 
@@ -280,7 +272,6 @@ class SettingsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param array  $data
 	 * @param RZ\Renzo\Core\Entities\Setting $setting
 	 * @return 
@@ -308,7 +299,6 @@ class SettingsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\Setting $setting
 	 * @return bool
@@ -320,7 +310,6 @@ class SettingsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -355,7 +344,6 @@ class SettingsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -385,7 +373,6 @@ class SettingsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -407,7 +394,6 @@ class SettingsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -426,7 +412,6 @@ class SettingsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @return \Doctrine\Common\Collections\ArrayCollection
 	 */
 	public static function getSettings() {

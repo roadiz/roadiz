@@ -25,7 +25,6 @@ use Symfony\Component\Validator\Constraints\Type;
 class ThemesController extends RozierApp {
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */

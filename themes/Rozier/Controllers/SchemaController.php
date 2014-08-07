@@ -22,13 +22,13 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
 /**
- * Redirection controller use to update database schema 
+ * Redirection controller use to update database schema.
  * 
  */
 class SchemaController extends RozierApp {
 
 	/**
-	 * No preparation for this blind controller
+	 * No preparation for this blind controller.
 	 * @return $this
 	 */
 	public function prepareBaseAssignation() {
@@ -36,7 +36,6 @@ class SchemaController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  string  $_token
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -69,7 +68,6 @@ class SchemaController extends RozierApp {
 	}
 
 	/**
-	 * [updateNodeTypeFieldsSchemaAction description]
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  string  $_token
 	 * @param  int  $node_type_id

@@ -36,8 +36,7 @@ use Symfony\Component\Validator\Constraints\Type;
 class NodeTypeFieldsController extends RozierApp
 {
 	/**
-	 * 
-	 * List every node-type-fields
+	 * List every node-type-fields.
 	 * @param  Symfony\Component\HttpFoundation\Request $request
 	 * @param  int  $node_type_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -64,8 +63,7 @@ class NodeTypeFieldsController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Return an edition form for requested node-type
+	 * Return an edition form for requested node-type.
 	 * @param  Symfony\Component\HttpFoundation\Request $request
 	 * @param  int  $node_type_field_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -121,8 +119,7 @@ class NodeTypeFieldsController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Return an creation form for requested node-type
+	 * Return an creation form for requested node-type.
 	 * @param Symfony\Component\HttpFoundation\Request  $request
 	 * @param int  $node_type_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -180,7 +177,7 @@ class NodeTypeFieldsController extends RozierApp
 	}
 
 	/**
-	 * Return an deletion form for requested node
+	 * Return an deletion form for requested node.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $node_type_field_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -247,7 +244,6 @@ class NodeTypeFieldsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\NodeTypeField  $field
 	 * @return void
@@ -264,7 +260,6 @@ class NodeTypeFieldsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param array  $data
 	 * @param RZ\Renzo\Core\Entities\NodeTypeField  $field
 	 * @param RZ\Renzo\Core\Entities\NodeType  $node_type
@@ -322,7 +317,6 @@ class NodeTypeFieldsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\NodeTypeField  $node 
 	 * @return Symfony\Component\Form\Forms
 	 */

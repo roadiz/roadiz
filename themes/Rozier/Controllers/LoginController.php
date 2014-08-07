@@ -20,7 +20,6 @@ use Symfony\Component\Validator\Constraints\Type;
 class LoginController extends RozierApp {
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -48,7 +47,6 @@ class LoginController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -61,7 +59,6 @@ class LoginController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -74,7 +71,6 @@ class LoginController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Document  $document 
 	 * @return Symfony\Component\Form\Forms
 	 */

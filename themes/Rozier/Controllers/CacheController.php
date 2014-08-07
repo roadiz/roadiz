@@ -32,7 +32,6 @@ use Symfony\Component\Validator\Constraints\Type;
 class CacheController extends RozierApp {
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -68,7 +67,6 @@ class CacheController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @return Symfony\Component\Form\Forms
 	 */
 	private function buildDeleteDoctrineForm() {

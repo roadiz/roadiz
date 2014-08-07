@@ -19,7 +19,6 @@ use Symfony\Component\Validator\Constraints\Type;
 class DocumentsController extends RozierApp {
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -48,7 +47,6 @@ class DocumentsController extends RozierApp {
 	}
  
  	/**
- 	 * 
  	 * @param  Symfony\Component\HttpFoundation\Request  $request
  	 * @param  int  $document_id
  	 * @return Symfony\Component\HttpFoundation\Response
@@ -107,7 +105,7 @@ class DocumentsController extends RozierApp {
 	}
 
 	/**
-	 * Return an deletion form for requested document
+	 * Return an deletion form for requested document.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $document_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -161,7 +159,6 @@ class DocumentsController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -217,7 +214,6 @@ class DocumentsController extends RozierApp {
 	}	
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Document  $doc
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -237,7 +233,6 @@ class DocumentsController extends RozierApp {
 		return $builder->getForm();
 	}
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Document  $document 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -273,7 +268,6 @@ class DocumentsController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  array   $data
 	 * @param  RZ\Renzo\Core\Entities\Document $document
 	 * @return void
@@ -288,8 +282,7 @@ class DocumentsController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Handle upload form data to create a Document
+	 * Handle upload form data to create a Document.
 	 * @param  array  $data
 	 * @return void
 	 */

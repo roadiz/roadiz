@@ -35,8 +35,7 @@ use Symfony\Component\Validator\Constraints\Type;
 class TagsController extends RozierApp
 {
 	/**
-	 * 
-	 * List every tags
+	 * List every tags.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -54,8 +53,7 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Return an edition form for requested tag
+	 * Return an edition form for requested tag.
 	 * @param  int  $tag_id        
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -106,8 +104,7 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Return an creation form for requested tag
+	 * Return an creation form for requested tag.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -157,8 +154,7 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 *
-	 * Return a deletion form for requested tag
+	 * Return a deletion form for requested tag.
 	 * @param Symfony\Component\HttpFoundation\Request $request
 	 * @param int  $tag_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -206,8 +202,7 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
-	 * Handle tag creation pages
+	 * Handle tag creation pages.
 	 * @param Symfony\Component\HttpFoundation\Request  $request
 	 * @param int  $tag_id
 	 * @param int  $translation_id
@@ -280,7 +275,6 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\Tag  $tag
 	 * @return void
@@ -295,7 +289,6 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param array  $data
 	 * @param RZ\Renzo\Core\Entities\Tag $tag
 	 * @param RZ\Renzo\Core\Entities\Translation  $translation
@@ -324,7 +317,6 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param array  $data
 	 * @param RZ\Renzo\Core\Entities\Tag $tag
 	 * @param RZ\Renzo\Core\Entities\Translation  $translation
@@ -360,7 +352,6 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\Tag  $tag
 	 * @return 
@@ -372,7 +363,6 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param RZ\Renzo\Core\Entities\Tag  $tag
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -395,7 +385,6 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param RZ\Renzo\Core\Entities\Tag  $tag
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -422,7 +411,6 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param RZ\Renzo\Core\Entities\Tag  $tag 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -450,7 +438,6 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Tag  $tag 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -469,7 +456,6 @@ class TagsController extends RozierApp
 	}
 
 	/**
-	 * 
 	 * @return \Doctrine\Common\Collections\ArrayCollection
 	 */
 	public static function getTags() {

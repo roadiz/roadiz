@@ -39,7 +39,7 @@ use Symfony\Component\Validator\Constraints\Type;
 class NodesController extends RozierApp {
 
 	/**
-	 * List every nodes
+	 * List every nodes.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
@@ -80,7 +80,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $node_id
 	 * @param  int  $translation_id
@@ -120,8 +119,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Return an edition form for requested node
+	 * Return an edition form for requested node.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $node_id
 	 * @param  int  $translation_id
@@ -221,8 +219,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Return an edition form for requested node
+	 * Return an edition form for requested node.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $node_id
 	 * @param  int  $translation_id
@@ -295,8 +292,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Return tags form for requested node
+	 * Return tags form for requested node.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $node_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -361,8 +357,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Return a deletion form for requested tag depending on the node
+	 * Return a deletion form for requested tag depending on the node.
 	 * @param  Symfony\Component\HttpFoundation\Requet  $request
 	 * @param  int  $node_id
 	 * @param  int  $tag_id
@@ -416,8 +411,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Handle node creation pages
+	 * Handle node creation pages.
 	 * @param Symfony\Component\HttpFoundation\Request  $request
 	 * @param int  $node_type_id
 	 * @param int  $translation_id
@@ -498,8 +492,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Handle node creation pages
+	 * Handle node creation pages.
 	 * @param Symfony\Component\HttpFoundation\Request  $request
 	 * @param int  $node_id
 	 * @param int  $translation_id
@@ -572,8 +565,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Return an deletion form for requested node
+	 * Return an deletion form for requested node.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @param  int  $node_id
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -622,7 +614,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\NodeType  $type
 	 * @param  RZ\Renzo\Core\Entities\Translation  $translation
@@ -652,7 +643,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  array  $data 
 	 * @return RZ\Renzo\Core\Entities\Node
 	 */
@@ -693,7 +683,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  string  $name
 	 * @return void
 	 */
@@ -715,8 +704,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Edit node base parameters
+	 * Edit node base parameters.
 	 * @param  array  $data 
 	 * @param  Node   $node 
 	 * @return void
@@ -739,8 +727,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Link a node with a tag 
+	 * Link a node with a tag.
 	 * @param  array $data Form data
 	 * @param  RZ\Renzo\Core\Entities\Node  $node 
 	 * @return RZ\Renzo\Core\Entities\Tag  $linkedTag
@@ -757,7 +744,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  array  $data
 	 * @param  RZ\Renzo\Core\Entities\Node  $node
 	 * @param  RZ\Renzo\Core\Entities\Tag  $tag
@@ -775,8 +761,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Create a new node-source for given translation
+	 * Create a new node-source for given translation.
 	 * @param  array  $data 
 	 * @param  RZ\Renzo\Core\Entities\Node  $node 
 	 * @return void
@@ -794,8 +779,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Edit node source parameters
+	 * Edit node source parameters.
 	 * @param  array  $data 
 	 * @param  RZ\Renzo\Core\Entities\NodesSources  $nodeSource
 	 * @return void    
@@ -812,7 +796,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Node  $node
 	 * @return 
 	 */
@@ -848,7 +831,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Node  $parentNode 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -876,7 +858,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Node  $node 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -910,7 +891,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Node  $node 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -932,7 +912,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Node  $node
 	 * @param  RZ\Renzo\Core\Entities\NodesSources $source
 	 * @return Symfony\Component\Form\Forms
@@ -969,7 +948,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  string  $type
 	 * @return AbstractType
 	 */
@@ -988,8 +966,7 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
-	 * Fill node-source content according to field type
+	 * Fill node-source content according to field type.
 	 * @param array  $data       
 	 * @param NodesSources  $nodeSource 
 	 * @param NodeTypeField  $field 
@@ -1016,7 +993,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param  RZ\Renzo\Core\Entities\Node  $node 
 	 * @return Symfony\Component\Form\Forms
 	 */
@@ -1035,7 +1011,6 @@ class NodesController extends RozierApp {
 	}
 
 	/**
-	 * 
 	 * @param RZ\Renzo\Core\Entities\Node  $node
 	 * @param RZ\Renzo\Core\Entities\Tag  $tag
 	 * @return Symfony\Component\Form\Forms
