@@ -7,8 +7,7 @@
 	<nav>
 		<a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-plus"></i> {% trans %}Upload a document{% endtrans %}</a>
 	</nav>
-
-	<ul class="uk-pagination" data-uk-pagination="{items:{{ documentsCount }}, itemsOnPage:{{ itemPerPage }}, currentPage:{{ currentPage }}}"></ul>
+	{% include 'widgets/filtersBar.html.twig' %}
 	<table class="documents uk-table">
 		<thead>
 	        <tr>

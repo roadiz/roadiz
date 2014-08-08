@@ -5,6 +5,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Entities\Translation;
+use RZ\Renzo\Core\ListManagers\EntityListManager;
 
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,37 +19,26 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class DocumentsController extends RozierApp {
 
-	const ITEM_PER_PAGE = 10;
+	const ITEM_PER_PAGE = 5;
 	/**
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function indexAction(Request $request) {
 
-		// ------- Testing pagination
-
-		$page = $request->query->get('page');
-		if (!($page > 1)) {
-			$page = 1;
-		}
-
-		$criteria = array();
-
-		$paginator =  new \RZ\Renzo\Core\Utils\Paginator( 
+		/*
+		 * Manage get request to filter list
+		 */
+		$listManager = new EntityListManager( 
+			$request, 
 			Kernel::getInstance()->em(), 
-			'RZ\Renzo\Core\Entities\Document', 
-			static::ITEM_PER_PAGE,
-			$criteria
+			'RZ\Renzo\Core\Entities\Document'
 		);
-		$documents = $paginator->findByAtPage(array(), $page);
+		$listManager->handle();
 
-		$this->assignation['currentPage'] = $page;
-		$this->assignation['itemPerPage'] = static::ITEM_PER_PAGE;
-		$this->assignation['documentsCount'] = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\Document')->countBy($criteria);
+		$this->assignation['filters'] = $listManager->getAssignation();
+		$this->assignation['documents'] = $listManager->getEntities();
 
-		// ------ testings end
-
-		$this->assignation['documents'] = $documents;
 		$this->assignation['thumbnailFormat'] = array(
 			'width' => 100,
 			'quality' => 50,

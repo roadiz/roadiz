@@ -17,6 +17,7 @@ use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
+use RZ\Renzo\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;

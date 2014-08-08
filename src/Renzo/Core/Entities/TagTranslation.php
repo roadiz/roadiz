@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="tags_translations", uniqueConstraints={@UniqueConstraint(columns={"tag_id", "translation_id"})})
  */
 class TagTranslation extends PersistableObject

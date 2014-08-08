@@ -5,6 +5,9 @@
 <section id="manage-users">
 	<h1 id="title">{% trans %}Users{% endtrans %}</h1>
 	<nav><a class="uk-button" href="{{ path('usersAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a user{% endtrans %}</a></nav>
+
+	{% include 'widgets/filtersBar.html.twig' %}
+
 	<table class="users uk-table">
 		<thead>
 	        <tr>

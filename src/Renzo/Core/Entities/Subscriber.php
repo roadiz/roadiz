@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\Human;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="subscribers")
  */
 class Subscriber extends Human

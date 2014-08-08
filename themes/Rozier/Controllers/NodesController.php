@@ -21,6 +21,7 @@ use RZ\Renzo\Core\Entities\UrlAlias;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Handlers\NodeHandler;
 use RZ\Renzo\Core\Utils\StringHandler;
+use RZ\Renzo\Core\ListManagers\EntityListManager;
 
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\RozierApp;
@@ -44,31 +45,25 @@ class NodesController extends RozierApp {
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function indexAction(Request $request) {
-		/*
-		 * Apply ordering or not
-		 */
-		try {
-			if ($request->query->get('field') && 
-				$request->query->get('ordering')) {
-				$nodes = Kernel::getInstance()->em()
-					->getRepository('RZ\Renzo\Core\Entities\Node')
-					->findBy(array(), array($request->query->get('field') => $request->query->get('ordering')));
-			}
-			else {
-				$nodes = Kernel::getInstance()->em()
-					->getRepository('RZ\Renzo\Core\Entities\Node')
-					->findAll();
-			}
-		}
-		catch(\Doctrine\ORM\ORMException $e){
-			return $this->throw404();
-		}
-
+		
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
         		->findDefault();
 
-		$this->assignation['nodes'] = $nodes;
+
+        /*
+		 * Manage get request to filter list
+		 */
+		$listManager = new EntityListManager( 
+			$request, 
+			Kernel::getInstance()->em(), 
+			'RZ\Renzo\Core\Entities\Node'
+		);
+		$listManager->handle();
+
+		$this->assignation['filters'] = $listManager->getAssignation();
+		$this->assignation['nodes'] =   $listManager->getEntities();
+
 		$this->assignation['node_types'] = NodeTypesController::getNodeTypes();
 		$this->assignation['translation'] = $translation;
 

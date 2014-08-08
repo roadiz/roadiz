@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="roles")
  */
 class Role extends PersistableObject

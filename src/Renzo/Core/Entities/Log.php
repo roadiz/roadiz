@@ -6,7 +6,7 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="log")
  * @HasLifecycleCallbacks
  */

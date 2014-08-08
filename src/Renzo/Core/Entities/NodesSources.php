@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="nodes_sources", uniqueConstraints={@UniqueConstraint(columns={"id","node_id", "translation_id"})})
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="discr", type="string")

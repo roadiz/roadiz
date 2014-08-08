@@ -8,7 +8,7 @@ use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Handlers\NodeTypeFieldHandler;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="node_type_fields",  indexes={
  *     @index(name="visible_idx", columns={"visible"}), 
  *     @index(name="indexed_idx", columns={"indexed"})

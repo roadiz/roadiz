@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="themes", indexes={
  * 		@index(name="backend_idx", columns={"backend"}),
  * 		@index(name="available_idx", columns={"available"})

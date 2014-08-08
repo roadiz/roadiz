@@ -19,6 +19,7 @@ use RZ\Renzo\Core\Entities\Group;
 
 use Themes\Rozier\RozierApp;
 use RZ\Renzo\Core\Utils\FacebookPictureFinder;
+use RZ\Renzo\Core\ListManagers\EntityListManager;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Renzo\Core\Exceptions\FacebookUsernameNotFoundException;
@@ -44,26 +45,18 @@ class UsersController extends RozierApp
 	 */
 	public function indexAction(Request $request) {
 		/*
-		 * Apply ordering or not
+		 * Manage get request to filter list
 		 */
-		try {
-			if ($request->query->get('field') && 
-				$request->query->get('ordering')) {
-				$users = Kernel::getInstance()->em()
-					->getRepository('RZ\Renzo\Core\Entities\User')
-					->findBy(array(), array($request->query->get('field') => $request->query->get('ordering')));
-			}
-			else {
-				$users = Kernel::getInstance()->em()
-					->getRepository('RZ\Renzo\Core\Entities\User')
-					->findAll();
-			}
-		}
-		catch(\Doctrine\ORM\ORMException $e){
-			return $this->throw404();
-		}
+		$listManager = new EntityListManager( 
+			$request, 
+			Kernel::getInstance()->em(), 
+			'RZ\Renzo\Core\Entities\User'
+		);
+		$listManager->handle();
 
-		$this->assignation['users'] = $users;
+		$this->assignation['filters'] = $listManager->getAssignation();
+		$this->assignation['users'] = $listManager->getEntities();
+
 
 		return new Response(
 			$this->getTwig()->render('users/list.html.twig', $this->assignation),

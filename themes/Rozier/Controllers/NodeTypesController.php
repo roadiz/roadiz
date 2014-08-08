@@ -17,6 +17,7 @@ use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
+use RZ\Renzo\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
@@ -40,11 +41,18 @@ class NodeTypesController extends RozierApp
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function indexAction(Request $request) {
-		$node_types = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\NodeType')
-			->findAll();
+		/*
+		 * Manage get request to filter list
+		 */
+		$listManager = new EntityListManager( 
+			$request, 
+			Kernel::getInstance()->em(), 
+			'RZ\Renzo\Core\Entities\NodeType'
+		);
+		$listManager->handle();
 
-		$this->assignation['node_types'] = $node_types;
+		$this->assignation['filters'] = $listManager->getAssignation();
+		$this->assignation['node_types'] =   $listManager->getEntities();
 
 		return new Response(
 			$this->getTwig()->render('node-types/list.html.twig', $this->assignation),

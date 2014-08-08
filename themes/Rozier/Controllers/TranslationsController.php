@@ -15,6 +15,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Entities\NodeTypeField;
+use RZ\Renzo\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;

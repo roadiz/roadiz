@@ -5,6 +5,7 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Theme;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\CMS\Controllers\FrontendController;
+use RZ\Renzo\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;

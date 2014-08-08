@@ -12,12 +12,13 @@
 
 namespace Themes\Rozier\Controllers;
 
+use Themes\Rozier\RozierApp;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Tag;
 use RZ\Renzo\Core\Entities\TagTranslation;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Entities\NodeTypeField;
-use Themes\Rozier\RozierApp;
+use RZ\Renzo\Core\ListManagers\EntityListManager;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 
@@ -40,10 +41,18 @@ class TagsController extends RozierApp
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function indexAction(Request $request) {
-		$tags = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Tag')
-			->findAllWithDefaultTranslation();
-		$this->assignation['tags'] = $tags;
+		/*
+		 * Manage get request to filter list
+		 */
+		$listManager = new EntityListManager( 
+			$request, 
+			Kernel::getInstance()->em(),
+			'RZ\Renzo\Core\Entities\Tag'
+		);
+		$listManager->handle();
+
+		$this->assignation['filters'] = $listManager->getAssignation();
+		$this->assignation['tags'] = $listManager->getEntities();
 
 		return new Response(
 			$this->getTwig()->render('tags/list.html.twig', $this->assignation),

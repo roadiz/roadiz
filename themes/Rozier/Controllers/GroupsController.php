@@ -7,6 +7,7 @@ use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Entities\Group;
 use RZ\Renzo\Core\Entities\User;
 use RZ\Renzo\Core\Entities\Translation;
+use RZ\Renzo\Core\ListManagers\EntityListManager;
 
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,11 +31,18 @@ class GroupsController extends RozierApp
 	 */
 	public function indexAction(Request $request)
 	{
-		$groups = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Group')
-			->findBy(array(), array('name' => 'ASC'));
+		/*
+		 * Manage get request to filter list
+		 */
+		$listManager = new EntityListManager( 
+			$request, 
+			Kernel::getInstance()->em(), 
+			'RZ\Renzo\Core\Entities\Group'
+		);
+		$listManager->handle();
 
-		$this->assignation['groups'] = $groups;
+		$this->assignation['filters'] = $listManager->getAssignation();
+		$this->assignation['groups'] = $listManager->getEntities();
 
 		return new Response(
 			$this->getTwig()->render('groups/list.html.twig', $this->assignation),
