@@ -2,7 +2,7 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="fr" datatype="plaintext" original="file.ext">
         <body>
-            <trans-unit id="1">
+            <!--<trans-unit id="1">
                 <source>Node name</source>
                 <target>Nom du nœud</target>
             </trans-unit>
@@ -17,7 +17,7 @@
             <trans-unit id="4">
                 <source>_password</source>
                 <target>Mot de passe</target>
-            </trans-unit>
+            </trans-unit>-->
 
             <trans-unit id="delete">
                 <source>delete</source>

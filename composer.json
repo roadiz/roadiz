@@ -22,7 +22,8 @@
         "symfony/finder": "@stable",
         "symfony/intl": "@stable",
         "twig/extensions": "@stable",
-        "michelf/php-markdown": "@stable"
+        "michelf/php-markdown": "@stable",
+        "symfony/serializer": "@stable"
     },
     "autoload": {
         "psr-4": {

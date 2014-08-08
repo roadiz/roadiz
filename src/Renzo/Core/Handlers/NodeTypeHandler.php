@@ -178,9 +178,6 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
      */
     public function serializeToJson() {
         $data = array();
-        // Reports information about the class NodeType
-        $nodeTypeInfos = new \ReflectionClass($this->getNodeType());
-        $data = array();
 
         $data['name'] = $this->getNodeType()->getName();
         $data['displayName'] = $this->getNodeType()->getDisplayName();
@@ -190,8 +187,8 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
         $data['hidingNodes'] = $this->getNodeType()->isHidingNodes();
         $data['fields'] = array();
 
-        foreach ($this->getNodeType()->getFields() as $ntf) {
-            $data['node_type_fields'][] = $ntf->getHandler()->serialize();
+        foreach ($this->getNodeType()->getFields() as $nodeTypeField) {
+            $data['node_type_fields'][] = $nodeTypeField->getHandler()->serialize();
         }
 
         if (defined(JSON_PRETTY_PRINT)) {
@@ -204,9 +201,38 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
 
     /**
      * Deserializes a Json into readable datas
-     * @return mixed[] array
+     * @param  string  $jsonString
+     * @return RZ\Renzo\Core\Entities\NodeType
      */
-    public function deserializeFromJson() {
-        
+    public static function deserializeFromJson( $jsonString ) {
+        $encoder = new JsonEncoder();
+        $normalizer = new GetSetMethodNormalizer();
+        $normalizer->setCamelizedAttributes(array(
+            'name',
+            'displayName',
+            'display_name',
+            'description',
+            'visible',
+            'newsletterType',
+            'hidingNodes'
+        ));
+
+        $serializer = new Serializer(array($normalizer), array($encoder));
+        $nodeType = $serializer->deserialize($jsonString, 'RZ\Renzo\Core\Entities\NodeType', 'json');
+
+        /*
+         * Importing Fields
+         */
+        return $nodeType;
+    }
+
+
+    /**
+     * Update an existing Node Type.
+     * @param RZ\Renzo\Core\Entities\NodeType
+     * @return bool
+     */
+    public function updateFromJson( NodeType $importedNT ) {
+       
     }
 }

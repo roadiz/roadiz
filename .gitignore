@@ -10,3 +10,4 @@ npm-debug.log
 ._*
 conf/config.json
 conf/*.config.json
+composer.lock

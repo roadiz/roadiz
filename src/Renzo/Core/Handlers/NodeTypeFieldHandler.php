@@ -73,8 +73,6 @@ class NodeTypeFieldHandler {
      */
     public function serialize() {
         $data = array();
-        // Reports information about the class NodeType
-        $nodeTypeInfos = new \ReflectionClass($this->getNodeTypeField());
 
         $data['name'] = $this->getNodeTypeField()->getName();
         $data['label'] = $this->getNodeTypeField()->getLabel();
@@ -86,6 +84,28 @@ class NodeTypeFieldHandler {
 
        	return $data;
     }
+
+    /**
+     * Deserializes a json file into a readable array of datas
+     * @return RZ\Renzo\Core\Entities\NodeTypeField
+     */
+    public function deserialize( $jsonString ) {
+    	$encoder = new JsonEncoder();
+		$normalizer = new GetSetMethodNormalizer();
+		$normalizer->setCamelizedAttributes(array(
+			'name',
+			'label',
+			'description',
+			'visible',
+			'type',
+			'indexed',
+			'virtual'
+		));
+
+		$serializer = new Serializer(array($normalizer), array($encoder));
+		return $serializer->deserialize($jsonString, 'RZ\Renzo\Core\Entities\NodeTypeField', 'json');
+    }
+
 
 	public function __construct(NodeTypeField $field) {
 		$this->nodeTypeField = $field;

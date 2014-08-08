@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "97e20d42d68868024d2f850d11a0d4f6",
+    "hash": "357d03177b5b5230a5d8ca8ca241707e",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1848,6 +1848,53 @@
             "time": "2014-07-09 09:05:48"
         },
         {
+            "name": "symfony/serializer",
+            "version": "v2.5.3",
+            "target-dir": "Symfony/Component/Serializer",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Serializer.git",
+                "reference": "f7bca262e8c9335c793ee07c682a8397089122a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Serializer/zipball/f7bca262e8c9335c793ee07c682a8397089122a6",
+                "reference": "f7bca262e8c9335c793ee07c682a8397089122a6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.5-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Serializer\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Symfony Serializer Component",
+            "homepage": "http://symfony.com",
+            "time": "2014-08-05 09:00:40"
+        },
+        {
             "name": "symfony/stopwatch",
             "version": "v2.5.2",
             "target-dir": "Symfony/Component/Stopwatch",
@@ -2254,24 +2301,18 @@
             "time": "2014-07-05 12:19:05"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "swiftmailer/swiftmailer": 0,
         "symfony/finder": 0,
         "symfony/intl": 0,
         "twig/extensions": 0,
-        "michelf/php-markdown": 0
+        "michelf/php-markdown": 0,
+        "symfony/serializer": 0
     },
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "prefer-stable": false,
+    "platform": [],
+    "platform-dev": []
 }

@@ -37,7 +37,7 @@ class DocumentsController extends RozierApp {
 		$listManager->handle();
 
 		$this->assignation['filters'] = $listManager->getAssignation();
-		$this->assignation['documents'] = $listManager->getEntities();
+		$this->assignation['documents'] = $listManager->getEntities(); 
 
 		$this->assignation['thumbnailFormat'] = array(
 			'width' => 100,

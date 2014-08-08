@@ -39,9 +39,19 @@ class SettingsController extends RozierApp
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function indexAction(Request $request) {
-		$settings = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Setting')
-			->findBy(array(), array('name' => 'ASC'));
+		
+		/*
+		 * Manage get request to filter list
+		 */
+		$listManager = new EntityListManager( 
+			$request, 
+			Kernel::getInstance()->em(), 
+			'RZ\Renzo\Core\Entities\Setting'
+		);
+		$listManager->handle();
+
+		$this->assignation['filters'] = $listManager->getAssignation();
+		$settings = $listManager->getEntities(); 
 
 		$this->assignation['settings'] = array();
 

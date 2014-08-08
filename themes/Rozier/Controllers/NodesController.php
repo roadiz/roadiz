@@ -46,10 +46,17 @@ class NodesController extends RozierApp {
 	 */
 	public function indexAction(Request $request) {
 		
+		/*
+		 * Security
+		 */
+		// show different content to admin users
+	    /*if (false === static::getSecurityContext()->isGranted('ROLE_LIST_NODES')) {
+	        throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+	    }*/
+
 		$translation = Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Translation')
         		->findDefault();
-
 
         /*
 		 * Manage get request to filter list

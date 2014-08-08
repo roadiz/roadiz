@@ -73,6 +73,7 @@ class TagsController extends RozierApp
 	{
 		$translation = Kernel::getInstance()->em()
 				->find('RZ\Renzo\Core\Entities\Translation', (int)$translation_id);
+
 		if ($translation !== null) {
 
 			$tag = Kernel::getInstance()->em()
