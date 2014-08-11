@@ -5,6 +5,7 @@
 <section id="manage-translations">
 	<h1 id="title">{% trans %}Translations{% endtrans %}</h1>
 	<nav><a class="uk-button" href="{{ path('translationsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a translation{% endtrans %}</a></nav>
+	{% include 'widgets/filtersBar.html.twig' %}
 	<table class="translations uk-table">
 		<thead>
 	        <tr>

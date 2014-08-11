@@ -1,8 +1,8 @@
 <?php 
 namespace RZ\Renzo\Core\Utils;
 
-
 use Doctrine\ORM\EntityManager;
+
 /**
  *  A simple paginator class to filter entities with limit and search				
  */

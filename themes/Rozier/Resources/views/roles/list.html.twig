@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
 <section id="manage-roles">
 	<h1 id="title">{% trans %}Roles{% endtrans %}</h1>
 	<nav><a class="uk-button" href="{{ path('rolesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a role{% endtrans %}</a></nav>
+	{% include 'widgets/filtersBar.html.twig' %}
 	<table class="roles uk-table">
 		<thead>
 	        <tr>

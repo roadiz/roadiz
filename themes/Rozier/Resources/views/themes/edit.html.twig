@@ -1,11 +1,9 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
-<section id="manage-group">
-	<h1 id="group-title">Edit {{ group.getName }}</h1>
-	
-	{% include 'groups/navBar.html.twig' with {'group':group, current:'edit'} %}
+<section id="manage-theme">
+	<h1 id="theme-title">Edit {{ theme.getClassName }}</h1>
+	<nav><a class="uk-button uk-button-small" href="{{ path('themesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to themes{% endtrans %}</a></nav>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}

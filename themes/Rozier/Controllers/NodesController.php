@@ -39,6 +39,8 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class NodesController extends RozierApp {
 
+	const ITEM_PER_PAGE = 5;
+
 	/**
 	 * List every nodes.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request

@@ -33,8 +33,10 @@ use Symfony\Component\Validator\Constraints\Type;
 /**
 * 
 */
-class NodeTypesController extends RozierApp
-{
+class NodeTypesController extends RozierApp {
+	
+	const ITEM_PER_PAGE = 5;
+
 	/**
 	 * List every node-types.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request

@@ -1,22 +1,19 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
-<section id="manage-group">
-	<h1 id="group-title">Edit {{ group.getName }}</h1>
-	
-	{% include 'groups/navBar.html.twig' with {'group':group, current:'edit'} %}
+<section id="manage-theme">
+	<h1 id="theme-title">{% trans %}Add a new theme{% endtrans %}</h1>
+	<nav><a class="uk-button uk-button-small" href="{{ path('themesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to themes{% endtrans %}</a></nav>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}
 
    		<fieldset data-uk-margin>
+   			<legend>{{ theme.getDisplayName }}</legend>
 		    {% for item in form %}
-		        {% if item.vars.name != "_token" and item.vars.name != "id" %}
+		        {% if item.vars.name != "_token" %}
 		    	<div class="uk-form-row">
-		    		{% if item.vars.block_prefixes[1] != 'hidden' %}
 		        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
-		    		{% endif %}
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
 		    	</div>	

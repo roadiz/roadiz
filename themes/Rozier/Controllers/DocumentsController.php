@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Constraints\Type;
 class DocumentsController extends RozierApp {
 
 	const ITEM_PER_PAGE = 5;
+	
 	/**
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
 	 * @return Symfony\Component\HttpFoundation\Response
@@ -34,6 +35,7 @@ class DocumentsController extends RozierApp {
 			Kernel::getInstance()->em(), 
 			'RZ\Renzo\Core\Entities\Document'
 		);
+
 		$listManager->handle();
 
 		$this->assignation['filters'] = $listManager->getAssignation();

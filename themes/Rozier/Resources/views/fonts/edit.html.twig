@@ -1,17 +1,16 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
-<section id="manage-group">
-	<h1 id="group-title">Edit {{ group.getName }}</h1>
-	
-	{% include 'groups/navBar.html.twig' with {'group':group, current:'edit'} %}
+<section id="manage-font">
+	<h1 id="font-title">Edit {{ font.getName }}</h1>
+	<nav><a class="uk-button uk-button-small" href="{{ path('fontsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to fonts{% endtrans %}</a></nav>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}
 
    		<fieldset data-uk-margin>
 		    {% for item in form %}
+		    	{# Node fields  #}
 		        {% if item.vars.name != "_token" and item.vars.name != "id" %}
 		    	<div class="uk-form-row">
 		    		{% if item.vars.block_prefixes[1] != 'hidden' %}

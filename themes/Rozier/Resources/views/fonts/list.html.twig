@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<section id="manage-fonts">
+	<h1 id="title">{% trans %}Roles{% endtrans %}</h1>
+	<nav><a class="uk-button" href="{{ path('fontsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a font{% endtrans %}</a></nav>
+	{% include 'widgets/filtersBar.html.twig' %}
+	<table class="fonts uk-table">
+		<thead>
+	        <tr>
+	            <th>{% trans %}Name{% endtrans %}</th>
+	            <th>{% trans %}Actions{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for font in fonts %}
+			<tr>
+				<td>
+					{% if not font.required %}<a href="{{ path('fontsEditPage', { font_id: font.getId }) }}">{{ font.getName }}</a>{% else %}
+					{{ font.getName }}{% endif %}
+				</td>
+				<td>
+					{% if not font.required %}
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('fontsDeletePage', { font_id: font.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}Delete{% endtrans %}</a>
+					{% else %}
+					<div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}font.required{% endtrans %}</div>
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}

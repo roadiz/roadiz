@@ -30,8 +30,10 @@ use Symfony\Component\Validator\Constraints\Type;
 /**
 * 
 */
-class TranslationsController extends RozierApp
-{
+class TranslationsController extends RozierApp {
+
+	const ITEM_PER_PAGE = 5;
+
 	/**
 	 * List every translations.
 	 * @param Symfony\Component\HttpFoundation\Request $request
@@ -43,6 +45,15 @@ class TranslationsController extends RozierApp
 			->findAll();
 
 		$this->assignation['translations'] = array();
+
+		$listManager = new EntityListManager( 
+			$request, 
+			Kernel::getInstance()->em(), 
+			'RZ\Renzo\Core\Entities\Translation'
+		);
+		$listManager->handle();
+
+		$this->assignation['filters'] = $listManager->getAssignation();
 
 		foreach ($translations as $translation) {
 

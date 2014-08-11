@@ -35,8 +35,9 @@ use Symfony\Component\Validator\Constraints\Type;
 /**
 * 
 */
-class UsersController extends RozierApp
-{
+class UsersController extends RozierApp {
+
+	const ITEM_PER_PAGE = 5;
 
 	/**
 	 * List every users.

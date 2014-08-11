@@ -22,8 +22,10 @@ use RZ\Renzo\Core\Exceptions\EntityRequiredException;
 /**
 * 
 */
-class GroupsController extends RozierApp
-{
+class GroupsController extends RozierApp {
+	
+	const ITEM_PER_PAGE = 5;
+	
 	/**
 	 * List groups action.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request

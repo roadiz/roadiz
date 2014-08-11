@@ -33,8 +33,10 @@ use Symfony\Component\Validator\Constraints\Type;
 /**
 * 
 */
-class TagsController extends RozierApp
-{
+class TagsController extends RozierApp {
+
+	const ITEM_PER_PAGE = 5;
+
 	/**
 	 * List every tags.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
