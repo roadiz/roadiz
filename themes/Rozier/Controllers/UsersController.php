@@ -203,7 +203,7 @@ class UsersController extends RozierApp {
 			if ($form->isValid()) {
 
 		 		$this->removeUserRole($form->getData(), $user);
-		 		$msg = $this->getTranslator()->trans('role.deleted', array('%name%'=>$role->getName()));
+		 		$msg = $this->getTranslator()->trans('user.role_removed', array('%name%'=>$role->getName()));
 		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
 	 			$this->getLogger()->info($msg);
 

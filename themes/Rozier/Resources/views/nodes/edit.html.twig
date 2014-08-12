@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block content %}
 <section id="manage-node">
-	<h1 id="node-title">Edit {{ source.getTitle }}</h1>
+	<h1 id="node-title">{% trans %}edit.node{% endtrans %} "{{ source.getTitle }}"</h1>
 
 	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
 	{% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}

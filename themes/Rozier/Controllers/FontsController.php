@@ -275,7 +275,7 @@ class FontsController extends RozierApp {
 					->findOneBy(array('name' => $data['name']));
 
 			if ($existing !== null) {
-				throw new EntityAlreadyExistsException($this->getTranslator()->trans("font.name.already.exists"), 1);
+				throw new EntityAlreadyExistsException($this->getTranslator()->trans("font.name.already_exists"), 1);
 			}
 
 			$font = new Font($data['name']);
@@ -296,7 +296,7 @@ class FontsController extends RozierApp {
 	 */
 	protected function editFont(array $data, Font $font) {	
 		if ($font->required()) {
-			throw new EntityRequiredException($this->getTranslator()->trans("font.required.cannot_be_updated"), 1);
+			throw new EntityRequiredException($this->getTranslator()->trans("font.name.cannot_be_updated"), 1);
 		}
 
 		if (isset($data['name'])) {
@@ -305,7 +305,7 @@ class FontsController extends RozierApp {
 					->findOneBy(array('name' => $data['name']));
 			if ($existing !== null && 
 				$existing->getId() != $font->getId()) {
-				throw new EntityAlreadyExistsException($this->getTranslator()->trans("font.name.already.exists"), 1);
+				throw new EntityAlreadyExistsException($this->getTranslator()->trans("font.name.already_exists"), 1);
 			}
 
 			$font->setName($data['name']);
@@ -325,12 +325,7 @@ class FontsController extends RozierApp {
 	 * @return void
 	 */
 	protected function deleteFont(array $data, Font $font) {
-		if (!$font->required()) {
-			Kernel::getInstance()->em()->remove($font);
-			Kernel::getInstance()->em()->flush();
-		}
-		else {
-			throw new EntityRequiredException($this->getTranslator()->trans("font.is.required"), 1);
-		}
+		Kernel::getInstance()->em()->remove($font);
+		Kernel::getInstance()->em()->flush();
 	}
 }

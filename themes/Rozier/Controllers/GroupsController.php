@@ -396,7 +396,7 @@ class GroupsController extends RozierApp {
 			if ($form->isValid()) {
 
 		 		$this->removeUser($form->getData(), $group, $user);
-		 		$msg = $this->getTranslator()->trans('user.removed_from_group', array('%name%'=>$user->getUserName()));
+		 		$msg = $this->getTranslator()->trans('group.user.removed_from_group', array('%name%'=>$user->getUserName()));
 		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
 	 			$this->getLogger()->info($msg);
 

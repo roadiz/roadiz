@@ -73,7 +73,7 @@ class ThemesController extends RozierApp {
 
 				try {
 			 		$this->editTheme($form->getData(), $theme);
-			 		$msg = $this->getTranslator()->trans('theme.updated', array('%classname%'=>$theme->getClassName()));
+			 		$msg = $this->getTranslator()->trans('theme.updated', array('%name%'=>$theme->getClassName()));
 					$request->getSession()->getFlashBag()->add('confirm', $msg);
 		 			$this->getLogger()->info($msg);
 		 			
@@ -127,7 +127,7 @@ class ThemesController extends RozierApp {
 			if ($form->isValid()) {
 				try {
 			 		$this->addTheme($form->getData(), $theme);
-			 		$msg = $this->getTranslator()->trans('theme.created', array('%classname%'=>$theme->getClassName()));
+			 		$msg = $this->getTranslator()->trans('theme.created', array('%name%'=>$theme->getClassName()));
 					$request->getSession()->getFlashBag()->add('confirm', $msg);
 		 			$this->getLogger()->info($msg);
 		 			
@@ -293,7 +293,7 @@ class ThemesController extends RozierApp {
 			->getRepository('RZ\Renzo\Core\Entities\Theme')
 			->findOneBy(array('className'=>$theme->getClassName()));
 		if ($existing !== null) {
-			throw new EntityAlreadyExistsException($this->getTranslator()->trans('theme.already_exists', array('%name%'=>$theme->getClassName())), 1);
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('theme.no_creation.already_exists', array('%name%'=>$theme->getClassName())), 1);
 		}
 		
 		Kernel::getInstance()->em()->persist($theme);
@@ -313,7 +313,7 @@ class ThemesController extends RozierApp {
 					->findOneBy(array('classname' => $data['name']));
 			if ($existing !== null && 
 				$existing->getId() != $theme->getId()) {
-				throw new EntityAlreadyExistsException($this->getTranslator()->trans("theme.classname.already.exists"), 1);
+				throw new EntityAlreadyExistsException($this->getTranslator()->trans("theme.no_update.already.exists"), 1);
 			}
 
 			$theme->setName($data['classname']);
@@ -328,7 +328,7 @@ class ThemesController extends RozierApp {
 
 		/*foreach ($data as $key => $value) {
 			if (isset($data['className'])) {
-				throw new EntityAlreadyExistsException($this->getTranslator()->trans('theme.cannot_rename_already_exists', array('%className%'=>$theme->getClassName())), 1);
+				throw new EntityAlreadyExistsException($this->getTranslator()->trans('theme.no_update.already.exists'), 1);
 			}
 			$setter = 'set'.ucwords($key);
 			$theme->$setter($value);

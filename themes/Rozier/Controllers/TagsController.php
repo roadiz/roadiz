@@ -333,7 +333,7 @@ class TagsController extends RozierApp {
 
 		if ($translatedTag->getName() != $data['name'] &&
 			$this->checkExists($data['name'])) {
-			throw new EntityAlreadyExistsException($this->getTranslator()->trans('tag.already_exists', array('%name%'=>$data['name'])), 1);
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('tag.no_update.already_exists', array('%name%'=>$data['name'])), 1);
 		}
 
 		foreach ($data as $key => $value) {
@@ -359,7 +359,7 @@ class TagsController extends RozierApp {
 	private function addTag($data, Tag $tag, Translation $translation) {
 
 		if ($this->checkExists($data['name'])) {
-			throw new EntityAlreadyExistsException($this->getTranslator()->trans('tag.already_exists', array('%name%'=>$data['name'])), 1);
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('tag.no_creation.already_exists', array('%name%'=>$data['name'])), 1);
 		}
 
 		$translatedTag = new TagTranslation( $tag, $translation );
@@ -411,7 +411,7 @@ class TagsController extends RozierApp {
 			throw new \RuntimeException("Parent tag Ids do not match", 1);
 		}
 		if ($this->checkExists($data['name'])) {
-			throw new EntityAlreadyExistsException($this->getTranslator()->trans('tag.already_exists', array('%name%'=>$data['name'])), 1);
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('tag.already_added', array('%name%'=>$data['name'])), 1);
 		}
 
 		$tag = new Tag();

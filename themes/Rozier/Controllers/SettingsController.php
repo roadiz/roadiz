@@ -267,7 +267,7 @@ class SettingsController extends RozierApp {
 				Kernel::getInstance()->em()
 				->getRepository('RZ\Renzo\Core\Entities\Setting')
 				->exists($data['name'])) {
-				throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
+				throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
 			}
 			try {
 				foreach ($data as $key => $value) {
@@ -279,7 +279,7 @@ class SettingsController extends RozierApp {
 				return true;
 			}
 			catch(\Exception $e) {
-				throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
+				throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
 			}
 		}
 	}
@@ -293,7 +293,7 @@ class SettingsController extends RozierApp {
 		if (Kernel::getInstance()->em()
 			->getRepository('RZ\Renzo\Core\Entities\Setting')
 			->exists($data['name'])) {
-			throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_creation.already_exists', array('%name%'=>$setting->getName())), 1);
 		}
 
 		try{
@@ -307,7 +307,7 @@ class SettingsController extends RozierApp {
 			return true;
 		}
 		catch(\Exception $e) {
-			throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.already_exists', array('%name%'=>$setting->getName())), 1);
+			throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_creation.already_exists', array('%name%'=>$setting->getName())), 1);
 		}
 	}
 
