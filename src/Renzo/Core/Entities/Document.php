@@ -28,6 +28,7 @@ class Document extends DateTimed
 		'application/pdf' => 'pdf',
 		'application/ogg' => 'video',
 		'video/ogg' => 'video',
+		'video/webm' => 'video',
 		'audio/mpeg' => 'audio',
 		'audio/x-wav' => 'audio',
 		'audio/wav' => 'audio',
@@ -127,6 +128,15 @@ class Document extends DateTimed
 	public function isVideo()
 	{
 		return static::$mimeToIcon[$this->getMimeType()] == 'video';
+	}
+	/**
+	 * Is current document an audio file.
+	 * 
+	 * @return boolean
+	 */
+	public function isAudio()
+	{
+		return static::$mimeToIcon[$this->getMimeType()] == 'audio';
 	}
 
 

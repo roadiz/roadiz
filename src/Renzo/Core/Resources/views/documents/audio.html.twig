@@ -1,5 +1,5 @@
 {% spaceless %}    
-<video 
+<audio 
 	data-document 
 	alt="{{ alt }}"
 	{% if width %}width="{{ width }}" {% endif %}
@@ -12,6 +12,6 @@
 	{% for source in sources %}
 	<source type="{{ source.mime }}" src="{{ source.url }}"></source>
 	{% endfor %}
-	Your browser does not support the video tag.
-</video>
+	Your browser does not support the audio tag.
+</audio>
 {% endspaceless %}

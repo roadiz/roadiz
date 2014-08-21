@@ -152,7 +152,7 @@ class DocumentViewer implements ViewableInterface
 	 * - background (hexadecimal color without #)
 	 * - progressive (boolean)
 	 * 
-	 * ## Video options
+	 * ## Audio / Video options
 	 * 
 	 * - autoplay
 	 * - controls
@@ -199,11 +199,65 @@ class DocumentViewer implements ViewableInterface
 			return $this->getTwig()->render('documents/image.html.twig', $assignation);
 		}
 		elseif ($this->getDocument()->isVideo()) {
+			$assignation['sources'] = $this->getSourcesFiles();
 			return $this->getTwig()->render('documents/video.html.twig', $assignation);
+		}
+		elseif ($this->getDocument()->isAudio()) {
+			$assignation['sources'] = $this->getSourcesFiles();
+			return $this->getTwig()->render('documents/audio.html.twig', $assignation);
 		}
 		else {
 			return $this->getTranslator()->trans('document.format.unknown');
 		}
+	}
+
+	/**
+	 * Get sources files formats for audio and video documents.
+	 * 
+	 * This method will search for document which filename is the same
+	 * except the extension. If you choose an MP4 file, it will look for a OGV and WEBM file.
+	 * 
+	 * @return array 
+	 */
+	public function getSourcesFiles()
+	{
+		$basename = pathinfo($this->getDocument()->getFileName());
+		$basename = $basename['filename'];
+
+		$sources = array();
+
+		if ($this->getDocument()->isVideo()) {
+			$sourcesDocsName = array(
+				$basename . '.ogg',
+				$basename . '.ogv',
+				$basename . '.mp4',
+				$basename . '.mov',
+				$basename . '.webm'
+			);
+		}
+		elseif ($this->getDocument()->isAudio()) {
+			$sourcesDocsName = array(
+				$basename . '.mp3',
+				$basename . '.ogg',
+				$basename . '.wav'
+			);
+		}
+		else {
+			return false;
+		}
+
+		$sourcesDocs = Kernel::getInstance()->em()
+			->getRepository("RZ\Renzo\Core\Entities\Document")
+			->findBy(array("filename" => $sourcesDocsName));
+
+		foreach ($sourcesDocs as $source) {
+			$sources[] = array(
+				'mime' => $source->getMimeType(),
+				'url' => Kernel::getInstance()->getRequest()->getBaseUrl().'/files/'.$source->getRelativeUrl()
+			);
+		}
+
+		return $sources;
 	}
 
 	/**

@@ -17,7 +17,7 @@
 <div class="image">
 	{% for document in nodeSource.getHandler.getDocumentsFromFieldName('images') %}
 		<figure class="uk-thumbnail">
-			{{ document.getViewer.getDocumentByArray({"width":200,"crop":"16x9"})|raw }}
+			{{ document.getViewer.getDocumentByArray({"width":200,"crop":"16x9", "controls":true})|raw }}
 			{# <img alt="{{ document.getName }}" src="{{ document.getViewer.getDocumentUrlByArray({"width":200,"crop":"16x9"}) }}" /> #}
 		</figure>	
 	{% endfor %}
