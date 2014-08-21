@@ -11,7 +11,7 @@
 	<table class="documents uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}document.thumbnail{% endtrans %}</th>
+	            <th class="uk-text-center">{% trans %}document.thumbnail{% endtrans %}</th>
 	            <th>{% trans %}document.filename{% endtrans %}</th>
 	            <th>{% trans %}document.createdAt{% endtrans %}</th>
 	            <th>{% trans %}actions{% endtrans %}</th>
@@ -21,14 +21,14 @@
 			{% for document in documents %}
 			<tr>
 				{% if document.isImage %}
-				<td>
+				<td class="uk-text-center">
 					<a href="{{ path('documentsEditPage', { document_id: document.getId }) }}">
 						<img width="100" alt="" src="{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}" />
 					</a>
 				</td>
 				{% else %}
-				<td>
-					<a href="{{ path('documentsEditPage', { document_id: document.getId }) }}"><i class='uk-icon-small uk-icon-file-{{ document.getShortType }}-o'></i></a>
+				<td class="uk-text-center">
+					<a href="{{ path('documentsEditPage', { document_id: document.getId }) }}"><i class='uk-icon-large uk-icon-file-{{ document.getShortType }}-o'></i></a>
 				</td>
 				{% endif %}
 				<td>

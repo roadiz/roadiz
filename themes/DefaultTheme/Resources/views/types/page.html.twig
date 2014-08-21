@@ -5,7 +5,7 @@
 <header>
 	{% for headerImage in headerImages %}
 	<figure>
-		<img src="{{ headerImage.getViewer.getDocumentUrlByArray(headerImageFilter) }}" />
+		<img alt="{{ nodeSource.getTitle }}" src="{{ headerImage.getViewer.getDocumentUrlByArray(headerImageFilter) }}" />
 	</figure>
 	{% endfor %}
 </header>
@@ -17,7 +17,8 @@
 <div class="image">
 	{% for document in nodeSource.getHandler.getDocumentsFromFieldName('images') %}
 		<figure class="uk-thumbnail">
-			<img src="{{ document.getViewer.getDocumentUrlByArray({"width":200,"crop":"16x9"}) }}" />
+			{{ document.getViewer.getDocumentByArray({"width":200,"crop":"16x9"})|raw }}
+			{# <img alt="{{ document.getName }}" src="{{ document.getViewer.getDocumentUrlByArray({"width":200,"crop":"16x9"}) }}" /> #}
 		</figure>	
 	{% endfor %}
 </div>

@@ -6,7 +6,9 @@ namespace RZ\Renzo\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\PersistableObject;
 use RZ\Renzo\Core\Handlers\NodeTypeHandler;
+use RZ\Renzo\Core\Serializers\NodeTypeSerializer;
 use RZ\Renzo\Core\Utils\StringHandler;
+
 /**
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodeTypeRepository")
  * @Table(name="node_types", indexes={
@@ -129,17 +131,18 @@ class NodeType extends PersistableObject
 	    return $this;
 	}
 
-
 	/**
      * @OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"ALL"})
      */
 	private $fields;
+
 	/**
-	 * @return ArrayCollection
+	 * @return Doctrine\Common\Collections\ArrayCollection
 	 */
 	public function getFields() {
 	    return $this->fields;
 	}
+
 	/**
 	 * @param NodeTypeField $field
 	 * @return NodeTypeField
@@ -150,6 +153,7 @@ class NodeType extends PersistableObject
         }
         return $this;
 	}
+
 	/**
 	 * @param  NodeTypeField   $field 
 	 * @return NodeTypeField
@@ -162,34 +166,46 @@ class NodeType extends PersistableObject
     }
 
 	/**
-	 * 
+     * @return arra
 	 */
 	public function __construct()
     {
         $this->fields = new ArrayCollection();
     }
 
-    public function getSourceEntityClassName()
-    {
+    /**
+     * @return string
+     */
+    public function getSourceEntityClassName() {
     	return 'NS'.ucwords($this->getName());
     }
-    public function getSourceEntityTableName()
-    {
+
+    /**
+     * @return string
+     */
+    public function getSourceEntityTableName() {
     	return 'ns_'.strtolower($this->getName());
     }
 
-    public static function getGeneratedEntitiesNamespace()
-    {
+    /**
+     * @return string
+     */
+    public static function getGeneratedEntitiesNamespace() {
     	return 'GeneratedNodeSources';
     }
 
-    public function getOneLineSummary()
-	{
+    /**
+     * @return string
+     */
+    public function getOneLineSummary() {
 		return $this->getId()." — ".$this->getName().
 			" — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
 	}
-	public function getFieldsSummary()
-	{
+
+	/**
+	 * @return string $text
+	 */
+	public function getFieldsSummary() {
 		$text = "|".PHP_EOL;
 		foreach ($this->getFields() as $field) {
 			$text .= "|--- ".$field->getOneLineSummary();
@@ -198,11 +214,16 @@ class NodeType extends PersistableObject
 	}
 
 	/**
-	 * 
-	 * @return NodeTypeHandler
+	 * @return  RZ\Renzo\Core\Handlers\NodeTypeHandler
 	 */
-	public function getHandler()
-	{
-		return new NodeTypeHandler( $this );
+	public function getHandler() {
+		return new NodeTypeHandler($this);
 	}
+
+	/**
+     * @return RZ\Renzo\Core\Serializers\NodeTypeSerializer
+     */
+    public function getSerializer() {
+    	return new NodeTypeSerializer($this);
+    }
 }

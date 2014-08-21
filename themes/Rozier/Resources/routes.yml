@@ -215,11 +215,11 @@ fontsEditPage:
     requirements: { user_id : "[0-9]+" }
 fontsAddPage:
     path:     /rz-admin/fonts/add
-    defaults: { _controller: Themes\Rozier\Controllers\FontsController::editGroupsAction }
+    defaults: { _controller: Themes\Rozier\Controllers\FontsController::addAction }
     requirements: { user_id : "[0-9]+" }
 fontsDeletePage:
     path:     /rz-admin/fonts/delete/{font_id}
-    defaults: { _controller: Themes\Rozier\Controllers\FontsController::removeRoleAction }
+    defaults: { _controller: Themes\Rozier\Controllers\FontsController::deleteAction }
     requirements: { user_id : "[0-9]+", role_id : "[0-9]+" }
 
 # TRANSLATIONS

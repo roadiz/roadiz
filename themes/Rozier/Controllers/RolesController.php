@@ -22,26 +22,23 @@ use RZ\Renzo\Core\Exceptions\EntityRequiredException;
 */
 class RolesController extends RozierApp {
 
-	const ITEM_PER_PAGE = 5;
-
 	/**
 	 * @param  Symfony\Component\HttpFoundation\Request $request
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function indexAction(Request $request) {
-		$roles = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Role')
-			->findBy(array(), array('name' => 'ASC'));
 
 		$listManager = new EntityListManager( 
 			$request, 
 			Kernel::getInstance()->em(), 
-			'RZ\Renzo\Core\Entities\Role'
+			'RZ\Renzo\Core\Entities\Role',
+			array(),
+			array('name' => 'ASC')
 		);
 		$listManager->handle();
 
 		$this->assignation['filters'] = $listManager->getAssignation();
-		$this->assignation['roles'] = $roles;
+		$this->assignation['roles'] = $listManager->getEntities();
 
 		return new Response(
 			$this->getTwig()->render('roles/list.html.twig', $this->assignation),
@@ -215,7 +212,7 @@ class RolesController extends RozierApp {
 
 	/**
 	 * Build add role form with name constraint.
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	protected function buildAddForm() {
 		$builder = $this->getFormFactory()
@@ -237,7 +234,7 @@ class RolesController extends RozierApp {
 	/**
 	 * Build delete role form with name constraint.
 	 * @param RZ\Renzo\Core\Entities\Role  $role
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	protected function buildDeleteForm(Role $role) {
 		$builder = $this->getFormFactory()
@@ -256,7 +253,7 @@ class RolesController extends RozierApp {
 	/**
 	 * Build edit role form with name constraint.
 	 * @param  RZ\Renzo\Core\Entities\Role  $role
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	protected function buildEditForm(Role $role) {
 		$defaults = array(

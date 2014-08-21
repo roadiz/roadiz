@@ -223,7 +223,7 @@ class DocumentsController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Document  $doc
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildDeleteForm(Document $doc) {
 		$defaults = array(
@@ -242,7 +242,7 @@ class DocumentsController extends RozierApp {
 	}
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Document  $document 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditForm(Document $document) {
 		$defaults = array(

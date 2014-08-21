@@ -23,7 +23,7 @@ use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
+use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -54,7 +54,7 @@ class TranslationsController extends RozierApp {
 		$listManager->handle();
 
 		$this->assignation['filters'] = $listManager->getAssignation();
-
+		
 		foreach ($translations as $translation) {
 
 			// Make default forms
@@ -318,7 +318,7 @@ class TranslationsController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Translation  $translation 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditForm(Translation $translation) {
 		$defaults = array(
@@ -345,7 +345,7 @@ class TranslationsController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Translation  $translation 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildDeleteForm(Translation $translation) {
 		$builder = $this->getFormFactory()
@@ -363,7 +363,7 @@ class TranslationsController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Translation  $translation
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildMakeDefaultForm(Translation $translation) {
 		$builder = $this->getFormFactory()

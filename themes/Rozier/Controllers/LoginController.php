@@ -72,7 +72,7 @@ class LoginController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Document  $document 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildLoginForm() {
 		$defaults = array();

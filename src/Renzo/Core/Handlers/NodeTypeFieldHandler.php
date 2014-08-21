@@ -8,7 +8,7 @@ use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Handlers\NodeTypeHandler;
-
+use RZ\Renzo\Core\Serializers\NodeTypeFieldSerializer;
 
 class NodeTypeFieldHandler {
 
@@ -70,7 +70,7 @@ class NodeTypeFieldHandler {
 	/**
      * Serializes data 
      * @return array         
-     */
+     *//*
     public function serialize() {
         $data = array();
 
@@ -83,12 +83,12 @@ class NodeTypeFieldHandler {
         $data['virtual'] = $this->getNodeTypeField()->isVirtual();
 
        	return $data;
-    }
+    }*/
 
     /**
      * Deserializes a json file into a readable array of datas
      * @return RZ\Renzo\Core\Entities\NodeTypeField
-     */
+     *//*
     public function deserialize( $jsonString ) {
     	$encoder = new JsonEncoder();
 		$normalizer = new GetSetMethodNormalizer();
@@ -104,8 +104,7 @@ class NodeTypeFieldHandler {
 
 		$serializer = new Serializer(array($normalizer), array($encoder));
 		return $serializer->deserialize($jsonString, 'RZ\Renzo\Core\Entities\NodeTypeField', 'json');
-    }
-
+    }*/
 
 	public function __construct(NodeTypeField $field) {
 		$this->nodeTypeField = $field;

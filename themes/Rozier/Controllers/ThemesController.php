@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use Symfony\Component\Form\Forms;
+use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -218,7 +218,7 @@ class ThemesController extends RozierApp {
 	/**
 	 * Build add theme form with classname constraint.
 	 * @param  Z\Renzo\Core\Entities\Theme  $theme 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	protected function buildAddForm(Theme $theme) {
 		$defaults = array(
@@ -243,7 +243,7 @@ class ThemesController extends RozierApp {
 	/**
 	 * Build delete theme form with classname constraint.
 	 * @param RZ\Renzo\Core\Entities\Theme  $theme
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	protected function buildDeleteForm(Theme $theme) {
 		$builder = $this->getFormFactory()
@@ -259,7 +259,7 @@ class ThemesController extends RozierApp {
 	/**
 	 * Build edit theme form with classname constraint.
 	 * @param  RZ\Renzo\Core\Entities\Theme  $theme
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	protected function buildEditForm(Theme $theme) {
 		$defaults = array(

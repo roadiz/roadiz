@@ -17,7 +17,7 @@ class NodeRepository extends EntityRepository
 	/**
 	 * 
 	 * @param  integer      $node_id     [description]
-	 * @param  Translation $translation [description]
+	 * @param  RZ\Renzo\Core\Entities\Translation $translation [description]
 	 * @return Node or null
 	 */
 	public function findWithTranslation($node_id, Translation $translation )
@@ -60,8 +60,8 @@ class NodeRepository extends EntityRepository
     /**
      * 
      * @param  string      $node_name     [description]
-     * @param  Translation $translation [description]
-     * @return Node or null
+     * @param  RZ\Renzo\Core\Entities\Translation $translation [description]
+     * @return RZ\Renzo\Core\Entities\Node or null
      */
     public function findByNodeNameWithTranslation($node_name, Translation $translation )
     {
@@ -82,7 +82,7 @@ class NodeRepository extends EntityRepository
     /**
      * 
      * @param  string      $node_name     [description]
-     * @return Node or null
+     * @return RZ\Renzo\Core\Entities\Node or null
      */
     public function findByNodeNameWithDefaultTranslation($node_name)
     {
@@ -104,7 +104,7 @@ class NodeRepository extends EntityRepository
      * 
      * @param  Node $node     [description]
      * @param  Translation $translation [description]
-     * @return Node or null
+     * @return RZ\Renzo\Core\Entities\Node or null
      */
     public function getChildrenWithTranslation( Node $node, Translation $translation )
     {
@@ -124,8 +124,8 @@ class NodeRepository extends EntityRepository
 
     /**
      * [findByParentWithTranslation description]
-     * @param  Node        $parent      [description]
-     * @param  Translation $translation [description]
+     * @param  RZ\Renzo\Core\Entities\Node        $parent      [description]
+     * @param  RZ\Renzo\Core\Entities\Translation $translation [description]
      * @return array Doctrine result array
      */
     public function findByParentWithTranslation( Node $parent = null, Translation $translation )
@@ -162,8 +162,8 @@ class NodeRepository extends EntityRepository
 
     /**
      * 
-     * @param  Node        $parent      [description]
-     * @param  Translation $translation [description]
+     * @param  RZ\Renzo\Core\Entities\Node        $parent      [description]
+     * @param  RZ\Renzo\Core\Entities\Translation $translation [description]
      * @return array Doctrine result array
      */
     public function findByParentWithDefaultTranslation( Node $parent = null )
@@ -198,7 +198,7 @@ class NodeRepository extends EntityRepository
 
     /**
      * 
-     * @param  \RZ\Renzo\Core\Entities\UrlAlias $urlAlias 
+     * @param  RZ\Renzo\Core\Entities\UrlAlias $urlAlias 
      * @return Node or null
      */
     public function findOneWithUrlAlias( $urlAlias )

@@ -430,7 +430,7 @@ class GroupsController extends RozierApp {
 
 	/**
 	 * Build add group form with name constraint.
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	protected function buildAddForm() {
 		$builder = $this->getFormFactory()
@@ -449,7 +449,7 @@ class GroupsController extends RozierApp {
 	/**
 	 * Build delete group form with name constraint.
 	 * @param  RZ\Renzo\Core\Entities\Group  $group
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	protected function buildDeleteForm(Group $group) {
 		$builder = $this->getFormFactory()
@@ -468,7 +468,7 @@ class GroupsController extends RozierApp {
 	/**
 	 * Build edit group form with name constraint.
 	 * @param  RZ\Renzo\Core\Entities\Group  $group
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	protected function buildEditForm(Group $group) {
 		$defaults = array(
@@ -496,7 +496,7 @@ class GroupsController extends RozierApp {
 	/**
 	 * 
 	 * @param  RZ\Renzo\Core\Entities\Group $group 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditRolesForm(Group $group) {
 		$defaults = array(
@@ -519,7 +519,7 @@ class GroupsController extends RozierApp {
 	/**
 	 * 
 	 * @param  RZ\Renzo\Core\Entities\Group $group 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditUsersForm(Group $group) {
 		$defaults = array(
@@ -547,7 +547,7 @@ class GroupsController extends RozierApp {
 	/**
 	 * @param RZ\Renzo\Core\Entities\Group $group
 	 * @param RZ\Renzo\Core\Entities\Role $role
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildRemoveRoleForm(Group $group, Role $role)
 	{
@@ -573,7 +573,7 @@ class GroupsController extends RozierApp {
 	/**
 	 * @param RZ\Renzo\Core\Entities\Group $group
 	 * @param RZ\Renzo\Core\Entities\User $user
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildRemoveUserForm(Group $group, User $user)
 	{

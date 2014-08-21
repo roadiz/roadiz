@@ -1,6 +1,5 @@
 <?php 
 
-
 namespace RZ\Renzo\Core\Entities;
 
 use RZ\Renzo\Core\Utils\EntityRepository;
@@ -69,6 +68,40 @@ class TranslationRepository extends EntityRepository
             return (boolean)$query->getSingleScalarResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
             return false;
+        }
+    }
+
+    /**
+     * 
+     * @param  string $pattern  Search pattern
+     * @param  array  $criteria Additionnal criteria
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function searchBy($pattern, array $criteria = array(), array $orders = array(), $limit = null, $offset = null ) {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->add('select', 't, obj')
+           ->add('from',  $this->getEntityName() . ' t');
+
+        $qb = $this->createSearchBy($pattern, $criteria, $qb, 'obj');
+        foreach ($orders as $key => $value) {
+            $qb->addOrderBy('obj.'.$key, $value);
+        }
+
+        if ($offset > -1) {
+            $qb->setFirstResult($offset);
+        }
+        if ($limit !== null) {
+            $qb->setMaxResults($limit);
+        }
+        
+        try {
+            return $qb->getQuery()->getResult();
+        }
+        catch(\Doctrine\ORM\Query\QueryException $e){
+            return null;
+        }
+        catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
         }
     }
 }

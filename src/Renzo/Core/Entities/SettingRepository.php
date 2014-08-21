@@ -10,6 +10,11 @@ use RZ\Renzo\Core\Kernel;
 
 class SettingRepository extends EntityRepository
 {
+	/**
+	 * 
+	 * @param  string $name
+	 * @return array     
+	 */
 	public function getValue($name)
 	{
 		$query = $this->_em->createQuery('
@@ -23,6 +28,12 @@ class SettingRepository extends EntityRepository
 			return null;
 		}
 	}
+
+	/**
+	 * 
+	 * @param  string $name 
+	 * @return array
+	 */
 	public function exists($name)
 	{
 		$query = $this->_em->createQuery('

@@ -1,0 +1,15 @@
+{% spaceless %}    
+<video 
+	data-document 
+	alt="{{ alt }}"
+	{% if width %}width="{{ width }}" {% endif %}
+	{% if height %}height="{{ height }}" {% endif %}
+	{% if class %}class="{{ class }}" {% endif %}
+	{% if identifier %}id="{{ identifier }}" {% endif %}
+	{% if controls %}controls {% endif %}
+	{% if autoplay %}autoplay {% endif %}
+>
+	<source type="{{ document.getMimeType }}" src="{{ url }}"></source>
+	Your browser does not support the video tag.
+</video>
+{% endspaceless %}

@@ -1,30 +1,38 @@
 {% extends 'base.html.twig' %}
 
+{% set variants = ["regular", "italic", "bold", "bold.italic", "light", "light.italic"] %}
+
 {% block content %}
 <section id="manage-fonts">
-	<h1 id="title">{% trans %}Roles{% endtrans %}</h1>
-	<nav><a class="uk-button" href="{{ path('fontsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a font{% endtrans %}</a></nav>
+	<h1 id="title">{% trans %}Fonts{% endtrans %}</h1>
+	<nav><a class="uk-button" href="{{ path('fontsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.font{% endtrans %}</a></nav>
 	{% include 'widgets/filtersBar.html.twig' %}
 	<table class="fonts uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}name{% endtrans %}</th>
+	            <th>{% trans %}font.variant{% endtrans %}</th>
+	            <th>{% trans %}font.files{% endtrans %}</th>
+	            <th>{% trans %}font.cssfamily{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
 			{% for font in fonts %}
 			<tr>
 				<td>
-					{% if not font.required %}<a href="{{ path('fontsEditPage', { font_id: font.getId }) }}">{{ font.getName }}</a>{% else %}
-					{{ font.getName }}{% endif %}
+					<a href="{{ path('fontsEditPage', { font_id: font.getId }) }}">{{ font.getName }}</a>
 				</td>
+				<td>{{ variants[font.getVariant]|trans }}</td>
 				<td>
-					{% if not font.required %}
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('fontsDeletePage', { font_id: font.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}Delete{% endtrans %}</a>
-					{% else %}
-					<div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}font.required{% endtrans %}</div>
-					{% endif %}
+					{% if font.getEOTFilename %}<div class="uk-badge">EOT</div>{% endif %}
+					{% if font.getWOFFFilename %}<div class="uk-badge">WOFF</div>{% endif %}
+					{% if font.getSVGFilename %}<div class="uk-badge">SVG</div>{% endif %}
+					{% if font.getOTFFilename %}<div class="uk-badge">OTF</div>{% endif %}
+				</td>
+				<td><code>{{ font.getHash }}</code></td>
+				<td>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('fontsDeletePage', { font_id: font.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}delete{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}

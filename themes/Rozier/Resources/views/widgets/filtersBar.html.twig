@@ -1,6 +1,6 @@
 <nav class="uk-navbar">
 	<div class="uk-navbar-content">
-   		<a class="uk-button" href="#">{% transchoice filters.itemCount %}{0} No item|{1} 1 item|]1,Inf] %count% items{% endtranschoice %}</a>
+   		<a class="uk-button" href="?">{% transchoice filters.itemCount %}{0} No item|{1} 1 item|]1,Inf] %count% items{% endtranschoice %}</a>
     </div>
 	{% if filters.description %}<a class="uk-navbar-brand">{{ filters.description }}</a>{% endif %}
 	<div class="uk-navbar-content uk-hidden-small">
@@ -12,12 +12,13 @@
     {% if filters.itemCount > filters.itemPerPage %}
     <div class="uk-navbar-content uk-hidden-small">
         <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
-            <input class="uk-form-width-mini" type="text" name="page"  value="{{ filters.currentPage }}">
+            {% if filters.search %}<input type="hidden" name="search" value="{{ filters.search }}" />{% endif %}
+            <input class="uk-form-width-mini" type="text" name="page"  value="{{ filters.currentPage }}" />
             / <span class="pageCount">{{ filters.pageCount }}</span>
 	        <div class="uk-button-group">
             	<button class="uk-button uk-button-primary">{% trans %}goto.page{% endtrans %}</button>
-	            {% if filters.currentPage > 1 %}<a class="uk-button" href="?page={{ filters.currentPage - 1 }}"><i class="uk-icon-arrow-left"></i> {% trans %}prev{% endtrans %}</a>{% endif %}
-	            {% if filters.currentPage < filters.pageCount %}<a class="uk-button" href="?page={{ filters.currentPage + 1 }}">{% trans %}next{% endtrans %} <i class="uk-icon-arrow-right"></i></a>{% endif %}
+	            {% if filters.previousPageQuery %}<a class="uk-button" href="?{{ filters.previousPageQuery }}"><i class="uk-icon-arrow-left"></i> {% trans %}prev{% endtrans %}</a>{% endif %}
+	            {% if filters.nextPageQuery %}<a class="uk-button" href="?{{ filters.nextPageQuery }}">{% trans %}next{% endtrans %} <i class="uk-icon-arrow-right"></i></a>{% endif %}
 	        </div>
         </form>
     </div>

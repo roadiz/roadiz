@@ -28,7 +28,7 @@ use RZ\Renzo\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
+use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -284,7 +284,7 @@ class UrlAliasesController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Node  $node 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildAddUrlAliasForm(Node $node) {
 		$defaults = array(
@@ -306,7 +306,7 @@ class UrlAliasesController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditUrlAliasForm(UrlAlias $ua) {
 		$defaults = array(
@@ -332,7 +332,7 @@ class UrlAliasesController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildDeleteUrlAliasForm(UrlAlias $ua) {
 		$defaults = array(

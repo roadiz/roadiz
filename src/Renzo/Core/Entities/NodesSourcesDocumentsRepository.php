@@ -15,6 +15,12 @@ use RZ\Renzo\Core\Kernel;
 class NodesSourcesDocumentsRepository extends EntityRepository
 {	
 
+    /**
+     * 
+     * @param  RZ\Renzo\Core\Entities\NodesSourcesDocument  $nodeSource [description]
+     * @param  RZ\Renzo\Core\Entities\NodeTypeField         $field      [description]
+     * @return array
+     */
     public function getLatestPosition( $nodeSource, NodeTypeField $field )
     {
         $query = $this->_em->createQuery('

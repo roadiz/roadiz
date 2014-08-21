@@ -76,7 +76,7 @@ class DebugPanel implements EventSubscriberInterface
 		}
 
 		$loader = new \Twig_Loader_Filesystem(array(
-			RENZO_ROOT.'/src/Renzo/Core/Resources/Templates', // Theme templates
+			RENZO_ROOT.'/src/Renzo/Core/Resources/views', // Theme templates
 		));
 		$this->twig = new \Twig_Environment($loader, array(
 		    'cache' => $cacheDir,

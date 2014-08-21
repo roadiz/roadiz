@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManager;
  */
 class EntityListManager
 {
-	const ITEM_PER_PAGE = 15;
+	const ITEM_PER_PAGE = 10;
 
 	protected $request = null;
 	protected $_em = null;
@@ -21,13 +21,13 @@ class EntityListManager
 
 	protected $orderingArray = null;
 	protected $filteringArray = null;
+	protected $queryArray = null;
 	protected $searchPattern = null;
 	protected $currentPage = null;
 
 	protected $assignation = null;
 
 	/**
-	 * 
 	 * @param Symfony\Component\HttpFoundation\Request $request
 	 * @param Doctrine\ORM\EntityManager $_em 
 	 * @param string $entityName
@@ -40,9 +40,10 @@ class EntityListManager
 		$this->entityName = $entityName;
 		$this->_em =        $_em;
 
-		$this->orderingArray = $preFilters;
-		$this->filteringArray = $preOrdering;
+		$this->orderingArray = $preOrdering;
+		$this->filteringArray = $preFilters;
 		$this->assignation = array();
+		$this->queryArray = array();
 	}
 
 	/**
@@ -51,27 +52,31 @@ class EntityListManager
 	 */
 	public function handle()
 	{
-		if ($this->request->query->get('field') && 
-			$this->request->query->get('ordering')) {
-
-			$this->orderingArray[$this->request->query->get('field')] = $this->request->query->get('ordering');
-		}
-
-		if ($this->request->query->get('search') != "") {
-			$this->searchPattern = $this->request->query->get('search');
-		}
-
-		$this->currentPage = $this->request->query->get('page');
-		if (!($this->currentPage > 1)) {
-			$this->currentPage = 1;
-		}
-
 		$this->paginator = new \RZ\Renzo\Core\Utils\Paginator( 
 			$this->_em, 
 			$this->entityName, 
 			static::ITEM_PER_PAGE,
 			$this->filteringArray
 		);
+
+		if ($this->request->query->get('field') && 
+			$this->request->query->get('ordering')) {
+
+			$this->orderingArray[$this->request->query->get('field')] = $this->request->query->get('ordering');
+			$this->queryArray['field'] = $this->request->query->get('field');
+			$this->queryArray['ordering'] = $this->request->query->get('ordering');
+		}
+
+		if ($this->request->query->get('search') != "") {
+			$this->searchPattern = $this->request->query->get('search');
+			$this->queryArray['search'] = $this->request->query->get('search');
+			$this->paginator->setSearchPattern($this->request->query->get('search'));
+		}
+
+		$this->currentPage = $this->request->query->get('page');
+		if (!($this->currentPage > 1)) {
+			$this->currentPage = 1;
+		}
 	}
 
 	/**
@@ -91,14 +96,41 @@ class EntityListManager
 	public function getAssignation()
 	{
 		try {
-			return array(
-				'description' => '',
-				'search'      => $this->searchPattern,
-				'currentPage' => $this->currentPage,
-				'pageCount'   => $this->paginator->getPageCount(),
-				'itemPerPage' => static::ITEM_PER_PAGE,
-				'itemCount'   => $this->_em->getRepository($this->entityName)->countBy($this->filteringArray)
+			$assign = array(
+				'description'       => '',
+				'search'            => $this->searchPattern,
+				'currentPage'       => $this->currentPage,
+				'pageCount'         => $this->paginator->getPageCount(),
+				'itemPerPage'       => static::ITEM_PER_PAGE,
+				'itemCount'         => $this->_em->getRepository($this->entityName)->countBy($this->filteringArray),
+				'nextPageQuery'     => null,
+				'previousPageQuery' => null
 			);
+
+			// Edit item count after a search
+			try {
+				if ($this->searchPattern != '') {
+					$assign['itemCount'] = $this->_em
+						->getRepository($this->entityName)
+						->countSearchBy($this->searchPattern, $this->filteringArray);
+				}
+			}
+			catch(\Exception $e){
+				
+			}
+
+			// compute next and prev page URL
+			if ($this->currentPage > 1) {
+				$this->queryArray['page'] = $this->currentPage - 1;
+				$assign['previousPageQuery'] = http_build_query($this->queryArray);
+			}
+			// compute next and prev page URL
+			if ($this->currentPage < $this->paginator->getPageCount()) {
+				$this->queryArray['page'] = $this->currentPage + 1;
+				$assign['nextPageQuery'] = http_build_query($this->queryArray);
+			}
+
+			return $assign;
 		}
 		catch(\Exception $e){
 			return null;
@@ -113,14 +145,7 @@ class EntityListManager
 	public function getEntities()
 	{
 		try {
-			if ($this->searchPattern != '') {
-				return $this->_em
-					->getRepository($this->entityName)
-					->searchBy($this->searchPattern, $this->filteringArray, $this->orderingArray);
-			}
-			else {
-				return $this->paginator->findByAtPage($this->filteringArray, $this->currentPage);
-			}
+			return $this->paginator->findByAtPage($this->filteringArray, $this->currentPage);
 		}
 		catch(\Exception $e){
 			return null;

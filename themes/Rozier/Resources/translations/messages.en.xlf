@@ -2,40 +2,776 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
-            <trans-unit id="1">
+            <!-- Common words -->
+            <trans-unit id="delete">
+                <source>delete</source>
+                <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="add">
+                <source>add</source>
+                <target>Add</target>
+            </trans-unit>
+            <trans-unit id="edit">
+                <source>edit</source>
+                <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="node_name">
                 <source>Node name</source>
                 <target>Node name</target>
             </trans-unit>
-            <trans-unit id="2">
+            <trans-unit id="See.tree">
                 <source>See tree</source>
                 <target>See tree</target>
             </trans-unit>
-            <trans-unit id="3">
+            <trans-unit id="_username">
                 <source>_username</source>
                 <target>Username</target>
             </trans-unit>
-            <trans-unit id="4">
+            <trans-unit id="_password">
                 <source>_password</source>
                 <target>Password</target>
             </trans-unit>
-
-            <trans-unit id="delete">
-                <source>delete</source>
-                <target>Supprimer</target>
+            <trans-unit id="login">
+                <source>Login</source>
+                <target>Connection</target>
+            </trans-unit>
+            <trans-unit id="Nodes">
+                <source>nodes</source>
+                <target>Nodes</target>
+            </trans-unit>
+            <trans-unit id="tags">
+                <source>tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="Welcome">
+                <source>Welcome</source>
+                <target>Welcome</target>
+            </trans-unit>
+            <trans-unit id="Delete">
+                <source>Delete</source>
+                <target>Delete</target>
             </trans-unit>
 
-            <!-- Documents -->
+            <!-- view / Admin menu -->
+            <trans-unit id="manage.nodes">
+                <source>manage.nodes</source>
+                <target>Manage nodes</target>
+            </trans-unit>
+            <trans-unit id="manage.documents">
+                <source>manage.documents</source>
+                <target>Manage documents</target>
+            </trans-unit>
+            <trans-unit id="manage.tags">
+                <source>manage.tags</source>
+                <target>Manage tags</target>
+            </trans-unit>
+            <trans-unit id="manage.node-types">
+                <source>manage.node-types</source>
+                <target>Manage node types</target>
+            </trans-unit>
+            <trans-unit id="manage.translations">
+                <source>manage.translations</source>
+                <target>Manage translations</target>
+            </trans-unit>
+            <trans-unit id="manage.users">
+                <source>manage.users</source>
+                <target>Manage users</target>
+            </trans-unit>
+            <trans-unit id="manage.fonts">
+                <source>manage.fonts</source>
+                <target>Manage fonts</target>
+            </trans-unit>
+            <trans-unit id="manage.themes">
+                <source>manage.themes</source>
+                <target>Manage themes</target>
+            </trans-unit>
+            <trans-unit id="manage.settings">
+                <source>manage.settings</source>
+                <target>Manage settings</target>
+            </trans-unit>
+            <trans-unit id="manage.roles">
+                <source>manage.roles</source>
+                <target>Manage roles</target>
+            </trans-unit>
+            <trans-unit id="manage.groups">
+                <source>manage.groups</source>
+                <target>Manage groups</target>
+            </trans-unit>
+
+            <!-- view / User panel -->
+            <trans-unit id="see.website">
+                <source>see.website</source>
+                <target>See website</target>
+            </trans-unit>
+            <trans-unit id="edit.account">
+                <source>edit.account</source>
+                <target>Edit account</target>
+            </trans-unit>
+            <trans-unit id="logout">
+                <source>logout</source>
+                <target>Logout</target>
+            </trans-unit>
+            <trans-unit id="delete.caches">
+                <source>delete.caches</source>
+                <target>Delete cache</target>
+            </trans-unit>
+            <trans-unit id="Dev.mode.activated">
+                <source>Dev mode activated</source>
+                <target>Dev mode enabled</target>
+            </trans-unit>
+
+            <!-- view / Tag Tree -->
+            <trans-unit id="edit.tag">
+                <source>edit.tag</source>
+                <target>Edit tag</target>
+            </trans-unit>
+            <trans-unit id="add.child.tag">
+                <source>add.child.tag</source>
+                <target>Add child tag</target>
+            </trans-unit>
+            <trans-unit id="delete.tag">
+                <source>delete.tag</source>
+                <target>Delete tag</target>
+            </trans-unit>
+            <trans-unit id="add.tag">
+                <source>add.tag</source>
+                <target>Add tag</target>
+            </trans-unit>
+
+            <!-- view / Filter Bar-->
+            <trans-unit id="search">
+                <source>search</source>
+                <target>Search</target>
+            </trans-unit>
+            <trans-unit id="goto.page">
+                <source>goto.page</source>
+                <target>Go to page</target>
+            </trans-unit>
+            <trans-unit id="prev">
+                <source>prev</source>
+                <target>Prev</target>
+            </trans-unit>
+            <trans-unit id="next">
+                <source>next</source>
+                <target>Next</target>
+            </trans-unit>
+
+            <!-- controller / Node Tree -->
+            <trans-unit id="edit.node{">
+                <source>edit.node</source>
+                <target>Edit node</target>
+            </trans-unit>
+            <trans-unit id="add.child.node{">
+                <source>add.child.node</source>
+                <target>Add child node</target>
+            </trans-unit>
+            <trans-unit id="delete.node{">
+                <source>delete.node</source>
+                <target>Delete node</target>
+            </trans-unit>
+
+            <!-- controller / Documents -->
             <trans-unit id="document.updated">
                 <source>document.updated</source>
-                <target>Document “%name%” has been updated</target>
+                <target>The document “%name%” has been updated.</target>
             </trans-unit>
             <trans-unit id="document.uploaded">
                 <source>document.uploaded</source>
-                <target>Document “%name%” has been uploaded</target>
+                <target>The document “%name%” has been uploaded.</target>
+            </trans-unit>
+            <trans-unit id="document.deleted">
+                <source>document.deleted</source>
+                <target>The document “%name%” has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="document.cannot_delete">
+                <source>document.cannot_delete</source>
+                <target>The document “%name%” can't be deleted.</target>
             </trans-unit>
             <trans-unit id="document.cannot_persist">
                 <source>document.cannot_persist</source>
-                <target>Document “%name%” could not be created</target>
+                <target>The document “%name%” could not be created.</target>
+            </trans-unit>
+
+            <!-- view / list Documents -->
+            <trans-unit id="Documents">
+                <source>Documents</source>
+                <target>Documents.</target>
+            </trans-unit>
+            <trans-unit id="upload.a.document">
+                <source>Upload a document</source>
+                <target>Upload a document</target>
+            </trans-unit>
+            <trans-unit id="document.thumbnail">
+                <source>document.thumbnail</source>
+                <target>Thumbnail</target>
+            </trans-unit>
+            <trans-unit id="document.filename">
+                <source>document.filename</source>
+                <target>Filename</target>
+            </trans-unit>
+            <trans-unit id="document.createdAt">
+                <source>document.createdAt</source>
+                <target>Creation date</target>
+            </trans-unit>
+            
+            <!-- view / upload Documents -->
+            <trans-unit id="back.to.documents">
+                <source>Back to documents</source>
+                <target>Back to documents</target>
+            </trans-unit>
+            <trans-unit id="upload.a.new.document">
+                <source>Upload a new document</source>
+                <target>Upload a new document</target>
+            </trans-unit>
+            
+            <!-- view / edit Documents -->
+            <trans-unit id="name">
+                <source>name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="description">
+                <source>description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="copyright">
+                <source>copyright</source>
+                <target>Copyright</target>
+            </trans-unit>
+            <trans-unit id="private">
+                <source>private</source>
+                <target>Private ?</target>
+            </trans-unit>
+            
+            <!-- view / delete Documents -->
+            <trans-unit id="delete.document">
+                <source>Delete document:</source>
+                <target>Supprimer le document :</target>
+            </trans-unit>
+            <trans-unit id="confirmation_msg">
+                <source>Are you sure you want to delete this document and its data?</source>
+                <target>Are you sure you want to delete this document and its data?</target>
+            </trans-unit>
+            <trans-unit id="Cancel">
+                <source>Cancel</source>
+                <target>Cancel</target>
+            </trans-unit>
+
+            <!-- controller / Nodes -->
+            <trans-unit id="node.created">
+                <source>node.created</source>
+                <target>The node “%name%” has been created</target>
+            </trans-unit>
+            <trans-unit id="node.no_creation.already_exists">
+                <source>node.no_creation.already_exists</source>
+                <target>The node “%name%” could not be created, it alreaedy exists.</target>
+            </trans-unit>
+            <trans-unit id="node.no_update.already_exists">
+                <source>node.no_update.already_exists</source>
+                <target>The node “%name%” could not be updated, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="node.updated">
+                <source>node.updated</source>
+                <target>The node “%name%” has been updated.</target>
+            </trans-unit>
+            <trans-unit id="node.deleted">
+                <source>node.deleted</source>
+                <target>The node “%name%” has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="node.translated">
+                <source>node.translated</source>
+                <target>The node “%name%” has been translated.</target>
+            </trans-unit>
+            <trans-unit id="node_source.updated">
+                <source>node_source.updated</source>
+                <target>The node source “%name%” has been updated.</target>
+            </trans-unit>
+             <trans-unit id="node.tag_linked">
+                <source>node.tag_linked</source>
+                <target>The tag "%tag%" has been linked to the node “%node%”.</target>
+            </trans-unit>
+            <trans-unit id="tag.removed">
+                <source>tag.removed</source>
+                <target>The tag “%name%" has been unlinked.</target>
+            </trans-unit>
+            <trans-unit id="node.no_creation.url_alias.already_exists">
+                <source>node.no_creation.url_alias.already_exists</source>
+                <target>The URL alias “%name%" could not be created, it already exists.</target>
+            </trans-unit>
+
+            <!-- view / add Nodes -->
+            <trans-unit id="add.a.new.node">
+                <source>Add.a.new.node</source>
+                <target>Add a new node</target>
+            </trans-unit>
+            <trans-unit id="in">
+                <source>In</source>
+                <target>In</target>
+            </trans-unit>
+            <trans-unit id="back.to.nodes">
+                <source>Back.to.nodes</source>
+                <target>Back to nodes</target>
+            </trans-unit>
+            <trans-unit id="nodes_title">
+                <source>Nodes</source>
+                <target>Nodes</target>
+            </trans-unit>
+            <trans-unit id="create.node">
+                <source>create.node</source>
+                <target>Create a node</target>
+            </trans-unit>
+            <trans-unit id="node.name">
+                <source>node.name</source>
+                <target>Node name</target>
+            </trans-unit>
+            <trans-unit id="node.type">
+                <source>node.type</source>
+                <target>Node type</target>
+            </trans-unit>
+            <trans-unit id="node.status">
+                <source>node.status</source>
+                <target>Node status</target>
+            </trans-unit>
+            <trans-unit id="last.modification">
+                <source>last.modification</source>
+                <target>Last modification</target>
+            </trans-unit>
+            <trans-unit id="actions">
+                <source>actions</source>
+                <target>Actions</target>
+            </trans-unit>
+            <trans-unit id="node.not.published">
+                <source>node.not.published</source>
+                <target>Unpublished node</target>
+            </trans-unit>
+            <trans-unit id="see.nodetree">
+                <source>see.nodetree</source>
+                <target>See node tree</target>
+            </trans-unit>
+            <trans-unit id="delete_button">
+                <source>delete</source>
+                <target>Delete</target>
+            </trans-unit>
+
+            <!-- view / edit Nodes -->
+            <trans-unit id="Translate">
+                <source>Translate</source>
+                <target>Translate</target>
+            </trans-unit>
+            <trans-unit id="nodeName">
+                <source>nodeName</source>
+                <target>Node name</target>
+            </trans-unit>
+            <trans-unit id="home">
+                <source>home</source>
+                <target>Is home ?</target>
+            </trans-unit>
+            <trans-unit id="hidingChildren">
+                <source>hidingChildren</source>
+                <target>Hiding children</target>
+            </trans-unit>
+            <trans-unit id="visible">
+                <source>visible</source>
+                <target>Is visible ?</target>
+            </trans-unit>
+            <trans-unit id="locked">
+                <source>locked</source>
+                <target>Is locked ?</target>
+            </trans-unit>
+            <trans-unit id="published">
+                <source>published</source>
+                <target>Is published ?</target>
+            </trans-unit>
+            <trans-unit id="archived">
+                <source>archived</source>
+                <target>Is archived ?</target>
+            </trans-unit>
+            
+            <!-- view / narBar Nodes -->
+            <trans-unit id="node.content">
+                <source>node.content</source>
+                <target>Node content</target>
+            </trans-unit>
+            <trans-unit id="node.parameters">
+                <source>node.parameters</source>
+                <target>Node settings</target>
+            </trans-unit>
+            <trans-unit id="tags_node">
+                <source>tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="urlaliases">
+                <source>urlaliases</source>
+                <target>URL Aliases</target>
+            </trans-unit>
+            <trans-unit id="tree">
+                <source>tree</source>
+                <target>Tree</target>
+            </trans-unit>
+            <trans-unit id="back.to.nodes_navbar">
+                <source>back.to.nodes</source>
+                <target>Back to nodes</target>
+            </trans-unit>
+            <trans-unit id="see.page">
+                <source>see.page</source>
+                <target>See page</target>
+            </trans-unit>
+
+            <!-- view / editTags Nodes -->
+            <trans-unit id="add.a.tag.to.node">
+                <source>Add a tag</source>
+                <target>Add a tag</target>
+            </trans-unit>
+            <trans-unit id="tags.edit.nodes">
+                <source>Tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="id.edit.nodes">
+                <source>Id</source>
+                <target>Id</target>
+            </trans-unit>
+            <trans-unit id="name.edit.nodes">
+                <source>Name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="actions.edit.nodes">
+                <source>Actions</source>
+                <target>Actions</target>
+            </trans-unit>
+            <trans-unit id="Unlink">
+                <source>Unlink</source>
+                <target>Unlink</target>
+            </trans-unit>
+
+            <!-- controller / URL Aliases -->
+            <trans-unit id="url_alias.updated">
+                <source>url_alias.updated</source>
+                <target>The URL alias “%alias%"" a été mis à jour.</target>
+            </trans-unit>
+            <trans-unit id="url_alias.no_update.already_exists">
+                <source>url_alias.no_update.already_exists</source>
+                <target>The URL alias “%alias%" could not be update, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="url_alias.deleted">
+                <source>url_alias.deleted</source>
+                <target>The URL alias “%alias%" has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="url_alias.created">
+                <source>url_alias.created</source>
+                <target>The URL alias “%alias%" has been created.</target>
+            </trans-unit>
+            <trans-unit id="url_alias.no_creation.already_exists">
+                <source>url_alias.no_creation.already_exists</source>
+                <target>The URL alias “%alias%" could not be created, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="url_alias.no_translation">
+                <source>url_alias.no_translation</source>
+                <target>The URL alias “%alias%" has been translated.</target>
+            </trans-unit>
+
+            <!-- controller / Fonts -->
+            <trans-unit id="font.created">
+                <source>font.created</source>
+                <target>The font “%name%" has been created.</target>
+            </trans-unit>
+            <trans-unit id="font.deleted">
+                <source>font.deleted</source>
+                <target>The font “%name%" has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="font.updated">
+                <source>font.updated</source>
+                <target>The font “%name%" has been updated.</target>
+            </trans-unit>
+            <trans-unit id="font.name.already_exists">
+                <source>font.name.already_exists</source>
+                <target>This font name can't be used, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="font.name.cannot_be_updated">
+                <source>font.required.cannot_be_updated</source>
+                <target>This font name can't be updated, it is required.</target>
+            </trans-unit>
+            <trans-unit id="font.name.already.exists">
+                <source>font.name.already.exists</source>
+                <target>This font name can't be used, it already exists.</target>
+            </trans-unit>
+
+            <!-- controller / Groups -->
+            <trans-unit id="group.created">
+                <source>group.created</source>
+                <target>The group “%name%" has been created.</target>
+            </trans-unit>
+            <trans-unit id="group.deleted">
+                <source>group.deleted</source>
+                <target>The group “%name%" has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="group.updated">
+                <source>group.updated</source>
+                <target>The group “%name%" has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="group.role_linked">
+                <source>group.role_linked</source>
+                <target>The role "%role%" has been linked to the group “%groupe%".</target>
+            </trans-unit>
+            <trans-unit id="role.removed_from_group">
+                <source>role.removed_from_group</source>
+                <target>The role “%name%" has been removed from the group.</target>
+            </trans-unit>
+            <trans-unit id="group.user_linked">
+                <source>group.user_linked</source>
+                <target>The user "%user%" has been linked to the group "%group%"'.</target>
+            </trans-unit>
+            <trans-unit id="group.user.removed_from_group">
+                <source>group.user.removed_from_group</source>
+                <target>The user "%name%" has been removed from the group.</target>
+            </trans-unit>
+            <trans-unit id="group.name.already.exists">
+                <source>group.name.already.exists</source>
+                <target>This group name already exists.</target>
+            </trans-unit>
+
+            <!-- controller / NodeTypeFields -->
+            <trans-unit id="node_type_field.created">
+                <source>node_type_field.created</source>
+                <target>The node type field “%name%" has been created.</target>
+            </trans-unit>
+            <trans-unit id="node_type_field.deleted">
+                <source>node_type_field.deleted</source>
+                <target>The node type field “%name%" has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="node_type_field.updated">
+                <source>node_type_field.updated</source>
+                <target>The node type field “%name%" has beeen updated.</target>
+            </trans-unit>
+
+            <!-- controller / NodeTypes -->
+            <trans-unit id="node_type.updated">
+                <source>node_type.updated</source>
+                <target>The node type “%name%" has been updated.</target>
+            </trans-unit>
+            <trans-unit id="node_type.created">
+                <source>node_type.created</source>
+                <target>The node type “%name%" has been created.</target>
+            </trans-unit>
+            <trans-unit id="node_type.deleted">
+                <source>node_type.deleted</source>
+                <target>The node type “%name%" has been deleted.</target>
+            </trans-unit>
+             <trans-unit id="node_type.cannot_rename_already_exists">
+                <source>node_type.cannot_rename_already_exists</source>
+                <target>This node type can't be renamed “%name%", it already exists.</target>
+            </trans-unit>
+            <trans-unit id="node_type.already_exists">
+                <source>node_type.already_exists</source>
+                <target>The node type “%name%" can't be created, it already exists.</target>
+            </trans-unit>
+
+            <!-- controller / NodeTypeUtils -->
+            <trans-unit id="file.format.not_valid">
+                <source>file.format.not_valid</source>
+                <target>The file format is not valid.</target>
+            </trans-unit>
+
+            <!-- controller / Roles -->
+            <trans-unit id="role.created">
+                <source>role.created</source>
+                <target>The role “%name%" has been created.</target>
+            </trans-unit>
+            <trans-unit id="role.deleted">
+                <source>role.deleted</source>
+                <target>The role “%name%" has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="role.updated">
+                <source>role.updated</source>
+                <target>The role “%name%" has been updated.</target>
+            </trans-unit>
+            <trans-unit id="role.name.already.exists">
+                <source>role.name.already.exists</source>
+                <target>This role name already exists.</target>
+            </trans-unit>
+            <trans-unit id="role.required.cannot_be_updated">
+                <source>role.required.cannot_be_updated</source>
+                <target>This role is required, it can't be updated.</target>
+            </trans-unit>
+            <trans-unit id="role.is.required">
+                <source>role.is.required</source>
+                <target>This role is required.</target>
+            </trans-unit>
+
+            <!-- controller / Schema -->
+            <trans-unit id="database.schema.updated">
+                <source>database.schema.updated</source>
+                <target>The database has been updated.</target>
+            </trans-unit>
+            <trans-unit id="database.schema.cannot_updated">
+                <source>database.schema.cannot_updated</source>
+                <target>The database can't be updated.</target>
+            </trans-unit>
+
+            <!-- controller / Settings -->
+            <trans-unit id="setting.created">
+                <source>setting.created</source>
+                <target>The setting “%name%" has been created.</target>
+            </trans-unit>
+            <trans-unit id="setting.updated">
+                <source>setting.updated</source>
+                <target>The setting "%name%" has been updated.</target>
+            </trans-unit>
+            <trans-unit id="setting.deleted">
+                <source>setting.deleted</source>
+                <target>The setting "%name%" has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="setting.no_update.already_exists">
+                <source>setting.no_update.already_exists</source>
+                <target>The setting "%name%" could not be edited, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="setting.no_creation.already_exists">
+                <source>setting.no_creation.already_exists</source>
+                <target>The setting "%name%" could not be created, it already exists.</target>
+            </trans-unit>
+
+            <!-- controller / Tags -->
+            <trans-unit id="tag.updated">
+                <source>tag.updated</source>
+                <target>The tag "%name%" has been updated.</target>
+            </trans-unit>
+             <trans-unit id="tag.created">
+                <source>tag.created</source>
+                <target>The tag "%name%" has been created.</target>
+            </trans-unit>
+             <trans-unit id="tag.deleted">
+                <source>tag.deleted</source>
+                <target>The tag "%name%" has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="tag.no_update.already_exists">
+                <source>tag.no_update.already_exists</source>
+                <target>The tag "%name%" could not be updated, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="tag.no_creation.already_exists">
+                <source>tag.no_creation.already_exists</source>
+                <target>The tag "%name%" could not be created, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="tag.tag.already_added">
+                <source>tag.tag.already_added</source>
+                <target>The tag "%name%" has already been added.</target>
+            </trans-unit>
+
+            <!-- view / narBar Tags -->
+            <trans-unit id="tag.tree">
+                <source>tag.tree</source>
+                <target>Tag tree</target>
+            </trans-unit>
+            <trans-unit id="tag.parameters">
+                <source>tag.parameters</source>
+                <target>Settings</target>
+            </trans-unit>
+            <trans-unit id="tag.nodes">
+                <source>tag.nodes</source>
+                <target>Nodes</target>
+            </trans-unit>
+            <trans-unit id="back.to.tags">
+                <source>back.to.tags</source>
+                <target>Back to tags</target>
+            </trans-unit>
+            
+            <!-- view / list Tags -->
+            <trans-unit id="create.a.tag">
+                <source>Create a tag</source>
+                <target>Create a tag</target>
+            </trans-unit>
+            
+            <!-- view / edit Tags -->
+           <trans-unit id="Edit">
+                <source>Edit</source>
+                <target>Edit</target>
+            </trans-unit>
+            
+            <!-- controller / Themes -->
+            <trans-unit id="theme.created">
+                <source>theme.created</source>
+                <target>The theme "%name%" has been created.</target>
+            </trans-unit>
+            <trans-unit id="theme.updated">
+                <source>theme.updated</source>
+                <target>The theme "%name%" has been updated.</target>
+            </trans-unit>
+            <trans-unit id="theme.deleted">
+                <source>theme.updated</source>
+                <target>The theme "%name%" has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="theme.no_creation.already_exists">
+                <source>theme.no_creation.already_exists</source>
+                <target>The theme "%name%" could not be created, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="theme.no_update.already.exists">
+                <source>theme.no_update.already.exists</source>
+                <target>The theme "%name%" could not be edited, it already exists.</target>
+            </trans-unit>
+
+            <!-- controller / Translations -->
+            <trans-unit id="translation.made_default">
+                <source>translation.made_default</source>
+                <target>The translation "%name%" has been made default translation.</target>
+            </trans-unit>
+            <trans-unit id="translation.updated">
+                <source>translation.updated</source>
+                <target>The translation "%name%" has been updated.</target>
+            </trans-unit>
+            <trans-unit id="translation.deleted">
+                <source>translation.deleted</source>
+                <target>The translation "%name%" has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="translation.cannot_update_already_exists">
+                <source>translation.cannot_update_already_exists</source>
+                <target>The translation "%name%" could not be updated, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="translation.cannot_create_already_exists">
+                <source>translation.cannot_create_already_exists</source>
+                <target>The translation "%name%" could not be created, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="translation.cannot_delete_default_translation">
+                <source>translation.cannot_delete_default_translation</source>
+                <target>Can't delete a default translation.</target>
+            </trans-unit>
+
+            <!-- controller / Users -->
+            <trans-unit id="user.created">
+                <source>user.created</source>
+                <target>The user "%name%" has been created.</target>
+            </trans-unit>
+            <trans-unit id="user.updated">
+                <source>user.updated</source>
+                <target>The user "%name%" has been updated.</target>
+            </trans-unit>
+            <trans-unit id="user.deleted">
+                <source>user.deleted</source>
+                <target>The user "%name%" has been deleted.</target>
+            </trans-unit>
+            <trans-unit id="user.role_linked">
+                <source>user.role_linked</source>
+                <target>The role "%role%" has been linked to the user %user%".</target>
+            </trans-unit>
+            <trans-unit id="user.role_removed">
+                <source>role.deleted</source>
+                <target>The role "%name%" has been removed from the user.</target>
+            </trans-unit>
+            <trans-unit id="user.group_linked">
+                <source>user.group_linked</source>
+                <target>The user "%user%" has been added to the group "%group%"'.</target>
+            </trans-unit>
+            <trans-unit id="user.group_removed">
+                <source>user.group_removed</source>
+                <target>The user "%user%" has been removed from the group "%group%"'.</target>
+            </trans-unit>
+            <trans-unit id="user.cannot_update.name_already_exists">
+                <source>user.cannot_update.name_already_exists</source>
+                <target>The user "%name%" could not be updated, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="user.cannot_update.email_already_exists">
+                <source>user.cannot_update.email_already_exists</source>
+                <target>Can't update email adress, it is already being used.</target>
+            </trans-unit>
+            <trans-unit id="user.facebook_name_does_not_exist">
+                <source>user.facebook_name_does_not_exist</source>
+                <target>This facebook name could not be found.</target>
             </trans-unit>
         </body>
     </file>

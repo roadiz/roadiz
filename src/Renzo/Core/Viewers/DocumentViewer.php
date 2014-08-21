@@ -4,7 +4,16 @@ namespace RZ\Renzo\Core\Viewers;
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Kernel;
 
-class DocumentViewer 
+use Symfony\Bridge\Twig\Extension\RoutingExtension;
+use Symfony\Bridge\Twig\Form\TwigRenderer;
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+
+class DocumentViewer implements ViewableInterface
 {
 	private $document;
 
@@ -16,12 +25,189 @@ class DocumentViewer
 	}
 
 	function __construct( Document $document )
-	{
+	{	
+		$this->initializeTwig()
+			->initializeTranslator();
 		$this->document = $document;
 	}
 
 	/**
-	 * Generate a resampled document Url
+	 * @return Symfony\Component\Translation\Translator.
+	 */
+	public function getTranslator()
+	{
+		return $this->translator;
+	}
+
+	/**
+	 * Get twig cache folder for current Viewer.
+	 * @return string
+	 */
+	public function getCacheDirectory()
+	{
+		return RENZO_ROOT.'/cache/Core/DocumentViewer/twig_cache';
+	}
+
+	/**
+	 * Check if twig cache must be cleared .
+	 */
+	public function handleTwigCache() {
+
+		if (Kernel::getInstance()->isDebug()) {
+			try {
+				$fs = new Filesystem();
+				$fs->remove(array($this->getCacheDirectory()));
+			} catch (IOExceptionInterface $e) {
+			    echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
+			}
+		}
+	}
+	/**
+	 * Create a Twig Environment instance.
+	 */
+	public function initializeTwig()
+	{
+		$this->handleTwigCache();
+
+		$loader = new \Twig_Loader_Filesystem(array(
+			RENZO_ROOT . '/src/Renzo/Core/Resources/views',
+		));
+		$this->twig = new \Twig_Environment($loader, array(
+		    'cache' => $this->getCacheDirectory(),
+		));
+
+		//RoutingExtension
+		$this->twig->addExtension(
+		    new RoutingExtension(Kernel::getInstance()->getUrlGenerator())
+		);
+		/*
+		 * ============================================================================
+		 * Dump
+		 * ============================================================================
+		 */
+		$dump = new \Twig_SimpleFilter('dump', function ($object) {
+		    return var_dump($object);
+		});
+		$this->twig->addFilter($dump);
+
+		return $this;
+	}
+	/**
+	 * @return \Twig_Environment
+	 */
+	public function getTwig()
+	{
+		return $this->twig;
+	}
+
+	/**
+	 * Create a translator instance and load theme messages.
+	 * 
+	 * src/Renzo/Core/Resources/translations/messages.{{lang}}.xlf
+	 * 
+	 * @todo  [Cache] Need to write XLF catalog to PHP using \Symfony\Component\Translation\Writer\TranslationWriter 
+	 */
+	public function initializeTranslator()
+	{
+		$lang = Kernel::getInstance()->getRequest()->getLocale();
+		$msgPath = RENZO_ROOT.'/src/Renzo/Core/Resources/translations/messages.'.$lang.'.xlf';
+
+		/*
+		 * fallback to english, if message catalog absent
+		 */
+		if (!file_exists($msgPath)) {
+			$lang = 'en';
+		}
+		// instancier un objet de la classe Translator
+		$this->translator = new Translator($lang);
+		// charger, en quelque sorte, des traductions dans ce translator
+		$this->translator->addLoader('xlf', new XliffFileLoader());
+		$this->translator->addResource(
+		    'xlf',
+			RENZO_ROOT.'/src/Renzo/Core/Resources/translations/messages.'.$lang.'.xlf',
+		    $lang
+		);
+		// ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
+		$this->twig->addExtension(new TranslationExtension($this->translator));
+		return $this;
+	}
+
+	/**
+	 * Output a document HTML tag according to its Mime type and 
+	 * the arguments array.
+	 * 
+	 * ## HTML output options
+	 * 
+	 * - identifier
+	 * - class
+	 * - **alt**: If not filled, it will get the document name, then the document filename 
+	 * 
+	 * ## Images resampling options
+	 * 
+	 * - width
+	 * - height 
+	 * - crop ({w}x{h}, for example : 100x200)
+	 * - grayscale / greyscale (boolean)
+	 * - quality (1-100)
+	 * - background (hexadecimal color without #)
+	 * - progressive (boolean)
+	 * 
+	 * ## Video options
+	 * 
+	 * - autoplay
+	 * - controls
+	 * 
+	 * @param  array $args
+	 * @return string HTML output
+	 */
+	public function getDocumentByArray( $args = null )
+	{
+		$assignation = array(
+			'document' => $this->getDocument(),
+			'url' => $this->getDocumentUrlByArray( $args )
+		);
+
+		if (!empty($args['width'])) {
+			$assignation['width'] = (int)$args['width'];
+		}
+		if (!empty($args['heigth'])) {
+			$assignation['heigth'] = (int)$args['heigth'];
+		}
+		if (!empty($args['identifier'])) {
+			$assignation['identifier'] = $args['identifier'];
+		}
+		if (!empty($args['class'])) {
+			$assignation['class'] = $args['class'];
+		}
+		if (!empty($args['autoplay'])) {
+			$assignation['autoplay'] = (boolean)$args['autoplay'];
+		}
+		if (!empty($args['controls'])) {
+			$assignation['controls'] = (boolean)$args['controls'];
+		}
+		if (!empty($args['alt'])) {
+			$assignation['alt'] = $args['alt'];
+		}
+		elseif (!empty($this->getDocument()->getName())) {
+			$assignation['alt'] = $this->getDocument()->getName();
+		}
+		else {
+			$assignation['alt'] = $this->getDocument()->getFileName();
+		}
+
+		if ($this->getDocument()->isImage()) {
+			return $this->getTwig()->render('documents/image.html.twig', $assignation);
+		}
+		elseif ($this->getDocument()->isVideo()) {
+			return $this->getTwig()->render('documents/video.html.twig', $assignation);
+		}
+		else {
+			return $this->getTranslator()->trans('document.format.unknown');
+		}
+	}
+
+	/**
+	 * Generate a resampled document Url.
 	 * 
 	 * - width
 	 * - height 
@@ -36,7 +222,9 @@ class DocumentViewer
 	 */
 	public function getDocumentUrlByArray( $args = null )
 	{
-		if ($args === null) {
+		if ($args === null || 
+			!$this->getDocument()->isImage()) {
+
 			return Kernel::getInstance()->getRequest()->getBaseUrl().'/files/'.$this->getDocument()->getRelativeUrl();
 		}
 		else {

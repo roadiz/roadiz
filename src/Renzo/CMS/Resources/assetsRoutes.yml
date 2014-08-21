@@ -5,3 +5,14 @@ SLIRProcess:
     path:     /assets/{queryString}/{filename}
     defaults: { _controller: \RZ\Renzo\CMS\Controllers\AssetsController::slirAction }
     requirements: { queryString : "[a-zA-Z0-9\-]+", filename : "[a-zA-Z0-9\-_\.\/]+" }
+#
+# Fonts serving
+# 
+FontFile:
+    path:     /assets/font/{filename}.{extension}
+    defaults: { _controller: \RZ\Renzo\CMS\Controllers\AssetsController::fontFileAction }
+    requirements: { filename : "[a-zA-Z0-9\-_]+", extension : "[a-z]+" }
+FontFaceCSS:
+    path:     /assets/fontfaces/{ token }
+    defaults: { _controller: \RZ\Renzo\CMS\Controllers\AssetsController::fontFacesAction }
+    requirements: { token : "[a-zA-Z0-9\-_]+" }

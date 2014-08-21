@@ -25,7 +25,6 @@ class Document extends DateTimed
 		'image/jpeg' => 'image',
 		'image/gif' => 'image',
 		'image/tiff' => 'image',
-		'image/svg+xml' => 'image',
 		'application/pdf' => 'pdf',
 		'application/ogg' => 'video',
 		'video/ogg' => 'video',
@@ -54,6 +53,14 @@ class Document extends DateTimed
 		'application/vnd.openxmlformats-officedocument.presentationml.slideshow' => 'powerpoint',
 		'application/vnd.oasis.opendocument.presentation' => 'powerpoint',
 		'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'powerpoint',
+		'image/svg+xml' => 'font',
+		'application/x-font-ttf' => 'font',
+		'application/x-font-truetype' => 'font',
+		'application/x-font-opentype' => 'font',
+		'application/font-woff' => 'font',
+		'application/vnd.ms-fontobject' => 'font',
+		'font/opentype' => 'font',
+   		'font/ttf' => 'font',
 	);
 
 	/**
@@ -104,13 +111,22 @@ class Document extends DateTimed
 	}
 
 	/**
-	 * Is current document an image
+	 * Is current document an image.
 	 * 
 	 * @return boolean
 	 */
 	public function isImage()
 	{
 		return static::$mimeToIcon[$this->getMimeType()] == 'image';
+	}
+	/**
+	 * Is current document a video.
+	 * 
+	 * @return boolean
+	 */
+	public function isVideo()
+	{
+		return static::$mimeToIcon[$this->getMimeType()] == 'video';
 	}
 
 
@@ -247,7 +263,7 @@ class Document extends DateTimed
     	
         $this->tags = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
-        $this->folder = substr(hash("crc32b", date('YmdHis')), 0, 12);
+        $this->folder = substr(hash("crc32b", date('YmdHi')), 0, 12);
     }
 
     /**

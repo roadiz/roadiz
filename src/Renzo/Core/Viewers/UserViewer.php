@@ -66,7 +66,7 @@ class UserViewer implements ViewableInterface
 		$this->handleTwigCache();
 
 		$loader = new \Twig_Loader_Filesystem(array(
-			RENZO_ROOT . '/src/Renzo/Core/Resources/Templates',
+			RENZO_ROOT . '/src/Renzo/Core/Resources/views',
 		));
 		$this->twig = new \Twig_Environment($loader, array(
 		    'cache' => $this->getCacheDirectory(),

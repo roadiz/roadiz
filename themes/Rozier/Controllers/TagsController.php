@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use Symfony\Component\Form\Forms;
+use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -451,7 +451,7 @@ class TagsController extends RozierApp {
 
 	/**
 	 * @param RZ\Renzo\Core\Entities\Tag  $tag
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildAddForm(Tag $tag) {
 		$defaults = array(
@@ -473,7 +473,7 @@ class TagsController extends RozierApp {
 
 	/**
 	 * @param RZ\Renzo\Core\Entities\Tag  $tag
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildAddChildForm(Tag $tag) {
 		$defaults = array(
@@ -499,7 +499,7 @@ class TagsController extends RozierApp {
 
 	/**
 	 * @param RZ\Renzo\Core\Entities\Tag  $tag 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditForm(Tag $tag) {
 		$translation = $tag->getTranslatedTags()->first();
@@ -526,7 +526,7 @@ class TagsController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Tag  $tag 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildDeleteForm(Tag $tag) {
 		$builder = $this->getFormFactory()

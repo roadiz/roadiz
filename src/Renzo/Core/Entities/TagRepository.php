@@ -14,7 +14,7 @@ class TagRepository extends EntityRepository
 	/**
 	 * 
 	 * @param  integer  $tag_id 
-	 * @param  Translation $translation
+	 * @param  RZ\Renzo\Core\Entities\Translation $translation
 	 * @return Tag or null
 	 */
 	public function findWithTranslation($tag_id, Translation $translation )
@@ -36,7 +36,7 @@ class TagRepository extends EntityRepository
 
 	/**
 	 * 
-	 * @param Translation $translation
+	 * @param  RZ\Renzo\Core\Entities\Translation $translation
 	 * @return array
 	 */
 	public function findAllWithTranslation( Translation $translation )
@@ -57,7 +57,7 @@ class TagRepository extends EntityRepository
 	/**
 	 * 
 	 * @param  integer  $tag_id  
-	 * @return Tag or null
+	 * @return RZ\Renzo\Core\Entities\Tag or null
 	 */
 	public function findWithDefaultTranslation($tag_id)
 	{
@@ -96,8 +96,8 @@ class TagRepository extends EntityRepository
 
     /**
      * 
-     * @param  Tag        $parent      [description]
-     * @param  Translation $translation [description]
+     * @param  RZ\Renzo\Core\Entities\Tag         $parent      [description]
+     * @param  RZ\Renzo\Core\Entities\Translation $translation [description]
      * @return array Doctrine result array
      */
     public function findByParentWithTranslation( Tag $parent = null, Translation $translation )
@@ -134,8 +134,8 @@ class TagRepository extends EntityRepository
 
     /**
      * 
-     * @param  Tag        $parent      [description]
-     * @param  Translation $translation [description]
+     * @param  RZ\Renzo\Core\Entities\Tag         $parent      [description]
+     * @param  RZ\Renzo\Core\Entities\Translation $translation [description]
      * @return array Doctrine result array
      */
     public function findByParentWithDefaultTranslation( Tag $parent = null )
@@ -230,7 +230,7 @@ class TagRepository extends EntityRepository
      * @param  array  $criteria Additionnal criteria
      * @return Doctrine\Common\Collections\ArrayCollection
      */
-    public function searchBy( $pattern, array $criteria = array(), array $orders = array() )
+    public function searchBy( $pattern, array $criteria = array(), array $orders = array(), $limit = null, $offset = null )
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 't, obj')
@@ -241,6 +241,14 @@ class TagRepository extends EntityRepository
         foreach ($orders as $key => $value) {
             $qb->addOrderBy('obj.'.$key, $value);
         }
+
+        if ($offset > -1) {
+            $qb->setFirstResult($offset);
+        }
+        if ($limit !== null) {
+            $qb->setMaxResults($limit);
+        }
+        
         try {
             return $qb->getQuery()->getResult();
         }

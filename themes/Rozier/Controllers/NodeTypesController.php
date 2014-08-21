@@ -25,7 +25,7 @@ use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
+use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -54,7 +54,7 @@ class NodeTypesController extends RozierApp {
 		$listManager->handle();
 
 		$this->assignation['filters'] = $listManager->getAssignation();
-		$this->assignation['node_types'] =   $listManager->getEntities();
+		$this->assignation['node_types'] = $listManager->getEntities();
 
 		return new Response(
 			$this->getTwig()->render('node-types/list.html.twig', $this->assignation),
@@ -291,7 +291,7 @@ class NodeTypesController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildAddForm(NodeType $node_type) {
 		$defaults = array(
@@ -325,7 +325,7 @@ class NodeTypesController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditForm(NodeType $node_type) {
 		$defaults = array(
@@ -353,7 +353,7 @@ class NodeTypesController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\NodeType  $node_type 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildDeleteForm(NodeType $node_type) {
 		$builder = $this->getFormFactory()

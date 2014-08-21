@@ -6,6 +6,7 @@ use RZ\Renzo\Core\AbstractEntities\Persistable;
 use RZ\Renzo\Core\AbstractEntities\Positioned;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Handlers\NodeTypeFieldHandler;
+use RZ\Renzo\Core\Serializers\NodeTypeFieldSerializer;
 
 /**
  * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
@@ -235,22 +236,38 @@ class NodeTypeField extends Positioned implements Persistable {
 		return static::$typeToDoctrine[$this->getType()] === null ? true : false;
 	}
 
-	public function getGetterName()
-	{
+	/**
+	 * @return string
+	 */
+	public function getGetterName() {
 		return 'get'.str_replace('_', '', ucwords($this->getName()));
 	}
-	public function getSetterName()
-	{
+
+	/**
+	 * @return string
+	 */
+	public function getSetterName() {
 		return 'set'.str_replace('_', '', ucwords($this->getName()));
 	}
 
-	public function getHandler()
-	{
-		return new NodeTypeFieldHandler( $this );
+	/**
+	 * @return RZ\Renzo\Core\Handlers\NodeTypeFieldHandler
+	 */
+	public function getHandler() {
+		return new NodeTypeFieldHandler($this);
 	}
 
-	public function getOneLineSummary()
-	{
+	/**
+     * @return RZ\Renzo\Core\Serializers\NodeTypeFieldSerializer
+     */
+    public function getSerializer() {
+    	return new NodeTypeFieldSerializer($this);
+    }
+
+    /**
+     * @return string 
+     */
+	public function getOneLineSummary() {
 		return $this->getId()." — ".$this->getName()." — ".$this->getLabel().
 			" — Indexed : ".($this->isIndexed()?'true':'false').PHP_EOL;
 	}

@@ -8,6 +8,7 @@ use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Handlers\NodeTypeHandler;
+use RZ\Renzo\Core\Serializers\NodeTypeSerializer;
 use Themes\Rozier\RozierApp;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
@@ -18,7 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-use Symfony\Component\Form\Forms;
+use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -37,7 +38,7 @@ class NodeTypesUtilsController extends 	RozierApp {
 			->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
 
 		$response =  new Response(
-			$node_type->getHandler()->serializeToJson(),
+			$node_type->getSerializer()->serializeToJson(),
 			Response::HTTP_OK,
 			array()
 		);
@@ -51,13 +52,6 @@ class NodeTypesUtilsController extends 	RozierApp {
 		return $response;		
 	}
 
-
-	// si existe pas -> import le node type + persist
-	// else update sans persister 
-	// PUIS flush
-    // appel de fonction de deserialization
-    // puis redirection vers node-types/list.html.twig
-
 	/**
 	 * Import a Json file (.rzt) containing NodeType datas and fields.
 	 * @param  Symfony\Component\HttpFoundation\Request $request 
@@ -70,8 +64,6 @@ class NodeTypesUtilsController extends 	RozierApp {
 
         if ($form->isValid() && 
         	!empty($form->getData()['attachment'])) {
-		    //$this->file->move($this->getUploadRootDir(), $this->file->getClientOriginalName());
-		    //$this->path = $this->file->getClientOriginalName();
         	
 			$serializedData = file_get_contents($form->getData()['attachment']['tmp_name']);
 
@@ -89,11 +81,8 @@ class NodeTypesUtilsController extends 	RozierApp {
 				$response->prepare($request);
 				return $response->send();
 			}
-			else{
-				$nodeType = NodeTypeHandler::deserializeFromJson($serializedData);
-
-				
-
+			else {
+				$nodeType = NodeTypeSerializer::deserializeFromJson($serializedData);
 				$existingNT = Kernel::getInstance()->em()
 										->getRepository('RZ\Renzo\Core\Entities\NodeType')
 										->findOneBy(array('name'=>$nodeType->getName()));
@@ -103,7 +92,7 @@ class NodeTypesUtilsController extends 	RozierApp {
 				} 
 				else {
 					// Already exists, must update
-					$existingNT->getHandler()->updateFromJson($nodeType);
+					$existingNT->getSerializer()->updateFromJson($nodeType);
 				}
 
 				Kernel::getInstance()->em()->flush();
@@ -136,12 +125,12 @@ class NodeTypesUtilsController extends 	RozierApp {
 
 
 	/**
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildImportJsonFileForm() {
 	    $builder = $this->getFormFactory()
 			->createBuilder('form')
-	        ->add('attachment', 'file')
+	        ->add('Attachment', 'file')
 		;
 
 		return $builder->getForm();

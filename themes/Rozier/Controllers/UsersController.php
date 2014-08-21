@@ -27,7 +27,7 @@ use RZ\Renzo\Core\Exceptions\FacebookUsernameNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
+use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -614,7 +614,7 @@ class UsersController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\User  $user 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildAddForm(User $user) {
 		$defaults = array(
@@ -659,7 +659,7 @@ class UsersController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\User  $user 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditRolesForm(User $user) {
 		$defaults = array(
@@ -681,7 +681,7 @@ class UsersController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\User  $user 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditForm(User $user) {
 		$defaults = array(
@@ -724,7 +724,7 @@ class UsersController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\User  $user 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildDeleteForm(User $user) {
 		$builder = $this->getFormFactory()
@@ -743,7 +743,7 @@ class UsersController extends RozierApp {
 	/**
 	 * @param RZ\Renzo\Core\Entities\User  $user
 	 * @param RZ\Renzo\Core\Entities\Role  $role
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildRemoveRoleForm(User $user, Role $role) {
 		$builder = $this->getFormFactory()
@@ -767,7 +767,7 @@ class UsersController extends RozierApp {
 
 	/**
 	 * @param RZ\Renzo\Core\Entities\User  $user
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditGroupsForm(User $user) {
 		$defaults = array(
@@ -790,7 +790,7 @@ class UsersController extends RozierApp {
 	/**
 	 * @param RZ\Renzo\Core\Entities\User  $user
 	 * @param RZ\Renzo\Core\Entities\Group  $group
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildRemoveGroupForm(User $user, Group $group) {
 		$builder = $this->getFormFactory()

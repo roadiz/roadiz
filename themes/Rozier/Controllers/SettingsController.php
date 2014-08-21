@@ -23,7 +23,7 @@ use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
+use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -33,8 +33,6 @@ use Symfony\Component\Validator\Constraints\Type;
 */
 class SettingsController extends RozierApp {
 	
-	const ITEM_PER_PAGE = 5;
-
 	/**
 	 * List every settings.
 	 * @param  Symfony\Component\HttpFoundation\Request  $request
@@ -48,7 +46,9 @@ class SettingsController extends RozierApp {
 		$listManager = new EntityListManager( 
 			$request, 
 			Kernel::getInstance()->em(), 
-			'RZ\Renzo\Core\Entities\Setting'
+			'RZ\Renzo\Core\Entities\Setting',
+			array(),
+			array('name'=>'ASC')
 		);
 		$listManager->handle();
 
@@ -324,7 +324,7 @@ class SettingsController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditForm(Setting $setting) {
 		$defaults = array(
@@ -358,7 +358,7 @@ class SettingsController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildAddForm(Setting $setting) {
 		$defaults = array(
@@ -387,7 +387,7 @@ class SettingsController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildShortEditForm(Setting $setting) {
 		$defaults = array(
@@ -408,7 +408,7 @@ class SettingsController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Setting  $setting 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildDeleteForm(Setting $setting) {
 		$builder = $this->getFormFactory()

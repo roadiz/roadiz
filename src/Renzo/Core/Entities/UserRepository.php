@@ -10,6 +10,11 @@ use RZ\Renzo\Core\Kernel;
 
 class UserRepository extends EntityRepository
 {
+	/**
+	 * 
+	 * @param  string $username 
+	 * @return array
+	 */
 	public function usernameExists($username)
 	{
 		$query = $this->_em->createQuery('
@@ -24,6 +29,11 @@ class UserRepository extends EntityRepository
 		}
 	}
 
+	/**
+	 * 
+	 * @param  string $email 
+	 * @return array
+	 */
 	public function emailExists($email)
 	{
 		$query = $this->_em->createQuery('

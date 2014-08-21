@@ -32,7 +32,7 @@ use RZ\Renzo\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
+use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -52,7 +52,7 @@ class NodesController extends RozierApp {
 		 * Security
 		 */
 		// show different content to admin users
-	    /*if (false === static::getSecurityContext()->isGranted('ROLE_LIST_NODES')) {
+	    /*if (false === static::getSecurityContext()->isGranted('ROLE_NODES_EDITOR')) {
 	        throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
 	    }*/
 
@@ -836,7 +836,7 @@ class NodesController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Node  $parentNode 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildAddChildForm(Node $parentNode) {
 		$defaults = array(
@@ -863,7 +863,7 @@ class NodesController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Node  $node 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditForm(Node $node) {
 		$fields = $node->getNodeType()->getFields();
@@ -896,7 +896,7 @@ class NodesController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Node  $node 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditTagsForm(Node $node) {
 		$defaults = array(
@@ -918,7 +918,7 @@ class NodesController extends RozierApp {
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Node  $node
 	 * @param  RZ\Renzo\Core\Entities\NodesSources  $source
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildEditSourceForm(Node $node, $source) {
 		$fields = $node->getNodeType()->getFields();
@@ -998,7 +998,7 @@ class NodesController extends RozierApp {
 
 	/**
 	 * @param  RZ\Renzo\Core\Entities\Node  $node 
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildDeleteForm(Node $node) {
 		$builder = $this->getFormFactory()
@@ -1017,7 +1017,7 @@ class NodesController extends RozierApp {
 	/**
 	 * @param RZ\Renzo\Core\Entities\Node  $node
 	 * @param RZ\Renzo\Core\Entities\Tag  $tag
-	 * @return Symfony\Component\Form\Forms
+	 * @return \Symfony\Component\Form\Form
 	 */
 	private function buildRemoveTagForm(Node $node, Tag $tag) {
 		$builder = $this->getFormFactory()
