@@ -1,14 +1,12 @@
-<?php 
+<?php
 /**
  * Copyright REZO ZERO 2014
- * 
- * 
- * 
  *
  * @file BackendController.php
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
+
 namespace Themes\Rozier;
 
 use RZ\Renzo\CMS\Controllers\BackendController;
@@ -31,55 +29,63 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * 
+ * Rozier main theme application
  */
-class RozierApp extends BackendController {
-	
-	protected static $themeName =      'Rozier administration theme';
-	protected static $themeAuthor =    'Ambroise Maupate, Julien Blanchet';
-	protected static $themeCopyright = 'REZO ZERO';
-	protected static $themeDir =       'Rozier';
+class RozierApp extends BackendController
+{
 
-	protected $formFactory = null;
+    protected static $themeName =      'Rozier administration theme';
+    protected static $themeAuthor =    'Ambroise Maupate, Julien Blanchet';
+    protected static $themeCopyright = 'REZO ZERO';
+    protected static $themeDir =       'Rozier';
 
+    protected $formFactory = null;
 
-	public function prepareBaseAssignation()
-	{
-		parent::prepareBaseAssignation();
+    /**
+     * @return array $assignation
+     */
+    public function prepareBaseAssignation()
+    {
+        parent::prepareBaseAssignation();
 
-		// Node tree
-		$nodeTreeWidget = new NodeTreeWidget(Kernel::getInstance()->getRequest(), $this);
-		$this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' back-office';
-		$this->assignation['nodeTree'] = new NodeTreeWidget(Kernel::getInstance()->getRequest(), $this);
-		$this->assignation['tagTree'] = new TagTreeWidget(Kernel::getInstance()->getRequest(), $this);
+        // Node tree
+        $nodeTreeWidget = new NodeTreeWidget(Kernel::getInstance()->getRequest(), $this);
+        $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' back-office';
+        $this->assignation['nodeTree'] = new NodeTreeWidget(Kernel::getInstance()->getRequest(), $this);
+        $this->assignation['tagTree'] = new TagTreeWidget(Kernel::getInstance()->getRequest(), $this);
 
-		return $this;
-	}
-	/**
-	 * 
-	 */
-	protected function getFormFactory()
-	{
-		if ($this->formFactory === null) {
+        return $this;
+    }
 
-			$validator = Validation::createValidator();
+    /**
+     * @return Symfony\Component\Form\Forms
+     */
+    protected function getFormFactory()
+    {
+        if (null === $this->formFactory) {
 
-			$this->formFactory = Forms::createFormFactoryBuilder()
-			    ->addExtension(new CsrfExtension(static::$csrfProvider))
-			    ->addExtension(new ValidatorExtension($validator))
-			    ->getFormFactory();
-		}
+            $validator = Validation::createValidator();
 
-		return $this->formFactory;
-	}
+            $this->formFactory = Forms::createFormFactoryBuilder()
+                ->addExtension(new CsrfExtension(static::$csrfProvider))
+                ->addExtension(new ValidatorExtension($validator))
+                ->getFormFactory();
+        }
 
+        return $this->formFactory;
+    }
 
-	public function indexAction( Request $request )
-	{
-		return new Response(
-			$this->getTwig()->render('index.html.twig', $this->assignation),
-			Response::HTTP_OK,
-			array('content-type' => 'text/html')
-		);
-	}
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response $response
+     */
+    public function indexAction(Request $request)
+    {
+        return new Response(
+            $this->getTwig()->render('index.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
 }

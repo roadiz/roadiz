@@ -1,4 +1,14 @@
-<?php 
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ * Description
+ *
+ * @file SchemaController.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
+
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -8,7 +18,6 @@ use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\CMS\Controllers\FrontendController;
 use Themes\Rozier\RozierApp;
-
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 
@@ -23,82 +32,85 @@ use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Redirection controller use to update database schema.
- * 
  */
-class SchemaController extends RozierApp {
+class SchemaController extends RozierApp
+{
+    /**
+     * No preparation for this blind controller.
+     *
+     * @return $this
+     */
+    public function prepareBaseAssignation()
+    {
+        return $this;
+    }
 
-	/**
-	 * No preparation for this blind controller.
-	 * @return $this
-	 */
-	public function prepareBaseAssignation() {
-		return $this;
-	}
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param string                                   $_token
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function updateNodeTypesSchemaAction(Request $request, $_token)
+    {
+        if (static::$csrfProvider->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
 
-	/**
-	 * @param  Symfony\Component\HttpFoundation\Request  $request
-	 * @param  string  $_token
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function updateNodeTypesSchemaAction(Request $request, $_token) {	
-		if (static::$csrfProvider->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
+            \RZ\Renzo\Console\SchemaCommand::updateSchema();
 
-			\RZ\Renzo\Console\SchemaCommand::updateSchema();
+            $msg = $this->getTranslator()->trans('database.schema.updated');
+            $request->getSession()->getFlashBag()->add('confirm', $msg);
+            $this->getLogger()->info($msg);
+        } else {
+            $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
+            $request->getSession()->getFlashBag()->add('error', $msg);
+            $this->getLogger()->error($msg);
+        }
+        /*
+         * Redirect to update schema page
+         */
+        $response = new RedirectResponse(
+            Kernel::getInstance()->getUrlGenerator()->generate(
+                'nodeTypesHomePage'
+            )
+        );
+        $response->prepare($request);
 
-			$msg = $this->getTranslator()->trans('database.schema.updated');
-			$request->getSession()->getFlashBag()->add('confirm', $msg);
-			$this->getLogger()->info($msg);
-		}
-		else {
-			$msg = $this->getTranslator()->trans('database.schema.cannot_updated');
-			$request->getSession()->getFlashBag()->add('error', $msg);
-			$this->getLogger()->error($msg);
-		}
-		/*
- 		 * Redirect to update schema page
- 		 */
- 		$response = new RedirectResponse(
-			Kernel::getInstance()->getUrlGenerator()->generate(
-				'nodeTypesHomePage'
-			)
-		);
-		$response->prepare($request);
+        return $response->send();
+    }
 
-		return $response->send();
-	}
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param string                                   $_token
+     * @param int                                      $nodeTypeId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $nodeTypeId)
+    {
+        if (static::$csrfProvider->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
+            \RZ\Renzo\Console\SchemaCommand::updateSchema();
 
-	/**
-	 * @param  Symfony\Component\HttpFoundation\Request  $request
-	 * @param  string  $_token
-	 * @param  int  $node_type_id
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $node_type_id) {	
-		if (static::$csrfProvider->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
-			\RZ\Renzo\Console\SchemaCommand::updateSchema();
+            $msg = $this->getTranslator()->trans('database.schema.updated');
+            $request->getSession()->getFlashBag()->add('confirm', $msg);
+            $this->getLogger()->info($msg);
+        } else {
+            $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
+            $request->getSession()->getFlashBag()->add('error', $msg);
+            $this->getLogger()->error($msg);
+        }
+        /*
+         * Redirect to update schema page
+         */
+        $response = new RedirectResponse(
+            Kernel::getInstance()->getUrlGenerator()->generate(
+                'nodeTypeFieldsListPage',
+                array(
+                    'nodeTypeId' => $nodeTypeId
+                )
+            )
+        );
+        $response->prepare($request);
 
-			$msg = $this->getTranslator()->trans('database.schema.updated');
-			$request->getSession()->getFlashBag()->add('confirm', $msg);
-			$this->getLogger()->info($msg);
-		}
-		else {
-			$msg = $this->getTranslator()->trans('database.schema.cannot_updated');
-			$request->getSession()->getFlashBag()->add('error', $msg);
-			$this->getLogger()->error($msg);
-		}
-		/*
- 		 * Redirect to update schema page
- 		 */
- 		$response = new RedirectResponse(
-			Kernel::getInstance()->getUrlGenerator()->generate(
-				'nodeTypeFieldsListPage', 
-				array(
-					'node_type_id' => $node_type_id
-				)
-			)
-		);
-		$response->prepare($request);
-
-		return $response->send();
-	}
+        return $response->send();
+    }
 }

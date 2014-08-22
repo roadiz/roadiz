@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Themes\Rozier\Controllers;
 
@@ -19,316 +19,316 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class DocumentsController extends RozierApp {
 
-	const ITEM_PER_PAGE = 5;
-	
-	/**
-	 * @param  Symfony\Component\HttpFoundation\Request  $request
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function indexAction(Request $request) {
+    const ITEM_PER_PAGE = 5;
 
-		/*
-		 * Manage get request to filter list
-		 */
-		$listManager = new EntityListManager( 
-			$request, 
-			Kernel::getInstance()->em(), 
-			'RZ\Renzo\Core\Entities\Document'
-		);
+    /**
+     * @param  Symfony\Component\HttpFoundation\Request  $request
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction(Request $request) {
 
-		$listManager->handle();
+        /*
+         * Manage get request to filter list
+         */
+        $listManager = new EntityListManager(
+            $request,
+            Kernel::getInstance()->em(),
+            'RZ\Renzo\Core\Entities\Document'
+        );
 
-		$this->assignation['filters'] = $listManager->getAssignation();
-		$this->assignation['documents'] = $listManager->getEntities(); 
+        $listManager->handle();
 
-		$this->assignation['thumbnailFormat'] = array(
-			'width' => 100,
-			'quality' => 50,
-			'crop' => '3x2'
-		);
+        $this->assignation['filters'] = $listManager->getAssignation();
+        $this->assignation['documents'] = $listManager->getEntities();
 
-		return new Response(
-			$this->getTwig()->render('documents/list.html.twig', $this->assignation),
-			Response::HTTP_OK,
-			array('content-type' => 'text/html')
-		);
-	}
- 
- 	/**
- 	 * @param  Symfony\Component\HttpFoundation\Request  $request
- 	 * @param  int  $document_id
- 	 * @return Symfony\Component\HttpFoundation\Response
- 	 */
-	public function editAction(Request $request, $document_id) {
-		$document = Kernel::getInstance()->em()
-			->find('RZ\Renzo\Core\Entities\Document', (int)$document_id);
+        $this->assignation['thumbnailFormat'] = array(
+            'width' => 100,
+            'quality' => 50,
+            'crop' => '3x2'
+        );
 
-		if ($document !== null) {
-			
-			$this->assignation['document'] = $document;
-			$this->assignation['thumbnailFormat'] = array(
-				'width' => 500,
-				'quality' => 70
-			);
+        return new Response(
+            $this->getTwig()->render('documents/list.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
 
-			/*
-			 * Handle main form
-			 */
-			$form = $this->buildEditForm( $document );
-			$form->handleRequest();
+    /**
+     * @param  Symfony\Component\HttpFoundation\Request  $request
+     * @param  int  $document_id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction(Request $request, $document_id) {
+        $document = Kernel::getInstance()->em()
+            ->find('RZ\Renzo\Core\Entities\Document', (int)$document_id);
 
-			if ($form->isValid()) {
+        if ($document !== null) {
 
-				$this->editDocument( $form->getData(), $document );
-				$msg = $this->getTranslator()->trans('document.updated', array(
-		 			'%name%'=>$document->getFilename()
-		 		));
-				$request->getSession()->getFlashBag()->add('confirm', $msg);
-	 			$this->getLogger()->info($msg);
-				/*
-		 		 * Force redirect to avoid resending form when refreshing page
-		 		 */
-		 		$response = new RedirectResponse(
-					Kernel::getInstance()->getUrlGenerator()->generate(
-						'documentsEditPage',
-						array('document_id' => $document->getId())
-					)
-				);
-				$response->prepare($request);
+            $this->assignation['document'] = $document;
+            $this->assignation['thumbnailFormat'] = array(
+                'width' => 500,
+                'quality' => 70
+            );
 
-				return $response->send();
-			}
+            /*
+             * Handle main form
+             */
+            $form = $this->buildEditForm( $document );
+            $form->handleRequest();
 
-			$this->assignation['form'] = $form->createView();
+            if ($form->isValid()) {
 
-			return new Response(
-				$this->getTwig()->render('documents/edit.html.twig', $this->assignation),
-				Response::HTTP_OK,
-				array('content-type' => 'text/html')
-			);
-		}
-		else {
-			return $this->throw404();
-		}
-	}
+                $this->editDocument( $form->getData(), $document );
+                $msg = $this->getTranslator()->trans('document.updated', array(
+                    '%name%'=>$document->getFilename()
+                ));
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                $this->getLogger()->info($msg);
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                $response = new RedirectResponse(
+                    Kernel::getInstance()->getUrlGenerator()->generate(
+                        'documentsEditPage',
+                        array('document_id' => $document->getId())
+                    )
+                );
+                $response->prepare($request);
 
-	/**
-	 * Return an deletion form for requested document.
-	 * @param  Symfony\Component\HttpFoundation\Request  $request
-	 * @param  int  $document_id
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function deleteAction(Request $request, $document_id) {
-		$document = Kernel::getInstance()->em()
-			->find('RZ\Renzo\Core\Entities\Document', (int)$document_id);
+                return $response->send();
+            }
 
-		if ($document !== null) {
-			$this->assignation['document'] = $document;
-			
-			$form = $this->buildDeleteForm( $document );
-			$form->handleRequest();
+            $this->assignation['form'] = $form->createView();
 
-			if ($form->isValid() && 
-				$form->getData()['document_id'] == $document->getId() ) {
+            return new Response(
+                $this->getTwig()->render('documents/edit.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        }
+        else {
+            return $this->throw404();
+        }
+    }
 
-				try{
-					$document->getHandler()->removeWithAssets();
-					$msg = $this->getTranslator()->trans('document.deleted', array('%name%'=>$document->getFilename()));
-					$request->getSession()->getFlashBag()->add('confirm', $msg);
-		 			$this->getLogger()->info($msg);
-				}
-				catch(\Exception $e){
-					$msg = $this->getTranslator()->trans('document.cannot_delete', array('%name%'=>$document->getFilename()));
-					$request->getSession()->getFlashBag()->add('error', $msg);
-		 			$this->getLogger()->warning($msg);
-				}
-		 		/*
-		 		 * Force redirect to avoid resending form when refreshing page
-		 		 */
-		 		$response = new RedirectResponse(
-					Kernel::getInstance()->getUrlGenerator()->generate('documentsHomePage')
-				);
-				$response->prepare($request);
+    /**
+     * Return an deletion form for requested document.
+     * @param  Symfony\Component\HttpFoundation\Request  $request
+     * @param  int  $document_id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction(Request $request, $document_id) {
+        $document = Kernel::getInstance()->em()
+            ->find('RZ\Renzo\Core\Entities\Document', (int)$document_id);
 
-				return $response->send();
-			}
+        if ($document !== null) {
+            $this->assignation['document'] = $document;
 
-			$this->assignation['form'] = $form->createView();
+            $form = $this->buildDeleteForm( $document );
+            $form->handleRequest();
 
-			return new Response(
-				$this->getTwig()->render('documents/delete.html.twig', $this->assignation),
-				Response::HTTP_OK,
-				array('content-type' => 'text/html')
-			);
-		}
-		else {
-			return $this->throw404();
-		}
-	}
+            if ($form->isValid() &&
+                $form->getData()['document_id'] == $document->getId() ) {
 
-	/**
-	 * @param  Symfony\Component\HttpFoundation\Request  $request
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function uploadAction(Request $request) {
-		/*
-		 * Handle main form
-		 */
-		$form = $this->buildUploadForm();
-		$form->handleRequest();
+                try{
+                    $document->getHandler()->removeWithAssets();
+                    $msg = $this->getTranslator()->trans('document.deleted', array('%name%'=>$document->getFilename()));
+                    $request->getSession()->getFlashBag()->add('confirm', $msg);
+                    $this->getLogger()->info($msg);
+                }
+                catch(\Exception $e){
+                    $msg = $this->getTranslator()->trans('document.cannot_delete', array('%name%'=>$document->getFilename()));
+                    $request->getSession()->getFlashBag()->add('error', $msg);
+                    $this->getLogger()->warning($msg);
+                }
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                $response = new RedirectResponse(
+                    Kernel::getInstance()->getUrlGenerator()->generate('documentsHomePage')
+                );
+                $response->prepare($request);
 
-		if ($form->isValid()) {
+                return $response->send();
+            }
 
-	 		if (false !== $document = $this->uploadDocument( $form )) {
+            $this->assignation['form'] = $form->createView();
 
-	 			$msg = $this->getTranslator()->trans('document.uploaded', array(
-		 			'%name%'=>$document->getFilename()
-		 		));
-	 			$request->getSession()->getFlashBag()->add('confirm', $msg);
-	 			$this->getLogger()->info($msg);
+            return new Response(
+                $this->getTwig()->render('documents/delete.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        }
+        else {
+            return $this->throw404();
+        }
+    }
 
-	 			$response = new Response();
-	 			$response->setContent(json_encode(array(
-	 			    'success' => true,
-	 			)));
-	 			$response->headers->set('Content-Type', 'application/json');
-	 			$response->setStatusCode(200);
-	 			$response->prepare($request);
-				return $response->send();
-	 		}
-	 		else {
-	 			$msg = $this->getTranslator()->trans('document.cannot_persist');
-	 			$request->getSession()->getFlashBag()->add('error', $msg);
-	 			$this->getLogger()->error($msg);
+    /**
+     * @param  Symfony\Component\HttpFoundation\Request  $request
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function uploadAction(Request $request) {
+        /*
+         * Handle main form
+         */
+        $form = $this->buildUploadForm();
+        $form->handleRequest();
 
-	 			$response = new Response();
-	 			$response->setContent(json_encode(array(
-	 			    "error" => $this->getTranslator()->trans('document.cannot_persist')
-	 			)));
-	 			$response->headers->set('Content-Type', 'application/json');
-	 			$response->setStatusCode(400);
-	 			$response->prepare($request);
-				return $response->send();
-	 		}
-		}
-		$this->assignation['form'] = $form->createView();
-		$this->assignation['maxUploadSize'] = \Symfony\Component\HttpFoundation\File\UploadedFile::getMaxFilesize()  / 1024 / 1024;
- 
-		return new Response(
-			$this->getTwig()->render('documents/upload.html.twig', $this->assignation),
-			Response::HTTP_OK,
-			array('content-type' => 'text/html')
-		);
-	}	
+        if ($form->isValid()) {
 
-	/**
-	 * @param  RZ\Renzo\Core\Entities\Document  $doc
-	 * @return \Symfony\Component\Form\Form
-	 */
-	private function buildDeleteForm(Document $doc) {
-		$defaults = array(
-			'document_id' =>  $doc->getId()
-		);
-		$builder = $this->getFormFactory()
-					->createBuilder('form', $defaults)
-					->add('document_id', 'hidden', array(
-						'data' => $doc->getId(),
-						'constraints' => array(
-							new NotBlank()
-						)
-					));
+            if (false !== $document = $this->uploadDocument( $form )) {
 
-		return $builder->getForm();
-	}
-	/**
-	 * @param  RZ\Renzo\Core\Entities\Document  $document 
-	 * @return \Symfony\Component\Form\Form
-	 */
-	private function buildEditForm(Document $document) {
-		$defaults = array(
-			'private' => $document->isPrivate(),
-			'name' => $document->getName(),
-			'description' => $document->getDescription(),
-			'copyright' => $document->getCopyright(),
-		);
+                $msg = $this->getTranslator()->trans('document.uploaded', array(
+                    '%name%'=>$document->getFilename()
+                ));
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                $this->getLogger()->info($msg);
 
-		$builder = $this->getFormFactory()
-					->createBuilder('form', $defaults)
-					->add('name', 'text', array('required' => false))
-					->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array('required' => false))
-					->add('copyright', 'text', array('required' => false))
-					->add('private', 'checkbox', array('required' => false))
-		;
+                $response = new Response();
+                $response->setContent(json_encode(array(
+                    'success' => true,
+                )));
+                $response->headers->set('Content-Type', 'application/json');
+                $response->setStatusCode(200);
+                $response->prepare($request);
+                return $response->send();
+            }
+            else {
+                $msg = $this->getTranslator()->trans('document.cannot_persist');
+                $request->getSession()->getFlashBag()->add('error', $msg);
+                $this->getLogger()->error($msg);
 
-		return $builder->getForm();
-	}
+                $response = new Response();
+                $response->setContent(json_encode(array(
+                    "error" => $this->getTranslator()->trans('document.cannot_persist')
+                )));
+                $response->headers->set('Content-Type', 'application/json');
+                $response->setStatusCode(400);
+                $response->prepare($request);
+                return $response->send();
+            }
+        }
+        $this->assignation['form'] = $form->createView();
+        $this->assignation['maxUploadSize'] = \Symfony\Component\HttpFoundation\File\UploadedFile::getMaxFilesize()  / 1024 / 1024;
 
- 	/**
- 	 * 
- 	 * @return Symfony\Component\Form\Forms
- 	 */
-	private function buildUploadForm() {
-		$builder = $this->getFormFactory()
-					->createBuilder('form')
-					->add('attachment', 'file');
+        return new Response(
+            $this->getTwig()->render('documents/upload.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
 
-		return $builder->getForm();
-	}
+    /**
+     * @param  RZ\Renzo\Core\Entities\Document  $doc
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildDeleteForm(Document $doc) {
+        $defaults = array(
+            'document_id' =>  $doc->getId()
+        );
+        $builder = $this->getFormFactory()
+                    ->createBuilder('form', $defaults)
+                    ->add('document_id', 'hidden', array(
+                        'data' => $doc->getId(),
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ));
 
-	/**
-	 * @param  array   $data
-	 * @param  RZ\Renzo\Core\Entities\Document $document
-	 * @return void
-	 */
-	private function editDocument($data, Document $document) {
-		foreach ($data as $key => $value) {
-			$setter = 'set'.ucwords($key);
-			$document->$setter( $value );
-		}
+        return $builder->getForm();
+    }
+    /**
+     * @param  RZ\Renzo\Core\Entities\Document  $document
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildEditForm(Document $document) {
+        $defaults = array(
+            'private' => $document->isPrivate(),
+            'name' => $document->getName(),
+            'description' => $document->getDescription(),
+            'copyright' => $document->getCopyright(),
+        );
 
-		Kernel::getInstance()->em()->flush();
-	}
+        $builder = $this->getFormFactory()
+                    ->createBuilder('form', $defaults)
+                    ->add('name', 'text', array('required' => false))
+                    ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array('required' => false))
+                    ->add('copyright', 'text', array('required' => false))
+                    ->add('private', 'checkbox', array('required' => false))
+        ;
 
-	/**
-	 * Handle upload form data to create a Document.
-	 * @param  array  $data
-	 * @return void
-	 */
-	private function uploadDocument($data) {
-		if (!empty($data['attachment'])) {
+        return $builder->getForm();
+    }
 
-			$file = $data['attachment']->getData();
+    /**
+     *
+     * @return Symfony\Component\Form\Forms
+     */
+    private function buildUploadForm() {
+        $builder = $this->getFormFactory()
+                    ->createBuilder('form')
+                    ->add('attachment', 'file');
 
-			$uploadedFile = new \Symfony\Component\HttpFoundation\File\UploadedFile( 
-				$file['tmp_name'],
-				$file['name'],
-				$file['type'],
-				$file['size'],
-				$file['error']
-			);
+        return $builder->getForm();
+    }
 
-			if ($uploadedFile !== null && 
-				$uploadedFile->getError() == UPLOAD_ERR_OK && 
-				$uploadedFile->isValid()) {
+    /**
+     * @param  array   $data
+     * @param  RZ\Renzo\Core\Entities\Document $document
+     * @return void
+     */
+    private function editDocument($data, Document $document) {
+        foreach ($data as $key => $value) {
+            $setter = 'set'.ucwords($key);
+            $document->$setter( $value );
+        }
 
-				try {
+        Kernel::getInstance()->em()->flush();
+    }
 
-					$document = new Document();
-					$document->setFilename($uploadedFile->getClientOriginalName());
-					$document->setMimeType($uploadedFile->getMimeType());
+    /**
+     * Handle upload form data to create a Document.
+     * @param  array  $data
+     * @return void
+     */
+    private function uploadDocument($data) {
+        if (!empty($data['attachment'])) {
 
-					Kernel::getInstance()->em()->persist($document);
-					Kernel::getInstance()->em()->flush();
+            $file = $data['attachment']->getData();
 
-					$uploadedFile->move(Document::getFilesFolder().'/'.$document->getFolder(), $document->getFilename());
-					return $document;
-				}
-				catch(\Exception $e){
-					
-					return false;
-				}
-			}
-		}
-		return false;
-	}
+            $uploadedFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
+                $file['tmp_name'],
+                $file['name'],
+                $file['type'],
+                $file['size'],
+                $file['error']
+            );
+
+            if ($uploadedFile !== null &&
+                $uploadedFile->getError() == UPLOAD_ERR_OK &&
+                $uploadedFile->isValid()) {
+
+                try {
+
+                    $document = new Document();
+                    $document->setFilename($uploadedFile->getClientOriginalName());
+                    $document->setMimeType($uploadedFile->getMimeType());
+
+                    Kernel::getInstance()->em()->persist($document);
+                    Kernel::getInstance()->em()->flush();
+
+                    $uploadedFile->move(Document::getFilesFolder().'/'.$document->getFolder(), $document->getFilename());
+                    return $document;
+                }
+                catch(\Exception $e){
+
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
 }

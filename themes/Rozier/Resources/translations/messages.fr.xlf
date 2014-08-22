@@ -160,7 +160,7 @@
             <trans-unit id="edit.node">
                 <source>edit.node</source>
                 <target>Éditer le nœud</target>
-            </trans-unit> 
+            </trans-unit>
             <trans-unit id="add.child.node">
                 <source>add.child.node</source>
                 <target>Ajouter un nœud enfant</target>
@@ -213,7 +213,7 @@
                 <source>document.createdAt</source>
                 <target>Date de création du document</target>
             </trans-unit>
-            
+
             <!-- view / upload Documents -->
             <trans-unit id="back.to.documents">
                 <source>Back to documents</source>
@@ -223,7 +223,7 @@
                 <source>Upload a new document</source>
                 <target>Téléverser un nouveau document</target>
             </trans-unit>
-            
+
             <!-- view / edit Documents -->
             <trans-unit id="name">
                 <source>name</source>
@@ -241,7 +241,7 @@
                 <source>private</source>
                 <target>Document privé ?</target>
             </trans-unit>
-            
+
             <!-- view / delete Documents -->
             <trans-unit id="delete.document">
                 <source>Delete document:</source>
@@ -385,7 +385,7 @@
                 <source>archived</source>
                 <target>Est archivé ?</target>
             </trans-unit>
-            
+
             <!-- view / narBar Nodes -->
             <trans-unit id="node.content">
                 <source>node.content</source>
@@ -543,23 +543,23 @@
             </trans-unit>
 
             <!-- controller / NodeTypes -->
-            <trans-unit id="node_type.updated">
+            <trans-unit id="nodeType.updated">
                 <source>node_type.updated</source>
                 <target>Le type de nœud “%name%" a été mis à jour.</target>
             </trans-unit>
-            <trans-unit id="node_type.created">
+            <trans-unit id="nodeType.created">
                 <source>node_type.created</source>
                 <target>Le type de nœud “%name%" a été créé.</target>
             </trans-unit>
-            <trans-unit id="node_type.deleted">
+            <trans-unit id="nodeType.deleted">
                 <source>node_type.deleted</source>
                 <target>Le type de nœud “%name%" a été supprimé.</target>
             </trans-unit>
-             <trans-unit id="node_type.cannot_rename_already_exists">
+             <trans-unit id="nodeType.cannot_rename_already_exists">
                 <source>node_type.cannot_rename_already_exists</source>
                 <target>Le type de nœud ne peut être renommé “%name%", il existe déjà.</target>
             </trans-unit>
-            <trans-unit id="node_type.already_exists">
+            <trans-unit id="nodeType.already_exists">
                 <source>node_type.already_exists</source>
                 <target>Le type de nœud “%name%" ne peut être créé, il existe déjà.</target>
             </trans-unit>
@@ -597,7 +597,7 @@
                 <source>fields</source>
                 <target>Champs</target>
             </trans-unit>
-            
+
             <!-- controller / NodeTypeUtils -->
             <trans-unit id="file.format.not_valid">
                 <source>file.format.not_valid</source>
@@ -705,19 +705,19 @@
                 <source>back.to.tags</source>
                 <target>Retour aux étiquettes</target>
             </trans-unit>
-            
+
             <!-- view / list Tags -->
             <trans-unit id="create.a.tag">
                 <source>Create a tag</source>
                 <target>Créer une étiquette</target>
             </trans-unit>
-            
+
             <!-- view / edit Tags -->
            <trans-unit id="Edit">
                 <source>Edit</source>
                 <target>Éditer</target>
             </trans-unit>
-            
+
 
 
             <!-- controller / Themes -->

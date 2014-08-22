@@ -1,4 +1,13 @@
-<?php 
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ * Description
+ *
+ * @file Kernel.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 
 namespace RZ\Renzo\Core;
 
@@ -42,595 +51,615 @@ use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
+
 /**
-* 
-*/
-class Kernel {
+ * Kernel.
+ */
+class Kernel
+{
+    private static $instance = null;
+    private $em =           null;
+    private $backendDebug = false;
+    private $config =       null;
 
-	private static $instance = null;
+    protected $httpKernel =          null;
+    protected $request =             null;
+    protected $requestContext =      null;
+    protected $response =            null;
+    protected $httpUtils =           null;
+    protected $context =             null;
+    protected $matcher =             null;
+    protected $resolver =            null;
+    protected $dispatcher =          null;
+    protected $urlMatcher =          null;
+    protected $urlGenerator =        null;
+    protected $stopwatch =           null;
+    protected $securityContext =     null;
+    protected $backendClass =        null;
+    protected $frontendThemes =      null;
+    protected $rootCollection =      null;
 
-	private $em =           null;
-	private $backendDebug = false;
-	private $config =       null;
+    /**
+     * Kernel constructor.
+     */
+    private final function __construct()
+    {
+        $this->parseConfig()
+             ->setupEntityManager($this->getConfig());
 
-	protected $httpKernel =          null;
-	protected $request =             null;
-	protected $requestContext =      null;
-	protected $response =            null;
-	protected $httpUtils =           null;
-	protected $context =             null;
-	protected $matcher =             null;
-	protected $resolver =            null;
-	protected $dispatcher =          null;
-	protected $urlMatcher =          null;
-	protected $urlGenerator =        null;
-	protected $stopwatch =           null;
-	protected $securityContext =     null;
-	protected $backendClass =        null;
-	protected $frontendThemes =      null;
-	protected $rootCollection =      null;
+        $this->stopwatch = new Stopwatch();
+        $this->stopwatch->start('global');
+        $this->rootCollection = new RouteCollection();
 
+        $this->request = Request::createFromGlobals();
+        $this->requestContext = new Routing\RequestContext($this->getResolvedBaseUrl());
 
-	private final function __construct() {
+        $this->dispatcher = new EventDispatcher();
+        $this->resolver =   new ControllerResolver();
+    }
 
-		$this->parseConfig()
-			 ->setupEntityManager( $this->getConfig() );
+    /**
+     * @return $this
+     */
+    public function parseConfig()
+    {
+        $configFile = RENZO_ROOT.'/conf/config.json';
+        if (file_exists($configFile)) {
+            $this->setConfig(
+                json_decode(file_get_contents($configFile), true)
+            );
+        } else {
+            $this->setConfig(null);
+        }
 
-		$this->stopwatch = new Stopwatch();
-		$this->stopwatch->start('global');
-		$this->rootCollection = new RouteCollection();
+        return $this;
+    }
 
-		$this->request = Request::createFromGlobals();
-		$this->requestContext = new Routing\RequestContext($this->getResolvedBaseUrl());
+    /**
+     * Get entities search paths.
+     *
+     * @return array
+     */
+    public function getEntitiesPaths()
+    {
+        return array(
+            "src/Renzo/Core/Entities",
+            "src/Renzo/Core/AbstractEntities",
+            "sources/GeneratedNodeSources"
+        );
+    }
 
-		$this->dispatcher = new EventDispatcher();
-		$this->resolver =   new ControllerResolver();
-	}
+    /**
+     * Initialize Doctrine entity manager.
+     * @param array $config
+     *
+     * @return $this
+     */
+    public function setupEntityManager($config)
+    {
+        // the connection configuration
+        if ($config !== null) {
+            $paths = $this->getEntitiesPaths();
 
-	/**
-	 * 
-	 * @return $this
-	 */
-	public function parseConfig()
-	{
-		$configFile = RENZO_ROOT.'/conf/config.json';
-		if (file_exists($configFile)) {
+            $dbParams = $config["doctrine"];
+            $configDB = Setup::createAnnotationMetadataConfiguration($paths, $this->isDebug());
 
-			$this->setConfig(
-				json_decode(file_get_contents($configFile), true)
-			);
-		}
-		else {
-			$this->setConfig(null);
-		}
+            $configDB->setProxyDir(RENZO_ROOT . '/sources/Proxies');
+            $configDB->setProxyNamespace('Proxies');
 
-		return $this;
-	}
-	/**
-	 * get entities search paths
-	 * @return array
-	 */
-	public function getEntitiesPaths()
-	{
-		return array(
-			"src/Renzo/Core/Entities", 
-			"src/Renzo/Core/AbstractEntities", 
-			"sources/GeneratedNodeSources"
-		);
-	}
-	/**
-	 * Initialize Doctrine entity manager
-	 * @param  array $config
-	 * @return $this
-	 */
-	public function setupEntityManager( $config )
-	{
-		// the connection configuration
-		if ($config !== null) {
-			$paths = $this->getEntitiesPaths();
+            $this->setEntityManager(EntityManager::create($dbParams, $configDB));
 
-			$dbParams = $config["doctrine"];
-			$configDB = Setup::createAnnotationMetadataConfiguration($paths, $this->isDebug());
+            if ($this->em()->getConfiguration()->getResultCacheImpl() !== null) {
+                $this->em()->getConfiguration()->getResultCacheImpl()->setNamespace($config["appNamespace"]);
+            }
+            if ($this->em()->getConfiguration()->getHydrationCacheImpl() !== null) {
+                $this->em()->getConfiguration()->getHydrationCacheImpl()->setNamespace($config["appNamespace"]);
+            }
+            if ($this->em()->getConfiguration()->getQueryCacheImpl() !== null) {
+                $this->em()->getConfiguration()->getQueryCacheImpl()->setNamespace($config["appNamespace"]);
+            }
+            if ($this->em()->getConfiguration()->getMetadataCacheImpl()) {
+                $this->em()->getConfiguration()->getMetadataCacheImpl()->setNamespace($config["appNamespace"]);
+            }
+        }
 
-			$configDB->setProxyDir(RENZO_ROOT . '/sources/Proxies');
-			$configDB->setProxyNamespace('Proxies');
+        return $this;
+    }
 
-			$this->setEntityManager(EntityManager::create($dbParams, $configDB));
+    /**
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
 
-			if ($this->em()->getConfiguration()->getResultCacheImpl() !== null) {
-				$this->em()->getConfiguration()->getResultCacheImpl()->setNamespace($config["appNamespace"]);
-			}
-			if ($this->em()->getConfiguration()->getHydrationCacheImpl() !== null) {
-				$this->em()->getConfiguration()->getHydrationCacheImpl()->setNamespace($config["appNamespace"]);
-			}
-			if ($this->em()->getConfiguration()->getQueryCacheImpl() !== null) {
-				$this->em()->getConfiguration()->getQueryCacheImpl()->setNamespace($config["appNamespace"]);
-			}
-			if ($this->em()->getConfiguration()->getMetadataCacheImpl()) {
-				$this->em()->getConfiguration()->getMetadataCacheImpl()->setNamespace($config["appNamespace"]);
-			}
-		}
+    /**
+     * @param array $config
+     *
+     * @return $config
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getConfig() {
-	    return $this->config;
-	}
-	/**
-	 * @param array $newconfig
-	 */
-	public function setConfig($config) {
-	    $this->config = $config;
-	    return $this;
-	}
+    /**
+     * Get application debug status.
+     *
+     * @return boolean
+     */
+    public function isDebug()
+    {
+        $conf = $this->getConfig();
 
-	/**
-	 * Get application debug status.
-	 * @return boolean
-	 */
-	public function isDebug() {
-		$conf = $this->getConfig();
-		return (boolean)$conf['devMode'];
-	}
-	/**
-	 * Get backend application debug status
-	 * @return boolean
-	 */
-	public function isBackendDebug()
-	{
-		return $this->backendDebug;
-	}
+        return (boolean) $conf['devMode'];
+    }
 
-	/**
-	 * Return unique instance of Kernel
-	 * @return Kernel
-	 */
-	public static function getInstance(){
+    /**
+     * Get backend application debug status.
+     *
+     * @return boolean
+     */
+    public function isBackendDebug()
+    {
+        return $this->backendDebug;
+    }
 
-		if (static::$instance === null) {
-			static::$instance = new Kernel();
-		}
+    /**
+     * Return unique instance of Kernel.
+     *
+     * @return Kernel
+     */
+    public static function getInstance()
+    {
 
-		return static::$instance;
-	}
+        if (static::$instance === null) {
+            static::$instance = new Kernel();
+        }
 
-	/**
-	 * @return Symfony\Component\Stopwatch\Stopwatch
-	 */
-	public function getStopwatch() { return $this->stopwatch; }
+        return static::$instance;
+    }
 
-	/**
-	 * Set kernel Doctrine entity manager and 
-	 * prepare custom data inheritance for Node system
-	 * 
-	 * @param EntityManager $em 
-	 */
-	public function setEntityManager(EntityManager $em)
-	{
-		$this->em = $em;
+    /**
+     * @return Symfony\Component\Stopwatch\Stopwatch
+     */
+    public function getStopwatch()
+    {
+        return $this->stopwatch;
+    }
 
-		$evm = $this->em->getEventManager();
- 
+    /**
+     * Set kernel Doctrine entity manager and
+     * prepare custom data inheritance for Node system.
+     *
+     * @param EntityManager $em
+     *
+     * @return Doctrine\ORM\EntityManager
+     */
+    public function setEntityManager(EntityManager $em)
+    {
+        $this->em = $em;
+
+        $evm = $this->em->getEventManager();
+
         /*
          * Create dynamic dicriminator map for our Node system
          */
         $inheritableEntityEvent = new DataInheritanceEvent();
         $evm->addEventListener(Events::loadClassMetadata, $inheritableEntityEvent);
 
-		return $this;
-	}
-	/**
-	 * 
-	 * @return Doctrine\ORM\EntityManager
-	 */
-	public function getEntityManager()
-	{
-		return $this->em;
-	}
-	/**
-	 * Alias for Kernel::getEntityManager method
-	 * @return Doctrine\ORM\EntityManager
-	 */
-	public function em() { return $this->em; }
+        return $this;
+    }
 
-	/**
-	 * 
-	 * @return RZ\Renzo\Core\Kernel $this
-	 */
-	public function runConsole()
-	{
-		$this->backendDebug = 	(boolean)SettingsBag::get('backend_debug');
-		
-		if ($this->getConfig() === null || 
-			(isset($this->getConfig()['install']) && 
-			 $this->getConfig()['install'] == true)) {
+    /**
+     * @return Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->em;
+    }
 
-			$this->prepareSetup();
-		}
-		else {
-			$this->prepareUrlHandling();
-		}
-		
+    /**
+     * Alias for Kernel::getEntityManager method.
+     *
+     * @return Doctrine\ORM\EntityManager
+     */
+    public function em()
+    {
+        return $this->em;
+    }
 
-		$application = new Application('Renzo Console Application', '0.1');
-		$application->add(new \RZ\Renzo\Console\TranslationsCommand);
-		$application->add(new \RZ\Renzo\Console\NodeTypesCommand);
-		$application->add(new \RZ\Renzo\Console\NodesCommand);
-		$application->add(new \RZ\Renzo\Console\SchemaCommand);
-		$application->add(new \RZ\Renzo\Console\ThemesCommand);
-		$application->add(new \RZ\Renzo\Console\InstallCommand);
-		$application->add(new \RZ\Renzo\Console\UsersCommand);
-		$application->add(new \RZ\Renzo\Console\RequirementsCommand);
-		
-		
-		$application->run();
+    /**
+     * @return RZ\Renzo\Core\Kernel $this
+     */
+    public function runConsole()
+    {
+        $this->backendDebug =   (boolean) SettingsBag::get('backend_debug');
 
-		$this->stopwatch->stop('global');
-		return $this;
-	}
-	/**
-	 * 
-	 * Run main HTTP application
-	 * 
-	 * @return RZ\Renzo\Core\Kernel $this
-	 */
-	public function runApp()
-	{
-		$this->debug = 			(boolean)SettingsBag::get('debug');
-		$this->backendDebug = 	(boolean)SettingsBag::get('backend_debug');
+        if ($this->getConfig() === null ||
+            (isset($this->getConfig()['install']) &&
+             $this->getConfig()['install'] == true)) {
 
-		$this->httpKernel = new HttpKernel($this->dispatcher, $this->resolver);
-		
-		if ($this->getConfig() === null || 
-			(isset($this->getConfig()['install']) && 
-			 $this->getConfig()['install'] == true)) {
+            $this->prepareSetup();
+        } else {
+            $this->prepareUrlHandling();
+        }
 
-			$this->prepareSetup();
-		}
-		else {
-			$this->prepareRequestHandling();
-		}
+        $application = new Application('Renzo Console Application', '0.1');
+        $application->add(new \RZ\Renzo\Console\TranslationsCommand);
+        $application->add(new \RZ\Renzo\Console\NodeTypesCommand);
+        $application->add(new \RZ\Renzo\Console\NodesCommand);
+        $application->add(new \RZ\Renzo\Console\SchemaCommand);
+        $application->add(new \RZ\Renzo\Console\ThemesCommand);
+        $application->add(new \RZ\Renzo\Console\InstallCommand);
+        $application->add(new \RZ\Renzo\Console\UsersCommand);
+        $application->add(new \RZ\Renzo\Console\RequirementsCommand);
 
-		try{
-			/*
-			 * ----------------------------
-			 * Main Framework handle call
-			 * ----------------------------
-			 */
-			$this->stopwatch->start('requestHandling');
-			$this->response = $this->httpKernel->handle( $this->request );
+        $application->run();
 
-			$this->response->send();
-			
-			$this->httpKernel->terminate( $this->request, $this->response );
-			$this->stopwatch->stop('requestHandling');
-		}
-		catch(\Symfony\Component\Routing\Exception\ResourceNotFoundException $e){
-			echo $e->getMessage().PHP_EOL;
-		}
-		catch(\LogicException $e){
-			echo $e->getMessage().PHP_EOL;
-		}
-		catch(\PDOException $e){
-			echo $e->getMessage().PHP_EOL;
-		}
+        $this->stopwatch->stop('global');
 
-		return $this;
-	}
-	/**
-	 * Run first installation interface
-	 * 
-	 * @return RZ\Renzo\Core\Kernel $this
-	 */
-	public function prepareSetup()
-	{
-		$feCollection = \Themes\Install\InstallApp::getRoutes();
-		if ($feCollection !== null) {
+        return $this;
+    }
 
-			$this->rootCollection->addCollection($feCollection);
-			$this->urlMatcher =   new UrlMatcher($this->rootCollection, $this->requestContext);
-			$this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
-			$this->httpUtils =    new HttpUtils($this->urlGenerator, $this->urlMatcher);
+    /**
+     * Run main HTTP application.
+     *
+     * @return RZ\Renzo\Core\Kernel $this
+     */
+    public function runApp()
+    {
+        $this->debug =          (boolean) SettingsBag::get('debug');
+        $this->backendDebug =   (boolean) SettingsBag::get('backend_debug');
 
-			$this->dispatcher->addSubscriber(new RouterListener($this->urlMatcher));
-		}
+        $this->httpKernel = new HttpKernel($this->dispatcher, $this->resolver);
 
-		return $this;
-	}
+        if ($this->getConfig() === null ||
+            (isset($this->getConfig()['install']) &&
+             $this->getConfig()['install'] == true)) {
 
-	private function prepareRouteCollection()
-	{
-		/*
-		 * Add Assets controller routes
-		 */
-		$this->rootCollection->addCollection(\RZ\Renzo\CMS\Controllers\AssetsController::getRoutes());
+            $this->prepareSetup();
+        } else {
+            $this->prepareRequestHandling();
+        }
 
-		/*
-		 * Add Backend routes
-		 */
-		$beClass = $this->backendClass;
-		$cmsCollection = $beClass::getRoutes();
-		if ($cmsCollection !== null) {
-			
-			$this->rootCollection->addCollection($cmsCollection, '/rz-admin', array('_scheme' => 'https'));
-		}
+        try {
+            /*
+             * ----------------------------
+             * Main Framework handle call
+             * ----------------------------
+             */
+            $this->stopwatch->start('requestHandling');
+            $this->response = $this->httpKernel->handle($this->request);
 
-		/*
-		 * Add Frontend routes
-		 *
-		 * return 'RZ\Renzo\CMS\Controllers\FrontendController';
-		 */
-		foreach ($this->frontendThemes as $theme) {
-			$feClass = $theme->getClassName();
-			$feCollection = $feClass::getRoutes();
-			if ($feCollection !== null) {
+            $this->response->send();
 
-				// set host pattern if defined
-				if ($theme->getHostname() != '*' && 
-					$theme->getHostname() != '') {
+            $this->httpKernel->terminate($this->request, $this->response);
+            $this->stopwatch->stop('requestHandling');
+        } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
+            echo $e->getMessage().PHP_EOL;
+        } catch (\LogicException $e) {
+            echo $e->getMessage().PHP_EOL;
+        } catch (\PDOException $e) {
+            echo $e->getMessage().PHP_EOL;
+        }
 
-					$feCollection->setHost($theme->getHostname());
-				}
-				$this->rootCollection->addCollection($feCollection);
-			}
-		}
+        return $this;
+    }
 
-		if (!file_exists(RENZO_ROOT.'/sources/Compiled')) {
-			mkdir(RENZO_ROOT.'/sources/Compiled', 0755, true);
-		}
+    /**
+     * Run first installation interface.
+     *
+     * @return RZ\Renzo\Core\Kernel $this
+     */
+    public function prepareSetup()
+    {
+        $feCollection = \Themes\Install\InstallApp::getRoutes();
+        if ($feCollection !== null) {
 
-		/*
-		 * Generate custom UrlMatcher
-		 */
-		$dumper = new PhpMatcherDumper($this->rootCollection);
-		$class = $dumper->dump(array(
-			'class' => 'GlobalUrlMatcher'
-		));
-		file_put_contents(RENZO_ROOT.'/sources/Compiled/GlobalUrlMatcher.php', $class);
-		
-		/*
-		 * Generate custom UrlGenerator
-		 */
-		$dumper = new PhpGeneratorDumper($this->rootCollection);
-		$class = $dumper->dump(array(
-			'class' => 'GlobalUrlGenerator'
-		));
-		file_put_contents(RENZO_ROOT.'/sources/Compiled/GlobalUrlGenerator.php', $class);
+            $this->rootCollection->addCollection($feCollection);
+            $this->urlMatcher =   new UrlMatcher($this->rootCollection, $this->requestContext);
+            $this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
+            $this->httpUtils =    new HttpUtils($this->urlGenerator, $this->urlMatcher);
 
+            $this->dispatcher->addSubscriber(new RouterListener($this->urlMatcher));
+        }
 
-		return $this;
-	}
+        return $this;
+    }
+
+    private function prepareRouteCollection()
+    {
+        /*
+         * Add Assets controller routes
+         */
+        $this->rootCollection->addCollection(\RZ\Renzo\CMS\Controllers\AssetsController::getRoutes());
+
+        /*
+         * Add Backend routes
+         */
+        $beClass = $this->backendClass;
+        $cmsCollection = $beClass::getRoutes();
+        if ($cmsCollection !== null) {
+            $this->rootCollection->addCollection($cmsCollection, '/rz-admin', array('_scheme' => 'https'));
+        }
+
+        /*
+         * Add Frontend routes
+         *
+         * return 'RZ\Renzo\CMS\Controllers\FrontendController';
+         */
+        foreach ($this->frontendThemes as $theme) {
+            $feClass = $theme->getClassName();
+            $feCollection = $feClass::getRoutes();
+            if ($feCollection !== null) {
+
+                // set host pattern if defined
+                if ($theme->getHostname() != '*' &&
+                    $theme->getHostname() != '') {
+
+                    $feCollection->setHost($theme->getHostname());
+                }
+                $this->rootCollection->addCollection($feCollection);
+            }
+        }
+
+        if (!file_exists(RENZO_ROOT.'/sources/Compiled')) {
+            mkdir(RENZO_ROOT.'/sources/Compiled', 0755, true);
+        }
+
+        /*
+         * Generate custom UrlMatcher
+         */
+        $dumper = new PhpMatcherDumper($this->rootCollection);
+        $class = $dumper->dump(array(
+            'class' => 'GlobalUrlMatcher'
+        ));
+        file_put_contents(RENZO_ROOT.'/sources/Compiled/GlobalUrlMatcher.php', $class);
+
+        /*
+         * Generate custom UrlGenerator
+         */
+        $dumper = new PhpGeneratorDumper($this->rootCollection);
+        $class = $dumper->dump(array(
+            'class' => 'GlobalUrlGenerator'
+        ));
+        file_put_contents(RENZO_ROOT.'/sources/Compiled/GlobalUrlGenerator.php', $class);
+
+        return $this;
+    }
 
 
-	/**
-	 * Prepare URL generation tools
-	 * @return this
-	 */
-	private function prepareUrlHandling()
-	{
-		$this->backendClass = $this->getBackendClass();
-		$this->frontendThemes = $this->getFrontendThemes();
+    /**
+     * Prepare URL generation tools.
+     *
+     * @return this
+     */
+    private function prepareUrlHandling()
+    {
+        $this->backendClass = $this->getBackendClass();
+        $this->frontendThemes = $this->getFrontendThemes();
 
-		if ($this->isDebug() || 
-			!file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlMatcher.php') || 
-			!file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlGenerator.php')) {
+        if ($this->isDebug() ||
+            !file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlMatcher.php') ||
+            !file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlGenerator.php')) {
 
-			$this->prepareRouteCollection();
-		}
-		$this->urlMatcher =   new MixedUrlMatcher($this->requestContext);
-		$this->urlGenerator = new \GlobalUrlGenerator($this->requestContext);
-		$this->httpUtils =    new HttpUtils($this->urlGenerator, $this->urlMatcher);
+            $this->prepareRouteCollection();
+        }
+        $this->urlMatcher =   new MixedUrlMatcher($this->requestContext);
+        $this->urlGenerator = new \GlobalUrlGenerator($this->requestContext);
+        $this->httpUtils =    new HttpUtils($this->urlGenerator, $this->urlMatcher);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	private function prepareTranslation()
-	{
+    /**
+     * Prepare Translation generation tools.
+     */
+    private function prepareTranslation()
+    {
         /*
          * set default locale
          */
         $translation = Kernel::getInstance()->em()
-        	->getRepository('RZ\Renzo\Core\Entities\Translation')
-        	->findDefault();
+            ->getRepository('RZ\Renzo\Core\Entities\Translation')
+            ->findDefault();
 
         if ($translation !== null) {
-        	$shortLocale = $translation->getShortLocale();
-        	Kernel::getInstance()->getRequest()->setLocale($shortLocale);
-        	\Locale::setDefault($shortLocale);
+            $shortLocale = $translation->getShortLocale();
+            Kernel::getInstance()->getRequest()->setLocale($shortLocale);
+            \Locale::setDefault($shortLocale);
         }
-	}
+    }
 
-	/**
-	 * 
-	 * Prepare backend and frontend routes and logic
-	 * @return boolean
-	 */
-	private function prepareRequestHandling()
-	{	
-		$this->stopwatch->start('prepareTranslation');
-		$this->prepareTranslation();
-		$this->stopwatch->stop('prepareTranslation');
+    /**
+     * Prepare backend and frontend routes and logic.
+     *
+     * @return boolean
+     */
+    private function prepareRequestHandling()
+    {
+        $this->stopwatch->start('prepareTranslation');
+        $this->prepareTranslation();
+        $this->stopwatch->stop('prepareTranslation');
 
-		$this->stopwatch->start('prepareRouting');
-		$this->prepareUrlHandling();
-		$this->stopwatch->stop('prepareRouting');
+        $this->stopwatch->start('prepareRouting');
+        $this->prepareUrlHandling();
+        $this->stopwatch->stop('prepareRouting');
 
-		$this->dispatcher->addSubscriber(new RouterListener($this->urlMatcher));
+        $this->dispatcher->addSubscriber(new RouterListener($this->urlMatcher));
 
-		/*
-		 * Security
-		 */
-		$this->stopwatch->start('firewall');
-		
-		$map = new FirewallMap();
-		// Register back-end security scheme
-		$beClass = $this->backendClass;
-		$beClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils, $this->dispatcher );
+        /*
+         * Security
+         */
+        $this->stopwatch->start('firewall');
 
-		// Register front-end security scheme
-		foreach ($this->frontendThemes as $theme) {
-			$feClass = $theme->getClassName();
-			$feClass::appendToFirewallMap( $map, $this->httpKernel, $this->httpUtils, $this->dispatcher );
-		}
+        $map = new FirewallMap();
+        // Register back-end security scheme
+        $beClass = $this->backendClass;
+        $beClass::appendToFirewallMap($map, $this->httpKernel, $this->httpUtils, $this->dispatcher);
 
-		$firewall = new Firewall($map, $this->dispatcher);
-		$this->dispatcher->addListener(
-		    KernelEvents::REQUEST,
-		    array($firewall, 'onKernelRequest')
-		);
+        // Register front-end security scheme
+        foreach ($this->frontendThemes as $theme) {
+            $feClass = $theme->getClassName();
+            $feClass::appendToFirewallMap($map, $this->httpKernel, $this->httpUtils, $this->dispatcher);
+        }
 
-		/*
-		 * Register after controller matched listener
-		 */
-		$this->dispatcher->addListener(
-		    KernelEvents::CONTROLLER,
-		    array($this, 'onControllerMatched')
-		);
+        $firewall = new Firewall($map, $this->dispatcher);
+        $this->dispatcher->addListener(
+            KernelEvents::REQUEST,
+            array($firewall, 'onKernelRequest')
+        );
 
-		$this->stopwatch->stop('firewall');
+        /*
+         * Register after controller matched listener
+         */
+        $this->dispatcher->addListener(
+            KernelEvents::CONTROLLER,
+            array($this, 'onControllerMatched')
+        );
 
-		/*
-		 * If debug, alter HTML responses to append Debug panel to view
-		 */
-		if ((boolean)SettingsBag::get('display_debug_panel')) {
-			$this->dispatcher->addSubscriber(new \RZ\Renzo\Core\Utils\DebugPanel());
-		}
-	}
+        $this->stopwatch->stop('firewall');
 
-	/**
-	 * After a controller has been matched
-	 * @param  SymfonyComponentHttpKernelEventFilterControllerEvent $event 
-	 * @return void
-	 */
-	public function onControllerMatched(\Symfony\Component\HttpKernel\Event\FilterControllerEvent $event)
-	{
-		$this->stopwatch->stop('matchingRoute');
-	}
+        /*
+         * If debug, alter HTML responses to append Debug panel to view
+         */
+        if ((boolean) SettingsBag::get('display_debug_panel')) {
+            $this->dispatcher->addSubscriber(new \RZ\Renzo\Core\Utils\DebugPanel());
+        }
+    }
 
-	/**
-	 * Get frontend app themes
-	 * 
-	 * 
-	 * @return ArrayCollection of RZ\Renzo\Core\Entities\Theme
-	 */
-	private function getFrontendThemes()
-	{
-		$themes = $this->em()
-			->getRepository('RZ\Renzo\Core\Entities\Theme')
-			->findBy(array('available'=>true, 'backendTheme'=>false));
+    /**
+     * After a controller has been matched.
+     * @param SymfonyComponentHttpKernelEventFilterControllerEvent $event
+     *
+     * @return void
+     */
+    public function onControllerMatched(\Symfony\Component\HttpKernel\Event\FilterControllerEvent $event)
+    {
+        $this->stopwatch->stop('matchingRoute');
+    }
 
-		if (count($themes) < 1) {
+    /**
+     * Get frontend app themes.
+     *
+     * @return ArrayCollection of RZ\Renzo\Core\Entities\Theme
+     */
+    private function getFrontendThemes()
+    {
+        $themes = $this->em()
+            ->getRepository('RZ\Renzo\Core\Entities\Theme')
+            ->findBy(array('available'=>true, 'backendTheme'=>false));
 
-			$defaultTheme = new Theme();
-			$defaultTheme->setClassName('RZ\Renzo\CMS\Controllers\FrontendController');
-			$defaultTheme->setAvailable(true);
+        if (count($themes) < 1) {
 
-			return array(
-				$defaultTheme
-			);
-		}
-		else{
-			return $themes; 
-		}
-	}
-	/**
-	 * Get backend app controller full-qualified classname
-	 * 
-	 * Return 'RZ\Renzo\CMS\Controllers\BackendController' if none found in database
-	 * 
-	 * @return string
-	 */
-	private function getBackendClass()
-	{
-		$theme = $this->em()
-			->getRepository('RZ\Renzo\Core\Entities\Theme')
-			->findOneBy(array('available'=>true, 'backendTheme'=>true));
+            $defaultTheme = new Theme();
+            $defaultTheme->setClassName('RZ\Renzo\CMS\Controllers\FrontendController');
+            $defaultTheme->setAvailable(true);
 
-		if ($theme !== null) {
-			return $theme->getClassName();
-		}
+            return array(
+                $defaultTheme
+            );
+        } else {
+            return $themes;
+        }
+    }
 
-		return 'RZ\Renzo\CMS\Controllers\BackendController';
-	}
+    /**
+     * Get backend app controller full-qualified classname
+     * Return 'RZ\Renzo\CMS\Controllers\BackendController' if none found in database.
+     *
+     * @return string
+     */
+    private function getBackendClass()
+    {
+        $theme = $this->em()
+            ->getRepository('RZ\Renzo\Core\Entities\Theme')
+            ->findOneBy(array('available'=>true, 'backendTheme'=>true));
 
-	/**
-	 * @return Symfony\Component\HttpFoundation\Request
-	 */
-	public function getRequest()
-	{
-		return $this->request;
-	}
+        if ($theme !== null) {
+            return $theme->getClassName();
+        }
 
-	/**
-	 * 
-	 * @return Symfony\Component\Routing\Generator\UrlGenerator
-	 */
-	public function getUrlGenerator()
-	{
-		return $this->urlGenerator;
-	}
+        return 'RZ\Renzo\CMS\Controllers\BackendController';
+    }
 
-	/**
-	 * Resolve current front controller URL
-	 * 
-	 * This method is the base of every URL building methods in RZ-CMS. 
-	 * Be careful with handling it.
-	 * 
-	 * @return string 
-	 */
-	private function getResolvedBaseUrl()
-	{
-		if (isset($_SERVER["SERVER_NAME"])) {
-			$url = pathinfo($_SERVER['PHP_SELF']);
+    /**
+     * @return Symfony\Component\HttpFoundation\Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
 
-			// Protocol
-			$pageURL = 'http';
-			if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
-			$pageURL .= "://";
-			// Port
-			if (isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") {
-				$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"];
-			} else {
-				$pageURL .= $_SERVER["SERVER_NAME"];
-			}
-			// Non root folder
-			if (!empty($url["dirname"]) && $url["dirname"] != '/') {
-				$pageURL .= $url["dirname"];
-			}
+    /**
+     * @return Symfony\Component\Routing\Generator\UrlGenerator
+     */
+    public function getUrlGenerator()
+    {
+        return $this->urlGenerator;
+    }
 
-			return $pageURL;
-		}
-		else {
-			return false;
-		}
-	}
+    /**
+     * Resolve current front controller URL
+     *
+     * This method is the base of every URL building methods in RZ-CMS.
+     * Be careful with handling it.
+     *
+     * @return string
+     */
+    private function getResolvedBaseUrl()
+    {
+        if (isset($_SERVER["SERVER_NAME"])) {
+            $url = pathinfo($_SERVER['PHP_SELF']);
 
-	/**
-	 * Execute after kernel response
-	 * 
-	 * Build debug panel if debug is ON
-	 * 
-	 * @param  FilterResponseEvent $event
-	 * @return void
-	 */
-	public function onKernelResponse(FilterResponseEvent $event)
-	{
-	   	if ($this->isDebug()) {
+            // Protocol
+            $pageURL = 'http';
+            if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
+                $pageURL .= "s";
+            }
+            $pageURL .= "://";
+            // Port
+            if (isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") {
+                $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"];
+            } else {
+                $pageURL .= $_SERVER["SERVER_NAME"];
+            }
+            // Non root folder
+            if (!empty($url["dirname"]) && $url["dirname"] != '/') {
+                $pageURL .= $url["dirname"];
+            }
 
-	    	$response = $event->getResponse();
+            return $pageURL;
+        } else {
+            return false;
+        }
+    }
 
-	    	if (strpos($response->getContent(), '</body>') !== false) {
-	    		$sw = $this->stopwatch->stop('global');
-	    		$debug = $sw->getCategory().' : '.$sw->getDuration().'ms - '.$sw->getMemory()/1000000.0.'Mo';
+    /**
+     * Execute after kernel response
+     * Build debug panel if debug is ON.
+     * @param FilterResponseEvent $event
+     *
+     * @return void
+     */
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        if ($this->isDebug()) {
 
-	    		$content = str_replace('</body>', $debug."</body>", $response->getContent());
+            $response = $event->getResponse();
 
-	    		$response->setContent($content);
-	    	}
-	   	}
-	}
+            if (strpos($response->getContent(), '</body>') !== false) {
+                $sw = $this->stopwatch->stop('global');
+                $debug = $sw->getCategory().' : '.$sw->getDuration().'ms - '.$sw->getMemory()/1000000.0.'Mo';
+
+                $content = str_replace('</body>', $debug."</body>", $response->getContent());
+
+                $response->setContent($content);
+            }
+        }
+    }
 }

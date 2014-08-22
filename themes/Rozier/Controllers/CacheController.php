@@ -1,9 +1,9 @@
-<?php 
+<?php
 /**
  * Copyright REZO ZERO 2014
- * 
- * 
- * 
+ *
+ *
+ *
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
@@ -31,49 +31,49 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class CacheController extends RozierApp {
 
-	/**
-	 * @param  Symfony\Component\HttpFoundation\Request  $request
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function deleteDoctrineCache(Request $request) {
-		$form = $this->buildDeleteDoctrineForm();
-		$form->handleRequest();
+    /**
+     * @param  Symfony\Component\HttpFoundation\Request  $request
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteDoctrineCache(Request $request) {
+        $form = $this->buildDeleteDoctrineForm();
+        $form->handleRequest();
 
-		if ($form->isValid()) {
+        if ($form->isValid()) {
 
-	 		SchemaCommand::refreshMetadata();
-	 		$msg = $this->getTranslator()->trans('cache.deleted');
-	 		$request->getSession()->getFlashBag()->add('confirm', $msg);
- 			$this->getLogger()->info($msg);
+            SchemaCommand::refreshMetadata();
+            $msg = $this->getTranslator()->trans('cache.deleted');
+            $request->getSession()->getFlashBag()->add('confirm', $msg);
+            $this->getLogger()->info($msg);
 
-	 		/*
-	 		 * Force redirect to avoid resending form when refreshing page
-	 		 */
-	 		$response = new RedirectResponse(
-				Kernel::getInstance()->getUrlGenerator()->generate('adminHomePage')
-			);
-			$response->prepare($request);
+            /*
+             * Force redirect to avoid resending form when refreshing page
+             */
+            $response = new RedirectResponse(
+                Kernel::getInstance()->getUrlGenerator()->generate('adminHomePage')
+            );
+            $response->prepare($request);
 
-			return $response->send();
-		}
+            return $response->send();
+        }
 
-		$this->assignation['form'] = $form->createView();
+        $this->assignation['form'] = $form->createView();
 
-		return new Response(
-			$this->getTwig()->render('cache/deleteDoctrine.html.twig', $this->assignation),
-			Response::HTTP_OK,
-			array('content-type' => 'text/html')
-		);
-	}
+        return new Response(
+            $this->getTwig()->render('cache/deleteDoctrine.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
 
-	/**
-	 * @return Symfony\Component\Form\Forms
-	 */
-	private function buildDeleteDoctrineForm() {
-		$builder = $this->getFormFactory()
-			->createBuilder('form')
-		;
+    /**
+     * @return Symfony\Component\Form\Forms
+     */
+    private function buildDeleteDoctrineForm() {
+        $builder = $this->getFormFactory()
+            ->createBuilder('form')
+        ;
 
-		return $builder->getForm();
-	}
+        return $builder->getForm();
+    }
 }

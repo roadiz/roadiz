@@ -1,9 +1,9 @@
-<?php 
+<?php
 /**
  * Copyright REZO ZERO 2014
- * 
- * 
- * 
+ *
+ *
+ *
  *
  * @file NodeTypesController.php
  * @copyright REZO ZERO 2014
@@ -32,306 +32,306 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
 /**
-* 
+*
 */
 class NodeTypeFieldsController extends RozierApp
 {
-	/**
-	 * List every node-type-fields.
-	 * @param  Symfony\Component\HttpFoundation\Request $request
-	 * @param  int  $node_type_id
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function listAction(Request $request, $node_type_id) {
-		$node_type = Kernel::getInstance()->em()
-			->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
+    /**
+     * List every node-type-fields.
+     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @param  int  $node_type_id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function listAction(Request $request, $node_type_id) {
+        $node_type = Kernel::getInstance()->em()
+            ->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
 
-		if ($node_type !== null) {
-			$fields = $node_type->getFields();
+        if ($node_type !== null) {
+            $fields = $node_type->getFields();
 
-			$this->assignation['node_type'] = $node_type;
-			$this->assignation['fields'] = $fields;
+            $this->assignation['node_type'] = $node_type;
+            $this->assignation['fields'] = $fields;
 
-			return new Response(
-				$this->getTwig()->render('node-type-fields/list.html.twig', $this->assignation),
-				Response::HTTP_OK,
-				array('content-type' => 'text/html')
-			);
-		}
-		else {
-			return $this->throw404();
-		}
-	}
+            return new Response(
+                $this->getTwig()->render('node-type-fields/list.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        }
+        else {
+            return $this->throw404();
+        }
+    }
 
-	/**
-	 * Return an edition form for requested node-type.
-	 * @param  Symfony\Component\HttpFoundation\Request $request
-	 * @param  int  $node_type_field_id
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function editAction(Request $request, $node_type_field_id) {
-		$field = Kernel::getInstance()->em()
-			->find('RZ\Renzo\Core\Entities\NodeTypeField', (int)$node_type_field_id);
+    /**
+     * Return an edition form for requested node-type.
+     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @param  int  $node_type_field_id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction(Request $request, $node_type_field_id) {
+        $field = Kernel::getInstance()->em()
+            ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int)$node_type_field_id);
 
-		if ($field !== null) {
+        if ($field !== null) {
 
-			$this->assignation['node_type'] = $field->getNodeType();
-			$this->assignation['field'] = $field;
-			
-			$form = $this->buildEditForm( $field );
+            $this->assignation['node_type'] = $field->getNodeType();
+            $this->assignation['field'] = $field;
 
-			$form->handleRequest();
+            $form = $this->buildEditForm( $field );
 
-			if ($form->isValid()) {
-		 		$this->editNodeTypeField($form->getData(), $field);
+            $form->handleRequest();
 
-		 		$msg = $this->getTranslator()->trans('node_type_field.updated', array('%name%'=>$field->getName()));
-		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
-	 			$this->getLogger()->info($msg);
-		 		
-		 		/*
-		 		 * Redirect to update schema page
-		 		 */
-		 		$response = new RedirectResponse(
-					Kernel::getInstance()->getUrlGenerator()->generate(
-						'nodeTypesFieldSchemaUpdate', 
-						array(
-							'node_type_id' => $field->getNodeType()->getId(),
-							'_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
-						)
-					)
-				);
-				$response->prepare($request);
+            if ($form->isValid()) {
+                $this->editNodeTypeField($form->getData(), $field);
 
-				return $response->send();
-			}
+                $msg = $this->getTranslator()->trans('node_type_field.updated', array('%name%'=>$field->getName()));
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                $this->getLogger()->info($msg);
 
-			$this->assignation['form'] = $form->createView();
+                /*
+                 * Redirect to update schema page
+                 */
+                $response = new RedirectResponse(
+                    Kernel::getInstance()->getUrlGenerator()->generate(
+                        'nodeTypesFieldSchemaUpdate',
+                        array(
+                            'node_type_id' => $field->getNodeType()->getId(),
+                            '_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                        )
+                    )
+                );
+                $response->prepare($request);
 
-			return new Response(
-				$this->getTwig()->render('node-type-fields/edit.html.twig', $this->assignation),
-				Response::HTTP_OK,
-				array('content-type' => 'text/html')
-			);
-		}
-		else {
-			return $this->throw404();
-		}
-	}
+                return $response->send();
+            }
 
-	/**
-	 * Return an creation form for requested node-type.
-	 * @param Symfony\Component\HttpFoundation\Request  $request
-	 * @param int  $node_type_id
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function addAction(Request $request, $node_type_id) {
-		$field = new NodeTypeField();
-		$node_type = Kernel::getInstance()->em()
-			->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
+            $this->assignation['form'] = $form->createView();
 
-		if ($node_type !== null && 
-			$field !== null) {
+            return new Response(
+                $this->getTwig()->render('node-type-fields/edit.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        }
+        else {
+            return $this->throw404();
+        }
+    }
 
-			$this->assignation['node_type'] = $node_type;
-			$this->assignation['field'] = $field;
-			$form = $this->buildEditForm( $field );
+    /**
+     * Return an creation form for requested node-type.
+     * @param Symfony\Component\HttpFoundation\Request  $request
+     * @param int  $node_type_id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function addAction(Request $request, $node_type_id) {
+        $field = new NodeTypeField();
+        $node_type = Kernel::getInstance()->em()
+            ->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
 
-			$form->handleRequest();
+        if ($node_type !== null &&
+            $field !== null) {
 
-			if ($form->isValid()) {
-		 		$this->addNodeTypeField($form->getData(), $field, $node_type);
+            $this->assignation['node_type'] = $node_type;
+            $this->assignation['field'] = $field;
+            $form = $this->buildEditForm( $field );
 
-		 		$msg = $this->getTranslator()->trans('node_type_field.created', array('%name%'=>$field->getName()));
-		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
-	 			$this->getLogger()->info($msg);
+            $form->handleRequest();
+
+            if ($form->isValid()) {
+                $this->addNodeTypeField($form->getData(), $field, $node_type);
+
+                $msg = $this->getTranslator()->trans('node_type_field.created', array('%name%'=>$field->getName()));
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                $this->getLogger()->info($msg);
 
 
-		 		/*
-		 		 * Redirect to update schema page
-		 		 */
-		 		$response = new RedirectResponse(
-					Kernel::getInstance()->getUrlGenerator()->generate(
-						'nodeTypesFieldSchemaUpdate', 
-						array(
-							'node_type_id' => $node_type_id,
-							'_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
-						)
-					)
-				);
-				$response->prepare($request);
+                /*
+                 * Redirect to update schema page
+                 */
+                $response = new RedirectResponse(
+                    Kernel::getInstance()->getUrlGenerator()->generate(
+                        'nodeTypesFieldSchemaUpdate',
+                        array(
+                            'node_type_id' => $node_type_id,
+                            '_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                        )
+                    )
+                );
+                $response->prepare($request);
 
-				return $response->send();
-			}
+                return $response->send();
+            }
 
-			$this->assignation['form'] = $form->createView();
+            $this->assignation['form'] = $form->createView();
 
-			return new Response(
-				$this->getTwig()->render('node-type-fields/add.html.twig', $this->assignation),
-				Response::HTTP_OK,
-				array('content-type' => 'text/html')
-			);
-		}
-		else {
-			return $this->throw404();
-		}
-	}
+            return new Response(
+                $this->getTwig()->render('node-type-fields/add.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        }
+        else {
+            return $this->throw404();
+        }
+    }
 
-	/**
-	 * Return an deletion form for requested node.
-	 * @param  Symfony\Component\HttpFoundation\Request  $request
-	 * @param  int  $node_type_field_id
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function deleteAction(Request $request, $node_type_field_id) {
-		$field = Kernel::getInstance()->em()
-			->find('RZ\Renzo\Core\Entities\NodeTypeField', (int)$node_type_field_id);
+    /**
+     * Return an deletion form for requested node.
+     * @param  Symfony\Component\HttpFoundation\Request  $request
+     * @param  int  $node_type_field_id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction(Request $request, $node_type_field_id) {
+        $field = Kernel::getInstance()->em()
+            ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int)$node_type_field_id);
 
-		if ($field !== null) {
-			$this->assignation['field'] = $field;
-			
-			$form = $this->buildDeleteForm( $field );
+        if ($field !== null) {
+            $this->assignation['field'] = $field;
 
-			$form->handleRequest();
+            $form = $this->buildDeleteForm( $field );
 
-			if ($form->isValid() && 
-				$form->getData()['node_type_field_id'] == $field->getId() ) {
+            $form->handleRequest();
 
-				$nodeTypeId = $field->getNodeType()->getId();
+            if ($form->isValid() &&
+                $form->getData()['node_type_field_id'] == $field->getId() ) {
 
-		 		Kernel::getInstance()->em()->remove($field);
-		 		Kernel::getInstance()->em()->flush();
+                $nodeTypeId = $field->getNodeType()->getId();
 
-		 		/*
-		 		 * Update Database
-		 		 */
-		 		$nodeType = Kernel::getInstance()->em()
-					->find('RZ\Renzo\Core\Entities\NodeType', (int)$nodeTypeId);
+                Kernel::getInstance()->em()->remove($field);
+                Kernel::getInstance()->em()->flush();
 
-		 		$nodeType->getHandler()->updateSchema();
+                /*
+                 * Update Database
+                 */
+                $nodeType = Kernel::getInstance()->em()
+                    ->find('RZ\Renzo\Core\Entities\NodeType', (int)$nodeTypeId);
 
-		 		$msg = $this->getTranslator()->trans('node_type_field.deleted', array('%name%'=>$field->getName()));
-		 		$request->getSession()->getFlashBag()->add('confirm', $msg);
-	 			$this->getLogger()->info($msg);
+                $nodeType->getHandler()->updateSchema();
 
-		 		/*
-		 		 * Redirect to update schema page
-		 		 */
-		 		$response = new RedirectResponse(
-					Kernel::getInstance()->getUrlGenerator()->generate(
-						'nodeTypesFieldSchemaUpdate', 
-						array(
-							'node_type_id' => $nodeTypeId,
-							'_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
-						)
-					)
-				);
-				$response->prepare($request);
+                $msg = $this->getTranslator()->trans('node_type_field.deleted', array('%name%'=>$field->getName()));
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                $this->getLogger()->info($msg);
 
-				return $response->send();
-			}
+                /*
+                 * Redirect to update schema page
+                 */
+                $response = new RedirectResponse(
+                    Kernel::getInstance()->getUrlGenerator()->generate(
+                        'nodeTypesFieldSchemaUpdate',
+                        array(
+                            'node_type_id' => $nodeTypeId,
+                            '_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                        )
+                    )
+                );
+                $response->prepare($request);
 
-			$this->assignation['form'] = $form->createView();
+                return $response->send();
+            }
 
-			return new Response(
-				$this->getTwig()->render('node-type-fields/delete.html.twig', $this->assignation),
-				Response::HTTP_OK,
-				array('content-type' => 'text/html')
-			);
-		}
-		else {
-			return $this->throw404();
-		}
-	}
+            $this->assignation['form'] = $form->createView();
 
-	/**
-	 * @param  array  $data
-	 * @param  RZ\Renzo\Core\Entities\NodeTypeField  $field
-	 * @return void
-	 */
-	private function editNodeTypeField($data, NodeTypeField $field) {
-		foreach ($data as $key => $value) {
-			$setter = 'set'.ucwords($key);
-			$field->$setter( $value );
-		}
-		Kernel::getInstance()->em()->flush();
-		
-		$field->getNodeType()->getHandler()->updateSchema();
+            return new Response(
+                $this->getTwig()->render('node-type-fields/delete.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        }
+        else {
+            return $this->throw404();
+        }
+    }
 
-	}
+    /**
+     * @param  array  $data
+     * @param  RZ\Renzo\Core\Entities\NodeTypeField  $field
+     * @return void
+     */
+    private function editNodeTypeField($data, NodeTypeField $field) {
+        foreach ($data as $key => $value) {
+            $setter = 'set'.ucwords($key);
+            $field->$setter( $value );
+        }
+        Kernel::getInstance()->em()->flush();
 
-	/**
-	 * @param array  $data
-	 * @param RZ\Renzo\Core\Entities\NodeTypeField  $field
-	 * @param RZ\Renzo\Core\Entities\NodeType  $node_type
-	 * @return void
-	 */
-	private function addNodeTypeField($data, NodeTypeField $field, NodeType $node_type) {
-		foreach ($data as $key => $value) {
-			$setter = 'set'.ucwords($key);
-			$field->$setter( $value );
-		}
+        $field->getNodeType()->getHandler()->updateSchema();
 
-		$field->setNodeType( $node_type );
+    }
 
-		Kernel::getInstance()->em()->persist($field);
-		Kernel::getInstance()->em()->flush();
+    /**
+     * @param array  $data
+     * @param RZ\Renzo\Core\Entities\NodeTypeField  $field
+     * @param RZ\Renzo\Core\Entities\NodeType  $node_type
+     * @return void
+     */
+    private function addNodeTypeField($data, NodeTypeField $field, NodeType $node_type) {
+        foreach ($data as $key => $value) {
+            $setter = 'set'.ucwords($key);
+            $field->$setter( $value );
+        }
 
-		$node_type->getHandler()->updateSchema();
-	}
+        $field->setNodeType( $node_type );
 
-	/**
-	 * @param  RZ\Renzo\Core\Entities\NodeTypeField   $field 
-	 * @return \Symfony\Component\Form\Form
-	 */
-	private function buildEditForm(NodeTypeField $field) {
-		$defaults = array(
-			'name' =>           $field->getName(),
-			'label' =>    		$field->getLabel(),
-			'type' =>    		$field->getType(),
-			'description' =>    $field->getDescription(),
-			'visible' =>        $field->isVisible(),
-			'indexed' => 		$field->isIndexed(),
-		);
-		$builder = $this->getFormFactory()
-					->createBuilder('form', $defaults)
-					->add('name', 'text', array(
-						'constraints' => array(
-							new NotBlank()
-						)
-					))
-					->add('label',  'text', array(
-						'constraints' => array(
-							new NotBlank()
-						)
-					))
-					->add('type', 'choice', array(
-						'required' => true,
-						'choices' => NodeTypeField::$typeToHuman
-					))
-					->add('description',    'text', array('required' => false))
-					->add('visible',  'checkbox', array('required' => false))
-					->add('indexed', 'checkbox', array('required' => false))
-		;
+        Kernel::getInstance()->em()->persist($field);
+        Kernel::getInstance()->em()->flush();
 
-		return $builder->getForm();
-	}
+        $node_type->getHandler()->updateSchema();
+    }
 
-	/**
-	 * @param  RZ\Renzo\Core\Entities\NodeTypeField  $node 
-	 * @return \Symfony\Component\Form\Form
-	 */
-	private function buildDeleteForm(NodeTypeField $field) {
-		$builder = $this->getFormFactory()
-			->createBuilder('form')
-			->add('node_type_field_id', 'hidden', array(
-				'data' => $field->getId(),
-				'constraints' => array(
-					new NotBlank()
-				)
-			))
-		;
+    /**
+     * @param  RZ\Renzo\Core\Entities\NodeTypeField   $field
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildEditForm(NodeTypeField $field) {
+        $defaults = array(
+            'name' =>           $field->getName(),
+            'label' =>          $field->getLabel(),
+            'type' =>           $field->getType(),
+            'description' =>    $field->getDescription(),
+            'visible' =>        $field->isVisible(),
+            'indexed' =>        $field->isIndexed(),
+        );
+        $builder = $this->getFormFactory()
+                    ->createBuilder('form', $defaults)
+                    ->add('name', 'text', array(
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ))
+                    ->add('label',  'text', array(
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ))
+                    ->add('type', 'choice', array(
+                        'required' => true,
+                        'choices' => NodeTypeField::$typeToHuman
+                    ))
+                    ->add('description',    'text', array('required' => false))
+                    ->add('visible',  'checkbox', array('required' => false))
+                    ->add('indexed', 'checkbox', array('required' => false))
+        ;
 
-		return $builder->getForm();
-	}
+        return $builder->getForm();
+    }
+
+    /**
+     * @param  RZ\Renzo\Core\Entities\NodeTypeField  $node
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildDeleteForm(NodeTypeField $field) {
+        $builder = $this->getFormFactory()
+            ->createBuilder('form')
+            ->add('node_type_field_id', 'hidden', array(
+                'data' => $field->getId(),
+                'constraints' => array(
+                    new NotBlank()
+                )
+            ))
+        ;
+
+        return $builder->getForm();
+    }
 }

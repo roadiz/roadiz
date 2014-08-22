@@ -1,4 +1,13 @@
-<?php 
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ * Description
+ *
+ * @file LoginController.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 
 namespace Themes\Rozier\Controllers;
 
@@ -17,16 +26,22 @@ use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-class LoginController extends RozierApp {
+/**
+ * Login controller
+ */
+class LoginController extends RozierApp
+{
 
-	/**
-	 * @param  Symfony\Component\HttpFoundation\Request  $request
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function indexAction(Request $request) {	
-		$form = $this->buildLoginForm();
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction(Request $request)
+    {
+        $form = $this->buildLoginForm();
 
-		$this->assignation['form'] = $form->createView();
+        $this->assignation['form'] = $form->createView();
 
         $session = $request->getSession();
         // get the login error if there is one
@@ -37,56 +52,59 @@ class LoginController extends RozierApp {
             $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         }
 
-		$this->assignation['error'] = $error;
+        $this->assignation['error'] = $error;
 
-		return new Response(
-			$this->getTwig()->render('login/login.html.twig', $this->assignation),
-			Response::HTTP_OK,
-			array('content-type' => 'text/html')
-		);
-	}
+        return new Response(
+            $this->getTwig()->render('login/login.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
 
-	/**
-	 * @param  Symfony\Component\HttpFoundation\Request  $request
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function checkAction(Request $request) {	
-		return new Response(
-			$this->getTwig()->render('login/check.html.twig', $this->assignation),
-			Response::HTTP_OK,
-			array('content-type' => 'text/html')
-		);
-	}
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function checkAction(Request $request)
+    {
+        return new Response(
+            $this->getTwig()->render('login/check.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
 
-	/**
-	 * @param  Symfony\Component\HttpFoundation\Request  $request
-	 * @return Symfony\Component\HttpFoundation\Response
-	 */
-	public function logoutAction(Request $request) {
-		return new Response(
-			$this->getTwig()->render('login/check.html.twig', $this->assignation),
-			Response::HTTP_OK,
-			array('content-type' => 'text/html')
-		);
-	}
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function logoutAction(Request $request)
+    {
+        return new Response(
+            $this->getTwig()->render('login/check.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
 
-	/**
-	 * @param  RZ\Renzo\Core\Entities\Document  $document 
-	 * @return \Symfony\Component\Form\Form
-	 */
-	private function buildLoginForm() {
-		$defaults = array();
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildLoginForm()
+    {
+        $defaults = array();
 
-		$builder = $this->getFormFactory()
-					->createNamedBuilder(null, 'form', $defaults, array())
-					->add('_username', 'text', array('constraints' => array(
-						new NotBlank()
-					)))
-					->add('_password', 'password', array('constraints' => array(
-						new NotBlank()
-					)))
-		;
+        $builder = $this->getFormFactory()
+            ->createNamedBuilder(null, 'form', $defaults, array())
+            ->add('_username', 'text', array('constraints' => array(
+                new NotBlank()
+            )))
+            ->add('_password', 'password', array('constraints' => array(
+                new NotBlank()
+            )));
 
-		return $builder->getForm();
-	}
+        return $builder->getForm();
+    }
 }

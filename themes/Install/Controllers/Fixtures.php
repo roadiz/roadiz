@@ -1,7 +1,15 @@
-<?php 
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ * Description
+ *
+ * @file Fixtures.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 
 namespace Themes\Install\Controllers;
-
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Theme;
@@ -11,98 +19,118 @@ use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Entities\Setting;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
+
 /**
-* 
+* Fixtures class
 */
-class Fixtures {
+class Fixtures
+{
 
-	public function installFixtures()
-	{
-		$this->installDefaultTranslation();
-		$this->installBackofficeTheme();
+    /**
+     * @return void
+     */
+    public function installFixtures()
+    {
+        $this->installDefaultTranslation();
+        $this->installBackofficeTheme();
 
-		Kernel::getInstance()->em()->flush();
-	}
+        Kernel::getInstance()->em()->flush();
+    }
 
-	public function createFolders()
-	{
-		$folders = array(
-			RENZO_ROOT . '/cache',
-			RENZO_ROOT . '/sources/Compiled',
-			RENZO_ROOT . '/sources/Proxies',
-			RENZO_ROOT . '/sources/GeneratedNodeSources',
-		);
+    /**
+     * @return void
+     */
+    public function createFolders()
+    {
+        $folders = array(
+            RENZO_ROOT . '/cache',
+            RENZO_ROOT . '/sources/Compiled',
+            RENZO_ROOT . '/sources/Proxies',
+            RENZO_ROOT . '/sources/GeneratedNodeSources',
+        );
 
-		foreach ($folders as $folder) {
-			if (!file_exists($folder)) {
-				if (!mkdir($folder, 0755, true)){
-					throw( new \Exception('Impossible to create “'.$folder.'” folder.'));
-				}
-			}
-		}
-	}
+        foreach ($folders as $folder) {
+            if (!file_exists($folder)) {
+                if (!mkdir($folder, 0755, true)) {
+                    throw(new \Exception('Impossible to create “'.$folder.'” folder.'));
+                }
+            }
+        }
+    }
 
-	protected function installBackofficeTheme()
-	{
-		$existing = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Theme')
-			->findOneBy(array('backendTheme'=>true, 'available'=>true));
+    /**
+     * @return void
+     */
+    protected function installBackofficeTheme()
+    {
+        $existing = Kernel::getInstance()->em()
+            ->getRepository('RZ\Renzo\Core\Entities\Theme')
+            ->findOneBy(array('backendTheme'=>true, 'available'=>true));
 
-		if ($existing === null) {
-			$beTheme = new Theme();
-			$beTheme->setClassName('\Themes\Rozier\RozierApp');
-			$beTheme->setAvailable(true);
-			$beTheme->setBackendTheme(true);
+        if (null === $existing) {
+            $beTheme = new Theme();
+            $beTheme->setClassName('\Themes\Rozier\RozierApp');
+            $beTheme->setAvailable(true);
+            $beTheme->setBackendTheme(true);
 
-			Kernel::getInstance()->em()->persist($beTheme);
-		}
-	}
+            Kernel::getInstance()->em()->persist($beTheme);
+        }
+    }
 
-	protected function installDefaultTranslation()
-	{
-		$existing = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Translation')
-			->findOneBy(array('defaultTranslation'=>true, 'available'=>true));
+    /**
+     * @return void
+     */
+    protected function installDefaultTranslation()
+    {
+        $existing = Kernel::getInstance()->em()
+            ->getRepository('RZ\Renzo\Core\Entities\Translation')
+            ->findOneBy(array('defaultTranslation'=>true, 'available'=>true));
 
-		if ($existing === null) {
-			$translation = new Translation();
-			$translation->setLocale('en_GB');
-			$translation->setDefaultTranslation(true);
-			$translation->setName(Translation::$availableLocales[$translation->getLocale()]);
-			$translation->setAvailable(true);
+        if (null === $existing) {
+            $translation = new Translation();
+            $translation->setLocale('en_GB');
+            $translation->setDefaultTranslation(true);
+            $translation->setName(Translation::$availableLocales[$translation->getLocale()]);
+            $translation->setAvailable(true);
 
-			Kernel::getInstance()->em()->persist($translation);
-		}
-	}
+            Kernel::getInstance()->em()->persist($translation);
+        }
+    }
 
-	public function createDefaultUser( $data )
-	{
-		$existing = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\User')
-			->findOneBy(array('username'=>$data['username'], 'email'=>$data['email']));
+    /**
+     * @param array $data
+     *
+     * @return boolean
+     */
+    public function createDefaultUser($data)
+    {
+        $existing = Kernel::getInstance()->em()
+            ->getRepository('RZ\Renzo\Core\Entities\User')
+            ->findOneBy(array('username'=>$data['username'], 'email'=>$data['email']));
 
-		if ($existing === null) {
-			$user = new User();
-			$user->setUsername($data['username']);
-			$user->setPlainPassword($data['password']);
-			$user->setEmail($data['email']);
+        if ($existing === null) {
+            $user = new User();
+            $user->setUsername($data['username']);
+            $user->setPlainPassword($data['password']);
+            $user->setEmail($data['email']);
 
-			$user->addRole($this->getRole(Role::ROLE_BACKEND_USER));
-			$user->addRole($this->getRole(Role::ROLE_SUPER_ADMIN));
+            $user->addRole($this->getRole(Role::ROLE_BACKEND_USER));
+            $user->addRole($this->getRole(Role::ROLE_SUPER_ADMIN));
 
-			Kernel::getInstance()->em()->persist($user);
+            Kernel::getInstance()->em()->persist($user);
+            Kernel::getInstance()->em()->flush();
+        }
 
-			Kernel::getInstance()->em()->flush();
-		}
-		return true;
-	}
+        return true;
+    }
 
-	/**
-     * Get role by name, and create it if does not exist
-     * @param  string $roleName
+    /**
+     * Get role by name, and create it if does not exist.
+     * @param string $roleName
+     *
      * @return Role
      */
-    protected function getRole( $roleName = Role::ROLE_SUPER_ADMIN )
+    protected function getRole($roleName = Role::ROLE_SUPER_ADMIN )
     {
         $role = Kernel::getInstance()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Role')
@@ -117,17 +145,18 @@ class Fixtures {
         return $role;
     }
     /**
-     * Get role by name, and create it if does not exist
-     * @param  string $roleName
-     * @return Role
+     * Get role by name, and create it if does not exist.
+     * @param string $name
+     *
+     * @return RZ\Renzo\Core\Entities\Role
      */
-    protected function getSetting( $name )
+    protected function getSetting($name)
     {
         $setting = Kernel::getInstance()->em()
-                ->getRepository('RZ\Renzo\Core\Entities\Setting')
-                ->findOneBy(array('name'=>$name));
+            ->getRepository('RZ\Renzo\Core\Entities\Setting')
+            ->findOneBy(array('name'=>$name));
 
-        if ($setting === null) {
+        if (null === $setting) {
             $setting = new Setting();
             $setting->setName($name);
             Kernel::getInstance()->em()->persist($setting);
@@ -137,34 +166,39 @@ class Fixtures {
         return $setting;
     }
 
-    public function saveInformations( $data )
+    /**
+     * @param array $data
+     *
+     * @return void
+     */
+    public function saveInformations($data)
     {
-    	/*
-    	 * Save settings
-    	 */
-    	$set1 = $this->getSetting('site_name');
-    	$set1->setValue($data['site_name']);
-    	$set1->setType(NodeTypeField::STRING_T);
+        /*
+         * Save settings
+         */
+        $set1 = $this->getSetting('site_name');
+        $set1->setValue($data['site_name']);
+        $set1->setType(NodeTypeField::STRING_T);
         Kernel::getInstance()->em()->flush();
 
         $set2 = $this->getSetting('email_sender');
-    	$set2->setValue($data['email_sender']);
-    	$set2->setType(NodeTypeField::EMAIL_T);
+        $set2->setValue($data['email_sender']);
+        $set2->setType(NodeTypeField::EMAIL_T);
         Kernel::getInstance()->em()->flush();
-        
+
         $set2 = $this->getSetting('email_sender_name');
-    	$set2->setValue($data['email_sender_name']);
-    	$set2->setType(NodeTypeField::STRING_T);
+        $set2->setValue($data['email_sender_name']);
+        $set2->setType(NodeTypeField::STRING_T);
         Kernel::getInstance()->em()->flush();
 
         $set2 = $this->getSetting('meta_description');
-    	$set2->setValue($data['meta_description']);
-    	$set2->setType(NodeTypeField::TEXT_T);
+        $set2->setValue($data['meta_description']);
+        $set2->setType(NodeTypeField::TEXT_T);
         Kernel::getInstance()->em()->flush();
 
         $set2 = $this->getSetting('display_debug_panel');
-    	$set2->setValue(false);
-    	$set2->setType(NodeTypeField::BOOLEAN_T);
+        $set2->setValue(false);
+        $set2->setType(NodeTypeField::BOOLEAN_T);
         Kernel::getInstance()->em()->flush();
 
         /*
@@ -173,23 +207,26 @@ class Fixtures {
         $this->installFrontendTheme();
     }
 
+    /**
+     * @return void
+     */
     protected function installFrontendTheme()
-	{
-		$existing = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Theme')
-			->findOneBy(array(
-				'backendTheme'=>false, 
-				'available'=>true
-			));
+    {
+        $existing = Kernel::getInstance()->em()
+            ->getRepository('RZ\Renzo\Core\Entities\Theme')
+            ->findOneBy(array(
+                'backendTheme'=>false,
+                'available'=>true
+            ));
 
-		if ($existing === null) {
-			$feTheme = new Theme();
-			$feTheme->setClassName('\Themes\DefaultTheme\Controllers\DefaultApp');
-			$feTheme->setAvailable(true);
-			$feTheme->setBackendTheme(false);
+        if (null === $existing) {
+            $feTheme = new Theme();
+            $feTheme->setClassName('\Themes\DefaultTheme\Controllers\DefaultApp');
+            $feTheme->setAvailable(true);
+            $feTheme->setBackendTheme(false);
 
-			Kernel::getInstance()->em()->persist($feTheme);
-			Kernel::getInstance()->em()->flush();
-		}
-	}
+            Kernel::getInstance()->em()->persist($feTheme);
+            Kernel::getInstance()->em()->flush();
+        }
+    }
 }
