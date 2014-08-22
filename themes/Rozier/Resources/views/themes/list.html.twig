@@ -27,7 +27,7 @@
 					{% endfor %}
 				</td>
 				<td>
-					<a href="{{ path('themesEditPage', { theme_id: theme.getId }) }}">{{ theme.getClassName }}</a>
+					<a href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{{ theme.getClassName }}</a>
 				</td>
 				<td><div class="uk-badge uk-badge-success">
 					{% if theme.getHostname != "*" %}
@@ -41,8 +41,8 @@
 				{% if theme.isBackendTheme %}<div class="uk-badge uk-badge-success"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
 				</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-primary" href="{{ path('themesEditPage', { theme_id: theme.getId }) }}">{% trans %}edit{% endtrans %}</a>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('themesDeletePage', { theme_id: theme.getId }) }}">{% trans %}delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-primary" href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{% trans %}edit{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('themesDeletePage', { themeId: theme.getId }) }}">{% trans %}delete{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}

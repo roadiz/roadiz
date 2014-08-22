@@ -17,7 +17,7 @@
 		        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
-		    	</div>	
+		    	</div>
 		        {% endif %}
 		    {% endfor %}
    		</fieldset>

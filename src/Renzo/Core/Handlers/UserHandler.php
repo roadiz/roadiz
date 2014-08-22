@@ -96,7 +96,7 @@ class UserHandler
     }
 
     /**
-     * @param  integer $length Password length
+     * @param integer $length Password length
      *
      * @return string New password
      */

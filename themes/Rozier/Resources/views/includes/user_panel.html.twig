@@ -1,9 +1,9 @@
 <section class="uk-width-1-10" id="user-panel">
-	<a href="{{ path('usersEditPage', {'user_id':session.user.getId }) }}"><img width="200" height="200" class="uk-thumbnail" src="{{ session.user.getPictureUrl }}" alt="{{ session.user.getUsername }}" /></a>
+	<a href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"><img width="200" height="200" class="uk-thumbnail" src="{{ session.user.getPictureUrl }}" alt="{{ session.user.getUsername }}" /></a>
 	<h3>{{ session.user.getUsername }}</h3>
 	<h4>{{ session.user.getFirstName }}</h4>
 	<p><a title="{% trans %}see.website{% endtrans %}" class="uk-icon-button uk-icon-home" target="_blank" href="{{ path('homePage') }}"></a></p>
-	<p><a title="{% trans %}edit.account{% endtrans %}" class="uk-icon-button uk-icon-user" href="{{ path('usersEditPage', {'user_id':session.user.getId }) }}"></a></p>
+	<p><a title="{% trans %}edit.account{% endtrans %}" class="uk-icon-button uk-icon-user" href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"></a></p>
 	<p><a title="{% trans %}logout{% endtrans %}" class="uk-icon-button uk-icon-sign-out" href="{{ path('logoutPage') }}"></a></p>
 	<p><a title="{% trans %}delete.caches{% endtrans %}" class="uk-icon-button uk-icon-flash" href="{{ path('deleteDoctrineCache') }}"></a></p>
 	{% if head.devMode %}

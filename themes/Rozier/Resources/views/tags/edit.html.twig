@@ -4,7 +4,7 @@
 {% block content %}
 <section id="manage-tag">
 	<h1 id="tag-title">{% trans %}Edit{% endtrans %} {{ tag.getTranslatedTags.first.getName }}</h1>
-	
+
 	{% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'edit'} %}
 	{% include 'tags/translationBar.html.twig' with {"tag": tag, "current":translation.getId} %}
 
@@ -19,7 +19,7 @@
 		        	<label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.name }}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
-		    	</div>	
+		    	</div>
 		        {% endif %}
 		    {% endfor %}
    		</fieldset>

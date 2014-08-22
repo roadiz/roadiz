@@ -1,19 +1,19 @@
 <nav class="group-edit-navigation uk-navbar">
 	<ul class="uk-navbar-nav">
 		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
-			<a href="{{ path('groupsEditPage', { group_id: group.getId }) }}">{% trans %}group.edit{% endtrans %}</a>
+			<a href="{{ path('groupsEditPage', { groupId: group.getId }) }}">{% trans %}group.edit{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'roles' %}uk-active{% endif %}">
-			<a href="{{ path('groupsEditRolesPage', { group_id: group.getId }) }}">{% trans %}group.roles{% endtrans %}</a>
+			<a href="{{ path('groupsEditRolesPage', { groupId: group.getId }) }}">{% trans %}group.roles{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'users' %}uk-active{% endif %}">
-			<a href="{{ path('groupsEditUsersPage', { group_id: group.getId }) }}">{% trans %}group.users{% endtrans %}</a>
+			<a href="{{ path('groupsEditUsersPage', { groupId: group.getId }) }}">{% trans %}group.users{% endtrans %}</a>
 		</li>
 	</ul>
 	<div class="uk-navbar-content">
 		<a class="uk-button" href="{{ path('groupsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.groups{% endtrans %}</a>
 	</div>
 	<div class="uk-navbar-content uk-navbar-flip">
-		<a class="uk-button uk-button-danger" href="{{ path('groupsDeletePage', { group_id: group.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+		<a class="uk-button uk-button-danger" href="{{ path('groupsDeletePage', { groupId: group.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 	</div>
 </nav>

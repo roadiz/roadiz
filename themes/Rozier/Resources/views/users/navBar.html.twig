@@ -1,19 +1,19 @@
 <nav class="user-edit-navigation uk-navbar">
 	<ul class="uk-navbar-nav">
 		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
-			<a href="{{ path('usersEditPage', { user_id: user.getId }) }}">{% trans %}user.edit{% endtrans %}</a>
+			<a href="{{ path('usersEditPage', { userId: user.getId }) }}">{% trans %}user.edit{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'roles' %}uk-active{% endif %}">
-			<a href="{{ path('usersEditRolesPage', { user_id: user.getId }) }}">{% trans %}user.roles{% endtrans %}</a>
+			<a href="{{ path('usersEditRolesPage', { userId: user.getId }) }}">{% trans %}user.roles{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'groups' %}uk-active{% endif %}">
-			<a href="{{ path('usersEditGroupsPage', { user_id: user.getId }) }}">{% trans %}user.groups{% endtrans %}</a>
+			<a href="{{ path('usersEditGroupsPage', { userId: user.getId }) }}">{% trans %}user.groups{% endtrans %}</a>
 		</li>
 	</ul>
 	<div class="uk-navbar-content">
 		<a class="uk-button" href="{{ path('usersHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.users{% endtrans %}</a>
 	</div>
 	<div class="uk-navbar-content uk-navbar-flip">
-		<a class="uk-button uk-button-danger" href="{{ path('usersDeletePage', { user_id: user.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+		<a class="uk-button uk-button-danger" href="{{ path('usersDeletePage', { userId: user.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 	</div>
 </nav>

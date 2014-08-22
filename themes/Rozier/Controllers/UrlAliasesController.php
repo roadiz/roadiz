@@ -1,15 +1,12 @@
 <?php
-/**
+/*
  * Copyright REZO ZERO 2014
  *
  *
- *
- *
- * @file NodesController.php
+ * @file UrlAliasesController.php
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -32,24 +29,26 @@ use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
-
-
-
-class UrlAliasesController extends RozierApp {
-
+/**
+ * {@inheritdoc}
+ */
+class UrlAliasesController extends RozierApp
+{
     /**
      * Return aliases form for requested node.
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @param  int  $node_id
-     * @param  int  $translation_id
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $nodeId
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function editAliasesAction(Request $request, $node_id) {
+    public function editAliasesAction(Request $request, $nodeId)
+    {
         $translation = Kernel::getInstance()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();
         $node = Kernel::getInstance()->em()
-            ->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
+            ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
         if ($node !== null) {
 
@@ -77,8 +76,7 @@ class UrlAliasesController extends RozierApp {
                         $msg = $this->getTranslator()->trans('url_alias.updated', array('%alias%'=>$alias->getAlias()));
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
                         $this->getLogger()->info($msg);
-                    }
-                    else {
+                    } else {
                         $msg = $this->getTranslator()->trans('url_alias.no_update.already_exists', array('%alias%'=>$alias->getAlias()));
                         $request->getSession()->getFlashBag()->add('error', $msg);
                         $this->getLogger()->warning($msg);
@@ -90,13 +88,14 @@ class UrlAliasesController extends RozierApp {
                     $response = new RedirectResponse(
                         Kernel::getInstance()->getUrlGenerator()->generate(
                             'nodesEditAliasesPage',
-                            array('node_id' => $node->getId())
+                            array('nodeId' => $node->getId())
                         )
                     );
                     $response->prepare($request);
 
                     return $response->send();
                 }
+
                 // Match delete
                 $deleteForm->handleRequest();
                 if ($deleteForm->isValid()) {
@@ -111,7 +110,7 @@ class UrlAliasesController extends RozierApp {
                     $response = new RedirectResponse(
                         Kernel::getInstance()->getUrlGenerator()->generate(
                             'nodesEditAliasesPage',
-                            array('node_id' => $node->getId())
+                            array('nodeId' => $node->getId())
                         )
                     );
                     $response->prepare($request);
@@ -130,7 +129,7 @@ class UrlAliasesController extends RozierApp {
              * =======================
              * Main ADD url alias form
              */
-            $form = $this->buildAddUrlAliasForm( $node );
+            $form = $this->buildAddUrlAliasForm($node);
             $form->handleRequest();
 
             if ($form->isValid()) {
@@ -144,12 +143,10 @@ class UrlAliasesController extends RozierApp {
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getLogger()->info($msg);
 
-                }
-                catch( EntityAlreadyExistsException $e ){
+                } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getLogger()->warning($e->getMessage());
-                }
-                catch( NoTranslationAvailableException $e ){
+                } catch (NoTranslationAvailableException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getLogger()->warning($e->getMessage());
                 }
@@ -159,10 +156,11 @@ class UrlAliasesController extends RozierApp {
                 $response = new RedirectResponse(
                     Kernel::getInstance()->getUrlGenerator()->generate(
                         'nodesEditAliasesPage',
-                        array('node_id' => $node->getId())
+                        array('nodeId' => $node->getId())
                     )
                 );
                 $response->prepare($request);
+
                 return $response->send();
             }
 
@@ -180,15 +178,17 @@ class UrlAliasesController extends RozierApp {
 
 
     /**
-     * @param array  $data
-     * @param RZ\Renzo\Core\Entities\Node  $node
+     * @param array                       $data
+     * @param RZ\Renzo\Core\Entities\Node $node
+     *
      * @return RZ\Renzo\Core\Entities\UrlAlias
      */
-    private function addNodeUrlAlias($data, Node $node) {
-        if ($data['node_id'] == $node->getId()) {
+    private function addNodeUrlAlias($data, Node $node)
+    {
+        if ($data['nodeId'] == $node->getId()) {
 
             $translation = Kernel::getInstance()->em()
-                        ->find('RZ\Renzo\Core\Entities\Translation', (int)$data['translation_id']);
+                        ->find('RZ\Renzo\Core\Entities\Translation', (int) $data['translationId']);
 
             $nodeSource = Kernel::getInstance()->em()
                         ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
@@ -206,116 +206,136 @@ class UrlAliasesController extends RozierApp {
                 }
 
                 try {
-                    $ua = new UrlAlias( $nodeSource );
+                    $ua = new UrlAlias($nodeSource);
                     $ua->setAlias($data['alias']);
                     Kernel::getInstance()->em()->persist($ua);
                     Kernel::getInstance()->em()->flush();
+
                     return $ua;
-                }
-                catch(\Exception $e){
+                } catch (\Exception $e) {
                     $msg = $this->getTranslator()->trans('url_alias.no_creation.already_exists', array('%alias%'=>$testingAlias));
+
                     throw new EntityAlreadyExistsException($msg, 1);
                 }
-            }
-            else{
+            } else {
                 $msg = $this->getTranslator()->trans('url_alias.no_translation', array('%translation%'=>$translation->getName()));
+
                 throw new NoTranslationAvailableException($msg, 1);
             }
         }
+
         return null;
     }
 
     /**
-     * @param  string  $name
-     * @return bool
+     * @param string $name
+     *
+     * @return boolean
      */
-    private function urlAliasExists($name) {
-        return (boolean)Kernel::getInstance()->em()
+    private function urlAliasExists($name)
+    {
+        return (boolean) Kernel::getInstance()->em()
             ->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
-            ->exists( $name );
+            ->exists($name);
     }
-
-    private function nodeNameExists($name) {
-        return (boolean)Kernel::getInstance()->em()
+    /**
+     * @param string $name
+     *
+     * @return boolean
+     */
+    private function nodeNameExists($name)
+    {
+        return (boolean) Kernel::getInstance()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Node')
-            ->exists( $name );
+            ->exists($name);
     }
 
     /**
-     * @param  array  $data
-     * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua
-     * @return void
+     * @param array                           $data
+     * @param RZ\Renzo\Core\Entities\UrlAlias $ua
+     *
+     * @return boolean
      */
-    private function editUrlAlias( $data, UrlAlias $ua) {
+    private function editUrlAlias($data, UrlAlias $ua)
+    {
         $testingAlias = StringHandler::slugify($data['alias']);
         if ($testingAlias != $ua->getAlias() &&
                 ($this->nodeNameExists($testingAlias) ||
                 $this->urlAliasExists($testingAlias))) {
 
-            $msg = $this->getTranslator()->trans('url_alias.no_update.already_exists', array('%alias%'=>$data['alias']));
+            $msg = $this->getTranslator()->trans(
+                'url_alias.no_update.already_exists',
+                array('%alias%'=>$data['alias'])
+            );
+
             throw new EntityAlreadyExistsException($msg, 1);
         }
 
-        if ($data['urlalias_id'] == $ua->getId()) {
+        if ($data['urlaliasId'] == $ua->getId()) {
 
             try {
                 $ua->setAlias($data['alias']);
                 Kernel::getInstance()->em()->flush();
+
                 return true;
-            }
-            catch(\Exception $e){
+            } catch (\Exception $e) {
                 return false;
             }
         }
+
+        return false;
     }
 
     /**
-     * @param  array  $data
-     * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua
-     * @return void
+     * @param array                           $data
+     * @param RZ\Renzo\Core\Entities\UrlAlias $ua
      */
-    private function deleteUrlAlias($data, UrlAlias $ua) {
-        if ($data['urlalias_id'] == $ua->getId()) {
-
+    private function deleteUrlAlias($data, UrlAlias $ua)
+    {
+        if ($data['urlaliasId'] == $ua->getId()) {
             Kernel::getInstance()->em()->remove($ua);
             Kernel::getInstance()->em()->flush();
         }
     }
 
     /**
-     * @param  RZ\Renzo\Core\Entities\Node  $node
+     * @param RZ\Renzo\Core\Entities\Node $node
+     *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildAddUrlAliasForm(Node $node) {
+    private function buildAddUrlAliasForm(Node $node)
+    {
         $defaults = array(
-            'node_id' =>  $node->getId()
+            'nodeId' =>  $node->getId()
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
-            ->add('node_id', 'hidden', array(
+            ->add('nodeId', 'hidden', array(
                 'data' => $node->getId(),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
-            ->add('alias', 'text' )
-            ->add('translation_id', new \RZ\Renzo\CMS\Forms\TranslationsType() );
+            ->add('alias', 'text')
+            ->add('translationId', new \RZ\Renzo\CMS\Forms\TranslationsType());
 
         return $builder->getForm();
     }
 
     /**
-     * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua
+     * @param RZ\Renzo\Core\Entities\UrlAlias $ua
+     *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildEditUrlAliasForm(UrlAlias $ua) {
+    private function buildEditUrlAliasForm(UrlAlias $ua)
+    {
         $defaults = array(
-            'urlalias_id' =>  $ua->getId(),
+            'urlaliasId' =>  $ua->getId(),
             'alias' =>  $ua->getAlias()
         );
         $builder = $this->getFormFactory()
                     ->createBuilder('form', $defaults)
-                    ->add('urlalias_id', 'hidden', array(
+                    ->add('urlaliasId', 'hidden', array(
                         'data' => $ua->getId(),
                         'constraints' => array(
                             new NotBlank()
@@ -331,16 +351,18 @@ class UrlAliasesController extends RozierApp {
     }
 
     /**
-     * @param  RZ\Renzo\Core\Entities\UrlAlias  $ua
+     * @param RZ\Renzo\Core\Entities\UrlAlias $ua
+     *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildDeleteUrlAliasForm(UrlAlias $ua) {
+    private function buildDeleteUrlAliasForm(UrlAlias $ua)
+    {
         $defaults = array(
-            'urlalias_id' =>  $ua->getId()
+            'urlaliasId' =>  $ua->getId()
         );
         $builder = $this->getFormFactory()
                     ->createBuilder('form', $defaults)
-                    ->add('urlalias_id', 'hidden', array(
+                    ->add('urlaliasId', 'hidden', array(
                         'data' => $ua->getId(),
                         'constraints' => array(
                             new NotBlank()

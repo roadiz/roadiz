@@ -1,4 +1,12 @@
-<?php 
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file AjaxDocumentsExplorerController.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -16,55 +24,54 @@ use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
-
-
+/**
+ * {@inheritdoc}
+ */
 class AjaxDocumentsExplorerController extends AbstractAjaxController
 {
-	
-	/**
-	 * 
-	 * @param  Request $request [description]
-	 * @return Symfony\Component\HttpFoundation\Response JSON response
-	 */
-	public function indexAction( Request $request ) {
+    /**
+     * @param Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response JSON response
+     */
+    public function indexAction(Request $request)
+    {
+        /*
+         * Validate
+         */
+        if (true !== $notValid = $this->validateRequest($request, 'GET')) {
+            return new Response(
+                json_encode($notValid),
+                Response::HTTP_OK,
+                array('content-type' => 'application/javascript')
+            );
+        }
 
-		/*
-		 * Validate
-		 */
-		if (true !== $notValid = $this->validateRequest($request, 'GET')) {
-			return new Response(
-				json_encode($notValid),
-				Response::HTTP_OK,
-				array('content-type' => 'application/javascript')
-			);
-		}
+        $documents = Kernel::getInstance()->em()
+            ->getRepository('RZ\Renzo\Core\Entities\Document')
+            ->findBy(array(), array('createdAt' => 'DESC'));
 
-		$documents = Kernel::getInstance()->em()
-			->getRepository('RZ\Renzo\Core\Entities\Document')
-			->findBy(array(), array('createdAt' => 'DESC'));
+        $documentsArray = array();
+        foreach ($documents as $doc) {
+            $documentsArray[] = array(
+                'id' => $doc->getId(),
+                'filename'=>$doc->getFilename(),
+                'thumbnail' => $doc->getViewer()->getDocumentUrlByArray(array("width"=>40, "crop"=>"1x1", "quality"=>50)),
+                'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', array('document'=>$doc)),
+            );
+        }
 
-		$documentsArray = array();
-		foreach ($documents as $doc) {
-			$documentsArray[] = array(
-				'id' => $doc->getId(),
-				'filename'=>$doc->getFilename(),
-				'thumbnail' => $doc->getViewer()->getDocumentUrlByArray(array("width"=>40, "crop"=>"1x1", "quality"=>50)),
-				'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', array('document'=>$doc)),
-			);
-		}
+        $responseArray = array(
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'documents' => $documentsArray,
+            'documentsCount' => count($documents)
+        );
 
-		$responseArray = array(
-			'status' => 'confirm',
-			'statusCode' => 200,
-			'documents' => $documentsArray,
-			'documentsCount' => count($documents)
-		);
-		
-		return new Response(
-			json_encode($responseArray),
-			Response::HTTP_OK,
-			array('content-type' => 'application/javascript')
-		);
-	}
-
+        return new Response(
+            json_encode($responseArray),
+            Response::HTTP_OK,
+            array('content-type' => 'application/javascript')
+        );
+    }
 }

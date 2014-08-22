@@ -4,9 +4,9 @@
 {% block content %}
 <section id="manage-node-type-field">
 	<h1 id="node-type-field-title">Edit {{ field.getName }}</h1>
-	
+
 	<nav>
-		<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { node_type_id: field.getNodeType.getId }) }}"><span class="uk-icon-reply"></span>{% trans %}Back to node-types fields{% endtrans %}</a>
+		<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: field.getNodeType.getId }) }}"><span class="uk-icon-reply"></span>{% trans %}Back to node-types fields{% endtrans %}</a>
 	</nav>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
@@ -20,7 +20,7 @@
 		        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
-		    	</div>	
+		    	</div>
 		        {% endif %}
 		    {% endfor %}
    		</fieldset>

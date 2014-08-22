@@ -16,7 +16,7 @@
 	    {{ form_rest(form) }}
 	    <fieldset data-uk-margin>
 	    	<legend>{% trans %}Are you sure you want to remove this user from group?{% endtrans %}</legend>
-	    	<a href="{{ path('groupsEditUsersPage', { group_id: group.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<a href="{{ path('groupsEditUsersPage', { groupId: group.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

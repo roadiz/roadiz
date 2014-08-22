@@ -1,5 +1,12 @@
 <?php
-
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file GroupsController.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -18,17 +25,16 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Renzo\Core\Exceptions\EntityRequiredException;
-
 /**
-*
-*/
-class GroupsController extends RozierApp {
-
-    const ITEM_PER_PAGE = 5;
-
+ * {@inheritdoc}
+ */
+class GroupsController extends RozierApp
+{
     /**
      * List groups action.
-     * @param  Symfony\Component\HttpFoundation\Request  $request
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
@@ -54,10 +60,11 @@ class GroupsController extends RozierApp {
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request  $request
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function addAction( Request $request )
+    public function addAction(Request $request)
     {
         $form = $this->buildAddForm();
         $form->handleRequest();
@@ -70,12 +77,10 @@ class GroupsController extends RozierApp {
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getLogger()->info($msg);
 
-            }
-            catch(EntityAlreadyExistsException $e){
+            } catch (EntityAlreadyExistsException $e) {
                 $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                 $this->getLogger()->warning($e->getMessage());
-            }
-            catch(\RuntimeException $e){
+            } catch (\RuntimeException $e) {
                 $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                 $this->getLogger()->warning($e->getMessage());
             }
@@ -101,20 +106,22 @@ class GroupsController extends RozierApp {
     }
 
     /**
-     * @param  Symfony\Component\HttpFoundation\Request  $request
-     * @param  int  $group_id
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $groupId
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction(Request $request, $group_id) {
+    public function deleteAction(Request $request, $groupId)
+    {
         $group = Kernel::getInstance()->em()
-            ->find('RZ\Renzo\Core\Entities\Group', (int)$group_id);
-        if ($group !== null) {
+            ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
-            $form = $this->buildDeleteForm( $group );
+        if ($group !== null) {
+            $form = $this->buildDeleteForm($group);
             $form->handleRequest();
 
             if ($form->isValid() &&
-                $form->getData()['group_id'] == $group->getId()) {
+                $form->getData()['groupId'] == $group->getId()) {
 
                 try {
                     $this->deleteGroup($form->getData(), $group);
@@ -122,8 +129,7 @@ class GroupsController extends RozierApp {
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getLogger()->info($msg);
 
-                }
-                catch (\RuntimeException $e) {
+                } catch (\RuntimeException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getLogger()->warning($e->getMessage());
                 }
@@ -131,7 +137,7 @@ class GroupsController extends RozierApp {
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse (
+                $response = new RedirectResponse(
                     Kernel::getInstance()->getUrlGenerator()->generate('groupsHomePage')
                 );
                 $response->prepare($request);
@@ -146,29 +152,31 @@ class GroupsController extends RozierApp {
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );
-        }
-        else {
+
+        } else {
             return $this->throw404();
         }
     }
 
     /**
-     * @param  Symfony\Component\HttpFoundation\Request  $request
-     * @param  int  $group_id
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $groupId
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function editAction(Request $request, $group_id) {
+    public function editAction(Request $request, $groupId)
+    {
         $group = Kernel::getInstance()->em()
-                    ->find('RZ\Renzo\Core\Entities\Group', (int)$group_id);
+                    ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         if ($group !== null) {
             $this->assignation['group'] = $group;
 
-            $form = $this->buildEditForm( $group );
+            $form = $this->buildEditForm($group);
             $form->handleRequest();
 
             if ($form->isValid() &&
-                $form->getData()['group_id'] == $group->getId()) {
+                $form->getData()['groupId'] == $group->getId()) {
 
                 try {
                     $this->editGroup($form->getData(), $group);
@@ -176,12 +184,10 @@ class GroupsController extends RozierApp {
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getLogger()->info($msg);
 
-                }
-                catch(EntityAlreadyExistsException $e){
+                } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getLogger()->warning($e->getMessage());
-                }
-                catch(\RuntimeException $e){
+                } catch (\RuntimeException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getLogger()->warning($e->getMessage());
                 }
@@ -204,28 +210,28 @@ class GroupsController extends RozierApp {
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );
-        }
-        else {
+        } else {
             return $this->throw404();
         }
     }
 
     /**
      * Return an edition form for requested group.
-     * @param  Symfony\Component\HttpFoundation\Request  $request
-     * @param  int  $group_id
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $groupId
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function editRolesAction(Request $request, $group_id) {
+    public function editRolesAction(Request $request, $groupId)
+    {
         $group = Kernel::getInstance()->em()
-            ->find('RZ\Renzo\Core\Entities\Group', (int)$group_id);
+            ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         if ($group !== null) {
 
             $this->assignation['group'] = $group;
-
-            $form = $this->buildEditRolesForm( $group );
-
+            $form = $this->buildEditRolesForm($group);
             $form->handleRequest();
 
             if ($form->isValid()) {
@@ -244,9 +250,9 @@ class GroupsController extends RozierApp {
                 $response = new RedirectResponse(
                     Kernel::getInstance()->getUrlGenerator()->generate(
                         'groupsEditRolesPage',
-                        array('group_id' => $group->getId())
-                        )
-                    );
+                        array('groupId' => $group->getId())
+                    )
+                );
                 $response->prepare($request);
 
                 return $response->send();
@@ -259,26 +265,27 @@ class GroupsController extends RozierApp {
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );
-        }
-        else {
+        } else {
             return $this->throw404();
         }
     }
 
     /**
-     * @param  Symfony\Component\HttpFoundation\Request  $request
-     * @param  int  $group_id
-     * @param  int  $role_id
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $groupId
+     * @param int                                      $roleId
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function removeRolesAction(Request $request, $group_id, $role_id) {
+    public function removeRolesAction(Request $request, $groupId, $roleId)
+    {
         $group = Kernel::getInstance()->em()
-            ->find('RZ\Renzo\Core\Entities\Group', (int)$group_id);
+            ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
         $role = Kernel::getInstance()->em()
-            ->find('RZ\Renzo\Core\Entities\Role', (int)$role_id);
+            ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
 
         if ($group !== null &&
-            $role !== null ) {
+            $role !== null) {
             $this->assignation['group'] = $group;
             $this->assignation['role'] = $role;
 
@@ -298,7 +305,7 @@ class GroupsController extends RozierApp {
                 $response = new RedirectResponse(
                     Kernel::getInstance()->getUrlGenerator()->generate(
                         'groupsEditRolesPage',
-                        array('group_id' => $group->getId())
+                        array('groupId' => $group->getId())
                     )
                 );
                 $response->prepare($request);
@@ -313,27 +320,26 @@ class GroupsController extends RozierApp {
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );
-        }
-        else {
+        } else {
             return $this->throw404();
         }
     }
 
     /**
-     * @param  Symfony\Component\HttpFoundation\Request  $request
-     * @param  int  $group_id
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $groupId
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function editUsersAction(Request $request, $group_id) {
+    public function editUsersAction(Request $request, $groupId)
+    {
         $group = Kernel::getInstance()->em()
-            ->find('RZ\Renzo\Core\Entities\Group', (int)$group_id);
+            ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         if ($group !== null) {
 
             $this->assignation['group'] = $group;
-
-            $form = $this->buildEditUsersForm( $group );
-
+            $form = $this->buildEditUsersForm($group);
             $form->handleRequest();
 
             if ($form->isValid()) {
@@ -352,9 +358,9 @@ class GroupsController extends RozierApp {
                 $response = new RedirectResponse(
                     Kernel::getInstance()->getUrlGenerator()->generate(
                         'groupsEditUsersPage',
-                        array('group_id' => $group->getId())
-                        )
-                    );
+                        array('groupId' => $group->getId())
+                    )
+                );
                 $response->prepare($request);
 
                 return $response->send();
@@ -367,23 +373,24 @@ class GroupsController extends RozierApp {
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );
-        }
-        else {
+        } else {
             return $this->throw404();
         }
     }
 
     /**
-     * @param  Symfony\Component\HttpFoundation\Request  $request
-     * @param  int  $group_id
-     * @param  int  $user_id
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $groupId
+     * @param int                                      $userId
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function removeUsersAction(Request $request, $group_id, $user_id) {
+    public function removeUsersAction(Request $request, $groupId, $userId)
+    {
         $group = Kernel::getInstance()->em()
-            ->find('RZ\Renzo\Core\Entities\Group', (int)$group_id);
+            ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
         $user = Kernel::getInstance()->em()
-            ->find('RZ\Renzo\Core\Entities\User', (int)$user_id);
+            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
 
         if ($group !== null &&
             $user !== null ) {
@@ -406,8 +413,8 @@ class GroupsController extends RozierApp {
                 $response = new RedirectResponse(
                     Kernel::getInstance()->getUrlGenerator()->generate(
                         'groupsEditUsersPage',
-                        array('group_id' => $group->getId(),
-                            'user_id' => $user->getId())
+                        array('groupId' => $group->getId(),
+                            'userId' => $user->getId())
                     )
                 );
                 $response->prepare($request);
@@ -422,17 +429,18 @@ class GroupsController extends RozierApp {
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );
-        }
-        else {
+        } else {
             return $this->throw404();
         }
     }
 
     /**
      * Build add group form with name constraint.
+     *
      * @return \Symfony\Component\Form\Form
      */
-    protected function buildAddForm() {
+    protected function buildAddForm()
+    {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
             ->add('name', 'text', array(
@@ -440,43 +448,47 @@ class GroupsController extends RozierApp {
                 'constraints' => array(
                     new NotBlank()
                 )
-            ))
-        ;
+            ));
 
         return $builder->getForm();
     }
 
     /**
      * Build delete group form with name constraint.
-     * @param  RZ\Renzo\Core\Entities\Group  $group
+     *
+     * @param RZ\Renzo\Core\Entities\Group $group
+     *
      * @return \Symfony\Component\Form\Form
      */
-    protected function buildDeleteForm(Group $group) {
+    protected function buildDeleteForm(Group $group)
+    {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('group_id', 'hidden', array(
+            ->add('groupId', 'hidden', array(
                 'data'=>$group->getId(),
                 'constraints' => array(
                     new NotBlank()
                 )
-            ))
-        ;
+            ));
 
         return $builder->getForm();
     }
 
     /**
      * Build edit group form with name constraint.
-     * @param  RZ\Renzo\Core\Entities\Group  $group
+     *
+     * @param RZ\Renzo\Core\Entities\Group $group
+     *
      * @return \Symfony\Component\Form\Form
      */
-    protected function buildEditForm(Group $group) {
+    protected function buildEditForm(Group $group)
+    {
         $defaults = array(
             'name'=>$group->getName()
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
-            ->add('group_id', 'hidden', array(
+            ->add('groupId', 'hidden', array(
                 'data'=>$group->getId(),
                 'constraints' => array(
                     new NotBlank()
@@ -487,53 +499,54 @@ class GroupsController extends RozierApp {
                 'constraints' => array(
                     new NotBlank()
                 )
-            ))
-        ;
+            ));
 
         return $builder->getForm();
     }
 
     /**
+     * @param RZ\Renzo\Core\Entities\Group $group
      *
-     * @param  RZ\Renzo\Core\Entities\Group $group
      * @return \Symfony\Component\Form\Form
      */
-    private function buildEditRolesForm(Group $group) {
+    private function buildEditRolesForm(Group $group)
+    {
         $defaults = array(
-            'group_id' =>  $group->getId()
+            'groupId' =>  $group->getId()
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
-            ->add('group_id', 'hidden', array(
+            ->add('groupId', 'hidden', array(
                 'data' => $group->getId(),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
-            ->add('role_id', new \RZ\Renzo\CMS\Forms\RolesType($group->getRolesEntities()),
+            ->add('roleId', new \RZ\Renzo\CMS\Forms\RolesType($group->getRolesEntities()),
                 array('label' => 'Role'));
 
         return $builder->getForm();
     }
 
     /**
+     * @param RZ\Renzo\Core\Entities\Group $group
      *
-     * @param  RZ\Renzo\Core\Entities\Group $group
      * @return \Symfony\Component\Form\Form
      */
-    private function buildEditUsersForm(Group $group) {
+    private function buildEditUsersForm(Group $group)
+    {
         $defaults = array(
-            'group_id' =>  $group->getId()
+            'groupId' =>  $group->getId()
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
-            ->add('group_id', 'hidden', array(
+            ->add('groupId', 'hidden', array(
                 'data' => $group->getId(),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
-            ->add('user_id', new \RZ\Renzo\CMS\Forms\UsersType($group->getUsers()),
+            ->add('userId', new \RZ\Renzo\CMS\Forms\UsersType($group->getUsers()),
                 array(
                     'label' => 'User',
                     'constraints' => array(
@@ -546,65 +559,68 @@ class GroupsController extends RozierApp {
 
     /**
      * @param RZ\Renzo\Core\Entities\Group $group
-     * @param RZ\Renzo\Core\Entities\Role $role
+     * @param RZ\Renzo\Core\Entities\Role  $role
+     *
      * @return \Symfony\Component\Form\Form
      */
     private function buildRemoveRoleForm(Group $group, Role $role)
     {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('group_id', 'hidden', array(
+            ->add('groupId', 'hidden', array(
                 'data' => $group->getId(),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
-            ->add('role_id', 'hidden', array(
+            ->add('roleId', 'hidden', array(
                 'data' => $role->getId(),
                 'constraints' => array(
                     new NotBlank()
                 )
-            ))
-        ;
+            ));
 
         return $builder->getForm();
     }
 
     /**
      * @param RZ\Renzo\Core\Entities\Group $group
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Renzo\Core\Entities\User  $user
+     *
      * @return \Symfony\Component\Form\Form
      */
     private function buildRemoveUserForm(Group $group, User $user)
     {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('group_id', 'hidden', array(
+            ->add('groupId', 'hidden', array(
                 'data' => $group->getId(),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
-            ->add('user_id', 'hidden', array(
+            ->add('userId', 'hidden', array(
                 'data' => $user->getId(),
                 'constraints' => array(
                     new NotBlank()
                 )
-            ))
-        ;
+            ));
 
         return $builder->getForm();
     }
 
     /**
-     * @param array  $data
+     * @param array $data
+     *
      * @return RZ\Renzo\Core\Entities\Group
      */
-    protected function addGroup(array $data) {
+    protected function addGroup(array $data)
+    {
         if (isset($data['name'])) {
             $existing = Kernel::getInstance()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Group')
                     ->findOneBy(array('name' => $data['name']));
+
             if ($existing !== null) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans("group.name.already.exists"), 1);
             }
@@ -615,18 +631,22 @@ class GroupsController extends RozierApp {
             Kernel::getInstance()->em()->flush();
 
             return $group;
-        }
-        else {
+        } else {
             throw new \RuntimeException("Group name is not defined", 1);
         }
+
         return null;
     }
 
     /**
      * @param array $data
+     * @param Group $group
+     *
      * @return RZ\Renzo\Core\Entities\Group
+     * @throws \RuntimeException
      */
-    protected function editGroup(array $data, Group $group) {
+    protected function editGroup(array $data, Group $group)
+    {
         if (isset($data['name'])) {
             $existing = Kernel::getInstance()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Group')
@@ -640,94 +660,104 @@ class GroupsController extends RozierApp {
             Kernel::getInstance()->em()->flush();
 
             return $group;
-        }
-        else {
+        } else {
             throw new \RuntimeException("Group name is not defined", 1);
         }
+
         return null;
     }
 
     /**
-     * @param  array  $data
-     * @param  RZ\Renzo\Core\Entities\Group  $group
-     * @return void
+     * @param array                        $data
+     * @param RZ\Renzo\Core\Entities\Group $group
      */
-    protected function deleteGroup(array $data, Group $group) {
+    protected function deleteGroup(array $data, Group $group)
+    {
         Kernel::getInstance()->em()->remove($group);
         Kernel::getInstance()->em()->flush();
     }
 
     /**
-     * @param array  $data
-     * @param RZ\Renzo\Core\Entities\Group  $group
+     * @param array                        $data
+     * @param RZ\Renzo\Core\Entities\Group $group
+     *
      * @return RZ\Renzo\Core\Entities\User
      */
-    private function addRole($data, Group $group) {
-        if ($data['group_id'] == $group->getId()) {
+    private function addRole($data, Group $group)
+    {
+        if ($data['groupId'] == $group->getId()) {
             $role = Kernel::getInstance()->em()
-                ->find('RZ\Renzo\Core\Entities\Role', (int)$data['role_id']);
+                ->find('RZ\Renzo\Core\Entities\Role', (int) $data['roleId']);
             if ($role !== null) {
                 $group->addRole($role);
                 Kernel::getInstance()->em()->flush();
 
-                return ($role);
+                return $role;
             }
         }
     }
 
     /**
-     * @param  array  $data
-     * @param  RZ\Renzo\Core\Entities\Group  $group
-     * @param  RZ\Renzo\Core\Entities\Role  $role
+     * @param array                        $data
+     * @param RZ\Renzo\Core\Entities\Group $group
+     * @param RZ\Renzo\Core\Entities\Role  $role
+     *
      * @return RZ\Renzo\Core\Entities\Role
      */
-    private function removeRole($data, Group $group, Role $role) {
-        if ($data['group_id'] == $group->getId() &&
-            $data['role_id'] == $role->getId()) {
+    private function removeRole($data, Group $group, Role $role)
+    {
+        if ($data['groupId'] == $group->getId() &&
+            $data['roleId'] == $role->getId()) {
 
             if ($role !== null) {
                 $group->removeRole($role);
                 Kernel::getInstance()->em()->flush();
             }
-            return ($role);
+
+            return $role;
         }
     }
 
     /**
-     * @param array $data
-     * @param RZ\Renzo\Core\Entities\Group  $group
+     * @param array                        $data
+     * @param RZ\Renzo\Core\Entities\Group $group
+     *
      * @return RZ\Renzo\Core\Entities\User
      */
-    private function addUser($data, Group $group) {
-        if ($data['group_id'] == $group->getId()) {
+    private function addUser($data, Group $group)
+    {
+        if ($data['groupId'] == $group->getId()) {
             $user = Kernel::getInstance()->em()
-                ->find('RZ\Renzo\Core\Entities\User', (int)$data['user_id']);
+                ->find('RZ\Renzo\Core\Entities\User', (int) $data['userId']);
 
             if ($user !== null) {
                 //$group->addUser($user);
                 $user->addGroup($group);
                 Kernel::getInstance()->em()->flush();
 
-                return ($user);
+                return $user;
             }
         }
     }
 
     /**
-     * @param  array $data
-     * @param  RZ\Renzo\Core\Entities\Group  $group
-     * @param  RZ\Renzo\Core\EntitiesUser  $user
+     * @param array                        $data
+     * @param RZ\Renzo\Core\Entities\Group $group
+     * @param RZ\Renzo\Core\EntitiesUser   $user
+     *
      * @return RZ\Renzo\Core\Entities\User
      */
-    private function removeUser($data, Group $group, User $user) {
-        if ($data['group_id'] == $group->getId() &&
-            $data['user_id'] == $user->getId()) {
+    private function removeUser($data, Group $group, User $user)
+    {
+        if ($data['groupId'] == $group->getId() &&
+            $data['userId'] == $user->getId()) {
 
             if ($user !== null) {
                 $user->removeGroup($group);
                 Kernel::getInstance()->em()->flush();
             }
-            return ($user);
+
+            return $user;
         }
     }
 }

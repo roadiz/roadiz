@@ -1,101 +1,132 @@
-<?php 
-
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file Group.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\AbstractEntities\PersistableObject;
-
+use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 /**
+ * A group gather User and Roles.
+ *
  * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="groups")
  */
-class Group extends PersistableObject
-{ 
-	/**
-	 * @Column(type="string", unique=true)
-	 * @var string
-	 */
-	private $name;
-	/**
-	 * @return string
-	 */
-	public function getName() {
-	    return $this->name;
-	}
-	/**
-	 * @param string $newname
-	 */
-	public function setName($name) {
-	    $this->name = $name;
-	
-	    return $this;
-	}
+class Group extends AbstractEntity
+{
+    /**
+     * @Column(type="string", unique=true)
+     * @var string
+     */
+    private $name;
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
 
-	/**
-	 * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\User", mappedBy="groups")
-	 * @var ArrayCollection
-	 */
-	private $users;
+        return $this;
+    }
 
-	/**
-	 * @return ArrayCollection
-	 */
-	public function getUsers() {
-	    return $this->users;
-	}
-	
-	/**
-	 * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\Role")
-	 * @JoinTable(name="groups_roles",
+    /**
+     * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\User", mappedBy="groups")
+     * @var ArrayCollection
+     */
+    private $users;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\Role")
+     * @JoinTable(name="groups_roles",
      *      joinColumns={@JoinColumn(name="group_id", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")}
      * )
-	 * @var ArrayCollection
-	 */
-	private $roles;
-	private $rolesNames = null;
-	/**
-     * Get roles entities
-	 * @return ArrayCollection
-	 */
-	public function getRolesEntities() {
-	    return $this->roles;
-	}
+     * @var ArrayCollection
+     */
+    private $roles;
+    private $rolesNames = null;
     /**
-     * Get roles names as a simple array
+     * Get roles entities.
+     *
+     * @return ArrayCollection
+     */
+    public function getRolesEntities()
+    {
+        return $this->roles;
+    }
+    /**
+     * Get roles names as a simple array.
+     *
      * @return array
      */
-    public function getRoles() {
+    public function getRoles()
+    {
         if ($this->rolesNames === null) {
             $this->rolesNames = array();
             foreach ($this->getRolesEntities() as $role) {
                 $this->rolesNames[] = $role->getName();
             }
         }
+
         return $this->rolesNames;
     }
+    /**
+     * @param Role $role
+     *
+     * @return $this
+     */
     public function addRole(Role $role)
     {
         if (!$this->getRolesEntities()->contains($role)) {
             $this->getRolesEntities()->add($role);
         }
+
         return $this;
     }
-
+    /**
+     * @param Role $role
+     *
+     * @return $this
+     */
     public function removeRole(Role $role)
     {
         if ($this->getRolesEntities()->contains($role)) {
             $this->getRolesEntities()->removeElement($role);
         }
+
         return $this;
     }
-	
-	public function __construct()
+    /**
+     * Create a new Group.
+     */
+    public function __construct()
     {
-    	parent::__construct();
+        parent::__construct();
 
-    	$this->roles = new ArrayCollection();
-    	$this->users = new ArrayCollection();
-    	$this->rolesNames = null;
+        $this->roles = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->rolesNames = null;
     }
 }

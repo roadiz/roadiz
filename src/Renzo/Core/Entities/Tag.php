@@ -1,40 +1,53 @@
-<?php 
-
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file Tag.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace RZ\Renzo\Core\Entities;
 
 use RZ\Renzo\Core\Handlers\TagHandler;
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\AbstractEntities\DateTimedPositioned;
-
+use RZ\Renzo\Core\AbstractEntities\AbstractDateTimedPositioned;
 /**
+ * Tags are hierarchical entities used
+ * to qualify Nodes, Documents, Subscribers.
+ *
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\TagRepository")
  * @Table(name="tags", indexes={
- *     @index(name="visible_idx", columns={"visible"}), 
+ *     @index(name="visible_idx", columns={"visible"}),
  *     @index(name="position_idx", columns={"position"})
  * })
  */
-class Tag extends DateTimedPositioned
-{	
-	/**
-	 * @Column(type="boolean")
-	 */
-	private $visible = true;
-	/**
-	 * @return boolean
-	 */
-	public function isVisible() {
-	    return $this->visible;
-	}
-	/**
-	 * @param boolean $newvisible
-	 */
-	public function setVisible($visible) {
-	    $this->visible = (boolean)$visible;
-	
-	    return $this;
-	}
+class Tag extends AbstractDateTimedPositioned
+{
+    /**
+     * @Column(type="boolean")
+     */
+    private $visible = true;
+    /**
+     * @return boolean
+     */
+    public function isVisible()
+    {
+        return $this->visible;
+    }
+    /**
+     * @param boolean $visible
+     *
+     * @return $this
+     */
+    public function setVisible($visible)
+    {
+        $this->visible = (boolean) $visible;
 
-	/**
+        return $this;
+    }
+
+    /**
      * @ManyToMany(targetEntity="Node", mappedBy="tags")
      * @JoinTable(name="nodes_tags")
      * @var ArrayCollection
@@ -43,7 +56,8 @@ class Tag extends DateTimedPositioned
     /**
      * @return ArrayCollection
      */
-    public function getNodes() {
+    public function getNodes()
+    {
         return $this->nodes;
     }
 
@@ -56,7 +70,8 @@ class Tag extends DateTimedPositioned
     /**
      * @return ArrayCollection
      */
-    public function getSubscribers() {
+    public function getSubscribers()
+    {
         return $this->subscribers;
     }
 
@@ -69,101 +84,119 @@ class Tag extends DateTimedPositioned
     /**
      * @return ArrayCollection
      */
-    public function getDocuments() {
+    public function getDocuments()
+    {
         return $this->documents;
     }
-	
-	/**
-	 * @ManyToOne(targetEntity="Tag", inversedBy="children", fetch="EXTRA_LAZY")
-	 * @JoinColumn(name="parent_tag_id", referencedColumnName="id", onDelete="CASCADE")
-	 * @var Tag
-	 */
-	private $parent;
 
-	/**
-	 * @return Tag parent
-	 */
-	public function getParent() {
-	    return $this->parent;
-	}
-	
-	/**
-	 * @param Tag $newparent [description]
-	 */
-	public function setParent($parent) {
-	    $this->parent = $parent;
-	
-	    return $this;
-	}
+    /**
+     * @ManyToOne(targetEntity="Tag", inversedBy="children", fetch="EXTRA_LAZY")
+     * @JoinColumn(name="parent_tag_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var Tag
+     */
+    private $parent;
 
-	/**
-	 * @OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true, fetch="EXTRA_LAZY")
-	 * @var ArrayCollection
-	 */
-	private $children;
+    /**
+     * @return Tag parent
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
 
-	/**
-	 * @return ArrayCollection
-	 */
-	public function getChildren() {
-	    return $this->children;
-	}
-	/**
-	 * @param Tag $newchildren
-	 * @return Tag
-	 */
-	public function addChild( Tag $child ) {
-	    if (!$this->getChildren()->contains($child)) {
-            $this->getChildren()->add($child);
-        }
-        return $this;
-	}
-	/**
-	 * @param  Tag   $child 
-	 * @return Tag
-	 */
-	public function removeChild( Tag $child ) {
-	    if ($this->getChildren()->contains($child)) {
-            $this->getChildren()->removeElement($child);
-        }
+    /**
+     * @param Tag $parent
+     *
+     * @return $this
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+
         return $this;
     }
 
     /**
-	 * @OneToMany(targetEntity="TagTranslation", mappedBy="tag", orphanRemoval=true, fetch="EXTRA_LAZY")
-	 * @var ArrayCollection
-	 */
-	private $translatedTags = null;
-	/**
-	 * @return ArrayCollection
-	 */
-	public function getTranslatedTags() {
-	    return $this->translatedTags;
-	}
+     * @OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @var ArrayCollection
+     */
+    private $children;
 
-	public function __construct()
+    /**
+     * @return ArrayCollection
+     */
+    public function getChildren()
     {
-    	parent::__construct();
+        return $this->children;
+    }
+    /**
+     * @param Tag $child
+     *
+     * @return $this
+     */
+    public function addChild(Tag $child)
+    {
+        if (!$this->getChildren()->contains($child)) {
+            $this->getChildren()->add($child);
+        }
 
-    	$this->nodes = new ArrayCollection();
-    	$this->subscribers = new ArrayCollection();
-    	$this->documents = new ArrayCollection();
-    	$this->translatedTags = new ArrayCollection();
-    	$this->children = new ArrayCollection();
+        return $this;
+    }
+    /**
+     * @param Tag $child
+     *
+     * @return $this
+     */
+    public function removeChild(Tag $child)
+    {
+        if ($this->getChildren()->contains($child)) {
+            $this->getChildren()->removeElement($child);
+        }
+
+        return $this;
     }
 
-    public function getOneLineSummary()
-	{
-		return $this->getId()." — ".$this->getName()." — ".$this->getNodeType()->getName().
-			" — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
-	}
+    /**
+     * @OneToMany(targetEntity="TagTranslation", mappedBy="tag", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @var ArrayCollection
+     */
+    private $translatedTags = null;
+    /**
+     * @return ArrayCollection
+     */
+    public function getTranslatedTags()
+    {
+        return $this->translatedTags;
+    }
+    /**
+     * Create a new Tag.
+     */
+    public function __construct()
+    {
+        parent::__construct();
 
-	/**
-	 * 
-	 * @return RZ\Renzo\Core\Handlers\TagHandler
-	 */
-	public function getHandler()
-	{
-		return new TagHandler( $this );
-	}
+        $this->nodes = new ArrayCollection();
+        $this->subscribers = new ArrayCollection();
+        $this->documents = new ArrayCollection();
+        $this->translatedTags = new ArrayCollection();
+        $this->children = new ArrayCollection();
+    }
+
+    /**
+     * @todo Move this method to a TagViewer
+     * @return string
+     */
+    public function getOneLineSummary()
+    {
+        return $this->getId()." — ".$this->getName()." — ".$this->getNodeType()->getName().
+            " — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
+    }
+
+    /**
+     * @return RZ\Renzo\Core\Handlers\TagHandler
+     */
+    public function getHandler()
+    {
+        return new TagHandler($this);
+    }
 }

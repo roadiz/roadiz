@@ -1,5 +1,12 @@
 <?php
-
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file NodeTypesUtilsController.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -23,29 +30,34 @@ use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
-
-
-class NodeTypesUtilsController extends  RozierApp {
+/**
+ * {@inheritdoc}
+ */
+class NodeTypesUtilsController extends RozierApp
+{
 
     /**
      * Export a Json file containing NodeType datas and fields.
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @param  int  $node_type_id
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $nodeTypeId
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function exportJsonFileAction(Request $request, $node_type_id) {
-        $node_type = Kernel::getInstance()->em()
-            ->find('RZ\Renzo\Core\Entities\NodeType', (int)$node_type_id);
+    public function exportJsonFileAction(Request $request, $nodeTypeId)
+    {
+        $nodeType = Kernel::getInstance()->em()
+            ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
         $response =  new Response(
-            $node_type->getSerializer()->serializeToJson(),
+            $nodeType->getSerializer()->serializeToJson(),
             Response::HTTP_OK,
             array()
         );
 
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $node_type->getName() . '.rzt')); // Rezo-Zero Type
+            $nodeType->getName() . '.rzt')); // Rezo-Zero Type
 
         $response->prepare($request);
 
@@ -54,10 +66,13 @@ class NodeTypesUtilsController extends  RozierApp {
 
     /**
      * Import a Json file (.rzt) containing NodeType datas and fields.
-     * @param  Symfony\Component\HttpFoundation\Request $request
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function importJsonFileAction(Request $request) {
+    public function importJsonFileAction(Request $request)
+    {
         $form = $this->buildImportJsonFileForm();
 
         $form->handleRequest();
@@ -79,9 +94,9 @@ class NodeTypesUtilsController extends  RozierApp {
                     )
                 );
                 $response->prepare($request);
+
                 return $response->send();
-            }
-            else {
+            } else {
                 $nodeType = NodeTypeSerializer::deserializeFromJson($serializedData);
                 $existingNT = Kernel::getInstance()->em()
                                         ->getRepository('RZ\Renzo\Core\Entities\NodeType')
@@ -89,8 +104,7 @@ class NodeTypesUtilsController extends  RozierApp {
 
                 if (null === $existingNT ) {
                     Kernel::getInstance()->em()->persist($nodeType);
-                }
-                else {
+                } else {
                     // Already exists, must update
                     $existingNT->getSerializer()->updateFromJson($nodeType);
                 }
@@ -110,6 +124,7 @@ class NodeTypesUtilsController extends  RozierApp {
                     )
                 );
                 $response->prepare($request);
+
                 return $response->send();
             }
         }
@@ -127,11 +142,11 @@ class NodeTypesUtilsController extends  RozierApp {
     /**
      * @return \Symfony\Component\Form\Form
      */
-    private function buildImportJsonFileForm() {
+    private function buildImportJsonFileForm()
+    {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('Attachment', 'file')
-        ;
+            ->add('Attachment', 'file');
 
         return $builder->getForm();
     }

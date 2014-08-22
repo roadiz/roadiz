@@ -1,55 +1,72 @@
-<?php 
-
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file Subscriber.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\AbstractEntities\Human;
-
+use RZ\Renzo\Core\AbstractEntities\AbstractHuman;
 /**
+ * A Subscriber is a light User which only can subscribe
+ * to newsletter feeds and can be tagged.
+ *
  * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="subscribers")
  */
-class Subscriber extends Human
+class Subscriber extends AbstractHuman
 {
-	/**
-	 * @Column(type="boolean")
-	 */
-	private $hardBounced = false;
-	/**
-	 * @return [type] [description]
-	 */
-	public function isHardBounced() {
-	    return $this->hardBounced;
-	}
-	/**
-	 * @param [type] $hardBounced [description]
-	 */
-	public function setHardBounced($hardBounced) {
-	    $this->hardBounced = (boolean)$hardBounced;
-	
-	    return $this;
-	}
+    /**
+     * @Column(type="boolean")
+     */
+    private $hardBounced = false;
+    /**
+     * @return boolean
+     */
+    public function isHardBounced()
+    {
+        return $this->hardBounced;
+    }
+    /**
+     * @param boolean $hardBounced
+     *
+     * @return $this
+     */
+    public function setHardBounced($hardBounced)
+    {
+        $this->hardBounced = (boolean) $hardBounced;
 
-	/**
-	 * @Column(type="boolean")
-	 */
-	private $softBounced = false;
-	/**
-	 * @return [type] [description]
-	 */
-	public function isSoftBounced() {
-	    return $this->softBounced;
-	}
-	/**
-	 * @param [type] $hardBounced [description]
-	 */
-	public function setSoftBounced($softBounced) {
-	    $this->softBounced = (boolean)$softBounced;
-	
-	    return $this;
-	}
+        return $this;
+    }
 
-	/**
+    /**
+     * @Column(type="boolean")
+     */
+    private $softBounced = false;
+    /**
+     * @return boolean
+     */
+    public function isSoftBounced()
+    {
+        return $this->softBounced;
+    }
+    /**
+     * @param boolean $softBounced
+     *
+     * @return $this
+     */
+    public function setSoftBounced($softBounced)
+    {
+        $this->softBounced = (boolean) $softBounced;
+
+        return $this;
+    }
+
+    /**
      * @ManyToMany(targetEntity="Tag", inversedBy="subscribers")
      * @JoinTable(name="subscribers_tags")
      * @var ArrayCollection
@@ -58,17 +75,18 @@ class Subscriber extends Human
     /**
      * @return ArrayCollection
      */
-    public function getTags() {
+    public function getTags()
+    {
         return $this->tags;
     }
 
-	/**
-	 * 
-	 */
-	public function __construct()
+    /**
+     * Create a new Subscriber
+     */
+    public function __construct()
     {
-    	parent::__construct();
+        parent::__construct();
 
-    	$this->tags = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 }

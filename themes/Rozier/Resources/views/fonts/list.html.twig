@@ -21,7 +21,7 @@
 			{% for font in fonts %}
 			<tr>
 				<td>
-					<a href="{{ path('fontsEditPage', { font_id: font.getId }) }}">{{ font.getName }}</a>
+					<a href="{{ path('fontsEditPage', { fontId: font.getId }) }}">{{ font.getName }}</a>
 				</td>
 				<td>{{ variants[font.getVariant]|trans }}</td>
 				<td>
@@ -32,7 +32,7 @@
 				</td>
 				<td><code>{{ font.getHash }}</code></td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('fontsDeletePage', { font_id: font.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('fontsDeletePage', { fontId: font.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}delete{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}

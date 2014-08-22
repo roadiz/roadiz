@@ -6,7 +6,7 @@
 	<h1 id="title">{% trans %}Fields: {% endtrans %}{{ node_type.getDisplayName }}</h1>
 	<nav>
 		<a class="uk-button" href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to node-types{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('nodeTypeFieldsAddPage', { node_type_id: node_type.getId }) }}"><i class="uk-icon-plus"></i> {% trans %}Add a field{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('nodeTypeFieldsAddPage', { node_typeId: nodeType.getId }) }}"><i class="uk-icon-plus"></i> {% trans %}Add a field{% endtrans %}</a>
 	</nav>
 	<table class="node-type-fields uk-table">
 		<thead>
@@ -20,11 +20,11 @@
 		<tbody>
 			{% for field in fields %}
 			<tr>
-				<td><a href="{{ path('nodeTypeFieldsEditPage', { node_type_field_id: field.getId }) }}">{{ field.getName }}</a></td>
+				<td><a href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}">{{ field.getName }}</a></td>
 				<td>{{ field.getLabel }}</td>
 				<td>{{ field.getTypeName }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { node_type_field_id: field.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}">{% trans %}Delete{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}

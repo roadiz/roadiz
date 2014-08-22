@@ -1,4 +1,13 @@
-<?php 
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ * Description
+ *
+ * @file NodeTypeFieldSerializer.php
+ * @copyright REZO ZERO 2014
+ * @author Thomas Aufresne
+ */
 
 namespace RZ\Renzo\Core\Serializers;
 
@@ -12,19 +21,31 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
-class NodeTypeFieldSerializer implements EntitySerializer {
+/**
+ * Serialization class for NodeTypeField.
+ */
+class NodeTypeFieldSerializer implements SerializerInterface
+{
 
     protected $nodeTypeField;
 
-    function __construct(NodeTypeField $nodeTypeField) {
+    /**
+     * NodeTypeFieldSerializer's contructor.
+     *
+     * @param RZ\Renzo\Core\Entities\NodeTypeField $nodeTypeField
+     */
+    public function __construct(NodeTypeField $nodeTypeField)
+    {
         $this->nodeTypeField = $nodeTypeField;
     }
 
-	/**
-     * Serializes data 
-     * @return array         
+    /**
+     * Serializes data.
+     *
+     * @return array
      */
-    public function serialize() {
+    public function serialize()
+    {
         $data = array();
 
         $data['name'] = $this->getNodeTypeField()->getName();
@@ -35,27 +56,31 @@ class NodeTypeFieldSerializer implements EntitySerializer {
         $data['indexed'] = $this->getNodeTypeField()->isIndexed();
         $data['virtual'] = $this->getNodeTypeField()->isVirtual();
 
-       	return $data;
+        return $data;
     }
 
     /**
-     * Deserializes a json file into a readable array of datas
+     * Deserializes a json file into a readable array of datas.
+     * @param string $jsonString
+     *
      * @return RZ\Renzo\Core\Entities\NodeTypeField
      */
-    public function deserialize($jsonString) {
-    	$encoder = new JsonEncoder();
-		$normalizer = new GetSetMethodNormalizer();
-		$normalizer->setCamelizedAttributes(array(
-			'name',
-			'label',
-			'description',
-			'visible',
-			'type',
-			'indexed',
-			'virtual'
-		));
+    public function deserialize($jsonString)
+    {
+        $encoder = new JsonEncoder();
+        $normalizer = new GetSetMethodNormalizer();
+        $normalizer->setCamelizedAttributes(array(
+            'name',
+            'label',
+            'description',
+            'visible',
+            'type',
+            'indexed',
+            'virtual'
+        ));
 
-		$serializer = new Serializer(array($normalizer), array($encoder));
-		return $serializer->deserialize($jsonString, 'RZ\Renzo\Core\Entities\NodeTypeField', 'json');
+        $serializer = new Serializer(array($normalizer), array($encoder));
+
+        return $serializer->deserialize($jsonString, 'RZ\Renzo\Core\Entities\NodeTypeField', 'json');
     }
 }

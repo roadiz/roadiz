@@ -22,13 +22,13 @@
 			<tr>
 				{% if document.isImage %}
 				<td class="uk-text-center">
-					<a href="{{ path('documentsEditPage', { document_id: document.getId }) }}">
+					<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}">
 						<img width="100" alt="" src="{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}" />
 					</a>
 				</td>
 				{% else %}
 				<td class="uk-text-center">
-					<a href="{{ path('documentsEditPage', { document_id: document.getId }) }}"><i class='uk-icon-large uk-icon-file-{{ document.getShortType }}-o'></i></a>
+					<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}"><i class='uk-icon-large uk-icon-file-{{ document.getShortType }}-o'></i></a>
 				</td>
 				{% endif %}
 				<td>
@@ -36,7 +36,7 @@
 				</td>
 				<td>{{ document.getCreatedAt|localizeddate('full', 'none') }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { document_id: document.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}">{% trans %}Delete{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}

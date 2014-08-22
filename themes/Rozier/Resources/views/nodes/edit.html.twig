@@ -17,11 +17,11 @@
 		        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
-		    	</div>	
+		    	</div>
 		        {% endif %}
 		    {% endfor %}
    		</fieldset>
-   		
+
 	    {{ form_rest(form) }}
 	    <fieldset data-uk-margin>
 	    	<input class="uk-button uk-button-primary" type="submit" />
@@ -36,16 +36,16 @@
    		<fieldset data-uk-margin>
 		    {% for item in translation_form %}
 		    	{# Node fields  #}
-		        {% if item.vars.name != "_token" and item.vars.name != "node_id" %}
+		        {% if item.vars.name != "_token" and item.vars.name != "nodeId" %}
 		    	<div class="uk-form-row">
 		        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
-		    	</div>	
+		    	</div>
 		        {% endif %}
 		    {% endfor %}
    		</fieldset>
-   		
+
 	    {{ form_rest(translation_form) }}
 	    <fieldset data-uk-margin>
 	    	<input class="uk-button uk-button-primary" type="submit" value="{% trans %}Translate{% endtrans %}" />

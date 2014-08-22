@@ -1,19 +1,19 @@
 {% set tTag = tag.getTranslatedTags.first %}
 {% set name = tTag.getName %}
-<li data-tag-id="{{ tag.getId }}" 
+<li data-tag-id="{{ tag.getId }}"
 	class="tagtree-element">
 
 	<div class="tagtree-element-inner uk-nestable-item">
 		<div class="uk-nestable-handle"></div>
 		<div data-nestable-action="toggle"></div>
 		<div class="tagtree-element-name">
-			<i class="uk-icon-tag"></i> 
+			<i class="uk-icon-tag"></i>
 			{% if not tag.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %}
 
 			{% if tag.isHidingChildren %}
-				<a href="{{ path('tagsTreePage', { tag_id:tag.getId }) }}">{{ name }}</a>
+				<a href="{{ path('tagsTreePage', { tagId:tag.getId }) }}">{{ name }}</a>
 			{% else %}
-				<a href="{{ path('tagsEditTranslatedPage', { tag_id:tag.getId, translation_id:tTag.getTranslation.getId }) }}">{{ name }}</a>
+				<a href="{{ path('tagsEditTranslatedPage', { tagId:tag.getId, translationId:tTag.getTranslation.getId }) }}">{{ name }}</a>
 			{% endif %}
 		</div>
 
@@ -22,17 +22,17 @@
 		    <nav class="uk-dropdown uk-dropdown-small">
 		        <div class="uk-nav uk-nav-dropdown">
 		            <p>
-		            	<a title="{% trans %}edit.tag.%name%{% endtrans %}" href="{{ path('tagsEditTranslatedPage', { tag_id:tag.getId, translation_id:tTag.getTranslation.getId }) }}">
+		            	<a title="{% trans %}edit.tag.%name%{% endtrans %}" href="{{ path('tagsEditTranslatedPage', { tagId:tag.getId, translationId:tTag.getTranslation.getId }) }}">
 		            		<i class="uk-icon-pencil"></i> {% trans %}edit.tag{% endtrans %}
 		            	</a>
 		            </p>
 		            <p>
-		            	<a title="{% trans %}add.child.tag.%name%{% endtrans %}" href="{{ path('tagsAddChildPage', { tag_id:tag.getId }) }}">
+		            	<a title="{% trans %}add.child.tag.%name%{% endtrans %}" href="{{ path('tagsAddChildPage', { tagId:tag.getId }) }}">
 		            		<i class="uk-icon-plus"></i> {% trans %}add.child.tag{% endtrans %}
 		            	</a>
 		            </p>
 		            <p>
-		            	<a title="{% trans %}delete.tag.%name%{% endtrans %}" href="{{ path('tagsDeletePage', { tag_id:tag.getId }) }}">
+		            	<a title="{% trans %}delete.tag.%name%{% endtrans %}" href="{{ path('tagsDeletePage', { tagId:tag.getId }) }}">
 		            		<i class="uk-icon-trash-o"></i> {% trans %}delete.tag{% endtrans %}
 		            	</a>
 		            </p>
@@ -41,7 +41,7 @@
 		</div>
 	</div>
 	<ul class="uk-nestable-list" data-parent-tag-id="{{ tag.getId }}">
-	{# 
+	{#
 	 # For drag&drop ease, we don't create nested lists
 	 # We will have to check after OR inside drag status
 	 #}

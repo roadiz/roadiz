@@ -25,7 +25,7 @@
             {% include 'includes/user_panel.html.twig' %}
             {% include 'includes/admin_menu.html.twig' %}
 
-            <div id="main-trees" class="uk-width-2-10">  
+            <div id="main-trees" class="uk-width-2-10">
                 <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
                     <li><a href=""><i class="uk-icon-code-fork"></i> {% trans %}nodes{% endtrans %}</a></li>
                     <li><a href=""><i class="uk-icon-tags"></i> {% trans %}tags{% endtrans %}</a></li>
@@ -70,8 +70,8 @@
                 'resourcesUrl': '{{ head.resourcesUrl }}',
                 'ajaxToken':    '{{ head.ajaxToken }}',
                 'routes': {
-                    'nodeAjaxEdit' :          '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%node_id%',
-                    'tagAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tag_id%',
+                    'nodeAjaxEdit' :          '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',
+                    'tagAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
                     'documentsAjaxExplorer' : '{{ head.baseUrl }}/rz-admin/ajax/documents/explore',
                 }
             };

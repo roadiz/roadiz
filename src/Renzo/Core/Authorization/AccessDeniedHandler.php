@@ -1,6 +1,12 @@
 <?php
-
-
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file AccessDeniedHandler.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace RZ\Renzo\Core\Authorization;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +19,6 @@ use RZ\Renzo\Core\Kernel;
 /**
  * This is used by the ExceptionListener to translate an AccessDeniedException
  * to a Response object.
- *
  */
 class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
@@ -25,14 +30,13 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
      *
      * @return Response may return null
      */
-    public function handle(Request $request, AccessDeniedException $accessDeniedException){
+    public function handle(Request $request, AccessDeniedException $accessDeniedException)
+    {
+        $response = new RedirectResponse(
+            Kernel::getInstance()->getUrlGenerator()->generate('homePage')
+        );
+        $response->prepare($request);
 
-
-    	$response = new RedirectResponse(
-			Kernel::getInstance()->getUrlGenerator()->generate('homePage')
-		);
-		$response->prepare($request);
-
-		return $response->send();
+        return $response->send();
     }
 }

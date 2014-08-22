@@ -2,7 +2,7 @@
 	<ul class="uk-navbar-nav">
 		{% for translation in available_translations %}
 		    <li class="{% if current == translation.getId %}uk-active{% endif %}">
-		    	<a href="{{ path('tagsEditTranslatedPage', { tag_id: tag.getId, translation_id:translation.getId }) }}">{{ translation.getName }}</a>
+		    	<a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId:translation.getId }) }}">{{ translation.getName }}</a>
 		    </li>
 		{% endfor %}
 	</ul>

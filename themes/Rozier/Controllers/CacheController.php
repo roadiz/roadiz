@@ -1,13 +1,12 @@
 <?php
-/**
+/*
  * Copyright REZO ZERO 2014
  *
  *
- *
+ * @file CacheController.php
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Console\SchemaCommand;
@@ -28,14 +27,18 @@ use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
-
-class CacheController extends RozierApp {
-
+/**
+ * {@inheritdoc}
+ */
+class CacheController extends RozierApp
+{
     /**
-     * @param  Symfony\Component\HttpFoundation\Request  $request
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function deleteDoctrineCache(Request $request) {
+    public function deleteDoctrineCache(Request $request)
+    {
         $form = $this->buildDeleteDoctrineForm();
         $form->handleRequest();
 
@@ -67,12 +70,12 @@ class CacheController extends RozierApp {
     }
 
     /**
-     * @return Symfony\Component\Form\Forms
+     * @return Symfony\Component\Form\Form
      */
-    private function buildDeleteDoctrineForm() {
+    private function buildDeleteDoctrineForm()
+    {
         $builder = $this->getFormFactory()
-            ->createBuilder('form')
-        ;
+            ->createBuilder('form');
 
         return $builder->getForm();
     }

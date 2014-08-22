@@ -1,4 +1,12 @@
-<?php 
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file TagTreeWidget.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace Themes\Rozier\Widgets;
 
 use RZ\Renzo\Core\Entities\Tag;
@@ -9,77 +17,86 @@ use Themes\Rozier\Widgets\AbstractWidget;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
-* 
-*/
+ * Prepare a Tag tree according to Tag hierarchy and given options.
+ */
 class TagTreeWidget extends AbstractWidget
 {
-	protected $parentTag =  null;
-	protected $tags =       null;
-	protected $translation = null;
+    protected $parentTag =  null;
+    protected $tags =       null;
+    protected $translation = null;
 
+    /**
+     * @param Request                    $request
+     * @param AppController              $refereeController
+     * @param RZ\Renzo\Core\Entities\Tag $parent
+     */
+    public function __construct(
+        Request $request,
+        $refereeController,
+        Tag $parent = null
+    )
+    {
+        parent::__construct($request, $refereeController);
 
-	/**
-	 * @param Request $request
-	 * @param AppController  $refereeController 
-	 * @param Tag  $parent 
-	 * @param Translation  $translation
-	 */
-	public function __construct(  Request $request, $refereeController, Tag $parent = null/*, Translation $translation = null */)
-	{
-		parent::__construct( $request, $refereeController );
+        $this->parentTag = $parent;
+        $this->getTagTreeAssignationForParent();
+    }
 
-		$this->parentTag = $parent;
-		//$this->translation = $translation;
+    /**
+     * Fill twig assignation array with TagTree entities.
+     */
+    protected function getTagTreeAssignationForParent()
+    {
+        if ($this->translation === null) {
+            $this->translation = Kernel::getInstance()->em()
+                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->findOneBy(array('defaultTranslation'=>true));
+        }
 
-		$this->getTagTreeAssignationForParent();
-	}
+        $this->tags = Kernel::getInstance()->em()
+                ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                ->findBy(array('parent'=>$this->parentTag), array('position'=>'ASC'));
+    }
 
-	/**
-	 * @param  RZ\Renzo\Core\Entities\Tag $parent Parent tag or NULL to get from root
-	 * @return array Twig assignation array
-	 */
-	protected function getTagTreeAssignationForParent( )
-	{
-		if ($this->translation === null) {
-			$this->translation = Kernel::getInstance()->em()
-					->getRepository('RZ\Renzo\Core\Entities\Translation')
-					->findOneBy(array('defaultTranslation'=>true));
-		}
+    /**
+     * @param RZ\Renzo\Core\Entities\Tag $parent
+     *
+     * @return ArrayCollection
+     */
+    public function getChildrenTags(Tag $parent)
+    {
+        if ($this->translation === null) {
+            $this->translation = Kernel::getInstance()->em()
+                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->findOneBy(array('defaultTranslation'=>true));
+        }
+        if ($parent !== null) {
+            return $this->tags = Kernel::getInstance()->em()
+                    ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                    ->findBy(array('parent'=>$parent), array('position'=>'ASC'));
+        }
 
-		$this->tags = Kernel::getInstance()->em()
-				->getRepository('RZ\Renzo\Core\Entities\Tag')
-				->findBy(array('parent'=>$this->parentTag), array('position'=>'ASC'));
-	}
-
-	/**
-	 * @param  RZ\Renzo\Core\Entities\Tag $parent
-	 * @return array
-	 */
-	public function getChildrenTags( Tag $parent )
-	{
-		if ($this->translation === null) {
-			$this->translation = Kernel::getInstance()->em()
-					->getRepository('RZ\Renzo\Core\Entities\Translation')
-					->findOneBy(array('defaultTranslation'=>true));
-		}
-		if ($parent !== null) {
-			return $this->tags = Kernel::getInstance()->em()
-					->getRepository('RZ\Renzo\Core\Entities\Tag')
-					->findBy(array('parent'=>$parent), array('position'=>'ASC'));
-		}
-		return null;
-	}
-
-	public function getRootTag()
-	{
-		return $this->parentTag;
-	}
-	public function getTranslation()
-	{
-		return $this->translation;
-	}
-	public function getTags()
-	{
-		return $this->tags;
-	}
+        return null;
+    }
+    /**
+     * @return RZ\Renzo\Core\Entities\Tag
+     */
+    public function getRootTag()
+    {
+        return $this->parentTag;
+    }
+    /**
+     * @return RZ\Renzo\Core\Entities\Translation
+     */
+    public function getTranslation()
+    {
+        return $this->translation;
+    }
+    /**
+     * @return ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
 }

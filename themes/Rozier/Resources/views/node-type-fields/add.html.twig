@@ -5,7 +5,7 @@
 <section id="manage-node-type">
 	<h1 id="node-type-field-title">{% trans %}Add a new field{% endtrans %}</h1>
 	<nav>
-		<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { node_type_id: node_type.getId }) }}"><span class="uk-icon-reply"></span>{% trans %}Back to fields{% endtrans %}</a>
+		<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: node_type.getId }) }}"><span class="uk-icon-reply"></span>{% trans %}Back to fields{% endtrans %}</a>
 	</nav>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
@@ -19,7 +19,7 @@
 		        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
-		    	</div>	
+		    	</div>
 		        {% endif %}
 		    {% endfor %}
    		</fieldset>

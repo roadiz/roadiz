@@ -16,7 +16,7 @@
 	    {{ form_rest(form) }}
 	    <fieldset data-uk-margin>
 	    	<legend>{% trans %}Are you sure you want to remove this tag?{% endtrans %}</legend>
-	    	<a href="{{ path('nodesEditTagsPage', { node_id: node.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<a href="{{ path('nodesEditTagsPage', { nodeId: node.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

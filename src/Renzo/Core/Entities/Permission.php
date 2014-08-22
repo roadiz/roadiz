@@ -1,19 +1,29 @@
-<?php 
-
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file Permission.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace RZ\Renzo\Core\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\AbstractEntities\PersistableObject;
+use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 
 /**
+ * Not implemented yet
+ *
  * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="permissions")
  */
-class Permission extends PersistableObject
+class Permission extends AbstractEntity
 {
-	
-	public function __construct()
+    /**
+     * Create a new Permission
+     */
+    public function __construct()
     {
-    	parent::__construct();
+        parent::__construct();
     }
 }

@@ -3,7 +3,7 @@
 {% else %}
 {% set name = node.getNodeName %}
 {% endif %}
-<li data-node-id="{{ node.getId }}" 
+<li data-node-id="{{ node.getId }}"
 	class="nodetree-element">
 
 	<div class="nodetree-element-inner uk-nestable-item">
@@ -18,9 +18,9 @@
 			{% if node.isArchived %}<i class="uk-icon-archive"></i> {% endif %}
 
 			{% if node.isHidingChildren %}
-				<a href="{{ path('nodesTreePage', { node_id:node.getId }) }}">{{ name }}</a>
+				<a href="{{ path('nodesTreePage', { nodeId:node.getId }) }}">{{ name }}</a>
 			{% else %}
-				<a href="{{ path('nodesEditSourcePage', { node_id:node.getId, translation_id:nodeTree.getTranslation.getId}) }}">{{ name }}</a>
+				<a href="{{ path('nodesEditSourcePage', { nodeId:node.getId, translationId:nodeTree.getTranslation.getId}) }}">{{ name }}</a>
 			{% endif %}
 		</div>
 
@@ -29,17 +29,17 @@
 		    <nav class="uk-dropdown uk-dropdown-small">
 		        <div class="uk-nav uk-nav-dropdown">
 		            <p>
-		            	<a title="{% trans %}edit.node.%name%{% endtrans %}" href="{{ path('nodesEditPage', { node_id:node.getId }) }}">
+		            	<a title="{% trans %}edit.node.%name%{% endtrans %}" href="{{ path('nodesEditPage', { nodeId:node.getId }) }}">
 		            		<i class="uk-icon-pencil"></i> {% trans %}edit.node{% endtrans %}
 		            	</a>
 		            </p>
 		            <p>
-		            	<a title="{% trans %}add.child.node.%name%{% endtrans %}" href="{{ path('nodesAddChildPage', { node_id:node.getId }) }}">
+		            	<a title="{% trans %}add.child.node.%name%{% endtrans %}" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}">
 		            		<i class="uk-icon-plus"></i> {% trans %}add.child.node{% endtrans %}
 		            	</a>
 		            </p>
 		            <p>
-		            	<a title="{% trans %}delete.node.%name%{% endtrans %}" href="{{ path('nodesDeletePage', { node_id:node.getId }) }}">
+		            	<a title="{% trans %}delete.node.%name%{% endtrans %}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">
 		            		<i class="uk-icon-trash-o"></i> {% trans %}delete.node{% endtrans %}
 		            	</a>
 		            </p>
@@ -48,7 +48,7 @@
 		</div>
 	</div>
 	<ul class="uk-nestable-list" data-parent-node-id="{{ node.getId }}">
-	{# 
+	{#
 	 # For drag&drop ease, we don't create nested lists
 	 # We will have to check after OR inside drag status
 	 #}

@@ -3,7 +3,7 @@
 {% block content %}
 <section id="manage-user-groups">
 	<h1 id="user-title">Edit {{ user.getDefaultTranslatedTag.getName }} groups</h1>
-	
+
 	{% include 'users/navBar.html.twig' with {'user':user, current:'groups'} %}
 
 	<table class="users-groups uk-table">
@@ -18,7 +18,7 @@
 			<tr>
 				<td>{{ group.getName }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveGroupsPage', { user_id: user.getId, group_id: group.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveGroupsPage', { userId: user.getId, groupId: group.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}
@@ -30,7 +30,7 @@
 
    		<fieldset data-uk-margin>
 		    {% for item in form %}
-			    {% if item.vars.name != "_token" and item.vars.name != 'user_id' %}
+			    {% if item.vars.name != "_token" and item.vars.name != 'userId' %}
 			    <div class="uk-form-row">
 			    	{# Source fields  #}
 			        <label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>

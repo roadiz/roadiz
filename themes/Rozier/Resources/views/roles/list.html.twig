@@ -16,12 +16,12 @@
 			{% for role in roles %}
 			<tr>
 				<td>
-					{% if not role.required %}<a href="{{ path('rolesEditPage', { role_id: role.getId }) }}">{{ role.getName }}</a>{% else %}
+					{% if not role.required %}<a href="{{ path('rolesEditPage', { roleId: role.getId }) }}">{{ role.getName }}</a>{% else %}
 					{{ role.getName }}{% endif %}
 				</td>
 				<td>
 					{% if not role.required %}
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('rolesDeletePage', { role_id: role.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}Delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('rolesDeletePage', { roleId: role.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}Delete{% endtrans %}</a>
 					{% else %}
 					<div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}role.required{% endtrans %}</div>
 					{% endif %}

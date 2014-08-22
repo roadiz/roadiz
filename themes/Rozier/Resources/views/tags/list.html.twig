@@ -7,7 +7,7 @@
 	<nav><a class="uk-button" href="{{ path('tagsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a tag{% endtrans %}</a></nav>
 
 	{% include 'widgets/filtersBar.html.twig' %}
-	
+
 	<table class="tags uk-table">
 		<thead>
 	        <tr>
@@ -21,10 +21,10 @@
 				{% set ttag = tag.getTranslatedTags.first %}
 				{% if ttag %}
 				<tr>
-					<td><a href="{{ path('tagsEditTranslatedPage', { tag_id: tag.getId, translation_id: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
-					<td><a href="{{ path('tagsEditTranslatedPage', { tag_id: tag.getId, translation_id: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
+					<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
+					<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
 					<td>
-						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tag_id: tag.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">{% trans %}Delete{% endtrans %}</a>
 					</td>
 				</tr>
 				{% endif %}

@@ -21,7 +21,7 @@
 			{% for group in groups %}
 			<tr>
 				<td>
-					{% if not group.required %}<a href="{{ path('groupsEditPage', { group_id: group.getId }) }}">{{ group.getName }}</a>{% else %}
+					{% if not group.required %}<a href="{{ path('groupsEditPage', { groupId: group.getId }) }}">{{ group.getName }}</a>{% else %}
 					{{ group.getName }}{% endif %}
 				</td>
 				<td>
@@ -34,7 +34,7 @@
 				</td>
 				<td>
 					{% if not group.required %}
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsDeletePage', { group_id: group.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}Delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsDeletePage', { groupId: group.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}Delete{% endtrans %}</a>
 					{% else %}
 					<div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}group.required{% endtrans %}</div>
 					{% endif %}

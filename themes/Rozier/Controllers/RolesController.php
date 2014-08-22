@@ -1,5 +1,12 @@
 <?php
-
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file RolesController.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -18,15 +25,18 @@ use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Renzo\Core\Exceptions\EntityRequiredException;
 
 /**
-*
-*/
-class RolesController extends RozierApp {
+ * {@inheritdoc}
+ */
+class RolesController extends RozierApp
+{
 
     /**
-     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request)
+    {
 
         $listManager = new EntityListManager(
             $request,
@@ -49,10 +59,13 @@ class RolesController extends RozierApp {
 
     /**
      * Return an creation form for requested role.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function addAction(Request $request) {
+    public function addAction(Request $request)
+    {
         $form = $this->buildAddForm();
         $form->handleRequest();
 
@@ -64,12 +77,10 @@ class RolesController extends RozierApp {
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getLogger()->info($msg);
 
-            }
-            catch(EntityAlreadyExistsException $e){
+            } catch (EntityAlreadyExistsException $e) {
                 $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                 $this->getLogger()->warning($e->getMessage());
-            }
-            catch(\RuntimeException $e){
+            } catch (\RuntimeException $e) {
                 $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                 $this->getLogger()->warning($e->getMessage());
             }
@@ -96,20 +107,23 @@ class RolesController extends RozierApp {
 
     /**
      * Return an deletion form for requested role.
-     * @param  Symfony\Component\HttpFoundation\Request  $request
-     * @param  int  $role_id
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $roleId
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction(Request $request, $role_id) {
+    public function deleteAction(Request $request, $roleId)
+    {
         $role = Kernel::getInstance()->em()
-                    ->find('RZ\Renzo\Core\Entities\Role', (int)$role_id);
+                    ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
         if ($role !== null) {
 
-            $form = $this->buildDeleteForm( $role );
+            $form = $this->buildDeleteForm($role);
             $form->handleRequest();
 
             if ($form->isValid() &&
-                $form->getData()['role_id'] == $role->getId()) {
+                $form->getData()['roleId'] == $role->getId()) {
 
                 try {
                     $this->deleteRole($form->getData(), $role);
@@ -117,12 +131,10 @@ class RolesController extends RozierApp {
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getLogger()->info($msg);
 
-                }
-                catch(EntityRequiredException $e){
+                } catch (EntityRequiredException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getLogger()->warning($e->getMessage());
-                }
-                catch(\RuntimeException $e){
+                } catch (\RuntimeException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getLogger()->warning($e->getMessage());
                 }
@@ -145,30 +157,32 @@ class RolesController extends RozierApp {
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );
-        }
-        else {
+        } else {
             return $this->throw404();
         }
     }
 
     /**
      * Return an edition form for requested role.
-     * @param  Symfony\Component\HttpFoundation\Request  $request
-     * @param  int  $role_id
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $roleId
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function editAction(Request $request, $role_id) {
+    public function editAction(Request $request, $roleId)
+    {
         $role = Kernel::getInstance()->em()
-                    ->find('RZ\Renzo\Core\Entities\Role', (int)$role_id);
+                    ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
 
         if ($role !== null &&
             !$role->required()) {
 
-            $form = $this->buildEditForm( $role );
+            $form = $this->buildEditForm($role);
             $form->handleRequest();
 
             if ($form->isValid() &&
-                $form->getData()['role_id'] == $role->getId()) {
+                $form->getData()['roleId'] == $role->getId()) {
 
                 try {
                     $this->editRole($form->getData(), $role);
@@ -176,12 +190,10 @@ class RolesController extends RozierApp {
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getLogger()->info($msg);
 
-                }
-                catch(EntityAlreadyExistsException $e){
+                } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getLogger()->warning($e->getMessage());
-                }
-                catch(\RuntimeException $e){
+                } catch (\RuntimeException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getLogger()->warning($e->getMessage());
                 }
@@ -204,17 +216,18 @@ class RolesController extends RozierApp {
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );
-        }
-        else {
+        } else {
             return $this->throw404();
         }
     }
 
     /**
      * Build add role form with name constraint.
+     *
      * @return \Symfony\Component\Form\Form
      */
-    protected function buildAddForm() {
+    protected function buildAddForm()
+    {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
             ->add('name', 'text', array(
@@ -225,43 +238,47 @@ class RolesController extends RozierApp {
                         'message' => $this->getTranslator()->trans('Role definition must be prefixed with “ROLE_” and contains only uppercase letters and underscores.')
                     ))
                 )
-            ))
-        ;
+            ));
 
         return $builder->getForm();
     }
 
     /**
      * Build delete role form with name constraint.
-     * @param RZ\Renzo\Core\Entities\Role  $role
+     *
+     * @param RZ\Renzo\Core\Entities\Role $role
+     *
      * @return \Symfony\Component\Form\Form
      */
-    protected function buildDeleteForm(Role $role) {
+    protected function buildDeleteForm(Role $role)
+    {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('role_id', 'hidden', array(
+            ->add('roleId', 'hidden', array(
                 'data'=>$role->getId(),
                 'constraints' => array(
                     new NotBlank()
                 )
-            ))
-        ;
+            ));
 
         return $builder->getForm();
     }
 
     /**
      * Build edit role form with name constraint.
-     * @param  RZ\Renzo\Core\Entities\Role  $role
+     *
+     * @param RZ\Renzo\Core\Entities\Role $role
+     *
      * @return \Symfony\Component\Form\Form
      */
-    protected function buildEditForm(Role $role) {
+    protected function buildEditForm(Role $role)
+    {
         $defaults = array(
             'name'=>$role->getName()
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
-            ->add('role_id', 'hidden', array(
+            ->add('roleId', 'hidden', array(
                 'data'=>$role->getId(),
                 'constraints' => array(
                     new NotBlank()
@@ -275,17 +292,18 @@ class RolesController extends RozierApp {
                         'message' => $this->getTranslator()->trans('Role definition must be prefixed with “ROLE_” and contains only uppercase letters and underscores.')
                     ))
                 )
-            ))
-        ;
+            ));
 
         return $builder->getForm();
     }
 
     /**
-     * @param array  $data
+     * @param array $data
+     *
      * @return RZ\Renzo\Core\Entities\Role
      */
-    protected function addRole(array $data) {
+    protected function addRole(array $data)
+    {
         if (isset($data['name'])) {
             $existing = Kernel::getInstance()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Role')
@@ -299,18 +317,21 @@ class RolesController extends RozierApp {
             Kernel::getInstance()->em()->flush();
 
             return $role;
-        }
-        else {
+        } else {
             throw new \RuntimeException("Role name is not defined", 1);
         }
+
         return null;
     }
 
     /**
-     * @param array  $data
+     * @param array                       $data
+     * @param RZ\Renzo\Core\Entities\Role $role
+     *
      * @return RZ\Renzo\Core\Entities\Role
      */
-    protected function editRole(array $data, Role $role) {
+    protected function editRole(array $data, Role $role)
+    {
         if ($role->required()) {
             throw new EntityRequiredException($this->getTranslator()->trans("role.required.cannot_be_updated"), 1);
         }
@@ -328,24 +349,23 @@ class RolesController extends RozierApp {
             Kernel::getInstance()->em()->flush();
 
             return $role;
-        }
-        else {
+        } else {
             throw new \RuntimeException("Role name is not defined", 1);
         }
+
         return null;
     }
 
     /**
-     * @param  array  $data
-     * @param  RZ\Renzo\Core\Entities\Role  $role
-     * @return void
+     * @param array                        $data
+     * @param RZ\Renzo\Core\Entities\Role  $role
      */
-    protected function deleteRole( array $data, Role $role ) {
+    protected function deleteRole( array $data, Role $role )
+    {
         if (!$role->required()) {
             Kernel::getInstance()->em()->remove($role);
             Kernel::getInstance()->em()->flush();
-        }
-        else {
+        } else {
             throw new EntityRequiredException($this->getTranslator()->trans("role.is.required"), 1);
         }
     }

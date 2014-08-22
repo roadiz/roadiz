@@ -1,20 +1,20 @@
 <nav class="node-edit-navigation uk-navbar">
 	<ul class="uk-navbar-nav">
 		<li class="{% if current == 'source' %}uk-active{% endif %}">
-			<a href="{{ path('nodesEditSourcePage', { node_id: node.getId, translation_id:translation.getId }) }}">{% trans %}node.content{% endtrans %}</a>
+			<a href="{{ path('nodesEditSourcePage', { nodeId: node.getId, translationId:translation.getId }) }}">{% trans %}node.content{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
-			<a href="{{ path('nodesEditPage', { node_id: node.getId }) }}">{% trans %}node.parameters{% endtrans %}</a>
+			<a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{% trans %}node.parameters{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'tags' %}uk-active{% endif %}">
-			<a href="{{ path('nodesEditTagsPage', { node_id: node.getId}) }}">{% trans %}tags{% endtrans %}</a>
+			<a href="{{ path('nodesEditTagsPage', { nodeId: node.getId}) }}">{% trans %}tags{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'aliases' %}uk-active{% endif %}">
-			<a href="{{ path('nodesEditAliasesPage', { node_id: node.getId}) }}">{% trans %}urlaliases{% endtrans %}</a>
+			<a href="{{ path('nodesEditAliasesPage', { nodeId: node.getId}) }}">{% trans %}urlaliases{% endtrans %}</a>
 		</li>
 		{% if node.isHidingChildren %}
 		<li class="{% if current == 'tree' %}uk-active{% endif %}">
-			<a href="{{ path('nodesTreePage', { node_id: node.getId}) }}">{% trans %}tree{% endtrans %}</a>
+			<a href="{{ path('nodesTreePage', { nodeId: node.getId}) }}">{% trans %}tree{% endtrans %}</a>
 		</li>
 		{% endif %}
 	</ul>
@@ -23,6 +23,6 @@
 	</div>
 	<div class="uk-navbar-content uk-navbar-flip">
 		<a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-eye"></i> {% trans %}see.page{% endtrans %}</a>
-		<a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { node_id: node.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+		<a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 	</div>
 </nav>

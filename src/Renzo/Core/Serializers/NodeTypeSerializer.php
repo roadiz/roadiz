@@ -1,4 +1,13 @@
-<?php 
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ * Description
+ *
+ * @file NodeTypeSerializer.php
+ * @copyright REZO ZERO 2014
+ * @author Thomas Aufresne
+ */
 
 namespace RZ\Renzo\Core\Serializers;
 
@@ -12,19 +21,30 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
-class NodeTypeSerializer implements EntitySerializer {
+/**
+ * Serialization class for NodeType.
+ */
+class NodeTypeSerializer implements SerializerInterface
+{
 
     protected $nodeType;
 
-    function __construct(NodeType $nodeType) {
+    /**
+     * NodeTypeSerializer's constructor.
+     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     */
+    public function __construct(NodeType $nodeType)
+    {
         $this->nodeType = $nodeType;
     }
 
     /**
      * Serializes data into Json.
-     * @return string         
+     *
+     * @return string
      */
-    public function serializeToJson() {
+    public function serializeToJson()
+    {
         $data = array();
 
         $data['name'] = $this->getNodeType()->getName();
@@ -41,18 +61,19 @@ class NodeTypeSerializer implements EntitySerializer {
 
         if (defined(JSON_PRETTY_PRINT)) {
             return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        }
-        else {
+        } else {
             return json_encode($data, JSON_NUMERIC_CHECK);
         }
     }
 
     /**
      * Deserializes a Json into readable datas
-     * @param  string  $jsonString
+     * @param string  $jsonString
+     *
      * @return RZ\Renzo\Core\Entities\NodeType
      */
-    public static function deserializeFromJson( $jsonString ) {
+    public static function deserializeFromJson($jsonString)
+    {
         $encoder = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
         $normalizer->setCamelizedAttributes(array(
@@ -76,10 +97,12 @@ class NodeTypeSerializer implements EntitySerializer {
 
     /**
      * Update an existing Node Type.
-     * @param RZ\Renzo\Core\Entities\NodeType
-     * @return bool
+     * @param RZ\Renzo\Core\Entities\NodeType $importedNT
+     *
+     * @return boolean
      */
-    public function updateFromJson(NodeType $importedNT) {
+    public function updateFromJson(NodeType $importedNT)
+    {
         return null;
     }
 }

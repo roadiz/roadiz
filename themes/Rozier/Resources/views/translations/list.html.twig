@@ -18,7 +18,7 @@
 		<tbody>
 			{% for t in translations %}
 			<tr>
-				<td><a href="{{ path('translationsEditPage', { translation_id: t.translation.getId }) }}">{{ t.translation.getName }}</a></td>
+				<td><a href="{{ path('translationsEditPage', { translationId: t.translation.getId }) }}">{{ t.translation.getName }}</a></td>
 				<td>{{ t.translation.getLocale }}</td>
 				<td>
 				{% if t.translation.isAvailable == false %}<div class="uk-badge uk-badge-warning">{% trans %}Not available{% endtrans %}</div>{% endif %}
@@ -38,7 +38,7 @@
 						{{ form_rest(t.defaultForm) }}
 						<input class="uk-button uk-button-small" type="submit" value="{% trans %}Set as default{% endtrans %}" />
 					</form>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('translationsDeletePage', { translation_id: t.translation.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}">{% trans %}Delete{% endtrans %}</a>
 				{% endif %}
 				</td>
 			</tr>

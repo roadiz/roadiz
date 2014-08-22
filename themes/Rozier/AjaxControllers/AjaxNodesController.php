@@ -1,4 +1,12 @@
-<?php 
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file AjaxNodesController.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -16,131 +24,127 @@ use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
-
-
+/**
+ * {@inheritdoc}
+ */
 class AjaxNodesController extends AbstractAjaxController
 {
-	
-	/**
-	 * Handle AJAX edition requests for Node
-	 * such as comming from nodetree widgets
-	 * 
-	 * @param  Request $request [description]
-	 * @param  int  $node_id [description]
-	 * @return Symfony\Component\HttpFoundation\Response JSON response
-	 */
-	public function editAction( Request $request, $node_id ) {
+    /**
+     * Handle AJAX edition requests for Node
+     * such as comming from nodetree widgets.
+     *
+     * @param Request $request
+     * @param int     $nodeId
+     *
+     * @return Symfony\Component\HttpFoundation\Response JSON response
+     */
+    public function editAction(Request $request, $nodeId)
+    {
+        /*
+         * Validate
+         */
+        if (true !== $notValid = $this->validateRequest($request)) {
+            return new Response(
+                json_encode($notValid),
+                Response::HTTP_OK,
+                array('content-type' => 'application/javascript')
+            );
+        }
 
-		/*
-		 * Validate
-		 */
-		if (true !== $notValid = $this->validateRequest($request)) {
-			return new Response(
-				json_encode($notValid),
-				Response::HTTP_OK,
-				array('content-type' => 'application/javascript')
-			);
-		}
+        $node = Kernel::getInstance()->em()
+            ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
-		$node = Kernel::getInstance()->em()
-			->find('RZ\Renzo\Core\Entities\Node', (int)$node_id);
+        if ($node !== null) {
 
-		if ($node !== null) {
-			
-			$responseArray = null;
+            $responseArray = null;
 
-			/*
-			 * Get the right update method against "_action" parameter
-			 */
-			switch ($request->get('_action')) {
-				case 'updatePosition':
-					$responseArray = $this->updatePosition( $request->request->all(), $node );
-					break;
-			}
+            /*
+             * Get the right update method against "_action" parameter
+             */
+            switch ($request->get('_action')) {
+                case 'updatePosition':
+                    $responseArray = $this->updatePosition($request->request->all(), $node);
+                    break;
+            }
 
-			if ($responseArray === null) {
-				$responseArray = array(
-					'statusCode' => '200',
-					'status' => 'success',
-					'responseText' => ('Node '.$node_id.' edited ')
-				);
-			}
-			
-			return new Response(
-				json_encode($responseArray),
-				Response::HTTP_OK,
-				array('content-type' => 'application/javascript')
-			);
-		}
-		
+            if ($responseArray === null) {
+                $responseArray = array(
+                    'statusCode' => '200',
+                    'status' => 'success',
+                    'responseText' => ('Node '.$nodeId.' edited ')
+                );
+            }
 
-		$responseArray = array(
-			'statusCode' => '403',
-			'status' 	=> 'danger',
-			'responseText' => 'Node '.$node_id.' does not exists'
-		);
-		
-		return new Response(
-			json_encode($responseArray),
-			Response::HTTP_OK,
-			array('content-type' => 'application/javascript')
-		);
-	}
+            return new Response(
+                json_encode($responseArray),
+                Response::HTTP_OK,
+                array('content-type' => 'application/javascript')
+            );
+        }
 
-	/**
-	 * [updatePosition description]
-	 * @param  array  $parameters [description]
-	 * @param  Node   $node       [description]
-	 * @return [type]             [description]
-	 */
-	protected function updatePosition($parameters, Node $node)
-	{
-		/*
-		 * First, we set the new parent
-		 */
-		$parent = null;
 
-		if (!empty($parameters['newParent']) && 
-			$parameters['newParent'] > 0) {
+        $responseArray = array(
+            'statusCode' => '403',
+            'status'    => 'danger',
+            'responseText' => 'Node '.$nodeId.' does not exists'
+        );
 
-			$parent = Kernel::getInstance()->em()
-				->find('RZ\Renzo\Core\Entities\Node', (int)$parameters['newParent']);
+        return new Response(
+            json_encode($responseArray),
+            Response::HTTP_OK,
+            array('content-type' => 'application/javascript')
+        );
+    }
 
-			if ($parent !== null) {
-				$node->setParent($parent);
-			}
-		}
-		elseif ($parameters['newParent'] == null) {
-			$node->setParent(null);
-		}
+    /**
+     * @param array $parameters
+     * @param Node  $node
+     */
+    protected function updatePosition($parameters, Node $node)
+    {
+        /*
+         * First, we set the new parent
+         */
+        $parent = null;
 
-		/*
-		 * Then compute new position
-		 */
-		if (!empty($parameters['nextNodeId']) && 
-			$parameters['nextNodeId'] > 0) {
-			$nextNode = Kernel::getInstance()->em()
-				->find('RZ\Renzo\Core\Entities\Node', (int)$parameters['nextNodeId']);
-			if ($nextNode !== null) {
-				$node->setPosition($nextNode->getPosition() - 0.5);
-			}
-		}
-		elseif (!empty($parameters['prevNodeId']) && 
-			$parameters['prevNodeId'] > 0) {
-			$prevNode = Kernel::getInstance()->em()
-				->find('RZ\Renzo\Core\Entities\Node', (int)$parameters['prevNodeId']);
-			if ($prevNode !== null) {
-				$node->setPosition($prevNode->getPosition() + 0.5);
-			}
-		}
-		// Apply position update before cleaning
-		Kernel::getInstance()->em()->flush();
+        if (!empty($parameters['newParent']) &&
+            $parameters['newParent'] > 0) {
 
-		if ($parent !== null) {
-			$parent->getHandler()->cleanChildrenPositions();
-		}
-		else {
-			NodeHandler::cleanRootNodesPositions();
-		}
-	}
+            $parent = Kernel::getInstance()->em()
+                ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['newParent']);
+
+            if ($parent !== null) {
+                $node->setParent($parent);
+            }
+        } elseif ($parameters['newParent'] == null) {
+            $node->setParent(null);
+        }
+
+        /*
+         * Then compute new position
+         */
+        if (!empty($parameters['nextNodeId']) &&
+            $parameters['nextNodeId'] > 0) {
+            $nextNode = Kernel::getInstance()->em()
+                ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['nextNodeId']);
+            if ($nextNode !== null) {
+                $node->setPosition($nextNode->getPosition() - 0.5);
+            }
+        } elseif (!empty($parameters['prevNodeId']) &&
+            $parameters['prevNodeId'] > 0) {
+            $prevNode = Kernel::getInstance()->em()
+                ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['prevNodeId']);
+            if ($prevNode !== null) {
+                $node->setPosition($prevNode->getPosition() + 0.5);
+            }
+        }
+        // Apply position update before cleaning
+        Kernel::getInstance()->em()->flush();
+
+        if ($parent !== null) {
+            $parent->getHandler()->cleanChildrenPositions();
+        } else {
+            NodeHandler::cleanRootNodesPositions();
+        }
+    }
 }
