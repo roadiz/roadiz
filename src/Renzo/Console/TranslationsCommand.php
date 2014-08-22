@@ -1,5 +1,12 @@
-<?php 
-
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file TranslationsCommand.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace RZ\Renzo\Console;
 
 use RZ\Renzo\Core\Kernel;
@@ -11,16 +18,15 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
-* 
-*/
+ * Command line utils for managing translations from terminal.
+ */
 class TranslationsCommand extends Command
 {
     private $dialog;
-	
-	protected function configure()
+
+    protected function configure()
     {
-        $this
-            ->setName('core:translations')
+        $this->setName('core:translations')
             ->setDescription('Manage translations')
             ->addArgument(
                 'name',
@@ -33,48 +39,45 @@ class TranslationsCommand extends Command
                 'Translation locale'
             )
             ->addOption(
-               'create',
-               null,
-               InputOption::VALUE_NONE,
-               'Create a translation'
+                'create',
+                null,
+                InputOption::VALUE_NONE,
+                'Create a translation'
             )
             ->addOption(
-               'delete',
-               null,
-               InputOption::VALUE_NONE,
-               'Delete requested translation'
+                'delete',
+                null,
+                InputOption::VALUE_NONE,
+                'Delete requested translation'
             )
             ->addOption(
-               'update',
-               null,
-               InputOption::VALUE_NONE,
-               'Update requested translation'
+                'update',
+                null,
+                InputOption::VALUE_NONE,
+                'Update requested translation'
             )
             ->addOption(
-               'enable',
-               null,
-               InputOption::VALUE_NONE,
-               'Enable requested translation'
+                'enable',
+                null,
+                InputOption::VALUE_NONE,
+                'Enable requested translation'
             )
             ->addOption(
-               'disable',
-               null,
-               InputOption::VALUE_NONE,
-               'Disable requested translation'
-            )
-        ;
+                'disable',
+                null,
+                InputOption::VALUE_NONE,
+                'Disable requested translation'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $this->dialog = $this->getHelperSet()->get('dialog');
         $text="";
         $name = $input->getArgument('name');
         $locale = $input->getArgument('locale');
 
         if ($name) {
-            
             $translation = Kernel::getInstance()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findOneBy(array('name'=>$name));
@@ -84,30 +87,26 @@ class TranslationsCommand extends Command
 
                 if ($input->getOption('delete')) {
                     if ($this->dialog->askConfirmation(
-                            $output,
-                            '<question>Are you sure to delete '.$translation->getName().' translation?</question> : ',
-                            false
-                        )) {
-                        
+                        $output,
+                        '<question>Are you sure to delete '.$translation->getName().' translation?</question> : ',
+                        false
+                    )) {
                         Kernel::getInstance()->em()->remove($translation);
                         Kernel::getInstance()->em()->flush();
                         $text = '<info>Translation deleted…</info>'.PHP_EOL;
                     }
-                }
-                else if ($input->getOption('enable')) {
+                } elseif ($input->getOption('enable')) {
                     $translation->setAvailable(true);
                     Kernel::getInstance()->em()->flush();
 
                     $text .= '<info>'.$translation->getName()." enabled…</info>".PHP_EOL;
-                }
-                else if ($input->getOption('disable')) {
+                } elseif ($input->getOption('disable')) {
                     $translation->setAvailable(false);
                     Kernel::getInstance()->em()->flush();
 
                     $text .= '<info>'.$translation->getName()." disabled…</info>".PHP_EOL;
                 }
-            }
-            else {
+            } else {
                 if ($input->getOption('create')) {
 
                     if (!empty($locale)) {
@@ -120,9 +119,9 @@ class TranslationsCommand extends Command
 
                         $text = 'New translation : '.$newTrans->getName().PHP_EOL.
                         'Locale : '.$newTrans->getLocale().PHP_EOL.
-                        'Available: '.(string)$newTrans->isAvailable().PHP_EOL;
-                    }
-                    else {
+                        'Available: '.(string) $newTrans->isAvailable().PHP_EOL;
+
+                    } else {
                         $text = '<error>You must define a locale…</error>'.PHP_EOL;
                     }
 
@@ -135,15 +134,13 @@ class TranslationsCommand extends Command
                 ->findAll();
 
             if (count($translations) > 0) {
-                foreach ( $translations as $trans) {
+                foreach ($translations as $trans) {
                     $text .= $trans->getOneLineSummary();
                 }
-            }
-            else {
+            } else {
                 $text = '<info>No available translations…</info>'.PHP_EOL;
             }
         }
-
 
         $output->writeln($text);
     }

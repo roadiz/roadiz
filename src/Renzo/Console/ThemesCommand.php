@@ -1,5 +1,12 @@
-<?php 
-
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file ThemesCommand.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace RZ\Renzo\Console;
 
 use RZ\Renzo\Core\Kernel;
@@ -11,16 +18,15 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
-* 
-*/
+ * Command line utils for managing themes from terminal.
+ */
 class ThemesCommand extends Command
 {
     private $dialog;
-	
-	protected function configure()
+
+    protected function configure()
     {
-        $this
-            ->setName('themes')
+        $this->setName('themes')
             ->setDescription('Manage themes')
             ->addArgument(
                 'classname',
@@ -28,24 +34,23 @@ class ThemesCommand extends Command
                 'Main theme classname'
             )
             ->addOption(
-               'setup',
-               null,
-               InputOption::VALUE_NONE,
-               'Setup theme'
+                'setup',
+                null,
+                InputOption::VALUE_NONE,
+                'Setup theme'
             )
             ->addOption(
-               'disable',
-               null,
-               InputOption::VALUE_NONE,
-               'Disable theme'
+                'disable',
+                null,
+                InputOption::VALUE_NONE,
+                'Disable theme'
             )
             ->addOption(
-               'enable',
-               null,
-               InputOption::VALUE_NONE,
-               'Enable theme'
-            )
-        ;
+                'enable',
+                null,
+                InputOption::VALUE_NONE,
+                'Enable theme'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -56,7 +61,7 @@ class ThemesCommand extends Command
         $name = $input->getArgument('classname');
 
         if ($name) {
-            
+
             $theme = Kernel::getInstance()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Theme')
                 ->findOneBy(array('className'=>$name));
@@ -64,36 +69,27 @@ class ThemesCommand extends Command
             if ($theme !== null) {
 
                 if ($input->getOption('enable')) {
-
                     if ($theme !== null && $name::enable()) {
-
                         $text = '<info>Theme enabled…</info>'.PHP_EOL;
-                    }
-                    else {
+                    } else {
                         $text = '<error>Requested theme is not setup yet…</error>'.PHP_EOL;
                     }
                 }
                 if ($input->getOption('disable')) {
-
                     if ($theme !== null && $name::disable()) {
-
                         $text = '<info>Theme disabled…</info>'.PHP_EOL;
-                    }
-                    else {
+                    } else {
                         $text = '<error>Requested theme is not setup yet…</error>'.PHP_EOL;
                     }
                 }
-            }
-            else {
+            } else {
                 if ($name::setup() === true) {
                     $text = '<info>Theme setup sucessfully…</info>'.PHP_EOL;
-                }
-                else {
+                } else {
                     $text = '<error>Cannot setup theme…</error>'.PHP_EOL;
                 }
             }
-        } 
-        else {
+        } else {
             $text = '<info>Installed theme…</info>'.PHP_EOL;
             $themes = Kernel::getInstance()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Theme')
@@ -101,19 +97,17 @@ class ThemesCommand extends Command
 
             if (count($themes) > 0) {
                 $text .= ' | '.PHP_EOL;
-                foreach ( $themes as $theme) {
-                    $text .= 
+                foreach ($themes as $theme) {
+                    $text .=
                         ' |_ '.$theme->getClassName()
                         .' — <info>'.($theme->isAvailable()?'enabled':'disabled').'</info>'
                         .' — <comment>'.($theme->isBackendTheme()?'Backend':'Frontend').'</comment>'
                         .PHP_EOL;
                 }
-            }
-            else {
+            } else {
                 $text = '<info>No available themes</info>'.PHP_EOL;
             }
         }
-
 
         $output->writeln($text);
     }

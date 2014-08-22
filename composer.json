@@ -25,6 +25,9 @@
         "michelf/php-markdown": "@stable",
         "symfony/serializer": "@stable"
     },
+    "require-dev":{
+        "squizlabs/php_codesniffer": "1.*"
+    },
     "autoload": {
         "psr-4": {
         	"RZ\\": "src/",

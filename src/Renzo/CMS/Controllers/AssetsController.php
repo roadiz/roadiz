@@ -1,9 +1,7 @@
-<?php 
+<?php
 /**
  * Copyright REZO ZERO 2014
- * 
- * 
- * 
+ *
  *
  * @file BackendController.php
  * @copyright REZO ZERO 2014
@@ -22,49 +20,43 @@ use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 
 /**
- * Special controller app file for assets managment with SLIR
+ * Special controller app file for assets managment with SLIR.
  */
-class AssetsController extends AppController {
-	
-	/**
-	 * Override default constructor
-	 */
-	public function __construct(){ }
+class AssetsController extends AppController
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function getRoutes()
+    {
+        $locator = new FileLocator(array(
+            RENZO_ROOT.'/src/Renzo/CMS/Resources'
+        ));
 
-	/**
-	 * 
-	 * @return RouteCollection
-	 */
-	public static function getRoutes()
-	{
-		$locator = new FileLocator(array(
-			RENZO_ROOT.'/src/Renzo/CMS/Resources'
-		));
+        if (file_exists(RENZO_ROOT.'/src/Renzo/CMS/Resources/assetsRoutes.yml')) {
+            $loader = new YamlFileLoader($locator);
 
-		if (file_exists(RENZO_ROOT.'/src/Renzo/CMS/Resources/assetsRoutes.yml')) {
-			$loader = new YamlFileLoader($locator);
-			return $loader->load('assetsRoutes.yml');
-		}
+            return $loader->load('assetsRoutes.yml');
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Handle images resize with SLIR vendor
-	 * 
-	 * @param  string $queryString
-	 * @param  string $filename
-	 * @return void
-	 */
-	public function slirAction($queryString, $filename)
-	{
-		define('SLIR_CONFIG_CLASSNAME','\RZ\Renzo\CMS\Utils\SLIRConfig');
+    /**
+     * Handle images resize with SLIR vendor.
+     *
+     * @param string $queryString
+     * @param string $filename
+     */
+    public function slirAction($queryString, $filename)
+    {
+        define('SLIR_CONFIG_CLASSNAME', '\RZ\Renzo\CMS\Utils\SLIRConfig');
 
-		Kernel::getInstance()->em()->close();
-		
-		$slir = new \SLIR\SLIR();
-		$slir->processRequestFromURL();
+        Kernel::getInstance()->em()->close();
 
-		// SLIR handle response by itself
-	}
+        $slir = new \SLIR\SLIR();
+        $slir->processRequestFromURL();
+
+        // SLIR handle response by itself
+    }
 }

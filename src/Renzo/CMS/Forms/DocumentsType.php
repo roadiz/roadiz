@@ -1,6 +1,12 @@
-<?php 
-
-
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file DocumentsType.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace RZ\Renzo\CMS\Forms;
 
 use RZ\Renzo\Core\Kernel;
@@ -11,30 +17,37 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
-* 
-*/
+ * Document selector and uploader form field type.
+ */
 class DocumentsType extends AbstractType
 {
     protected $selectedDocuments;
 
     /**
+     * {@inheritdoc}
+     *
      * @param array $documents Array of Document instances
      */
-    public function __construct( array $documents )
+    public function __construct(array $documents)
     {
         $this->selectedDocuments = $documents;
     }
 
-	public function setDefaultOptions( OptionsResolverInterface $resolver )
-    {	
-    	$documents = Kernel::getInstance()->em()
-    		->getRepository('RZ\Renzo\Core\Entities\Document')
-    		->findAll();
+    /**
+     * {@inheritdoc}
+     *
+     * @param OptionsResolverInterface $resolver
+     */
+    public function setDefaultOptions( OptionsResolverInterface $resolver )
+    {
+        $documents = Kernel::getInstance()->em()
+            ->getRepository('RZ\Renzo\Core\Entities\Document')
+            ->findAll();
 
-    	$choices = array();
-    	foreach ($documents as $doc) {
-    		$choices[$doc->getId()] = $doc->getFilename();
-    	}
+        $choices = array();
+        foreach ($documents as $doc) {
+            $choices[$doc->getId()] = $doc->getFilename();
+        }
 
         $datas = array();
         foreach ($this->selectedDocuments as $doc) {
@@ -48,6 +61,8 @@ class DocumentsType extends AbstractType
     }
 
     /**
+     * {@inheritdoc}
+     *
      * @param FormView      $view
      * @param FormInterface $form
      * @param array         $options
@@ -57,16 +72,20 @@ class DocumentsType extends AbstractType
         parent::finishView($view, $form, $options);
 
         /*
-         * Inject data as plain documents entities 
+         * Inject data as plain documents entities
          */
         $view->vars['data'] = $this->selectedDocuments;
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getParent()
     {
         return 'choice';
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'documents';

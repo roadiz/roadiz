@@ -11,3 +11,4 @@ npm-debug.log
 conf/config.json
 conf/*.config.json
 composer.lock
+report

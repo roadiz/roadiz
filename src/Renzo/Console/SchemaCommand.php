@@ -1,5 +1,13 @@
-<?php 
-
+<?php
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ *
+ * @file SchemaCommand.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 
 namespace RZ\Renzo\Console;
 
@@ -21,178 +29,184 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
 /**
-* 
-*/
-class SchemaCommand extends Command {
-	private $dialog;
-	
-	protected function configure()
-	{
-		$this
-			->setName('schema')
-			->setDescription('Manage database schema')
-			->addOption(
-			   'refresh',
-			   null,
-			   InputOption::VALUE_NONE,
-			   'Refresh doctrine metadata cache'
-			)
-			->addOption(
-			   'update',
-			   null,
-			   InputOption::VALUE_NONE,
-			   'Update current database schema'
-			)
-			->addOption(
-			   'execute',
-			   null,
-			   InputOption::VALUE_NONE,
-			   'Apply changes'
-			)
-		;
-	}
+ * Command line utils for managing database schema from terminal.
+ */
+class SchemaCommand extends Command
+{
+    private $dialog;
 
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$this->dialog = $this->getHelperSet()->get('dialog');
-		$text="";
+    protected function configure()
+    {
+        $this->setName('schema')
+            ->setDescription('Manage database schema')
+            ->addOption(
+                'refresh',
+                null,
+                InputOption::VALUE_NONE,
+                'Refresh doctrine metadata cache'
+            )
+            ->addOption(
+                'update',
+                null,
+                InputOption::VALUE_NONE,
+                'Update current database schema'
+            )
+            ->addOption(
+                'execute',
+                null,
+                InputOption::VALUE_NONE,
+                'Apply changes'
+            );
+    }
 
-		if ($input->getOption('refresh')) {
-			$text .= static::refreshMetadata();
-			$text .= '<info>Your database metadata cache has been purged…</info>'.PHP_EOL;
-		}
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->dialog = $this->getHelperSet()->get('dialog');
+        $text="";
 
-		if ($input->getOption('update')) {
-			
-			$sql = static::getUpdateSchema();
-			$count = count($sql);
+        if ($input->getOption('refresh')) {
+            $text .= static::refreshMetadata();
+            $text .= '<info>Your database metadata cache has been purged…</info>'.PHP_EOL;
+        }
 
-			if ($count > 0) {
-				/*
-				 * Print changes
-				 */
-				for($i=0; $i<$count; $i++) {
-				    $text .= $sql[$i].PHP_EOL;
-				}
-				$text .= '<info>'.$count.'</info> change(s) in your database schema… Use <info>--execute</info> to apply'.PHP_EOL;
+        if ($input->getOption('update')) {
 
-				/*
-				 * If execute option = Perform changes
-				 */
-				if ($input->getOption('execute')) {
-					if ($this->dialog->askConfirmation(
-							$output,
-							'<question>Are you sure to update your database schema?</question> : ',
-							false
-						)) {
-				
-						if (static::updateSchema()) {
-							$text .= '<info>Schema updated…</info>'.PHP_EOL;
-						}
-					}
-				}
-			}
-			else {
-				$text .= '<info>Your database schema is already up to date…</info>'.PHP_EOL;
-			}
-		}
+            $sql = static::getUpdateSchema();
+            $count = count($sql);
 
-		$output->writeln($text);
-	}
+            if ($count > 0) {
+                /*
+                 * Print changes
+                 */
+                for ($i=0; $i<$count; $i++) {
+                    $text .= $sql[$i].PHP_EOL;
+                }
+                $text .= '<info>'.$count.'</info> change(s) in your database schema… Use <info>--execute</info> to apply'.PHP_EOL;
 
-	/**
-	 * Refresh doctrine caches and proxies
-	 * @return void
-	 */
-	public static function refreshMetadata()
-	{
-		$text = '';
-		// Empty result cache
-		$cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getResultCacheImpl();
+                /*
+                 * If execute option = Perform changes
+                 */
+                if ($input->getOption('execute')) {
+                    if ($this->dialog->askConfirmation(
+                        $output,
+                        '<question>Are you sure to update your database schema?</question> : ',
+                        false
+                    )) {
+
+                        if (static::updateSchema()) {
+                            $text .= '<info>Schema updated…</info>'.PHP_EOL;
+                        }
+                    }
+                }
+            } else {
+                $text .= '<info>Your database schema is already up to date…</info>'.PHP_EOL;
+            }
+        }
+
+        $output->writeln($text);
+    }
+
+    /**
+     * Refresh doctrine caches and proxies
+     * @return void
+     */
+    public static function refreshMetadata()
+    {
+        $text = '';
+        // Empty result cache
+        $cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getResultCacheImpl();
         if ($cacheDriver !== null) {
-        	$text .= 'Result cache: '.$cacheDriver->getNamespace().' — ';
+            $text .= 'Result cache: '.$cacheDriver->getNamespace().' — ';
             $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
             $text .= PHP_EOL;
-        }
-        else {
-	        // Empty hydratation cache
-			$cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getHydrationCacheImpl();
-	        if ($cacheDriver !== null) {
-	        	$text .= 'Hydratation cache: '.$cacheDriver->getNamespace().' — ';
-	            $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
-	            $text .= PHP_EOL;
-	        }else {
+        } else {
+            // Empty hydratation cache
+            $cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getHydrationCacheImpl();
+            if ($cacheDriver !== null) {
+                $text .= 'Hydratation cache: '.$cacheDriver->getNamespace().' — ';
+                $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
+                $text .= PHP_EOL;
+            } else {
 
-		        // Empty query cache
-				$cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getQueryCacheImpl();
-		        if ($cacheDriver !== null) {
-		        	$text .= 'Query cache: '.$cacheDriver->getNamespace().' — ';
-		            $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
-		            $text .= PHP_EOL;
-		        }
-		        else {
+                // Empty query cache
+                $cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getQueryCacheImpl();
+                if ($cacheDriver !== null) {
+                    $text .= 'Query cache: '.$cacheDriver->getNamespace().' — ';
+                    $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
+                    $text .= PHP_EOL;
+                } else {
 
-			        // Empty metadata cache
-					$cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getMetadataCacheImpl();
-			        if ($cacheDriver !== null) {
-			        	$text .= 'Metadata cache: '.$cacheDriver->getNamespace().' — ';
-			            $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
-			            $text .= PHP_EOL;
-			        }
-		        }
-	        }
+                    // Empty metadata cache
+                    $cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getMetadataCacheImpl();
+                    if ($cacheDriver !== null) {
+                        $text .= 'Metadata cache: '.$cacheDriver->getNamespace().' — ';
+                        $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
+                        $text .= PHP_EOL;
+                    }
+                }
+            }
         }
 
         /*
          * Recreate proxies files
          */
-		$fs = new Filesystem();
-		$finder = new Finder();
-		$finder->files()->in(RENZO_ROOT . '/sources/Proxies');
-		$fs->remove($finder);
+        $fs = new Filesystem();
+        $finder = new Finder();
+        $finder->files()->in(RENZO_ROOT . '/sources/Proxies');
+        $fs->remove($finder);
 
         $meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
-		$proxyFactory = Kernel::getInstance()->em()->getProxyFactory();
-		$proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/sources/Proxies');
-		$text .= '<info>Doctrine proxiy classes has been purged…</info>'.PHP_EOL;
-	}
+        $proxyFactory = Kernel::getInstance()->em()->getProxyFactory();
+        $proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/sources/Proxies');
+        $text .= '<info>Doctrine proxiy classes has been purged…</info>'.PHP_EOL;
+    }
 
-	/**
-	 * Update database schema
-	 * 
-	 * @return boolean
-	 */
-	public static function updateSchema()
-	{
-		static::refreshMetadata();
+    /**
+     * Update database schema.
+     *
+     * @return boolean
+     */
+    public static function updateSchema()
+    {
+        static::refreshMetadata();
 
-		$tool = new \Doctrine\ORM\Tools\SchemaTool( Kernel::getInstance()->em() );
-		$meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
-		$sql = $tool->getUpdateSchemaSql($meta);
+        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getInstance()->em());
+        $meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
+        $sql = $tool->getUpdateSchemaSql($meta);
 
-		foreach($sql as $statement) {
-		    Kernel::getInstance()->em()->getConnection()->exec( $statement );
-		}
+        foreach ($sql as $statement) {
+            Kernel::getInstance()->em()->getConnection()->exec($statement);
+        }
 
-		return true;
-	}
-	public static function createSchema()
-	{
-		$tool = new \Doctrine\ORM\Tools\SchemaTool( Kernel::getInstance()->em() );
-		$meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
-		$sql = $tool->getUpdateSchemaSql($meta);
+        return true;
+    }
 
-		foreach($sql as $statement) {
-		    Kernel::getInstance()->em()->getConnection()->exec( $statement );
-		}
-	}
+    /**
+     * Create database schema.
+     */
+    public static function createSchema()
+    {
+        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getInstance()->em());
+        $meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
+        $sql = $tool->getUpdateSchemaSql($meta);
 
-	public static function getUpdateSchema()
-	{
-		static::refreshMetadata();
+        foreach ($sql as $statement) {
+            Kernel::getInstance()->em()->getConnection()->exec($statement);
+        }
+    }
 
-		$tool = new \Doctrine\ORM\Tools\SchemaTool( Kernel::getInstance()->em() );
-		$meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
-		return $tool->getUpdateSchemaSql($meta);
-	}
+    /**
+     * Get SQL query to update schema.
+     *
+     * @return string
+     */
+    public static function getUpdateSchema()
+    {
+        static::refreshMetadata();
+
+        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getInstance()->em());
+        $meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
+
+        return $tool->getUpdateSchemaSql($meta);
+    }
 }
