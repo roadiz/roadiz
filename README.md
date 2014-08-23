@@ -11,5 +11,6 @@
 
 ### Run self tests
 
-* `phpunit --bootstrap bootstrap.php ./Tests`
+* *PHPUnit tests*: `phpunit --bootstrap bootstrap.php ./Tests`
+* *Code quality*, use *Symfony2 standard*: `phpcs --report=full --report-file=./report --extensions=php --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/sources/*,*/Tests/* -p ./`, follow instructions at https://github.com/opensky/Symfony2-coding-standard
 

@@ -8,7 +8,6 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-
 namespace RZ\Renzo\Core;
 
 use RZ\Renzo\Inheritance\Doctrine\DataInheritanceEvent;
@@ -95,7 +94,7 @@ class Kernel
         $this->requestContext = new Routing\RequestContext($this->getResolvedBaseUrl());
 
         $this->dispatcher = new EventDispatcher();
-        $this->resolver =   new ControllerResolver();
+        $this->resolver = new ControllerResolver();
     }
 
     /**
@@ -277,7 +276,7 @@ class Kernel
      */
     public function runConsole()
     {
-        $this->backendDebug =   (boolean) SettingsBag::get('backend_debug');
+        $this->backendDebug = (boolean) SettingsBag::get('backend_debug');
 
         if ($this->getConfig() === null ||
             (isset($this->getConfig()['install']) &&
@@ -636,30 +635,6 @@ class Kernel
             return $pageURL;
         } else {
             return false;
-        }
-    }
-
-    /**
-     * Execute after kernel response
-     * Build debug panel if debug is ON.
-     * @param FilterResponseEvent $event
-     *
-     * @return void
-     */
-    public function onKernelResponse(FilterResponseEvent $event)
-    {
-        if ($this->isDebug()) {
-
-            $response = $event->getResponse();
-
-            if (strpos($response->getContent(), '</body>') !== false) {
-                $sw = $this->stopwatch->stop('global');
-                $debug = $sw->getCategory().' : '.$sw->getDuration().'ms - '.$sw->getMemory()/1000000.0.'Mo';
-
-                $content = str_replace('</body>', $debug."</body>", $response->getContent());
-
-                $response->setContent($content);
-            }
         }
     }
 }

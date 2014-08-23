@@ -1,13 +1,22 @@
 <?php
-
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file NodeTest.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 use RZ\Renzo\Core\Entities\Node;
-
+/**
+ * Test Node features
+ */
 class NodeTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider nodeNameProvider
      */
-    public function testNodeName( $nodeName, $expected)
+    public function testNodeName($nodeName, $expected)
     {
         // Arrange
         $a = new Node();

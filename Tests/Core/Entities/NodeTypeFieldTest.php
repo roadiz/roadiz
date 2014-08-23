@@ -1,13 +1,22 @@
 <?php
-
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ * @file NodeTypeFieldTest.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 use RZ\Renzo\Core\Entities\NodeTypeField;
-
+/**
+ * Test node-type field features
+ */
 class NodeTypeFieldTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider getGetterNameProvider
      */
-    public function testGetGetterName( $sourceName, $expected)
+    public function testGetGetterName($sourceName, $expected)
     {
         // Arrange
         $a = new NodeTypeField();
@@ -19,7 +28,7 @@ class NodeTypeFieldTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getSetterNameProvider
      */
-    public function testGetSetterName( $sourceName, $expected)
+    public function testGetSetterName($sourceName, $expected)
     {
         // Arrange
         $a = new NodeTypeField();
@@ -31,7 +40,7 @@ class NodeTypeFieldTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider setNameProvider
      */
-    public function testSetName( $sourceName, $expected)
+    public function testSetName($sourceName, $expected)
     {
         // Arrange
         $a = new NodeTypeField();
