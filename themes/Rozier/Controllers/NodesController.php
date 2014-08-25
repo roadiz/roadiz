@@ -696,11 +696,11 @@ class NodesController extends RozierApp
         }
         $type = null;
 
-        if (!empty($data['node_typeId'])) {
+        if (!empty($data['nodeTypeId'])) {
             $type = Kernel::getInstance()->em()
                         ->find(
                             'RZ\Renzo\Core\Entities\NodeType',
-                            (int) $data['node_typeId']
+                            (int) $data['nodeTypeId']
                         );
         }
         if (null === $type) {

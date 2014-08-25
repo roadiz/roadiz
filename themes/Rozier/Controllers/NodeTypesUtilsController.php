@@ -112,14 +112,21 @@ class NodeTypesUtilsController extends RozierApp
                             $field->setNodeType($nodeType);
                             Kernel::getInstance()->em()->persist($field);
                         }
+
+                        $msg = $this->getTranslator()->trans('nodeType.imported.created');
+                        $request->getSession()->getFlashBag()->add('confirm', $msg);
+                        $this->getLogger()->info($msg);
+
                     } else {
                         /*
                          * Node-type already exists.
                          * Must update fields.
                          */
-                        $msg = $this->getTranslator()->trans('nodeType.already.exists');
-                        $request->getSession()->getFlashBag()->add('warning', $msg);
-                        $this->getLogger()->warning($msg);
+                        $existingNT->getHandler()->diff($nodeType);
+
+                        $msg = $this->getTranslator()->trans('nodeType.imported.updated');
+                        $request->getSession()->getFlashBag()->add('confirm', $msg);
+                        $this->getLogger()->info($msg);
                     }
 
                     Kernel::getInstance()->em()->flush();

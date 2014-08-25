@@ -174,6 +174,22 @@ class NodeType extends AbstractEntity
     {
         return $this->fields;
     }
+    /**
+     * Get every node-type fields names in
+     * a simple array.
+     *
+     * @return array
+     */
+    public function getFieldsNames()
+    {
+        $namesArray = array();
+
+        foreach ($this->getFields() as $field) {
+            $namesArray[] = $field->getName();
+        }
+
+        return $namesArray;
+    }
 
     /**
      * @param NodeTypeField $field

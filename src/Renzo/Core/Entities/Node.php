@@ -392,8 +392,6 @@ class Node extends AbstractDateTimedPositioned
      */
     public function __construct(NodeType $nodeType = null)
     {
-        parent::__construct();
-
         $this->tags = new ArrayCollection();
         $this->childrens = new ArrayCollection();
         $this->nodeSources = new ArrayCollection();

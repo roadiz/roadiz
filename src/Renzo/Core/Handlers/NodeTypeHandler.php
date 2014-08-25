@@ -184,4 +184,54 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
 
         return $this;
     }
+
+    /**
+     * Update current node-type using a new one.
+     *
+     * Update diff will update only non-critical fields such as :
+     *
+     * * description
+     * * displayName
+     *
+     * It will only create absent node-type fields won't delete fields
+     * not to lose any data.
+     *
+     * This method does not flush ORM. You'll need to manually call it.
+     *
+     * @param  RZ\Renzo\Core\Entities\NodeType $newNodeType
+     *
+     * @throws \RuntimeException If newNodeType param is null
+     */
+    public function diff(NodeType $newNodeType)
+    {
+        if (null !== $newNodeType) {
+            /*
+             * options
+             */
+            if ("" != $newNodeType->getDisplayName()) {
+                $this->getNodeType()->setDisplayName($newNodeType->getDisplayName());
+            }
+            if ("" != $newNodeType->getDescription()) {
+                $this->getNodeType()->setDescription($newNodeType->getDescription());
+            }
+            /*
+             * make fields diff
+             */
+            $existingFieldsNames = $this->getNodeType()->getFieldsNames();
+
+            foreach ($newNodeType->getFields() as $newField) {
+                if (false == in_array($newField->getName(), $existingFieldsNames)) {
+                    /*
+                     * Field does not exist in type,
+                     * creating it.
+                     */
+                    $newField->setNodeType($this->getNodeType());
+                    Kernel::getInstance()->em()->persist($newField);
+                }
+            }
+
+        } else {
+            throw new \RuntimeException("New node-type is null", 1);
+        }
+    }
 }
