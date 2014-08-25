@@ -45,8 +45,7 @@ class DocumentViewer implements ViewableInterface
      */
     public function __construct(Document $document)
     {
-        $this->initializeTwig()
-            ->initializeTranslator();
+        $this->initializeTwig();
         $this->document = $document;
     }
 
@@ -135,27 +134,6 @@ class DocumentViewer implements ViewableInterface
      */
     public function initializeTranslator()
     {
-        $lang = Kernel::getInstance()->getRequest()->getLocale();
-        $msgPath = RENZO_ROOT.'/src/Renzo/Core/Resources/translations/messages.'.$lang.'.xlf';
-
-        /*
-         * fallback to english, if message catalog absent
-         */
-        if (!file_exists($msgPath)) {
-            $lang = 'en';
-        }
-        // instancier un objet de la classe Translator
-        $this->translator = new Translator($lang);
-        // charger, en quelque sorte, des traductions dans ce translator
-        $this->translator->addLoader('xlf', new XliffFileLoader());
-        $this->translator->addResource(
-            'xlf',
-            RENZO_ROOT.'/src/Renzo/Core/Resources/translations/messages.'.$lang.'.xlf',
-            $lang
-        );
-        // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
-        $this->twig->addExtension(new TranslationExtension($this->translator));
-
         return $this;
     }
 
@@ -232,7 +210,7 @@ class DocumentViewer implements ViewableInterface
 
             return $this->getTwig()->render('documents/audio.html.twig', $assignation);
         } else {
-            return $this->getTranslator()->trans('document.format.unknown');
+            return 'document.format.unknown';
         }
     }
 
