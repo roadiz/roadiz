@@ -2,8 +2,8 @@
 
 {% block content %}
 <section id="manage-theme">
-	<h1 id="theme-title">Edit {{ theme.getClassName }}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('themesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to themes{% endtrans %}</a></nav>
+	<h1 id="theme-title">{% trans %}edit.theme{% endtrans %} {{ theme.getClassName }}</h1>
+	<nav><a class="uk-button uk-button-small" href="{{ path('themesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.themes{% endtrans %}</a></nav>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
    		{{ form_errors(form) }}
@@ -17,7 +17,7 @@
 		    		{% endif %}
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
-		    	</div>	
+		    	</div>
 		        {% endif %}
 		    {% endfor %}
    		</fieldset>

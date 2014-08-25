@@ -332,7 +332,4 @@ groupsRemoveUsersPage:
     path:     /rz-admin/groups/edit/{groupId}/users/{userId}/remove
     defaults: { _controller: Themes\Rozier\Controllers\GroupsController::removeUsersAction }
     requirements: { groupId : "[0-9]+", userId : "[0-9]+" }
-groupsSchemaUpdate:
-    path:     /rz-admin/node-types/groups/update-schema/{_token}
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::updateNodeTypeFieldsSchemaAction }
-    requirements: { node_typeId : "[0-9]+", _token: "[A-z0-9\-\_\$]+" }
+

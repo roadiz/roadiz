@@ -157,11 +157,11 @@
             </trans-unit>
 
             <!-- controller / Node Tree -->
-            <trans-unit id="edit.node{">
+            <trans-unit id="edit.node">
                 <source>edit.node</source>
                 <target>Edit node</target>
             </trans-unit>
-            <trans-unit id="add.child.node{">
+            <trans-unit id="add.child.node">
                 <source>add.child.node</source>
                 <target>Add child node</target>
             </trans-unit>
@@ -213,7 +213,7 @@
                 <source>document.createdAt</source>
                 <target>Creation date</target>
             </trans-unit>
-            
+
             <!-- view / upload Documents -->
             <trans-unit id="back.to.documents">
                 <source>Back to documents</source>
@@ -223,7 +223,7 @@
                 <source>Upload a new document</source>
                 <target>Upload a new document</target>
             </trans-unit>
-            
+
             <!-- view / edit Documents -->
             <trans-unit id="name">
                 <source>name</source>
@@ -241,7 +241,7 @@
                 <source>private</source>
                 <target>Private ?</target>
             </trans-unit>
-            
+
             <!-- view / delete Documents -->
             <trans-unit id="delete.document">
                 <source>Delete document:</source>
@@ -385,7 +385,7 @@
                 <source>archived</source>
                 <target>Is archived ?</target>
             </trans-unit>
-            
+
             <!-- view / narBar Nodes -->
             <trans-unit id="node.content">
                 <source>node.content</source>
@@ -492,6 +492,68 @@
             <trans-unit id="font.name.already.exists">
                 <source>font.name.already.exists</source>
                 <target>This font name can't be used, it already exists.</target>
+            </trans-unit>
+            <trans-unit id="font.name">
+                <source>font.name</source>
+                <target>Font name</target>
+            </trans-unit>
+            <trans-unit id="font.eotFile">
+                <source>font.eotFile</source>
+                <target>EOT file</target>
+            </trans-unit>
+            <trans-unit id="font.woffFile">
+                <source>font.woffFile</source>
+                <target>WOFF file</target>
+            </trans-unit>
+            <trans-unit id="font.otfFile">
+                <source>font.otfFile</source>
+                <target>OTF file</target>
+            </trans-unit>
+            <trans-unit id="font.svgFile">
+                <source>font.svgFile</source>
+                <target>SVG file</target>
+            </trans-unit>
+
+            <!-- view / list Fonts -->
+            <trans-unit id="add.font">
+                <source>add.font</source>
+                <target>Add a font</target>
+            </trans-unit>
+            <trans-unit id="Fonts">
+                <source>Fonts</source>
+                <target>Fonts</target>
+            </trans-unit>
+            <trans-unit id="font.variant">
+                <source>font.variant</source>
+                <target>Variants</target>
+            </trans-unit>
+            <trans-unit id="font.files">
+                <source>font.files</source>
+                <target>Font files</target>
+            </trans-unit>
+            <trans-unit id="font.cssfamily">
+                <source>font.cssfamily</source>
+                <target>CSS Family</target>
+            </trans-unit>
+
+            <!-- view / add Fonts -->
+            <trans-unit id="Add a new font">
+                <source>Add a new font</source>
+                <target>Add a new font</target>
+            </trans-unit>
+            <trans-unit id="Back to font">
+                <source>Back to font</source>
+                <target>Back to fonts</target>
+            </trans-unit>
+
+            <!-- view / delete Fonts -->
+            <trans-unit id="Delete font:">
+                <source>Delete font:</source>
+                <target>Delete font</target>
+            </trans-unit>
+            <trans-unit id="Are you sure you want to delete this font?">
+                <source>Are you sure you want to delete this font?</source>
+                <target>Are you sure you want to delete this font ?</target>
             </trans-unit>
 
             <!-- controller / Groups -->
@@ -654,7 +716,7 @@
                 <target>The tag "%name%" has already been added.</target>
             </trans-unit>
 
-            <!-- view / narBar Tags -->
+            <!-- view / navBar Tags -->
             <trans-unit id="tag.tree">
                 <source>tag.tree</source>
                 <target>Tag tree</target>
@@ -671,19 +733,19 @@
                 <source>back.to.tags</source>
                 <target>Back to tags</target>
             </trans-unit>
-            
+
             <!-- view / list Tags -->
             <trans-unit id="create.a.tag">
                 <source>Create a tag</source>
                 <target>Create a tag</target>
             </trans-unit>
-            
+
             <!-- view / edit Tags -->
            <trans-unit id="Edit">
                 <source>Edit</source>
                 <target>Edit</target>
             </trans-unit>
-            
+
             <!-- controller / Themes -->
             <trans-unit id="theme.created">
                 <source>theme.created</source>
@@ -704,6 +766,76 @@
             <trans-unit id="theme.no_update.already.exists">
                 <source>theme.no_update.already.exists</source>
                 <target>The theme "%name%" could not be edited, it already exists.</target>
+            </trans-unit>
+
+             <!-- view / list Themes -->
+            <trans-unit id="add.theme">
+                <source>add.theme</source>
+                <target>Add a theme</target>
+            </trans-unit>
+            <trans-unit id="themes">
+                <source>theme</source>
+                <target>Theme</target>
+            </trans-unit>
+            <trans-unit id="theme">
+                <source>themes</source>
+                <target>Themes</target>
+            </trans-unit>
+            <trans-unit id="theme.classname">
+                <source>theme.classname</source>
+                <target>Class name</target>
+            </trans-unit>
+            <trans-unit id="theme.host">
+                <source>theme.host</source>
+                <target>Host</target>
+            </trans-unit>
+            <trans-unit id="status">
+                <source>status</source>
+                <target>Status</target>
+            </trans-unit>
+            <trans-unit id="theme.disabled">
+                <source>theme.disabled</source>
+                <target>Disabled ?</target>
+            </trans-unit>
+            <trans-unit id="theme.backend">
+                <source>theme.backend</source>
+                <target>Backend theme ?</target>
+            </trans-unit>
+            <trans-unit id="all.hostnames">
+                <source>all.hostnames</source>
+                <target>Host names</target>
+            </trans-unit>
+
+            <!-- view / edit Themes -->
+            <trans-unit id="edit.theme">
+                <source>edit.theme</source>
+                <target>Edit theme</target>
+            </trans-unit>
+            <trans-unit id="back.to.themes">
+                <source>back.to.themes</source>
+                <target>Back to themes</target>
+            </trans-unit>
+
+            <!-- view / add Themes -->
+            <trans-unit id="add.a.new.theme">
+                <source>add.a.new.theme</source>
+                <target>Add a new theme</target>
+            </trans-unit>
+            <trans-unit id="available">
+                <source>available</source>
+                <target>Available ?</target>
+            </trans-unit>
+            <trans-unit id="className">
+                <source>className</source>
+                <target>Class name</target>
+            </trans-unit>
+            <trans-unit id="hostName">
+                <source>hostName</source>
+                <target>Host name</target>
+            </trans-unit>
+            <trans-unit id="backendTheme">
+                <source>backendTheme</source>
+                <target>Backend theme ?</target>
             </trans-unit>
 
             <!-- controller / Translations -->
