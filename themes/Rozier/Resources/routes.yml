@@ -59,7 +59,7 @@ nodesTreePage:
 nodesAddPage:
     path:     /rz-admin/nodes/add/{nodeTypeId}/{translationId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::addAction }
-    requirements: { node_typeId : "[0-9]+", translationId : "[0-9]+" }
+    requirements: { nodeTypeId : "[0-9]+", translationId : "[0-9]+" }
 nodesAddChildPage:
     path:     /rz-admin/nodes/add-child/{nodeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::addChildAction }
@@ -82,7 +82,7 @@ nodeTypesHomePage:
 nodeTypesEditPage:
     path:     /rz-admin/node-types/edit/{nodeTypeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypesController::editAction }
-    requirements: { node_typeId : "[0-9]+" }
+    requirements: { nodeTypeId : "[0-9]+" }
 nodeTypesAddPage:
     path:     /rz-admin/node-types/add
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypesController::addAction }
@@ -92,11 +92,11 @@ nodeTypesImportPage:
 nodeTypesDeletePage:
     path:     /rz-admin/node-types/delete/{nodeTypeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypesController::deleteAction }
-    requirements: { node_typeId : "[0-9]+" }
+    requirements: { nodeTypeId : "[0-9]+" }
 nodesTypesExportPage:
     path:     /rz-admin/node-types/export/{nodeTypeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypesUtilsController::exportJsonFileAction }
-    requirements: { node_typeId : "[0-9]+" }
+    requirements: { nodeTypeId : "[0-9]+" }
 nodeTypesSchemaUpdate:
     path:     /rz-admin/node-types/update-schema/{_token}
     defaults: { _controller: Themes\Rozier\Controllers\SchemaController::updateNodeTypesSchemaAction }
@@ -106,23 +106,23 @@ nodeTypesSchemaUpdate:
 nodeTypeFieldsListPage:
     path:     /rz-admin/node-types/fields/{nodeTypeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::listAction }
-    requirements: { node_typeId : "[0-9]+" }
+    requirements: { nodeTypeId : "[0-9]+" }
 nodeTypeFieldsEditPage:
     path:     /rz-admin/node-types/fields/edit/{nodeTypeFieldId}
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::editAction }
-    requirements: { node_type_fieldId : "[0-9]+" }
+    requirements: { nodeTypeFieldId : "[0-9]+" }
 nodeTypeFieldsAddPage:
     path:     /rz-admin/node-types/fields/add/{nodeTypeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::addAction }
-    requirements: { node_typeId : "[0-9]+" }
+    requirements: { nodeTypeId : "[0-9]+" }
 nodeTypeFieldsDeletePage:
     path:     /rz-admin/node-types/fields/delete/{nodeTypeFieldId}
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::deleteAction }
-    requirements: { node_type_fieldId : "[0-9]+" }
+    requirements: { nodeTypeFieldId : "[0-9]+" }
 nodeTypesFieldSchemaUpdate:
     path:     /rz-admin/node-types/fields/update-schema/{nodeTypeId}/{_token}
     defaults: { _controller: Themes\Rozier\Controllers\SchemaController::updateNodeTypeFieldsSchemaAction }
-    requirements: { node_typeId : "[0-9]+", _token: "[A-z0-9\-\_\$]+" }
+    requirements: { nodeTypeId : "[0-9]+", _token: "[A-z0-9\-\_\$]+" }
 
 # SETTINGS
 settingsHomePage:

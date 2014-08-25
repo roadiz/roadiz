@@ -27,7 +27,7 @@ Rozier.onDocumentReady = function( event ) {
 };
 
 /**
- * 
+ *
  * @param  Event event
  * @param  jQueryNode element
  * @param  string status  added, moved or removed
@@ -84,7 +84,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 
 	console.log(postData);
 	$.ajax({
-		url: Rozier.routes.nodeAjaxEdit.replace("%node_id%", node_id),
+		url: Rozier.routes.nodeAjaxEdit.replace("%nodeId%", node_id),
 		type: 'POST',
 		dataType: 'json',
 		data: postData
@@ -109,7 +109,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 
 
 /**
- * 
+ *
  * @param  Event event
  * @param  jQueryTag element
  * @param  string status  added, moved or removed
@@ -166,7 +166,7 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 
 	console.log(postData);
 	$.ajax({
-		url: Rozier.routes.tagAjaxEdit.replace("%tag_id%", tag_id),
+		url: Rozier.routes.tagAjaxEdit.replace("%tagId%", tag_id),
 		type: 'POST',
 		dataType: 'json',
 		data: postData

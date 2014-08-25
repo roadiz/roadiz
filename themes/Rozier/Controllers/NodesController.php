@@ -74,7 +74,9 @@ class NodesController extends RozierApp
 
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['nodes'] = $listManager->getEntities();
-        $this->assignation['nodeTypes'] = NodeTypesController::getNodeTypes();
+        $this->assignation['nodeTypes'] =  $this->getKernel()->em()
+            ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+            ->findBy(array('newsletterType' => false));
         $this->assignation['translation'] = $translation;
 
         return new Response(

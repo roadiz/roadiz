@@ -378,16 +378,6 @@ class NodeTypesController extends RozierApp
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public static function getNodeTypes()
-    {
-        return $this->getKernel()->em()
-            ->getRepository('RZ\Renzo\Core\Entities\NodeType')
-            ->findBy(array('newsletterType' => false));
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
     public static function getNewsletterNodeTypes()
     {
         return $this->getKernel()->em()

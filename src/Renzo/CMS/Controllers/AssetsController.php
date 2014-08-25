@@ -31,7 +31,7 @@ class AssetsController extends AppController
      *
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
-    public function __init(SecurityContext $securityContext)
+    public function __init(SecurityContext $securityContext = null)
     {
 
     }

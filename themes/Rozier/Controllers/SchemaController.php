@@ -53,7 +53,9 @@ class SchemaController extends RozierApp
      */
     public function updateNodeTypesSchemaAction(Request $request, $_token)
     {
-        if (static::$csrfProvider->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
+        if ($this->getKernel()
+                ->getCsrfProvider()
+                ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
 
             \RZ\Renzo\Console\SchemaCommand::updateSchema();
 
@@ -87,7 +89,9 @@ class SchemaController extends RozierApp
      */
     public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $nodeTypeId)
     {
-        if (static::$csrfProvider->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
+        if ($this->getKernel()
+                ->getCsrfProvider()
+                ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
             \RZ\Renzo\Console\SchemaCommand::updateSchema();
 
             $msg = $this->getTranslator()->trans('database.schema.updated');
