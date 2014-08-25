@@ -2,13 +2,11 @@
 /*
  * Copyright REZO ZERO 2014
  *
- * Description
  *
  * @file PageController.php
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-
 namespace Themes\DefaultTheme\Controllers;
 
 use RZ\Renzo\Core\Entities\Node;
@@ -19,21 +17,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Frontend controller to handle node request
- * This class must be inherited in order to create a new theme
+ * Frontend controller to handle Page node-type request.
  */
 class PageController extends DefaultApp
 {
 
     /**
-     * Default action for any Page node
+     * Default action for any Page node.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param RZ\Renzo\Core\Entities\Node              $node
      * @param RZ\Renzo\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request, Node $node = null, Translation $translation = null)
+    public function indexAction(
+        Request $request,
+        Node $node = null,
+        Translation $translation = null
+    )
     {
         $this->prepareThemeAssignation($node, $translation);
 

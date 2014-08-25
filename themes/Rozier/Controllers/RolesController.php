@@ -40,7 +40,7 @@ class RolesController extends RozierApp
 
         $listManager = new EntityListManager(
             $request,
-            Kernel::getInstance()->em(),
+            $this->getKernel()->em(),
             'RZ\Renzo\Core\Entities\Role',
             array(),
             array('name' => 'ASC')
@@ -89,7 +89,7 @@ class RolesController extends RozierApp
              * Force redirect to avoid resending form when refreshing page
              */
             $response = new RedirectResponse(
-                Kernel::getInstance()->getUrlGenerator()->generate('rolesHomePage')
+                $this->getKernel()->getUrlGenerator()->generate('rolesHomePage')
             );
             $response->prepare($request);
 
@@ -115,7 +115,7 @@ class RolesController extends RozierApp
      */
     public function deleteAction(Request $request, $roleId)
     {
-        $role = Kernel::getInstance()->em()
+        $role = $this->getKernel()->em()
                     ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
         if ($role !== null) {
 
@@ -143,7 +143,7 @@ class RolesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('rolesHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('rolesHomePage')
                 );
                 $response->prepare($request);
 
@@ -172,7 +172,7 @@ class RolesController extends RozierApp
      */
     public function editAction(Request $request, $roleId)
     {
-        $role = Kernel::getInstance()->em()
+        $role = $this->getKernel()->em()
                     ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
 
         if ($role !== null &&
@@ -202,7 +202,7 @@ class RolesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('rolesHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('rolesHomePage')
                 );
                 $response->prepare($request);
 
@@ -305,7 +305,7 @@ class RolesController extends RozierApp
     protected function addRole(array $data)
     {
         if (isset($data['name'])) {
-            $existing = Kernel::getInstance()->em()
+            $existing = $this->getKernel()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Role')
                     ->findOneBy(array('name' => $data['name']));
             if ($existing !== null) {
@@ -313,8 +313,8 @@ class RolesController extends RozierApp
             }
 
             $role = new Role($data['name']);
-            Kernel::getInstance()->em()->persist($role);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->persist($role);
+            $this->getKernel()->em()->flush();
 
             return $role;
         } else {
@@ -337,7 +337,7 @@ class RolesController extends RozierApp
         }
 
         if (isset($data['name'])) {
-            $existing = Kernel::getInstance()->em()
+            $existing = $this->getKernel()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Role')
                     ->findOneBy(array('name' => $data['name']));
             if ($existing !== null &&
@@ -346,7 +346,7 @@ class RolesController extends RozierApp
             }
 
             $role->setName($data['name']);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->flush();
 
             return $role;
         } else {
@@ -363,8 +363,8 @@ class RolesController extends RozierApp
     protected function deleteRole( array $data, Role $role )
     {
         if (!$role->required()) {
-            Kernel::getInstance()->em()->remove($role);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->remove($role);
+            $this->getKernel()->em()->flush();
         } else {
             throw new EntityRequiredException($this->getTranslator()->trans("role.is.required"), 1);
         }

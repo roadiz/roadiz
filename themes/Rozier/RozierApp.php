@@ -67,7 +67,7 @@ class RozierApp extends BackendController
             $validator = Validation::createValidator();
 
             $this->formFactory = Forms::createFormFactoryBuilder()
-                ->addExtension(new CsrfExtension(static::$csrfProvider))
+                ->addExtension(new CsrfExtension($this->getKernel()->getCsrfProvider()))
                 ->addExtension(new ValidatorExtension($validator))
                 ->getFormFactory();
         }

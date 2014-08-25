@@ -42,7 +42,7 @@ class FontsController extends RozierApp
     {
         $listManager = new EntityListManager(
             $request,
-            Kernel::getInstance()->em(),
+            $this->getKernel()->em(),
             'RZ\Renzo\Core\Entities\Font'
         );
         $listManager->handle();
@@ -89,7 +89,7 @@ class FontsController extends RozierApp
              * Force redirect to avoid resending form when refreshing page
              */
             $response = new RedirectResponse(
-                Kernel::getInstance()->getUrlGenerator()->generate('fontsHomePage')
+                $this->getKernel()->getUrlGenerator()->generate('fontsHomePage')
             );
             $response->prepare($request);
 
@@ -114,7 +114,7 @@ class FontsController extends RozierApp
      */
     public function deleteAction(Request $request, $fontId)
     {
-        $font = Kernel::getInstance()->em()
+        $font = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Font', (int) $fontId);
 
         if (null !== $font) {
@@ -142,7 +142,7 @@ class FontsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('fontsHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('fontsHomePage')
                 );
                 $response->prepare($request);
 
@@ -170,7 +170,7 @@ class FontsController extends RozierApp
      */
     public function editAction(Request $request, $fontId)
     {
-        $font = Kernel::getInstance()->em()
+        $font = $this->getKernel()->em()
                     ->find('RZ\Renzo\Core\Entities\Font', (int) $fontId);
 
         if ($font !== null) {
@@ -199,7 +199,7 @@ class FontsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('fontsHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('fontsHomePage')
                 );
                 $response->prepare($request);
 
@@ -227,7 +227,7 @@ class FontsController extends RozierApp
      */
     public function downloadAction(Request $request, $fontId)
     {
-        $font = Kernel::getInstance()->em()
+        $font = $this->getKernel()->em()
                     ->find('RZ\Renzo\Core\Entities\Font', (int) $fontId);
 
         if ($font !== null) {
@@ -378,7 +378,7 @@ class FontsController extends RozierApp
         $data = $rawData->getData();
 
         if (isset($data['name'])) {
-            $existing = Kernel::getInstance()->em()
+            $existing = $this->getKernel()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Font')
                     ->findOneBy(array('name' => $data['name'], 'variant' => $data['variant']));
 
@@ -388,13 +388,13 @@ class FontsController extends RozierApp
 
             $font = new Font();
             $font->setName($data['name']);
-            $font->setHash(Kernel::getInstance()->getConfig()['security']['secret']);
+            $font->setHash($this->getKernel()->getConfig()['security']['secret']);
             $font->setVariant($data['variant']);
 
             $this->uploadFontFiles($rawData, $font);
 
-            Kernel::getInstance()->em()->persist($font);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->persist($font);
+            $this->getKernel()->em()->flush();
 
             return $font;
         } else {
@@ -514,7 +514,7 @@ class FontsController extends RozierApp
         $data = $rawData->getData();
 
         if (isset($data['name'])) {
-            $existing = Kernel::getInstance()->em()
+            $existing = $this->getKernel()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Font')
                     ->findOneBy(array('name' => $data['name'], 'variant' => $data['variant']));
             if ($existing !== null &&
@@ -523,12 +523,12 @@ class FontsController extends RozierApp
             }
 
             $font->setName($data['name']);
-            $font->setHash(Kernel::getInstance()->getConfig()['security']['secret']);
+            $font->setHash($this->getKernel()->getConfig()['security']['secret']);
             $font->setVariant($data['variant']);
 
             $this->uploadFontFiles($rawData, $font);
 
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->flush();
 
             return $font;
         } else {
@@ -546,7 +546,7 @@ class FontsController extends RozierApp
      */
     protected function deleteFont(array $data, Font $font)
     {
-        Kernel::getInstance()->em()->remove($font);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->remove($font);
+        $this->getKernel()->em()->flush();
     }
 }

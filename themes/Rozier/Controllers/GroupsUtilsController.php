@@ -44,7 +44,7 @@ class GroupsUtilsController extends RozierApp
      */
     public function exportJsonFileAction(Request $request, $groupId)
     {
-        $group = Kernel::getInstance()->em()
+        $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         $response =  new Response(
@@ -87,21 +87,21 @@ class GroupsUtilsController extends RozierApp
                 if (null !== json_decode($serializedData)) {
 
                     $group = GroupJsonSerializer::deserialize($serializedData);
-                    $existingGroup = Kernel::getInstance()->em()
+                    $existingGroup = $this->getKernel()->em()
                         ->getRepository('RZ\Renzo\Core\Entities\Group')
                         ->findOneBy(array('name'=>$group->getName()));
 
                     if (null === $existingGroup) {
 
-                        Kernel::getInstance()->em()->persist($group);
-                        Kernel::getInstance()->em()->flush();
+                        $this->getKernel()->em()->persist($group);
+                        $this->getKernel()->em()->flush();
 
                         foreach ($group->getRoles() as $role) {
                             /*
                              * then persist each field
                              */
                             $group->addRoles($role);
-                            Kernel::getInstance()->em()->persist($role);
+                            $this->getKernel()->em()->persist($role);
                         }
 
                         $msg = $this->getTranslator()->trans('group.imported.created');
@@ -116,7 +116,7 @@ class GroupsUtilsController extends RozierApp
                         $this->getLogger()->info($msg);
                     }
 
-                    Kernel::getInstance()->em()->flush();
+                    $this->getKernel()->em()->flush();
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);

@@ -51,7 +51,7 @@ class AjaxTagsController extends AbstractAjaxController
             );
         }
 
-        $tag = Kernel::getInstance()->em()
+        $tag = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
@@ -110,7 +110,7 @@ class AjaxTagsController extends AbstractAjaxController
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
 
-            $parent = Kernel::getInstance()->em()
+            $parent = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['newParent']);
 
             if ($parent !== null) {
@@ -125,7 +125,7 @@ class AjaxTagsController extends AbstractAjaxController
          */
         if (!empty($parameters['nextTagId']) &&
             $parameters['nextTagId'] > 0) {
-            $nextTag = Kernel::getInstance()->em()
+            $nextTag = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['nextTagId']);
             if ($nextTag !== null) {
                 $tag->setPosition($nextTag->getPosition() - 0.5);
@@ -133,14 +133,14 @@ class AjaxTagsController extends AbstractAjaxController
         } elseif (!empty($parameters['prevTagId']) &&
             $parameters['prevTagId'] > 0) {
 
-            $prevTag = Kernel::getInstance()->em()
+            $prevTag = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['prevTagId']);
             if ($prevTag !== null) {
                 $tag->setPosition($prevTag->getPosition() + 0.5);
             }
         }
         // Apply position update before cleaning
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->flush();
 
         if ($parent !== null) {
             $parent->getHandler()->cleanChildrenPositions();

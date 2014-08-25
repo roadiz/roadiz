@@ -44,15 +44,15 @@ class UrlAliasesController extends RozierApp
      */
     public function editAliasesAction(Request $request, $nodeId)
     {
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();
-        $node = Kernel::getInstance()->em()
+        $node = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
         if ($node !== null) {
 
-            $uas = Kernel::getInstance()->em()
+            $uas = $this->getKernel()->em()
                             ->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
                             ->findAllFromNode($node->getId());
 
@@ -86,7 +86,7 @@ class UrlAliasesController extends RozierApp
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'nodesEditAliasesPage',
                             array('nodeId' => $node->getId())
                         )
@@ -108,7 +108,7 @@ class UrlAliasesController extends RozierApp
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'nodesEditAliasesPage',
                             array('nodeId' => $node->getId())
                         )
@@ -154,7 +154,7 @@ class UrlAliasesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'nodesEditAliasesPage',
                         array('nodeId' => $node->getId())
                     )
@@ -187,10 +187,10 @@ class UrlAliasesController extends RozierApp
     {
         if ($data['nodeId'] == $node->getId()) {
 
-            $translation = Kernel::getInstance()->em()
+            $translation = $this->getKernel()->em()
                         ->find('RZ\Renzo\Core\Entities\Translation', (int) $data['translationId']);
 
-            $nodeSource = Kernel::getInstance()->em()
+            $nodeSource = $this->getKernel()->em()
                         ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
                         ->findOneBy(array('node'=>$node, 'translation'=>$translation));
 
@@ -208,8 +208,8 @@ class UrlAliasesController extends RozierApp
                 try {
                     $ua = new UrlAlias($nodeSource);
                     $ua->setAlias($data['alias']);
-                    Kernel::getInstance()->em()->persist($ua);
-                    Kernel::getInstance()->em()->flush();
+                    $this->getKernel()->em()->persist($ua);
+                    $this->getKernel()->em()->flush();
 
                     return $ua;
                 } catch (\Exception $e) {
@@ -234,7 +234,7 @@ class UrlAliasesController extends RozierApp
      */
     private function urlAliasExists($name)
     {
-        return (boolean) Kernel::getInstance()->em()
+        return (boolean) $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
             ->exists($name);
     }
@@ -245,7 +245,7 @@ class UrlAliasesController extends RozierApp
      */
     private function nodeNameExists($name)
     {
-        return (boolean) Kernel::getInstance()->em()
+        return (boolean) $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Node')
             ->exists($name);
     }
@@ -275,7 +275,7 @@ class UrlAliasesController extends RozierApp
 
             try {
                 $ua->setAlias($data['alias']);
-                Kernel::getInstance()->em()->flush();
+                $this->getKernel()->em()->flush();
 
                 return true;
             } catch (\Exception $e) {
@@ -293,8 +293,8 @@ class UrlAliasesController extends RozierApp
     private function deleteUrlAlias($data, UrlAlias $ua)
     {
         if ($data['urlaliasId'] == $ua->getId()) {
-            Kernel::getInstance()->em()->remove($ua);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->remove($ua);
+            $this->getKernel()->em()->flush();
         }
     }
 

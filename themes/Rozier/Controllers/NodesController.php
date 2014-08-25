@@ -54,11 +54,11 @@ class NodesController extends RozierApp
          * Security
          */
         // show different content to admin users
-        /*if (false === static::getSecurityContext()->isGranted('ROLE_NODES_EDITOR')) {
+        /*if (false === $this->getKernel()->getSecurityContext()->isGranted('ROLE_NODES_EDITOR')) {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }*/
 
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Translation')
             ->findDefault();
 
@@ -67,7 +67,7 @@ class NodesController extends RozierApp
          */
         $listManager = new EntityListManager(
             $request,
-            Kernel::getInstance()->em(),
+            $this->getKernel()->em(),
             'RZ\Renzo\Core\Entities\Node'
         );
         $listManager->handle();
@@ -93,17 +93,17 @@ class NodesController extends RozierApp
      */
     public function treeAction(Request $request, $nodeId, $translationId = null)
     {
-        $node = Kernel::getInstance()->em()
+        $node = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
-        Kernel::getInstance()->em()->refresh($node);
+        $this->getKernel()->em()->refresh($node);
 
         $translation = null;
         if (null !== $translationId) {
-            $translation = Kernel::getInstance()->em()
+            $translation = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findOneBy(array('id'=>(int) $translationId));
         } else {
-            $translation = Kernel::getInstance()->em()
+            $translation = $this->getKernel()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Translation')
                     ->findDefault();
         }
@@ -134,11 +134,11 @@ class NodesController extends RozierApp
      */
     public function editAction(Request $request, $nodeId, $translationId = null)
     {
-        $node = Kernel::getInstance()->em()
+        $node = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
-        Kernel::getInstance()->em()->refresh($node);
+        $this->getKernel()->em()->refresh($node);
 
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();
 
@@ -171,7 +171,7 @@ class NodesController extends RozierApp
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'nodesEditSourcePage',
                             array('nodeId' => $node->getId(), 'translationId'=>$translationForm->getData()['translationId'])
                         )
@@ -205,7 +205,7 @@ class NodesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'nodesEditPage',
                         array('nodeId' => $node->getId())
                     )
@@ -237,15 +237,15 @@ class NodesController extends RozierApp
      */
     public function editSourceAction(Request $request, $nodeId, $translationId)
     {
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
 
-            $gnode = Kernel::getInstance()->em()
+            $gnode = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
-            $source = Kernel::getInstance()->em()
+            $source = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
                 ->findOneBy(array('translation'=>$translation, 'node'=>array('id'=>(int) $nodeId)));
 
@@ -278,7 +278,7 @@ class NodesController extends RozierApp
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'nodesEditSourcePage',
                             array('nodeId' => $node->getId(), 'translationId'=>$translation->getId())
                         )
@@ -289,7 +289,7 @@ class NodesController extends RozierApp
                 }
 
                 $this->assignation['form'] = $form->createView();
-                //Kernel::getInstance()->em()->detach($node);
+                //$this->getKernel()->em()->detach($node);
 
                 return new Response(
                     $this->getTwig()->render('nodes/editSource.html.twig', $this->assignation),
@@ -312,13 +312,13 @@ class NodesController extends RozierApp
      */
     public function editTagsAction(Request $request, $nodeId)
     {
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();
 
         if (null !== $translation) {
 
-            $source = Kernel::getInstance()->em()
+            $source = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
                 ->findOneBy(array(
                     'translation'=>$translation,
@@ -351,7 +351,7 @@ class NodesController extends RozierApp
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'nodesEditTagsPage',
                             array('nodeId' => $node->getId())
                         )
@@ -385,9 +385,9 @@ class NodesController extends RozierApp
      */
     public function removeTagAction(Request $request, $nodeId, $tagId)
     {
-        $node = Kernel::getInstance()->em()
+        $node = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
-        $tag = Kernel::getInstance()->em()
+        $tag = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
         if ($node !== null && $tag !== null) {
@@ -408,7 +408,7 @@ class NodesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'nodesEditTagsPage',
                         array('nodeId' => $node->getId())
                     )
@@ -441,15 +441,15 @@ class NodesController extends RozierApp
      */
     public function addAction(Request $request, $nodeTypeId, $translationId = null)
     {
-        $type = Kernel::getInstance()->em()
+        $type = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', $nodeTypeId);
 
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Translation')
             ->findDefault();
 
         if ($translationId != null) {
-            $translation = Kernel::getInstance()->em()
+            $translation = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
         }
 
@@ -476,7 +476,7 @@ class NodesController extends RozierApp
                     $this->getLogger()->info($msg);
 
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'nodesEditPage',
                             array('nodeId' => $node->getId())
                         )
@@ -490,7 +490,7 @@ class NodesController extends RozierApp
                     $this->getLogger()->warning($e->getMessage());
 
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'nodesAddPage',
                             array('nodeTypeId' => $nodeTypeId, 'translationId' => $translationId)
                         )
@@ -526,15 +526,15 @@ class NodesController extends RozierApp
      */
     public function addChildAction(Request $request, $nodeId, $translationId = null)
     {
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();
 
         if (null !== $translationId) {
-            $translation = Kernel::getInstance()->em()
+            $translation = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
         }
-        $parentNode = Kernel::getInstance()->em()
+        $parentNode = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
         if (null !== $translation &&
@@ -553,7 +553,7 @@ class NodesController extends RozierApp
                     $this->getLogger()->info($msg);
 
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'nodesEditPage',
                             array('nodeId' => $node->getId())
                         )
@@ -570,7 +570,7 @@ class NodesController extends RozierApp
                     $this->getLogger()->warning($e->getMessage());
 
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'nodesAddChildPage',
                             array('nodeId' => $nodeId, 'translationId' => $translationId)
                         )
@@ -605,7 +605,7 @@ class NodesController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeId)
     {
-        $node = Kernel::getInstance()->em()
+        $node = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
         if (null !== $node) {
@@ -626,7 +626,7 @@ class NodesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('nodesHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('nodesHomePage')
                 );
                 $response->prepare($request);
 
@@ -666,12 +666,12 @@ class NodesController extends RozierApp
         try {
             $node = new Node($type);
             $node->setNodeName($data['nodeName']);
-            Kernel::getInstance()->em()->persist($node);
+            $this->getKernel()->em()->persist($node);
 
             $sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
             $source = new $sourceClass($node, $translation);
-            Kernel::getInstance()->em()->persist($source);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->persist($source);
+            $this->getKernel()->em()->flush();
 
             return $node;
         } catch (\Exception $e) {
@@ -697,7 +697,7 @@ class NodesController extends RozierApp
         $type = null;
 
         if (!empty($data['nodeTypeId'])) {
-            $type = Kernel::getInstance()->em()
+            $type = $this->getKernel()->em()
                         ->find(
                             'RZ\Renzo\Core\Entities\NodeType',
                             (int) $data['nodeTypeId']
@@ -714,11 +714,11 @@ class NodesController extends RozierApp
             $node = new Node($type);
             $node->setParent($parentNode);
             $node->setNodeName($data['nodeName']);
-            Kernel::getInstance()->em()->persist($node);
+            $this->getKernel()->em()->persist($node);
             $sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
             $source = new $sourceClass($node, $translation);
-            Kernel::getInstance()->em()->persist($source);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->persist($source);
+            $this->getKernel()->em()->flush();
 
             return $node;
         } catch (\Exception $e) {
@@ -735,7 +735,7 @@ class NodesController extends RozierApp
      */
     private function urlAliasExists($name)
     {
-        return (boolean) Kernel::getInstance()->em()
+        return (boolean) $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
             ->exists($name);
     }
@@ -747,7 +747,7 @@ class NodesController extends RozierApp
      */
     private function nodeNameExists($name)
     {
-        return (boolean) Kernel::getInstance()->em()
+        return (boolean) $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Node')
             ->exists($name);
     }
@@ -773,7 +773,7 @@ class NodesController extends RozierApp
             $node->$setter( $value );
         }
 
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->flush();
     }
 
     /**
@@ -786,12 +786,12 @@ class NodesController extends RozierApp
      */
     private function addNodeTag($data, Node $node)
     {
-        $tag = Kernel::getInstance()->em()
+        $tag = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Tag')
                 ->findWithDefaultTranslation($data['tagId']);
 
         $node->getTags()->add($tag);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->flush();
 
         return $tag;
     }
@@ -809,7 +809,7 @@ class NodesController extends RozierApp
             $data['tagId'] == $tag->getId()) {
 
             $node->removeTag($tag);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->flush();
 
             return $tag;
         }
@@ -828,7 +828,7 @@ class NodesController extends RozierApp
         $sourceClass = "GeneratedNodeSources\\".$node
                                 ->getNodeType()
                                 ->getSourceEntityClassName();
-        $newTranslation = Kernel::getInstance()->em()
+        $newTranslation = $this->getKernel()->em()
                 ->find(
                     'RZ\Renzo\Core\Entities\Translation',
                     (int) $data['translationId']
@@ -836,8 +836,8 @@ class NodesController extends RozierApp
 
         $source = new $sourceClass($node, $newTranslation);
 
-        Kernel::getInstance()->em()->persist($source);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->persist($source);
+        $this->getKernel()->em()->flush();
     }
 
     /**
@@ -857,7 +857,7 @@ class NodesController extends RozierApp
             }
         }
 
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->flush();
     }
 
     /**
@@ -1058,7 +1058,7 @@ class NodesController extends RozierApp
                 $nodeSource->getHandler()->cleanDocumentsFromField($field);
 
                 foreach ($data[$field->getName()] as $documentId) {
-                    $tempDoc = Kernel::getInstance()->em()
+                    $tempDoc = $this->getKernel()->em()
                         ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
                     if ($tempDoc !== null) {
                         $nodeSource->getHandler()->addDocumentForField($tempDoc, $field);

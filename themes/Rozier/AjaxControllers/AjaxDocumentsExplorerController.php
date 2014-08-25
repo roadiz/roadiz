@@ -47,7 +47,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             );
         }
 
-        $documents = Kernel::getInstance()->em()
+        $documents = $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Document')
             ->findBy(array(), array('createdAt' => 'DESC'));
 

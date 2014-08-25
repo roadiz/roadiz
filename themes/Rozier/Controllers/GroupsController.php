@@ -44,7 +44,7 @@ class GroupsController extends RozierApp
          */
         $listManager = new EntityListManager(
             $request,
-            Kernel::getInstance()->em(),
+            $this->getKernel()->em(),
             'RZ\Renzo\Core\Entities\Group'
         );
         $listManager->handle();
@@ -89,7 +89,7 @@ class GroupsController extends RozierApp
              * Force redirect to avoid resending form when refreshing page
              */
             $response = new RedirectResponse(
-                Kernel::getInstance()->getUrlGenerator()->generate('groupsHomePage')
+                $this->getKernel()->getUrlGenerator()->generate('groupsHomePage')
             );
             $response->prepare($request);
 
@@ -113,7 +113,7 @@ class GroupsController extends RozierApp
      */
     public function deleteAction(Request $request, $groupId)
     {
-        $group = Kernel::getInstance()->em()
+        $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         if ($group !== null) {
@@ -138,7 +138,7 @@ class GroupsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('groupsHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('groupsHomePage')
                 );
                 $response->prepare($request);
 
@@ -166,7 +166,7 @@ class GroupsController extends RozierApp
      */
     public function editAction(Request $request, $groupId)
     {
-        $group = Kernel::getInstance()->em()
+        $group = $this->getKernel()->em()
                     ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         if ($group !== null) {
@@ -196,7 +196,7 @@ class GroupsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('groupsHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('groupsHomePage')
                 );
                 $response->prepare($request);
 
@@ -225,7 +225,7 @@ class GroupsController extends RozierApp
      */
     public function editRolesAction(Request $request, $groupId)
     {
-        $group = Kernel::getInstance()->em()
+        $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         if ($group !== null) {
@@ -248,7 +248,7 @@ class GroupsController extends RozierApp
                 * Force redirect to avoid resending form when refreshing page
                 */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'groupsEditRolesPage',
                         array('groupId' => $group->getId())
                     )
@@ -279,9 +279,9 @@ class GroupsController extends RozierApp
      */
     public function removeRolesAction(Request $request, $groupId, $roleId)
     {
-        $group = Kernel::getInstance()->em()
+        $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
-        $role = Kernel::getInstance()->em()
+        $role = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
 
         if ($group !== null &&
@@ -303,7 +303,7 @@ class GroupsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'groupsEditRolesPage',
                         array('groupId' => $group->getId())
                     )
@@ -333,7 +333,7 @@ class GroupsController extends RozierApp
      */
     public function editUsersAction(Request $request, $groupId)
     {
-        $group = Kernel::getInstance()->em()
+        $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         if ($group !== null) {
@@ -356,7 +356,7 @@ class GroupsController extends RozierApp
                 * Force redirect to avoid resending form when refreshing page
                 */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'groupsEditUsersPage',
                         array('groupId' => $group->getId())
                     )
@@ -387,9 +387,9 @@ class GroupsController extends RozierApp
      */
     public function removeUsersAction(Request $request, $groupId, $userId)
     {
-        $group = Kernel::getInstance()->em()
+        $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
-        $user = Kernel::getInstance()->em()
+        $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
 
         if ($group !== null &&
@@ -411,7 +411,7 @@ class GroupsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'groupsEditUsersPage',
                         array('groupId' => $group->getId(),
                             'userId' => $user->getId())
@@ -617,7 +617,7 @@ class GroupsController extends RozierApp
     protected function addGroup(array $data)
     {
         if (isset($data['name'])) {
-            $existing = Kernel::getInstance()->em()
+            $existing = $this->getKernel()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Group')
                     ->findOneBy(array('name' => $data['name']));
 
@@ -627,8 +627,8 @@ class GroupsController extends RozierApp
 
             $group = new Group();
             $group->setName($data['name']);
-            Kernel::getInstance()->em()->persist($group);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->persist($group);
+            $this->getKernel()->em()->flush();
 
             return $group;
         } else {
@@ -648,7 +648,7 @@ class GroupsController extends RozierApp
     protected function editGroup(array $data, Group $group)
     {
         if (isset($data['name'])) {
-            $existing = Kernel::getInstance()->em()
+            $existing = $this->getKernel()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Group')
                     ->findOneBy(array('name' => $data['name']));
             if ($existing !== null &&
@@ -657,7 +657,7 @@ class GroupsController extends RozierApp
             }
 
             $group->setName($data['name']);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->flush();
 
             return $group;
         } else {
@@ -673,8 +673,8 @@ class GroupsController extends RozierApp
      */
     protected function deleteGroup(array $data, Group $group)
     {
-        Kernel::getInstance()->em()->remove($group);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->remove($group);
+        $this->getKernel()->em()->flush();
     }
 
     /**
@@ -686,11 +686,11 @@ class GroupsController extends RozierApp
     private function addRole($data, Group $group)
     {
         if ($data['groupId'] == $group->getId()) {
-            $role = Kernel::getInstance()->em()
+            $role = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Role', (int) $data['roleId']);
             if ($role !== null) {
                 $group->addRole($role);
-                Kernel::getInstance()->em()->flush();
+                $this->getKernel()->em()->flush();
 
                 return $role;
             }
@@ -711,7 +711,7 @@ class GroupsController extends RozierApp
 
             if ($role !== null) {
                 $group->removeRole($role);
-                Kernel::getInstance()->em()->flush();
+                $this->getKernel()->em()->flush();
             }
 
             return $role;
@@ -727,13 +727,13 @@ class GroupsController extends RozierApp
     private function addUser($data, Group $group)
     {
         if ($data['groupId'] == $group->getId()) {
-            $user = Kernel::getInstance()->em()
+            $user = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\User', (int) $data['userId']);
 
             if ($user !== null) {
                 //$group->addUser($user);
                 $user->addGroup($group);
-                Kernel::getInstance()->em()->flush();
+                $this->getKernel()->em()->flush();
 
                 return $user;
             }
@@ -754,7 +754,7 @@ class GroupsController extends RozierApp
 
             if ($user !== null) {
                 $user->removeGroup($group);
-                Kernel::getInstance()->em()->flush();
+                $this->getKernel()->em()->flush();
             }
 
             return $user;

@@ -41,7 +41,7 @@ class ThemesController extends RozierApp
     {
         $listManager = new EntityListManager(
             $request,
-            Kernel::getInstance()->em(),
+            $this->getKernel()->em(),
             'RZ\Renzo\Core\Entities\Theme'
         );
         $listManager->handle();
@@ -66,7 +66,7 @@ class ThemesController extends RozierApp
      */
     public function editAction(Request $request, $themeId)
     {
-        $theme = Kernel::getInstance()->em()
+        $theme = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
@@ -94,7 +94,7 @@ class ThemesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('themesHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('themesHomePage')
                 );
                 $response->prepare($request);
 
@@ -145,7 +145,7 @@ class ThemesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('themesHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('themesHomePage')
                 );
                 $response->prepare($request);
 
@@ -172,7 +172,7 @@ class ThemesController extends RozierApp
      */
     public function deleteAction(Request $request, $themeId)
     {
-        $theme = Kernel::getInstance()->em()
+        $theme = $this->getKernel()->em()
                     ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
@@ -200,7 +200,7 @@ class ThemesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('themesHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('themesHomePage')
                 );
                 $response->prepare($request);
 
@@ -299,7 +299,7 @@ class ThemesController extends RozierApp
             $theme->$setter($value);
         }
 
-        $existing = Kernel::getInstance()->em()
+        $existing = $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Theme')
             ->findOneBy(array('className'=>$theme->getClassName()));
 
@@ -313,8 +313,8 @@ class ThemesController extends RozierApp
             );
         }
 
-        Kernel::getInstance()->em()->persist($theme);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->persist($theme);
+        $this->getKernel()->em()->flush();
     }
 
     /**
@@ -324,7 +324,7 @@ class ThemesController extends RozierApp
     private function editTheme(array $data, Theme $theme)
     {
         /*if (isset($data['classname'])) {
-            $existing = Kernel::getInstance()->em()
+            $existing = $this->getKernel()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Theme')
                     ->findOneBy(array('classname' => $data['name']));
             if ($existing !== null &&
@@ -333,7 +333,7 @@ class ThemesController extends RozierApp
             }
 
             $theme->setName($data['classname']);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->flush();
 
             return $theme;
         }
@@ -350,7 +350,7 @@ class ThemesController extends RozierApp
             $theme->$setter($value);
         }
 
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->flush();
 
         return true;*/
     }
@@ -361,7 +361,7 @@ class ThemesController extends RozierApp
      */
     protected function deleteTheme(array $data, Theme $theme)
     {
-        Kernel::getInstance()->em()->remove($theme);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->remove($theme);
+        $this->getKernel()->em()->flush();
     }
 }

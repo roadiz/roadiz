@@ -43,7 +43,7 @@ class TranslationsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $translations = Kernel::getInstance()->em()
+        $translations = $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Translation')
             ->findAll();
 
@@ -51,7 +51,7 @@ class TranslationsController extends RozierApp
 
         $listManager = new EntityListManager(
             $request,
-            Kernel::getInstance()->em(),
+            $this->getKernel()->em(),
             'RZ\Renzo\Core\Entities\Translation'
         );
         $listManager->handle();
@@ -75,7 +75,7 @@ class TranslationsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'translationsHomePage'
                     )
                 );
@@ -106,7 +106,7 @@ class TranslationsController extends RozierApp
      */
     public function editAction(Request $request, $translationId)
     {
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
@@ -132,7 +132,7 @@ class TranslationsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'translationsEditPage',
                         array('translation_id' => $translation->getId())
                     )
@@ -187,7 +187,7 @@ class TranslationsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('translationsHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('translationsHomePage')
                 );
                 $response->prepare($request);
 
@@ -215,7 +215,7 @@ class TranslationsController extends RozierApp
      */
     public function deleteAction(Request $request, $translationId)
     {
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
 
         if (null !== $translation) {
@@ -242,7 +242,7 @@ class TranslationsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('translationsHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('translationsHomePage')
                 );
                 $response->prepare($request);
 
@@ -275,7 +275,7 @@ class TranslationsController extends RozierApp
                 $translation->$setter( $value );
             }
 
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->flush();
         } catch (\Exception $e) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans('translation.cannot_update_already_exists',
                 array('%locale%'=>$translation->getLocale())), 1);
@@ -295,8 +295,8 @@ class TranslationsController extends RozierApp
                 $setter = 'set'.ucwords($key);
                 $translation->$setter( $value );
             }
-            Kernel::getInstance()->em()->persist($translation);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->persist($translation);
+            $this->getKernel()->em()->flush();
         } catch (\Exception $e) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans('translation.cannot_create_already_exists',
                 array('%locale%'=>$translation->getLocale())), 1);
@@ -314,8 +314,8 @@ class TranslationsController extends RozierApp
         if ($data['translation_id'] == $translation->getId()) {
 
             if (false === $translation->isDefaultTranslation()) {
-                Kernel::getInstance()->em()->remove($translation);
-                Kernel::getInstance()->em()->flush();
+                $this->getKernel()->em()->remove($translation);
+                $this->getKernel()->em()->flush();
             } else {
                 throw new \Exception($this->getTranslator()->trans('translation.cannot_delete_default_translation', array('%name%'=>$translation->getName())), 1);
             }

@@ -10,23 +10,25 @@
  */
 namespace RZ\Renzo\Core;
 
-use RZ\Renzo\Inheritance\Doctrine\DataInheritanceEvent;
+use RZ\Renzo\Core\Events\DataInheritanceEvent;
 use RZ\Renzo\Core\Routing\MixedUrlMatcher;
 use RZ\Renzo\Core\Bags\SettingsBag;
+use RZ\Renzo\Core\Handlers\UserProvider;
+use RZ\Renzo\Core\Handlers\UserHandler;
 use RZ\Renzo\Core\Entities\Theme;
 
-use Symfony\Component\Console\Application;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
+use Symfony\Component\Console\Application;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\KernelEvents;
-
 use Symfony\Component\Routing;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -36,15 +38,21 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
-
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
+use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Stopwatch\Stopwatch;
-
 use Symfony\Component\HttpFoundation\RequestMatcher;
-
+use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\User\UserChecker;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
+use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
@@ -56,6 +64,8 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
  */
 class Kernel
 {
+    const SECURITY_DOMAIN = 'rzcms_domain';
+
     private static $instance = null;
     private $em =           null;
     private $backendDebug = false;
@@ -73,21 +83,35 @@ class Kernel
     protected $urlMatcher =          null;
     protected $urlGenerator =        null;
     protected $stopwatch =           null;
-    protected $securityContext =     null;
     protected $backendClass =        null;
     protected $frontendThemes =      null;
     protected $rootCollection =      null;
+
+    /*
+     * About security and authentification.
+     *
+     * Authentification is global in RZCMS, but authorization
+     * will be handled differently by each available theme.
+     *
+     */
+    protected $csrfProvider =          null;
+    protected $userProvider =          null;
+    protected $securityContext =       null;
+    protected $accessDecisionManager = null;
+    protected $authenticationManager = null;
 
     /**
      * Kernel constructor.
      */
     private final function __construct()
     {
+        $this->stopwatch = new Stopwatch();
+        $this->stopwatch->start('global');
+
+        $this->stopwatch->start('initKernel');
         $this->parseConfig()
              ->setupEntityManager($this->getConfig());
 
-        $this->stopwatch = new Stopwatch();
-        $this->stopwatch->start('global');
         $this->rootCollection = new RouteCollection();
 
         $this->request = Request::createFromGlobals();
@@ -95,6 +119,7 @@ class Kernel
 
         $this->dispatcher = new EventDispatcher();
         $this->resolver = new ControllerResolver();
+        $this->stopwatch->stop('initKernel');
     }
 
     /**
@@ -149,16 +174,24 @@ class Kernel
             $this->setEntityManager(EntityManager::create($dbParams, $configDB));
 
             if ($this->em()->getConfiguration()->getResultCacheImpl() !== null) {
-                $this->em()->getConfiguration()->getResultCacheImpl()->setNamespace($config["appNamespace"]);
+                $this->em()->getConfiguration()
+                        ->getResultCacheImpl()
+                        ->setNamespace($config["appNamespace"]);
             }
             if ($this->em()->getConfiguration()->getHydrationCacheImpl() !== null) {
-                $this->em()->getConfiguration()->getHydrationCacheImpl()->setNamespace($config["appNamespace"]);
+                $this->em()->getConfiguration()
+                        ->getHydrationCacheImpl()
+                        ->setNamespace($config["appNamespace"]);
             }
             if ($this->em()->getConfiguration()->getQueryCacheImpl() !== null) {
-                $this->em()->getConfiguration()->getQueryCacheImpl()->setNamespace($config["appNamespace"]);
+                $this->em()->getConfiguration()
+                        ->getQueryCacheImpl()
+                        ->setNamespace($config["appNamespace"]);
             }
             if ($this->em()->getConfiguration()->getMetadataCacheImpl()) {
-                $this->em()->getConfiguration()->getMetadataCacheImpl()->setNamespace($config["appNamespace"]);
+                $this->em()->getConfiguration()
+                        ->getMetadataCacheImpl()
+                        ->setNamespace($config["appNamespace"]);
             }
         }
 
@@ -192,9 +225,7 @@ class Kernel
      */
     public function isDebug()
     {
-        $conf = $this->getConfig();
-
-        return (boolean) $conf['devMode'];
+        return (boolean) $this->getConfig()['devMode'];
     }
 
     /**
@@ -311,8 +342,8 @@ class Kernel
      */
     public function runApp()
     {
-        $this->debug =          (boolean) SettingsBag::get('debug');
-        $this->backendDebug =   (boolean) SettingsBag::get('backend_debug');
+        $this->debug = (boolean) SettingsBag::get('debug');
+        $this->backendDebug = (boolean) SettingsBag::get('backend_debug');
 
         $this->httpKernel = new HttpKernel($this->dispatcher, $this->resolver);
 
@@ -331,20 +362,17 @@ class Kernel
              * Main Framework handle call
              * ----------------------------
              */
-            $this->stopwatch->start('requestHandling');
             $this->response = $this->httpKernel->handle($this->request);
-
             $this->response->send();
-
             $this->httpKernel->terminate($this->request, $this->response);
-            $this->stopwatch->stop('requestHandling');
+
         } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
             echo $e->getMessage().PHP_EOL;
-        } catch (\LogicException $e) {
+        } /*catch (\LogicException $e) {
             echo $e->getMessage().PHP_EOL;
         } catch (\PDOException $e) {
             echo $e->getMessage().PHP_EOL;
-        }
+        }*/
 
         return $this;
     }
@@ -383,7 +411,11 @@ class Kernel
         $beClass = $this->backendClass;
         $cmsCollection = $beClass::getRoutes();
         if ($cmsCollection !== null) {
-            $this->rootCollection->addCollection($cmsCollection, '/rz-admin', array('_scheme' => 'https'));
+            $this->rootCollection->addCollection(
+                $cmsCollection,
+                '/rz-admin',
+                array('_scheme' => 'https')
+            );
         }
 
         /*
@@ -469,7 +501,7 @@ class Kernel
 
         if ($translation !== null) {
             $shortLocale = $translation->getShortLocale();
-            Kernel::getInstance()->getRequest()->setLocale($shortLocale);
+            $this->getRequest()->setLocale($shortLocale);
             \Locale::setDefault($shortLocale);
         }
     }
@@ -494,52 +526,116 @@ class Kernel
         /*
          * Security
          */
-        $this->stopwatch->start('firewall');
+        $this->stopwatch->start('sessionSecurity');
+        // Create session and CsrfProvider
+        $this->initializeSession();
+        // Create security context with RZCMS User/Roles system
+        $this->initializeSecurityContext();
+        $this->stopwatch->stop('sessionSecurity');
 
+        $this->stopwatch->start('firewall');
         $map = new FirewallMap();
         // Register back-end security scheme
         $beClass = $this->backendClass;
-        $beClass::appendToFirewallMap($map, $this->httpKernel, $this->httpUtils, $this->dispatcher);
+        $beClass::appendToFirewallMap(
+            $this->getSecurityContext(),
+            $this->getUserProvider(),
+            $this->getAuthenticationManager(),
+            $this->getAccessDecisionManager(),
+            $map,
+            $this->httpKernel,
+            $this->httpUtils,
+            $this->dispatcher
+        );
 
         // Register front-end security scheme
         foreach ($this->frontendThemes as $theme) {
             $feClass = $theme->getClassName();
-            $feClass::appendToFirewallMap($map, $this->httpKernel, $this->httpUtils, $this->dispatcher);
+            $feClass::appendToFirewallMap(
+                $this->getSecurityContext(),
+                $this->getUserProvider(),
+                $this->getAuthenticationManager(),
+                $this->getAccessDecisionManager(),
+                $map,
+                $this->httpKernel,
+                $this->httpUtils,
+                $this->dispatcher
+            );
         }
 
         $firewall = new Firewall($map, $this->dispatcher);
+        $this->stopwatch->stop('firewall');
+
+        /*
+         * Events
+         */
         $this->dispatcher->addListener(
             KernelEvents::REQUEST,
-            array($firewall, 'onKernelRequest')
+            array(
+                $this,
+                'onStartKernelRequest'
+            )
         );
-
+        $this->dispatcher->addListener(
+            KernelEvents::REQUEST,
+            array(
+                $firewall,
+                'onKernelRequest'
+            )
+        );
         /*
          * Register after controller matched listener
          */
         $this->dispatcher->addListener(
             KernelEvents::CONTROLLER,
-            array($this, 'onControllerMatched')
+            array(
+                $this,
+                'onControllerMatched'
+            )
         );
-
-        $this->stopwatch->stop('firewall');
-
+        $this->dispatcher->addListener(
+            KernelEvents::CONTROLLER,
+            array(
+                new \RZ\Renzo\Core\Events\ControllerMatchedEvent($this),
+                'onControllerMatched'
+            )
+        );
+        $this->dispatcher->addListener(
+            KernelEvents::TERMINATE,
+            array(
+                $this,
+                'onKernelTerminate'
+            )
+        );
         /*
          * If debug, alter HTML responses to append Debug panel to view
          */
-        if ((boolean) SettingsBag::get('display_debug_panel')) {
+        if (true == SettingsBag::get('display_debug_panel')) {
             $this->dispatcher->addSubscriber(new \RZ\Renzo\Core\Utils\DebugPanel());
         }
     }
-
     /**
-     * After a controller has been matched.
-     * @param SymfonyComponentHttpKernelEventFilterControllerEvent $event
-     *
-     * @return void
+     * Start a stopwatch event when a kernel start handling.
      */
-    public function onControllerMatched(\Symfony\Component\HttpKernel\Event\FilterControllerEvent $event)
+    public function onStartKernelRequest()
     {
-        $this->stopwatch->stop('matchingRoute');
+        $this->stopwatch->start('requestHandling');
+    }
+    /**
+     * Stop request-handling stopwatch event and
+     * start a new stopwatch event when a controller is instanciated.
+     */
+    public function onControllerMatched()
+    {
+        $this->stopwatch->stop('requestHandling');
+        $this->stopwatch->start('controllerHandling');
+    }
+    /**
+     * Stop controller handling stopwatch event.
+     */
+    public function onKernelTerminate()
+    {
+        $this->stopwatch->stop('controllerHandling');
     }
 
     /**
@@ -568,7 +664,8 @@ class Kernel
     }
 
     /**
-     * Get backend app controller full-qualified classname
+     * Get backend app controller full-qualified classname.
+     *
      * Return 'RZ\Renzo\CMS\Controllers\BackendController' if none found in database.
      *
      * @return string
@@ -587,23 +684,7 @@ class Kernel
     }
 
     /**
-     * @return Symfony\Component\HttpFoundation\Request
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * @return Symfony\Component\Routing\Generator\UrlGenerator
-     */
-    public function getUrlGenerator()
-    {
-        return $this->urlGenerator;
-    }
-
-    /**
-     * Resolve current front controller URL
+     * Resolve current front controller URL.
      *
      * This method is the base of every URL building methods in RZ-CMS.
      * Be careful with handling it.
@@ -636,5 +717,87 @@ class Kernel
         } else {
             return false;
         }
+    }
+
+    private function initializeSession()
+    {
+        // créer un objet session depuis le composant HttpFoundation
+        $this->getRequest()->setSession(new Session());
+
+        // générer le secret CSRF depuis quelque part
+        $csrfSecret = $this->getConfig()["security"]['secret'];
+        $this->csrfProvider = new SessionCsrfProvider(
+            $this->getRequest()->getSession(),
+            $csrfSecret
+        );
+    }
+
+    private function initializeSecurityContext()
+    {
+        $this->userProvider = new UserProvider();
+        $this->authenticationManager = new DaoAuthenticationProvider(
+            $this->userProvider,
+            new UserChecker(),
+            static::SECURITY_DOMAIN,
+            UserHandler::getEncoderFactory()
+        );
+        $this->accessDecisionManager = new AccessDecisionManager(
+            array(
+                new RoleVoter('ROLE_')
+            )
+        );
+        $this->securityContext = new SecurityContext(
+            $this->authenticationManager,
+            $this->accessDecisionManager
+        );
+    }
+    /**
+     * @return Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider
+     */
+    public function getCsrfProvider()
+    {
+        return $this->csrfProvider;
+    }
+    /**
+     * @return \RZ\Renzo\Core\Handlers\UserProvider
+     */
+    public function getUserProvider()
+    {
+        return $this->userProvider;
+    }
+    /**
+     * @return \Symfony\Component\Security\Core\SecurityContext
+     */
+    public function getSecurityContext()
+    {
+        return $this->securityContext;
+    }
+    /**
+     * @return Symfony\Component\Security\Core\Authorization\AccessDecisionManager
+     */
+    public function getAccessDecisionManager()
+    {
+        return $this->accessDecisionManager;
+    }
+    /**
+     * @return Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider
+     */
+    public function getAuthenticationManager()
+    {
+        return $this->authenticationManager;
+    }
+    /**
+     * @return Symfony\Component\HttpFoundation\Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+    /**
+     * @return Symfony\Component\Routing\Generator\UrlGenerator
+     */
+    public function getUrlGenerator()
+    {
+        return $this->urlGenerator;
     }
 }

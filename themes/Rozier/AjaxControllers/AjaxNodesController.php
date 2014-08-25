@@ -51,7 +51,7 @@ class AjaxNodesController extends AbstractAjaxController
             );
         }
 
-        $node = Kernel::getInstance()->em()
+        $node = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
         if ($node !== null) {
@@ -110,7 +110,7 @@ class AjaxNodesController extends AbstractAjaxController
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
 
-            $parent = Kernel::getInstance()->em()
+            $parent = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['newParent']);
 
             if ($parent !== null) {
@@ -125,21 +125,21 @@ class AjaxNodesController extends AbstractAjaxController
          */
         if (!empty($parameters['nextNodeId']) &&
             $parameters['nextNodeId'] > 0) {
-            $nextNode = Kernel::getInstance()->em()
+            $nextNode = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['nextNodeId']);
             if ($nextNode !== null) {
                 $node->setPosition($nextNode->getPosition() - 0.5);
             }
         } elseif (!empty($parameters['prevNodeId']) &&
             $parameters['prevNodeId'] > 0) {
-            $prevNode = Kernel::getInstance()->em()
+            $prevNode = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['prevNodeId']);
             if ($prevNode !== null) {
                 $node->setPosition($prevNode->getPosition() + 0.5);
             }
         }
         // Apply position update before cleaning
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->flush();
 
         if ($parent !== null) {
             $parent->getHandler()->cleanChildrenPositions();

@@ -42,7 +42,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function listAction(Request $request, $nodeTypeId)
     {
-        $nodeType = Kernel::getInstance()->em()
+        $nodeType = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if ($nodeType !== null) {
@@ -71,7 +71,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function editAction(Request $request, $nodeTypeFieldId)
     {
-        $field = Kernel::getInstance()->em()
+        $field = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
         if ($field !== null) {
@@ -92,11 +92,11 @@ class NodeTypeFieldsController extends RozierApp
                  * Redirect to update schema page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'nodeTypesFieldSchemaUpdate',
                         array(
                             'nodeTypeId' => $field->getNodeType()->getId(),
-                            '_token' => Kernel::getInstance()->getCsrfProvider()->generateCsrfToken(
+                            '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(
                                 static::SCHEMA_TOKEN_INTENTION
                             )
                         )
@@ -130,7 +130,7 @@ class NodeTypeFieldsController extends RozierApp
     public function addAction(Request $request, $nodeTypeId)
     {
         $field = new NodeTypeField();
-        $nodeType = Kernel::getInstance()->em()
+        $nodeType = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if ($nodeType !== null &&
@@ -153,11 +153,11 @@ class NodeTypeFieldsController extends RozierApp
                  * Redirect to update schema page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'nodeTypesFieldSchemaUpdate',
                         array(
                             'nodeTypeId' => $nodeTypeId,
-                            '_token' => Kernel::getInstance()->getCsrfProvider()->generateCsrfToken(
+                            '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(
                                 static::SCHEMA_TOKEN_INTENTION
                             )
                         )
@@ -190,7 +190,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeTypeFieldId)
     {
-        $field = Kernel::getInstance()->em()
+        $field = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
         if ($field !== null) {
@@ -203,13 +203,13 @@ class NodeTypeFieldsController extends RozierApp
 
                 $nodeTypeId = $field->getNodeType()->getId();
 
-                Kernel::getInstance()->em()->remove($field);
-                Kernel::getInstance()->em()->flush();
+                $this->getKernel()->em()->remove($field);
+                $this->getKernel()->em()->flush();
 
                 /*
                  * Update Database
                  */
-                $nodeType = Kernel::getInstance()->em()
+                $nodeType = $this->getKernel()->em()
                     ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
                 $nodeType->getHandler()->updateSchema();
@@ -225,11 +225,11 @@ class NodeTypeFieldsController extends RozierApp
                  * Redirect to update schema page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'nodeTypesFieldSchemaUpdate',
                         array(
                             'nodeTypeId' => $nodeTypeId,
-                            '_token' => Kernel::getInstance()->getCsrfProvider()->generateCsrfToken(
+                            '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(
                                 static::SCHEMA_TOKEN_INTENTION
                             )
                         )
@@ -263,7 +263,7 @@ class NodeTypeFieldsController extends RozierApp
             $field->$setter($value);
         }
 
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->flush();
         $field->getNodeType()->getHandler()->updateSchema();
     }
 
@@ -285,8 +285,8 @@ class NodeTypeFieldsController extends RozierApp
 
         $field->setNodeType($nodeType);
 
-        Kernel::getInstance()->em()->persist($field);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->persist($field);
+        $this->getKernel()->em()->flush();
 
         $nodeType->getHandler()->updateSchema();
     }

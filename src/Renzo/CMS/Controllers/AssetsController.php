@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-
+use Symfony\Component\Security\Core\SecurityContext;
 
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
@@ -26,13 +26,16 @@ use Symfony\Component\Config\FileLocator;
  */
 class AssetsController extends AppController
 {
-    /**
-     * Initialize without Twig and Translators.
+   /**
+     * Initialize controller with NO twig environment.
+     *
+     * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
-    public function __construct()
+    public function __init(SecurityContext $securityContext)
     {
 
     }
+
     /**
      * {@inheritdoc}
      */

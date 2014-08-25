@@ -123,8 +123,6 @@ class Group extends AbstractEntity
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->roles = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->rolesNames = null;

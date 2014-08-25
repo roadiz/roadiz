@@ -16,7 +16,10 @@ use RZ\Renzo\Core\Handlers\UserHandler;
 use RZ\Renzo\Core\Authentification\AuthenticationSuccessHandler;
 use RZ\Renzo\Core\Authorization\AccessDeniedHandler;
 
+use Symfony\Component\HttpFoundation\RequestMatcher;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
@@ -28,19 +31,15 @@ use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 use Symfony\Component\Security\Http\AccessMap;
-use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
-
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
-
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserChecker;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
+
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -55,15 +54,6 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 class BackendController extends AppController
 {
     protected static $backendTheme = true;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->logger->setSecurityContext(static::$securityContext);
-    }
 
     /**
      * {@inheritdoc}
@@ -85,38 +75,16 @@ class BackendController extends AppController
      * {@inheritdoc}
      */
     public static function appendToFirewallMap(
+        SecurityContext $securityContext,
+        UserProvider $renzoUserProvider,
+        DaoAuthenticationProvider $authenticationManager,
+        AccessDecisionManager $accessDecisionManager,
         FirewallMap $firewallMap,
         HttpKernelInterface $httpKernel,
         HttpUtils $httpUtils,
         EventDispatcher $dispatcher = null
     )
     {
-        /*
-         * Need session for security
-         */
-        static::initializeSession();
-
-        $areaName = 'rz_admin';
-
-        $renzoUserProvider = new UserProvider();
-
-        $authenticationManager = new DaoAuthenticationProvider(
-            $renzoUserProvider,
-            new UserChecker(),
-            $areaName,
-            UserHandler::getEncoderFactory()
-        );
-        $accessDecisionManager = new AccessDecisionManager(
-            array(
-                new RoleVoter('ROLE_')
-            )
-        );
-        static::$securityContext = new SecurityContext(
-            $authenticationManager,
-            $accessDecisionManager
-        );
-
-
         /*
          * Prepare app firewall
          */
@@ -129,7 +97,7 @@ class BackendController extends AppController
          * Listener
          */
         $logoutListener = new LogoutListener(
-            static::getSecurityContext(),
+            $securityContext,
             $httpUtils,
             //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
             new DefaultLogoutSuccessHandler($httpUtils),
@@ -143,9 +111,9 @@ class BackendController extends AppController
         $listeners = array(
             // manages the SecurityContext persistence through a session
             new ContextListener(
-                static::getSecurityContext(),
+                $securityContext,
                 array($renzoUserProvider),
-                $areaName,
+                Kernel::SECURITY_DOMAIN,
                 new Logger(),
                 $dispatcher
             ),
@@ -153,11 +121,11 @@ class BackendController extends AppController
             $logoutListener,
             // authentication via a simple form composed of a username and a password
             new UsernamePasswordFormAuthenticationListener(
-                static::getSecurityContext(),
+                $securityContext,
                 $authenticationManager,
                 new SessionAuthenticationStrategy(SessionAuthenticationStrategy::INVALIDATE),
                 $httpUtils,
-                $areaName,
+                Kernel::SECURITY_DOMAIN,
                 new AuthenticationSuccessHandler($httpUtils, array(
                     'always_use_default_target_path' => false,
                     'default_target_path'            => '/rz-admin',
@@ -180,20 +148,18 @@ class BackendController extends AppController
             ),
             // enforces access control rules
             new AccessListener(
-                static::getSecurityContext(),
+                $securityContext,
                 $accessDecisionManager,
                 $accessMap,
                 $authenticationManager
-            ),
-            // automatically adds a Token if none is already present.
-            //new AnonymousAuthenticationListener(static::getSecurityContext(), '') // $key
+            )
         );
 
         $exceptionListener = new ExceptionListener(
-            static::getSecurityContext(),
+            $securityContext,
             new AuthenticationTrustResolver('', ''),
             $httpUtils,
-            $areaName,
+            Kernel::SECURITY_DOMAIN,
             new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint(
                 $httpKernel,
                 $httpUtils,

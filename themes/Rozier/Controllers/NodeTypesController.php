@@ -48,7 +48,7 @@ class NodeTypesController extends RozierApp
          */
         $listManager = new EntityListManager(
             $request,
-            Kernel::getInstance()->em(),
+            $this->getKernel()->em(),
             'RZ\Renzo\Core\Entities\NodeType'
         );
         $listManager->handle();
@@ -72,7 +72,7 @@ class NodeTypesController extends RozierApp
      */
     public function editAction(Request $request, $nodeTypeId)
     {
-        $nodeType = Kernel::getInstance()->em()
+        $nodeType = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if (null !== $nodeType) {
@@ -97,10 +97,10 @@ class NodeTypesController extends RozierApp
                  * Redirect to update schema page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'nodeTypesSchemaUpdate',
                         array(
-                            '_token' => Kernel::getInstance()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                            '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
                         )
                     )
                 );
@@ -153,10 +153,10 @@ class NodeTypesController extends RozierApp
                      * Redirect to update schema page
                      */
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'nodeTypesSchemaUpdate',
                             array(
-                                '_token' => Kernel::getInstance()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                                '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
                             )
                         )
                     );
@@ -165,7 +165,7 @@ class NodeTypesController extends RozierApp
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getLogger()->warning($e->getMessage());
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'nodeTypesAddPage'
                         )
                     );
@@ -196,7 +196,7 @@ class NodeTypesController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeTypeId)
     {
-        $nodeType = Kernel::getInstance()->em()
+        $nodeType = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if (null !== $nodeType) {
@@ -221,10 +221,10 @@ class NodeTypesController extends RozierApp
                  * Redirect to update schema page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'nodeTypesSchemaUpdate',
                         array(
-                            '_token' => Kernel::getInstance()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                            '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
                         )
                     )
                 );
@@ -261,7 +261,7 @@ class NodeTypesController extends RozierApp
             $nodeType->$setter( $value );
         }
 
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->flush();
         $nodeType->getHandler()->updateSchema();
 
         return true;
@@ -280,15 +280,15 @@ class NodeTypesController extends RozierApp
             $nodeType->$setter( $value );
         }
 
-        $existing = Kernel::getInstance()->em()
+        $existing = $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\NodeType')
             ->findOneBy(array('name'=>$nodeType->getName()));
         if ($existing !== null) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans('nodeType.already_exists', array('%name%'=>$nodeType->getName())), 1);
         }
 
-        Kernel::getInstance()->em()->persist($nodeType);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->persist($nodeType);
+        $this->getKernel()->em()->flush();
 
         $nodeType->getHandler()->updateSchema();
 
@@ -380,7 +380,7 @@ class NodeTypesController extends RozierApp
      */
     public static function getNodeTypes()
     {
-        return Kernel::getInstance()->em()
+        return $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\NodeType')
             ->findBy(array('newsletterType' => false));
     }
@@ -390,7 +390,7 @@ class NodeTypesController extends RozierApp
      */
     public static function getNewsletterNodeTypes()
     {
-        return Kernel::getInstance()->em()
+        return $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\NodeType')
             ->findBy(array('newsletterType' => true));
     }

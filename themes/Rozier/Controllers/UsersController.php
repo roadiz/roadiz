@@ -47,7 +47,7 @@ class UsersController extends RozierApp
          */
         $listManager = new EntityListManager(
             $request,
-            Kernel::getInstance()->em(),
+            $this->getKernel()->em(),
             'RZ\Renzo\Core\Entities\User'
         );
         $listManager->handle();
@@ -72,7 +72,7 @@ class UsersController extends RozierApp
      */
     public function editAction(Request $request, $userId)
     {
-        $user = Kernel::getInstance()->em()
+        $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -99,7 +99,7 @@ class UsersController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'usersEditPage',
                         array('userId' => $user->getId())
                     )
@@ -131,7 +131,7 @@ class UsersController extends RozierApp
      */
     public function editRolesAction(Request $request, $userId)
     {
-        $user = Kernel::getInstance()->em()
+        $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -154,7 +154,7 @@ class UsersController extends RozierApp
                 * Force redirect to avoid resending form when refreshing page
                 */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'usersEditRolesPage',
                         array('userId' => $user->getId())
                     )
@@ -187,9 +187,9 @@ class UsersController extends RozierApp
      */
     public function removeRoleAction(Request $request, $userId, $roleId)
     {
-        $user = Kernel::getInstance()->em()
+        $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
-        $role = Kernel::getInstance()->em()
+        $role = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
 
         if ($user !== null && $role !== null ) {
@@ -210,7 +210,7 @@ class UsersController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'usersEditRolesPage',
                         array('userId' => $user->getId())
                     )
@@ -240,7 +240,7 @@ class UsersController extends RozierApp
      */
     public function editGroupsAction(Request $request, $userId)
     {
-        $user = Kernel::getInstance()->em()
+        $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -263,7 +263,7 @@ class UsersController extends RozierApp
                 * Force redirect to avoid resending form when refreshing page
                 */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'usersEditGroupsPage',
                         array('userId' => $user->getId())
                     )
@@ -296,9 +296,9 @@ class UsersController extends RozierApp
      */
     public function removeGroupAction(Request $request, $userId, $groupId)
     {
-        $user = Kernel::getInstance()->em()
+        $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
-        $group = Kernel::getInstance()->em()
+        $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         if ($user !== null) {
@@ -322,7 +322,7 @@ class UsersController extends RozierApp
                 * Force redirect to avoid resending form when refreshing page
                 */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'usersEditGroupsPage',
                         array('userId' => $user->getId())
                     )
@@ -382,7 +382,7 @@ class UsersController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('usersHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('usersHomePage')
                 );
                 $response->prepare($request);
 
@@ -411,7 +411,7 @@ class UsersController extends RozierApp
      */
     public function deleteAction(Request $request, $userId)
     {
-        $user = Kernel::getInstance()->em()
+        $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -438,7 +438,7 @@ class UsersController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('usersHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('usersHomePage')
                 );
                 $response->prepare($request);
 
@@ -463,7 +463,7 @@ class UsersController extends RozierApp
     private function editUser($data, User $user)
     {
         if ($data['username'] != $user->getUsername() &&
-                Kernel::getInstance()->em()
+                $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\User')
                 ->usernameExists($data['username'])
             ) {
@@ -477,7 +477,7 @@ class UsersController extends RozierApp
             );
         }
         if ($data['email'] != $user->getEmail() &&
-            Kernel::getInstance()->em()
+            $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\User')
                 ->emailExists($data['email'])) {
 
@@ -496,7 +496,7 @@ class UsersController extends RozierApp
         }
 
         $this->updateProfileImage($user);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->flush();
     }
 
     /**
@@ -505,10 +505,10 @@ class UsersController extends RozierApp
      */
     private function addUser($data, User $user)
     {
-        if (Kernel::getInstance()->em()
+        if ($this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\User')
                 ->usernameExists($data['username']) ||
-            Kernel::getInstance()->em()
+            $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\User')
                 ->emailExists($data['email'])) {
 
@@ -527,8 +527,8 @@ class UsersController extends RozierApp
         }
 
         $this->updateProfileImage($user);
-        Kernel::getInstance()->em()->persist($user);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->persist($user);
+        $this->getKernel()->em()->flush();
     }
 
     /**
@@ -559,8 +559,8 @@ class UsersController extends RozierApp
      */
     private function deleteUser($data, User $user)
     {
-        Kernel::getInstance()->em()->remove($user);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->remove($user);
+        $this->getKernel()->em()->flush();
     }
 
     /**
@@ -572,11 +572,11 @@ class UsersController extends RozierApp
     private function addUserRole($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $role = Kernel::getInstance()->em()
+            $role = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Role', $data['roleId']);
 
             $user->addRole($role);
-            Kernel::getInstance()->em()->flush();
+            $this->getKernel()->em()->flush();
 
             return $role;
         }
@@ -593,12 +593,12 @@ class UsersController extends RozierApp
     private function removeUserRole($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $role = Kernel::getInstance()->em()
+            $role = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Role', $data['roleId']);
 
             if ($role !== null) {
                 $user->removeRole($role);
-                Kernel::getInstance()->em()->flush();
+                $this->getKernel()->em()->flush();
             }
 
             return $role;
@@ -616,12 +616,12 @@ class UsersController extends RozierApp
     private function addUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $group = Kernel::getInstance()->em()
+            $group = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Group', $data['group']);
 
             if ($group !== null) {
                 $user->addGroup($group);
-                Kernel::getInstance()->em()->flush();
+                $this->getKernel()->em()->flush();
             }
 
             return $group;
@@ -639,12 +639,12 @@ class UsersController extends RozierApp
     private function removeUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $group = Kernel::getInstance()->em()
+            $group = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Group', $data['groupId']);
 
             if ($group !== null) {
                 $user->removeGroup($group);
-                Kernel::getInstance()->em()->flush();
+                $this->getKernel()->em()->flush();
             }
 
             return $group;

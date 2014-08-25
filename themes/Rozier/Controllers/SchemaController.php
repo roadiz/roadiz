@@ -69,7 +69,7 @@ class SchemaController extends RozierApp
          * Redirect to update schema page
          */
         $response = new RedirectResponse(
-            Kernel::getInstance()->getUrlGenerator()->generate(
+            $this->getKernel()->getUrlGenerator()->generate(
                 'nodeTypesHomePage'
             )
         );
@@ -102,7 +102,7 @@ class SchemaController extends RozierApp
          * Redirect to update schema page
          */
         $response = new RedirectResponse(
-            Kernel::getInstance()->getUrlGenerator()->generate(
+            $this->getKernel()->getUrlGenerator()->generate(
                 'nodeTypeFieldsListPage',
                 array(
                     'nodeTypeId' => $nodeTypeId

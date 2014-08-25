@@ -2,14 +2,12 @@
 /*
  * Copyright REZO ZERO 2014
  *
- * [Description]
  *
  * @file DataInheritanceEvent.php
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-
-namespace RZ\Renzo\Inheritance\Doctrine;
+namespace RZ\Renzo\Core\Events;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\NodeType;
@@ -22,7 +20,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class DataInheritanceEvent
 {
     /**
-     * [loadClassMetadata description]
      * @param Doctrine\ORM\Event\LoadClassMetadataEventArgs  $eventArgs
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
@@ -60,7 +57,7 @@ class DataInheritanceEvent
     }
 
     /**
-     * Get NodesSources class metadata
+     * Get NodesSources class metadata.
      *
      * @return Doctrine\ORM\Mapping\ClassMetadata
      */
@@ -98,7 +95,8 @@ class DataInheritanceEvent
 
 
     /**
-     * Check if given table exists
+     * Check if given table exists.
+     *
      * This method must be used at installation not to throw error when
      * creating discriminator map with node-types
      *

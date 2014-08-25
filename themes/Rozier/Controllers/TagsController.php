@@ -46,7 +46,7 @@ class TagsController extends RozierApp
          */
         $listManager = new EntityListManager(
             $request,
-            Kernel::getInstance()->em(),
+            $this->getKernel()->em(),
             'RZ\Renzo\Core\Entities\Tag'
         );
         $listManager->handle();
@@ -72,12 +72,12 @@ class TagsController extends RozierApp
      */
     public function editTranslatedAction(Request $request, $tagId, $translationId)
     {
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
 
-            $tag = Kernel::getInstance()->em()
+            $tag = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Tag')
                 ->findWithTranslation((int) $tagId, $translation);
 
@@ -85,22 +85,22 @@ class TagsController extends RozierApp
              * If translation does not exist, we created it.
              */
             if ($tag === null) {
-                $baseTag = Kernel::getInstance()->em()
+                $baseTag = $this->getKernel()->em()
                     ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
-                Kernel::getInstance()->em()->refresh($baseTag);
+                $this->getKernel()->em()->refresh($baseTag);
 
                 if ($baseTag !== null) {
 
                     $translatedTag = new TagTranslation($baseTag, $translation);
                     $translatedTag->setName($baseTag->getTranslatedTags()->first()->getName());
-                    Kernel::getInstance()->em()->persist($translatedTag);
-                    Kernel::getInstance()->em()->flush();
+                    $this->getKernel()->em()->persist($translatedTag);
+                    $this->getKernel()->em()->flush();
 
-                    $tag = Kernel::getInstance()->em()
+                    $tag = $this->getKernel()->em()
                         ->getRepository('RZ\Renzo\Core\Entities\Tag')
                         ->findWithTranslation((int) $tagId, $translation);
-                    Kernel::getInstance()->em()->refresh($tag);
+                    $this->getKernel()->em()->refresh($tag);
                 } else {
                     return $this->throw404();
                 }
@@ -108,7 +108,7 @@ class TagsController extends RozierApp
 
             $this->assignation['tag'] = $tag;
             $this->assignation['translation'] = $translation;
-            $this->assignation['available_translations'] = Kernel::getInstance()->em()
+            $this->assignation['available_translations'] = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findAllAvailable();
 
@@ -126,7 +126,7 @@ class TagsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
+                    $this->getKernel()->getUrlGenerator()->generate(
                         'tagsEditTranslatedPage',
                         array('tagId' => $tag->getId(), 'translationId' => $translation->getId())
                     )
@@ -159,7 +159,7 @@ class TagsController extends RozierApp
     {
         $tag = new Tag();
 
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();
 
@@ -181,7 +181,7 @@ class TagsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('tagsHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('tagsHomePage')
                 );
                 $response->prepare($request);
 
@@ -210,7 +210,7 @@ class TagsController extends RozierApp
      */
     public function deleteAction(Request $request, $tagId)
     {
-        $tag = Kernel::getInstance()->em()
+        $tag = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
@@ -231,7 +231,7 @@ class TagsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate('tagsHomePage')
+                    $this->getKernel()->getUrlGenerator()->generate('tagsHomePage')
                 );
                 $response->prepare($request);
 
@@ -261,15 +261,15 @@ class TagsController extends RozierApp
      */
     public function addChildAction(Request $request, $tagId, $translationId = null)
     {
-        $translation = Kernel::getInstance()->em()
+        $translation = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();
 
         if ($translationId != null) {
-            $translation = Kernel::getInstance()->em()
+            $translation = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
         }
-        $parentTag = Kernel::getInstance()->em()
+        $parentTag = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
         if ($translation !== null &&
@@ -288,7 +288,7 @@ class TagsController extends RozierApp
                     $this->getLogger()->info($msg);
 
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'tagsEditPage',
                             array('tagId' => $tag->getId())
                         )
@@ -302,7 +302,7 @@ class TagsController extends RozierApp
                     $this->getLogger()->warning($e->getMessage());
 
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'tagsAddChildPage',
                             array('tagId' => $tagId, 'translationId' => $translationId)
                         )
@@ -358,7 +358,7 @@ class TagsController extends RozierApp
             }
         }
 
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->flush();
     }
 
     /**
@@ -394,9 +394,9 @@ class TagsController extends RozierApp
         }
         $tag->getTranslatedTags()->add($translatedTag);
 
-        Kernel::getInstance()->em()->persist($translatedTag);
-        Kernel::getInstance()->em()->persist($tag);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->persist($translatedTag);
+        $this->getKernel()->em()->persist($tag);
+        $this->getKernel()->em()->flush();
 
         return $tag;
     }
@@ -410,7 +410,7 @@ class TagsController extends RozierApp
      */
     private function checkExists($name)
     {
-        $ttag = Kernel::getInstance()->em()
+        $ttag = $this->getKernel()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
                     ->findOneBy(array('name'=>$name));
 
@@ -457,9 +457,9 @@ class TagsController extends RozierApp
         }
         $tag->getTranslatedTags()->add($translatedTag);
 
-        Kernel::getInstance()->em()->persist($translatedTag);
-        Kernel::getInstance()->em()->persist($tag);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->persist($translatedTag);
+        $this->getKernel()->em()->persist($tag);
+        $this->getKernel()->em()->flush();
 
         return $tag;
     }
@@ -470,8 +470,8 @@ class TagsController extends RozierApp
      */
     private function deleteTag( $data, Tag $tag )
     {
-        Kernel::getInstance()->em()->remove($tag);
-        Kernel::getInstance()->em()->flush();
+        $this->getKernel()->em()->remove($tag);
+        $this->getKernel()->em()->flush();
     }
 
     /**
@@ -578,7 +578,7 @@ class TagsController extends RozierApp
      */
     public static function getTags()
     {
-        return Kernel::getInstance()->em()
+        return $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Tag')
             ->findAll();
     }

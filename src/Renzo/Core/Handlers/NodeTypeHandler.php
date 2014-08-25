@@ -198,7 +198,7 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
      *
      * This method does not flush ORM. You'll need to manually call it.
      *
-     * @param  RZ\Renzo\Core\Entities\NodeType $newNodeType
+     * @param RZ\Renzo\Core\Entities\NodeType $newNodeType
      *
      * @throws \RuntimeException If newNodeType param is null
      */

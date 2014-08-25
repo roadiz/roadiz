@@ -30,12 +30,13 @@ class DefaultApp extends FrontendController
 {
     protected static $specificNodesControllers = array(
         'home',
-        // Put here your node which need a specific controller
+        // Put here your nodes which need a specific controller
         // instead of a node-type controller
     );
 
     /**
-     * Default action for any node URL
+     * Default action for any node URL.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param RZ\Renzo\Core\Entities\Node              $node
      * @param RZ\Renzo\Core\Entities\Translation       $translation
@@ -51,7 +52,8 @@ class DefaultApp extends FrontendController
     }
 
     /**
-     * Default action for default URL (homepage)
+     * Default action for default URL (homepage).
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param RZ\Renzo\Core\Entities\Node              $node
      * @param RZ\Renzo\Core\Entities\Translation       $translation
@@ -85,6 +87,9 @@ class DefaultApp extends FrontendController
         $this->storeNodeAndTranslation($node, $translation);
         $this->assignation['navigation'] = $this->assignMainNavigation();
 
+        /*
+         * Common image format for pages headers
+         */
         $this->assignation['headerImageFilter'] = array(
             'width'=>1024,
             'crop'=>'1024x200'
@@ -92,7 +97,7 @@ class DefaultApp extends FrontendController
     }
 
     /**
-     * @return [type] [description]
+     * @return RZ\Renzo\Core\Entities\Node
      */
     protected function assignMainNavigation()
     {

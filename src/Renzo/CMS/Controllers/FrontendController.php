@@ -9,12 +9,46 @@
  */
 namespace RZ\Renzo\CMS\Controllers;
 
+
+use RZ\Renzo\Core\Kernel;
+use RZ\Renzo\Core\Log\Logger;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Utils\StringHandler;
+use RZ\Renzo\Core\Handlers\UserProvider;
+use RZ\Renzo\Core\Handlers\UserHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RequestMatcher;
+
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+
+use RZ\Renzo\Core\Authentification\AuthenticationSuccessHandler;
+use RZ\Renzo\Core\Authorization\AccessDeniedHandler;
+
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
+use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Security\Http\Firewall;
+use Symfony\Component\Security\Http\FirewallMap;
+use Symfony\Component\Security\Http\Firewall\ExceptionListener;
+use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
+use Symfony\Component\Security\Http\Firewall\ContextListener;
+use Symfony\Component\Security\Http\Firewall\LogoutListener;
+use Symfony\Component\Security\Http\Firewall\AccessListener;
+use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
+use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
+use Symfony\Component\Security\Http\AccessMap;
+use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
+use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
+use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\User\UserChecker;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
+use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
+
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -25,7 +59,6 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
  */
 class FrontendController extends AppController
 {
-
     /**
      * {@inheritdoc}
      */
@@ -120,6 +153,7 @@ class FrontendController extends AppController
      * @param Symfony\Component\HttpFoundation\Request $request
      *
      * @return Symfony\Component\HttpFoundation\Response
+     * @throws Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
      */
     protected function handle(Request $request)
     {
@@ -129,19 +163,34 @@ class FrontendController extends AppController
 
         if ($this->getRequestedNode() !== null) {
 
-            $nodeController =       $namespace . '\\' . StringHandler::classify($this->getRequestedNode()->getNodeName()) . 'Controller';
-            $nodeTypeController =   $namespace . '\\' . StringHandler::classify($this->getRequestedNode()->getNodeType()->getName()) . 'Controller';
+            $nodeController = $namespace . '\\' . StringHandler::classify($this->getRequestedNode()->getNodeName()) . 'Controller';
+            $nodeTypeController = $namespace . '\\' . StringHandler::classify($this->getRequestedNode()->getNodeType()->getName()) . 'Controller';
 
             if (in_array($this->getRequestedNode()->getNodeName(), static::$specificNodesControllers) &&
                 class_exists($nodeController) &&
                 method_exists($nodeController, 'indexAction')) {
 
                 $ctrl = new $nodeController();
+                /*
+                 * Inject current Kernel to the matched Controller
+                 */
+                if ($ctrl instanceof AppController) {
+                    $ctrl->setKernel($this->getKernel());
+                    $ctrl->__init($this->getKernel()->getSecurityContext());
+                }
 
                 return $ctrl->indexAction($request, $this->getRequestedNode(), $this->getRequestedTranslation());
             } elseif (class_exists($nodeTypeController) &&
                 method_exists($nodeTypeController, 'indexAction')) {
+
                 $ctrl = new $nodeTypeController();
+                /*
+                 * Inject current Kernel to the matched Controller
+                 */
+                if ($ctrl instanceof AppController) {
+                    $ctrl->setKernel($this->getKernel());
+                    $ctrl->__init($this->getKernel()->getSecurityContext());
+                }
 
                 return $ctrl->indexAction($request, $this->getRequestedNode(), $this->getRequestedTranslation());
             } else {
@@ -170,5 +219,65 @@ class FrontendController extends AppController
     public function getRequestedTranslation()
     {
         return $this->translation;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     *
+     * For front-end controller, we only need to get
+     * authenticated users credentials tokens.
+     */
+    public static function appendToFirewallMap(
+        SecurityContext $securityContext,
+        UserProvider $userProvider,
+        DaoAuthenticationProvider $authenticationManager,
+        AccessDecisionManager $accessDecisionManager,
+        FirewallMap $firewallMap,
+        HttpKernelInterface $httpKernel,
+        HttpUtils $httpUtils,
+        EventDispatcher $dispatcher = null
+    )
+    {
+        /*
+         * Prepare app firewall
+         */
+        $requestMatcher = new RequestMatcher('^/');
+        // allows configuration of different access control rules for specific parts of the website.
+        //$accessMap = new AccessMap($requestMatcher, array());
+
+        $listeners = array(
+            // manages the SecurityContext persistence through a session
+            new ContextListener(
+                $securityContext,
+                array($userProvider),
+                Kernel::SECURITY_DOMAIN,
+                new Logger(),
+                $dispatcher
+            ),
+            // automatically adds a Token if none is already present.
+            new AnonymousAuthenticationListener($securityContext, '') // $key
+        );
+
+        $exceptionListener = new ExceptionListener(
+            $securityContext,
+            new AuthenticationTrustResolver('', ''),
+            $httpUtils,
+            Kernel::SECURITY_DOMAIN,
+            new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint(
+                $httpKernel,
+                $httpUtils,
+                '/login',
+                true // bool $useForward
+            ),
+            null, //$errorPage
+            new AccessDeniedHandler(), //AccessDeniedHandlerInterface $accessDeniedHandler
+            new Logger() //LoggerInterface $logger
+        );
+
+        /*
+         * Inject a new firewall map element
+         */
+        $firewallMap->add($requestMatcher, $listeners, $exceptionListener);
     }
 }

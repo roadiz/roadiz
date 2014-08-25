@@ -11,9 +11,10 @@ namespace RZ\Renzo\CMS\Controllers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Theme;
 use RZ\Renzo\Core\Entities\Document;
+use RZ\Renzo\Core\Handlers\UserProvider;
+use RZ\Renzo\Core\Handlers\UserHandler;
 
 use RZ\Renzo\Core\Viewers\ViewableInterface;
-
 use \Michelf\Markdown;
 
 use Symfony\Component\Security\Http\Firewall;
@@ -34,7 +35,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
@@ -42,6 +42,13 @@ use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
+
+use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\User\UserChecker;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
+use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 
 /**
  * Base class for Renzo themes.
@@ -51,6 +58,30 @@ class AppController implements ViewableInterface
     const AJAX_TOKEN_INTENTION = 'ajax';
     const SCHEMA_TOKEN_INTENTION = 'update_schema';
     const FONT_TOKEN_INTENTION = 'font_request';
+
+
+    private $kernel = null;
+    /**
+     * Inject current Kernel into running controller.
+     *
+     * @param RZ\Renzo\Core\Kernel $newKernel
+     */
+    public function setKernel(Kernel $newKernel)
+    {
+        $this->kernel = $newKernel;
+    }
+    /**
+     * Get current RZCMS Kernel instance.
+     *
+     * Prefer this methods instead of calling static getInstance
+     * method of RZ\Renzo\Core\Kernel.
+     *
+     * @return RZ\Renzo\Core\Kernel
+     */
+    public function getKernel()
+    {
+        return $this->kernel;
+    }
 
     /**
      * Theme name.
@@ -135,7 +166,6 @@ class AppController implements ViewableInterface
      * @var array
      */
     protected $assignation = array();
-    protected static $csrfProvider = null;
 
     /**
      * @var Symfony\Component\Translation\Translator
@@ -163,15 +193,19 @@ class AppController implements ViewableInterface
 
     /**
      * Initialize controller with its twig environment.
+     *
+     * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
-    public function __construct()
+    public function __init(SecurityContext $securityContext)
     {
         $this->initializeTwig()
              ->initializeTranslator()
              ->prepareBaseAssignation();
 
         $this->logger = new \RZ\Renzo\Core\Log\Logger();
+        $this->logger->setSecurityContext($securityContext);
     }
+
     /**
      * @return RouteCollection
      */
@@ -195,6 +229,7 @@ class AppController implements ViewableInterface
      */
     public function initializeTranslator()
     {
+        $this->getKernel()->getStopwatch()->start('initTranslations');
         $lang = Kernel::getInstance()->getRequest()->getLocale();
         $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
 
@@ -217,27 +252,11 @@ class AppController implements ViewableInterface
         // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
         $this->twig->addExtension(new TranslationExtension($this->translator));
         $this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
+        $this->getKernel()->getStopwatch()->stop('initTranslations');
 
         return $this;
     }
 
-    /**
-     * Create session for current controller before HttpKernel handling.
-     *
-     * @return void
-     */
-    protected static function initializeSession()
-    {
-        // créer un objet session depuis le composant HttpFoundation
-        Kernel::getInstance()->getRequest()->setSession(new Session());
-
-        // générer le secret CSRF depuis quelque part
-        $csrfSecret = Kernel::getInstance()->getConfig()["security"]['secret'];
-        static::$csrfProvider = new SessionCsrfProvider(
-            Kernel::getInstance()->getRequest()->getSession(),
-            $csrfSecret
-        );
-    }
     /**
      * {@inheritdoc}
      */
@@ -321,7 +340,7 @@ class AppController implements ViewableInterface
         $formEngine->setEnvironment($this->twig);
         // ajoutez à Twig la FormExtension
         $this->twig->addExtension(
-            new FormExtension(new TwigRenderer($formEngine, static::$csrfProvider))
+            new FormExtension(new TwigRenderer($formEngine, Kernel::getInstance()->getCsrfProvider()))
         );
 
         //RoutingExtension
@@ -380,25 +399,25 @@ class AppController implements ViewableInterface
     public function prepareBaseAssignation()
     {
         $this->assignation = array(
-            'request' => Kernel::getInstance()->getRequest(),
+            'request' => $this->getKernel()->getRequest(),
             'head' => array(
-                'devMode' => (boolean) Kernel::getInstance()->getConfig()['devMode'],
-                'baseUrl' => Kernel::getInstance()->getRequest()->getBaseUrl(),
-                'filesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/'.Document::getFilesFolderName(),
+                'devMode' => (boolean) $this->getKernel()->getConfig()['devMode'],
+                'baseUrl' => $this->getKernel()->getRequest()->getBaseUrl(),
+                'filesUrl' => $this->getKernel()->getRequest()->getBaseUrl().'/'.Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => static::$csrfProvider->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => static::$csrfProvider->generateCsrfToken(static::FONT_TOKEN_INTENTION)
+                'ajaxToken' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
+                'fontToken' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::FONT_TOKEN_INTENTION)
             ),
             'session' => array(
-                'messages' => Kernel::getInstance()->getRequest()->getSession()->getFlashBag()->all(),
-                'id' => Kernel::getInstance()->getRequest()->getSession()->getId()
+                'messages' => $this->getKernel()->getRequest()->getSession()->getFlashBag()->all(),
+                'id' => $this->getKernel()->getRequest()->getSession()->getId()
             )
         );
 
-        if (static::getSecurityContext() !== null &&
-            static::getSecurityContext()->getToken() !== null ) {
+        if ($this->getKernel()->getSecurityContext() !== null &&
+            $this->getKernel()->getSecurityContext()->getToken() !== null ) {
 
-            $this->assignation['session']['user'] = static::getSecurityContext()->getToken()->getUser();
+            $this->assignation['session']['user'] = $this->getKernel()->getSecurityContext()->getToken()->getUser();
         }
 
         return $this;
@@ -493,14 +512,22 @@ class AppController implements ViewableInterface
      *
      * Implements this method if your app controller need a security context.
      *
-     * @param FirewallMap         $firewallMap
-     * @param HttpKernelInterface $httpKernel
-     * @param HttpUtils           $httpUtils
-     * @param EventDispatcher     $dispatcher
+     * @param SecurityContext           $securityContext
+     * @param UserProvider              $renzoUserProvider
+     * @param DaoAuthenticationProvider $authenticationManager
+     * @param AccessDecisionManager     $accessDecisionManager
+     * @param FirewallMap               $firewallMap
+     * @param HttpKernelInterface       $httpKernel
+     * @param HttpUtils                 $httpUtils
+     * @param EventDispatcher           $dispatcher
      *
      * @see BackendController::appendToFirewallMap
      */
     public static function appendToFirewallMap(
+        SecurityContext $securityContext,
+        UserProvider $renzoUserProvider,
+        DaoAuthenticationProvider $authenticationManager,
+        AccessDecisionManager $accessDecisionManager,
         FirewallMap $firewallMap,
         HttpKernelInterface $httpKernel,
         HttpUtils $httpUtils,
@@ -508,17 +535,5 @@ class AppController implements ViewableInterface
     )
     {
 
-    }
-
-    /**
-     * @var Symfony\Component\Security\Core\SecurityContext
-     */
-    public static $securityContext = null;
-    /**
-     * @return Symfony\Component\Security\Core\SecurityContext
-     */
-    public static function getSecurityContext()
-    {
-        return static::$securityContext;
     }
 }
