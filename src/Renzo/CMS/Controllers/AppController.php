@@ -50,6 +50,7 @@ class AppController implements ViewableInterface
 {
     const AJAX_TOKEN_INTENTION = 'ajax';
     const SCHEMA_TOKEN_INTENTION = 'update_schema';
+    const FONT_TOKEN_INTENTION = 'font_request';
 
     /**
      * Theme name.
@@ -369,6 +370,7 @@ class AppController implements ViewableInterface
      *     - filesUrl
      *     - resourcesUrl
      *     - ajaxToken
+     *     - fontToken
      * - session
      *     - messages
      *     - id
@@ -384,7 +386,8 @@ class AppController implements ViewableInterface
                 'baseUrl' => Kernel::getInstance()->getRequest()->getBaseUrl(),
                 'filesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/'.Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => static::$csrfProvider->generateCsrfToken(static::AJAX_TOKEN_INTENTION)
+                'ajaxToken' => static::$csrfProvider->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
+                'fontToken' => static::$csrfProvider->generateCsrfToken(static::FONT_TOKEN_INTENTION)
             ),
             'session' => array(
                 'messages' => Kernel::getInstance()->getRequest()->getSession()->getFlashBag()->all(),
@@ -497,7 +500,12 @@ class AppController implements ViewableInterface
      *
      * @see BackendController::appendToFirewallMap
      */
-    public static function appendToFirewallMap( FirewallMap $firewallMap, HttpKernelInterface $httpKernel, HttpUtils $httpUtils, EventDispatcher $dispatcher = null )
+    public static function appendToFirewallMap(
+        FirewallMap $firewallMap,
+        HttpKernelInterface $httpKernel,
+        HttpUtils $httpUtils,
+        EventDispatcher $dispatcher = null
+    )
     {
 
     }

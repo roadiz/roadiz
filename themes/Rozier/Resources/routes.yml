@@ -28,7 +28,7 @@ deleteDoctrineCache:
     path:     /rz-admin/cache/delete-doctrine-cache
     defaults: { _controller: Themes\Rozier\Controllers\CacheController::deleteDoctrineCache }
 
-#  NODES
+# NODES
 nodesHomePage:
     path:     /rz-admin/nodes
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction }
@@ -213,6 +213,10 @@ fontsEditPage:
     path:     /rz-admin/fonts/edit/{fontId}
     defaults: { _controller: Themes\Rozier\Controllers\FontsController::editAction }
     requirements: { userId : "[0-9]+" }
+fontsDownloadPage:
+    path:     /rz-admin/fonts/download/{fontId}
+    defaults: { _controller: Themes\Rozier\Controllers\FontsController::downloadAction }
+    requirements: { userId : "[0-9]+" }
 fontsAddPage:
     path:     /rz-admin/fonts/add
     defaults: { _controller: Themes\Rozier\Controllers\FontsController::addAction }
@@ -317,6 +321,9 @@ groupsDeletePage:
     path:     /rz-admin/groups/delete/{groupId}
     defaults: { _controller: Themes\Rozier\Controllers\GroupsController::deleteAction }
     requirements: { groupId : "[0-9]+" }
+groupsImportPage:
+    path:     /rz-admin/groups/import/
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsUtilsController::importJsonFileAction }
 groupsEditUsersPage:
     path:     /rz-admin/groups/edit/{groupId}/users
     defaults: { _controller: Themes\Rozier\Controllers\GroupsController::editUsersAction }
@@ -325,3 +332,7 @@ groupsRemoveUsersPage:
     path:     /rz-admin/groups/edit/{groupId}/users/{userId}/remove
     defaults: { _controller: Themes\Rozier\Controllers\GroupsController::removeUsersAction }
     requirements: { groupId : "[0-9]+", userId : "[0-9]+" }
+groupsSchemaUpdate:
+    path:     /rz-admin/node-types/groups/update-schema/{_token}
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::updateNodeTypeFieldsSchemaAction }
+    requirements: { node_typeId : "[0-9]+", _token: "[A-z0-9\-\_\$]+" }

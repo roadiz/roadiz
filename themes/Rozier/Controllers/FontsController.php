@@ -14,6 +14,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Font;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Renzo\Core\Utils\StringHandler;
 
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
@@ -212,6 +213,59 @@ class FontsController extends RozierApp
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );
+        } else {
+            return $this->throw404();
+        }
+    }
+    /**
+     * Return a ZipArchive of requested font.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $fontId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function downloadAction(Request $request, $fontId)
+    {
+        $font = Kernel::getInstance()->em()
+                    ->find('RZ\Renzo\Core\Entities\Font', (int) $fontId);
+
+        if ($font !== null) {
+
+            // Prepare File
+            $file = tempnam("tmp", "zip");
+            $zip = new \ZipArchive();
+            $zip->open($file, \ZipArchive::OVERWRITE);
+
+            if ("" != $font->getEOTFilename()) {
+                $zip->addFile($font->getEOTAbsolutePath(), $font->getEOTFilename());
+            }
+            if ("" != $font->getSVGFilename()) {
+                $zip->addFile($font->getSVGAbsolutePath(), $font->getSVGFilename());
+            }
+            if ("" != $font->getWOFFFilename()) {
+                $zip->addFile($font->getWOFFAbsolutePath(), $font->getWOFFFilename());
+            }
+            if ("" != $font->getOTFFilename()) {
+                $zip->addFile($font->getOTFAbsolutePath(), $font->getOTFFilename());
+            }
+            // Close and send to users
+            $zip->close();
+
+            $filename = StringHandler::slugify($font->getName().' '.$font->getReadableVariant()).'.zip';
+
+            $response = new Response(
+                file_get_contents($file),
+                Response::HTTP_OK,
+                array(
+                    'content-type' => 'application/zip',
+                    'content-length' => filesize($file),
+                    'content-disposition' => 'attachment; filename='.$filename
+                )
+            );
+            unlink($file);
+
+            return $response;
         } else {
             return $this->throw404();
         }

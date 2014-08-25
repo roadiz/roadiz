@@ -35,7 +35,6 @@ class UserViewer implements ViewableInterface
     protected $translator = null;
 
     /**
-     * Constructor
      * @param RZ\Renzo\Core\Entities\User $user
      */
     public function __construct(User $user)

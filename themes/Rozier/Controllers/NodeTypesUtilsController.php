@@ -15,7 +15,7 @@ use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Handlers\NodeTypeHandler;
-use RZ\Renzo\Core\Serializers\NodeTypeSerializer;
+use RZ\Renzo\Core\Serializers\NodeTypeJsonSerializer;
 use Themes\Rozier\RozierApp;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
@@ -35,7 +35,6 @@ use Symfony\Component\Validator\Constraints\Type;
  */
 class NodeTypesUtilsController extends RozierApp
 {
-
     /**
      * Export a Json file containing NodeType datas and fields.
      *
@@ -49,8 +48,10 @@ class NodeTypesUtilsController extends RozierApp
         $nodeType = Kernel::getInstance()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
+        $serializer = new NodeTypeJsonSerializer($nodeType);
+
         $response =  new Response(
-            $nodeType->getSerializer()->serializeToJson(),
+            $serializer->serialize(),
             Response::HTTP_OK,
             array()
         );
@@ -78,12 +79,83 @@ class NodeTypesUtilsController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid() &&
-            !empty($form->getData()['attachment'])) {
+            !empty($form['node_type_file'])) {
 
-            $serializedData = file_get_contents($form->getData()['attachment']['tmp_name']);
+            $file = $form['node_type_file']->getData();
 
-            if (null === json_decode($serializedData)) {
-                $msg = $this->getTranslator()->trans('file.format.not_valid');
+            if (UPLOAD_ERR_OK == $file['error']) {
+
+                $serializedData = file_get_contents($file['tmp_name']);
+
+                if (null !== json_decode($serializedData)) {
+
+                    $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
+                    $existingNT = Kernel::getInstance()->em()
+                                            ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+                                            ->findOneBy(array('name'=>$nodeType->getName()));
+
+                    if (null === $existingNT) {
+                        /*
+                         * New node-type…
+                         *
+                         * First persist node-type
+                         */
+                        Kernel::getInstance()->em()->persist($nodeType);
+
+                        // Flush before creating node-type fields.
+                        Kernel::getInstance()->em()->flush();
+
+                        foreach ($nodeType->getFields() as $field) {
+                            /*
+                             * then persist each field
+                             */
+                            $field->setNodeType($nodeType);
+                            Kernel::getInstance()->em()->persist($field);
+                        }
+                    } else {
+                        /*
+                         * Node-type already exists.
+                         * Must update fields.
+                         */
+                        $msg = $this->getTranslator()->trans('nodeType.already.exists');
+                        $request->getSession()->getFlashBag()->add('warning', $msg);
+                        $this->getLogger()->warning($msg);
+                    }
+
+                    Kernel::getInstance()->em()->flush();
+                    $nodeType->getHandler()->updateSchema();
+
+                    /*
+                     * Redirect to update schema page
+                     */
+                    $response = new RedirectResponse(
+                        Kernel::getInstance()->getUrlGenerator()->generate(
+                            'nodeTypesSchemaUpdate',
+                            array(
+                                '_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                            )
+                        )
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
+                } else {
+                    $msg = $this->getTranslator()->trans('file.format.not_valid');
+                    $request->getSession()->getFlashBag()->add('error', $msg);
+                    $this->getLogger()->error($msg);
+
+                    // redirect even if its null
+                    $response = new RedirectResponse(
+                        Kernel::getInstance()->getUrlGenerator()->generate(
+                            'nodeTypesImportPage'
+                        )
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
+                }
+            } else {
+                $msg = $this->getTranslator()->trans('file.not_uploaded');
                 $request->getSession()->getFlashBag()->add('error', $msg);
                 $this->getLogger()->error($msg);
 
@@ -91,36 +163,6 @@ class NodeTypesUtilsController extends RozierApp
                 $response = new RedirectResponse(
                     Kernel::getInstance()->getUrlGenerator()->generate(
                         'nodeTypesImportPage'
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
-            } else {
-                $nodeType = NodeTypeSerializer::deserializeFromJson($serializedData);
-                $existingNT = Kernel::getInstance()->em()
-                                        ->getRepository('RZ\Renzo\Core\Entities\NodeType')
-                                        ->findOneBy(array('name'=>$nodeType->getName()));
-
-                if (null === $existingNT ) {
-                    Kernel::getInstance()->em()->persist($nodeType);
-                } else {
-                    // Already exists, must update
-                    $existingNT->getSerializer()->updateFromJson($nodeType);
-                }
-
-                Kernel::getInstance()->em()->flush();
-                $nodeType->getHandler()->updateSchema();
-
-                /*
-                 * Redirect to update schema page
-                 */
-                $response = new RedirectResponse(
-                    Kernel::getInstance()->getUrlGenerator()->generate(
-                        'nodeTypesSchemaUpdate',
-                        array(
-                            '_token' => static::$csrfProvider->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
-                        )
                     )
                 );
                 $response->prepare($request);
@@ -146,7 +188,7 @@ class NodeTypesUtilsController extends RozierApp
     {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('Attachment', 'file');
+            ->add('node_type_file', 'file');
 
         return $builder->getForm();
     }

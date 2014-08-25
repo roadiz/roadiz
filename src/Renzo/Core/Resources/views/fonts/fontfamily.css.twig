@@ -1,0 +1,13 @@
+@font-face {
+    font-family: "{{ font.getHash }}";
+
+    src: url('{{ font.getHandler.getDownloadUrl("eot", csrfProvider.generateCsrfToken(font.getHash ~ 'eot')) }}');
+    src: url('{{ font.getHandler.getDownloadUrl("eot", csrfProvider.generateCsrfToken(font.getHash ~ 'eot')) }}?#iefix') format('embedded-opentype'),
+        {% if font.getWOFFFilename %}url('{{ font.getHandler.getDownloadUrl("woff", csrfProvider.generateCsrfToken(font.getHash ~ 'woff')) }}') format('woff'),{% endif %}
+        {% if font.getOTFFilename %}url('{{ font.getHandler.getDownloadUrl("otf", csrfProvider.generateCsrfToken(font.getHash ~ 'otf')) }}') format('opentype'),{% endif %}
+        {% if font.getSVGFilename %}url('{{ font.getHandler.getDownloadUrl("svg", csrfProvider.generateCsrfToken(font.getHash ~ 'svg')) }}') format('svg'){% endif %};
+
+    {% for key, value in font.getFontVariantInfos %}
+    font-{{ key }}: {{ value }};
+    {% endfor %}
+}

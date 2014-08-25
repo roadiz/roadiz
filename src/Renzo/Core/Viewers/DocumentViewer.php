@@ -41,7 +41,6 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
-     * Constructor
      * @param RZ\Renzo\Core\Entities\Document $document
      */
     public function __construct(Document $document)

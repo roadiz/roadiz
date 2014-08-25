@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% set variants = ["regular", "italic", "bold", "bold.italic", "light", "light.italic"] %}
-
 {% block content %}
 <section id="manage-fonts">
 	<h1 id="title">{% trans %}Fonts{% endtrans %}</h1>
@@ -23,7 +21,7 @@
 				<td>
 					<a href="{{ path('fontsEditPage', { fontId: font.getId }) }}">{{ font.getName }}</a>
 				</td>
-				<td>{{ variants[font.getVariant]|trans }}</td>
+				<td>{{ font.getReadableVariant }}</td>
 				<td>
 					{% if font.getEOTFilename %}<div class="uk-badge">EOT</div>{% endif %}
 					{% if font.getWOFFFilename %}<div class="uk-badge">WOFF</div>{% endif %}
@@ -32,6 +30,7 @@
 				</td>
 				<td><code>{{ font.getHash }}</code></td>
 				<td>
+					<a class="uk-button uk-button-small" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}"><span class="uk-icon-download"></span> {% trans %}download{% endtrans %}</a>
 					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('fontsDeletePage', { fontId: font.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}delete{% endtrans %}</a>
 				</td>
 			</tr>

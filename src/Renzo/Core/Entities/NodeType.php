@@ -266,12 +266,4 @@ class NodeType extends AbstractEntity
     {
         return new NodeTypeHandler($this);
     }
-
-    /**
-     * @return RZ\Renzo\Core\Serializers\NodeTypeSerializer
-     */
-    public function getSerializer()
-    {
-        return new NodeTypeSerializer($this);
-    }
 }

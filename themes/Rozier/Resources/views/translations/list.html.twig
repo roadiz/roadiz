@@ -36,9 +36,9 @@
 					        {% endif %}
 						{% endfor %}
 						{{ form_rest(t.defaultForm) }}
-						<input class="uk-button uk-button-small" type="submit" value="{% trans %}Set as default{% endtrans %}" />
+						<button class="uk-button uk-button-small" type="submit"><i class="uk-icon-star"></i> {% trans %}Set as default{% endtrans %}</button>
 					</form>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}Delete{% endtrans %}</a>
 				{% endif %}
 				</td>
 			</tr>

@@ -102,45 +102,6 @@ class NodeTypeFieldHandler
     }
 
     /**
-     * Serializes data
-     * @return array
-     *//*
-    public function serialize() {
-        $data = array();
-
-        $data['name'] = $this->getNodeTypeField()->getName();
-        $data['label'] = $this->getNodeTypeField()->getLabel();
-        $data['description'] = $this->getNodeTypeField()->getDescription();
-        $data['visible'] = $this->getNodeTypeField()->isVisible();
-        $data['type'] = $this->getNodeTypeField()->getType();
-        $data['indexed'] = $this->getNodeTypeField()->isIndexed();
-        $data['virtual'] = $this->getNodeTypeField()->isVirtual();
-
-        return $data;
-    }*/
-
-    /**
-     * Deserializes a json file into a readable array of datas
-     * @return RZ\Renzo\Core\Entities\NodeTypeField
-     *//*
-    public function deserialize( $jsonString ) {
-        $encoder = new JsonEncoder();
-        $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes(array(
-            'name',
-            'label',
-            'description',
-            'visible',
-            'type',
-            'indexed',
-            'virtual'
-        ));
-
-        $serializer = new Serializer(array($normalizer), array($encoder));
-        return $serializer->deserialize($jsonString, 'RZ\Renzo\Core\Entities\NodeTypeField', 'json');
-    }*/
-
-    /**
      * Create a new node-type-field handler with node-type-field to handle.
      *
      * @param NodeTypeField $field

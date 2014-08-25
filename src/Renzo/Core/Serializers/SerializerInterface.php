@@ -8,8 +8,7 @@
  * @copyright REZO ZERO 2014
  * @author Thomas Aufresne
  */
-
-namespace RZ\Renzo\Core\Utils;
+namespace RZ\Renzo\Core\Serializers;
 
 /**
  * EntitySerializer that implements simple serialization/deserialization methods.
@@ -20,14 +19,16 @@ interface SerializerInterface
     /**
      * Serializes data.
      *
-     * @return void
+     * @return mixed
      */
     public function serialize();
 
     /**
      * Deserializes a json file into a readable array of datas.
      *
-     * @return void
+     * @param string $string Input to deserialize
+     *
+     * @return mixed
      */
-    public function deserialize();
+    public static function deserialize($string);
 }

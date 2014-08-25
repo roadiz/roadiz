@@ -301,6 +301,30 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
         return $this;
     }
     /**
+     * @Column(type="text", nullable=true)
+     */
+    private $defaultValues;
+
+    /**
+     * @return string
+     */
+    public function getDefaultValues()
+    {
+        return $this->defaultValues;
+    }
+
+    /**
+     * @param string $defaultValues
+     *
+     * @return $this
+     */
+    public function setDefaultValues($defaultValues)
+    {
+        $this->defaultValues = $defaultValues;
+
+        return $this;
+    }
+    /**
      * @Column(type="boolean")
      */
     private $indexed = false;
@@ -413,14 +437,6 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
     public function getHandler()
     {
         return new NodeTypeFieldHandler($this);
-    }
-
-    /**
-     * @return RZ\Renzo\Core\Serializers\NodeTypeFieldSerializer
-     */
-    public function getSerializer()
-    {
-        return new NodeTypeFieldSerializer($this);
     }
 
     /**

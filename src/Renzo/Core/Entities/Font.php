@@ -31,6 +31,43 @@ class Font extends AbstractDateTimed
     const LIGHT_ITALIC = 5;
 
     /**
+     * Get Mime type for each font file extensions.
+     *
+     * @var array
+     */
+    public static $extensionToMime = array(
+        'svg' => 'image/svg+xml',
+        'ttf' => 'application/x-font-truetype',
+        'otf' => 'application/x-font-opentype',
+        'woff' => 'application/font-woff',
+        'eot' => 'application/vnd.ms-fontobject',
+    );
+
+    /**
+     * Get readable variant association
+     *
+     * @var array
+     */
+    protected static $variantToHuman = array(
+        Font::REGULAR => 'Regular',
+        Font::ITALIC => 'Italic',
+        Font::BOLD => 'Bold',
+        Font::BOLD_ITALIC => 'Bold italic',
+        Font::LIGHT => 'Light',
+        Font::LIGHT_ITALIC => 'Light italic',
+    );
+
+    /**
+     * Get a readable string to describe current font variant.
+     *
+     * @return string
+     */
+    public function getReadableVariant()
+    {
+        return static::$variantToHuman[$this->getVariant()];
+    }
+
+    /**
      * @Column(type="integer", name="variant", unique=false, nullable=false)
      */
     protected $variant = Font::REGULAR;
@@ -51,6 +88,56 @@ class Font extends AbstractDateTimed
         $this->variant = $variant;
 
         return $this;
+    }
+
+    /**
+     * Return font variant information for CSS font-face
+     * into a simple array.
+     *
+     * * style
+     * * weight
+     *
+     * @return array
+     */
+    public function getFontVariantInfos()
+    {
+        switch ($this->getVariant()) {
+            case static::LIGHT_ITALIC:
+                return array(
+                    'style' => 'italic',
+                    'weight' => 'lighter'
+                );
+            case static::LIGHT:
+                return array(
+                    'style' => 'normal',
+                    'weight' => 'lighter'
+                );
+
+            case static::BOLD_ITALIC:
+                return array(
+                    'style' => 'italic',
+                    'weight' => 'bold'
+                );
+
+            case static::BOLD:
+                return array(
+                    'style' => 'normal',
+                    'weight' => 'bold'
+                );
+
+            case static::ITALIC:
+                return array(
+                    'style' => 'italic',
+                    'weight' => 'normal'
+                );
+
+            case static::REGULAR:
+            default:
+                return array(
+                    'style' => 'normal',
+                    'weight' => 'normal'
+                );
+        }
     }
 
 
@@ -307,5 +394,20 @@ class Font extends AbstractDateTimed
     public static function getFilesFolderName()
     {
         return 'files/fonts';
+    }
+
+    /**
+     * @return RZ\Renzo\Core\Handlers\FontHandler
+     */
+    public function getHandler()
+    {
+        return new \RZ\Renzo\Core\Handlers\FontHandler($this);
+    }
+    /**
+     * @return RZ\Renzo\Core\Handlers\FontViewer
+     */
+    public function getViewer()
+    {
+        return new \RZ\Renzo\Core\Viewers\FontViewer($this);
     }
 }

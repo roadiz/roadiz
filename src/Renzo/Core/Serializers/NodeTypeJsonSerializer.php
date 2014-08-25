@@ -22,9 +22,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
 /**
- * Serialization class for NodeType.
+ * Json Serialization handler for NodeType.
  */
-class NodeTypeSerializer implements SerializerInterface
+class NodeTypeJsonSerializer implements SerializerInterface
 {
 
     protected $nodeType;
@@ -39,27 +39,36 @@ class NodeTypeSerializer implements SerializerInterface
     }
 
     /**
+     * @return RZ\Renzo\Core\Entities\NodeType
+     */
+    public function getNodeType()
+    {
+        return $this->nodeType;
+    }
+
+    /**
      * Serializes data into Json.
      *
      * @return string
      */
-    public function serializeToJson()
+    public function serialize()
     {
         $data = array();
 
-        $data['name'] = $this->getNodeType()->getName();
-        $data['displayName'] = $this->getNodeType()->getDisplayName();
-        $data['description'] = $this->getNodeType()->getDescription();
-        $data['visible'] = $this->getNodeType()->isVisible();
+        $data['name'] =           $this->getNodeType()->getName();
+        $data['displayName'] =    $this->getNodeType()->getDisplayName();
+        $data['description'] =    $this->getNodeType()->getDescription();
+        $data['visible'] =        $this->getNodeType()->isVisible();
         $data['newsletterType'] = $this->getNodeType()->isNewsletterType();
-        $data['hidingNodes'] = $this->getNodeType()->isHidingNodes();
-        $data['fields'] = array();
+        $data['hidingNodes'] =    $this->getNodeType()->isHidingNodes();
+        $data['fields'] =         array();
 
         foreach ($this->getNodeType()->getFields() as $nodeTypeField) {
-            $data['node_type_fields'][] = $nodeTypeField->getHandler()->serialize();
+            $ntfSerializer = new NodeTypeFieldJsonSerializer($nodeTypeField);
+            $data['fields'][] = $ntfSerializer->serialize();
         }
 
-        if (defined(JSON_PRETTY_PRINT)) {
+        if (defined('JSON_PRETTY_PRINT')) {
             return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         } else {
             return json_encode($data, JSON_NUMERIC_CHECK);
@@ -67,12 +76,13 @@ class NodeTypeSerializer implements SerializerInterface
     }
 
     /**
-     * Deserializes a Json into readable datas
-     * @param string  $jsonString
+     * Deserializes a Json into readable datas.
+     *
+     * @param string $string
      *
      * @return RZ\Renzo\Core\Entities\NodeType
      */
-    public static function deserializeFromJson($jsonString)
+    public static function deserialize($string)
     {
         $encoder = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
@@ -87,22 +97,21 @@ class NodeTypeSerializer implements SerializerInterface
         ));
 
         $serializer = new Serializer(array($normalizer), array($encoder));
-        $nodeType = $serializer->deserialize($jsonString, 'RZ\Renzo\Core\Entities\NodeType', 'json');
+        $nodeType = $serializer->deserialize($string, 'RZ\Renzo\Core\Entities\NodeType', 'json');
 
         /*
-         * Importing Fields
+         * Importing Fields.
+         *
+         * We need to extract fields from node-type and to re-encode them
+         * to pass to NodeTypeFieldSerializer.
          */
-        return $nodeType;
-    }
+        $tempArray = json_decode($string, true);
 
-    /**
-     * Update an existing Node Type.
-     * @param RZ\Renzo\Core\Entities\NodeType $importedNT
-     *
-     * @return boolean
-     */
-    public function updateFromJson(NodeType $importedNT)
-    {
-        return null;
+        foreach ($tempArray['fields'] as $fieldAssoc) {
+            $ntField = NodeTypeFieldJsonSerializer::deserialize(json_encode($fieldAssoc));
+            $nodeType->addField($ntField);
+        }
+
+        return $nodeType;
     }
 }
