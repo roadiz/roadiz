@@ -196,14 +196,16 @@ class AppController implements ViewableInterface
      *
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
-    public function __init(SecurityContext $securityContext)
+    public function __init(SecurityContext $securityContext = null)
     {
         $this->initializeTwig()
              ->initializeTranslator()
              ->prepareBaseAssignation();
 
-        $this->logger = new \RZ\Renzo\Core\Log\Logger();
-        $this->logger->setSecurityContext($securityContext);
+        if (null !== $securityContext) {
+            $this->logger = new \RZ\Renzo\Core\Log\Logger();
+            $this->logger->setSecurityContext($securityContext);
+        }
     }
 
     /**

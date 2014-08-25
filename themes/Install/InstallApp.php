@@ -16,7 +16,7 @@ use Themes\Install\Controllers\Fixtures;
 use Themes\Install\Controllers\Requirements;
 
 use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\CMS\Controllers\FrontendController;
+use RZ\Renzo\CMS\Controllers\AppController;
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
@@ -39,7 +39,7 @@ use Symfony\Component\Validator\Validation;
 /**
  * Installation application
  */
-class InstallApp extends FrontendController
+class InstallApp extends AppController
 {
 
     protected static $themeName =      'Install theme';
@@ -75,7 +75,7 @@ class InstallApp extends FrontendController
     public function handleTwigCache()
     {
 
-        if (/*Kernel::getInstance()->isDebug()*/true) {
+        if (/*$this->getKernel()->isDebug()*/true) {
             try {
                 $fs = new Filesystem();
                 $fs->remove(array($this->getCacheDirectory()));
@@ -91,10 +91,10 @@ class InstallApp extends FrontendController
     public function prepareBaseAssignation()
     {
         $this->assignation = array(
-            'request' => Kernel::getInstance()->getRequest(),
+            'request' => $this->getKernel()->getRequest(),
             'head' => array(
-                'baseUrl' => Kernel::getInstance()->getRequest()->getBaseUrl(),
-                'filesUrl' => Kernel::getInstance()->getRequest()->getBaseUrl().'/'.Document::getFilesFolderName(),
+                'baseUrl' => $this->getKernel()->getRequest()->getBaseUrl(),
+                'filesUrl' => $this->getKernel()->getRequest()->getBaseUrl().'/'.Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl()
             )
         );
@@ -176,8 +176,8 @@ class InstallApp extends FrontendController
                     $fixtures = new Fixtures();
                     $fixtures->createFolders();
 
-                    Kernel::getInstance()->setupEntityManager($config->getConfiguration());
-                    Kernel::getInstance()->em()->getConnection()->connect();
+                    $this->getKernel()->setupEntityManager($config->getConfiguration());
+                    $this->getKernel()->em()->getConnection()->connect();
 
                     \RZ\Renzo\Console\SchemaCommand::createSchema();
                     \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
@@ -187,7 +187,7 @@ class InstallApp extends FrontendController
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'installDatabaseDonePage'
                         )
                     );
@@ -253,7 +253,7 @@ class InstallApp extends FrontendController
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'installThemesPage'
                         )
                     );
@@ -304,7 +304,7 @@ class InstallApp extends FrontendController
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'installDonePage'
                         )
                     );
@@ -362,7 +362,7 @@ class InstallApp extends FrontendController
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        Kernel::getInstance()->getUrlGenerator()->generate(
+                        $this->getKernel()->getUrlGenerator()->generate(
                             'installHomePage'
                         )
                     );

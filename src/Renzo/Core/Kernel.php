@@ -197,70 +197,6 @@ class Kernel
 
         return $this;
     }
-
-    /**
-     * @return array
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param array $config
-     *
-     * @return $config
-     */
-    public function setConfig($config)
-    {
-        $this->config = $config;
-
-        return $this;
-    }
-
-    /**
-     * Get application debug status.
-     *
-     * @return boolean
-     */
-    public function isDebug()
-    {
-        return (boolean) $this->getConfig()['devMode'];
-    }
-
-    /**
-     * Get backend application debug status.
-     *
-     * @return boolean
-     */
-    public function isBackendDebug()
-    {
-        return $this->backendDebug;
-    }
-
-    /**
-     * Return unique instance of Kernel.
-     *
-     * @return Kernel
-     */
-    public static function getInstance()
-    {
-
-        if (static::$instance === null) {
-            static::$instance = new Kernel();
-        }
-
-        return static::$instance;
-    }
-
-    /**
-     * @return Symfony\Component\Stopwatch\Stopwatch
-     */
-    public function getStopwatch()
-    {
-        return $this->stopwatch;
-    }
-
     /**
      * Set kernel Doctrine entity manager and
      * prepare custom data inheritance for Node system.
@@ -282,24 +218,6 @@ class Kernel
         $evm->addEventListener(Events::loadClassMetadata, $inheritableEntityEvent);
 
         return $this;
-    }
-
-    /**
-     * @return Doctrine\ORM\EntityManager
-     */
-    public function getEntityManager()
-    {
-        return $this->em;
-    }
-
-    /**
-     * Alias for Kernel::getEntityManager method.
-     *
-     * @return Doctrine\ORM\EntityManager
-     */
-    public function em()
-    {
-        return $this->em;
     }
 
     /**
@@ -368,11 +286,7 @@ class Kernel
 
         } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
             echo $e->getMessage().PHP_EOL;
-        } /*catch (\LogicException $e) {
-            echo $e->getMessage().PHP_EOL;
-        } catch (\PDOException $e) {
-            echo $e->getMessage().PHP_EOL;
-        }*/
+        }
 
         return $this;
     }
@@ -385,7 +299,8 @@ class Kernel
     public function prepareSetup()
     {
         $feCollection = \Themes\Install\InstallApp::getRoutes();
-        if ($feCollection !== null) {
+
+        if (null !== $feCollection) {
 
             $this->rootCollection->addCollection($feCollection);
             $this->urlMatcher =   new UrlMatcher($this->rootCollection, $this->requestContext);
@@ -393,6 +308,14 @@ class Kernel
             $this->httpUtils =    new HttpUtils($this->urlGenerator, $this->urlMatcher);
 
             $this->dispatcher->addSubscriber(new RouterListener($this->urlMatcher));
+
+            $this->dispatcher->addListener(
+                KernelEvents::CONTROLLER,
+                array(
+                    new \RZ\Renzo\Core\Events\ControllerMatchedEvent($this),
+                    'onControllerMatched'
+                )
+            );
         }
 
         return $this;
@@ -627,6 +550,7 @@ class Kernel
      */
     public function onControllerMatched()
     {
+        $this->stopwatch->stop('matchingRoute');
         $this->stopwatch->stop('requestHandling');
         $this->stopwatch->start('controllerHandling');
     }
@@ -799,5 +723,82 @@ class Kernel
     public function getUrlGenerator()
     {
         return $this->urlGenerator;
+    }
+    /**
+     * @return Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->em;
+    }
+    /**
+     * Alias for Kernel::getEntityManager method.
+     *
+     * @return Doctrine\ORM\EntityManager
+     */
+    public function em()
+    {
+        return $this->em;
+    }
+    /**
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param array $config
+     *
+     * @return $config
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
+
+        return $this;
+    }
+
+    /**
+     * Get application debug status.
+     *
+     * @return boolean
+     */
+    public function isDebug()
+    {
+        return (boolean) $this->getConfig()['devMode'];
+    }
+
+    /**
+     * Get backend application debug status.
+     *
+     * @return boolean
+     */
+    public function isBackendDebug()
+    {
+        return $this->backendDebug;
+    }
+
+    /**
+     * Return unique instance of Kernel.
+     *
+     * @return Kernel
+     */
+    public static function getInstance()
+    {
+        if (static::$instance === null) {
+            static::$instance = new Kernel();
+        }
+
+        return static::$instance;
+    }
+
+    /**
+     * @return Symfony\Component\Stopwatch\Stopwatch
+     */
+    public function getStopwatch()
+    {
+        return $this->stopwatch;
     }
 }
