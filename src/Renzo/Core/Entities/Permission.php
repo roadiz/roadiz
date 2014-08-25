@@ -19,11 +19,5 @@ use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
  */
 class Permission extends AbstractEntity
 {
-    /**
-     * Create a new Permission
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+
 }

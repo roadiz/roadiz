@@ -1060,7 +1060,7 @@ class NodesController extends RozierApp
                 $nodeSource->getHandler()->cleanDocumentsFromField($field);
 
                 foreach ($data[$field->getName()] as $documentId) {
-                    $tempDoc = $this->getKernel()->em()
+                    $tempDoc = Kernel::getInstance()->em()
                         ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
                     if ($tempDoc !== null) {
                         $nodeSource->getHandler()->addDocumentForField($tempDoc, $field);

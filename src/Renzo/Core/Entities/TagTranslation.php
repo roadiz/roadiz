@@ -125,8 +125,6 @@ class TagTranslation extends AbstractEntity
      */
     public function __construct(Tag $original, Translation $translation)
     {
-        parent::__construct();
-
         $this->setTag($original);
         $this->setTranslation($translation);
     }

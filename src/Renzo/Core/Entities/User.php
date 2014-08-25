@@ -521,8 +521,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
 

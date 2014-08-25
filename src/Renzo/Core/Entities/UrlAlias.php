@@ -74,8 +74,6 @@ class UrlAlias extends AbstractEntity
      */
     public function __construct($nodeSource)
     {
-        parent::__construct();
-
         $this->setNodeSource($nodeSource);
     }
 }

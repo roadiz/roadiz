@@ -153,10 +153,17 @@ Rozier.onDocumentReady = function( event ) {
 
 	$('.nodetree-widget .root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );
 	$('.tagtree-widget .root-tree').on('nestable-change', Rozier.onNestableTagTreeChange );
+
+	/*
+	 * TEMP
+	 */
+	$('[data-uk-pagination]').on('uk-select-page', function(e, pageIndex){
+	    document.location.href = document.location.origin + document.location.pathname + '?page='+(pageIndex+1);
+	});
 };
 
 /**
- * 
+ *
  * @param  Event event
  * @param  jQueryNode element
  * @param  string status  added, moved or removed
@@ -213,7 +220,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 
 	console.log(postData);
 	$.ajax({
-		url: Rozier.routes.nodeAjaxEdit.replace("%node_id%", node_id),
+		url: Rozier.routes.nodeAjaxEdit.replace("%nodeId%", node_id),
 		type: 'POST',
 		dataType: 'json',
 		data: postData
@@ -238,7 +245,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 
 
 /**
- * 
+ *
  * @param  Event event
  * @param  jQueryTag element
  * @param  string status  added, moved or removed
@@ -295,7 +302,7 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 
 	console.log(postData);
 	$.ajax({
-		url: Rozier.routes.tagAjaxEdit.replace("%tag_id%", tag_id),
+		url: Rozier.routes.tagAjaxEdit.replace("%tagId%", tag_id),
 		type: 'POST',
 		dataType: 'json',
 		data: postData

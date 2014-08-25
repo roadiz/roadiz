@@ -12,7 +12,6 @@
    		{{ form_errors(form) }}
 
    		<div class="fallback">
-   			<legend>{{ node_type.getDisplayName }}</legend>
 		    {% for item in form %}
 		    	{# Node fields  #}
 		        {% if item.vars.name != "_token" %}
@@ -20,7 +19,7 @@
 		        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
-		    	</div>	
+		    	</div>
 		        {% endif %}
 		    {% endfor %}
 		     <input class="uk-button uk-button-primary" type="submit" value="{% trans %}Upload{% endtrans %}" />

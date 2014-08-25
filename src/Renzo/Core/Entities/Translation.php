@@ -298,8 +298,6 @@ class Translation extends AbstractDateTimed
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->nodeSources = new ArrayCollection();
         $this->tagTranslations = new ArrayCollection();
     }

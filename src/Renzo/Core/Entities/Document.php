@@ -331,8 +331,6 @@ class Document extends AbstractDateTimed
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->tags = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
         $this->folder = substr(hash("crc32b", date('YmdHi')), 0, 12);

@@ -79,8 +79,6 @@ class Role extends AbstractEntity
      */
     public function __construct($name)
     {
-        parent::__construct();
-
         $this->setName($name);
     }
 }

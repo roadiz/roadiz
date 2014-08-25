@@ -173,8 +173,6 @@ class Tag extends AbstractDateTimedPositioned
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->nodes = new ArrayCollection();
         $this->subscribers = new ArrayCollection();
         $this->documents = new ArrayCollection();

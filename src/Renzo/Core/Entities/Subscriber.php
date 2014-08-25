@@ -85,8 +85,6 @@ class Subscriber extends AbstractHuman
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->tags = new ArrayCollection();
     }
 }
