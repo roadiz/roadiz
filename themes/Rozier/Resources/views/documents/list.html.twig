@@ -23,7 +23,8 @@
 				{% if document.isImage %}
 				<td class="uk-text-center">
 					<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}">
-						<img width="100" alt="" src="{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}" />
+						{# <img width="100" alt="" src="{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}" /> #}
+						{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
 					</a>
 				</td>
 				{% else %}

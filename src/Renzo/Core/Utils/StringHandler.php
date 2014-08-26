@@ -21,7 +21,7 @@ class StringHandler
      *
      * @return string
      */
-    public static function removeDiacritics( $string )
+    public static function removeDiacritics($string)
     {
         $string = htmlentities($string, ENT_NOQUOTES, 'utf-8');
         $string = preg_replace('#([\'])#', ' ', $string);
@@ -39,7 +39,7 @@ class StringHandler
      *
      * @return string Slugified string
      */
-    public static function slugify( $string )
+    public static function slugify($string)
     {
         $string = trim(strtolower($string));
         $string = static::removeDiacritics($string);
@@ -54,7 +54,7 @@ class StringHandler
      *
      * @return string Classified string
      */
-    public static function classify( $string )
+    public static function classify($string)
     {
         $string = static::removeDiacritics($string);
         $string = trim(preg_replace('#([^a-zA-Z])#', '', ucwords($string)));
@@ -68,7 +68,7 @@ class StringHandler
      *
      * @return string Slugified string
      */
-    public static function cleanForFilename( $string )
+    public static function cleanForFilename($string)
     {
         $string = trim(strtolower($string));
         $string = static::removeDiacritics($string);
@@ -84,7 +84,7 @@ class StringHandler
      *
      * @return string Variablized string
      */
-    public static function variablize( $string )
+    public static function variablize($string)
     {
         $string = trim(strtolower($string));
         $string = static::removeDiacritics($string);

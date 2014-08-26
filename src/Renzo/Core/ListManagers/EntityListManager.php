@@ -22,7 +22,7 @@ use Doctrine\ORM\EntityManager;
  */
 class EntityListManager
 {
-    const ITEM_PER_PAGE = 10;
+    const ITEM_PER_PAGE = 20;
 
     protected $request = null;
     protected $_em = null;

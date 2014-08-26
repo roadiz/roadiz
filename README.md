@@ -12,4 +12,4 @@
 ### Run self tests
 
 * *PHPUnit tests*: `phpunit --bootstrap bootstrap.php ./Tests`
-* *Code quality*, use PHP_CodeSniffer with *Symfony2 standard*: `phpcs --report=full --report-file=./report --extensions=php --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/sources/*,*/Tests/* -p ./`, follow instructions at https://github.com/opensky/Symfony2-coding-standard
+* *Code quality*, use PHP_CodeSniffer with *Symfony2 standard*: `phpcs --report=full --report-file=./report.txt --extensions=php --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/sources/*,*/Tests/* -p ./`, follow instructions at https://github.com/opensky/Symfony2-coding-standard

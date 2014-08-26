@@ -3,12 +3,14 @@
 use RZ\Renzo\Core\Entities\Setting;
 use RZ\Renzo\Core\Kernel;
 
-class SessionTest extends PHPUnit_Framework_TestCase
+class SettingTest extends PHPUnit_Framework_TestCase
 {
+    private static $entityCollection;
+
     /**
      * @dataProvider settingsProvider
      */
-    public function testGetValue( $name, $expected )
+    public function testGetValue($name, $expected)
     {
         $value = Kernel::getInstance()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Setting')
@@ -31,6 +33,7 @@ class SessionTest extends PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
+        static::$entityCollection = array();
         $settings = static::settingsProvider();
 
         foreach ($settings as $setting) {
@@ -38,26 +41,18 @@ class SessionTest extends PHPUnit_Framework_TestCase
             $s->setName($setting[0]);
             $s->setValue($setting[1]);
             Kernel::getInstance()->em()->persist($s);
+
+            static::$entityCollection[] = $s;
         }
 
         Kernel::getInstance()->em()->flush();
-        Kernel::getInstance()->em()->clear(); // Detaches all objects from Doctrine!
     }
-
+    /**
+     * Remove test entities.
+     */
     public static function tearDownAfterClass()
     {
-        $settings = static::settingsProvider();
-        $settingsNames = array();
-
-        foreach ($settings as $setting) {
-            $settingsNames[] =$setting[0];
-        }
-
-        $objs = Kernel::getInstance()->em()
-            ->getRepository('RZ\Renzo\Core\Entities\Setting')
-            ->findBy(array('name'=>$settingsNames));
-
-        foreach ($objs as $setting) {
+        foreach (static::$entityCollection as $setting) {
             Kernel::getInstance()->em()->remove($setting);
         }
 

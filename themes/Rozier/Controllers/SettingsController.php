@@ -426,7 +426,7 @@ class SettingsController extends RozierApp
     {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('setting_id', 'hidden', array(
+            ->add('settingId', 'hidden', array(
                 'data' => $setting->getId(),
                 'constraints' => array(
                     new NotBlank()

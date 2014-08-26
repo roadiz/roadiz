@@ -82,6 +82,24 @@ class AppController implements ViewableInterface
     {
         return $this->kernel;
     }
+    /**
+     * Alias for `$this->getKernel()->getSecurityContext()`.
+     *
+     * @return Symfony\Component\Security\Core\SecurityContext
+     */
+    public function getSecurityContext()
+    {
+        return $this->getKernel()->getSecurityContext();
+    }
+    /**
+     * Alias for `$this->getKernel()->getEntityManager()`.
+     *
+     * @return Doctrine\ORM\EntityManager
+     */
+    public function em()
+    {
+        return $this->getKernel()->getEntityManager();
+    }
 
     /**
      * Theme name.
