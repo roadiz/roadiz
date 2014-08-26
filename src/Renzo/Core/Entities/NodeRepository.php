@@ -114,7 +114,7 @@ class NodeRepository extends EntityRepository
      *
      * @return RZ\Renzo\Core\Entities\Node or null
      */
-    public function getChildrenWithTranslation( Node $node, Translation $translation )
+    public function getChildrenWithTranslation(Node $node, Translation $translation)
     {
         $query = $this->_em->createQuery('
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n

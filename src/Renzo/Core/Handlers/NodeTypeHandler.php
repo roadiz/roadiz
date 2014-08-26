@@ -45,7 +45,7 @@ class NodeTypeHandler
     /**
      * Create a new node-type handler with node-type to handle.
      *
-     * @param NodeType $nodeType
+     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
      */
     public function __construct(NodeType $nodeType)
     {

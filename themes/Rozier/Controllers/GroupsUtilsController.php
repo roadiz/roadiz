@@ -7,11 +7,13 @@
  * @copyright REZO ZERO 2014
  * @author Thomas Aufresne
  */
+
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Group;
 use RZ\Renzo\Core\Entities\Role;
+use RZ\Renzo\Core\Handlers\GroupHandler;
 use RZ\Renzo\Core\Serializers\GroupJsonSerializer;
 use Themes\Rozier\RozierApp;
 
@@ -33,35 +35,6 @@ use Symfony\Component\Validator\Constraints\Type;
  */
 class GroupsUtilsController extends RozierApp
 {
-
-    /**
-     * Export a Json file containing Groups datas and roles.
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $groupId
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function exportJsonFileAction(Request $request, $groupId)
-    {
-        $group = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
-
-        $response =  new Response(
-            $group->getSerializer()->serialize(),
-            Response::HTTP_OK,
-            array()
-        );
-
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $group->getName() . '.rzt')); // Rezo-Zero Type
-
-        $response->prepare($request);
-
-        return $response;
-    }
-
     /**
      * Import a Json file (.rzt) containing Group datas and roles.
      *
@@ -93,16 +66,21 @@ class GroupsUtilsController extends RozierApp
 
                     if (null === $existingGroup) {
 
-                        $this->getKernel()->em()->persist($group);
-                        $this->getKernel()->em()->flush();
-
-                        foreach ($group->getRoles() as $role) {
+                        foreach ($group->getRolesEntities() as $role) {
                             /*
-                             * then persist each field
+                             * then persist each role
                              */
-                            $group->addRoles($role);
                             $this->getKernel()->em()->persist($role);
                         }
+                        $this->getKernel()->em()->flush();
+
+                        /*
+                         * New group.
+                         *
+                         * First persist group
+                         */
+                        $this->getKernel()->em()->persist($group);
+                        // Flush before creating group's roles.
 
                         $msg = $this->getTranslator()->trans('group.imported.created');
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -117,10 +95,31 @@ class GroupsUtilsController extends RozierApp
                     }
 
                     $this->getKernel()->em()->flush();
+
+                     // redirect even if its null
+                    $response = new RedirectResponse(
+                        $this->getKernel()->getUrlGenerator()->generate(
+                            'groupsHomePage'
+                        )
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
+
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);
                     $this->getLogger()->error($msg);
+
+                    // redirect even if its null
+                    $response = new RedirectResponse(
+                        $this->getKernel()->getUrlGenerator()->generate(
+                            'groupsImportPage'
+                        )
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
                 }
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');

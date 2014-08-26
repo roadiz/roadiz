@@ -11,6 +11,8 @@ namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
+use RZ\Renzo\Core\Handlers\GroupHandler;
+
 /**
  * A group gather User and Roles.
  *
@@ -58,7 +60,7 @@ class Group extends AbstractEntity
     }
 
     /**
-     * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\Role")
+     * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\Role", inversedBy="groups")
      * @JoinTable(name="groups_roles",
      *      joinColumns={@JoinColumn(name="group_id", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")}
@@ -67,6 +69,7 @@ class Group extends AbstractEntity
      */
     private $roles;
     private $rolesNames = null;
+
     /**
      * Get roles entities.
      *
@@ -93,7 +96,7 @@ class Group extends AbstractEntity
         return $this->rolesNames;
     }
     /**
-     * @param Role $role
+     * @param RZ\Renzo\Core\Entities\Role $role
      *
      * @return $this
      */
@@ -106,7 +109,7 @@ class Group extends AbstractEntity
         return $this;
     }
     /**
-     * @param Role $role
+     * @param RZ\Renzo\Core\Entities\Role $role
      *
      * @return $this
      */
@@ -118,6 +121,15 @@ class Group extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * @return GroupHandler
+     */
+    public function getHandler()
+    {
+        return new GroupHandler($this);
+    }
+
     /**
      * Create a new Group.
      */

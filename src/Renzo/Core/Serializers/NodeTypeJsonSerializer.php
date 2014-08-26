@@ -103,7 +103,7 @@ class NodeTypeJsonSerializer implements SerializerInterface
          * Importing Fields.
          *
          * We need to extract fields from node-type and to re-encode them
-         * to pass to NodeTypeFieldSerializer.
+         * to pass to NodeTypeFieldJsonSerializer.
          */
         $tempArray = json_decode($string, true);
 

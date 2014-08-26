@@ -273,17 +273,31 @@ class ThemesController extends RozierApp
     protected function buildEditForm(Theme $theme)
     {
         $defaults = array(
-            'classname'=>$theme->getClassName()
+            //'information' =>    $theme->getInformation(),
+            'classname' =>      $theme->getClassName(),
+            //'available' =>      $theme->isAvailable(),
+            //'hostname' =>       $theme->getHostname(),
+            //'isBackendTheme' => $theme->isBackendTheme()
         );
 
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
             ->add('themeId', 'hidden', array(
-                'data'=>$theme->getId()
+                'data' => $theme->getId()
             ))
+           /* ->add('information', 'text', array(
+                'data' => $theme->getInformation()
+            ))*/
             ->add('classname', 'text', array(
-                'data'=>$theme->getClassName()
-            ));
+                'data' => $theme->getClassName()
+            ))
+            /*->add('available', 'checkbox', array(
+                'data' => $theme->isAvailable()
+                'required' => false
+            ))
+            ->add('hostname', 'text', array(
+                'data' => $theme->getHostname()
+            ))*/;
 
         return $builder->getForm();
     }

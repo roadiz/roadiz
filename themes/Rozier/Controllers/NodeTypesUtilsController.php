@@ -7,6 +7,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
+
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
@@ -30,6 +31,7 @@ use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+
 /**
  * {@inheritdoc}
  */
@@ -91,8 +93,8 @@ class NodeTypesUtilsController extends RozierApp
 
                     $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
                     $existingNT = $this->getKernel()->em()
-                                            ->getRepository('RZ\Renzo\Core\Entities\NodeType')
-                                            ->findOneBy(array('name'=>$nodeType->getName()));
+                        ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+                        ->findOneBy(array('name'=>$nodeType->getName()));
 
                     if (null === $existingNT) {
                         /*

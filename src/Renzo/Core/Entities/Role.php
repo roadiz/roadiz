@@ -11,6 +11,7 @@ namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
+use RZ\Renzo\Core\Utils\StringHandler;
 
 /**
  * Roles are persisted version of string Symfony's roles.
@@ -29,6 +30,7 @@ class Role extends AbstractEntity
      * @var string
      */
     private $name;
+
     /**
      * @return string
      */
@@ -36,6 +38,7 @@ class Role extends AbstractEntity
     {
         return $this->name;
     }
+
     /**
      * @param string $name
      *
@@ -43,10 +46,60 @@ class Role extends AbstractEntity
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $name = StringHandler::variablize($name);
+
+        if (0 === preg_match("/^role_/i", $name)) {
+            $name = "ROLE_" . $name;
+        }
+
+        $this->name = strtoupper($name);
 
         return $this;
     }
+
+    /**
+     * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\Group", mappedBy="roles")
+     *
+     * @var ArrayCollection
+     */
+    private $groups;
+
+    /**
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    /**
+     * @param RZ\Renzo\Core\Entities\Group $group
+     *
+     * @return RZ\Renzo\Core\Entities\Group
+     */
+    public function addGroup(Group $group)
+    {
+        if (!$this->getGroups()->contains($group)) {
+            $this->getGroups()->add($group);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param RZ\Renzo\Core\Entities\Group $group
+     *
+     * @return RZ\Renzo\Core\Entities\Group
+     */
+    public function removeGroup(Group $group)
+    {
+        if ($this->getGroups()->contains($group)) {
+            $this->getGroups()->removeElement($group);
+        }
+
+        return $this;
+    }
+
     /**
      * Get a classified version of current role name.
      *
@@ -77,7 +130,7 @@ class Role extends AbstractEntity
      *
      * @param string $name Role name
      */
-    public function __construct($name)
+    public function __construct($name = null)
     {
         $this->setName($name);
     }

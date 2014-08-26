@@ -37,7 +37,6 @@ class RolesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-
         $listManager = new EntityListManager(
             $request,
             $this->getKernel()->em(),
@@ -360,7 +359,7 @@ class RolesController extends RozierApp
      * @param array                        $data
      * @param RZ\Renzo\Core\Entities\Role  $role
      */
-    protected function deleteRole( array $data, Role $role )
+    protected function deleteRole(array $data, Role $role)
     {
         if (!$role->required()) {
             $this->getKernel()->em()->remove($role);

@@ -51,7 +51,7 @@ class RoleJsonSerializer implements SerializerInterface
      *
      * This method does not output a valid JSON string
      * but only a ready-to-encode array. This will be encoded
-     * by the parent Node-type serialize method.
+     * by the parent GroupJsonSerialize method.
      *
      * @return array
      * @see RZ\Renzo\Core\Serializers\GroupJsonSerializer::serialize

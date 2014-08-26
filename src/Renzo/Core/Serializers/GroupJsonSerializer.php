@@ -39,11 +39,11 @@ class GroupJsonSerializer implements SerializerInterface
     }
 
     /**
-     * @return RZ\Renzo\Core\Entities\Role
+     * @return RZ\Renzo\Core\Entities\Group
      */
-    public function getRoles()
+    public function getGroup()
     {
-        return $this->group->getRoles();
+        return $this->group;
     }
 
     /**
@@ -58,7 +58,7 @@ class GroupJsonSerializer implements SerializerInterface
         $data['name'] = $this->getName();
         $data['roles'] = array();
 
-        foreach ($this->getRoles() as $role) {
+        foreach ($this->getGroup()->getRoles() as $role) {
             $roleSerializer = new RoleJsonSerializer($role);
             $data['roles'][] = $roleSerializer->serialize();
         }
@@ -82,12 +82,17 @@ class GroupJsonSerializer implements SerializerInterface
         $normalizer = new GetSetMethodNormalizer();
         $normalizer->setCamelizedAttributes(array(
             'name',
-            'roles'
         ));
 
         $serializer = new Serializer(array($normalizer), array($encoder));
         $group = $serializer->deserialize($string, 'RZ\Renzo\Core\Entities\Group', 'json');
 
+        /*
+         * Importing Roles.
+         *
+         * We need to extract roles from group and to re-encode them
+         * to pass to RoleJsonSerializer.
+         */
         $tempArray = json_decode($string, true);
 
         foreach ($tempArray['roles'] as $roleAssoc) {

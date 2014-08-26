@@ -439,7 +439,7 @@
             </trans-unit>
             <trans-unit id="Unlink">
                 <source>Unlink</source>
-                <target>Délier</target>
+                <target>Retirer</target>
             </trans-unit>
 
             <!-- controller / URL Aliases -->
