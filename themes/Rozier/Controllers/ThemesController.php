@@ -273,11 +273,10 @@ class ThemesController extends RozierApp
     protected function buildEditForm(Theme $theme)
     {
         $defaults = array(
-            //'information' =>    $theme->getInformation(),
             'classname' =>      $theme->getClassName(),
-            //'available' =>      $theme->isAvailable(),
-            //'hostname' =>       $theme->getHostname(),
-            //'isBackendTheme' => $theme->isBackendTheme()
+            'available' =>      $theme->isAvailable(),
+            'hostname' =>       $theme->getHostname(),
+            'isBackendTheme' => $theme->isBackendTheme()
         );
 
         $builder = $this->getFormFactory()
@@ -285,19 +284,16 @@ class ThemesController extends RozierApp
             ->add('themeId', 'hidden', array(
                 'data' => $theme->getId()
             ))
-           /* ->add('information', 'text', array(
-                'data' => $theme->getInformation()
-            ))*/
             ->add('classname', 'text', array(
                 'data' => $theme->getClassName()
             ))
-            /*->add('available', 'checkbox', array(
-                'data' => $theme->isAvailable()
+            ->add('available', 'checkbox', array(
+                'data' => $theme->isAvailable(),
                 'required' => false
             ))
             ->add('hostname', 'text', array(
                 'data' => $theme->getHostname()
-            ))*/;
+            ));
 
         return $builder->getForm();
     }
@@ -337,10 +333,10 @@ class ThemesController extends RozierApp
      */
     private function editTheme(array $data, Theme $theme)
     {
-        /*if (isset($data['classname'])) {
+        if (isset($data['classname'])) {
             $existing = $this->getKernel()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Theme')
-                    ->findOneBy(array('classname' => $data['name']));
+                    ->findOneBy(array('classname' => $data['classname']));
             if ($existing !== null &&
                 $existing->getId() != $theme->getId()) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans("theme.no_update.already.exists"), 1);
@@ -354,9 +350,9 @@ class ThemesController extends RozierApp
         else {
             throw new \RuntimeException("Theme classname is not defined", 1);
         }
-        return null;*/
+        return null;
 
-        /*foreach ($data as $key => $value) {
+        foreach ($data as $key => $value) {
             if (isset($data['className'])) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans('theme.no_update.already.exists'), 1);
             }
@@ -366,7 +362,7 @@ class ThemesController extends RozierApp
 
         $this->getKernel()->em()->flush();
 
-        return true;*/
+        return true;
     }
 
     /**
