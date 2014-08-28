@@ -1,9 +1,8 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
 <section id="manage-setting">
-	<h1 id="setting-title">Edit {{ setting.getDisplayName }}</h1>
+	<h1 id="setting-title">{% trans %}Edit{% endtrans %} {{ setting.getDisplayName }}</h1>
 	<nav><a class="uk-button uk-button-small" href="{{ path('settingsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to settings{% endtrans %}</a></nav>
 
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>

@@ -29,13 +29,13 @@
 				<td>
 					<a href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{{ theme.getClassName }}</a>
 				</td>
-				<td><div class="uk-badge uk-badge-success">
+				<td>
 					{% if theme.getHostname != "*" %}
 					{{ theme.getHostname }}
 					{% else %}
-					{% trans %}all.hostnames{% endtrans %}
+					<div class="uk-badge uk-badge-success">{% trans %}all.hostnames{% endtrans %}</div>
 					{% endif %}
-				</div></td>
+				</td>
 				<td>
 				{% if not theme.isAvailable %}<div class="uk-badge uk-badge-warning"><span class="uk-icon-eye-slash"></span> {% trans %}theme.disabled{% endtrans %}</div>{% endif %}
 				{% if theme.isBackendTheme %}<div class="uk-badge uk-badge-success"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}

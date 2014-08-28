@@ -335,12 +335,43 @@ class SettingsController extends RozierApp
      *
      * @return \Symfony\Component\Form\Form
      */
+    private function buildAddForm(Setting $setting)
+    {
+        $defaults = array(
+            'name' =>    $setting->getName(),
+            'Value' =>   $setting->getValue(),
+            'visible' => $setting->isVisible(),
+            'type' =>    $setting->getType(),
+        );
+        $builder = $this->getFormFactory()
+            ->createBuilder('form', $defaults)
+            ->add('name', 'text', array(
+                'constraints' => array(
+                    new NotBlank()
+                )
+            ))
+            ->add('Value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false))
+            ->add('visible', 'checkbox', array('required' => false))
+            ->add('type', 'choice', array(
+                'required' => true,
+                'choices' => NodeTypeField::$typeToHuman
+            ));
+
+        return $builder->getForm();
+    }
+
+
+    /**
+     * @param RZ\Renzo\Core\Entities\Setting $setting
+     *
+     * @return \Symfony\Component\Form\Form
+     */
     private function buildEditForm(Setting $setting)
     {
         $defaults = array(
             'id' =>      $setting->getId(),
             'name' =>    $setting->getName(),
-            'value' =>   $setting->getValue(),
+            'Value' =>   $setting->getValue(),
             'visible' => $setting->isVisible(),
             'type' =>    $setting->getType(),
         );
@@ -355,37 +386,7 @@ class SettingsController extends RozierApp
                 'data'=>$setting->getId(),
                 'required' => true
             ))
-            ->add('value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false))
-            ->add('visible', 'checkbox', array('required' => false))
-            ->add('type', 'choice', array(
-                'required' => true,
-                'choices' => NodeTypeField::$typeToHuman
-            ));
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @param RZ\Renzo\Core\Entities\Setting $setting
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildAddForm(Setting $setting)
-    {
-        $defaults = array(
-            'name' =>    $setting->getName(),
-            'value' =>   $setting->getValue(),
-            'visible' => $setting->isVisible(),
-            'type' =>    $setting->getType(),
-        );
-        $builder = $this->getFormFactory()
-            ->createBuilder('form', $defaults)
-            ->add('name', 'text', array(
-                'constraints' => array(
-                    new NotBlank()
-                )
-            ))
-            ->add('value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false))
+            ->add('Value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false))
             ->add('visible', 'checkbox', array('required' => false))
             ->add('type', 'choice', array(
                 'required' => true,
@@ -404,7 +405,7 @@ class SettingsController extends RozierApp
     {
         $defaults = array(
             'id' =>      $setting->getId(),
-            'value' =>   $setting->getValue()
+            'Value' =>   $setting->getValue()
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
@@ -412,7 +413,7 @@ class SettingsController extends RozierApp
                 'data'=>$setting->getId(),
                 'required' => true
             ))
-            ->add('value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false));
+            ->add('Value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false));
 
         return $builder->getForm();
     }

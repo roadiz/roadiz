@@ -4,7 +4,7 @@
 {% block content %}
 <section id="manage-settings">
 	<h1 id="title">{% trans %}Settings{% endtrans %}</h1>
-	<nav><a class="uk-button" href="{{ path('settingsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a setting{% endtrans %}</a></nav>
+	<nav><a class="uk-button" href="{{ path('settingsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Add a new setting{% endtrans %}</a></nav>
 
 	{% include 'widgets/filtersBar.html.twig' %}
 
@@ -13,7 +13,7 @@
 	        <tr>
 	            <th>{% trans %}Name{% endtrans %}</th>
 	            <th>{% trans %}Value{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -31,7 +31,7 @@
 						        {% endif %}
 						    {% endfor %}
 					    {{ form_rest(setting.form) }}
-					    <button class="uk-button uk-button-primary uk-button-small" type="submit"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</button>
+						<button class="uk-button uk-button-primary uk-button-small" type="submit"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</button>
 					</form>
 				</td>
 				<td>

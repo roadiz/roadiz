@@ -690,6 +690,34 @@
                 <target>The setting "%name%" could not be created, it already exists.</target>
             </trans-unit>
 
+            <!-- view / list Settings -->
+            <trans-unit id="Settings">
+                <source>Settings</source>
+                <target>Settings</target>
+            </trans-unit>
+            <trans-unit id="Back to settings">
+                <source>Back to settings</source>
+                <target>Back to settings</target>
+            </trans-unit>
+            <trans-unit id="Value">
+                <source>Value</source>
+                <target>Value</target>
+            </trans-unit>
+            <trans-unit id="Add a new setting">
+                <source>Add a new setting</source>
+                <target>Add a new setting</target>
+            </trans-unit>
+
+            <!-- view / delete Settings -->
+            <trans-unit id="Delete setting:">
+                <source>Delete setting:</source>
+                <target>Delete setting :</target>
+            </trans-unit>
+            <trans-unit id="Are you sure you want to delete this setting?">
+                <source>Are you sure you want to delete this setting?</source>
+                <target>Are you sure you want to delete this setting ?</target>
+            </trans-unit>
+
             <!-- controller / Tags -->
             <trans-unit id="tag.updated">
                 <source>tag.updated</source>
@@ -756,7 +784,7 @@
                 <target>The theme "%name%" has been updated.</target>
             </trans-unit>
             <trans-unit id="theme.deleted">
-                <source>theme.updated</source>
+                <source>theme.deleted</source>
                 <target>The theme "%name%" has been deleted.</target>
             </trans-unit>
             <trans-unit id="theme.no_creation.already_exists">
@@ -904,6 +932,66 @@
             <trans-unit id="user.facebook_name_does_not_exist">
                 <source>user.facebook_name_does_not_exist</source>
                 <target>This facebook name could not be found.</target>
+            </trans-unit>
+
+              <!-- view / list Users -->
+            <trans-unit id="Create a user">
+                <source>Create a user</source>
+                <target>Create a user</target>
+            </trans-unit>
+            <trans-unit id="user.roles">
+                <source>user.roles</source>
+                <target>User role(s)</target>
+            </trans-unit>
+            <trans-unit id="user.username">
+                <source>user.username</source>
+                <target>Username</target>
+            </trans-unit>
+            <trans-unit id="user.email">
+                <source>user.email</source>
+                <target>Email</target>
+            </trans-unit>
+
+            <!-- view / add Users-->
+            <trans-unit id="Add a new user">
+                <source>Add a new user</source>
+                <target>Add a new user</target>
+            </trans-unit>
+            <trans-unit id="Back to users">
+                <source>Back to users</source>
+                <target>Back to users</target>
+            </trans-unit>
+            <trans-unit id="email">
+                <source>email</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="username">
+                <source>username</source>
+                <target>Username</target>
+            </trans-unit>
+            <trans-unit id="firstName">
+                <source>firstName</source>
+                <target>First Name</target>
+            </trans-unit>
+            <trans-unit id="lastName">
+                <source>lastName</source>
+                <target>Last Name</target>
+            </trans-unit>
+            <trans-unit id="company">
+                <source>company</source>
+                <target>Company</target>
+            </trans-unit>
+            <trans-unit id="job">
+                <source>job</source>
+                <target>Job</target>
+            </trans-unit>
+            <trans-unit id="birthday">
+                <source>birthday</source>
+                <target>Birthday</target>
+            </trans-unit>
+            <trans-unit id="facebookName">
+                <source>facebookName</source>
+                <target>Facebook name</target>
             </trans-unit>
         </body>
     </file>

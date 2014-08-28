@@ -16,7 +16,7 @@ use RZ\Renzo\Core\Utils\StringHandler;
 /**
  * Roles are persisted version of string Symfony's roles.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\RoleRepository")
  * @Table(name="roles")
  */
 class Role extends AbstractEntity
@@ -46,15 +46,25 @@ class Role extends AbstractEntity
      */
     public function setName($name)
     {
+        $this->name = static::cleanName($name);
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return string $name
+     */
+    public static function cleanName($name)
+    {
         $name = StringHandler::variablize($name);
 
         if (0 === preg_match("/^role_/i", $name)) {
             $name = "ROLE_" . $name;
         }
 
-        $this->name = strtoupper($name);
-
-        return $this;
+        return strtoupper($name);
     }
 
     /**

@@ -590,6 +590,52 @@
                 <target>Le nom de groupe ne peut être utilisé, il existe déjà.</target>
             </trans-unit>
 
+            <!-- view / list Groups -->
+            <trans-unit id="Groups">
+                <source>Groups</source>
+                <target>Groupes</target>
+            </trans-unit>
+            <trans-unit id="Create a group">
+                <source>Create a group</source>
+                <target>Créer un groupe</target>
+            </trans-unit>
+            <trans-unit id="Import a group (.rzt)">
+                <source>Import a group (.rzt)</source>
+                <target>Importer un groupe (.rzt)</target>
+            </trans-unit>
+            <trans-unit id="Users">
+                <source>Users</source>
+                <target>Utilisateurs</target>
+            </trans-unit>
+            <trans-unit id="group.required">
+                <source>group.required</source>
+                <target>Groupe requis</target>
+            </trans-unit>
+
+            <!-- view / add Groups -->
+            <trans-unit id="Add a new group">
+                <source>Add a new group</source>
+                <target>Ajouter un nouveau groupe</target>
+            </trans-unit>
+            <trans-unit id="Back to groups">
+                <source>Back to groups</source>
+                <target>Retour aux groupes</target>
+            </trans-unit>
+            <trans-unit id="group.name">
+                <source>group.name</source>
+                <target>Nom du groupe</target>
+            </trans-unit>
+
+            <!-- view / delete Groups -->
+            <trans-unit id="Delete group:">
+                <source>Delete group:</source>
+                <target>Supprimer un groupe : </target>
+            </trans-unit>
+            <trans-unit id="Are you sure you want to delete this group?">
+                <source>Are you sure you want to delete this group?</source>
+                <target>Ètes-vous sûr de vouloir supprimer ce groupe ?</target>
+            </trans-unit>
+
             <!-- controller / NodeTypeFields -->
             <trans-unit id="node_type_field.created">
                 <source>node_type_field.created</source>
@@ -724,6 +770,34 @@
                 <target>Le paramètre "%name%" ne peut être créé, il existe déjà.</target>
             </trans-unit>
 
+            <!-- view / list Settings -->
+            <trans-unit id="Settings">
+                <source>Settings</source>
+                <target>Paramètres</target>
+            </trans-unit>
+            <trans-unit id="Back to settings">
+                <source>Back to settings</source>
+                <target>Retour aux paramètres</target>
+            </trans-unit>
+            <trans-unit id="Value">
+                <source>Value</source>
+                <target>Valeur</target>
+            </trans-unit>
+            <trans-unit id="Add a new setting">
+                <source>Add a new setting</source>
+                <target>Ajouter un paramètre</target>
+            </trans-unit>
+
+            <!-- view / delete Settings -->
+            <trans-unit id="Delete setting:">
+                <source>Delete setting:</source>
+                <target>Supprimer le paramètre :</target>
+            </trans-unit>
+            <trans-unit id="Are you sure you want to delete this setting?">
+                <source>Are you sure you want to delete this setting?</source>
+                <target>Ètes-vous sûr de vouloir supprimer ce paramètre ?</target>
+            </trans-unit>
+
             <!-- controller / Tags -->
             <trans-unit id="tag.updated">
                 <source>tag.updated</source>
@@ -783,14 +857,14 @@
             <!-- controller / Themes -->
             <trans-unit id="theme.updated">
                 <source>theme.updated</source>
-                <target>Le thème "%name%" a été mise à jour.</target>
+                <target>Le thème "%name%" a été mis à jour.</target>
             </trans-unit>
             <trans-unit id="theme.created">
                 <source>theme.created</source>
                 <target>Le thème "%name%" a été créé.</target>
             </trans-unit>
             <trans-unit id="theme.deleted">
-                <source>theme.updated</source>
+                <source>theme.deleted</source>
                 <target>Le thème "%name%" a été supprimé.</target>
             </trans-unit>
             <trans-unit id="theme.no_creation.already_exists">
@@ -938,6 +1012,66 @@
             <trans-unit id="user.facebook_name_does_not_exist">
                 <source>user.facebook_name_does_not_exist</source>
                 <target>Ce nom d'utilisateur Facebook n'existe pas.</target>
+            </trans-unit>
+
+            <!-- view / list Users -->
+            <trans-unit id="Create a user">
+                <source>Create a user</source>
+                <target>Créer un utilisateur</target>
+            </trans-unit>
+            <trans-unit id="user.roles">
+                <source>user.roles</source>
+                <target>Rôle(s) utilisateur</target>
+            </trans-unit>
+            <trans-unit id="user.username">
+                <source>user.username</source>
+                <target>Nom utilisateur</target>
+            </trans-unit>
+            <trans-unit id="user.email">
+                <source>user.email</source>
+                <target>Courrier électronique</target>
+            </trans-unit>
+
+            <!-- view / add Users-->
+            <trans-unit id="Add a new user">
+                <source>Add a new user</source>
+                <target>Ajouter un nouvel utilisateur</target>
+            </trans-unit>
+            <trans-unit id="Back to users">
+                <source>Back to users</source>
+                <target>Retour aux utilisateurs</target>
+            </trans-unit>
+            <trans-unit id="email">
+                <source>email</source>
+                <target>Courrier électronique</target>
+            </trans-unit>
+            <trans-unit id="username">
+                <source>username</source>
+                <target>Nom d'utilisateur</target>
+            </trans-unit>
+            <trans-unit id="firstName">
+                <source>firstName</source>
+                <target>Prénom</target>
+            </trans-unit>
+            <trans-unit id="lastName">
+                <source>lastName</source>
+                <target>Nom</target>
+            </trans-unit>
+            <trans-unit id="company">
+                <source>company</source>
+                <target>Entreprise</target>
+            </trans-unit>
+            <trans-unit id="job">
+                <source>job</source>
+                <target>Emploi</target>
+            </trans-unit>
+            <trans-unit id="birthday">
+                <source>birthday</source>
+                <target>Date de naissance</target>
+            </trans-unit>
+            <trans-unit id="facebookName">
+                <source>facebookName</source>
+                <target>Nom facebook</target>
             </trans-unit>
         </body>
     </file>

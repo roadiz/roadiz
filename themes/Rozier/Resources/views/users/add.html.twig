@@ -11,13 +11,13 @@
 
    		<fieldset data-uk-margin>
 		    {% for item in form %}
-		    	{# Node fields  #}
+		    	{# User fields  #}
 		        {% if item.vars.name != "_token" %}
 		    	<div class="uk-form-row">
 		        	<label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.name }}</label>
 			        {{ form_errors(item) }}
 			        {{ form_widget(item) }}
-		    	</div>	
+		    	</div>
 		        {% endif %}
 		    {% endfor %}
    		</fieldset>

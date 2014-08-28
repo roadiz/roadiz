@@ -25,10 +25,12 @@ class RoleRepository extends EntityRepository
      */
     public function countByName($roleName)
     {
+        $roleName = Role::cleanName($roleName);
+
         $query = $this->_em->createQuery('
             SELECT COUNT(r) FROM RZ\Renzo\Core\Entities\Role r
-            WHERE r.roleName = :roleName')
-        ->setParameter('roleName', $roleName);
+            WHERE r.name = :name')
+        ->setParameter('name', $roleName);
 
        return $query->getSingleScalarResult();
     }
@@ -38,19 +40,21 @@ class RoleRepository extends EntityRepository
      *
      * @return RZ\Renzo\Core\Entities\Role
      */
-    public function findOneByname($roleName)
+    public function findOneByName($roleName)
     {
-        if (0 === $this->countByName($roleName)) {
+        $roleName = Role::cleanName($roleName);
+
+        if (0 == $this->countByName($roleName)) {
             $role = new Role($roleName);
             $this->_em->persist($role);
             $this->_em->flush();
 
-           return $role;
+            return $role;
         } else {
             $query = $this->_em->createQuery('
                 SELECT r FROM RZ\Renzo\Core\Entities\Role r
-                WHERE r.roleName = :roleName')
-                ->setParameter('roleName', $roleName);
+                WHERE r.name = :name')
+                ->setParameter('name', $roleName);
 
             return $query->getSingleResult();
         }

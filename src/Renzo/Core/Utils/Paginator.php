@@ -31,7 +31,7 @@ class Paginator
     public function __construct(
         EntityManager $_em,
         $entityName,
-        $itemPerPages = 20,
+        $itemPerPages = 10,
         array $criteria = array()
     )
     {

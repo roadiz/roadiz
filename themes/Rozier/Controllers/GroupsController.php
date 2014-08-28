@@ -454,27 +454,6 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * Build delete group form with name constraint.
-     *
-     * @param RZ\Renzo\Core\Entities\Group $group
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildDeleteForm(Group $group)
-    {
-        $builder = $this->getFormFactory()
-            ->createBuilder('form')
-            ->add('groupId', 'hidden', array(
-                'data'=>$group->getId(),
-                'constraints' => array(
-                    new NotBlank()
-                )
-            ));
-
-        return $builder->getForm();
-    }
-
-    /**
      * Build edit group form with name constraint.
      *
      * @param RZ\Renzo\Core\Entities\Group $group
@@ -496,6 +475,27 @@ class GroupsController extends RozierApp
             ))
             ->add('name', 'text', array(
                 'data'=>$group->getName(),
+                'constraints' => array(
+                    new NotBlank()
+                )
+            ));
+
+        return $builder->getForm();
+    }
+
+    /**
+     * Build delete group form with name constraint.
+     *
+     * @param RZ\Renzo\Core\Entities\Group $group
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    protected function buildDeleteForm(Group $group)
+    {
+        $builder = $this->getFormFactory()
+           ->createBuilder('form')
+            ->add('groupId', 'hidden', array(
+                'data'=>$group->getId(),
                 'constraints' => array(
                     new NotBlank()
                 )
