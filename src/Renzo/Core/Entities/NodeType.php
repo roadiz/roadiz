@@ -276,6 +276,23 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * Get every searchable node-type fields as a Doctrine ArrayCollection.
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSearchableFields()
+    {
+        $searchable = new ArrayCollection();
+        foreach ($this->getFields() as $field) {
+            if ($field->isSearchable()) {
+                $searchable->add($field);
+            }
+        }
+
+        return $searchable;
+    }
+
+    /**
      * @return  RZ\Renzo\Core\Handlers\NodeTypeHandler
      */
     public function getHandler()

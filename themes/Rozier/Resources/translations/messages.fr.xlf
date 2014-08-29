@@ -672,7 +672,7 @@
                 <target>Le type de nœud “%name%" ne peut être créé, il existe déjà.</target>
             </trans-unit>
 
-            <!-- view / list NodesTypes-->
+            <!-- view / list NodeType-->
             <trans-unit id="Manage fields">
                 <source>Manage fields</source>
                 <target>Gestion des champs</target>
@@ -704,6 +704,16 @@
             <trans-unit id="fields">
                 <source>fields</source>
                 <target>Champs</target>
+            </trans-unit>
+
+            <!-- view / add NodeType -->
+            <trans-unit id="Delete node-type:">
+                <source>Delete node-type:</source>
+                <target>Supprimer ce type de nœud :</target>
+            </trans-unit>
+            <trans-unit id="Are you sure you want to delete this node-type and all its inherited nodes and newsletters?">
+                <source>Are you sure you want to delete this node-type and all its inherited nodes and newsletters?</source>
+                <target>Ètes-vous sûr de vouloir supprimer ce type de nœud et tous ses nœuds et newsletters hérités</target>
             </trans-unit>
 
             <!-- controller / NodeTypeUtils -->
@@ -849,9 +859,19 @@
             </trans-unit>
 
             <!-- view / edit Tags -->
-           <trans-unit id="Edit">
+            <trans-unit id="Edit">
                 <source>Edit</source>
                 <target>Éditer</target>
+            </trans-unit>
+
+            <!-- view / remove Tags -->
+            <trans-unit id="Add a new tag">
+                <source>Add a new tag</source>
+                <target>Ajouter une nouvelle étiquette</target>
+            </trans-unit>
+            <trans-unit id="Back to tags">
+                <source>Back to tags</source>
+                <target>Retour aux étiquettes</target>
             </trans-unit>
 
             <!-- controller / Themes -->

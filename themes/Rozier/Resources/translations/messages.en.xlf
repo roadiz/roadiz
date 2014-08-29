@@ -626,6 +626,16 @@
                 <target>The node type “%name%" can't be created, it already exists.</target>
             </trans-unit>
 
+            <!-- view / add NodeType -->
+            <trans-unit id="Delete node-type:">
+                <source>Delete node-type:</source>
+                <target>Delete node-type:</target>
+            </trans-unit>
+            <trans-unit id="Are you sure you want to delete this node-type and all its inherited nodes and newsletters?">
+                <source>Are you sure you want to delete this node-type and all its inherited nodes and newsletters?</source>
+                <target>Are you sure you want to delete this node-type and all its inherited nodes and newsletters?</target>
+            </trans-unit>
+
             <!-- controller / NodeTypeUtils -->
             <trans-unit id="file.format.not_valid">
                 <source>file.format.not_valid</source>
@@ -772,6 +782,16 @@
            <trans-unit id="Edit">
                 <source>Edit</source>
                 <target>Edit</target>
+            </trans-unit>
+
+            <!-- view / remove Tags -->
+            <trans-unit id="Add a new tag">
+                <source>Add a new tag</source>
+                <target>Add a new tag</target>
+            </trans-unit>
+            <trans-unit id="Back to tags">
+                <source>Back to tags</source>
+                <target>Back to tags</target>
             </trans-unit>
 
             <!-- controller / Themes -->

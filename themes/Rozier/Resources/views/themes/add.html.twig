@@ -10,7 +10,7 @@
 
    		<fieldset data-uk-margin>
    			<legend>{{ theme.getDisplayName }}</legend>
-		    {% for item in form %}
+            {% for item in form %}
 		        {% if item.vars.name != "_token" %}
 		    	<div class="uk-form-row">
 		        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>

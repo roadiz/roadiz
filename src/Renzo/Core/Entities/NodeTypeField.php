@@ -187,6 +187,18 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
         NodeTypeField::DOCUMENTS_T =>'documents',
     );
 
+    /**
+     * List searchable fields types in a searchEngine such as Solr.
+     *
+     * @var array
+     */
+    protected static $searchableTypes = array(
+        NodeTypeField::STRING_T,
+        NodeTypeField::RICHTEXT_T,
+        NodeTypeField::TEXT_T,
+        NodeTypeField::MARKDOWN_T,
+    );
+
 
     /**
      * @Id
@@ -437,6 +449,16 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
     public function getHandler()
     {
         return new NodeTypeFieldHandler($this);
+    }
+
+    /**
+     * Tell if current field can be searched and indexed in a Search engine server.
+     *
+     * @return boolean
+     */
+    public function isSearchable()
+    {
+        return (boolean) in_array($this->getType(), static::$searchableTypes);
     }
 
     /**

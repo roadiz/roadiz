@@ -21,11 +21,13 @@ use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Finder\Finder;
 
 /**
  * {@inheritdoc}
@@ -67,42 +69,36 @@ class ThemesController extends RozierApp
     {
         $theme = new Theme();
 
-        if ($theme !== null) {
-            $this->assignation['theme'] = $theme;
+        $form = $this->buildAddForm($theme);
+        $form->handleRequest();
+        if ($form->isValid()) {
+            try {
+                $this->addTheme($form->getData(), $theme);
+                $msg = $this->getTranslator()->trans('theme.created', array('%name%'=>$theme->getClassName()));
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                $this->getLogger()->info($msg);
 
-            $form = $this->buildAddForm($theme);
-            $form->handleRequest();
-            if ($form->isValid()) {
-                try {
-                    $this->addTheme($form->getData(), $theme);
-                    $msg = $this->getTranslator()->trans('theme.created', array('%name%'=>$theme->getClassName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
-
-                } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
-                }
-
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
-                $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('themesHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+            } catch (EntityAlreadyExistsException $e) {
+                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+                $this->getLogger()->warning($e->getMessage());
             }
 
-            $this->assignation['form'] = $form->createView();
-
-            return new Response(
-                $this->getTwig()->render('themes/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                array('content-type' => 'text/html')
+            $response = new RedirectResponse(
+                $this->getKernel()->getUrlGenerator()->generate('themesHomePage')
             );
+            $response->prepare($request);
+
+            return $response->send();
         }
+
+        $this->assignation['form'] = $form->createView();
+
+        return new Response(
+            $this->getTwig()->render('themes/add.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+
     }
 
     /**
@@ -227,19 +223,36 @@ class ThemesController extends RozierApp
      */
     protected function buildAddForm(Theme $theme)
     {
-        $defaults = array(
-            'available' =>  $theme->isAvailable(),
-            'className' =>  $theme->getClassName(),
-            'hostname' =>   $theme->getHostname(),
-            'backendTheme' =>   $theme->isBackendTheme(),
-        );
+        $finder = new Finder();
+
+        // Extracting the PHP files from every Theme folder
+        $iterator = $finder
+            ->files()
+            ->name('*.php')
+            ->depth(1)
+            ->in('/var/www/vhosts/edgar.rezo-zero.com/htdocs/renzo/themes');
+
+        // And storing it into an array, used in the form
+        foreach ($iterator as $file) {
+            $defaults[] = $file->getFileName();
+        }
+
+        // Indeed containing the PHP files
+        var_dump($defaults);
 
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
-            ->add('available', 'checkbox', array('required' => false))
-            ->add('className', 'text', array('required' => false))
-            ->add('hostname', 'text', array('required' => false))
-            ->add('backendTheme', 'checkbox', array('required' => false));
+            ->add('available', 'checkbox', array(
+                'data' => $theme->isAvailable(),
+                'required' => false
+            ))
+            ->add('hostname', 'text', array(
+                'data' => $theme->getHostname()
+            ))
+            ->add('backendTheme', 'checkbox', array(
+                'data' => $theme->isBackendTheme(),
+                'required' => false
+            ));
 
         return $builder->getForm();
     }
