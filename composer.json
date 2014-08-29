@@ -25,7 +25,7 @@
         "michelf/php-markdown": "@stable",
         "symfony/serializer": "@stable",
         "symfony/filesystem": "@stable",
-        "reprovinci/solr-php-client": "@stable"
+        "solarium/solarium": "@stable"
     },
     "autoload": {
         "psr-4": {

@@ -12,3 +12,4 @@ conf/config.json
 conf/*.config.json
 composer.lock
 report.txt
+TestTheme

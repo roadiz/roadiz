@@ -59,6 +59,8 @@ use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 
+use Solarium\Client;
+
 /**
  * Kernel.
  */
@@ -246,6 +248,7 @@ class Kernel
         $application->add(new \RZ\Renzo\Console\InstallCommand);
         $application->add(new \RZ\Renzo\Console\UsersCommand);
         $application->add(new \RZ\Renzo\Console\RequirementsCommand);
+        $application->add(new \RZ\Renzo\Console\SolrCommand);
 
         $application->run();
 
@@ -608,26 +611,47 @@ class Kernel
         return 'RZ\Renzo\CMS\Controllers\BackendController';
     }
 
+    /**
+     * Get Solr service if available.
+     *
+     *
+     * @return Apache_Solr_Service or null
+     */
     public function getSolrService()
     {
         if ($this->isSolrAvailable()) {
             if (null === $this->solrService) {
 
-                $this->solrService = new Apache_Solr_Service(
-                    $this->getConfig()['solr']['host'],
-                    $this->getConfig()['solr']['port'],
-                    $this->getConfig()['solr']['path']
-                );
-            }
-
-            if (!$this->solrService->ping()) {
-                return null;
+                $this->solrService = new \Solarium\Client($this->getConfig()['solr']);
+                $this->solrService->setDefaultEndpoint('localhost');
             }
 
             return $this->solrService;
         }
 
         return null;
+    }
+
+    /**
+     * Ping current Solr server.
+     *
+     * @return boolean
+     */
+    public function pingSolrServer()
+    {
+        if ($this->isSolrAvailable()) {
+            // create a ping query
+            $ping = $this->getSolrService()->createPing();
+            // execute the ping query
+            try {
+                $result = $this->getSolrService()->ping($ping);
+                return true;
+            } catch (\Exception $e) {
+                return false;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -801,10 +825,7 @@ class Kernel
      */
     public function isSolrAvailable()
     {
-        if (isset($this->getConfig()['solr']) &&
-            !empty($this->getConfig()['solr']['host']) &&
-            !empty($this->getConfig()['solr']['port']) &&
-            !empty($this->getConfig()['solr']['path'])) {
+        if (isset($this->getConfig()['solr']['endpoint'])) {
 
             return true;
         }

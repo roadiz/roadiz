@@ -1,0 +1,20 @@
+[
+    {
+        "name": "un super setting",
+        "value": "value",
+        "visible": 1,
+        "type": 0
+    },
+    {
+        "name": "un autre setting",
+        "value": "value2",
+        "visible": 1,
+        "type": 0
+    },
+    {
+        "name": "un setting",
+        "value": "value4",
+        "visible": 1,
+        "type": 0
+    }
+]
