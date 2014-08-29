@@ -9,10 +9,9 @@
  * @author Ambroise Maupate
  */
 
-namespace Themes\DefaultTheme\Controllers;
+namespace Themes\DefaultTheme;
 
 use RZ\Renzo\CMS\Controllers\FrontendController;
-
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
@@ -20,7 +19,6 @@ use RZ\Renzo\Core\Utils\StringHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
@@ -28,6 +26,30 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 */
 class DefaultApp extends FrontendController
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected static $themeName =      'Default theme';
+    /**
+     * {@inheritdoc}
+     */
+    protected static $themeAuthor =    'Ambroise Maupate';
+    /**
+     * {@inheritdoc}
+     */
+    protected static $themeCopyright = 'REZO ZERO';
+    /**
+     * {@inheritdoc}
+     */
+    protected static $themeDir =       'DefaultTheme';
+    /**
+     * {@inheritdoc}
+     */
+    protected static $backendTheme =    false;
+
+    /**
+     * {@inheritdoc}
+     */
     protected static $specificNodesControllers = array(
         'home',
         // Put here your nodes which need a specific controller

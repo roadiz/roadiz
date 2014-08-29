@@ -86,6 +86,7 @@ class Kernel
     protected $backendClass =        null;
     protected $frontendThemes =      null;
     protected $rootCollection =      null;
+    protected $solrService =         null;
 
     /*
      * About security and authentification.
@@ -607,6 +608,28 @@ class Kernel
         return 'RZ\Renzo\CMS\Controllers\BackendController';
     }
 
+    public function getSolrService()
+    {
+        if ($this->isSolrAvailable()) {
+            if (null === $this->solrService) {
+
+                $this->solrService = new Apache_Solr_Service(
+                    $this->getConfig()['solr']['host'],
+                    $this->getConfig()['solr']['port'],
+                    $this->getConfig()['solr']['path']
+                );
+            }
+
+            if (!$this->solrService->ping()) {
+                return null;
+            }
+
+            return $this->solrService;
+        }
+
+        return null;
+    }
+
     /**
      * Resolve current front controller URL.
      *
@@ -768,6 +791,25 @@ class Kernel
     public function isDebug()
     {
         return (boolean) $this->getConfig()['devMode'];
+    }
+
+    /**
+     * Tell if an Apache Solr server is available,
+     * for advanced search engine.
+     *
+     * @return boolean
+     */
+    public function isSolrAvailable()
+    {
+        if (isset($this->getConfig()['solr']) &&
+            !empty($this->getConfig()['solr']['host']) &&
+            !empty($this->getConfig()['solr']['port']) &&
+            !empty($this->getConfig()['solr']['path'])) {
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

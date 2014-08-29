@@ -159,7 +159,7 @@ class FrontendController extends AppController
     {
         $currentClass = get_class($this);
         $refl = new \ReflectionClass($currentClass);
-        $namespace = $refl->getNamespaceName();
+        $namespace = $refl->getNamespaceName() . '\\Controllers';
 
         if ($this->getRequestedNode() !== null) {
 

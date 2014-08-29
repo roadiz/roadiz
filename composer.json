@@ -23,7 +23,9 @@
         "symfony/intl": "@stable",
         "twig/extensions": "@stable",
         "michelf/php-markdown": "@stable",
-        "symfony/serializer": "@stable"
+        "symfony/serializer": "@stable",
+        "symfony/filesystem": "@stable",
+        "reprovinci/solr-php-client": "@stable"
     },
     "autoload": {
         "psr-4": {

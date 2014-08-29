@@ -9,6 +9,11 @@
 		"password": "",
 		"dbname":   ""
 	},
+	"solr": {
+		"host":"localhost",
+		"port":"8983",
+		"path":"/solr"
+	},
 	"security": {
 		"secret": "change#this#secret#very#important"
 	}

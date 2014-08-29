@@ -9,6 +9,7 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
+use Themes\DefaultTheme\DefaultApp;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Utils\StringHandler;
