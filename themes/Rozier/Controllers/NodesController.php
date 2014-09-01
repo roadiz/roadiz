@@ -860,6 +860,16 @@ class NodesController extends RozierApp
         }
 
         $this->getKernel()->em()->flush();
+
+        // Update Solr Serach engine if setup
+        if (true === $this->getKernel()->pingSolrServer()) {
+            $solrSource = new \RZ\Renzo\Core\SearchEngine\SolariumNodeSource(
+                $nodeSource,
+                $this->getKernel()->getSolrService()
+            );
+            $solrSource->getDocumentFromIndex();
+            $solrSource->updateAndCommit();
+        }
     }
 
     /**

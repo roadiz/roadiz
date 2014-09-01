@@ -16,7 +16,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 /**
  * NodesSources store Node content according to a translation and a NodeType.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodesSourcesRepository")
  * @Table(name="nodes_sources", uniqueConstraints={@UniqueConstraint(columns={"id","node_id", "translation_id"})})
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="discr", type="string")

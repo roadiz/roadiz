@@ -118,8 +118,10 @@ class SolrCommand extends Command
     }
 
     /**
+     * Delete Solr index and loop over every NodesSources to index them again.
      *
-     * @param  \Solarium\Client $solr
+     * @param \Solarium\Client $solr
+     * @param OutputInterface  $output
      */
     private function reindexNodeSources(\Solarium\Client $solr, OutputInterface $output)
     {

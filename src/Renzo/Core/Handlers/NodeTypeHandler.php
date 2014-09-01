@@ -106,7 +106,7 @@ use RZ\Renzo\Core\Entities\NodesSources;
 /**
  * Generated custom node-source type from RZ-CMS backoffice.
  *
- * @Entity
+ * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodesSourcesRepository")
  * @Table(name="'.$this->getNodeType()->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
  */
 class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources

@@ -340,6 +340,8 @@ class ThemesController extends RozierApp
     /**
      * @param array                        $data
      * @param RZ\Renzo\Core\Entities\Theme $theme
+     *
+     * @return boolean
      */
     private function editTheme(array $data, Theme $theme)
     {

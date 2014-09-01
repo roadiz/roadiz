@@ -82,6 +82,12 @@ class NodeTypesCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Generate every node-types source entity classes'
+            )
+            ->addOption(
+                'regenerateAllEntities',
+                null,
+                InputOption::VALUE_NONE,
+                'Delete and re-generate every node-types source entity classes'
             );
     }
 
@@ -141,6 +147,11 @@ class NodeTypesCommand extends Command
 
                 if ($input->getOption('generateAllEntities')) {
                     foreach ($nodetypes as $nt) {
+                        $text .= '<info>'.$nt->getHandler()->generateSourceEntityClass().'</info>'.PHP_EOL;
+                    }
+                } elseif ($input->getOption('regenerateAllEntities')) {
+                    foreach ($nodetypes as $nt) {
+                        $nt->getHandler()->removeSourceEntityClass();
                         $text .= '<info>'.$nt->getHandler()->generateSourceEntityClass().'</info>'.PHP_EOL;
                     }
                 } else {

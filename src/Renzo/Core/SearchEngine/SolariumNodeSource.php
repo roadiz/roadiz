@@ -36,13 +36,13 @@ class SolariumNodeSource
     /**
      * Create a new SolariumNodeSource.
      *
+     * @param NodesSources     $nodeSource
      * @param \Solarium_Client $client
-     * @param NodesSources $nodeSource
      *
      * @throws RZ\Renzo\Core\Exceptions\SolrServerNotAvailableException If Solr server does not respond.
      */
-    public function __construct($nodeSource, \Solarium\Client $client = null){
-
+    public function __construct($nodeSource, \Solarium\Client $client = null)
+    {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
         } elseif (false === Kernel::getInstance()->pingSolrServer()) {
@@ -61,8 +61,7 @@ class SolariumNodeSource
     public function getDocumentFromIndex()
     {
         $query = $this->client->createSelect();
-        $query->setQuery(static::IDENTIFIER_KEY.':"'.$this->nodeSource->getId().
-            '"&locale_s:"'.$this->nodeSource->getTranslation()->getLocale().'"');
+        $query->setQuery(static::IDENTIFIER_KEY.':'.$this->nodeSource->getId());
 
         // this executes the query and returns the result
         $resultset = $this->client->select($query);
@@ -72,6 +71,7 @@ class SolariumNodeSource
         } else {
             foreach ($resultset as $document) {
                 $this->document = $document;
+
                 return true;
             }
         }
@@ -144,6 +144,7 @@ class SolariumNodeSource
      *
      * Use this method only when you need to index single NodeSources.
      *
+     * @return boolean
      */
     public function indexAndCommit()
     {
@@ -155,8 +156,11 @@ class SolariumNodeSource
             // add the documents and a commit command to the update query
             $update->addDocument($this->getDocument());
             $update->addCommit();
+
             return $this->client->update($update);
         }
+
+        return false;
     }
 
     /**
@@ -164,6 +168,7 @@ class SolariumNodeSource
      *
      * Use this method only when you need to re-index single NodeSources.
      *
+     * @return boolean
      */
     public function updateAndCommit()
     {
@@ -177,8 +182,11 @@ class SolariumNodeSource
             // add the documents and a commit command to the update query
             $update->addDocument($this->getDocument());
             $update->addCommit();
+
             return $this->client->update($update);
         }
+
+        return false;
     }
 
     /**
@@ -199,7 +207,7 @@ class SolariumNodeSource
     /**
      * Remove current document from SearchEngine index.
      *
-     * @param  Solarium\QueryType\Update\Query\Query $update
+     * @param Solarium\QueryType\Update\Query\Query $update
      *
      * @return boolean
      *

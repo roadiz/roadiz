@@ -645,6 +645,7 @@ class Kernel
             // execute the ping query
             try {
                 $result = $this->getSolrService()->ping($ping);
+
                 return true;
             } catch (\Exception $e) {
                 return false;
