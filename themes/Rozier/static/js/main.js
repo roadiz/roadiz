@@ -5,6 +5,8 @@
  */
 var Rozier = {};
 
+Rozier.searchNodesSourcesDelay = null;
+
 Rozier.onDocumentReady = function( event ) {
 	/*
 	 * Store Rozier configuration
@@ -18,12 +20,66 @@ Rozier.onDocumentReady = function( event ) {
 	$('.nodetree-widget .root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );
 	$('.tagtree-widget .root-tree').on('nestable-change', Rozier.onNestableTagTreeChange );
 
+	// Search node
+	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
+
 	/*
 	 * TEMP
 	 */
 	$('[data-uk-pagination]').on('uk-select-page', function(e, pageIndex){
 	    document.location.href = document.location.origin + document.location.pathname + '?page='+(pageIndex+1);
 	});
+};
+
+/**
+ * Handle ajax search node source.
+ *
+ * @param event
+ */
+Rozier.onSearchNodesSources = function (event) {
+
+	var $input = $(event.currentTarget);
+
+	if ($input.val().length > 2) {
+		clearTimeout(Rozier.searchNodesSourcesDelay);
+		Rozier.searchNodesSourcesDelay = setTimeout(function () {
+			var postData = {
+				_token: Rozier.ajaxToken,
+				_action:'searchNodesSources',
+				searchTerms: $input.val()
+			};
+			console.log(postData);
+			$.ajax({
+				url: Rozier.routes.searchNodesSourcesAjax,
+				type: 'POST',
+				dataType: 'json',
+				data: postData
+			})
+			.done(function( data ) {
+				console.log(data);
+
+				if (typeof data.data != "undefined" &&
+					data.data.length > 0) {
+
+					$results = $('#nodes-sources-search-results');
+					$results.empty();
+
+					for(var i in data.data) {
+						$results.append('<li><a href="'+data.data[i].url+
+								'"><span class="title">'+data.data[i].title+
+						    	'</span> <span class="type">'+data.data[i].typeName+
+						    	'</span></a></li>');
+					}
+				}
+			})
+			.fail(function( data ) {
+				console.log(data);
+			})
+			.always(function() {
+				console.log("complete");
+			});
+		}, 300);
+	}
 };
 
 /**
@@ -34,6 +90,7 @@ Rozier.onDocumentReady = function( event ) {
  * @return boolean
  */
 Rozier.onNestableNodeTreeChange = function (event, element, status) {
+
 	console.log("Node: "+element.data('node-id')+ " status : "+status);
 
 	/*

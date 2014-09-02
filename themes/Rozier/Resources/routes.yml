@@ -74,6 +74,9 @@ nodeAjaxEdit:
     path:     /rz-admin/ajax/node/edit/{nodeId}
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::editAction }
     requirements: { nodeId : "[0-9]+" }
+searchNodesSourcesAjax:
+    path:     /rz-admin/ajax/nodes-sources/search
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxSearchNodesSourcesController::searchAction }
 
 # Node TYPES
 nodeTypesHomePage:
