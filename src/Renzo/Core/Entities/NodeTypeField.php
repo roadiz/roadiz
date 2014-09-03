@@ -180,7 +180,7 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
         NodeTypeField::MARKDOWN_T => 'markdown',
         NodeTypeField::BOOLEAN_T =>  'checkbox',
         NodeTypeField::INTEGER_T =>  'integer',
-        NodeTypeField::DECIMAL_T =>  'decimal',
+        NodeTypeField::DECIMAL_T =>  'number',
         NodeTypeField::EMAIL_T =>    'email',
         NodeTypeField::ENUM_T =>     'enumeration',
         NodeTypeField::MULTIPLE_T => 'multiple_enumeration',
