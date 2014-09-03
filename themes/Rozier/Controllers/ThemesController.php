@@ -223,25 +223,10 @@ class ThemesController extends RozierApp
      */
     protected function buildAddForm(Theme $theme)
     {
-        $finder = new Finder();
-
-        // Extracting the PHP files from every Theme folder
-        $iterator = $finder
-            ->files()
-            ->name('*.php')
-            ->depth(1)
-            ->in('/var/www/vhosts/edgar.rezo-zero.com/htdocs/renzo/themes');
-
-        // And storing it into an array, used in the form
-        foreach ($iterator as $file) {
-            $defaults[] = $file->getFileName();
-        }
-
-        // Indeed containing the PHP files
-        var_dump($defaults);
-
         $builder = $this->getFormFactory()
-            ->createBuilder('form', $defaults)
+            ->createBuilder('form')
+            ->add('theme', new \RZ\Renzo\CMS\Forms\ThemesType(),
+                array('label' => 'Theme'))
             ->add('available', 'checkbox', array(
                 'data' => $theme->isAvailable(),
                 'required' => false

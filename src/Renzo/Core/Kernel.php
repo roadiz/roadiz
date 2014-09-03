@@ -67,6 +67,7 @@ use Solarium\Client;
 class Kernel
 {
     const SECURITY_DOMAIN = 'rzcms_domain';
+    const INSTALL_CLASSNAME = 'Themes\\Install\\InstallApp';
 
     private static $instance = null;
     private $em =           null;
@@ -304,7 +305,8 @@ class Kernel
      */
     public function prepareSetup()
     {
-        $feCollection = \Themes\Install\InstallApp::getRoutes();
+        $installClassname = static::INSTALL_CLASSNAME;
+        $feCollection = $installClassname::getRoutes();
 
         if (null !== $feCollection) {
 
