@@ -2,6 +2,7 @@
 	"appNamespace": "chooseAnUniqueNameForYourApp",
 	"install": true,
 	"devMode": true,
+	"timezone": "Europe/Paris",
 	"doctrine": {
 		"driver":   "pdo_mysql",
 		"host":     "localhost",

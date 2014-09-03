@@ -123,6 +123,8 @@ class Kernel
         $this->dispatcher = new EventDispatcher();
         $this->resolver = new ControllerResolver();
         $this->stopwatch->stop('initKernel');
+
+        date_default_timezone_set($this->getConfig()["timezone"]);
     }
 
     /**
