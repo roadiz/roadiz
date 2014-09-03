@@ -9,6 +9,34 @@
 * Install dependencies: `composer install` or `composer update`
 * Install database: `php index.php install` or go to your web-browser to launch Install wizard.
 
+#### Database connexion
+
+To connect manually to your database, you can add this to your `config.json`:
+
+```
+"doctrine": {
+    "driver": "pdo_mysql",
+    "host": "localhost",
+    "user": "",
+    "password": "",
+    "dbname": ""
+}
+```
+
+If you prefer socket:
+
+```
+"doctrine": {
+    "driver": "pdo_mysql",
+    "unix_socket": "",
+    "user": "",
+    "password": "",
+    "dbname": ""
+}
+```
+
+For more options you can visit *Doctrine* website: http://doctrine-dbal.readthedocs.org/en/latest/reference/configuration.html
+
 ### Apache Solr
 
 RZCMS v3 can use Apache Solr search-engine to index nodes.
