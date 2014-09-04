@@ -62,7 +62,7 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Solarium\Client;
 
 /**
- * Kernel.
+ * Main renzo CMS entry point.
  */
 class Kernel
 {
@@ -90,7 +90,6 @@ class Kernel
     protected $frontendThemes =      null;
     protected $rootCollection =      null;
     protected $solrService =         null;
-
     /*
      * About security and authentification.
      *
