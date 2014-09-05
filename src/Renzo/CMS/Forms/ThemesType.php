@@ -12,24 +12,18 @@ namespace RZ\Renzo\CMS\Forms;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Theme;
+use RZ\Renzo\Core\Exceptions\ThemeClassNotValidException;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Roles selector form field type.
+ * Theme selector form field type.
  */
 class ThemesType extends AbstractType
 {
     protected $themes;
 
-    /**
-     * {@inheritdoc}
-     * @param Doctrine\Common\Collections\ArrayCollection $roles Existing roles name array (used to display only available roles to parent entity)
-     */
-    public function __construct()
-    {
-    }
     /**
      * {@inheritdoc}
      */
@@ -53,11 +47,22 @@ class ThemesType extends AbstractType
         // And storing it into an array, used in the form
         foreach ($iterator as $file) {
             ob_start();
-            include_once RENZO_ROOT.'/themes/'.$file->getRelativePathname();
+
+            $classPath = RENZO_ROOT.'/themes/'.$file->getRelativePathname();
+            include_once $classPath;
             $namespace = str_replace('/', '\\', $file->getRelativePathname());
             $classname = 'Themes\\'.str_replace('.php', '', $namespace);
             ob_end_clean();
-            $choices[$classname] = $file->getFileName().": ".$classname::getThemeName();
+
+            /*
+             * Parsed file is not or does not contain any PHP Class
+             * Bad Theme !
+             */
+            if (class_exists($classname)) {
+                $choices[$classname] = $file->getFileName().": ".$classname::getThemeName();
+            } else {
+                throw new ThemeClassNotValidException($classPath . " file does not contain any valid PHP Class.", 1);
+            }
         }
         foreach ($themes as $theme) {
             if (array_key_exists($theme->getClassName(), $choices)){
