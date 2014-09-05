@@ -27,9 +27,7 @@
                     {{ group.getName }}{% endif %}
                 </td>
                 <td>
-                    {% for role in group.getRolesEntities %}
-                        <i data-uk-tooltip title="{{ role.getName }}" data-role="{{ role.getName }}" class="uk-icon-star"></i>
-                    {% endfor %}
+                    <i class="uk-icon-star"></i> {% transchoice group.getRolesEntities.count %}{0} No roles|{1} 1 role|]1,Inf] %count% roles{% endtranschoice %}
                 </td>
                 <td>
                     <i class="uk-icon-user"></i> {% transchoice group.getUsers.count %}{0} No users|{1} 1 user|]1,Inf] %count% user{% endtranschoice %}
