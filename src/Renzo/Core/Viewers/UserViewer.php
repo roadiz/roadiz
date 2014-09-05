@@ -170,18 +170,17 @@ class UserViewer implements ViewableInterface
 
         // Create the message
         $message = \Swift_Message::newInstance()
-
-          // Give the message a subject
-          ->setSubject($this->getTranslator()->trans('welcome.user.email.%site%', array('%site%'=>SettingsBag::get('email_sender_name'))))
-
-          // Set the From address with an associative array
-          ->setFrom(array(SettingsBag::get('email_sender') => SettingsBag::get('email_sender_name')))
-
-          // Set the To addresses with an associative array
-          ->setTo(array($this->user->getEmail()))
-
-          // Give it a body
-          ->setBody($emailBody, 'text/html');
+            // Give the message a subject
+            ->setSubject($this->getTranslator()->trans(
+                'welcome.user.email.%site%',
+                array('%site%'=>SettingsBag::get('email_sender_name'))
+            ))
+            // Set the From address with an associative array
+            ->setFrom(array(SettingsBag::get('email_sender') => SettingsBag::get('email_sender_name')))
+            // Set the To addresses with an associative array
+            ->setTo(array($this->user->getEmail()))
+            // Give it a body
+            ->setBody($emailBody, 'text/html');
 
         // Create the Transport
         $transport = \Swift_MailTransport::newInstance();

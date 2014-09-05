@@ -386,7 +386,10 @@ class AppController implements ViewableInterface
         $formEngine->setEnvironment($this->twig);
         // ajoutez à Twig la FormExtension
         $this->twig->addExtension(
-            new FormExtension(new TwigRenderer($formEngine, Kernel::getInstance()->getCsrfProvider()))
+            new FormExtension(new TwigRenderer(
+                $formEngine,
+                Kernel::getInstance()->getCsrfProvider()
+            ))
         );
 
         //RoutingExtension
@@ -449,10 +452,16 @@ class AppController implements ViewableInterface
             'head' => array(
                 'devMode' => (boolean) $this->getKernel()->getConfig()['devMode'],
                 'baseUrl' => $this->getKernel()->getRequest()->getBaseUrl(),
-                'filesUrl' => $this->getKernel()->getRequest()->getBaseUrl().'/'.Document::getFilesFolderName(),
+                'filesUrl' => $this->getKernel()
+                                   ->getRequest()
+                                   ->getBaseUrl().'/'.Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::FONT_TOKEN_INTENTION)
+                'ajaxToken' => $this->getKernel()
+                                    ->getCsrfProvider()
+                                    ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
+                'fontToken' => $this->getKernel()
+                                    ->getCsrfProvider()
+                                    ->generateCsrfToken(static::FONT_TOKEN_INTENTION)
             ),
             'session' => array(
                 'messages' => $this->getKernel()->getRequest()->getSession()->getFlashBag()->all(),
@@ -463,7 +472,10 @@ class AppController implements ViewableInterface
         if ($this->getKernel()->getSecurityContext() !== null &&
             $this->getKernel()->getSecurityContext()->getToken() !== null ) {
 
-            $this->assignation['session']['user'] = $this->getKernel()->getSecurityContext()->getToken()->getUser();
+            $this->assignation['session']['user'] = $this->getKernel()
+                                                         ->getSecurityContext()
+                                                         ->getToken()
+                                                         ->getUser();
         }
 
         return $this;

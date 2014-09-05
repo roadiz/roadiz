@@ -26,10 +26,17 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
- *  DocumentViewer
+ * DocumentViewer
  */
 class DocumentViewer implements ViewableInterface
 {
+    /**
+     * We use a static Twig instance
+     * for performance issue, not to recreate it at
+     * each `getDocumentByArray` call.
+     */
+    protected static $twig = null;
+
     private $document;
 
     /**
@@ -54,7 +61,7 @@ class DocumentViewer implements ViewableInterface
      */
     public function getTranslator()
     {
-        return $this->translator;
+        return null;
     }
 
     /**
@@ -71,7 +78,6 @@ class DocumentViewer implements ViewableInterface
      */
     public function handleTwigCache()
     {
-
         if (Kernel::getInstance()->isDebug()) {
             try {
                 $fs = new Filesystem();
@@ -89,28 +95,31 @@ class DocumentViewer implements ViewableInterface
      */
     public function initializeTwig()
     {
-        $this->handleTwigCache();
+        if (null === static::$twig) {
 
-        $loader = new \Twig_Loader_Filesystem(array(
-            RENZO_ROOT . '/src/Renzo/Core/Resources/views',
-        ));
-        $this->twig = new \Twig_Environment($loader, array(
-            'cache' => $this->getCacheDirectory(),
-        ));
+            $this->handleTwigCache();
 
-        //RoutingExtension
-        $this->twig->addExtension(
-            new RoutingExtension(Kernel::getInstance()->getUrlGenerator())
-        );
-        /*
-         * ============================================================================
-         * Dump
-         * ============================================================================
-         */
-        $dump = new \Twig_SimpleFilter('dump', function ($object) {
-            return var_dump($object);
-        });
-        $this->twig->addFilter($dump);
+            $loader = new \Twig_Loader_Filesystem(array(
+                RENZO_ROOT . '/src/Renzo/Core/Resources/views',
+            ));
+            static::$twig = new \Twig_Environment($loader, array(
+                'cache' => $this->getCacheDirectory(),
+            ));
+
+            //RoutingExtension
+            static::$twig->addExtension(
+                new RoutingExtension(Kernel::getInstance()->getUrlGenerator())
+            );
+            /*
+             * ============================================================================
+             * Dump
+             * ============================================================================
+             */
+            $dump = new \Twig_SimpleFilter('dump', function ($object) {
+                return var_dump($object);
+            });
+            static::$twig->addFilter($dump);
+        }
 
         return $this;
     }
@@ -120,7 +129,7 @@ class DocumentViewer implements ViewableInterface
      */
     public function getTwig()
     {
-        return $this->twig;
+        return static::$twig;
     }
 
     /**

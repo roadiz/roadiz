@@ -163,8 +163,12 @@ class FrontendController extends AppController
 
         if ($this->getRequestedNode() !== null) {
 
-            $nodeController = $namespace . '\\' . StringHandler::classify($this->getRequestedNode()->getNodeName()) . 'Controller';
-            $nodeTypeController = $namespace . '\\' . StringHandler::classify($this->getRequestedNode()->getNodeType()->getName()) . 'Controller';
+            $nodeController = $namespace.'\\'.
+                              StringHandler::classify($this->getRequestedNode()->getNodeName()).
+                              'Controller';
+            $nodeTypeController = $namespace.'\\'.
+                                  StringHandler::classify($this->getRequestedNode()->getNodeType()->getName()).
+                                  'Controller';
 
             if (in_array($this->getRequestedNode()->getNodeName(), static::$specificNodesControllers) &&
                 class_exists($nodeController) &&
@@ -205,7 +209,11 @@ class FrontendController extends AppController
                 );
             }
 
-            return $ctrl->indexAction($request, $this->getRequestedNode(), $this->getRequestedTranslation());
+            return $ctrl->indexAction(
+                $request,
+                $this->getRequestedNode(),
+                $this->getRequestedTranslation()
+            );
         }
         throw new ResourceNotFoundException("No front-end controller found");
     }
