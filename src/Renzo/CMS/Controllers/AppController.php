@@ -227,6 +227,32 @@ class AppController implements ViewableInterface
     }
 
     /**
+     * Initialize controller with environment from an other controller
+     * in order to avoid initializing same componant again.
+     *
+     * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
+     * @param \Twig_Environment                                $twigEnvironment
+     * @param Translator                                       $translator
+     * @param array                                            $baseAssignation
+     */
+    public function __initFromOtherController(
+        SecurityContext $securityContext,
+        \Twig_Environment $twigEnvironment,
+        Translator $translator,
+        array $baseAssignation
+    )
+    {
+        $this->twig = $twigEnvironment;
+        $this->translator = $translator;
+        $this->assignation = $baseAssignation;
+
+        if (null !== $securityContext) {
+            $this->logger = new \RZ\Renzo\Core\Log\Logger();
+            $this->logger->setSecurityContext($securityContext);
+        }
+    }
+
+    /**
      * @return RouteCollection
      */
     public static function getRoutes()

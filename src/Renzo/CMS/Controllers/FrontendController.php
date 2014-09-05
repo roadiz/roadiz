@@ -171,28 +171,12 @@ class FrontendController extends AppController
                 method_exists($nodeController, 'indexAction')) {
 
                 $ctrl = new $nodeController();
-                /*
-                 * Inject current Kernel to the matched Controller
-                 */
-                if ($ctrl instanceof AppController) {
-                    $ctrl->setKernel($this->getKernel());
-                    $ctrl->__init($this->getKernel()->getSecurityContext());
-                }
 
-                return $ctrl->indexAction($request, $this->getRequestedNode(), $this->getRequestedTranslation());
             } elseif (class_exists($nodeTypeController) &&
                 method_exists($nodeTypeController, 'indexAction')) {
 
                 $ctrl = new $nodeTypeController();
-                /*
-                 * Inject current Kernel to the matched Controller
-                 */
-                if ($ctrl instanceof AppController) {
-                    $ctrl->setKernel($this->getKernel());
-                    $ctrl->__init($this->getKernel()->getSecurityContext());
-                }
 
-                return $ctrl->indexAction($request, $this->getRequestedNode(), $this->getRequestedTranslation());
             } else {
                 throw new ResourceNotFoundException(
                     "No front-end controller found for '".
@@ -201,6 +185,27 @@ class FrontendController extends AppController
                     $nodeTypeController." controller."
                 );
             }
+
+            /*
+             * Inject current Kernel to the matched Controller
+             */
+            if ($ctrl instanceof AppController) {
+                $ctrl->setKernel($this->getKernel());
+
+                /*
+                 * As we are creating an other controller
+                 * we don't need to init again, so we pass the
+                 * environment to the next level.
+                 */
+                $ctrl->__initFromOtherController(
+                    $this->getKernel()->getSecurityContext(),
+                    $this->twig,
+                    $this->translator,
+                    $this->assignation
+                );
+            }
+
+            return $ctrl->indexAction($request, $this->getRequestedNode(), $this->getRequestedTranslation());
         }
         throw new ResourceNotFoundException("No front-end controller found");
     }
