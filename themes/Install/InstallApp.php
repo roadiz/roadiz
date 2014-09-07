@@ -469,6 +469,7 @@ class InstallApp extends AppController
                 )
             ))
             ->add('password', 'repeated', array(
+                'type' => 'password',
                 'invalid_message' => 'Passwords must match',
                 'first_options'  => array('label' => 'Password'),
                 'second_options' => array('label' => 'Password (verify)'),

@@ -1069,6 +1069,14 @@
                 <source>username</source>
                 <target>Nom d'utilisateur</target>
             </trans-unit>
+            <trans-unit id="password">
+                <source>password</source>
+                <target>Mot de passe</target>
+            </trans-unit>
+            <trans-unit id="passwordVerify">
+                <source>passwordVerify</source>
+                <target>Mot de passe (confirmation)</target>
+            </trans-unit>
             <trans-unit id="firstName">
                 <source>firstName</source>
                 <target>Prénom</target>

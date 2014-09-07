@@ -660,41 +660,33 @@ class UsersController extends RozierApp
      */
     private function buildAddForm(User $user)
     {
-        $defaults = array(
-            'email' => $user->getEmail(),
-            'username' => $user->getUsername(),
-            'firstName' => $user->getFirstName(),
-            'lastName' => $user->getLastName(),
-            'company' => $user->getCompany(),
-            'job' => $user->getJob(),
-            'birthday' => $user->getBirthday(),
-            'facebookName' => $user->getFacebookName(),
-        );
-
         $builder = $this->getFormFactory()
-            ->createBuilder('form', $defaults)
-            ->add('email', 'email', array(
-                'constraints' => array(
-                    new NotBlank()
-                )
-            ))
-            ->add('username', 'text', array(
-                'constraints' => array(
-                    new NotBlank()
-                )
-            ))
-            ->add('plainPassword', 'repeated', array(
-                'type' => 'password',
-                'constraints' => array(
-                    new NotBlank()
-                )
-            ))
-            ->add('firstName', 'text', array('required' => false))
-            ->add('lastName', 'text', array('required' => false))
-            ->add('company', 'text', array('required' => false))
-            ->add('job', 'text', array('required' => false))
-            ->add('birthday', 'date', array('required' => false))
-            ->add('facebookName', 'text', array('required' => false));
+                        ->createBuilder('form')
+                        ->add('email', 'email', array(
+                            'constraints' => array(
+                                new NotBlank()
+                            )
+                        ))
+                        ->add('username', 'text', array(
+                            'constraints' => array(
+                                new NotBlank()
+                            )
+                        ))
+                        ->add('plainPassword', 'repeated', array(
+                            'type' => 'password',
+                            'invalid_message' => 'Passwords must match',
+                            'first_options'  => array('label' => 'password'),
+                            'second_options' => array('label' => 'passwordVerify'),
+                            'constraints' => array(
+                                new NotBlank()
+                            )
+                        ))
+                        ->add('firstName', 'text', array('required' => false))
+                        ->add('lastName', 'text', array('required' => false))
+                        ->add('company', 'text', array('required' => false))
+                        ->add('job', 'text', array('required' => false))
+                        ->add('birthday', 'date', array('required' => false))
+                        ->add('facebookName', 'text', array('required' => false));
 
         return $builder->getForm();
     }
@@ -742,27 +734,30 @@ class UsersController extends RozierApp
         );
 
         $builder = $this->getFormFactory()
-                    ->createBuilder('form', $defaults)
-                    ->add('email', 'email', array(
-                        'constraints' => array(
-                            new NotBlank()
-                        )
-                    ))
-                    ->add('username', 'text', array(
-                        'constraints' => array(
-                            new NotBlank()
-                        )
-                    ))
-                    ->add('plainPassword', 'repeated', array(
-                        'type' => 'password',
-                        'required' => false
-                    ))
-                    ->add('firstName', 'text', array('required' => false))
-                    ->add('lastName', 'text', array('required' => false))
-                    ->add('company', 'text', array('required' => false))
-                    ->add('job', 'text', array('required' => false))
-                    ->add('birthday', 'date', array('required' => false))
-                    ->add('facebookName', 'text', array('required' => false));
+                        ->createBuilder('form', $defaults)
+                        ->add('email', 'email', array(
+                            'constraints' => array(
+                                new NotBlank()
+                            )
+                        ))
+                        ->add('username', 'text', array(
+                            'constraints' => array(
+                                new NotBlank()
+                            )
+                        ))
+                        ->add('plainPassword', 'repeated', array(
+                            'type' => 'password',
+                            'invalid_message' => 'Passwords must match',
+                            'first_options'  => array('label' => 'password'),
+                            'second_options' => array('label' => 'passwordVerify'),
+                            'required' => false
+                        ))
+                        ->add('firstName', 'text', array('required' => false))
+                        ->add('lastName', 'text', array('required' => false))
+                        ->add('company', 'text', array('required' => false))
+                        ->add('job', 'text', array('required' => false))
+                        ->add('birthday', 'date', array('required' => false))
+                        ->add('facebookName', 'text', array('required' => false));
 
         return $builder->getForm();
     }
