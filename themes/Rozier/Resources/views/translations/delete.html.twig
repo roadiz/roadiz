@@ -5,16 +5,9 @@
 <section id="manage-translation">
 	<h1 id="translation-title">{% trans %}Delete translation:{% endtrans %} {{ translation.getName }}</h1>
 
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-   		{{ form_errors(form) }}
-	    {% for item in form %}
-	    	{# Node fields  #}
-	        {% if item.vars.name != "_token" %}
-		        {{ form_errors(item) }}
-		        {{ form_widget(item) }}
-	        {% endif %}
-	    {% endfor %}
-	    {{ form_rest(form) }}
+	{% form_theme form 'forms.html.twig' %}
+    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
 	    	<legend>{% trans %}Are you sure you want to delete this translation?{% endtrans %}</legend>
 	    	<a href="{{ path('translationsHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>

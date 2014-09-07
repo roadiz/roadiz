@@ -7,26 +7,15 @@
 	{% include 'nodes/navBar.html.twig' with {"current": 'aliases'} %}
 
 	<h2>{% trans %}Add an alias{% endtrans %}</h2>
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-   		{{ form_errors(form) }}
 
-   		<fieldset data-uk-margin>
-		    {% for item in form %}
-			    {% if item.vars.name != "_token" %}
-			    <div class="uk-form-row">
-			    	{# Source fields  #}
-			        <label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
-			        {{ form_errors(item) }}
-			        {{ form_widget(item) }}
-			    </div>
-			    {% endif %}
-		    {% endfor %}
-   		</fieldset>
-	    {{ form_rest(form) }}
+	{% form_theme form 'forms.html.twig' %}
+	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
 	    	<input class="uk-button uk-button-primary" type="submit" />
    		</fieldset>
 	</form>
+
 	<hr />
 	<h2>{% trans %}Url aliases{% endtrans %}</h2>
 	<table class="aliases uk-table">

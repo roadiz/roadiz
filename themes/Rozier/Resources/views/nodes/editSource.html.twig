@@ -7,27 +7,9 @@
 	{% include 'nodes/navBar.html.twig' with {"current": 'source'} %}
 	{% include 'nodes/translationBar.html.twig' with {"current": translation.getId} %}
 
+	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-   		{{ form_errors(form) }}
-
-   		<fieldset data-uk-margin>
-		    {% for item in form %}
-		    	{% if item.vars.block_prefixes[2] == 'documents' %}
-		    		{{ form_errors(item) }}
-			        {{ form_widget(item) }}
-		    	{% else %}
-				    {% if item.vars.name != "_token" %}
-				    <div class="uk-form-row">
-				    	{# Source fields  #}
-				        <label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.label }}</label>
-				        {{ form_errors(item) }}
-				        {{ form_widget(item) }}
-				    </div>
-				    {% endif %}
-			    {% endif %}
-		    {% endfor %}
-   		</fieldset>
-	    {{ form_rest(form) }}
+	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
 	    	<input class="uk-button uk-button-primary" type="submit" />
    		</fieldset>

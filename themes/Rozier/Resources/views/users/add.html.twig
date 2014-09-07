@@ -6,22 +6,9 @@
 	<h1 id="user-title">{% trans %}Add a new user{% endtrans %}</h1>
 	<nav><a class="uk-button uk-button-small" href="{{ path('usersHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to users{% endtrans %}</a></nav>
 
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-   		{{ form_errors(form) }}
-
-   		<fieldset data-uk-margin>
-		    {% for item in form %}
-		    	{# User fields  #}
-		        {% if item.vars.name != "_token" %}
-		    	<div class="uk-form-row">
-		        	<label class="uk-form-label"for="{{ item.vars.id }}">{{ item.vars.name }}</label>
-			        {{ form_errors(item) }}
-			        {{ form_widget(item) }}
-		    	</div>
-		        {% endif %}
-		    {% endfor %}
-   		</fieldset>
-	    {{ form_rest(form) }}
+	{% form_theme form 'forms.html.twig' %}
+    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
 	    	<input class="uk-button uk-button-primary" type="submit" />
    		</fieldset>

@@ -7,23 +7,9 @@
 
     {% include 'groups/navBar.html.twig' with {'group':group, current:'edit'} %}
 
+    {% form_theme form 'forms.html.twig' %}
     <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_errors(form) }}
-
-        <fieldset data-uk-margin>
-            {% for item in form %}
-                {% if item.vars.name != "_token" and item.vars.name != "id" %}
-                <div class="uk-form-row">
-                    {% if item.vars.block_prefixes[1] != 'hidden' %}
-                    <label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
-                    {% endif %}
-                    {{ form_errors(item) }}
-                    {{ form_widget(item) }}
-                </div>
-                {% endif %}
-            {% endfor %}
-        </fieldset>
-        {{ form_rest(form) }}
+        {{ form_widget(form) }}
         <fieldset data-uk-margin>
             <input class="uk-button uk-button-primary" type="submit" />
         </fieldset>

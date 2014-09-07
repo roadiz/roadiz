@@ -21,16 +21,9 @@
 			<tr>
 				<td><a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">{{ setting.setting.getName }}</a></td>
 				<td>
-					<form class="uk-form" action="#" method="post" {{ form_enctype(setting.form) }}>
-				   		{{ form_errors(setting.form) }}
-						    {% for item in setting.form %}
-						    	{# Node fields  #}
-						        {% if item.vars.name != "_token" %}
-							        {{ form_errors(item) }}
-							        {{ form_widget(item) }}
-						        {% endif %}
-						    {% endfor %}
-					    {{ form_rest(setting.form) }}
+					{% form_theme setting.form 'forms.html.twig' %}
+					<form class="uk-form " action="#" method="post" {{ form_enctype(setting.form) }}>
+					    {{ form_widget(setting.form) }}
 						<button class="uk-button uk-button-primary uk-button-small" type="submit"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</button>
 					</form>
 				</td>

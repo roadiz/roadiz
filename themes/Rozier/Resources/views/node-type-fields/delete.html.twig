@@ -5,16 +5,9 @@
 <section id="manage-node-type-field">
 	<h1 id="node-type-field-title">{% trans %}Delete node-type field:{% endtrans %} {{ field.getLabel }}</h1>
 
+	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-   		{{ form_errors(form) }}
-	    {% for item in form %}
-	    	{# Node fields  #}
-	        {% if item.vars.name != "_token" %}
-		        {{ form_errors(item) }}
-		        {{ form_widget(item) }}
-	        {% endif %}
-	    {% endfor %}
-	    {{ form_rest(form) }}
+	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
 	    	<legend>{% trans %}Are you sure you want to delete this node-type field?{% endtrans %}</legend>
 	    	<a href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: field.getNodeType.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>

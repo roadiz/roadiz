@@ -5,16 +5,9 @@
 <section id="manage-document">
 	<h1 id="node-title">{% trans %}Delete document:{% endtrans %} {{ document.getFilename }}</h1>
 
+	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-   		{{ form_errors(form) }}
-	    {% for item in form %}
-	    	{# Node fields  #}
-	        {% if item.vars.name != "_token" %}
-		        {{ form_errors(item) }}
-		        {{ form_widget(item) }}
-	        {% endif %}
-	    {% endfor %}
-	    {{ form_rest(form) }}
+	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
 	    	<legend>{% trans %}Are you sure you want to delete this document and its data?{% endtrans %}</legend>
 	    	<a href="{{ path('documentsHomePage') }}" class="uk-button">{% trans %}Cancel{% endtrans %}</a>
