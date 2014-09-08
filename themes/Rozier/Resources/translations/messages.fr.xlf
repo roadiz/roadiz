@@ -1062,11 +1062,11 @@
                 <target>Retour aux utilisateurs</target>
             </trans-unit>
             <trans-unit id="email">
-                <source>email</source>
+                <source>Email</source>
                 <target>Courrier électronique</target>
             </trans-unit>
             <trans-unit id="username">
-                <source>username</source>
+                <source>Username</source>
                 <target>Nom d'utilisateur</target>
             </trans-unit>
             <trans-unit id="password">
@@ -1078,27 +1078,27 @@
                 <target>Mot de passe (confirmation)</target>
             </trans-unit>
             <trans-unit id="firstName">
-                <source>firstName</source>
+                <source>First name</source>
                 <target>Prénom</target>
             </trans-unit>
             <trans-unit id="lastName">
-                <source>lastName</source>
+                <source>Last name</source>
                 <target>Nom</target>
             </trans-unit>
             <trans-unit id="company">
-                <source>company</source>
+                <source>Company</source>
                 <target>Entreprise</target>
             </trans-unit>
             <trans-unit id="job">
-                <source>job</source>
+                <source>Job</source>
                 <target>Emploi</target>
             </trans-unit>
             <trans-unit id="birthday">
-                <source>birthday</source>
+                <source>Birthday</source>
                 <target>Date de naissance</target>
             </trans-unit>
             <trans-unit id="facebookName">
-                <source>facebookName</source>
+                <source>Facebook name</source>
                 <target>Nom facebook</target>
             </trans-unit>
         </body>

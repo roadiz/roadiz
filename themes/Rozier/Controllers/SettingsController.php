@@ -413,7 +413,10 @@ class SettingsController extends RozierApp
                 'data'=>$setting->getId(),
                 'required' => true
             ))
-            ->add('Value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false));
+            ->add('Value', NodeTypeField::$typeToForm[$setting->getType()], array(
+                'label' => false,
+                'required' => false
+            ));
 
         return $builder->getForm();
     }

@@ -982,11 +982,11 @@
                 <target>Back to users</target>
             </trans-unit>
             <trans-unit id="email">
-                <source>email</source>
+                <source>Email</source>
                 <target>Email</target>
             </trans-unit>
             <trans-unit id="username">
-                <source>username</source>
+                <source>Username</source>
                 <target>Username</target>
             </trans-unit>
             <trans-unit id="password">
@@ -998,27 +998,27 @@
                 <target>Password (verify)</target>
             </trans-unit>
             <trans-unit id="firstName">
-                <source>firstName</source>
-                <target>First Name</target>
+                <source>First name</source>
+                <target>First name</target>
             </trans-unit>
             <trans-unit id="lastName">
-                <source>lastName</source>
-                <target>Last Name</target>
+                <source>Last name</source>
+                <target>Last name</target>
             </trans-unit>
             <trans-unit id="company">
-                <source>company</source>
+                <source>Company</source>
                 <target>Company</target>
             </trans-unit>
             <trans-unit id="job">
-                <source>job</source>
+                <source>Job</source>
                 <target>Job</target>
             </trans-unit>
             <trans-unit id="birthday">
-                <source>birthday</source>
+                <source>Birthday</source>
                 <target>Birthday</target>
             </trans-unit>
-            <trans-unit id="facebookName">
-                <source>facebookName</source>
+            <trans-unit id="FacebookName">
+                <source>Facebook name</source>
                 <target>Facebook name</target>
             </trans-unit>
         </body>

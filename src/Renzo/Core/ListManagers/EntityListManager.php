@@ -44,7 +44,13 @@ class EntityListManager
      * @param array                                    $preFilters
      * @param array                                    $preOrdering
      */
-    public function __construct(Request $request, EntityManager $_em, $entityName, $preFilters = array(), $preOrdering = array())
+    public function __construct(
+        Request $request,
+        EntityManager $_em,
+        $entityName,
+        $preFilters = array(),
+        $preOrdering = array()
+    )
     {
         $this->request =    $request;
         $this->entityName = $entityName;
@@ -154,7 +160,7 @@ class EntityListManager
     public function getEntities()
     {
         try {
-            return $this->paginator->findByAtPage($this->filteringArray, $this->currentPage);
+            return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
         } catch (\Exception $e) {
             return null;
         }

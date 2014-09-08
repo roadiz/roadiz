@@ -752,12 +752,24 @@ class UsersController extends RozierApp
                             'second_options' => array('label' => 'passwordVerify'),
                             'required' => false
                         ))
-                        ->add('firstName', 'text', array('required' => false))
-                        ->add('lastName', 'text', array('required' => false))
-                        ->add('company', 'text', array('required' => false))
-                        ->add('job', 'text', array('required' => false))
-                        ->add('birthday', 'date', array('required' => false))
-                        ->add('facebookName', 'text', array('required' => false));
+                        ->add('firstName', 'text', array(
+                            'required' => false
+                        ))
+                        ->add('lastName', 'text', array(
+                            'required' => false
+                        ))
+                        ->add('company', 'text', array(
+                            'required' => false
+                        ))
+                        ->add('job', 'text', array(
+                            'required' => false
+                        ))
+                        ->add('birthday', 'date', array(
+                            'required' => false
+                        ))
+                        ->add('facebookName', 'text', array(
+                            'required' => false
+                        ));
 
         return $builder->getForm();
     }
