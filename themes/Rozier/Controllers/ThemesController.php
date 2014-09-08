@@ -225,7 +225,7 @@ class ThemesController extends RozierApp
     {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('theme', new \RZ\Renzo\CMS\Forms\ThemesType(),
+            ->add('className', new \RZ\Renzo\CMS\Forms\ThemesType(),
                 array('label' => 'Theme'))
             ->add('available', 'checkbox', array(
                 'data' => $theme->isAvailable(),
@@ -253,7 +253,7 @@ class ThemesController extends RozierApp
     {
         $defaults = array(
             'available' =>    $theme->isAvailable(),
-            'classname' =>    $theme->getClassName(),
+            'className' =>    $theme->getClassName(),
             'hostname' =>     $theme->getHostname(),
             'backendTheme' => $theme->isBackendTheme()
         );
@@ -306,7 +306,7 @@ class ThemesController extends RozierApp
 
         $existing = $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Theme')
-            ->findOneBy(array('classname'=>$theme->getClassName()));
+            ->findOneBy(array('className'=>$theme->getClassName()));
 
         if ($existing !== null) {
             throw new EntityAlreadyExistsException(

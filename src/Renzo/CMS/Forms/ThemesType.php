@@ -47,7 +47,6 @@ class ThemesType extends AbstractType
         // And storing it into an array, used in the form
         foreach ($iterator as $file) {
             ob_start();
-
             $classPath = RENZO_ROOT.'/themes/'.$file->getRelativePathname();
             include_once $classPath;
             $namespace = str_replace('/', '\\', $file->getRelativePathname());
