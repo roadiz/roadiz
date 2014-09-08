@@ -300,6 +300,16 @@ rolesDeletePage:
     path:     /rz-admin/roles/delete/{roleId}
     defaults: { _controller: Themes\Rozier\Controllers\RolesController::deleteAction }
     requirements: { roleId : "[0-9]+" }
+rolesExportAllPage:
+    path:     /rz-admin/roless/export
+    defaults: { _controller: Themes\Rozier\Controllers\RolesUtilsController::exportAllAction }
+rolesExportPage:
+    path:     /rz-admin/roles/export/{roleId}
+    requirements: { roleId : "[0-9]+" }
+    defaults: { _controller: Themes\Rozier\Controllers\RolesUtilsController::exportAction }
+rolesImportPage:
+    path:     /rz-admin/roles/import/
+    defaults: { _controller: Themes\Rozier\Controllers\RolesUtilsController::importJsonFileAction }
 
 # GROUPS
 groupsHomePage:

@@ -60,7 +60,7 @@ class GroupCollectionJsonSerializer implements SerializerInterface
      * Deserializes a Json into readable datas
      * @param string $string
      *
-     * @return RZ\Renzo\Core\Entities\Group
+     * @return ArrayCollection
      */
     public static function deserialize($string)
     {
