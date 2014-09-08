@@ -46,6 +46,12 @@ class ThemesCommand extends Command
                 'Disable theme'
             )
             ->addOption(
+                'force-twig-compilation',
+                null,
+                InputOption::VALUE_NONE,
+                'Force Twig templates compilation'
+            )
+            ->addOption(
                 'enable',
                 null,
                 InputOption::VALUE_NONE,
@@ -80,6 +86,12 @@ class ThemesCommand extends Command
                         $text = '<info>Theme disabled…</info>'.PHP_EOL;
                     } else {
                         $text = '<error>Requested theme is not setup yet…</error>'.PHP_EOL;
+                    }
+                }
+
+                if ($input->getOption('force-twig-compilation')) {
+                    if (true === $name::forceTwigCompilation()) {
+                        $text = '<info>Twig templates have been compiled…</info>'.PHP_EOL;
                     }
                 }
             } else {

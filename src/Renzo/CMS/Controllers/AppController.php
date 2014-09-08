@@ -275,7 +275,7 @@ class AppController implements ViewableInterface
      */
     public function initializeTranslator()
     {
-        $this->getKernel()->getStopwatch()->start('initTranslations');
+        //$this->getKernel()->getStopwatch()->start('initTranslations');
         $lang = Kernel::getInstance()->getRequest()->getLocale();
         $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
 
@@ -298,7 +298,7 @@ class AppController implements ViewableInterface
         // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
         $this->twig->addExtension(new TranslationExtension($this->translator));
         $this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
-        $this->getKernel()->getStopwatch()->stop('initTranslations');
+        //$this->getKernel()->getStopwatch()->stop('initTranslations');
 
         return $this;
     }
@@ -418,6 +418,44 @@ class AppController implements ViewableInterface
         $this->twig->addFilter($markdown);
 
         return $this;
+    }
+
+    /**
+     * Force current AppController twig templates compilation.
+     *
+     * @return boolean
+     */
+    public static function forceTwigCompilation()
+    {
+        if (file_exists(static::getViewsFolder()))
+        {
+            $ctrl = new static();
+            $ctrl->initializeTwig();
+            $ctrl->initializeTranslator();
+
+            try {
+                $fs = new Filesystem();
+                $fs->remove(array($ctrl->getCacheDirectory()));
+            } catch (IOExceptionInterface $e) {
+                echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
+            }
+
+            foreach (new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator(static::getViewsFolder()),
+                    \RecursiveIteratorIterator::LEAVES_ONLY
+                ) as $file)
+            {
+                // force compilation
+                if ($file->isFile()) {
+                    $ctrl->getTwig()->loadTemplate(str_replace(static::getViewsFolder().'/', '', $file));
+                }
+            }
+
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     /**
      * {@inheritdoc}
