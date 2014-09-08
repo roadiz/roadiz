@@ -1,0 +1,629 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-08 19:26+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: themes/Rozier/Controllers/DocumentsController.php:93
+msgid "document.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/DocumentsController.php:147
+msgid "document.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/DocumentsController.php:153
+msgid "document.cannot_delete"
+msgstr ""
+
+#: themes/Rozier/Controllers/DocumentsController.php:197
+msgid "document.uploaded"
+msgstr ""
+
+#: themes/Rozier/Controllers/DocumentsController.php:214
+#: themes/Rozier/Controllers/DocumentsController.php:220
+msgid "document.cannot_persist"
+msgstr ""
+
+#: themes/Rozier/Controllers/CacheController.php:48
+msgid "cache.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/GroupsController.php:76
+msgid "group.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/GroupsController.php:128
+msgid "group.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/GroupsController.php:183
+msgid "group.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/GroupsController.php:240
+msgid "group.role_linked"
+msgstr ""
+
+#: themes/Rozier/Controllers/GroupsController.php:298
+msgid "role.removed_from_group"
+msgstr ""
+
+#: themes/Rozier/Controllers/GroupsController.php:348
+msgid "group.user_linked"
+msgstr ""
+
+#: themes/Rozier/Controllers/GroupsController.php:406
+msgid "group.user.removed_from_group"
+msgstr ""
+
+#: themes/Rozier/Controllers/GroupsController.php:447
+msgid "group.name"
+msgstr ""
+
+#: themes/Rozier/Controllers/GroupsController.php:625
+#: themes/Rozier/Controllers/GroupsController.php:656
+msgid "group.name.already.exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/ThemesController.php:77
+msgid "theme.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/ThemesController.php:126
+msgid "theme.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/ThemesController.php:182
+msgid "theme.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/ThemesController.php:314
+msgid "theme.no_creation.already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/UsersController.php:88
+msgid "user.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/UsersController.php:146
+msgid "user.role_linked"
+msgstr ""
+
+#: themes/Rozier/Controllers/UsersController.php:205
+msgid "user.role_removed"
+msgstr ""
+
+#: themes/Rozier/Controllers/UsersController.php:255
+msgid "user.group_linked"
+msgstr ""
+
+#: themes/Rozier/Controllers/UsersController.php:314
+msgid "user.group_removed"
+msgstr ""
+
+#: themes/Rozier/Controllers/UsersController.php:371
+msgid "user.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/UsersController.php:430
+msgid "user.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/UsersController.php:473
+msgid "user.cannot_update.name_already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/UsersController.php:486
+msgid "user.cannot_update.email_already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/UsersController.php:517
+msgid "user.cannot_create_already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/UsersController.php:546
+msgid "user.facebook_name_does_not_exist"
+msgstr ""
+
+#: themes/Rozier/Controllers/RolesController.php:75
+msgid "role.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/RolesController.php:129
+msgid "role.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/RolesController.php:188
+msgid "role.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/RolesController.php:233
+msgid "role.name"
+msgstr ""
+
+#: themes/Rozier/Controllers/RolesController.php:237
+#: themes/Rozier/Controllers/RolesController.php:291
+msgid ""
+"Role definition must be prefixed with “ROLE_” and contains only uppercase "
+"letters and underscores."
+msgstr ""
+
+#: themes/Rozier/Controllers/RolesController.php:311
+#: themes/Rozier/Controllers/RolesController.php:344
+msgid "role.name.already.exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/RolesController.php:335
+msgid "role.required.cannot_be_updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/RolesController.php:368
+msgid "role.is.required"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypesUtilsController.php:116
+msgid "nodeType.imported.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypesUtilsController.php:127
+msgid "nodeType.imported.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypesUtilsController.php:150
+#: themes/Rozier/Controllers/RolesUtilsController.php:139
+#: themes/Rozier/Controllers/GroupsUtilsController.php:161
+msgid "file.format.not_valid"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypesUtilsController.php:165
+#: themes/Rozier/Controllers/RolesUtilsController.php:154
+#: themes/Rozier/Controllers/GroupsUtilsController.php:176
+msgid "file.not_uploaded"
+msgstr ""
+
+#: themes/Rozier/Controllers/TagsController.php:122
+msgid "tag.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/TagsController.php:177
+#: themes/Rozier/Controllers/TagsController.php:286
+msgid "tag.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/TagsController.php:226
+msgid "tag.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/TagsController.php:344
+msgid "tag.no_update.already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/TagsController.php:377
+msgid "tag.no_creation.already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/TagsController.php:437
+msgid "tag.already_added"
+msgstr ""
+
+#: themes/Rozier/Controllers/UrlAliasesController.php:76
+msgid "url_alias.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/UrlAliasesController.php:80
+#: themes/Rozier/Controllers/UrlAliasesController.php:267
+msgid "url_alias.no_update.already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/UrlAliasesController.php:104
+msgid "url_alias.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/UrlAliasesController.php:139
+msgid "url_alias.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/UrlAliasesController.php:204
+#: themes/Rozier/Controllers/UrlAliasesController.php:216
+msgid "url_alias.no_creation.already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/UrlAliasesController.php:221
+msgid "url_alias.no_translation"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypeFieldsController.php:87
+msgid "nodeTypeField.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypeFieldsController.php:147
+msgid "nodeTypeField.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypeFieldsController.php:218
+msgid "nodeTypeField.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodesController.php:163
+msgid "node.translated"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodesController.php:197
+msgid "node.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodesController.php:273
+msgid "node_source.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodesController.php:346
+msgid "node.tag_linked"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodesController.php:405
+msgid "tag.removed"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodesController.php:476
+#: themes/Rozier/Controllers/NodesController.php:553
+msgid "node.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodesController.php:624
+msgid "node.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodesController.php:661
+msgid "node.noCreation.urlAlias.alreadyExists"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodesController.php:680
+#: themes/Rozier/Controllers/NodesController.php:727
+msgid "node.noCreation.alreadyExists"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodesController.php:695
+msgid "node.no_creation.url_alias.already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodesController.php:770
+msgid "node.noUpdate.alreadyExists"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypesController.php:89
+msgid "nodeType.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypesController.php:148
+msgid "nodeType.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypesController.php:217
+msgid "nodeType.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypesController.php:258
+msgid "nodeType.cannot_rename_already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/NodeTypesController.php:287
+msgid "nodeType.already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/RolesUtilsController.php:122
+msgid "role.imported"
+msgstr ""
+
+#: themes/Rozier/Controllers/SettingsController.php:67
+#: themes/Rozier/Controllers/SettingsController.php:120
+msgid "setting.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/SettingsController.php:174
+msgid "setting.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/SettingsController.php:230
+msgid "setting.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/SettingsController.php:273
+#: themes/Rozier/Controllers/SettingsController.php:285
+msgid "setting.no_update.already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/SettingsController.php:301
+#: themes/Rozier/Controllers/SettingsController.php:315
+msgid "setting.no_creation.already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/SchemaController.php:62
+#: themes/Rozier/Controllers/SchemaController.php:97
+msgid "database.schema.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/SchemaController.php:66
+#: themes/Rozier/Controllers/SchemaController.php:101
+msgid "database.schema.cannot_updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/GroupsUtilsController.php:146
+msgid "group.imported.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/FontsController.php:76
+msgid "font.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/FontsController.php:129
+msgid "font.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/FontsController.php:186
+msgid "font.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/FontsController.php:284
+#: themes/Rozier/Controllers/FontsController.php:344
+msgid "font.name"
+msgstr ""
+
+#: themes/Rozier/Controllers/FontsController.php:287
+#: themes/Rozier/Controllers/FontsController.php:348
+msgid "font.variant"
+msgstr ""
+
+#: themes/Rozier/Controllers/FontsController.php:290
+#: themes/Rozier/Controllers/FontsController.php:351
+msgid "font.eotFile"
+msgstr ""
+
+#: themes/Rozier/Controllers/FontsController.php:294
+#: themes/Rozier/Controllers/FontsController.php:355
+msgid "font.woffFile"
+msgstr ""
+
+#: themes/Rozier/Controllers/FontsController.php:298
+#: themes/Rozier/Controllers/FontsController.php:359
+msgid "font.otfFile"
+msgstr ""
+
+#: themes/Rozier/Controllers/FontsController.php:302
+#: themes/Rozier/Controllers/FontsController.php:363
+msgid "font.svgFile"
+msgstr ""
+
+#: themes/Rozier/Controllers/FontsController.php:386
+msgid "font.variant.already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/FontsController.php:522
+msgid "font.name.already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/TranslationsController.php:71
+msgid "translation.made_default"
+msgstr ""
+
+#: themes/Rozier/Controllers/TranslationsController.php:123
+msgid "translation.updated"
+msgstr ""
+
+#: themes/Rozier/Controllers/TranslationsController.php:179
+msgid "translation.created"
+msgstr ""
+
+#: themes/Rozier/Controllers/TranslationsController.php:234
+msgid "translation.deleted"
+msgstr ""
+
+#: themes/Rozier/Controllers/TranslationsController.php:280
+msgid "translation.cannot_update_already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/TranslationsController.php:301
+msgid "translation.cannot_create_already_exists"
+msgstr ""
+
+#: themes/Rozier/Controllers/TranslationsController.php:320
+msgid "translation.cannot_delete_default_translation"
+msgstr ""
+
+#: cache/Rozier/twig_cache/c2/f0/812838e3f9f09f590c64ee4f15918e1bf8b8dae7925b1bd3562707590f26.php:26
+msgid "add.tag"
+msgstr ""
+
+#: cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php:69
+msgid "edit.tag.%name%"
+msgstr ""
+
+#: cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php:75
+msgid "edit.tag"
+msgstr ""
+
+#: cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php:82
+msgid "add.child.tag.%name%"
+msgstr ""
+
+#: cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php:88
+msgid "add.child.tag"
+msgstr ""
+
+#: cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php:95
+msgid "delete.tag.%name%"
+msgstr ""
+
+#: cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php:101
+msgid "delete.tag"
+msgstr ""
+
+#: cache/Rozier/twig_cache/d1/24/7dfccc179fbdf301fda956115b9b9654f38664ee9ab500f47e7377f2f5ae.php:82
+msgid "nodes"
+msgstr ""
+
+#: cache/Rozier/twig_cache/d1/24/7dfccc179fbdf301fda956115b9b9654f38664ee9ab500f47e7377f2f5ae.php:86
+msgid "tags"
+msgstr ""
+
+#: cache/Rozier/twig_cache/d1/24/7dfccc179fbdf301fda956115b9b9654f38664ee9ab500f47e7377f2f5ae.php:230
+msgid "Welcome"
+msgstr ""
+
+#: cache/Rozier/twig_cache/a5/66/07a1fccf6671cf05837b5f44b5eab3f2ff2bb9737e95b4d06b07ee2e058a.php:38
+#: cache/Rozier/twig_cache/a5/66/07a1fccf6671cf05837b5f44b5eab3f2ff2bb9737e95b4d06b07ee2e058a.php:44
+msgid "search"
+msgstr ""
+
+#: cache/Rozier/twig_cache/a5/66/07a1fccf6671cf05837b5f44b5eab3f2ff2bb9737e95b4d06b07ee2e058a.php:72
+msgid "goto.page"
+msgstr ""
+
+#: cache/Rozier/twig_cache/a5/66/07a1fccf6671cf05837b5f44b5eab3f2ff2bb9737e95b4d06b07ee2e058a.php:80
+msgid "prev"
+msgstr ""
+
+#: cache/Rozier/twig_cache/a5/66/07a1fccf6671cf05837b5f44b5eab3f2ff2bb9737e95b4d06b07ee2e058a.php:89
+msgid "next"
+msgstr ""
+
+#: cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php:34
+msgid "Settings"
+msgstr ""
+
+#: cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php:40
+msgid "Add a new setting"
+msgstr ""
+
+#: cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php:53
+msgid "Name"
+msgstr ""
+
+#: cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php:57
+msgid "Value"
+msgstr ""
+
+#: cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php:61
+msgid "actions"
+msgstr ""
+
+#: cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php:93
+msgid "edit"
+msgstr ""
+
+#: cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php:102
+msgid "Delete"
+msgstr ""
+
+#: cache/Rozier/twig_cache/44/1b/ded5a0927735bfbe274d9a2c23941bbeaf19a668a095c946c92f9a302f1c.php:32
+msgid "search.node"
+msgstr ""
+
+#: cache/Rozier/twig_cache/06/98/61193aebf8237156a8c77aa3460e726bea3bd7c4111b52a5ea506a31a4fb.php:38
+msgid "see.website"
+msgstr ""
+
+#: cache/Rozier/twig_cache/06/98/61193aebf8237156a8c77aa3460e726bea3bd7c4111b52a5ea506a31a4fb.php:44
+msgid "edit.account"
+msgstr ""
+
+#: cache/Rozier/twig_cache/06/98/61193aebf8237156a8c77aa3460e726bea3bd7c4111b52a5ea506a31a4fb.php:50
+msgid "logout"
+msgstr ""
+
+#: cache/Rozier/twig_cache/06/98/61193aebf8237156a8c77aa3460e726bea3bd7c4111b52a5ea506a31a4fb.php:56
+msgid "delete.caches"
+msgstr ""
+
+#: cache/Rozier/twig_cache/06/98/61193aebf8237156a8c77aa3460e726bea3bd7c4111b52a5ea506a31a4fb.php:65
+msgid "Dev mode activated"
+msgstr ""
+
+#: cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php:102
+msgid "edit.node.%name%"
+msgstr ""
+
+#: cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php:108
+msgid "edit.node"
+msgstr ""
+
+#: cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php:115
+msgid "add.child.node.%name%"
+msgstr ""
+
+#: cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php:121
+msgid "add.child.node"
+msgstr ""
+
+#: cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php:128
+msgid "delete.node.%name%"
+msgstr ""
+
+#: cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php:134
+msgid "delete.node"
+msgstr ""
+
+#: cache/Rozier/twig_cache/3b/07/54bf9e944525336f9466e763bd0756b69c61d3b33a5a118cd8c860642770.php:73
+msgid "documents.toggle-explorer"
+msgstr ""
+
+#: cache/Rozier/twig_cache/3b/07/54bf9e944525336f9466e763bd0756b69c61d3b33a5a118cd8c860642770.php:77
+msgid "documents.toggle-uploader"
+msgstr ""
+
+#: cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php:25
+msgid "manage.nodes"
+msgstr ""
+
+#: cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php:31
+msgid "manage.documents"
+msgstr ""
+
+#: cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php:37
+msgid "manage.tags"
+msgstr ""
+
+#: cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php:43
+msgid "manage.node-types"
+msgstr ""
+
+#: cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php:49
+msgid "manage.translations"
+msgstr ""
+
+#: cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php:55
+msgid "manage.fonts"
+msgstr ""
+
+#: cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php:61
+msgid "manage.themes"
+msgstr ""
+
+#: cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php:67
+msgid "manage.users"
+msgstr ""
+
+#: cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php:73
+msgid "manage.roles"
+msgstr ""
+
+#: cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php:79
+msgid "manage.groups"
+msgstr ""
+
+#: cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php:85
+msgid "site.settings"
+msgstr ""

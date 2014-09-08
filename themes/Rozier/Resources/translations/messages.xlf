@@ -1,0 +1,1311 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.1" version="1.1">
+  <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en-US" datatype="plaintext">
+    <body>
+      <trans-unit xml:space="preserve" id="1" approved="no" restype="x-gettext-domain-header">
+        <source>Project-Id-Version: PACKAGE VERSION
+Report-Msgid-Bugs-To: 
+POT-Creation-Date: 2014-09-08 19:26+0200
+PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE
+Last-Translator: FULL NAME &lt;EMAIL@ADDRESS&gt;
+Language-Team: LANGUAGE &lt;LL@li.org&gt;
+Language: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Generator: Translate Toolkit 1.9.0
+</source>
+        <target state="translated">Project-Id-Version: PACKAGE VERSION
+Report-Msgid-Bugs-To: 
+POT-Creation-Date: 2014-09-08 19:26+0200
+PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE
+Last-Translator: FULL NAME &lt;EMAIL@ADDRESS&gt;
+Language-Team: LANGUAGE &lt;LL@li.org&gt;
+Language: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Generator: Translate Toolkit 1.9.0
+</target>
+        <context-group name="po-entry" purpose="information">
+          <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
+Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+This file is distributed under the same license as the PACKAGE package.
+FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</context>
+        </context-group>
+        <note from="po-translator">SOME DESCRIPTIVE TITLE.
+Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+This file is distributed under the same license as the PACKAGE package.
+FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="2">
+        <source>document.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="3">
+        <source>document.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="4">
+        <source>document.cannot_delete</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="5">
+        <source>document.uploaded</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="6">
+        <source>document.cannot_persist</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
+          <context context-type="linenumber">214</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
+          <context context-type="linenumber">220</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="7">
+        <source>cache.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/CacheController.php</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="8">
+        <source>group.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="9">
+        <source>group.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="10">
+        <source>group.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="11">
+        <source>group.role_linked</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
+          <context context-type="linenumber">240</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="12">
+        <source>role.removed_from_group</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
+          <context context-type="linenumber">298</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="13">
+        <source>group.user_linked</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
+          <context context-type="linenumber">348</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="14">
+        <source>group.user.removed_from_group</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
+          <context context-type="linenumber">406</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="15">
+        <source>group.name</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
+          <context context-type="linenumber">447</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="16">
+        <source>group.name.already.exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
+          <context context-type="linenumber">625</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
+          <context context-type="linenumber">656</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="17">
+        <source>theme.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/ThemesController.php</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="18">
+        <source>theme.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/ThemesController.php</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="19">
+        <source>theme.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/ThemesController.php</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="20">
+        <source>theme.no_creation.already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/ThemesController.php</context>
+          <context context-type="linenumber">314</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="21">
+        <source>user.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="22">
+        <source>user.role_linked</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="23">
+        <source>user.role_removed</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
+          <context context-type="linenumber">205</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="24">
+        <source>user.group_linked</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
+          <context context-type="linenumber">255</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="25">
+        <source>user.group_removed</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
+          <context context-type="linenumber">314</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="26">
+        <source>user.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
+          <context context-type="linenumber">371</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="27">
+        <source>user.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
+          <context context-type="linenumber">430</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="28">
+        <source>user.cannot_update.name_already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
+          <context context-type="linenumber">473</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="29">
+        <source>user.cannot_update.email_already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
+          <context context-type="linenumber">486</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="30">
+        <source>user.cannot_create_already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
+          <context context-type="linenumber">517</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="31">
+        <source>user.facebook_name_does_not_exist</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
+          <context context-type="linenumber">546</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="32">
+        <source>role.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesController.php</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="33">
+        <source>role.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesController.php</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="34">
+        <source>role.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesController.php</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="35">
+        <source>role.name</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesController.php</context>
+          <context context-type="linenumber">233</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="36">
+        <source>Role definition must be prefixed with “ROLE_” and contains only uppercase letters and underscores.</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesController.php</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesController.php</context>
+          <context context-type="linenumber">291</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="37">
+        <source>role.name.already.exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesController.php</context>
+          <context context-type="linenumber">311</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesController.php</context>
+          <context context-type="linenumber">344</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="38">
+        <source>role.required.cannot_be_updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesController.php</context>
+          <context context-type="linenumber">335</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="39">
+        <source>role.is.required</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesController.php</context>
+          <context context-type="linenumber">368</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="40">
+        <source>nodeType.imported.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesUtilsController.php</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="41">
+        <source>nodeType.imported.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesUtilsController.php</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="42">
+        <source>file.format.not_valid</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesUtilsController.php</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesUtilsController.php</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsUtilsController.php</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="43">
+        <source>file.not_uploaded</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesUtilsController.php</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesUtilsController.php</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsUtilsController.php</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="44">
+        <source>tag.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="45">
+        <source>tag.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
+          <context context-type="linenumber">286</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="46">
+        <source>tag.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="47">
+        <source>tag.no_update.already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
+          <context context-type="linenumber">344</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="48">
+        <source>tag.no_creation.already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
+          <context context-type="linenumber">377</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="49">
+        <source>tag.already_added</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
+          <context context-type="linenumber">437</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="50">
+        <source>url_alias.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UrlAliasesController.php</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="51">
+        <source>url_alias.no_update.already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UrlAliasesController.php</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UrlAliasesController.php</context>
+          <context context-type="linenumber">267</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="52">
+        <source>url_alias.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UrlAliasesController.php</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="53">
+        <source>url_alias.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UrlAliasesController.php</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="54">
+        <source>url_alias.no_creation.already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UrlAliasesController.php</context>
+          <context context-type="linenumber">204</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UrlAliasesController.php</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="55">
+        <source>url_alias.no_translation</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/UrlAliasesController.php</context>
+          <context context-type="linenumber">221</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="56">
+        <source>nodeTypeField.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypeFieldsController.php</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="57">
+        <source>nodeTypeField.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypeFieldsController.php</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="58">
+        <source>nodeTypeField.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypeFieldsController.php</context>
+          <context context-type="linenumber">218</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="59">
+        <source>node.translated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="60">
+        <source>node.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="61">
+        <source>node_source.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">273</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="62">
+        <source>node.tag_linked</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">346</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="63">
+        <source>tag.removed</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">405</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="64">
+        <source>node.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">476</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">553</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="65">
+        <source>node.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">624</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="66">
+        <source>node.noCreation.urlAlias.alreadyExists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">661</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="67">
+        <source>node.noCreation.alreadyExists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">680</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">727</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="68">
+        <source>node.no_creation.url_alias.already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">695</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="69">
+        <source>node.noUpdate.alreadyExists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
+          <context context-type="linenumber">770</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="70">
+        <source>nodeType.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="71">
+        <source>nodeType.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="72">
+        <source>nodeType.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="73">
+        <source>nodeType.cannot_rename_already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
+          <context context-type="linenumber">258</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="74">
+        <source>nodeType.already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
+          <context context-type="linenumber">287</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="75">
+        <source>role.imported</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/RolesUtilsController.php</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="76">
+        <source>setting.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="77">
+        <source>setting.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
+          <context context-type="linenumber">174</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="78">
+        <source>setting.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="79">
+        <source>setting.no_update.already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
+          <context context-type="linenumber">273</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
+          <context context-type="linenumber">285</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="80">
+        <source>setting.no_creation.already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
+          <context context-type="linenumber">301</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
+          <context context-type="linenumber">315</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="81">
+        <source>database.schema.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SchemaController.php</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SchemaController.php</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="82">
+        <source>database.schema.cannot_updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SchemaController.php</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/SchemaController.php</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="83">
+        <source>group.imported.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/GroupsUtilsController.php</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="84">
+        <source>font.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="85">
+        <source>font.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="86">
+        <source>font.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="87">
+        <source>font.name</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">284</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">344</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="88">
+        <source>font.variant</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">287</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">348</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="89">
+        <source>font.eotFile</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">290</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">351</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="90">
+        <source>font.woffFile</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">294</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">355</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="91">
+        <source>font.otfFile</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">298</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">359</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="92">
+        <source>font.svgFile</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">302</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">363</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="93">
+        <source>font.variant.already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">386</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="94">
+        <source>font.name.already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
+          <context context-type="linenumber">522</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="95">
+        <source>translation.made_default</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="96">
+        <source>translation.updated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="97">
+        <source>translation.created</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="98">
+        <source>translation.deleted</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
+          <context context-type="linenumber">234</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="99">
+        <source>translation.cannot_update_already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
+          <context context-type="linenumber">280</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="100">
+        <source>translation.cannot_create_already_exists</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
+          <context context-type="linenumber">301</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="101">
+        <source>translation.cannot_delete_default_translation</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
+          <context context-type="linenumber">320</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="102">
+        <source>add.tag</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/c2/f0/812838e3f9f09f590c64ee4f15918e1bf8b8dae7925b1bd3562707590f26.php</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="103">
+        <source>edit.tag.%name%</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="104">
+        <source>edit.tag</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="105">
+        <source>add.child.tag.%name%</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="106">
+        <source>add.child.tag</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="107">
+        <source>delete.tag.%name%</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="108">
+        <source>delete.tag</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="109">
+        <source>nodes</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/d1/24/7dfccc179fbdf301fda956115b9b9654f38664ee9ab500f47e7377f2f5ae.php</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="110">
+        <source>tags</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/d1/24/7dfccc179fbdf301fda956115b9b9654f38664ee9ab500f47e7377f2f5ae.php</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="111">
+        <source>Welcome</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/d1/24/7dfccc179fbdf301fda956115b9b9654f38664ee9ab500f47e7377f2f5ae.php</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="112">
+        <source>search</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/a5/66/07a1fccf6671cf05837b5f44b5eab3f2ff2bb9737e95b4d06b07ee2e058a.php</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/a5/66/07a1fccf6671cf05837b5f44b5eab3f2ff2bb9737e95b4d06b07ee2e058a.php</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="113">
+        <source>goto.page</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/a5/66/07a1fccf6671cf05837b5f44b5eab3f2ff2bb9737e95b4d06b07ee2e058a.php</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="114">
+        <source>prev</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/a5/66/07a1fccf6671cf05837b5f44b5eab3f2ff2bb9737e95b4d06b07ee2e058a.php</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="115">
+        <source>next</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/a5/66/07a1fccf6671cf05837b5f44b5eab3f2ff2bb9737e95b4d06b07ee2e058a.php</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="116">
+        <source>Settings</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="117">
+        <source>Add a new setting</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="118">
+        <source>Name</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="119">
+        <source>Value</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="120">
+        <source>actions</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="121">
+        <source>edit</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="122">
+        <source>Delete</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="123">
+        <source>search.node</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/44/1b/ded5a0927735bfbe274d9a2c23941bbeaf19a668a095c946c92f9a302f1c.php</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="124">
+        <source>see.website</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/06/98/61193aebf8237156a8c77aa3460e726bea3bd7c4111b52a5ea506a31a4fb.php</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="125">
+        <source>edit.account</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/06/98/61193aebf8237156a8c77aa3460e726bea3bd7c4111b52a5ea506a31a4fb.php</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="126">
+        <source>logout</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/06/98/61193aebf8237156a8c77aa3460e726bea3bd7c4111b52a5ea506a31a4fb.php</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="127">
+        <source>delete.caches</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/06/98/61193aebf8237156a8c77aa3460e726bea3bd7c4111b52a5ea506a31a4fb.php</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="128">
+        <source>Dev mode activated</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/06/98/61193aebf8237156a8c77aa3460e726bea3bd7c4111b52a5ea506a31a4fb.php</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="129">
+        <source>edit.node.%name%</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="130">
+        <source>edit.node</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="131">
+        <source>add.child.node.%name%</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="132">
+        <source>add.child.node</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="133">
+        <source>delete.node.%name%</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="134">
+        <source>delete.node</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="135">
+        <source>documents.toggle-explorer</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/3b/07/54bf9e944525336f9466e763bd0756b69c61d3b33a5a118cd8c860642770.php</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="136">
+        <source>documents.toggle-uploader</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/3b/07/54bf9e944525336f9466e763bd0756b69c61d3b33a5a118cd8c860642770.php</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="137">
+        <source>manage.nodes</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="138">
+        <source>manage.documents</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="139">
+        <source>manage.tags</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="140">
+        <source>manage.node-types</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="141">
+        <source>manage.translations</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="142">
+        <source>manage.fonts</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="143">
+        <source>manage.themes</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="144">
+        <source>manage.users</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="145">
+        <source>manage.roles</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="146">
+        <source>manage.groups</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="147">
+        <source>site.settings</source>
+        <target></target>
+        <context-group name="po-reference" purpose="location">
+          <context context-type="sourcefile">cache/Rozier/twig_cache/02/9a/30cdcf16fb85f9c761fc12f092aef556ec5eca10f9a7befa374dbea99628.php</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
