@@ -26,26 +26,6 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
  */
 class RoleJsonSerializer implements SerializerInterface
 {
-
-    protected $role;
-    /**
-     * RoleJsonSerializer's contructor.
-     *
-     * @param RZ\Renzo\Core\Entities\Role $role
-     */
-    public function __construct(Role $role)
-    {
-        $this->role = $role;
-    }
-
-    /**
-     * @return RZ\Renzo\Core\Entities\Role
-     */
-    public function getRole()
-    {
-        return $this->role;
-    }
-
     /**
      * Serializes data.
      *
@@ -56,12 +36,16 @@ class RoleJsonSerializer implements SerializerInterface
      * @return array
      * @see RZ\Renzo\Core\Serializers\GroupJsonSerializer::serialize
      */
-    public function serialize()
+    public static function serialize($role)
     {
         $data = array();
-        $data['name'] = $this->getRole()->getName();
+        $data['name'] = $role->getName();
 
-        return $data;
+        if (defined('JSON_PRETTY_PRINT')) {
+            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode($data, JSON_NUMERIC_CHECK);
+        }
     }
 
     /**

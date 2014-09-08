@@ -15,6 +15,7 @@ use RZ\Renzo\Core\Entities\Group;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Handlers\GroupHandler;
 use RZ\Renzo\Core\Serializers\GroupJsonSerializer;
+use RZ\Renzo\Core\Serializers\GroupCollectionJsonSerializer;
 use Themes\Rozier\RozierApp;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
@@ -35,6 +36,65 @@ use Symfony\Component\Validator\Constraints\Type;
  */
 class GroupsUtilsController extends RozierApp
 {
+    /**
+     * Export all Group datas and roles in a Json file (.rzt).
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function exportAllAction(Request $request)
+    {
+        $existingGroup = $this->getKernel()->em()
+                              ->getRepository('RZ\Renzo\Core\Entities\Group')
+                              ->findAll();
+        $group = GroupCollectionJsonSerializer::serialize($existingGroup);
+
+        $response =  new Response(
+            $group,
+            Response::HTTP_OK,
+            array()
+        );
+
+        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'group-all-' . date("YmdHis")  . '.rzt')); // Rezo-Zero Type
+
+        $response->prepare($request);
+
+        return $response;
+    }
+
+    /**
+     * Export a Group in a Json file (.rzt).
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $groupId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function exportAction(Request $request, $groupId)
+    {
+        $existingGroup = $this->getKernel()->em()
+                              ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
+
+        $group = GroupCollectionJsonSerializer::serialize(array($existingGroup));
+
+        $response =  new Response(
+            $group,
+            Response::HTTP_OK,
+            array()
+        );
+
+        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'group-' . $existingGroup->getName() . '-' . date("YmdHis")  . '.rzt')); // Rezo-Zero Type
+
+        $response->prepare($request);
+
+        return $response;
+    }
+
     /**
      * Import a Json file (.rzt) containing Group datas and roles.
      *
@@ -59,42 +119,39 @@ class GroupsUtilsController extends RozierApp
 
                 if (null !== json_decode($serializedData)) {
 
-                    $group = GroupJsonSerializer::deserialize($serializedData);
-                    $existingGroup = $this->getKernel()->em()
-                        ->getRepository('RZ\Renzo\Core\Entities\Group')
-                        ->findOneBy(array('name'=>$group->getName()));
+                    $groups = GroupCollectionJsonSerializer::deserialize($serializedData);
+                    foreach ($groups as $group) {
+                      $existingGroup = $this->getKernel()->em()
+                          ->getRepository('RZ\Renzo\Core\Entities\Group')
+                          ->findOneBy(array('name'=>$group->getName()));
 
-                    if (null === $existingGroup) {
+                      if (null === $existingGroup) {
+                          foreach ($group->getRolesEntities() as $role) {
+                              /*
+                               * then persist each role
+                               */
+                              $role = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\Role')->findOneByName($role->getName());
 
-                        foreach ($group->getRolesEntities() as $role) {
-                            /*
-                             * then persist each role
-                             */
-                            $this->getKernel()->em()->persist($role);
-                        }
+                            var_dump("toto");
+                          }
+
+                          $this->getKernel()->em()->persist($group);
+                          // Flush before creating group's roles.
                         $this->getKernel()->em()->flush();
+                          $msg = $this->getTranslator()->trans('group.imported.created');
+                          $request->getSession()->getFlashBag()->add('confirm', $msg);
+                          $this->getLogger()->info($msg);
 
-                        /*
-                         * New group.
-                         *
-                         * First persist group
-                         */
-                        $this->getKernel()->em()->persist($group);
-                        // Flush before creating group's roles.
+                      } else {
+                          $existingGroup->getHandler()->diff($group);
 
-                        $msg = $this->getTranslator()->trans('group.imported.created');
-                        $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getLogger()->info($msg);
+                          $msg = $this->getTranslator()->trans('group.imported.updated');
+                          $request->getSession()->getFlashBag()->add('confirm', $msg);
+                          $this->getLogger()->info($msg);
+                      }
 
-                    } else {
-                        $existingGroup->getHandler()->diff($group);
-
-                        $msg = $this->getTranslator()->trans('group.imported.updated');
-                        $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getLogger()->info($msg);
+                      $this->getKernel()->em()->flush();
                     }
-
-                    $this->getKernel()->em()->flush();
 
                      // redirect even if its null
                     $response = new RedirectResponse(

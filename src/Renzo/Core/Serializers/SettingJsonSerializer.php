@@ -26,26 +26,6 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
  */
 class SettingJsonSerializer implements SerializerInterface
 {
-
-    protected $setting;
-    /**
-     * SettingJsonSerializer's contructor.
-     *
-     * @param RZ\Renzo\Core\Entities\Setting $setting
-     */
-    public function __construct(Setting $setting)
-    {
-        $this->setting = $setting;
-    }
-
-    /**
-     * @return RZ\Renzo\Core\Entities\Setting
-     */
-    public function getSetting()
-    {
-        return $this->setting;
-    }
-
     /**
      * Serializes data.
      *
@@ -56,15 +36,19 @@ class SettingJsonSerializer implements SerializerInterface
      * @return array
      * @see RZ\Renzo\Core\Serializers\GroupJsonSerializer::serialize
      */
-    public function serialize()
+    public static function serialize($setting)
     {
         $data = array();
-        $data['name'] = $this->getSetting()->getName();
-        $data['value'] = $this->getSetting()->getValue();
-        $data['type'] = $this->getSetting()->getType();
-        $data['visible'] = $this->getSetting()->isVisible();
+        $data['name'] = $setting->getName();
+        $data['value'] = $setting->getValue();
+        $data['type'] = $setting->getType();
+        $data['visible'] = $setting->isVisible();
 
-        return $data;
+        if (defined('JSON_PRETTY_PRINT')) {
+            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode($data, JSON_NUMERIC_CHECK);
+        }
     }
 
     /**

@@ -27,40 +27,20 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 class GroupJsonSerializer implements SerializerInterface
 {
 
-    protected $group;
-
-    /**
-     * GroupSerializer's constructor.
-     * @param RZ\Renzo\Core\Entities\Group $group
-     */
-    public function __construct(NodeType $group)
-    {
-        $this->group = $group;
-    }
-
-    /**
-     * @return RZ\Renzo\Core\Entities\Group
-     */
-    public function getGroup()
-    {
-        return $this->group;
-    }
-
     /**
      * Serializes data into Json.
      *
      * @return string
      */
-    public function serialize()
+    public static function serialize($group)
     {
         $data = array();
 
-        $data['name'] = $this->getName();
+        $data['name'] = $group->getName();
         $data['roles'] = array();
 
-        foreach ($this->getGroup()->getRoles() as $role) {
-            $roleSerializer = new RoleJsonSerializer($role);
-            $data['roles'][] = $roleSerializer->serialize();
+        foreach ($group->getRoles() as $role) {
+            $data['roles'][] = array('name' => $role->getName());
         }
 
         if (defined(JSON_PRETTY_PRINT)) {
@@ -97,9 +77,11 @@ class GroupJsonSerializer implements SerializerInterface
 
         foreach ($tempArray['roles'] as $roleAssoc) {
             $role = RoleJsonSerializer::deserialize(json_encode($roleAssoc));
+            $role = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\Role')->findOneByName($role->getName());
             $group->addRole($role);
         }
-
-        return $group;
+        $data = array();
+        $data[] = $group;
+        return $data;
     }
 }

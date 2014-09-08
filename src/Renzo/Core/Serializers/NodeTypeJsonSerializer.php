@@ -27,45 +27,36 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 class NodeTypeJsonSerializer implements SerializerInterface
 {
 
-    protected $nodeType;
-
-    /**
-     * NodeTypeSerializer's constructor.
-     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
-     */
-    public function __construct(NodeType $nodeType)
-    {
-        $this->nodeType = $nodeType;
-    }
-
-    /**
-     * @return RZ\Renzo\Core\Entities\NodeType
-     */
-    public function getNodeType()
-    {
-        return $this->nodeType;
-    }
 
     /**
      * Serializes data into Json.
      *
      * @return string
      */
-    public function serialize()
+    public function serialize($nodeType)
     {
         $data = array();
 
-        $data['name'] =           $this->getNodeType()->getName();
-        $data['displayName'] =    $this->getNodeType()->getDisplayName();
-        $data['description'] =    $this->getNodeType()->getDescription();
-        $data['visible'] =        $this->getNodeType()->isVisible();
-        $data['newsletterType'] = $this->getNodeType()->isNewsletterType();
-        $data['hidingNodes'] =    $this->getNodeType()->isHidingNodes();
+        $data['name'] =           $nodeType->getName();
+        $data['displayName'] =    $nodeType->getDisplayName();
+        $data['description'] =    $nodeType->getDescription();
+        $data['visible'] =        $nodeType->isVisible();
+        $data['newsletterType'] = $nodeType->isNewsletterType();
+        $data['hidingNodes'] =    $nodeType->isHidingNodes();
         $data['fields'] =         array();
 
-        foreach ($this->getNodeType()->getFields() as $nodeTypeField) {
-            $ntfSerializer = new NodeTypeFieldJsonSerializer($nodeTypeField);
-            $data['fields'][] = $ntfSerializer->serialize();
+        foreach ($nodeType()->getFields() as $nodeTypeField) {
+            $nodeTypeFieldData = array();
+            $nodeTypeFieldData['name'] =           $nodeTypeField->getName();
+            $nodeTypeFieldData['label'] =          $nodeTypeField->getLabel();
+            $nodeTypeFieldData['description'] =    $nodeTypeField->getDescription();
+            $nodeTypeFieldData['visible'] =        $nodeTypeField->isVisible();
+            $nodeTypeFieldData['type'] =           $nodeTypeField->getType();
+            $nodeTypeFieldData['indexed'] =        $nodeTypeField->isIndexed();
+            $nodeTypeFieldData['virtual'] =        $nodeTypeField->isVirtual();
+            $nodeTypeFieldData['default_values'] = $nodeTypeField->getDefaultValues();
+
+            $data['fields'][] = $nodeTypeFieldData;
         }
 
         if (defined('JSON_PRETTY_PRINT')) {

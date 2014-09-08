@@ -335,4 +335,11 @@ groupsRemoveUsersPage:
     path:     /rz-admin/groups/edit/{groupId}/users/{userId}/remove
     defaults: { _controller: Themes\Rozier\Controllers\GroupsController::removeUsersAction }
     requirements: { groupId : "[0-9]+", userId : "[0-9]+" }
+groupsExportAllPage:
+    path:     /rz-admin/groups/export
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsUtilsController::exportAllAction }
+groupsExportPage:
+    path:     /rz-admin/groups/export/{groupId}
+    requirements: { groupId : "[0-9]+" }
+    defaults: { _controller: Themes\Rozier\Controllers\GroupsUtilsController::exportAction }
 

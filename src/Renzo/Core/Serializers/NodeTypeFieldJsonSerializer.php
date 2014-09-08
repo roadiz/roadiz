@@ -27,25 +27,6 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 class NodeTypeFieldJsonSerializer implements SerializerInterface
 {
 
-    protected $nodeTypeField;
-    /**
-     * NodeTypeFieldSerializer's contructor.
-     *
-     * @param RZ\Renzo\Core\Entities\NodeTypeField $nodeTypeField
-     */
-    public function __construct(NodeTypeField $nodeTypeField)
-    {
-        $this->nodeTypeField = $nodeTypeField;
-    }
-
-    /**
-     * @return RZ\Renzo\Core\Entities\NodeTypeField
-     */
-    public function getNodeTypeField()
-    {
-        return $this->nodeTypeField;
-    }
-
     /**
      * Serializes data.
      *
@@ -56,20 +37,24 @@ class NodeTypeFieldJsonSerializer implements SerializerInterface
      * @return array
      * @see RZ\Renzo\Core\Serializers\NodeTypeJsonSerializer::serialize
      */
-    public function serialize()
+    public static function serialize($nodeTypeField)
     {
         $data = array();
 
-        $data['name'] =           $this->getNodeTypeField()->getName();
-        $data['label'] =          $this->getNodeTypeField()->getLabel();
-        $data['description'] =    $this->getNodeTypeField()->getDescription();
-        $data['visible'] =        $this->getNodeTypeField()->isVisible();
-        $data['type'] =           $this->getNodeTypeField()->getType();
-        $data['indexed'] =        $this->getNodeTypeField()->isIndexed();
-        $data['virtual'] =        $this->getNodeTypeField()->isVirtual();
-        $data['default_values'] = $this->getNodeTypeField()->getDefaultValues();
+        $data['name'] =           $nodeTypeField->getName();
+        $data['label'] =          $nodeTypeField->getLabel();
+        $data['description'] =    $nodeTypeField->getDescription();
+        $data['visible'] =        $nodeTypeField->isVisible();
+        $data['type'] =           $nodeTypeField->getType();
+        $data['indexed'] =        $nodeTypeField->isIndexed();
+        $data['virtual'] =        $nodeTypeField->isVirtual();
+        $data['default_values'] = $nodeTypeField->getDefaultValues();
 
-        return $data;
+        if (defined('JSON_PRETTY_PRINT')) {
+            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode($data, JSON_NUMERIC_CHECK);
+        }
     }
 
     /**

@@ -70,8 +70,8 @@ class GroupHandler
 
             foreach ($newGroup->getRolesEntities() as $newRole) {
                 if (false == in_array($newRole->getName(), $existingRolesNames)) {
-                    $this->getGroup()->addRole($newRole);
-                    Kernel::getInstance()->em()->persist($newRole);
+                    $role = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\Role')->findOneByName($newRole->getName());
+                    $this->getGroup()->addRole($role);
                 }
             }
 

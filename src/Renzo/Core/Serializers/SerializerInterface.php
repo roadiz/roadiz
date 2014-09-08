@@ -21,7 +21,7 @@ interface SerializerInterface
      *
      * @return mixed
      */
-    public function serialize();
+    public static function serialize($obj);
 
     /**
      * Deserializes a json file into a readable array of datas.
