@@ -667,6 +667,10 @@
                 <source>role.is.required</source>
                 <target>This role is required.</target>
             </trans-unit>
+            <trans-unit id="role.imported">
+                <source>role.imported</source>
+                <target>Import successful.</target>
+            </trans-unit>
 
             <!-- controller / Schema -->
             <trans-unit id="database.schema.updated">

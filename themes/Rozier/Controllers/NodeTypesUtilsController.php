@@ -50,10 +50,8 @@ class NodeTypesUtilsController extends RozierApp
         $nodeType = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
-        $serializer = new NodeTypeJsonSerializer($nodeType);
-
         $response =  new Response(
-            $serializer->serialize(),
+            NodeTypeJsonSerializer::serialize($noteType),
             Response::HTTP_OK,
             array()
         );

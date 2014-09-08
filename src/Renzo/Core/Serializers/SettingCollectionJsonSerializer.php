@@ -27,36 +27,16 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
  */
 class SettingCollectionJsonSerializer implements SerializerInterface
 {
-
-    protected $settings;
-    /**
-     * SettingCollectionJsonSerializer's contructor.
-     *
-     * @param Doctrine\Common\Collections\ArrayCollection $settings
-     */
-    public function __construct(ArrayCollection $settings)
-    {
-        $this->setting = $setting;
-    }
-
-    /**
-     * @return Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getSettings()
-    {
-        return $this->settings;
-    }
-
     /**
      * Serializes data.
      *
      * @return string
      * @see RZ\Renzo\Core\Serializers\GroupJsonSerializer::serialize
      */
-    public function serialize()
+    public static function serialize($settings)
     {
         $data = array();
-        foreach ($this->getSettings() as $setting) {
+        foreach ($settings as $setting) {
             $data[] = array(
                 "name" => $setting->getName(),
                 "value" => $setting->getValue(),

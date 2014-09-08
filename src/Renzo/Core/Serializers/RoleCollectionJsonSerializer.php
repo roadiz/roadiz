@@ -12,7 +12,7 @@
 namespace RZ\Renzo\Core\Serializers;
 
 use RZ\Renzo\Core\Entities\Role;
-use RZ\Renzo\Core\Entities\Group;
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\Serializers\EntitySerializer;
 use RZ\Renzo\Core\Kernel;
 
@@ -24,22 +24,23 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 /**
  * Serialization class for Role.
  */
-class RoleJsonSerializer implements SerializerInterface
+class RoleCollectionJsonSerializer implements SerializerInterface
 {
-    /**
-     * Serializes data.
+     /**
+     * Serializes data into Json.
      *
-     * This method does not output a valid JSON string
-     * but only a ready-to-encode array. This will be encoded
-     * by the parent GroupJsonSerialize method.
-     *
-     * @return array
-     * @see RZ\Renzo\Core\Serializers\GroupJsonSerializer::serialize
+     * @return string
      */
-    public static function serialize($role)
+    public static function serialize($roles)
     {
         $data = array();
-        $data['name'] = $role->getName();
+
+        foreach ($roles as $role) {
+            $tmp = array();
+            $tmp['name'] = $role->getName();
+            $data[] = $tmp;
+        }
+
 
         if (defined('JSON_PRETTY_PRINT')) {
             return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -53,16 +54,16 @@ class RoleJsonSerializer implements SerializerInterface
      *
      * @param string $jsonString
      *
-     * @return RZ\Renzo\Core\Entities\Role
+     * @return ArrayCollection
      */
     public static function deserialize($jsonString)
     {
-        $encoder = new JsonEncoder();
-        $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes(array('name'));
-
-        $serializer = new Serializer(array($normalizer), array($encoder));
-
-        return $serializer->deserialize($jsonString, 'RZ\Renzo\Core\Entities\Role', 'json');
+        $roles = json_decode($jsonString, true);
+        $data = new ArrayCollection();
+        foreach ($roles as $role) {
+            $tmp = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\Role')->findOneByName($role['name']);
+            $data[] = $tmp;
+        }
+        return $data;
     }
 }
