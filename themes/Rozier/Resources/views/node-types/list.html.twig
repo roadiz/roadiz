@@ -29,7 +29,7 @@
 					<td>{{ type.getSourceEntityClassName }}</td>
 					<td><div class="uk-badge">{{ type.getFields|length }} {% trans %}fields{% endtrans %}</div></td>
 					<td>
-						<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: type.getId }) }}">{% trans %}Manage fields{% endtrans %}</a>
+						<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: type.getId }) }}"><i class="uk-icon-node-type-fields"></i> {% trans %}Manage fields{% endtrans %}</a>
 						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypesDeletePage', { nodeTypeId: type.getId }) }}">{% trans %}Delete{% endtrans %}</a>
 						<a class="uk-button uk-button-small" href="{{ path('nodesTypesExportPage', { nodeTypeId: type.getId }) }}">{% trans %}Export{% endtrans %}</a>
 					</td>

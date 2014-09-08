@@ -72,7 +72,7 @@ class Translation extends AbstractDateTimed
     public static $availableLocalesShortcut = array(
         'fr' => "fr_FR", // France
         'en' => "en_GB",
-        'us' => "en_US",
+        'en' => "en_US",
         'it' => "it_IT",
         'es' => "es_ES",
         'nl' => "nl_NL",
