@@ -272,7 +272,7 @@ class SettingsController extends RozierApp
                 ->exists($data['name'])) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
             }
-            //try {
+            try {
                 foreach ($data as $key => $value) {
                     if ($key != 'group') {
                         $setter = 'set'.ucwords($key);
@@ -288,9 +288,9 @@ class SettingsController extends RozierApp
                 $this->getKernel()->em()->flush();
 
                 return true;
-            // } catch (\Exception $e) {
-            //     throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
-            // }
+            } catch (\Exception $e) {
+                throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
+            }
         }
     }
 
