@@ -272,18 +272,25 @@ class SettingsController extends RozierApp
                 ->exists($data['name'])) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
             }
-            try {
+            //try {
                 foreach ($data as $key => $value) {
-                    $setter = 'set'.ucwords($key);
-                    $setting->$setter( $value );
+                    if ($key != 'group') {
+                        $setter = 'set'.ucwords($key);
+                        $setting->$setter( $value );
+                    }
+                    else {
+                        $group = $this->getKernel()->em()
+                                 ->find('RZ\Renzo\Core\Entities\SettingGroup', (int) $value);
+                        $setting->setSettingGroup($group);
+                    }
                 }
 
                 $this->getKernel()->em()->flush();
 
                 return true;
-            } catch (\Exception $e) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
-            }
+            // } catch (\Exception $e) {
+            //     throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
+            // }
         }
     }
 
@@ -374,6 +381,7 @@ class SettingsController extends RozierApp
             'Value' =>   $setting->getValue(),
             'visible' => $setting->isVisible(),
             'type' =>    $setting->getType(),
+            'group' =>   $setting->getSettingGroup()->getId(),
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
@@ -391,7 +399,9 @@ class SettingsController extends RozierApp
             ->add('type', 'choice', array(
                 'required' => true,
                 'choices' => NodeTypeField::$typeToHuman
-            ));
+            ))
+            ->add('group', new \RZ\Renzo\CMS\Forms\SettingGroupType()
+            );
 
         return $builder->getForm();
     }
