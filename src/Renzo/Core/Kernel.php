@@ -124,7 +124,14 @@ class Kernel
         $this->resolver = new ControllerResolver();
         $this->stopwatch->stop('initKernel');
 
-        date_default_timezone_set($this->getConfig()["timezone"]);
+        /*
+         * Define a request wide timezone
+         */
+        if (!empty($this->getConfig()["timezone"])) {
+            date_default_timezone_set($this->getConfig()["timezone"]);
+        } else {
+            date_default_timezone_set("Europe/Paris");
+        }
     }
 
     /**
