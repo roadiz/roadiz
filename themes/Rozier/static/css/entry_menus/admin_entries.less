@@ -9,6 +9,7 @@
             padding: 0px;
             margin: 0px;
             color: @admin-menu-color;
+            .transition(color 0.2s linear);
         }
     }
     header {
@@ -16,10 +17,17 @@
         .box-sizing();
 
         background-color: #e9e9e9;
+
+
+        hr {
+            border-top: 1px dashed #c4c4c4;
+            border-bottom: 1px dashed white;
+            height: 0px;
+            margin: 0px;
+        }
     }
     li {
         width: 30px;
-
         display: block;
         margin: 0px auto;
         padding: 10px;
@@ -34,20 +42,65 @@
         .uk-nav-sub {
             position: relative;
             display: none;
-            padding: 0px;
+            padding: 5px 0;
             margin: 0px;
             left: -10px;
 
             li {
                 border-bottom: 0 none;
+                padding: 5px 10px;
+
+                i {
+                    font-size: 24px;
+                }
             }
         }
 
-
         &:hover {
+            & > a,
+            & > p {
+                color: darken(@admin-menu-color, 25%);
+            }
+
             .uk-nav-sub {
                 display: block;
             }
         }
+    }
+}
+
+#frontend-home {
+    &-area {
+        height: 113px;
+        .box-sizing();
+        text-align: center;
+        padding: 40px 0;
+    }
+    &-link {
+        background: white;
+        color: #909090;
+        font-size: 28px;
+        line-height: 38px;
+
+        width: 40px;
+        height: 40px;
+    }
+}
+
+#minify-tree-panel {
+    &-area {
+        height: 35px;
+        .box-sizing();
+        text-align: center;
+        padding: 7px 0;
+    }
+    &-button {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+        line-height: 20px;
+        background: #d8d8d8;
+        border: 0 none;
+        color: #909090;
     }
 }

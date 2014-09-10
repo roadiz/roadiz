@@ -60,10 +60,10 @@
                 background: #333333;
                 border-color: @user-panel-text-alt-color;
                 text-shadow: none;
-
                 display: inline-block;
-
                 .opacity(0.3);
+
+                .transition(~"border-color 0.3s linear, opacity 0.3s linear");
 
                 &:hover {
                     .opacity(1);

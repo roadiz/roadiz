@@ -1,9 +1,20 @@
 <nav>
-	<header><a id="frontend-home-link"
-			    title="{% trans %}see.website{% endtrans %}"
-				class="uk-icon-button uk-icon-earth"
-				target="_blank"
-				href="{{ path('homePage') }}"></a></header>
+	<header>
+		<div id="frontend-home-area">
+			<a id="frontend-home-link"
+			   title="{% trans %}see.website{% endtrans %}"
+			   class="uk-icon-button uk-icon-earth"
+			   target="_blank"
+			   href="{{ path('homePage') }}"></a>
+		</div>
+		<hr/>
+		<div id="minify-tree-panel-area">
+			<a id="minify-tree-panel-button"
+				title="{% trans %}minify.tree.panel{% endtrans %}"
+				class="uk-icon-button uk-icon-minus">
+			</a>
+		</div>
+	</header>
 
 	<ul class="uk-nav uk-nav-parent-icon">
 		<li><a href="{{ path('adminHomePage') }}"><i class="uk-icon-dashboard"></i><span class="info">{% trans %}dashboard{% endtrans %}</span></a></li>
