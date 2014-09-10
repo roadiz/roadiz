@@ -10,25 +10,26 @@
     <div class="uk-form-row uk-margin-small-top documents-widget" data-document-widget>
     	<nav class="documents-widget-nav uk-navbar">
     		<ul class="uk-navbar-nav">
-    			<li class="uk-navbar-brand">{{ label }}</li>
+    			<li class="uk-navbar-brand"><i class="uk-icon-documents"></i></li>
     		</ul>
     		<div class="uk-navbar-content uk-navbar-flip">
                 <div class="uk-button-group">
-                    <a class="uk-button" href="#" data-document-widget-toggle-explorer><i class="uk-icon-folder-open-o"></i> {% trans %}documents.toggle-explorer{% endtrans %}</a>
-                    <a class="uk-button" href="#" data-document-widget-toggle-uploader><i class="uk-icon-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
+                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-explorer><i class="uk-icon-document-explorer"></i> {% trans %}documents.toggle-explorer{% endtrans %}</a>
+                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-cloud-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
+                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-embedder><i class="uk-icon-embed"></i> {% trans %}documents.toggle-embedder{% endtrans %}</a>
                 </div>
             </div>
     	</nav>
 	    <ul class="uk-nestable documents-widget-nestable" data-uk-nestable="{group:'documents-widget',maxDepth:1}" data-input-name="{{ name }}">
 		    {% for doc in data %}
-		    {% include 'widgets/documentSmallThumbnail.html.twig' with { 
-                'document':doc, 
-                'name': name, 
-                'full_name':full_name, 
-                'read_only': read_only, 
-                'disabled':disabled, 
+		    {% include 'widgets/documentSmallThumbnail.html.twig' with {
+                'document':doc,
+                'name': name,
+                'full_name':full_name,
+                'read_only': read_only,
+                'disabled':disabled,
                 'required':required,
-                'attr': attr 
+                'attr': attr
             } %}
 		    {% endfor %}
 	    </ul>
