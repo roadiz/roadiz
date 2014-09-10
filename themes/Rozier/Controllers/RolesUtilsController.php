@@ -17,6 +17,8 @@ use RZ\Renzo\Core\Serializers\RoleJsonSerializer;
 use RZ\Renzo\Core\Serializers\RoleCollectionJsonSerializer;
 use Themes\Rozier\RozierApp;
 
+use RZ\Renzo\CMS\Importers\RolesImporter;
+
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -117,23 +119,38 @@ class RolesUtilsController extends RozierApp
                 $serializedData = file_get_contents($file['tmp_name']);
 
                 if (null !== json_decode($serializedData)) {
-                    $roles = RoleCollectionJsonSerializer::deserialize($serializedData);
+                    if (RolesImporter::importJsonFile($serializedData)) {
+                        $msg = $this->getTranslator()->trans('role.imported');
+                        $request->getSession()->getFlashBag()->add('confirm', $msg);
+                        $this->getLogger()->info($msg);
 
-                    $msg = $this->getTranslator()->trans('role.imported');
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                        $this->getKernel()->em()->flush();
 
-                    $this->getKernel()->em()->flush();
+                         // redirect even if its null
+                        $response = new RedirectResponse(
+                            $this->getKernel()->getUrlGenerator()->generate(
+                                'rolesHomePage'
+                            )
+                        );
+                        $response->prepare($request);
 
-                     // redirect even if its null
-                    $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
-                            'rolesHomePage'
-                        )
-                    );
-                    $response->prepare($request);
+                        return $response->send();
+                    } else {
+                        $msg = $this->getTranslator()->trans('file.format.not_valid');
+                        $request->getSession()->getFlashBag()->add('error', $msg);
+                        $this->getLogger()->error($msg);
 
-                    return $response->send();
+                        // redirect even if its null
+                        $response = new RedirectResponse(
+                            $this->getKernel()->getUrlGenerator()->generate(
+                                'rolesImportPage'
+                            )
+                        );
+                        $response->prepare($request);
+
+                        return $response->send();
+                    }
+
 
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
