@@ -20,6 +20,8 @@ use Themes\Rozier\RozierApp;
 
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 
+use RZ\Renzo\CMS\Importers\GroupsImporter;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -119,29 +121,7 @@ class GroupsUtilsController extends RozierApp
 
                 if (null !== json_decode($serializedData)) {
 
-                    $groups = GroupCollectionJsonSerializer::deserialize($serializedData);
-                    foreach ($groups as $group) {
-                        $existingGroup = $this->getKernel()->em()
-                            ->getRepository('RZ\Renzo\Core\Entities\Group')
-                            ->findOneBy(array('name'=>$group->getName()));
-
-                        if (null === $existingGroup) {
-                            foreach ($group->getRolesEntities() as $role) {
-                              /*
-                               * then persist each role
-                               */
-                                $role = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\Role')->findOneByName($role->getName());
-                            }
-
-                            $this->getKernel()->em()->persist($group);
-                            // Flush before creating group's roles.
-                            $this->getKernel()->em()->flush();
-                        } else {
-                            $existingGroup->getHandler()->diff($group);
-                        }
-
-                        $this->getKernel()->em()->flush();
-                    }
+                    GroupsImporter::importJsonFile($serializedData);
 
                     $msg = $this->getTranslator()->trans('group.imported.updated');
                     $request->getSession()->getFlashBag()->add('confirm', $msg);

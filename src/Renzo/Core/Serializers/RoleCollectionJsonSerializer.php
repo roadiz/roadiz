@@ -4,7 +4,7 @@
  *
  * Description
  *
- * @file RoleJsonSerializer.php
+ * @file RoleCollectionJsonSerializer.php
  * @copyright REZO ZERO 2014
  * @author Thomas Aufresne
  */
