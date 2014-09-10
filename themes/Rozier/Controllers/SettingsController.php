@@ -274,8 +274,15 @@ class SettingsController extends RozierApp
             }
             try {
                 foreach ($data as $key => $value) {
-                    $setter = 'set'.ucwords($key);
-                    $setting->$setter( $value );
+                    if ($key != 'group') {
+                        $setter = 'set'.ucwords($key);
+                        $setting->$setter( $value );
+                    }
+                    else {
+                        $group = $this->getKernel()->em()
+                                 ->find('RZ\Renzo\Core\Entities\SettingGroup', (int) $value);
+                        $setting->setSettingGroup($group);
+                    }
                 }
 
                 $this->getKernel()->em()->flush();
@@ -375,6 +382,14 @@ class SettingsController extends RozierApp
             'visible' => $setting->isVisible(),
             'type' =>    $setting->getType(),
         );
+        if ($setting->getSettingGroup() == null)
+        {
+            $default['group'] = null;
+        }
+        else
+        {
+            $default['group'] = $setting->getSettingGroup()->getId();
+        }
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
             ->add('name', 'text', array(
@@ -391,7 +406,9 @@ class SettingsController extends RozierApp
             ->add('type', 'choice', array(
                 'required' => true,
                 'choices' => NodeTypeField::$typeToHuman
-            ));
+            ))
+            ->add('group', new \RZ\Renzo\CMS\Forms\SettingGroupType()
+            );
 
         return $builder->getForm();
     }

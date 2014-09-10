@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Entities\NodeTypeField;
+use RZ\Renzo\Core\Entities\SettingGroup;
 /**
  * Settings entity are a simple key-value configuration system.
  *
@@ -98,6 +99,31 @@ class Setting extends AbstractEntity
     public function setVisible($visible)
     {
         $this->visible = (boolean) $visible;
+
+        return $this;
+    }
+
+    /**
+     * @ManyToOne(targetEntity="SettingGroup", inversedBy="settings")
+     * @JoinColumn(name="setting_group_id", referencedColumnName="id")
+     * @var SettingGroup
+     */
+    private $settingGroup;
+    /**
+     * @return SettingGroup
+     */
+    public function getSettingGroup()
+    {
+        return $this->settingGroup;
+    }
+    /**
+     * @param SettingGroup $settingGroup
+     *
+     * @return $this
+     */
+    public function setSettingGroup($settingGroup)
+    {
+        $this->settingGroup = $settingGroup;
 
         return $this;
     }
