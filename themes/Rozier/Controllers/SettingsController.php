@@ -381,8 +381,15 @@ class SettingsController extends RozierApp
             'Value' =>   $setting->getValue(),
             'visible' => $setting->isVisible(),
             'type' =>    $setting->getType(),
-            'group' =>   $setting->getSettingGroup()->getId(),
         );
+        if ($setting->getSettingGroup() == null)
+        {
+            $default['group'] = null;
+        }
+        else
+        {
+            $default['group'] = $setting->getSettingGroup()->getId();
+        }
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
             ->add('name', 'text', array(

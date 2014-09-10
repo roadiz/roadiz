@@ -142,6 +142,12 @@ settingsDeletePage:
     path:     /rz-admin/settings/delete/{settingId}
     defaults: { _controller: Themes\Rozier\Controllers\SettingsController::deleteAction }
     requirements: { settingId : "[0-9]+" }
+settingsExportAllPage:
+    path:     /rz-admin/settings/export
+    defaults: { _controller: Themes\Rozier\Controllers\SettingsUtilsController::exportAllAction }
+settingsImportPage:
+    path:     /rz-admin/settings/import
+    defaults: { _controller: Themes\Rozier\Controllers\SettingsUtilsController::importJsonFileAction }
 
 # TAGS
 tagsHomePage:

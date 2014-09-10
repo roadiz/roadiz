@@ -12,7 +12,8 @@
 namespace RZ\Renzo\Core\Serializers;
 
 use RZ\Renzo\Core\Entities\Setting;
-use RZ\Renzo\Core\Entities\Group;
+use RZ\Renzo\Core\Entities\SettingGroup;
+use RZ\Renzo\Core\Entities\NodeTypeField;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\Serializers\EntitySerializer;
 use RZ\Renzo\Core\Kernel;
@@ -31,20 +32,24 @@ class SettingCollectionJsonSerializer implements SerializerInterface
      * Serializes data.
      *
      * @return string
-     * @see RZ\Renzo\Core\Serializers\GroupJsonSerializer::serialize
+     *
      */
-    public static function serialize($settings)
+    public static function serialize($settingGroup)
     {
         $data = array();
-        foreach ($settings as $setting) {
-            $data[] = array(
-                "name" => $setting->getName(),
-                "value" => $setting->getValue(),
-                "visible" => $setting->isVisible(),
-                "type" => $setting->getType(),
-            );
+        foreach ($settingGroup as $group) {
+            $tmpGroup = array();
+            foreach ($group->getSettings() as $setting) {
+                $tmp = array(
+                    "name" => $setting->getName(),
+                    "value" => $setting->getValue(),
+                    "visible" => $setting->isVisible(),
+                    "type" => $setting->getType(),
+                );
+                $tmpGroup[] = $tmp;
+            }
+            $data[$group->getName()] = $tmpGroup;
         }
-
         if (defined('JSON_PRETTY_PRINT')) {
             return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         } else {
@@ -62,16 +67,28 @@ class SettingCollectionJsonSerializer implements SerializerInterface
     public static function deserialize($jsonString)
     {
         $collection = new ArrayCollection();
-        $array = json_decode($jsonString, true);
+        $groups = json_decode($jsonString, true);
+        foreach ($groups as $name => $group)
+        {
+            $newGroup = new SettingGroup();
 
-        foreach ($array as $settingAssoc) {
-            $setting = new Setting();
-            $setting->setName($settingAssoc['name']);
-            $setting->setValue($settingAssoc['value']);
-            $setting->setVisible($settingAssoc['visible']);
-            $setting->setType($settingAssoc['type']);
+            $newGroup->setName($name);
+            foreach ($group as $setting) {
+                $newSetting = new Setting();
+                $newSetting->setName($setting['name']);
+                $newSetting->setType($setting['type']);
+                if ($setting['type'] == NodeTypeField::DATETIME_T) {
+                    $dt = new \DateTime($setting['value']['date'], new \DateTimeZone($setting['value']['timezone']));
+                    $newSetting->setValue($dt);
+                }
+                else {
+                    $newSetting->setValue($setting['value']);
+                }
+                $newSetting->setVisible($setting['visible']);
 
-            $collection->add($setting);
+                $newGroup->addSetting($newSetting);
+            }
+            $collection[] = $newGroup;
         }
 
         return $collection;

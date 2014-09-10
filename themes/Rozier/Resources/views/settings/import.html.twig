@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<section id="manage-settings">
+    <h1 id="title">{% trans %}import.setting{% endtrans %}</h1>
+
+    {% form_theme form 'forms.html.twig' %}
+    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        <button type="submit" class="uk-button uk-button-primary"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</button>
+    </form>
+</section>
+{% endblock %}

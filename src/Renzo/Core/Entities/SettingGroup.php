@@ -46,11 +46,16 @@ class SettingGroup extends AbstractEntity
 
 
     /**
-     * @OneToMany(targetEntity="Setting", mappedBy="group")
+     * @OneToMany(targetEntity="Setting", mappedBy="settingGroup")
      * @var ArrayCollection
      *
      */
     private $settings;
+
+    public function __construct()
+    {
+        $this->settings = new ArrayCollection();
+    }
     /**
      * @return ArrayCollection
      */
@@ -59,14 +64,29 @@ class SettingGroup extends AbstractEntity
         return $this->settings;
     }
     /**
-     * @param ArrayCollection $settings
+     * @param RZ\Renzo\Core\Entities\Setting $setting
      *
      * @return $this
      */
     public function addSetting($setting)
     {
-        $this->settings->add($setting);
-        $setting->setGroup($this);
+        if (!$this->getSettings()->contains($setting)) {
+            $this->settings->add($setting);
+        }
         return $this;
+    }
+
+    /**
+     * @param ArrayCollection $settings
+     *
+     * @return $this
+     */
+    public function addSettings($settings)
+    {
+        foreach ($settings as $setting) {
+            if (!$this->getSettings()->contains($setting)) {
+                $this->settings->add($setting);
+            }
+        }
     }
 }
