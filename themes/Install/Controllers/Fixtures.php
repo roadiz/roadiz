@@ -88,7 +88,7 @@ class Fixtures
 
         if (null === $existing) {
             $translation = new Translation();
-            $translation->setLocale('en_GB');
+            $translation->setLocale('en_US');
             $translation->setDefaultTranslation(true);
             $translation->setName(Translation::$availableLocales[$translation->getLocale()]);
             $translation->setAvailable(true);
@@ -221,7 +221,7 @@ class Fixtures
 
         if (null === $existing) {
             $feTheme = new Theme();
-            $feTheme->setClassName('\Themes\DefaultTheme\Controllers\DefaultApp');
+            $feTheme->setClassName('\Themes\DefaultTheme\DefaultApp');
             $feTheme->setAvailable(true);
             $feTheme->setBackendTheme(false);
 
