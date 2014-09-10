@@ -53,8 +53,14 @@ class DebugPanel implements EventSubscriberInterface
     public function onKernelResponse(FilterResponseEvent $event)
     {
         $response = $event->getResponse();
+        //
+        if (false !== strpos($response->getContent(), '<!-- ##debug_panel## -->')) {
+            $this->initializeTwig();
+            $content = str_replace('<!-- ##debug_panel## -->', $this->getDebugView(), $response->getContent());
+            $response->setContent($content);
+            $event->setResponse($response);
 
-        if (false !== strpos($response->getContent(), '</body>')) {
+        } elseif (false !== strpos($response->getContent(), '</body>')) {
 
             $this->initializeTwig();
             $content = str_replace('</body>', $this->getDebugView()."</body>", $response->getContent());

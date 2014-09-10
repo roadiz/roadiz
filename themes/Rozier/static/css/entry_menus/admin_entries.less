@@ -1,11 +1,53 @@
+@admin-menu-color: #aeb0b2;
+@admin-menu-border-color: #e0e0e0;
+
 #admin-menu {
 
+    .uk-nav {
+        display: block;
+        a, p {
+            padding: 0px;
+            margin: 0px;
+            color: @admin-menu-color;
+        }
+    }
+    header {
+        height: @global-header-height;
+        .box-sizing();
+
+        background-color: #e9e9e9;
+    }
     li {
+        width: 30px;
+
+        display: block;
+        margin: 0px auto;
+        padding: 10px;
+        border-bottom: 1px solid @admin-menu-border-color;
+
         i {
             font-size: 30px;
         }
         .info {
             display: none;
+        }
+        .uk-nav-sub {
+            position: relative;
+            display: none;
+            padding: 0px;
+            margin: 0px;
+            left: -10px;
+
+            li {
+                border-bottom: 0 none;
+            }
+        }
+
+
+        &:hover {
+            .uk-nav-sub {
+                display: block;
+            }
         }
     }
 }

@@ -17,9 +17,9 @@
 
 #main-container-inner {
 
-     display: table-row;
+    display: table-row;
 
-    & > .main-container-section {
+    & > section {
 
         display: table-cell;
         vertical-align: top;
@@ -32,6 +32,8 @@
             bottom:0;
             left:0;
             right:0;
+
+            padding-bottom: 50px;
         }
     }
 }
@@ -39,6 +41,10 @@
 
 #user-panel {
     width: 268px;
+
+    &.minified {
+        width: 128px;
+    }
 }
 #admin-menu {
     width: 88px;

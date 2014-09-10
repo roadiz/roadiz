@@ -1,39 +1,41 @@
-<div id="rz-debug-panel">
-	<h4>Debug panel</h4>
-	<dl>
-		<dt><i class="uk-icon-truck"></i> Global memory</dt>
-		<dd>{{ (stopwatch.getEvent('global').getMemory / 1000000)|round(2, 'floor') }}Mo</dd>
+<section id="rz-debug-panel">
+	<div>
+		<h4>Debug panel</h4>
+		<dl>
+			<dt><i class="uk-icon-truck"></i> Global memory</dt>
+			<dd>{{ (stopwatch.getEvent('global').getMemory / 1000000)|round(2, 'floor') }}Mo</dd>
 
-		<dt><i class="uk-icon-clock-o"></i> Global time</dt>
-		<dd>{{ stopwatch.getEvent('global').getDuration }}ms</dd>
+			<dt><i class="uk-icon-clock-o"></i> Global time</dt>
+			<dd>{{ stopwatch.getEvent('global').getDuration }}ms</dd>
 
-		<dt><i class="uk-icon-clock-o"></i> Init kernel</dt>
-		<dd>{{ stopwatch.getEvent('initKernel').getDuration }}ms</dd>
+			<dt><i class="uk-icon-clock-o"></i> Init kernel</dt>
+			<dd>{{ stopwatch.getEvent('initKernel').getDuration }}ms</dd>
 
-		<dt><i class="uk-icon-clock-o"></i> Prepare routing</dt>
-		<dd>{{ stopwatch.getEvent('prepareRouting').getDuration }}ms</dd>
+			<dt><i class="uk-icon-clock-o"></i> Prepare routing</dt>
+			<dd>{{ stopwatch.getEvent('prepareRouting').getDuration }}ms</dd>
 
-		<dt><i class="uk-icon-clock-o"></i> Prepare session</dt>
-		<dd>{{ stopwatch.getEvent('sessionSecurity').getDuration }}ms</dd>
+			<dt><i class="uk-icon-clock-o"></i> Prepare session</dt>
+			<dd>{{ stopwatch.getEvent('sessionSecurity').getDuration }}ms</dd>
 
-		<dt><i class="uk-icon-clock-o"></i> Prepare firewall</dt>
-		<dd>{{ stopwatch.getEvent('firewall').getDuration }}ms</dd>
+			<dt><i class="uk-icon-clock-o"></i> Prepare firewall</dt>
+			<dd>{{ stopwatch.getEvent('firewall').getDuration }}ms</dd>
 
-		<dt><i class="uk-icon-clock-o"></i> Prepare locale</dt>
-		<dd>{{ stopwatch.getEvent('prepareTranslation').getDuration }}ms</dd>
+			<dt><i class="uk-icon-clock-o"></i> Prepare locale</dt>
+			<dd>{{ stopwatch.getEvent('prepareTranslation').getDuration }}ms</dd>
 
-		<dt><i class="uk-icon-clock-o"></i> Matching route</dt>
-		<dd>{{ stopwatch.getEvent('matchingRoute').getDuration }}ms</dd>
+			<dt><i class="uk-icon-clock-o"></i> Matching route</dt>
+			<dd>{{ stopwatch.getEvent('matchingRoute').getDuration }}ms</dd>
 
-		<dt><i class="uk-icon-clock-o"></i> Request handling</dt>
-		<dd>{{ stopwatch.getEvent('requestHandling').getDuration }}ms</dd>
+			<dt><i class="uk-icon-clock-o"></i> Request handling</dt>
+			<dd>{{ stopwatch.getEvent('requestHandling').getDuration }}ms</dd>
 
-		{# <dt><i class="uk-icon-clock-o"></i> Controller handling</dt>
-		<dd>{{ stopwatch.getEvent('controllerHandling').getDuration }}ms</dd> #}
+			{# <dt><i class="uk-icon-clock-o"></i> Controller handling</dt>
+			<dd>{{ stopwatch.getEvent('controllerHandling').getDuration }}ms</dd> #}
 
-		{#
-		In controller handling
-		<dt><i class="uk-icon-clock-o"></i> Init translations</dt>
-		<dd>{{ stopwatch.getEvent('initTranslations').getDuration }}ms</dd> #}
-	</dl>
+			{#
+			In controller handling
+			<dt><i class="uk-icon-clock-o"></i> Init translations</dt>
+			<dd>{{ stopwatch.getEvent('initTranslations').getDuration }}ms</dd> #}
+		</dl>
+	</div>
 </div>
