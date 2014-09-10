@@ -21,27 +21,37 @@
     </head>
     <body>
         {% include 'includes/messages.html.twig' %}
-        <div id="main-container" class="uk-grid">
-            {% include 'includes/user_panel.html.twig' %}
-            {% include 'includes/admin_menu.html.twig' %}
+        <div id="main-container" >
+            <div id="main-container-inner">
+                <section class="main-container-section" id="user-panel">
+                    {% include 'includes/user_panel.html.twig' %}
+                </section>
+                <section class="main-container-section" id="admin-menu">
+                    {% include 'includes/admin_menu.html.twig' %}
+                </section>
 
-            <div id="main-trees" class="uk-width-2-10">
-                {% include 'widgets/nodesSourcesSearch.html.twig' %}
-                <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
-                    <li><a href=""><i class="uk-icon-code-fork"></i> {% trans %}nodes{% endtrans %}</a></li>
-                    <li><a href=""><i class="uk-icon-tags"></i> {% trans %}tags{% endtrans %}</a></li>
-                </ul>
-                <!-- This is the container of the content items -->
-                <ul id="tree-container" class="uk-switcher uk-margin">
-                    <li>{% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':true} only %}</li>
-                    <li>{% include 'widgets/tagTree/tagTree.html.twig' with {"tagTree":tagTree, "tag":tagTree.getRootTag, 'mainTagTree':true} only %}</li>
-                </ul>
-            </div>
-            <!-- Add your site or application content here -->
-            <div class="uk-width-6-10" id="main_content">
-            {% block content %}
-                <h1>{% trans %}Welcome{% endtrans %}</h1>
-            {% endblock %}
+                <section id="main-trees" class="main-container-section">
+                    <div>
+                        {% include 'widgets/nodesSourcesSearch.html.twig' %}
+                        <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
+                            <li><a href=""><i class="uk-icon-code-fork"></i> {% trans %}nodes{% endtrans %}</a></li>
+                            <li><a href=""><i class="uk-icon-tags"></i> {% trans %}tags{% endtrans %}</a></li>
+                        </ul>
+                        <!-- This is the container of the content items -->
+                        <ul id="tree-container" class="uk-switcher uk-margin">
+                            <li>{% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':true} only %}</li>
+                            <li>{% include 'widgets/tagTree/tagTree.html.twig' with {"tagTree":tagTree, "tag":tagTree.getRootTag, 'mainTagTree':true} only %}</li>
+                        </ul>
+                    </div>
+                </section>
+                <!-- Add your site or application content here -->
+                <section id="main_content" class="main-container-section">
+                    <div>
+                    {% block content %}
+                        <h1>{% trans %}Welcome{% endtrans %}</h1>
+                    {% endblock %}
+                    </div>
+                </section>
             </div>
         </div>
 

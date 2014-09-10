@@ -1,0 +1,48 @@
+/*
+ * This file define main grid layout
+ * and width for each section
+ */
+#main-container {
+    display: table;
+    position: fixed;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+#main-container-inner {
+
+     display: table-row;
+
+    & > .main-container-section {
+
+        display: table-cell;
+        vertical-align: top;
+        position: relative;
+
+        & > div {
+            overflow-y: scroll;
+            position:absolute;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+        }
+    }
+}
+
+
+#user-panel {
+    width: 268px;
+}
+#admin-menu {
+    width: 88px;
+}
+#main-trees {
+    width: 271px;
+}

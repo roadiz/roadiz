@@ -1,11 +1,27 @@
-<section class="uk-width-1-10" id="user-panel">
-	<a href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"><img width="200" height="200" class="uk-thumbnail" src="{{ session.user.getPictureUrl }}" alt="{{ session.user.getUsername }}" /></a>
-	<h3>{{ session.user.getUsername }}</h3>
-	<h4>{{ session.user.getFirstName }}</h4>
-	<p><a title="{% trans %}edit.account{% endtrans %}" class="uk-icon-button uk-icon-user" href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"></a></p>
-	<p><a title="{% trans %}logout{% endtrans %}" class="uk-icon-button uk-icon-sign-out" href="{{ path('logoutPage') }}"></a></p>
-	<p><a title="{% trans %}delete.caches{% endtrans %}" class="uk-icon-button uk-icon-flash" href="{{ path('deleteDoctrineCache') }}"></a></p>
-	{% if head.devMode %}
-	<p><i class="uk-icon-cogs"></i> {% trans %}Dev mode activated{% endtrans %}</p>
-	{% endif %}
-</section>
+{% if session.user.getFirstName %}
+{% set displayName = session.user.getFirstName %}
+{% else %}
+{% set displayName = session.user.getUsername %}
+{% endif %}
+
+<div>
+    <div id="company">
+        {% if head.companyLogo %}
+        {% else %}
+            <a class="uk-icon-rezozero" href="{{ path('adminHomePage') }}"></a>
+        {% endif %}
+    </div>
+	<div id="user">
+        <a id="user-picture" href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"><img width="200" height="200" class="uk-thumbnail" src="{{ session.user.getPictureUrl }}" alt="{{ session.user.getUsername }}" /></a>
+        <h3>Hello <span class="username">{{ displayName }}</span></h3>
+
+        <nav class="user-actions">
+            <a title="{% trans %}edit.account{% endtrans %}" class="uk-icon-button uk-icon-user" href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"></a>
+            <a title="{% trans %}logout{% endtrans %}" class="uk-icon-button uk-icon-turn-off" href="{{ path('logoutPage') }}"></a>
+            <a title="{% trans %}delete.caches{% endtrans %}" class="uk-icon-button uk-icon-flash" href="{{ path('deleteDoctrineCache') }}"></a>
+            {% if head.devMode %}
+            <p><i class="uk-icon-cogs"></i> {% trans %}Dev mode activated{% endtrans %}</p>
+            {% endif %}
+        </nav>
+    </div>
+</div>
