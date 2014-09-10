@@ -34,8 +34,8 @@
                     <div>
                         {% include 'widgets/nodesSourcesSearch.html.twig' %}
                         <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
-                            <li><a href=""><i class="uk-icon-code-fork"></i> {% trans %}nodes{% endtrans %}</a></li>
-                            <li><a href=""><i class="uk-icon-tags"></i> {% trans %}tags{% endtrans %}</a></li>
+                            <li class="tabs"><a href=""><i class="uk-icon-node-tree"></i><span class="label">{% trans %}nodes{% endtrans %}</span></a></li>
+                            <li class="tabs"><a href=""><i class="uk-icon-tags"></i><span class="label">{% trans %}tags{% endtrans %}</span></a></li>
                         </ul>
                         <!-- This is the container of the content items -->
                         <ul id="tree-container" class="uk-switcher uk-margin">

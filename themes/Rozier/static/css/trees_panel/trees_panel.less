@@ -1,0 +1,66 @@
+#main-trees {
+
+}
+
+#nodes-sources-search {
+    height: @global-header-height;
+    background-color: #aaaaaa;
+    text-align: center;
+
+    form {
+        padding-top: 45px;
+    }
+
+    i {
+        color: #4c4c4c;
+        margin-top: -9px;
+    }
+
+    &-input {
+
+        background: none transparent;
+        border: 0 none;
+        color: #4c4c4c;
+        font-size: 14px;
+
+        &::-webkit-input-placeholder {
+           color: #4c4c4c;
+        }
+
+        &:-moz-placeholder { /* Firefox 18- */
+           color: #4c4c4c;
+        }
+
+        &::-moz-placeholder {  /* Firefox 19+ */
+           color: #4c4c4c;
+        }
+
+        &:-ms-input-placeholder {
+            color: #4c4c4c;
+        }
+    }
+}
+
+#tree-menu {
+    margin-top: -37px;
+
+    text-align: center;
+
+    li {
+        height: 37px;
+        .box-sizing();
+
+        .label {
+            display: none;
+        }
+
+        &.tabs {
+            float: none;
+            display: inline-block;
+
+            a {
+                .rounded(0);
+            }
+        }
+    }
+}
