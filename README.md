@@ -4,11 +4,11 @@
 ### Installation
 
 * Clone current repository to your web root
-* Edit your own config file: `cp ./conf/config.default.json ./conf/config.json`
 * Add your database configuration
-* Install dependencies: `composer install`
+* Install dependencies: `composer install`, if you don’t have *Composer* installed on your machine
+follow official doc at https://getcomposer.org/doc/00-intro.md#globally
 * Generate an optimized autoloader: `composer dumpautoload -o`
-* Install database: `php index.php install` or go to your web-browser to launch Install wizard.
+* Go to your web-browser to launch Install wizard.
 
 #### Database connexion
 
@@ -63,5 +63,7 @@ Add this to your `config.json` to link your RZCMS install to your Solr server:
 
 * *PHPUnit tests*: `phpunit --bootstrap bootstrap.php ./tests`
 * *Code quality*, use PHP_CodeSniffer with *Symfony2 standard*:
-`phpcs --report=full --report-file=./report.txt --extensions=php --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/sources/*,*/Tests/* -p ./`
-Follow instructions at https://github.com/opensky/Symfony2-coding-standard
+```
+phpcs --report=full --report-file=./report.txt --extensions=php --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/sources/*,*/Tests/* -p ./
+```
+* Follow instructions at https://github.com/opensky/Symfony2-coding-standard
