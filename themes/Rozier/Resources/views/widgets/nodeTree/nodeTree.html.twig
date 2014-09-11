@@ -1,5 +1,8 @@
 {% if nodeTree %}
 <nav class="nodetree-widget">
+    {% if mainNodeTree %}
+    <h4>{% trans %}Node-tree{% endtrans %}</h4>
+    {% endif %}
 	<ul class="root-tree uk-nestable" data-uk-nestable="{'group':'nodeTree'}" data-parent-node-id="{{ node.getId }}">
 		{% for cnode in nodeTree.getNodes %}
 			{% include 'widgets/nodeTree/singleNode.html.twig' with { "node":cnode, "nodeTree":nodeTree } only %}
