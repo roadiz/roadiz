@@ -6,7 +6,8 @@
 * Clone current repository to your web root
 * Edit your own config file: `cp ./conf/config.default.json ./conf/config.json`
 * Add your database configuration
-* Install dependencies: `composer install` or `composer update`
+* Install dependencies: `composer install`
+* Generate an optimized autoloader: `composer dumpautoload -o`
 * Install database: `php index.php install` or go to your web-browser to launch Install wizard.
 
 #### Database connexion

@@ -104,7 +104,8 @@ class FrontendController extends AppController
      */
     public function indexAction(Request $request, Node $node = null, Translation $translation = null)
     {
-        $this->storeNodeAndTranslation($node, $translation);
+        $this->node = $node;
+        $this->translation = $translation;
 
         //  Main node based routing method
         return $this->handle($request);

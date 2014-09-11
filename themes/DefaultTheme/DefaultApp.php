@@ -57,23 +57,6 @@ class DefaultApp extends FrontendController
     );
 
     /**
-     * Default action for any node URL.
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function indexAction(Request $request, Node $node = null, Translation $translation = null)
-    {
-        $this->prepareThemeAssignation($node, $translation);
-
-        //  Main node based routing method
-        return $this->handle($request);
-    }
-
-    /**
      * Default action for default URL (homepage).
      *
      * @param Symfony\Component\HttpFoundation\Request $request

@@ -93,6 +93,33 @@
         .box-sizing();
         text-align: center;
         padding: 7px 0;
+
+
+        &:after {
+            font-family: FontAwesome;
+            display: inline-block;
+            font-weight: 400;
+            font-style: normal;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+
+            content: "\f0d9";
+            color: #aaaaaa;
+
+            position: absolute;
+            right: 0px;
+            font-size: 20px;
+
+            .transform-transition(ease 1s);
+        }
+
+        &.tree-panel-hidden {
+
+            &:after {
+                .transform(translate(100%));
+            }
+        }
     }
     &-button {
         width: 20px;
