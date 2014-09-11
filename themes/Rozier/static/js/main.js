@@ -23,12 +23,33 @@ Rozier.onDocumentReady = function( event ) {
 	// Search node
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
 
+	//
+	$('#minify-tree-panel-button').on('click', Rozier.toggleTreesPanel);
+
 	/*
 	 * TEMP
 	 */
 	$('[data-uk-pagination]').on('uk-select-page', function(e, pageIndex){
 	    document.location.href = document.location.origin + document.location.pathname + '?page='+(pageIndex+1);
 	});
+};
+
+Rozier.toggleTreesPanel = function (event) {
+	var _this = this;
+
+	$('#main-trees').toggleClass('minified');
+
+	$('#minify-tree-panel-button').toggleClass('uk-icon-minus');
+	$('#minify-tree-panel-button').toggleClass('uk-icon-plus');
+	return false;
+};
+
+Rozier.toggleUserPanel = function (event) {
+	var _this = this;
+
+	$('#user-panel').toggleClass('minified');
+
+	return false;
 };
 
 /**
