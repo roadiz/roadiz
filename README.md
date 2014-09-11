@@ -4,7 +4,8 @@
 ### Installation
 
 * Clone current repository to your web root
-* Add your database configuration
+* Create an **empty** database for your new website.
+**Don’t setup your website on an already used database, it will erase any existing table on it.**
 * Install dependencies: `composer install`, if you don’t have *Composer* installed on your machine
 follow official doc at https://getcomposer.org/doc/00-intro.md#globally
 * Generate an optimized autoloader: `composer dumpautoload -o`
