@@ -1,0 +1,43 @@
+<nav class="actions-menu uk-navbar">
+    {% if source %}
+    <a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-eye"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
+    {% endif %}
+
+
+    {# Delete current node #}
+    <a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}"><i class="uk-icon-trash-o"></i><span class="label">{% trans %}delete{% endtrans %}</span></a>
+
+    {#
+     # Node statuses
+     #}
+    <div class="node-statuses">
+        <header><i class="uk-icon-status"></i><span class="label">{% trans %}statuses{% endtrans %}</span></header>
+        <ul>
+            <li class="node-visibility">
+                <i class="uk-icon-visibility"></i>
+                <span class="label">{% trans %}visibility{% endtrans %}</span>
+                <input type="checkbox" name="visibility" value="1" {% if node.isVisible %}checked{% endif %} />
+            </li>
+            <li class="node-publishing">
+                <i class="uk-icon-publishing"></i>
+                <span class="label">{% trans %}publishing{% endtrans %}</span>
+                <input type="checkbox" name="publishing" value="1" {% if node.isPublished %}checked{% endif %} />
+            </li>
+            <li class="node-hiding-children">
+                <i class="uk-icon-folder"></i>
+                <span class="label">{% trans %}hiding-children{% endtrans %}</span>
+                <input type="checkbox" name="hiding-children" value="1" {% if node.isHidingChildren %}checked{% endif %} />
+            </li>
+            <li class="node-lock">
+                <i class="uk-icon-lock"></i>
+                <span class="label">{% trans %}lock-status{% endtrans %}</span>
+                <input type="checkbox" name="lock-status" value="1" {% if node.isLocked %}checked{% endif %} />
+            </li>
+            <li class="node-sterile">
+                <i class="uk-icon-sterile"></i>
+                <span class="label">{% trans %}sterile-status{% endtrans %}</span>
+                <input type="checkbox" name="sterile-status" value="1" {% if node.isSterile %}checked{% endif %} />
+            </li>
+        </ul>
+    </div>
+</nav>

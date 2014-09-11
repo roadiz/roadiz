@@ -21,8 +21,4 @@
 	<div class="uk-navbar-content">
 		<a class="uk-button" href="{{ path('nodesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.nodes{% endtrans %}</a>
 	</div>
-	<div class="uk-navbar-content uk-navbar-flip">
-		<a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-eye"></i> {% trans %}see.page{% endtrans %}</a>
-		<a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
-	</div>
 </nav>

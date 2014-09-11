@@ -1,0 +1,43 @@
+.actions-menu {
+
+    position: fixed;
+
+    right: 0px;
+    top: 20%;
+    z-index: 9999;
+    width: 55px;
+
+    .box-sizing();
+
+
+    .uk-button {
+        .rounded(0);
+        border: 0 none;
+
+        i {
+            .rounded(100%);
+            background: #f9f9f9;
+            color: #808080;
+
+            width: 33px;
+            height: 33px;
+        }
+
+
+        .label {
+            display: none;
+        }
+    }
+
+
+    &:hover {
+
+        width:163px;
+
+        .uk-button {
+            .label {
+                display: block;
+            }
+        }
+    }
+}
