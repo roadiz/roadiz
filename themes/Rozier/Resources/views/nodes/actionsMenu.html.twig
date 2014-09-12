@@ -1,0 +1,53 @@
+<nav data-action-menu class="actions-menu uk-navbar rz-vertical-align">
+    {# Delete current node #}
+    <a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}"><i class="uk-icon-trash-o"></i><span class="label">{% trans %}delete{% endtrans %}</span></a>
+
+    {#
+     # Node actions
+     #}
+    <div class="node-actions">
+        <header><i class="uk-icon-settings"></i><span class="label">{% trans %}actions{% endtrans %}</span></header>
+        <nav>
+            {% if source %}
+            <a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-eye"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
+            {% endif %}
+            <a class="uk-button" href="#"><i class="uk-icon-duplicate"></i><span class="label">{% trans %}duplicate{% endtrans %}</span></a>
+            <a class="uk-button" href="#"><i class="uk-icon-archive"></i><span class="label">{% trans %}archive{% endtrans %}</span></a>
+            <a class="uk-button" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}"><i class="uk-icon-add"></i><span class="label">{% trans %}add.child{% endtrans %}</span></a>
+        </nav>
+    </div>
+
+    {#
+     # Node statuses
+     #}
+    <div class="node-statuses">
+        <header><i class="uk-icon-check-light"></i><span class="label">{% trans %}statuses{% endtrans %}</span></header>
+        <ul>
+            <li class="node-visibility">
+                <i class="uk-icon-eye"></i>
+                <span class="label">{% trans %}visibility{% endtrans %}</span>
+                <input class="rz-boolean-checkbox" type="checkbox" name="visibility" value="1" {% if node.isVisible %}checked{% endif %} />
+            </li>
+            <li class="node-published">
+                <i class="uk-icon-published"></i>
+                <span class="label">{% trans %}published{% endtrans %}</span>
+                <input class="rz-boolean-checkbox" type="checkbox" name="published" value="1" {% if node.isPublished %}checked{% endif %} />
+            </li>
+            <li class="node-hiding-children">
+                <i class="uk-icon-folder"></i>
+                <span class="label">{% trans %}hiding-children{% endtrans %}</span>
+                <input class="rz-boolean-checkbox" type="checkbox" name="hiding-children" value="1" {% if node.isHidingChildren %}checked{% endif %} />
+            </li>
+            <li class="node-lock">
+                <i class="uk-icon-lock"></i>
+                <span class="label">{% trans %}lock-status{% endtrans %}</span>
+                <input class="rz-boolean-checkbox" type="checkbox" name="lock-status" value="1" {% if node.isLocked %}checked{% endif %} />
+            </li>
+            <li class="node-sterile">
+                <i class="uk-icon-node-sterile"></i>
+                <span class="label">{% trans %}sterile-status{% endtrans %}</span>
+                <input class="rz-boolean-checkbox" type="checkbox" name="sterile-status" value="1" {% if node.isSterile %}checked{% endif %} />
+            </li>
+        </ul>
+    </div>
+</nav>

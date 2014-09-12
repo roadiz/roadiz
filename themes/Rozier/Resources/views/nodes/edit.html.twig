@@ -7,23 +7,30 @@
 	{% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}
 
 	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+	<form id="edit-node-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
+	    	{% spaceless %}
+	    	<button data-action-save="#edit-node-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+	    		<i class="uk-icon-save"></i>
+	    		<span class="label">{% trans %}save{% endtrans %}</span>
+	    	</button>
+	    	{% endspaceless %}
    		</fieldset>
 	</form>
 
-	{% if translation_form %}
+	{% if translationForm %}
 	<h2 id="add-node-translation">Translate node</h2>
-	{% form_theme translation_form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(translation_form) }}>
-	    {{ form_widget(translation_form) }}
+	{% form_theme translationForm 'forms.html.twig' %}
+	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(translationForm) }}>
+	    {{ form_widget(translationForm) }}
 	    <fieldset data-uk-margin>
 	    	<input class="uk-button uk-button-primary" type="submit" value="{% trans %}Translate{% endtrans %}" />
    		</fieldset>
 	</form>
-
 	{% endif %}
+
+
+	{% include 'nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}
