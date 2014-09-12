@@ -21,9 +21,9 @@
     </head>
     <body>
         {% include 'includes/messages.html.twig' %}
-        <div id="main-container" class="uk-grid">
+        <div id="main-container">
             <!-- Add your site or application content here -->
-            <div class="uk-width-10-10" id="main_content">
+            <div id="main_content">
             {% block content %}
                 <h1>{% trans %}Welcome{% endtrans %}</h1>
             {% endblock %}

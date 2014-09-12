@@ -29,7 +29,7 @@
 {%- endblock form_label %}
 
 {% block form_widget_compound -%}
-    <div data-uk-margin {{ block('widget_container_attributes') }}>
+    <div class="data-uk-margin" {{ block('widget_container_attributes') }}>
         {%- if form.parent is empty -%}
             {{ form_errors(form) }}
         {%- endif -%}
