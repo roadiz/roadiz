@@ -97,6 +97,7 @@
         &:hover {
             .uk-nestable-handle:after {
                 color: #333333;
+                border-color: #333333;
             }
         }
     }
@@ -123,12 +124,19 @@
      */
     // Default circle
     .uk-nestable-handle:after {
-        content: "\f1db";
+        content: "";
         font-family: FontAwesome;
         color: #999999;
         font-size: 12px;
-        background-color: #d3d3d3;
         .rounded(100%);
+
+        background-color: white;
+        border:  1px solid #999999;
+        width:   10px;
+        display: inline-block;
+        height:  10px;
+        top: 2px;
+        position: relative;
     }
 
     .uk-nestable-item {
@@ -140,7 +148,11 @@
                 content: "\f015";
                 font-family: FontAwesome;
                 font-size: 16px;
-
+                background-color: #d3d3d3;
+                border: 0 none;
+                width: auto;
+                height: auto;
+                top: 0px;
             }
         }
 
@@ -151,6 +163,11 @@
                 content: "\f230";
                 font-family: FontAwesome;
                 font-size: 16px;
+                background-color: #d3d3d3;
+                border: 0 none;
+                width: auto;
+                height: auto;
+                top: 0px;
             }
         }
     }

@@ -162,12 +162,46 @@ Rozier.onDocumentReady = function( event ) {
 	//
 	$('#minify-tree-panel-button').on('click', Rozier.toggleTreesPanel);
 
+	Rozier.centerVerticalObjects();
+	Rozier.parseActionSaveButtons();
 	/*
 	 * TEMP
 	 */
 	$('[data-uk-pagination]').on('uk-select-page', function(e, pageIndex){
 	    document.location.href = document.location.origin + document.location.pathname + '?page='+(pageIndex+1);
 	});
+};
+
+
+/*
+ * Center vetically every DOM objects that have
+ * the data-vertical-center attribute
+ */
+Rozier.centerVerticalObjects = function() {
+	var $objects = $(".rz-vertical-align");
+
+	$objects.each(function (index, element) {
+		$($objects[index]).css({
+			'top': '50%',
+			'margin-top': (element.offsetHeight/-2)+'px'
+		});
+	});
+};
+
+Rozier.parseActionSaveButtons = function(){
+
+	var $button = $($(".rz-action-save").get(0));
+	var $actionMenu = $($('.actions-menu').get(0));
+
+	if ($button.length && $actionMenu.length) {
+		var formToSave = $($button.attr('data-action-save'));
+		if (formToSave.length) {
+			$button.prependTo($actionMenu);
+			$button.on('click', function (event) {
+				formToSave.submit();
+			});
+		}
+	}
 };
 
 Rozier.toggleTreesPanel = function (event) {
