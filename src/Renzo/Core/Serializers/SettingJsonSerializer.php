@@ -20,7 +20,6 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-
 /**
  * Serialization class for Setting.
  */
@@ -57,6 +56,9 @@ class SettingJsonSerializer implements SerializerInterface
      */
     public static function deserialize($jsonString)
     {
+        if ($jsonString == "") {
+            throw new \Exception('File is empty.');
+        }
         $encoder = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
         $normalizer->setCamelizedAttributes(array(

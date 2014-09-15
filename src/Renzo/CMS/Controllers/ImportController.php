@@ -34,43 +34,62 @@ use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Validator\Validation;
 
-class ImportController extends AppController
+use Themes\Install\InstallApp;
+
+class ImportController extends InstallApp
 {
 
     static function importSettingsAction($themeId = null)
     {
-        $data = {};
-        $data['status'] = true;
+        $pathFile = '/Resources/import/settings.rzt';
+        $classImporter = "RZ\Renzo\CMS\Importers\SettingsImporter";
+        return self::importContent($pathFile, $classImporter, $themeId);
+    }
+
+    static function importRolesAction($themeId = null)
+    {
+        $pathFile = '/Resources/import/roles.rzt';
+        $classImporter = "RZ\Renzo\CMS\Importers\RolesImporter";
+        return self::importContent($pathFile, $classImporter, $themeId);
+    }
+
+    static function importGroupsAction($themeId = null)
+    {
+        $pathFile = '/Resources/import/groups.rzt';
+        $classImporter = "RZ\Renzo\CMS\Importers\GroupsImporter";
+        return self::importContent($pathFile, $classImporter, $themeId);
+    }
+
+    static function importContent($pathFile, $classImporter, $themeId)
+    {
+        $data = array();
+        $data['status'] = false;
         try {
-            if (null !== $themeId) {
-                $path = REZ0_ROOT.'/themes/Intall/Resources/import/settings.rzt';
-            }
-            else {
+            if (null === $themeId) {
+                $path = RENZO_ROOT . '/themes/install' . $pathFile;
+            } else {
                 $theme = Kernel::getInstance()->em()
-                         ->getRepository('RZ\Renzo\Core\Entities\Theme')
-                         ->findOneBy(array('id'=>$themeId));
+                         ->find('RZ\Renzo\Core\Entities\Theme', $themeId);
                 $dir = dir($theme->getClassName());
                 if ($theme === null)
-                    throw new Exception('Theme don\'t exist in database.');
-                $path = REZ0_ROOT.'/themes/' . $dir . '/Resources/import/settings.rzt';
+                    throw new \Exception('Theme don\'t exist in database.');
+                $path = RENZO_ROOT . '/themes/' . $dir . $pathFile;
             }
-            $file = file_get_contents($path);
-            if ($file === false) {
-                throw new Exception('File: '. $settings . ' don\'t exist.');
+            if (file_exists ($path)) {
+                $file = file_get_contents($path);
+                $ret = $classImporter::importJsonFile($file);
+            } else {
+                throw new \Exception('File: ' . $path . ' don\'t existe');
             }
-            else {
-                $ret = SettingsImporter::importJsonFile($file);
-            }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $data['error'] = $e->getMessage();
-            $date['status'] = false;
             return new Response(
                 json_encode($data),
                 Response::HTTP_NOT_FOUND,
                 array('content-type' => 'application/javascript')
             );
         }
+        $data['status'] = true;
         return new Response(
             json_encode($data),
             Response::HTTP_OK,

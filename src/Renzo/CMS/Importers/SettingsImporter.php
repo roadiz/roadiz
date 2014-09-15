@@ -46,7 +46,7 @@ class SettingsImporter implements ImporterInterface
      */
     public static function importJsonFile($serializedData)
     {
-        $return = true;
+        $return = false;
         $settingGroups = SettingCollectionJsonSerializer::deserialize($serializedData);
         $groups = Kernel::getInstance()->em()
                   ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
@@ -102,6 +102,7 @@ class SettingsImporter implements ImporterInterface
             Kernel::getInstance()->em()->flush();
 
         }
+        $return = true;
         return $return;
     }
 

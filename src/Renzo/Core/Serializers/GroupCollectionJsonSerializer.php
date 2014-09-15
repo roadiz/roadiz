@@ -66,6 +66,9 @@ class GroupCollectionJsonSerializer implements SerializerInterface
      */
     public static function deserialize($string)
     {
+        if ($string == "") {
+            throw new \Exception('File is empty.');
+        }
         $collection = new ArrayCollection();
         $array = json_decode($string, true);
 

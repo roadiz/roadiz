@@ -60,6 +60,9 @@ class RoleCollectionJsonSerializer implements SerializerInterface
      */
     public static function deserialize($jsonString)
     {
+        if ($jsonString == "") {
+            throw new \Exception('File is empty.');
+        }
         $roles = json_decode($jsonString, true);
         $data = new ArrayCollection();
         foreach ($roles as $role) {
