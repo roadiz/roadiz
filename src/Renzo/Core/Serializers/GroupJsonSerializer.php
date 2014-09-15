@@ -58,6 +58,9 @@ class GroupJsonSerializer implements SerializerInterface
      */
     public static function deserialize($string)
     {
+        if ($string == "") {
+            throw new \Exception('File is empty.');
+        }
         $encoder = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
         $normalizer->setCamelizedAttributes(array(

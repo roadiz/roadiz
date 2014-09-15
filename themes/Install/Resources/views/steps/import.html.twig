@@ -21,8 +21,8 @@
     	{% endfor %}
     </table>
     <p>
-    	<a class="uk-button uk-button-success" href="{{ path('installCheckPage')  }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.requirement{% endtrans %}</a>
-    	<button class="uk-button" href="{{ path('installDatabasePage') }}" disabled>{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></button>
+    	<a class="uk-button uk-button-success" href="{{ path('installDatabasePage')  }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.Database{% endtrans %}</a>
+    	<button class="uk-button" href="{{ path('installUserPage')  }}" disabled>{% trans %}goto.user{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></button>
     </p>
 
 {% endblock %}

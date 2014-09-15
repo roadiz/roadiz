@@ -46,7 +46,7 @@ class GroupsImporter implements ImporterInterface
      */
     public static function importJsonFile($serializedData)
     {
-        $return = true;
+        $return = false;
         $groups = GroupCollectionJsonSerializer::deserialize($serializedData);
         foreach ($groups as $group) {
             $existingGroup = Kernel::getInstance()->em()
@@ -70,6 +70,7 @@ class GroupsImporter implements ImporterInterface
 
             Kernel::getInstance()->em()->flush();
         }
+        $return = true;
         return $return;
     }
 

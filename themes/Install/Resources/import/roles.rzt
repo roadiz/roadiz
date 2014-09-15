@@ -1,0 +1,104 @@
+[
+    {
+        "name": "ROLE_ACCESSABOUT"
+    },
+    {
+        "name": "ROLE_ACCESSADMINISTRATION"
+    },
+    {
+        "name": "ROLE_ACCESSCONTAINERNODETREE"
+    },
+    {
+        "name": "ROLE_ACCESSCUSTOMERS"
+    },
+    {
+        "name": "ROLE_ACCESSDOCUMENTS"
+    },
+    {
+        "name": "ROLE_ACCESSGLOBALNODETREE"
+    },
+    {
+        "name": "ROLE_ACCESSHOMENODETREE"
+    },
+    {
+        "name": "ROLE_ACCESSNEWSLETTERS"
+    },
+    {
+        "name": "ROLE_ACCESSNEWSLETTERSSTATS"
+    },
+    {
+        "name": "ROLE_ACCESSNODEMASSCREATIONTAB"
+    },
+    {
+        "name": "ROLE_ACCESSNODES"
+    },
+    {
+        "name": "ROLE_ACCESSNODESEOTAB"
+    },
+    {
+        "name": "ROLE_ACCESSNODETAGSTAB"
+    },
+    {
+        "name": "ROLE_ACCESSNODETRANSLATIONTAB"
+    },
+    {
+        "name": "ROLE_ACCESSNODETRANSTYPE"
+    },
+    {
+        "name": "ROLE_ACCESSOWNUSER"
+    },
+    {
+        "name": "ROLE_ACCESSSHOP"
+    },
+    {
+        "name": "ROLE_ACCESSSUBSCRIBERS"
+    },
+    {
+        "name": "ROLE_ACCESSSURVEYS"
+    },
+    {
+        "name": "ROLE_ACCESSSURVEYSEDITION"
+    },
+    {
+        "name": "ROLE_ACCESSSURVEYSQUESTIONS"
+    },
+    {
+        "name": "ROLE_ACCESSSURVEYSSUBMISSIONS"
+    },
+    {
+        "name": "ROLE_ACCESSTAGS"
+    },
+    {
+        "name": "ROLE_ADMIN"
+    },
+    {
+        "name": "ROLE_ADMIN_GROUP"
+    },
+    {
+        "name": "ROLE_BACKEND_USER"
+    },
+    {
+        "name": "ROLE_CLEARDBCACHE"
+    },
+    {
+        "name": "ROLE_EDITOR"
+    },
+    {
+        "name": "ROLE_NAME"
+    },
+    {
+        "name": "ROLE_OWNER"
+    },
+    {
+        "name": "ROLE_POSTONFACEBOOK"
+    },
+    {
+        "name": "ROLE_SUPER_ADMIN"
+    },
+    {
+        "name": "ROLE_TOTOTOTOTOTOTO"
+    },
+    {
+        "name": "ROLE_TROLL_INTERNET"
+    }
+]

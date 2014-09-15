@@ -20,7 +20,7 @@ installImportSettings:
 installImportGroups:
     path:     /install/import/groups
     defaults: { _controller: RZ\Renzo\CMS\Controllers\importController::importGroupsAction }
-installImportGroups:
+installImportRoles:
     path:     /install/import/roles
     defaults: { _controller: RZ\Renzo\CMS\Controllers\importController::importRolesAction }
 installUserPage:

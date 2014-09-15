@@ -66,6 +66,9 @@ class SettingCollectionJsonSerializer implements SerializerInterface
      */
     public static function deserialize($jsonString)
     {
+        if ($jsonString == "") {
+            throw new \Exception('File is empty.');
+        }
         $collection = new ArrayCollection();
         $groups = json_decode($jsonString, true);
         foreach ($groups as $name => $group)
