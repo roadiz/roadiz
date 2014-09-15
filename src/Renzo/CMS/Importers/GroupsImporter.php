@@ -40,7 +40,7 @@ class GroupsImporter implements ImporterInterface
     /**
      * Import a Json file (.rzt) containing group.
      *
-     * @param Array $serialized
+     * @param string $serializedData
      *
      * @return bool
      */

@@ -10,8 +10,17 @@
 
 namespace RZ\Renzo\CMS\Importers;
 
+/**
+ * Class for create all importer.
+ */
 interface ImporterInterface
-
 {
+    /**
+     * Import json file.
+     *
+     * @param string $template
+     *
+     * @return bool
+     */
     public static function importJsonFile($template);
 }

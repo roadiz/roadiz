@@ -36,9 +36,18 @@ use Symfony\Component\Validator\Validation;
 
 use Themes\Install\InstallApp;
 
+/**
+ * Class to have generiaue importer for all theme.
+ */
 class ImportController extends InstallApp
 {
-
+    /**
+     * Import theme's Settings file.
+     *
+     * @param int $themeId
+     *
+     * @return string
+     */
     static function importSettingsAction($themeId = null)
     {
         $pathFile = '/Resources/import/settings.rzt';
@@ -46,6 +55,13 @@ class ImportController extends InstallApp
         return self::importContent($pathFile, $classImporter, $themeId);
     }
 
+    /**
+     * Import theme's Roles file.
+     *
+     * @param int $themeId
+     *
+     * @return string
+     */
     static function importRolesAction($themeId = null)
     {
         $pathFile = '/Resources/import/roles.rzt';
@@ -53,6 +69,13 @@ class ImportController extends InstallApp
         return self::importContent($pathFile, $classImporter, $themeId);
     }
 
+    /**
+     * Import theme's Groups file.
+     *
+     * @param int $themeId
+     *
+     * @return string
+     */
     static function importGroupsAction($themeId = null)
     {
         $pathFile = '/Resources/import/groups.rzt';
@@ -60,6 +83,15 @@ class ImportController extends InstallApp
         return self::importContent($pathFile, $classImporter, $themeId);
     }
 
+    /**
+     * Import theme's Settings file.
+     *
+     * @param string $pathFile
+     * @param string $classImporter
+     * @param int    $themeId
+     *
+     * @return string
+     */
     static function importContent($pathFile, $classImporter, $themeId)
     {
         $data = array();
@@ -71,11 +103,12 @@ class ImportController extends InstallApp
                 $theme = Kernel::getInstance()->em()
                          ->find('RZ\Renzo\Core\Entities\Theme', $themeId);
                 $dir = dir($theme->getClassName());
-                if ($theme === null)
+                if ($theme === null) {
                     throw new \Exception('Theme don\'t exist in database.');
+                }
                 $path = RENZO_ROOT . '/themes/' . $dir . $pathFile;
             }
-            if (file_exists ($path)) {
+            if (file_exists($path)) {
                 $file = file_get_contents($path);
                 $ret = $classImporter::importJsonFile($file);
             } else {

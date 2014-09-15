@@ -40,7 +40,7 @@ class SettingsImporter implements ImporterInterface
     /**
      * Import a Json file (.rzt) containing setting and setting group.
      *
-     * @param Array $serialized
+     * @param string $serializedData
      *
      * @return bool
      */
@@ -69,8 +69,7 @@ class SettingsImporter implements ImporterInterface
                     Kernel::getInstance()->em()->flush();
                     $baseGroup = $group;
                 }
-            }
-            else {
+            } else {
                 $baseGroup = null;
             }
             foreach ($group->getSettings() as $setting) {
@@ -84,17 +83,16 @@ class SettingsImporter implements ImporterInterface
                 if ($baseEntry === null) {
                     Kernel::getInstance()->em()->persist($setting);
                     Kernel::getInstance()->em()->flush();
-                    if ($baseGroup != null)
+                    if ($baseGroup != null) {
                         $baseGroup->addSetting($baseEntry);
-                }
-                else {
+                    }
+                } else {
                     $baseEntry->setType($setting->getType());
                     $baseEntry->setValue($setting->getValue());
                     $baseEntry->setVisible($setting->isVisible());
                     if ($baseGroup !== null) {
                         $baseEntry->setSettingGroup($baseGroup);
-                    }
-                    else {
+                    } else {
                         $baseEntry->setSettingGroup(null);
                     }
                 }

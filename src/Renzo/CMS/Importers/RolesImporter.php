@@ -40,7 +40,7 @@ class RolesImporter implements ImporterInterface
     /**
      * Import a Json file (.rzt) containing setting and setting group.
      *
-     * @param Array $serialized
+     * @param string $serializedData
      *
      * @return bool
      */
