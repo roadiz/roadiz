@@ -26,8 +26,7 @@
         position: relative;
 
         & > div {
-            overflow-x: visible;
-            overflow-y: scroll;
+            overflow: hidden;
             position:absolute;
             top:0;
             bottom:0;
@@ -43,24 +42,31 @@
             }
         }
     }
-}
 
-
-#user-panel {
-    width: @user-panel-width;
-}
-#admin-menu {
-    width: @entries-panel-width;
-}
-#main-trees {
-    width: @trees-panel-width;
-
-    & > div {
+    #user-panel {
+        width: @user-panel-width;
+    }
+    #admin-menu {
+        width: @entries-panel-width;
+    }
+    #main-trees {
         width: @trees-panel-width;
+
+        & > div {
+            width: @trees-panel-width;
+            overflow-y: auto;
+        }
+
+        &.minified {
+            .transform(scale3D(0,1,1));
+            width: 1px;
+        }
     }
 
-    &.minified {
-        .transform(scale3D(0,1,1));
-        width: 1px;
+    #main-content {
+        & > div {
+            overflow-y: auto;
+        }
     }
 }
+
