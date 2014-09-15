@@ -15,7 +15,7 @@
                 <td></td>
     			<td>{{ name|trans }}</td>
     			<td>
-    				<div class="uk-badge uk-badge-notification uk-badge-warning"><i class="uk-icon-spinner uk-icon-spin"></i></div>
+    				<div class="uk-badge uk-badge-notification uk-badge-warning" id="{{ name }}"><i class="uk-icon-spinner"></i></div>
     			</td>
     		</tr>
     	{% endfor %}
@@ -24,4 +24,5 @@
     	<a class="uk-button uk-button-success" href="{{ path('installCheckPage')  }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.requirement{% endtrans %}</a>
     	<button class="uk-button" href="{{ path('installDatabasePage') }}" disabled>{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></button>
     </p>
+
 {% endblock %}
