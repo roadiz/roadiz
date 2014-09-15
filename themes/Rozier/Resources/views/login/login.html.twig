@@ -1,17 +1,18 @@
 {% extends 'simple.html.twig' %}
 
-
 {% block content %}
 <section id="login">
-	<h1 id="tag-title">{% trans %}Back office{% endtrans %}</h1>
+    <div id="login-logo"></div>
+    <div id="login-credit"><span id="login-rz"></span><span id="login-version">2.11.9.2</span></div>
+	<h1 id="tag-title">{% trans %}Back-office{% endtrans %}</h1>
 	{% if error %}
 	    <div data-uk-alert class="uk-alert uk-alert-danger">{{ error.message }}</div>
     {% endif %}
 
    	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" action="{{ path('loginCheckPage') }}" method="post" {{ form_enctype(form) }}>
+    <form id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" action="{{ path('loginCheckPage') }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
+	    <fieldset>
 	    	<button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}Login{% endtrans %}</button>
    		</fieldset>
 	</form>

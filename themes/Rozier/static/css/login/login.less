@@ -1,0 +1,58 @@
+#main_content {
+    position: absolute;
+    top: 0px; bottom: 0px; left: 0px; right: 0px;
+    background-color: #EEEEEE;
+}
+
+section#login {
+    position: absolute;
+    width: @login-W; height: @login-H;
+    background-color: white;
+    margin: -@login-H/2 auto 0 -@login-W/2;
+    left: 50%;top: 50%;
+    padding: 50px 40px;
+    text-align: center;
+    .box-sizing();
+
+    div#login-logo {
+        position: absolute;
+        width: 128px; height: 116px;
+        background-color: @green-rz;
+        top: 0px; left: -128px;
+    }
+    div#login-credit {
+        position: absolute;
+        width: 128px; height: (@login-H)-116px;
+        background-color: @grey-interface;
+        top: 116px; left: -128px;
+
+        #login-rz {
+            position: absolute;
+            color: @grey-medium;
+            bottom: 80px;
+            width: 100%;
+            left: 0px;
+        }
+
+        #login-version {
+            position: absolute;
+            color: @grey-medium;
+            font-size: 11px;
+            bottom: 40px;
+            width: 100%;
+            left: 0px;
+        }
+    }
+    h1 {
+        margin: 0px 0px 25px;
+        font-size: 36px;
+    }
+    #login-form {
+        text-align: left;
+
+        input[type="text"],
+        input[type="password"] {
+            width: 315px;
+        }
+    }
+}
