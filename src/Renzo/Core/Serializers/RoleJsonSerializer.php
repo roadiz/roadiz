@@ -33,7 +33,9 @@ class RoleJsonSerializer implements SerializerInterface
      * but only a ready-to-encode array. This will be encoded
      * by the parent GroupJsonSerialize method.
      *
-     * @return array
+     * @param RZ\Renzo\Core\Entities\Role $role
+     *
+     * @return string
      * @see RZ\Renzo\Core\Serializers\GroupJsonSerializer::serialize
      */
     public static function serialize($role)

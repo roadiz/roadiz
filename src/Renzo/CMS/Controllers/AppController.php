@@ -444,8 +444,7 @@ class AppController implements ViewableInterface
      */
     public static function forceTwigCompilation()
     {
-        if (file_exists(static::getViewsFolder()))
-        {
+        if (file_exists(static::getViewsFolder())) {
             $ctrl = new static();
             $ctrl->initializeTwig();
             $ctrl->initializeTranslator();
@@ -456,12 +455,11 @@ class AppController implements ViewableInterface
             } catch (IOExceptionInterface $e) {
                 echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
             }
-
-            foreach (new \RecursiveIteratorIterator(
-                    new \RecursiveDirectoryIterator(static::getViewsFolder()),
-                    \RecursiveIteratorIterator::LEAVES_ONLY
-                ) as $file)
-            {
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator(static::getViewsFolder()),
+                \RecursiveIteratorIterator::LEAVES_ONLY
+            );
+            foreach ($iterator as $file) {
                 // force compilation
                 if ($file->isFile()) {
                     $ctrl->getTwig()->loadTemplate(str_replace(static::getViewsFolder().'/', '', $file));
@@ -469,8 +467,7 @@ class AppController implements ViewableInterface
             }
 
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

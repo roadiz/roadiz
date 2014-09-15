@@ -277,8 +277,7 @@ class SettingsController extends RozierApp
                     if ($key != 'group') {
                         $setter = 'set'.ucwords($key);
                         $setting->$setter( $value );
-                    }
-                    else {
+                    } else {
                         $group = $this->getKernel()->em()
                                  ->find('RZ\Renzo\Core\Entities\SettingGroup', (int) $value);
                         $setting->setSettingGroup($group);
@@ -382,21 +381,17 @@ class SettingsController extends RozierApp
             'visible' => $setting->isVisible(),
             'type' =>    $setting->getType(),
         );
-        if ($setting->getSettingGroup() == null)
-        {
+        if ($setting->getSettingGroup() == null) {
             $default['group'] = null;
-        }
-        else
-        {
+        } else {
             $default['group'] = $setting->getSettingGroup()->getId();
         }
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
-            ->add('name', 'text', array(
-                'constraints' => array(
-                    new NotBlank()
-                )
-            ))
+            ->add('name', 'text',
+                array('constraints' => array(
+                    new NotBlank())
+                ))
             ->add('id', 'hidden', array(
                 'data'=>$setting->getId(),
                 'required' => true

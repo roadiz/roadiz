@@ -29,12 +29,9 @@ class SettingJsonSerializer implements SerializerInterface
     /**
      * Serializes data.
      *
-     * This method does not output a valid JSON string
-     * but only a ready-to-encode array. This will be encoded
-     * by the parent GroupJsonSerialize method.
+     * @param RZ\Renzo\Core\Entities\Setting $setting
      *
-     * @return array
-     * @see RZ\Renzo\Core\Serializers\GroupJsonSerializer::serialize
+     * @return strong
      */
     public static function serialize($setting)
     {

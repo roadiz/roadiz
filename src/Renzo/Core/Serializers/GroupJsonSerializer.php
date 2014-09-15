@@ -30,6 +30,8 @@ class GroupJsonSerializer implements SerializerInterface
     /**
      * Serializes data into Json.
      *
+     * @param RZ\Renzo\Core\Entities\Group $group
+     *
      * @return string
      */
     public static function serialize($group)

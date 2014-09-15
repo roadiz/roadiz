@@ -31,6 +31,8 @@ class NodeTypeJsonSerializer implements SerializerInterface
     /**
      * Serializes data into Json.
      *
+     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     *
      * @return string
      */
     public function serialize($nodeType)

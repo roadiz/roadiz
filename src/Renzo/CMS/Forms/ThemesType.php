@@ -64,10 +64,10 @@ class ThemesType extends AbstractType
             }
         }
         foreach ($themes as $theme) {
-            if (array_key_exists($theme->getClassName(), $choices)){
+            if (array_key_exists($theme->getClassName(), $choices)) {
                 unset($choices[$theme->getClassName()]);
             }
-            if (array_key_exists(Kernel::INSTALL_CLASSNAME, $choices)){
+            if (array_key_exists(Kernel::INSTALL_CLASSNAME, $choices)) {
                 unset($choices[Kernel::INSTALL_CLASSNAME]);
             }
         }

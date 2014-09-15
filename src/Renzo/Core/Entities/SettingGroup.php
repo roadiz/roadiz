@@ -51,7 +51,9 @@ class SettingGroup extends AbstractEntity
      *
      */
     private $settings;
-
+    /**
+     * @{inheritdoc}
+     */
     public function __construct()
     {
         $this->settings = new ArrayCollection();

@@ -31,6 +31,8 @@ class SettingCollectionJsonSerializer implements SerializerInterface
     /**
      * Serializes data.
      *
+     * @param Doctrine\Common\Collections\ArrayCollection $settingGroup
+     *
      * @return string
      *
      */
@@ -68,8 +70,7 @@ class SettingCollectionJsonSerializer implements SerializerInterface
     {
         $collection = new ArrayCollection();
         $groups = json_decode($jsonString, true);
-        foreach ($groups as $name => $group)
-        {
+        foreach ($groups as $name => $group) {
             $newGroup = new SettingGroup();
 
             $newGroup->setName($name);
@@ -80,8 +81,7 @@ class SettingCollectionJsonSerializer implements SerializerInterface
                 if ($setting['type'] == NodeTypeField::DATETIME_T) {
                     $dt = new \DateTime($setting['value']['date'], new \DateTimeZone($setting['value']['timezone']));
                     $newSetting->setValue($dt);
-                }
-                else {
+                } else {
                     $newSetting->setValue($setting['value']);
                 }
                 $newSetting->setVisible($setting['visible']);

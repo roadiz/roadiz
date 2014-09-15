@@ -31,6 +31,8 @@ class GroupCollectionJsonSerializer implements SerializerInterface
     /**
      * Serializes data into Json.
      *
+     * @param Doctrine\Common\Collections\ArrayCollection $groups
+     *
      * @return string
      */
     public static function serialize($groups)

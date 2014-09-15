@@ -123,8 +123,7 @@ class SettingsUtilsController extends RozierApp
                                 $this->getKernel()->em()->flush();
                                 $baseGroup = $group;
                             }
-                        }
-                        else {
+                        } else {
                             $baseGroup = null;
                         }
                         foreach ($group->getSettings() as $setting) {
@@ -134,21 +133,19 @@ class SettingsUtilsController extends RozierApp
                                     $baseEntry = $existingSetting;
                                     break ;
                                 }
-                            }
-                            if ($baseEntry === null) {
+                            } if ($baseEntry === null) {
                                 $this->getKernel()->em()->persist($setting);
                                 $this->getKernel()->em()->flush();
-                                if ($baseGroup != null)
+                                if ($baseGroup != null) {
                                     $baseGroup->addSetting($baseEntry);
-                            }
-                            else {
+                                }
+                            } else {
                                 $baseEntry->setType($setting->getType());
                                 $baseEntry->setValue($setting->getValue());
                                 $baseEntry->setVisible($setting->isVisible());
                                 if ($baseGroup !== null) {
                                     $baseEntry->setSettingGroup($baseGroup);
-                                }
-                                else {
+                                } else {
                                     $baseEntry->setSettingGroup(null);
                                 }
                             }

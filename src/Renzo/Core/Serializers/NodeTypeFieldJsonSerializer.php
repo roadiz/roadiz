@@ -34,6 +34,8 @@ class NodeTypeFieldJsonSerializer implements SerializerInterface
      * but only a ready-to-encode array. This will be encoded
      * by the parent Node-type serialize method.
      *
+     * @param RZ\Renzo\Core\Entities\NodeTypeField $nodeTypeField
+     *
      * @return array
      * @see RZ\Renzo\Core\Serializers\NodeTypeJsonSerializer::serialize
      */

@@ -26,8 +26,10 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
  */
 class RoleCollectionJsonSerializer implements SerializerInterface
 {
-     /**
+    /**
      * Serializes data into Json.
+     *
+     * @param Doctrine\Common\Collections\ArrayCollection $roles
      *
      * @return string
      */

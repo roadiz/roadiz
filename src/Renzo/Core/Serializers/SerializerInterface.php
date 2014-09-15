@@ -19,6 +19,8 @@ interface SerializerInterface
     /**
      * Serializes data.
      *
+     * @param mixed $obj
+     *
      * @return mixed
      */
     public static function serialize($obj);
