@@ -159,6 +159,23 @@ class AppController implements ViewableInterface
     }
 
     /**
+     * Theme requires a minimal CMS version.
+     *
+     * Example: "*" will accept any CMS version. Or "3.0.*" will
+     * accept any build version of 3.0.
+     *
+     * @var string
+     */
+    protected static $themeRequire = '*';
+    /**
+     * @return string
+     */
+    public static function getThemeRequire()
+    {
+        return static::$themeRequire;
+    }
+
+    /**
      * Is theme for backend?
      *
      * @var boolean
@@ -488,6 +505,7 @@ class AppController implements ViewableInterface
         $this->assignation = array(
             'request' => $this->getKernel()->getRequest(),
             'head' => array(
+                'cmsVersion' => Kernel::CMS_VERSION,
                 'devMode' => (boolean) $this->getKernel()->getConfig()['devMode'],
                 'baseUrl' => $this->getKernel()->getRequest()->getBaseUrl(),
                 'filesUrl' => $this->getKernel()

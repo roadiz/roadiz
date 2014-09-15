@@ -66,6 +66,7 @@ use Solarium\Client;
  */
 class Kernel
 {
+    const CMS_VERSION = 'alpha b0000';
     const SECURITY_DOMAIN = 'rzcms_domain';
     const INSTALL_CLASSNAME = 'Themes\\Install\\InstallApp';
 

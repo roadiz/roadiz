@@ -5,6 +5,22 @@
 @user-picture-size-mini: 68px;
 @user-panel-border-color: rgba(199,199,204, 0.14);
 
+
+.user-panel-button(){
+    background: #333333;
+    border-color: @user-panel-text-alt-color;
+    text-shadow: none;
+    display: inline-block;
+    .opacity(0.3);
+
+    .transition(~"border-color 0.3s linear, opacity 0.3s linear");
+
+    &:hover {
+        .opacity(1);
+        border-color:@contrast-color;
+    }
+}
+
 #user-panel {
     background: @user-panel-color;
     color: @user-panel-text-alt-color;
@@ -54,21 +70,8 @@
         .user-actions {
             padding: 10px;
             border-top: 1px solid @user-panel-border-color;
-
-
             a {
-                background: #333333;
-                border-color: @user-panel-text-alt-color;
-                text-shadow: none;
-                display: inline-block;
-                .opacity(0.3);
-
-                .transition(~"border-color 0.3s linear, opacity 0.3s linear");
-
-                &:hover {
-                    .opacity(1);
-                    border-color:@contrast-color;
-                }
+                .user-panel-button();
             }
         }
     }
@@ -139,5 +142,29 @@
                 .rounded(@user-picture-size-mini / 2);
             }
         }
+    }
+
+    #cms-version {
+
+        position: absolute;
+        bottom: 0px;
+        text-align: center;
+        margin: 0 auto;
+        width: @user-panel-width;
+        padding: 30px 0;
+
+        a {
+            .user-panel-button();
+            margin-bottom: 5px;
+        }
+        p {
+            font-size: 11px;
+            color: #808080;
+            margin: 0.8em;
+        }
+        i.uk-icon-rezozero {
+            font-size: 22px;
+        }
+
     }
 }
