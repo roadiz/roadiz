@@ -503,6 +503,7 @@ class AppController implements ViewableInterface
             'request' => $this->getKernel()->getRequest(),
             'head' => array(
                 'cmsVersion' => Kernel::CMS_VERSION,
+                'cmsBuild' => Kernel::$CMS_BUILD,
                 'devMode' => (boolean) $this->getKernel()->getConfig()['devMode'],
                 'baseUrl' => $this->getKernel()->getRequest()->getBaseUrl(),
                 'filesUrl' => $this->getKernel()
