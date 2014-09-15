@@ -11,6 +11,18 @@ installDatabasePage:
 installDatabaseDonePage:
     path:     /install/database/done
     defaults: { _controller: Themes\Install\InstallApp::databaseDoneAction }
+installImportPage:
+    path:     /install/import
+    defaults: { _controller: Themes\Install\InstallApp::importAction }
+installImportSettings:
+    path:     /install/import/settings
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\importController::importSettingsAction }
+installImportGroups:
+    path:     /install/import/groups
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\importController::importGroupsAction }
+installImportRoles:
+    path:     /install/import/roles
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\importController::importRolesAction }
 installUserPage:
     path:     /install/user
     defaults: { _controller: Themes\Install\InstallApp::userAction }

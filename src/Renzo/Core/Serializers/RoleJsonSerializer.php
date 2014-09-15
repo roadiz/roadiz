@@ -59,6 +59,9 @@ class RoleJsonSerializer implements SerializerInterface
      */
     public static function deserialize($jsonString)
     {
+        if ($jsonString == "") {
+            throw new \Exception('File is empty.');
+        }
         $encoder = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
         $normalizer->setCamelizedAttributes(array('name'));

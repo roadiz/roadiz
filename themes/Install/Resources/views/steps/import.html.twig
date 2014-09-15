@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="uk-panel-title">{% trans %}import.json{% endtrans %}</h1>
+    <p>{% trans %}import.message{% endtrans %}</p>
+
+    <table class="uk-table">
+    	<tr>
+    		<th></th>
+    		<th>{% trans %}step.name{% endtrans %}</th>
+    		<th>{% trans %}status{% endtrans %}</th>
+    	</tr>
+    	{% for name in names %}
+    		<tr>
+                <td></td>
+    			<td>{{ name|trans }}</td>
+    			<td>
+    				<div class="uk-badge uk-badge-notification uk-badge-warning" id="{{ name }}"><i class="uk-icon-spinner"></i></div>
+    			</td>
+    		</tr>
+    	{% endfor %}
+    </table>
+    <p>
+    	<a class="uk-button uk-button-success" href="{{ path('installDatabasePage')  }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.Database{% endtrans %}</a>
+    	<button class="uk-button" href="{{ path('installUserPage')  }}" disabled>{% trans %}goto.user{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></button>
+    </p>
+
+{% endblock %}

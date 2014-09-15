@@ -23,6 +23,7 @@ use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Entities\User;
 use RZ\Renzo\Core\Entities\Role;
 
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
@@ -135,9 +136,24 @@ class InstallApp extends AppController
         $requ = new Requirements();
         $this->assignation['requirements'] = $requ->getRequirements();
         $this->assignation['totalSuccess'] = $requ->isTotalSuccess();
-
         return new Response(
             $this->getTwig()->render('steps/requirements.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
+
+    /**
+     * Import screen
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function importAction(Request $request)
+    {
+        $this->assignation['names'] = array("setting", "role", "group");
+        return new Response(
+            $this->getTwig()->render('steps/import.html.twig', $this->assignation),
             Response::HTTP_OK,
             array('content-type' => 'text/html')
         );
