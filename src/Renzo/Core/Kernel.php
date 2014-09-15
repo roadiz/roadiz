@@ -66,9 +66,11 @@ use Solarium\Client;
  */
 class Kernel
 {
-    const CMS_VERSION = 'alpha b0000';
+    const CMS_VERSION = 'alpha';
     const SECURITY_DOMAIN = 'rzcms_domain';
     const INSTALL_CLASSNAME = 'Themes\\Install\\InstallApp';
+
+    public static $CMS_BUILD = null;
 
     private static $instance = null;
     private $em =           null;
@@ -109,6 +111,10 @@ class Kernel
      */
     private final function __construct()
     {
+        if (file_exists(RENZO_ROOT.'/BUILD.php')) {
+            static::$CMS_BUILD = include(RENZO_ROOT.'/BUILD.php');
+        }
+
         $this->stopwatch = new Stopwatch();
         $this->stopwatch->start('global');
 
