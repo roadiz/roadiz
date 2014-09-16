@@ -4,55 +4,137 @@
     background-color: #EEEEEE;
 }
 
-section#login {
+#login {
     position: absolute;
     width: @login-W; height: @login-H;
     background-color: white;
     margin: -@login-H/2 auto 0 -@login-W/2;
     left: 50%;top: 50%;
-    padding: 50px 40px;
+    padding: 0;
     text-align: center;
     .box-sizing();
 
-    div#login-logo {
+    #login-infos {
         position: absolute;
-        width: 128px; height: 116px;
-        background-color: @green-rz;
-        top: 0px; left: -128px;
+        width: @login-BarW;
+
+        #login-logo {
+            position: absolute;
+            display: table-row;
+            width: 128px; height: 116px;
+            background-color: @contrast-color;
+            top: 0px; left: 0;
+
+            .uk-icon-rezozero {
+                display: table-cell;
+                width: 128px; height: 116px;
+                font-size: 65px;
+                vertical-align: middle;
+                padding-left: 5px;
+                -webkit-font-smoothing: subpixel-antialiased;
+            }
+        }
+
+        #login-credit {
+            position: absolute;
+            width: @login-BarW; height: (@login-H)-116px;
+            background-color: @grey-interface;
+            top: 116px; left: 0;
+
+            .uk-icon-rezozero {
+                font-size: 22px;
+            }
+
+            .uk-icon-rezozero{
+                position: absolute;
+                color: @grey-medium;
+                bottom: 50px;
+                width: 100%;
+                left: 0px;
+            }
+
+            #login-version {
+                position: absolute;
+                color: @grey-medium;
+                font-size: 10px;
+                font-weight: bold;
+                bottom: 26px;
+                width: 100%;
+                left: 0px;
+            }
+        }
     }
-    div#login-credit {
+
+    #login-formGlobal {
         position: absolute;
-        width: 128px; height: (@login-H)-116px;
-        background-color: @grey-interface;
-        top: 116px; left: -128px;
+        width: @login-FormW;
+        height: @login-H;
+        left: @login-BarW;
+        padding: 50px 35px;
+        .box-sizing();
 
-        #login-rz {
-            position: absolute;
-            color: @grey-medium;
-            bottom: 80px;
-            width: 100%;
-            left: 0px;
+        h1 {
+            margin: 0px 0px 25px;
+            font-size: 36px;
         }
+        #login-form {
+            text-align: left;
 
-        #login-version {
-            position: absolute;
-            color: @grey-medium;
-            font-size: 11px;
-            bottom: 40px;
-            width: 100%;
-            left: 0px;
+            .uk-icon-sign-in {
+                display: none;
+            }
+
+            input[type="text"],
+            input[type="password"] {
+                width: 300px;
+            }
+        }
+        #login-link {
+            text-align: left;
+            margin-top: 40px;
+
+            #frontend-home-link {
+                display: inline-block;
+                text-decoration: none;
+                width: auto; height: 38px;
+
+                .uk-icon-earth {
+                    display: inline-block;
+                    width: 38px;
+                    height: 38px;
+                    font-size: 26px;
+                    line-height: 38px;
+                    background: @grey-verylight;
+                    vertical-align: middle;
+                    color: #666666;
+
+                    &:before {
+                        padding-left: 2px;
+                    }
+                }
+                .text {
+                    display: inline-block;
+                    margin-left: 2px;
+                    height: 38px;
+                    line-height: 41px;
+                    font-size: 11px;
+                    font-weight: bold;
+                    vertical-align: top;
+                }
+            }
+            .login-link {
+                display: inline-block;
+                margin: 8px 0 8px 8px;
+                height: 22px;
+                line-height: 25px;
+                font-size: 11px;
+                font-weight: bold;
+                vertical-align: top;
+                border-left: 1px solid #CCCCCC;
+                padding-left: 10px;
+                color: #666666;
+            }
         }
     }
-    h1 {
-        margin: 0px 0px 25px;
-        font-size: 36px;
-    }
-    #login-form {
-        text-align: left;
 
-        input[type="text"],
-        input[type="password"] {
-            width: 315px;
-        }
-    }
 }
