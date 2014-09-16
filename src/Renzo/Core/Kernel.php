@@ -70,7 +70,7 @@ class Kernel
     const SECURITY_DOMAIN = 'rzcms_domain';
     const INSTALL_CLASSNAME = 'Themes\\Install\\InstallApp';
 
-    public static $CMS_BUILD = null;
+    public static $cmsBuild = null;
 
     private static $instance = null;
     private $em =           null;
@@ -112,7 +112,7 @@ class Kernel
     private final function __construct()
     {
         if (file_exists(RENZO_ROOT.'/BUILD.php')) {
-            static::$CMS_BUILD = include(RENZO_ROOT.'/BUILD.php');
+            static::$cmsBuild = include(RENZO_ROOT.'/BUILD.php');
         }
 
         $this->stopwatch = new Stopwatch();
