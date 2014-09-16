@@ -16,13 +16,13 @@ installImportPage:
     defaults: { _controller: Themes\Install\InstallApp::importAction }
 installImportSettings:
     path:     /install/import/settings
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\importController::importSettingsAction }
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importSettingsAction }
 installImportGroups:
     path:     /install/import/groups
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\importController::importGroupsAction }
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importGroupsAction }
 installImportRoles:
     path:     /install/import/roles
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\importController::importRolesAction }
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importRolesAction }
 installUserPage:
     path:     /install/user
     defaults: { _controller: Themes\Install\InstallApp::userAction }

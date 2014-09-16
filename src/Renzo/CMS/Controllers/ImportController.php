@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Validation;
 use Themes\Install\InstallApp;
 
 /**
- * Class to have generiaue importer for all theme.
+ * Class to have generique importer for all theme.
  */
 class ImportController extends InstallApp
 {
@@ -129,5 +129,4 @@ class ImportController extends InstallApp
             array('content-type' => 'application/javascript')
         );
     }
-
 }

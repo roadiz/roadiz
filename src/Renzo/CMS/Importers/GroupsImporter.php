@@ -63,7 +63,7 @@ class GroupsImporter implements ImporterInterface
 
                 Kernel::getInstance()->em()->persist($group);
                 // Flush before creating group's roles.
-                Kernel::getInstance()->flush();
+                Kernel::getInstance()->em()->flush();
             } else {
                 $existingGroup->getHandler()->diff($group);
             }
@@ -73,5 +73,4 @@ class GroupsImporter implements ImporterInterface
         $return = true;
         return $return;
     }
-
 }

@@ -151,7 +151,7 @@ class InstallApp extends AppController
      */
     public function importAction(Request $request)
     {
-        $this->assignation['names'] = array("setting", "role", "group");
+        $this->assignation['names'] = array("installImportSettings", "installImportRoles", "installImportGroups");
         return new Response(
             $this->getTwig()->render('steps/import.html.twig', $this->assignation),
             Response::HTTP_OK,

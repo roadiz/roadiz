@@ -15,14 +15,22 @@
                 <td></td>
     			<td>{{ name|trans }}</td>
     			<td>
-    				<div class="uk-badge uk-badge-notification uk-badge-warning" id="{{ name }}"><i class="uk-icon-spinner"></i></div>
+    				<div class="uk-badge uk-badge-notification" id="{{ name }}"><i class="uk-icon-circle-o"></i></div>
     			</td>
     		</tr>
     	{% endfor %}
     </table>
     <p>
     	<a class="uk-button uk-button-success" href="{{ path('installDatabasePage')  }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.Database{% endtrans %}</a>
-    	<button class="uk-button" href="{{ path('installUserPage')  }}" disabled>{% trans %}goto.user{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></button>
+    	<a id="next-step-button" class="uk-button uk-button-disabled" href="{{ path('installUserPage')  }}">{% trans %}goto.user{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
     </p>
+{% endblock %}
 
+{% block customScripts %}
+<script type="text/javascript">
+    Install.importRoutes = [];
+    {% for name in names %}
+    Install.importRoutes.push({'url': '{{ path(name) }}', 'id':'{{ name }}'});
+    {% endfor %}
+</script>
 {% endblock %}

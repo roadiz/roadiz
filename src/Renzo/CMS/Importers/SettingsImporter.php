@@ -48,60 +48,70 @@ class SettingsImporter implements ImporterInterface
     {
         $return = false;
         $settingGroups = SettingCollectionJsonSerializer::deserialize($serializedData);
-        $groups = Kernel::getInstance()->em()
-                  ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
-                  ->findAll();
-        $settings = Kernel::getInstance()->em()
-                  ->getRepository('RZ\Renzo\Core\Entities\Setting')
-                  ->findAll();
-        $groups = new ArrayCollection($groups);
-        foreach ($settingGroups as $group) {
-            if ($group->getName() != "__default__") {
-                $baseGroup = null;
-                foreach ($groups as $existingGroup) {
-                    if ($group->getName() == $existingGroup->getName()) {
-                        $baseGroup = $existingGroup;
-                        break ;
-                    }
-                }
-                if ($baseGroup === null) {
-                    Kernel::getInstance()->em()->persist($group);
-                    Kernel::getInstance()->em()->flush();
-                    $baseGroup = $group;
-                }
-            } else {
-                $baseGroup = null;
-            }
-            foreach ($group->getSettings() as $setting) {
-                $baseEntry = null;
-                foreach ($settings as $existingSetting) {
-                    if ($setting->getName() == $existingSetting->getName()) {
-                        $baseEntry = $existingSetting;
-                        break ;
-                    }
-                }
-                if ($baseEntry === null) {
-                    Kernel::getInstance()->em()->persist($setting);
-                    Kernel::getInstance()->em()->flush();
-                    if ($baseGroup != null) {
-                        $baseGroup->addSetting($baseEntry);
-                    }
-                } else {
-                    $baseEntry->setType($setting->getType());
-                    $baseEntry->setValue($setting->getValue());
-                    $baseEntry->setVisible($setting->isVisible());
-                    if ($baseGroup !== null) {
-                        $baseEntry->setSettingGroup($baseGroup);
-                    } else {
-                        $baseEntry->setSettingGroup(null);
-                    }
-                }
-            }
-            Kernel::getInstance()->em()->flush();
 
+        $groupsNames = Kernel::getInstance()->em()
+                  ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
+                  ->findAllNames();
+
+        $settingsNames = Kernel::getInstance()->em()
+                  ->getRepository('RZ\Renzo\Core\Entities\Setting')
+                  ->findAllNames();
+
+        $newSettings = new ArrayCollection();
+
+        foreach ($settingGroups as $index => $settingGroup) {
+
+            /*
+             * Loop over settings to set their group
+             * and move them to a temp collection
+             */
+            foreach ($settingGroup->getSettings() as $setting) {
+
+                if (!in_array($setting->getName(), $settingsNames)) {
+                    //Kernel::getInstance()->em()->persist($setting);
+                } else {
+                    $setting = Kernel::getInstance()->em()
+                        ->getRepository('RZ\Renzo\Core\Entities\Setting')
+                        ->findOneByName($setting->getName());
+
+                }
+                if ($settingGroup->getName() == "__default__") {
+                    $setting->setSettingGroup(null);
+                } else {
+                    $setting->setSettingGroup($settingGroup);
+                }
+                $newSettings->add($setting);
+            }
         }
+
+        foreach ($newSettings as $setting) {
+
+            $settingGroup = $setting->getSettingGroup();
+
+            /*
+             * Persist or not group
+             */
+            if (null !== $settingGroup) {
+
+                if (!in_array($settingGroup->getName(), $groupsNames)) {
+                    Kernel::getInstance()->em()->persist($settingGroup);
+                } else {
+                    $settingGroup = Kernel::getInstance()->em()
+                        ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
+                        ->findOneByName($settingGroup->getName());
+
+                    $setting->setSettingGroup($settingGroup);
+                }
+            }
+
+            if ($setting->getId() === null) {
+                Kernel::getInstance()->em()->persist($setting);
+            }
+        }
+        Kernel::getInstance()->em()->flush();
+
         $return = true;
+
         return $return;
     }
-
 }

@@ -3,10 +3,15 @@
  * Rozier entry point
  * ============================================================================
  */
-var RozierInstall = {};
+var Install = {
+    importFixtures: null
+};
 
-RozierInstall.onDocumentReady = function( event ) {
+Install.onDocumentReady = function( event ) {
 
+    if(typeof Install.importRoutes != "undefined"){
+        Install.importFixtures = new ImportFixtures(Install.importRoutes);
+    }
 };
 
 /*
@@ -14,4 +19,4 @@ RozierInstall.onDocumentReady = function( event ) {
  * Plug into jQuery standard events
  * ============================================================================
  */
-$(document).ready(RozierInstall.onDocumentReady);
+$(document).ready(Install.onDocumentReady);
