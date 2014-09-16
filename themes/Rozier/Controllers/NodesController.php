@@ -952,10 +952,16 @@ class NodesController extends RozierApp
             'locked' => $node->isLocked(),
             'published' => $node->isPublished(),
             'archived' => $node->isArchived(),
+            'priority' => $node->getPriority(),
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
             ->add('nodeName', 'text', array(
+                'constraints' => array(
+                    new NotBlank()
+                )
+            ))
+            ->add('priority', 'number', array(
                 'constraints' => array(
                     new NotBlank()
                 )

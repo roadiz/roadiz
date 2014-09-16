@@ -9,8 +9,8 @@
 		<li class="{% if current == 'tags' %}uk-active{% endif %}">
 			<a href="{{ path('nodesEditTagsPage', { nodeId: node.getId}) }}">{% trans %}tags{% endtrans %}</a>
 		</li>
-		<li class="{% if current == 'aliases' %}uk-active{% endif %}">
-			<a href="{{ path('nodesEditAliasesPage', { nodeId: node.getId}) }}">{% trans %}urlaliases{% endtrans %}</a>
+		<li class="{% if current == 'seo' %}uk-active{% endif %}">
+			<a href="{{ path('nodesEditSEOPage', { nodeId: node.getId, translationId:translation.getId}) }}">{% trans %}seo{% endtrans %}</a>
 		</li>
 		{% if node.isHidingChildren %}
 		<li class="{% if current == 'tree' %}uk-active{% endif %}">
