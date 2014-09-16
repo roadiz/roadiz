@@ -8,7 +8,10 @@
             <i class="uk-icon-rezozero"></i>
         {% endif %}
     </div>
-    <div id="login-credit"><span id="login-rz"></span><span id="login-version">{{ head.cmsVersion }} - build {{ head.cmsBuild }}</span></div>
+    <div id="login-credit">
+        <i class="uk-icon-rezozero"></i>
+        <span id="login-version">{{ head.cmsVersion }} - build {{ head.cmsBuild }}</span>
+    </div>
 	<h1 id="tag-title">{% trans %}Back-office{% endtrans %}</h1>
 	{% if error %}
 	    <div data-uk-alert class="uk-alert uk-alert-danger">{{ error.message }}</div>

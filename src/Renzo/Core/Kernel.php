@@ -109,7 +109,7 @@ class Kernel
     /**
      * Kernel constructor.
      */
-    private final function __construct()
+    final private function __construct()
     {
         if (file_exists(RENZO_ROOT.'/BUILD.php')) {
             static::$cmsBuild = include(RENZO_ROOT.'/BUILD.php');

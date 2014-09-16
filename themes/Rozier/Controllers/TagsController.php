@@ -468,7 +468,7 @@ class TagsController extends RozierApp
      * @param array                      $data
      * @param RZ\Renzo\Core\Entities\Tag $tag
      */
-    private function deleteTag( $data, Tag $tag )
+    private function deleteTag($data, Tag $tag)
     {
         $this->getKernel()->em()->remove($tag);
         $this->getKernel()->em()->flush();

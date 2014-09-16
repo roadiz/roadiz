@@ -38,7 +38,7 @@ class DocumentsType extends AbstractType
      *
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions( OptionsResolverInterface $resolver )
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $documents = Kernel::getInstance()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Document')

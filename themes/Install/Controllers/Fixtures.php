@@ -130,7 +130,7 @@ class Fixtures
      *
      * @return Role
      */
-    protected function getRole($roleName = Role::ROLE_SUPER_ADMIN )
+    protected function getRole($roleName = Role::ROLE_SUPER_ADMIN)
     {
         $role = Kernel::getInstance()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Role')
