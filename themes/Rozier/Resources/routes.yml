@@ -48,8 +48,8 @@ nodesRemoveTagsPage:
     path:     /rz-admin/nodes/edit/{nodeId}/tags/{tagId}/remove
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::removeTagAction }
     requirements: { nodeId : "[0-9]+", tagId : "[0-9]+" }
-nodesEditAliasesPage:
-    path:     /rz-admin/nodes/edit/{nodeId}/aliases
+nodesEditSEOPage:
+    path:     /rz-admin/nodes/edit/{nodeId}/seo/{translationId}
     defaults: { _controller: Themes\Rozier\Controllers\UrlAliasesController::editAliasesAction }
     requirements: { nodeId : "[0-9]+" }
 nodesTreePage:

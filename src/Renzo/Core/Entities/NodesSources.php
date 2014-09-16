@@ -120,7 +120,7 @@ class NodesSources extends AbstractEntity
      */
     public function setMetaTitle($metaTitle)
     {
-        $this->metaTitle = $metaTitle;
+        $this->metaTitle = trim($metaTitle);
 
         return $this;
     }
@@ -144,7 +144,7 @@ class NodesSources extends AbstractEntity
      */
     public function setMetaKeywords($metaKeywords)
     {
-        $this->metaKeywords = $metaKeywords;
+        $this->metaKeywords = trim($metaKeywords);
 
         return $this;
     }
@@ -168,7 +168,7 @@ class NodesSources extends AbstractEntity
      */
     public function setMetaDescription($metaDescription)
     {
-        $this->metaDescription = $metaDescription;
+        $this->metaDescription = trim($metaDescription);
 
         return $this;
     }

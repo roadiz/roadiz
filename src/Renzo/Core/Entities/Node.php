@@ -17,6 +17,7 @@ use RZ\Renzo\Core\Entities\Tag;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Entities\NodesSources;
 use RZ\Renzo\Core\Handlers\NodeHandler;
+
 /**
  * Node entities are the central feature of RZ-CMS,
  * it describes a document-like object which can be inherited
@@ -148,6 +149,32 @@ class Node extends AbstractDateTimedPositioned
     public function setLocked($locked)
     {
         $this->locked = $locked;
+
+        return $this;
+    }
+
+
+    /**
+     * @Column(type="decimal", precision=2)
+     */
+    private $priority = 0.8;
+
+    /**
+     * @return integer
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @param integer $priority
+     *
+     * @return $this
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = (float)$priority;
 
         return $this;
     }

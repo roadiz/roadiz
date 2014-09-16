@@ -29,6 +29,7 @@ use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+
 /**
  * {@inheritdoc}
  */
@@ -42,15 +43,26 @@ class UrlAliasesController extends RozierApp
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function editAliasesAction(Request $request, $nodeId)
+    public function editAliasesAction(Request $request, $nodeId, $translationId = null)
     {
-        $translation = $this->getKernel()->em()
-                ->getRepository('RZ\Renzo\Core\Entities\Translation')
-                ->findDefault();
-        $node = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+        if (null === $translationId && $translationId < 1) {
+            $translation = $this->getKernel()->em()
+                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->findDefault();
+        } else {
+            $translation = $this->getKernel()->em()
+                    ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
+        }
 
-        if ($node !== null) {
+
+        $source = $this->getKernel()->em()
+                ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+                ->findOneBy(array('translation'=>$translation, 'node'=>array('id'=>(int) $nodeId)));
+
+        $node = $source->getNode();
+
+        if ($source !== null &&
+            $node !== null) {
 
             $uas = $this->getKernel()->em()
                             ->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
@@ -59,6 +71,39 @@ class UrlAliasesController extends RozierApp
             $this->assignation['node'] = $node;
             $this->assignation['aliases'] = array();
             $this->assignation['translation'] = $translation;
+            $this->assignation['available_translations'] = $node->getHandler()->getAvailableTranslations();
+
+            /*
+             * SEO Form
+             */
+            $seoForm = $this->buildEditSEOForm($source);
+            $this->assignation['seoForm'] = $seoForm->createView();
+            $seoForm->handleRequest();
+
+            if ($seoForm->isValid()) {
+                if ($this->editSEO($seoForm->getData(), $source)) {
+                    $msg = $this->getTranslator()->trans('node.seo.updated');
+                    $request->getSession()->getFlashBag()->add('confirm', $msg);
+                    $this->getLogger()->info($msg);
+                } else {
+                    $msg = $this->getTranslator()->trans('node.seo.not.updated');
+                    $request->getSession()->getFlashBag()->add('error', $msg);
+                    $this->getLogger()->warning($msg);
+                }
+
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                $response = new RedirectResponse(
+                    $this->getKernel()->getUrlGenerator()->generate(
+                        'nodesEditSEOPage',
+                        array('nodeId' => $node->getId(), 'translationId'=> $translationId)
+                    )
+                );
+                $response->prepare($request);
+
+                return $response->send();
+            }
 
             /*
              * each url alias edit form
@@ -228,6 +273,29 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
+     * Edit NodesSources SEO fields.
+     *
+     * @param array                               $data
+     * @param RZ\Renzo\Core\Entities\NodesSources $nodeSource
+     *
+     * @return boolean
+     */
+    private function editSEO(array $data, $nodeSource)
+    {
+        if ($data['id'] == $nodeSource->getId()) {
+
+            $nodeSource->setMetaTitle($data['metaTitle']);
+            $nodeSource->setMetaKeywords($data['metaKeywords']);
+            $nodeSource->setMetaDescription($data['metaDescription']);
+
+            $this->getKernel()->em()->flush();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param string $name
      *
      * @return boolean
@@ -345,6 +413,40 @@ class UrlAliasesController extends RozierApp
                         'constraints' => array(
                             new NotBlank()
                         )
+                    ));
+
+        return $builder->getForm();
+    }
+
+    /**
+     * @param RZ\Renzo\Core\Entities\NodesSources $ns
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildEditSEOForm($ns)
+    {
+        $defaults = array(
+            'id' =>  $ns->getId(),
+            'metaTitle' =>  $ns->getMetaTitle(),
+            'metaKeywords' =>  $ns->getMetaKeywords(),
+            'metaDescription' =>  $ns->getMetaDescription()
+        );
+        $builder = $this->getFormFactory()
+                    ->createBuilder('form', $defaults)
+                    ->add('id', 'hidden', array(
+                        'data' => $ns->getId(),
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ))
+                    ->add('metaTitle', 'text', array(
+                        'required' => false
+                    ))
+                    ->add('metaKeywords', 'text', array(
+                        'required' => false
+                    ))
+                    ->add('metaDescription', 'textarea', array(
+                        'required' => false
                     ));
 
         return $builder->getForm();
