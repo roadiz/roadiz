@@ -225,19 +225,34 @@ class ThemesController extends RozierApp
     {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('className', new \RZ\Renzo\CMS\Forms\ThemesType(),
-                array('label' => 'Theme'))
-            ->add('available', 'checkbox', array(
-                'data' => $theme->isAvailable(),
-                'required' => false
-            ))
-            ->add('hostname', 'text', array(
-                'data' => $theme->getHostname()
-            ))
-            ->add('backendTheme', 'checkbox', array(
-                'data' => $theme->isBackendTheme(),
-                'required' => false
-            ));
+            ->add(
+                'className',
+                new \RZ\Renzo\CMS\Forms\ThemesType(),
+                array('label' => 'Theme')
+            )
+            ->add(
+                'available',
+                'checkbox',
+                array(
+                    'data' => $theme->isAvailable(),
+                    'required' => false
+                )
+            )
+            ->add(
+                'hostname',
+                'text',
+                array(
+                    'data' => $theme->getHostname()
+                )
+            )
+            ->add(
+                'backendTheme',
+                'checkbox',
+                array(
+                    'data' => $theme->isBackendTheme(),
+                    'required' => false
+                )
+            );
 
         return $builder->getForm();
     }

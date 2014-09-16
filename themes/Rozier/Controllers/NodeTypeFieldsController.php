@@ -276,8 +276,7 @@ class NodeTypeFieldsController extends RozierApp
         $data,
         NodeTypeField $field,
         NodeType $nodeType
-    )
-    {
+    ) {
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
             $field->$setter($value);

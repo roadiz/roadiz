@@ -56,9 +56,13 @@ class NodeTypesUtilsController extends RozierApp
             array()
         );
 
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $nodeType->getName() . '.rzt')); // Rezo-Zero Type
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $nodeType->getName() . '.rzt'
+            )
+        ); // Rezo-Zero Type
 
         $response->prepare($request);
 

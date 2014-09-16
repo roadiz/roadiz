@@ -271,7 +271,8 @@ class InstallApp extends AppController
                     $user = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\User')->findOneBy(array('username' => $userForm->getData()['username']));
                     $response = new RedirectResponse(
                         $this->getKernel()->getUrlGenerator()->generate(
-                            'installUserSummaryPage', array("userId" => $user->getId())
+                            'installUserSummaryPage',
+                            array("userId" => $user->getId())
                         )
                     );
                     $response->prepare($request);

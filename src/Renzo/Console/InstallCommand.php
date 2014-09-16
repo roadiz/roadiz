@@ -1,8 +1,8 @@
-<?php 
+<?php
 /*
  * Copyright REZO ZERO 2014
- * 
- * 
+ *
+ *
  *
  * @file InstallCommand.php
  * @copyright REZO ZERO 2014
@@ -101,7 +101,7 @@ class InstallCommand extends Command
 
     /**
      * Tell if there is any translation.
-     * 
+     *
      * @return boolean
      */
     public function hasDefaultTranslation()

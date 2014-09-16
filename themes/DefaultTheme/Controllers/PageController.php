@@ -36,8 +36,7 @@ class PageController extends DefaultApp
         Request $request,
         Node $node = null,
         Translation $translation = null
-    )
-    {
+    ) {
         $this->prepareThemeAssignation($node, $translation);
 
         return new Response(

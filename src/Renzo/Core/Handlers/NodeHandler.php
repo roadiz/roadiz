@@ -150,10 +150,9 @@ class NodeHandler
     public function getUnavailableTranslations()
     {
         $query = Kernel::getInstance()->em()
-                        ->createQuery('
-            SELECT t FROM RZ\Renzo\Core\Entities\Translation t
-            WHERE t.id NOT IN (:translations_id)'
-                        )->setParameter('translations_id', $this->getAvailableTranslationsId());
+                        ->createQuery('SELECT t FROM RZ\Renzo\Core\Entities\Translation t
+                                       WHERE t.id NOT IN (:translations_id)')
+                        ->setParameter('translations_id', $this->getAvailableTranslationsId());
 
         try {
             return $query->getResult();
@@ -168,9 +167,8 @@ class NodeHandler
     public function getUnavailableTranslationsId()
     {
         $query = Kernel::getInstance()->em()
-                        ->createQuery('
-            SELECT t.id FROM RZ\Renzo\Core\Entities\Translation t
-            WHERE t.id NOT IN (:translations_id)')
+                        ->createQuery('SELECT t.id FROM RZ\Renzo\Core\Entities\Translation t
+                                       WHERE t.id NOT IN (:translations_id)')
                         ->setParameter('translations_id', $this->getAvailableTranslationsId());
 
         try {

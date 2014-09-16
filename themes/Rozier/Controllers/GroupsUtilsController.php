@@ -58,9 +58,13 @@ class GroupsUtilsController extends RozierApp
             array()
         );
 
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'group-all-' . date("YmdHis")  . '.rzt')); // Rezo-Zero Type
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'group-all-' . date("YmdHis")  . '.rzt'
+            )
+        ); // Rezo-Zero Type
 
         $response->prepare($request);
 
@@ -88,9 +92,13 @@ class GroupsUtilsController extends RozierApp
             array()
         );
 
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'group-' . $existingGroup->getName() . '-' . date("YmdHis")  . '.rzt')); // Rezo-Zero Type
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'group-' . $existingGroup->getName() . '-' . date("YmdHis")  . '.rzt'
+            )
+        ); // Rezo-Zero Type
 
         $response->prepare($request);
 

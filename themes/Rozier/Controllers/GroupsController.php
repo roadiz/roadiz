@@ -522,8 +522,11 @@ class GroupsController extends RozierApp
                     new NotBlank()
                 )
             ))
-            ->add('roleId', new \RZ\Renzo\CMS\Forms\RolesType($group->getRolesEntities()),
-                array('label' => 'Role'));
+            ->add(
+                'roleId',
+                new \RZ\Renzo\CMS\Forms\RolesType($group->getRolesEntities()),
+                array('label' => 'Role')
+            );
 
         return $builder->getForm();
     }
@@ -546,13 +549,16 @@ class GroupsController extends RozierApp
                     new NotBlank()
                 )
             ))
-            ->add('userId', new \RZ\Renzo\CMS\Forms\UsersType($group->getUsers()),
+            ->add(
+                'userId',
+                new \RZ\Renzo\CMS\Forms\UsersType($group->getUsers()),
                 array(
                     'label' => 'User',
                     'constraints' => array(
                         new NotBlank()
                     )
-            ));
+                )
+            );
 
         return $builder->getForm();
     }

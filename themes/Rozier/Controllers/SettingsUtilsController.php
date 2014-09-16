@@ -67,9 +67,13 @@ class SettingsUtilsController extends RozierApp
             array()
         );
 
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'setting-all-' . date("YmdHis")  . '.rzt')); // Rezo-Zero Type
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'setting-all-' . date("YmdHis")  . '.rzt'
+            )
+        ); // Rezo-Zero Type
 
         $response->prepare($request);
 

@@ -197,10 +197,11 @@ class UsersCommand extends Command
      *
      * @return RZ\Renzo\Core\Entities\User
      */
-    private function executeUserCreation( $username,
-                                          InputInterface $input,
-                                          OutputInterface $output )
-    {
+    private function executeUserCreation(
+        $username,
+        InputInterface $input,
+        OutputInterface $output
+    ) {
         $text = "";
         $user = new User();
         $user->setUsername($username);

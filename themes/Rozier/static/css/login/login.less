@@ -17,7 +17,7 @@ section#login {
     div#login-logo {
         position: absolute;
         width: 128px; height: 116px;
-        background-color: @green-rz;
+        background-color: @contrast-color;
         top: 0px; left: -128px;
     }
     div#login-credit {
@@ -26,12 +26,12 @@ section#login {
         background-color: @grey-interface;
         top: 116px; left: -128px;
 
-        #login-rz {
-            position: absolute;
-            color: @grey-medium;
-            bottom: 80px;
-            width: 100%;
-            left: 0px;
+        i.uk-icon-rezozero {
+
+            font-size: 22px;
+            &:before {
+                content: "\f318";
+            }
         }
 
         #login-version {

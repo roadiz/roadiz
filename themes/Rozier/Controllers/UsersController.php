@@ -703,14 +703,21 @@ class UsersController extends RozierApp
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
-            ->add('userId', 'hidden', array(
-                'data' => $user->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'userId',
+                'hidden',
+                array(
+                    'data' => $user->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ))
-            ->add('roleId', new \RZ\Renzo\CMS\Forms\RolesType($user->getRolesEntities()),
-                array('label' => 'Role'));
+            )
+            ->add(
+                'roleId',
+                new \RZ\Renzo\CMS\Forms\RolesType($user->getRolesEntities()),
+                array('label' => 'Role')
+            );
 
         return $builder->getForm();
     }
@@ -735,41 +742,77 @@ class UsersController extends RozierApp
 
         $builder = $this->getFormFactory()
                         ->createBuilder('form', $defaults)
-                        ->add('email', 'email', array(
-                            'constraints' => array(
-                                new NotBlank()
+                        ->add(
+                            'email',
+                            'email',
+                            array(
+                                'constraints' => array(
+                                    new NotBlank()
+                                )
                             )
-                        ))
-                        ->add('username', 'text', array(
-                            'constraints' => array(
-                                new NotBlank()
+                        )
+                        ->add(
+                            'username',
+                            'text',
+                            array(
+                                'constraints' => array(
+                                    new NotBlank()
+                                )
                             )
-                        ))
-                        ->add('plainPassword', 'repeated', array(
-                            'type' => 'password',
-                            'invalid_message' => 'Passwords must match',
-                            'first_options'  => array('label' => 'password'),
-                            'second_options' => array('label' => 'passwordVerify'),
-                            'required' => false
-                        ))
-                        ->add('firstName', 'text', array(
-                            'required' => false
-                        ))
-                        ->add('lastName', 'text', array(
-                            'required' => false
-                        ))
-                        ->add('company', 'text', array(
-                            'required' => false
-                        ))
-                        ->add('job', 'text', array(
-                            'required' => false
-                        ))
-                        ->add('birthday', 'date', array(
-                            'required' => false
-                        ))
-                        ->add('facebookName', 'text', array(
-                            'required' => false
-                        ));
+                        )
+                        ->add(
+                            'plainPassword',
+                            'repeated',
+                            array(
+                                'type' => 'password',
+                                'invalid_message' => 'Passwords must match',
+                                'first_options'  => array('label' => 'password'),
+                                'second_options' => array('label' => 'passwordVerify'),
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'firstName',
+                            'text',
+                            array(
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'lastName',
+                            'text',
+                            array(
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'company',
+                            'text',
+                            array(
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'job',
+                            'text',
+                            array(
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'birthday',
+                            'date',
+                            array(
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'facebookName',
+                            'text',
+                            array(
+                                'required' => false
+                            )
+                        );
 
         return $builder->getForm();
     }
@@ -783,12 +826,16 @@ class UsersController extends RozierApp
     {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('userId', 'hidden', array(
-                'data' => $user->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'userId',
+                'hidden',
+                array(
+                    'data' => $user->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ));
+            );
 
         return $builder->getForm();
     }
@@ -803,18 +850,26 @@ class UsersController extends RozierApp
     {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('userId', 'hidden', array(
-                'data' => $user->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'userId',
+                'hidden',
+                array(
+                    'data' => $user->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ))
-            ->add('roleId', 'hidden', array(
-                'data' => $role->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            )
+            ->add(
+                'roleId',
+                'hidden',
+                array(
+                    'data' => $role->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ));
+            );
 
         return $builder->getForm();
     }
@@ -831,14 +886,21 @@ class UsersController extends RozierApp
         );
         $builder = $this->getFormFactory()
                     ->createBuilder('form', $defaults)
-                    ->add('userId', 'hidden', array(
-                        'data' => $user->getId(),
-                        'constraints' => array(
-                            new NotBlank()
+                    ->add(
+                        'userId',
+                        'hidden',
+                        array(
+                            'data' => $user->getId(),
+                            'constraints' => array(
+                                new NotBlank()
+                            )
                         )
-                    ))
-                    ->add('group', new \RZ\Renzo\CMS\Forms\GroupsType($user->getGroups()),
-                        array('label' => 'Group'));
+                    )
+                    ->add(
+                        'group',
+                        new \RZ\Renzo\CMS\Forms\GroupsType($user->getGroups()),
+                        array('label' => 'Group')
+                    );
 
         return $builder->getForm();
     }
@@ -853,18 +915,26 @@ class UsersController extends RozierApp
     {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('userId', 'hidden', array(
-                'data' => $user->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'userId',
+                'hidden',
+                array(
+                    'data' => $user->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ))
-            ->add('groupId', 'hidden', array(
-                'data' => $group->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            )
+            ->add(
+                'groupId',
+                'hidden',
+                array(
+                    'data' => $group->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ));
+            );
 
         return $builder->getForm();
     }

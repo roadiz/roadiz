@@ -38,8 +38,7 @@ class NodeTreeWidget extends AbstractWidget
         $refereeController,
         Node $parent = null,
         Translation $translation = null
-    )
-    {
+    ) {
         parent::__construct($request, $refereeController);
 
         $this->parentNode = $parent;

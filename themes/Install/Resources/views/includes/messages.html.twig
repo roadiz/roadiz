@@ -1,6 +1,6 @@
 {% if session.messages|length %}
 	{% for type, msgs in session.messages %}
-		{% for msg in msgs %} 
+		{% for msg in msgs %}
 			<div data-uk-alert class="uk-alert uk-alert-{% if type == "confirm" %}success{% elseif type == "warning" %}warning{% else %}danger{% endif %}">
 				<a href="" class="uk-alert-close uk-close"></a>
 				<p>{{ msg }}</p>

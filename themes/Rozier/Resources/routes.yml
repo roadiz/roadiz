@@ -358,4 +358,3 @@ groupsExportPage:
     path:     /rz-admin/groups/export/{groupId}
     requirements: { groupId : "[0-9]+" }
     defaults: { _controller: Themes\Rozier\Controllers\GroupsUtilsController::exportAction }
-

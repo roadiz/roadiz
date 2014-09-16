@@ -32,7 +32,7 @@ class RoleRepository extends EntityRepository
             WHERE r.name = :name')
         ->setParameter('name', $roleName);
 
-       return $query->getSingleScalarResult();
+        return $query->getSingleScalarResult();
     }
 
     /**

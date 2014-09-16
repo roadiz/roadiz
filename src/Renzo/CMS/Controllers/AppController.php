@@ -257,8 +257,7 @@ class AppController implements ViewableInterface
         \Twig_Environment $twigEnvironment,
         Translator $translator,
         array $baseAssignation
-    )
-    {
+    ) {
         $this->twig = $twigEnvironment;
         $this->translator = $translator;
         $this->assignation = $baseAssignation;
@@ -644,8 +643,7 @@ class AppController implements ViewableInterface
         HttpKernelInterface $httpKernel,
         HttpUtils $httpUtils,
         EventDispatcher $dispatcher = null
-    )
-    {
+    ) {
 
     }
 }

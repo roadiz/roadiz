@@ -152,11 +152,10 @@ class NodesCommand extends Command
      */
     private function executeNodeCreation(
         InputInterface $input,
-        OutputInterface $output ,
+        OutputInterface $output,
         NodeType $type,
         Translation $translation
-    )
-    {
+    ) {
         $text = "";
         $nodeName = $input->getArgument('node-name');
         $node = new Node($type);
