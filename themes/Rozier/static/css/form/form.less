@@ -32,19 +32,20 @@
         border: 1px solid @grey-form-border;
         .border-radius(0px);
         .box-sizing();
-        .transition(0.35s ease border-color);
+        .transition(~'0.35s ease border-color, 0.5s ease background');
 
-        &:focus {
+        &:hover {
             background-color: white;
+            border-color: #888888;
+            color: #333;
+        }
+        &:focus {
+            background-color: @grey-verylight;
             border-color: #888888;
             color: #333;
         }
     }
 
-    input[type="text"],
-    input[type="password"] {
-        height: 36px;
-    }
 
     .uk-form-label {
         font-size: 11px;
@@ -56,15 +57,35 @@
             color: @grey-form-before;
         }
     }
+
+    // Default Button
+
+    input[type="text"],
+    input[type="password"] {
+        height: 36px;
+    }
     .uk-button, .uk-button-primary {
         height: 36px;
         background: @grey-form-submit;
         border-color: @grey-form-submit-border;
         .border-radius(0px);
+        font-size: 11px;
+        line-height: 36px;
+        font-weight: bold;
+        color: @grey-form-submit-color;
+        text-shadow: 0 1px 0 rgba(255,255,255,.5);
+        .transition(~'0.35s ease border-color, 0.5s ease background');
+
+
+        &:hover {
+            background-color: @grey-form-submit-hover;
+            border-color: #888888;
+            color: #333;
+        }
     }
 
     .data-uk-margin {
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         div {
             margin-bottom: 10px;
         }
