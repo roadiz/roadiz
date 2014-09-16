@@ -26,6 +26,10 @@ installImportRoles:
 installUserPage:
     path:     /install/user
     defaults: { _controller: Themes\Install\InstallApp::userAction }
+installUserSummaryPage:
+    path:     /install/user/summary/{userId}
+    defaults: { _controller: Themes\Install\InstallApp::userSummaryAction }
+    requirements: { userId : "[0-9]+" }
 installThemesPage:
     path:     /install/themes
     defaults: { _controller: Themes\Install\InstallApp::themesAction }

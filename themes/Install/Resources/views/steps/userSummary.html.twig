@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="uk-panel-title">{% trans %}install.user.new{% endtrans %}</h1>
+    <p>
+        {% trans %}user.name{% endtrans %}: {{ name }}<br>
+        {% trans %}user.email{% endtrans %}: {{ email }}
+    </p>
+    <p>
+    	<a class="uk-button uk-button-success" href="{{ path('installImportPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.import{% endtrans %}</a>
+        <a class="uk-button uk-button-primary" href="{{ path('installUserPage') }}"><i class="uk-icon-magic"></i> {% trans %}create.another.user{% endtrans %}</a>
+    	<a class="uk-button uk-button-success" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-right"></i> {% trans %}goto.theme{% endtrans %}</a>
+    </p>
+{% endblock %}

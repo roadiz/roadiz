@@ -268,9 +268,10 @@ class InstallApp extends AppController
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
+                    $user = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\User')->findOneBy(array('username' => $userForm->getData()['username']));
                     $response = new RedirectResponse(
                         $this->getKernel()->getUrlGenerator()->generate(
-                            'installThemesPage'
+                            'installUserSummaryPage', array("userId" => $user->getId())
                         )
                     );
                     $response->prepare($request);
@@ -292,6 +293,26 @@ class InstallApp extends AppController
         );
     }
 
+    /**
+     * User information screen
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $userId
+     * @param RZ\Renzo\Core\Entities\Node              $node
+     * @param RZ\Renzo\Core\Entities\Translation       $translation
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function userSummaryAction(Request $request, $userId, Node $node = null, Translation $translation = null)
+    {
+        $user = Kernel::getInstance()->em()->find('RZ\Renzo\Core\Entities\User', $userId);
+        $this->assignation['name'] = $user->getUsername();
+        $this->assignation['email'] = $user->getEmail();
+        return new Response(
+            $this->getTwig()->render('steps/userSummary.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
 
     /**
      * Theme install screen
