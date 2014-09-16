@@ -134,7 +134,7 @@ class TranslationsController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getKernel()->getUrlGenerator()->generate(
                         'translationsEditPage',
-                        array('translation_id' => $translation->getId())
+                        array('translationId' => $translation->getId())
                     )
                 );
                 $response->prepare($request);
