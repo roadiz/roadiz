@@ -71,8 +71,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         \Doctrine\ORM\QueryBuilder $qb,
         array $criteria = array(),
         $alias = "obj"
-    )
-    {
+    ) {
         /*
          * get fields needed for a search
          * query
@@ -125,8 +124,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         array $orders = array(),
         $limit = null,
         $offset = null
-    )
-    {
+    ) {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'obj')
            ->add('from', $this->getEntityName() . ' obj');
@@ -160,7 +158,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
-    public function countSearchBy( $pattern, array $criteria = array() )
+    public function countSearchBy($pattern, array $criteria = array())
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(obj)')

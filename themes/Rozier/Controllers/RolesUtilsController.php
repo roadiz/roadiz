@@ -57,9 +57,13 @@ class RolesUtilsController extends RozierApp
             array()
         );
 
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'role-all-' . date("YmdHis")  . '.rzt')); // Rezo-Zero Type
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'role-all-' . date("YmdHis")  . '.rzt'
+            )
+        ); // Rezo-Zero Type
 
         $response->prepare($request);
 
@@ -87,9 +91,13 @@ class RolesUtilsController extends RozierApp
             array()
         );
 
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'role-' . $existingRole->getName() . '-' . date("YmdHis")  . '.rzt')); // Rezo-Zero Type
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'role-' . $existingRole->getName() . '-' . date("YmdHis")  . '.rzt'
+            )
+        ); // Rezo-Zero Type
 
         $response->prepare($request);
 

@@ -99,19 +99,19 @@ class SolrCommand extends Command
             $text .= '<error>No Solr search engine server has been configured…</error>'.PHP_EOL;
             $text .= 'Personnalize your config.json file to enable Solr (sample):'.PHP_EOL;
             $text .=
-'"solr": {
-    "endpoint": {
-        "localhost": {
-            "host":"localhost",
-            "port":"8983",
-            "path":"/solr",
-            "core":"mycore",
-            "timeout":3,
-            "username":"",
-            "password":""
-        }
-    }
-}';
+            '"solr": {
+                "endpoint": {
+                    "localhost": {
+                        "host":"localhost",
+                        "port":"8983",
+                        "path":"/solr",
+                        "core":"mycore",
+                        "timeout":3,
+                        "username":"",
+                        "password":""
+                    }
+                }
+            }';
         }
 
         $output->writeln($text);

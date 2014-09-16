@@ -50,8 +50,7 @@ class EntityListManager
         $entityName,
         $preFilters = array(),
         $preOrdering = array()
-    )
-    {
+    ) {
         $this->request =    $request;
         $this->entityName = $entityName;
         $this->_em =        $_em;

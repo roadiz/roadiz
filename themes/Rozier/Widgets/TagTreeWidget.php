@@ -34,8 +34,7 @@ class TagTreeWidget extends AbstractWidget
         Request $request,
         $refereeController,
         Tag $parent = null
-    )
-    {
+    ) {
         parent::__construct($request, $refereeController);
 
         $this->parentTag = $parent;

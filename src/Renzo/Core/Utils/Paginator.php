@@ -33,8 +33,7 @@ class Paginator
         $entityName,
         $itemPerPages = 10,
         array $criteria = array()
-    )
-    {
+    ) {
         $this->_em = $_em;
         $this->entityName = $entityName;
         $this->setItemsPerPage($itemPerPages);

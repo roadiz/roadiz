@@ -955,23 +955,45 @@ class NodesController extends RozierApp
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
-            ->add('nodeName', 'text', array(
+            ->add(
+                'nodeName',
+                'text',
+                array(
                 'constraints' => array(
                     new NotBlank()
+                        )
                 )
-            ))
-            ->add('home', 'checkbox',
-                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox')))
-            ->add('hidingChildren', 'checkbox',
-                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox')))
-            ->add('visible', 'checkbox',
-                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox')))
-            ->add('locked', 'checkbox',
-                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox')))
-            ->add('published', 'checkbox',
-                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox')))
-            ->add('archived', 'checkbox',
-                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox')));
+            )
+            ->add(
+                'home',
+                'checkbox',
+                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox'))
+            )
+            ->add(
+                'hidingChildren',
+                'checkbox',
+                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox'))
+            )
+            ->add(
+                'visible',
+                'checkbox',
+                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox'))
+            )
+            ->add(
+                'locked',
+                'checkbox',
+                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox'))
+            )
+            ->add(
+                'published',
+                'checkbox',
+                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox'))
+            )
+            ->add(
+                'archived',
+                'checkbox',
+                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox'))
+            );
 
         return $builder->getForm();
     }

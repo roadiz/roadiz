@@ -251,8 +251,7 @@ class FrontendController extends AppController
         HttpKernelInterface $httpKernel,
         HttpUtils $httpUtils,
         EventDispatcher $dispatcher = null
-    )
-    {
+    ) {
         /*
          * Prepare app firewall
          */

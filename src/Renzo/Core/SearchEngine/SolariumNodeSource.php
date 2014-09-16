@@ -198,8 +198,10 @@ class SolariumNodeSource
      */
     public function clean(Query $update)
     {
-        $update->addDeleteQuery(static::IDENTIFIER_KEY.':"'.$this->nodeSource->getId().
-            '"&locale_s:"'.$this->nodeSource->getTranslation()->getLocale().'"');
+        $update->addDeleteQuery(
+            static::IDENTIFIER_KEY.':"'.$this->nodeSource->getId()
+            .'"&locale_s:"'.$this->nodeSource->getTranslation()->getLocale().'"'
+        );
 
         return true;
     }

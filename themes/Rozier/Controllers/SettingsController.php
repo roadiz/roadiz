@@ -388,21 +388,42 @@ class SettingsController extends RozierApp
         }
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
-            ->add('name', 'text',
+            ->add(
+                'name',
+                'text',
                 array('constraints' => array(
                     new NotBlank())
-                ))
-            ->add('id', 'hidden', array(
+                )
+            )
+            ->add(
+                'id',
+                'hidden',
+                array(
                 'data'=>$setting->getId(),
                 'required' => true
-            ))
-            ->add('Value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false))
-            ->add('visible', 'checkbox', array('required' => false))
-            ->add('type', 'choice', array(
-                'required' => true,
-                'choices' => NodeTypeField::$typeToHuman
-            ))
-            ->add('group', new \RZ\Renzo\CMS\Forms\SettingGroupType()
+                )
+            )
+            ->add(
+                'Value',
+                NodeTypeField::$typeToForm[$setting->getType()],
+                array('required' => false)
+            )
+            ->add(
+                'visible',
+                'checkbox',
+                array('required' => false)
+            )
+            ->add(
+                'type',
+                'choice',
+                array(
+                    'required' => true,
+                    'choices' => NodeTypeField::$typeToHuman
+                )
+            )
+            ->add(
+                'group',
+                new \RZ\Renzo\CMS\Forms\SettingGroupType()
             );
 
         return $builder->getForm();

@@ -185,8 +185,7 @@ class TagRepository extends EntityRepository
         \Doctrine\ORM\QueryBuilder $qb,
         array $criteria = array(),
         $alias = "obj"
-    )
-    {
+    ) {
         /*
          * get fields needed for a search
          * query
@@ -247,8 +246,7 @@ class TagRepository extends EntityRepository
         array $orders = array(),
         $limit = null,
         $offset = null
-    )
-    {
+    ) {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 't, obj')
            ->add('from', $this->getEntityName() . ' t')

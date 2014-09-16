@@ -155,11 +155,10 @@ class NodesSourcesHandler
         $parent = $this->nodeSource->getNode()->getParent();
         if ($parent !== null) {
             $query = Kernel::getInstance()->em()
-                            ->createQuery('
-                SELECT ns FROM RZ\Renzo\Core\Entities\NodesSources ns
-                WHERE ns.node = :node
-                AND ns.translation = :translation'
-                            )->setParameter('node', $parent)
+                            ->createQuery('SELECT ns FROM RZ\Renzo\Core\Entities\NodesSources ns
+                                           WHERE ns.node = :node
+                                           AND ns.translation = :translation')
+                            ->setParameter('node', $parent)
                             ->setParameter('translation', $this->nodeSource->getTranslation());
 
             try {

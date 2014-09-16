@@ -277,8 +277,13 @@ class TranslationsController extends RozierApp
 
             $this->getKernel()->em()->flush();
         } catch (\Exception $e) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans('translation.cannot_update_already_exists',
-                array('%locale%'=>$translation->getLocale())), 1);
+            throw new EntityAlreadyExistsException(
+                $this->getTranslator()->trans(
+                    'translation.cannot_update_already_exists',
+                    array('%locale%'=>$translation->getLocale())
+                ),
+                1
+            );
         }
     }
 
@@ -298,8 +303,13 @@ class TranslationsController extends RozierApp
             $this->getKernel()->em()->persist($translation);
             $this->getKernel()->em()->flush();
         } catch (\Exception $e) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans('translation.cannot_create_already_exists',
-                array('%locale%'=>$translation->getLocale())), 1);
+            throw new EntityAlreadyExistsException(
+                $this->getTranslator()->trans(
+                    'translation.cannot_create_already_exists',
+                    array('%locale%'=>$translation->getLocale())
+                ),
+                1
+            );
         }
     }
 
@@ -317,7 +327,13 @@ class TranslationsController extends RozierApp
                 $this->getKernel()->em()->remove($translation);
                 $this->getKernel()->em()->flush();
             } else {
-                throw new \Exception($this->getTranslator()->trans('translation.cannot_delete_default_translation', array('%name%'=>$translation->getName())), 1);
+                throw new \Exception(
+                    $this->getTranslator()->trans(
+                        'translation.cannot_delete_default_translation',
+                        array('%name%'=>$translation->getName())
+                    ),
+                    1
+                );
             }
         }
     }
@@ -336,16 +352,28 @@ class TranslationsController extends RozierApp
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
-            ->add('name', 'text', array(
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'name',
+                'text',
+                array(
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ))
-            ->add('locale', 'choice', array(
-                'required' => true,
-                'choices' => Translation::$availableLocales
-            ))
-            ->add('available', 'checkbox', array('required' => false));
+            )
+            ->add(
+                'locale',
+                'choice',
+                array(
+                    'required' => true,
+                    'choices' => Translation::$availableLocales
+                )
+            )
+            ->add(
+                'available',
+                'checkbox',
+                array('required' => false)
+            );
 
         return $builder->getForm();
     }
@@ -359,12 +387,16 @@ class TranslationsController extends RozierApp
     {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('translation_id', 'hidden', array(
-                'data' => $translation->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'translation_id',
+                'hidden',
+                array(
+                    'data' => $translation->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ));
+            );
 
         return $builder->getForm();
     }
@@ -378,12 +410,16 @@ class TranslationsController extends RozierApp
     {
         $builder = $this->getFormFactory()
             ->createBuilder('form')
-            ->add('translation_id', 'hidden', array(
-                'data' => $translation->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'translation_id',
+                'hidden',
+                array(
+                    'data' => $translation->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ));
+            );
 
         return $builder->getForm();
     }
