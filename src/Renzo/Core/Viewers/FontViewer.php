@@ -143,5 +143,4 @@ class FontViewer implements ViewableInterface
 
         return $this->getTwig()->render('fonts/fontfamily.css.twig', $assignation);
     }
-
 }

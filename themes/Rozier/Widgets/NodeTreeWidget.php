@@ -13,8 +13,8 @@ use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Kernel;
 use Themes\Rozier\Widgets\AbstractWidget;
-
 use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Prepare a Node tree according to Node hierarchy and given options.
  *

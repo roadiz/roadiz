@@ -11,6 +11,7 @@ namespace RZ\Renzo\Core\Handlers;
 
 use RZ\Renzo\Core\Entities\Logger;
 use Doctrine\ORM\EntityManager;
+
 /**
  * Handle operations with logs entities.
  */

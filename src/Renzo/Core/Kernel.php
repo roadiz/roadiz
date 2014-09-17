@@ -111,8 +111,11 @@ class Kernel
      */
     final private function __construct()
     {
-        if (file_exists(RENZO_ROOT.'/BUILD.php')) {
-            static::$cmsBuild = include(RENZO_ROOT.'/BUILD.php');
+        /*
+         * Get build number from txt file generated at each pre-commit
+         */
+        if (file_exists(RENZO_ROOT.'/BUILD.txt')) {
+            static::$cmsBuild = intval(trim(file_get_contents(RENZO_ROOT.'/BUILD.txt')));
         }
 
         $this->stopwatch = new Stopwatch();

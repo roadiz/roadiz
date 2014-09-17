@@ -13,6 +13,7 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Translation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+
 /**
  * EntityRepository that implements search engine query with Solr
  */

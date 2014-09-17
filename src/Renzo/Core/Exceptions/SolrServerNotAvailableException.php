@@ -8,6 +8,7 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Renzo\Core\Exceptions;
+
 /**
  * Exception raised when no Solr server respond.
  */

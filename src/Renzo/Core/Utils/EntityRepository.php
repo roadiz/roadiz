@@ -10,6 +10,7 @@
 namespace RZ\Renzo\Core\Utils;
 
 use Doctrine\Common\Collections\Criteria;
+
 /**
  * EntityRepository that implements a simple countBy method.
  */

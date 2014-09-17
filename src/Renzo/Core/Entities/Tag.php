@@ -12,6 +12,7 @@ namespace RZ\Renzo\Core\Entities;
 use RZ\Renzo\Core\Handlers\TagHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\AbstractDateTimedPositioned;
+
 /**
  * Tags are hierarchical entities used
  * to qualify Nodes, Documents, Subscribers.

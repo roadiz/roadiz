@@ -76,7 +76,7 @@ class Paginator
      */
     public function getPageCount()
     {
-        if ($this->searchPattern !== null ) {
+        if ($this->searchPattern !== null) {
             $total = $this->_em->getRepository($this->entityName)
                             ->countSearchBy($this->searchPattern, $this->criteria);
         } else {
@@ -97,7 +97,7 @@ class Paginator
      */
     public function findByAtPage(array $order = array(), $page = 1)
     {
-        if ( $this->searchPattern !== null ) {
+        if ($this->searchPattern !== null) {
             return $this->_em->getRepository($this->entityName)
                         ->searchBy(
                             $this->searchPattern,
@@ -135,5 +135,4 @@ class Paginator
     {
         return $this->itemsPerPage;
     }
-
 }

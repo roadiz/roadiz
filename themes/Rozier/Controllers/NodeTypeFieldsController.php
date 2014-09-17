@@ -15,18 +15,17 @@ use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
-use Themes\Rozier\RozierApp;
-
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use \Symfony\Component\Form\Form;
 use \Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use \Symfony\Component\Validator\Constraints\NotBlank;
 use \Symfony\Component\Validator\Constraints\Type;
+
 /**
  * {@inheritdoc}
  */

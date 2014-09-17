@@ -13,6 +13,7 @@ use RZ\Renzo\CMS\Controller\AppController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
  * A widget always has to be created and called from a valid AppController
  * in order to get Twig renderer engine, security context and request context.

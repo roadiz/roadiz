@@ -12,6 +12,7 @@ namespace RZ\Renzo\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Renzo\Core\Handlers\TranslationHandler;
+
 /**
  * Translations describe language locales to be used by Nodes,
  * Tags, UrlAliases and Documents.

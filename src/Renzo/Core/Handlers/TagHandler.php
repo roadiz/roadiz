@@ -13,6 +13,7 @@ use RZ\Renzo\Core\Entities\Tag;
 use RZ\Renzo\Core\Entities\TagType;
 use RZ\Renzo\Core\Entities\TagTypeField;
 use RZ\Renzo\Core\Entities\Translation;
+
 /**
  * Handle operations with tags entities.
  */

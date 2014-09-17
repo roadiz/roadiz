@@ -12,6 +12,7 @@ namespace RZ\Renzo\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 use RZ\Renzo\Core\Utils\StringHandler;
+
 /**
  * UrlAliases are used to translate Nodes URLs.
  *

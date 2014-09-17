@@ -10,6 +10,7 @@
 namespace RZ\Renzo\Core\AbstractEntities;
 
 use RZ\Renzo\Core\AbstractEntities\AbstractDateTimed;
+
 /**
  * Combined AbstractDateTimed and AbstractPositioned.
  *

@@ -15,6 +15,7 @@ use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Kernel;
+
 /**
  * {@inheritdoc}
  */

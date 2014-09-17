@@ -11,6 +11,7 @@ namespace RZ\Renzo\Core\Utils;
 
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\ClientErrorResponseException;
+
 /**
  * Util to grab a facebook profile picture from userAlias.
  */

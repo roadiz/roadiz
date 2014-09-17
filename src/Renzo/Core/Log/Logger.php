@@ -13,6 +13,7 @@ use RZ\Renzo\Core\Entities\Log;
 use RZ\Renzo\Core\Kernel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+
 /**
  * A log system which store message in database.
  */

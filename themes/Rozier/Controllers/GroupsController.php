@@ -15,16 +15,16 @@ use RZ\Renzo\Core\Entities\Group;
 use RZ\Renzo\Core\Entities\User;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
-
+use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Renzo\Core\Exceptions\EntityRequiredException;
 use Themes\Rozier\RozierApp;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\EntityRequiredException;
 /**
  * {@inheritdoc}
  */

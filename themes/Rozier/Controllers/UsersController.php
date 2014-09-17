@@ -13,13 +13,11 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\User;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Entities\Group;
-
-use Themes\Rozier\RozierApp;
 use RZ\Renzo\Core\Utils\FacebookPictureFinder;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
-
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Renzo\Core\Exceptions\FacebookUsernameNotFoundException;
+use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +26,7 @@ use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+
 /**
  * {@inheritdoc}
  */
@@ -192,7 +191,7 @@ class UsersController extends RozierApp
         $role = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
 
-        if ($user !== null && $role !== null ) {
+        if ($user !== null && $role !== null) {
             $this->assignation['user'] = $user;
             $this->assignation['role'] = $role;
 

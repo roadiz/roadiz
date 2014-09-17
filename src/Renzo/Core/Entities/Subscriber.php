@@ -11,6 +11,7 @@ namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\AbstractHuman;
+
 /**
  * A Subscriber is a light User which only can subscribe
  * to newsletter feeds and can be tagged.

@@ -13,6 +13,7 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\CMS\Controllers\AppController;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+
 /**
  * Event dispatched after a route has been matched.
  */

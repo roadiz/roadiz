@@ -12,6 +12,7 @@ namespace RZ\Renzo\Core\Entities;
 use RZ\Renzo\Core\Utils\EntityRepository;
 use RZ\Renzo\Core\Entities\Tag;
 use RZ\Renzo\Core\Kernel;
+
 /**
  * {@inheritdoc}
  */

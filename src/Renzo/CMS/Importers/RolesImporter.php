@@ -51,5 +51,4 @@ class RolesImporter implements ImporterInterface
         $return = true;
         return $return;
     }
-
 }

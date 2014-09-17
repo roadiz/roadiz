@@ -8,6 +8,7 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Renzo\Core\Exceptions;
+
 /**
  * Exception raised when trying to update or delete a required entity.
  */

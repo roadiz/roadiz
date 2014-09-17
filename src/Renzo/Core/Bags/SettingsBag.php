@@ -10,6 +10,7 @@
 namespace RZ\Renzo\Core\Bags;
 
 use RZ\Renzo\Core\Kernel;
+
 /**
  * Settings bag used to get quickly a setting value.
  */

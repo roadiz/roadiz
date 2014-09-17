@@ -13,6 +13,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\SettingGroup;
+
 /**
  * Settings entity are a simple key-value configuration system.
  *

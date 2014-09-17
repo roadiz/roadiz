@@ -10,6 +10,7 @@
 namespace RZ\Renzo\Core\AbstractEntities;
 
 use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
+
 /**
  * An AbstractEntity with datetime fields to keep track of time with your items.
  *

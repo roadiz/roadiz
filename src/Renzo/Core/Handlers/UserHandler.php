@@ -14,6 +14,7 @@ use RZ\Renzo\Core\Log\Logger;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Util\SecureRandom;
+
 /**
  * Handle operations with users entities.
  */

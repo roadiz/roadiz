@@ -15,17 +15,16 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Font;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
 use RZ\Renzo\Core\Utils\StringHandler;
-
+use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Renzo\Core\Exceptions\EntityRequiredException;
 use Themes\Rozier\RozierApp;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
-
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\EntityRequiredException;
 
 /**
  * Fonts controller

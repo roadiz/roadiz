@@ -23,10 +23,10 @@ if [[ $php_cs_output != 0 ]]; then
 fi
 
 # Create a BUILD.php file with total commit count from Life begining
-echo "<?php return ${commit_count};" > ./BUILD.php;
+echo "${commit_count}" > ./BUILD.txt;
 
 # Do not forget to add it to your commit file list
-git add ./BUILD.php;
+git add ./BUILD.txt;
 
 # You must exit 0 to perform the real commit
 exit 0;

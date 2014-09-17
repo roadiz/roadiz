@@ -14,6 +14,7 @@ use RZ\Renzo\Core\AbstractEntities\PersistableInterface;
 use RZ\Renzo\Core\Entities\NodesSources;
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Entities\NodeTypeField;
+
 /**
  * Describes a complexe ManyToMany relation
  * between NodesSources, Documents and NodeTypeFields.

@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\AbstractEntities\AbstractDateTimed;
+
 /**
  * Fonts are entities which store each webfont file for a
  * font-family and a font-variant.

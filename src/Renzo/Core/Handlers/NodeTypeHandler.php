@@ -15,6 +15,7 @@ use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use Doctrine\DBAL\Schema\Column;
+
 /**
  * Handle operations with node-type entities.
  */

@@ -123,7 +123,7 @@ class UsersCommand extends Command
                         $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
                     }
                 } elseif ($input->getOption('picture')) {
-                    if ($user !== null ) {
+                    if ($user !== null) {
                         $facebook = new FacebookPictureFinder($user->getFacebookName());
                         if (false !== $url = $facebook->getPictureUrl()) {
                             $user->setPictureUrl($url);

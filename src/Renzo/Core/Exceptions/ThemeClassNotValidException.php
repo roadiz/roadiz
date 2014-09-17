@@ -8,6 +8,7 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Renzo\Core\Exceptions;
+
 /**
  * Exception raised when trying to include
  * manually a Theme class file which seems not valid.

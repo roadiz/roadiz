@@ -11,6 +11,7 @@ namespace RZ\Renzo\Core\Entities;
 use RZ\Renzo\Core\Utils\EntityRepository;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Kernel;
+
 /**
  * {@inheritdoc}
  */

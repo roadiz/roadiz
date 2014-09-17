@@ -17,6 +17,7 @@ use RZ\Renzo\Core\Exceptions\SolrServerNotAvailableException;
 
 use Solarium\QueryType\Update\Query\Query;
 use Solarium\QueryType\Update\Query\Document\DocumentInterface;
+
 /**
  * Wrap a Solarium and a NodeSource together to ease indexing.
  */

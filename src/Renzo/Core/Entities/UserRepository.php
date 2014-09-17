@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Kernel;
+
 /**
  * {@inheritdoc}
  */

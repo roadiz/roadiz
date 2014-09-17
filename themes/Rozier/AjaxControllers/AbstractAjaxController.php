@@ -14,6 +14,7 @@ use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
  * Extends common back-office controller, but add a request validation
  * to secure Ajax connexions.

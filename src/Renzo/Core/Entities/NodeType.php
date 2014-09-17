@@ -13,6 +13,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 use RZ\Renzo\Core\Handlers\NodeTypeHandler;
 use RZ\Renzo\Core\Serializers\NodeTypeSerializer;
 use RZ\Renzo\Core\Utils\StringHandler;
+
 /**
  * NodeTypes describe each node structure family,
  * They are mandatory before creating any Node.

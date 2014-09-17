@@ -14,6 +14,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Viewers\DocumentViewer;
 use RZ\Renzo\Core\Handlers\DocumentHandler;
+
 /**
  * Documents entity represent a file on server with datetime and naming.
  *
