@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% if session.user.getFirstName %}
+{% set displayName = session.user.getFirstName %}
+{% else %}
+{% set displayName = session.user.getUsername %}
+{% endif %}
+
+{% block content %}
+<section id="dashboard">
+    <h1 id="title">{% trans %}hello{% endtrans %}, {{ displayName }}</h1>
+    {% include 'dashboard/navbar.html.twig' with {'current':'dashboard'} %}
+</section>
+{% endblock %}

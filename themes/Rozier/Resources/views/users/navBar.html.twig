@@ -9,6 +9,9 @@
 		<li class="{% if current == 'groups' %}uk-active{% endif %}">
 			<a href="{{ path('usersEditGroupsPage', { userId: user.getId }) }}">{% trans %}user.groups{% endtrans %}</a>
 		</li>
+		<li class="{% if current == 'history' %}uk-active{% endif %}">
+			<a href="{{ path('historyUserPage', { userId: user.getId }) }}">{% trans %}history{% endtrans %}</a>
+		</li>
 	</ul>
 	<div class="uk-navbar-content">
 		<a class="uk-button" href="{{ path('usersHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.users{% endtrans %}</a>

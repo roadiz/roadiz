@@ -1,0 +1,13 @@
+<nav class="dashboard-navigation uk-navbar">
+    <ul class="uk-navbar-nav">
+        <li class="{% if current == 'dashboard' %}uk-active{% endif %}">
+            <a href="{{ path('adminHomePage') }}">{% trans %}dashboard{% endtrans %}</a>
+        </li>
+        <li class="{% if current == 'history' %}uk-active{% endif %}" >
+            <a href="{{ path('historyHomePage') }}">{% trans %}history{% endtrans %}</a>
+        </li>
+        <li class="{% if current == 'comments' %}uk-active{% endif %}">
+            <a href="#">{% trans %}comments{% endtrans %}</a>
+        </li>
+    </ul>
+</nav>

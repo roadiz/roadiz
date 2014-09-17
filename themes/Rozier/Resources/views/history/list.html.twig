@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<section id="manage-history">
+	<h1 id="title">{% trans %}history{% endtrans %}</h1>
+	{% include 'widgets/filtersBar.html.twig' %}
+	<table class="history uk-table">
+		<thead>
+	        <tr>
+	            <th>{% trans %}datetime{% endtrans %}</th>
+	            <th>{% trans %}level{% endtrans %}</th>
+	            <th>{% trans %}user{% endtrans %}</th>
+	            <th>{% trans %}message{% endtrans %}</th>
+	        </tr>
+	    </thead>
+		<tbody>
+			{% for log in logs %}
+			<tr>
+				<td>{{ log.getDatetime|date }}</td>
+				<td>{{ levels[log.getLevel] }}</td>
+				<td>{% if log.getUser %}
+					<a href="{{ path("usersEditPage", {"userId":log.getUser.getId }) }}">{{ log.getUser.getUsername }}</a>
+				{% endif %}</td>
+				<td>{{ log.getMessage }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+{% endblock %}
