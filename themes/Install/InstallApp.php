@@ -441,7 +441,7 @@ class InstallApp extends AppController
                     'pdo_mysql'=>'pdo_mysql',
                     'pdo_pgsql'=>'pdo_pgsql',
                     'oci8' => 'oci8',
-                    'mysqli' => 'mysqli',
+                    'pdo_sqlite' => 'pdo_sqlite',
                 ),
                 'constraints' => array(
                     new NotBlank()
