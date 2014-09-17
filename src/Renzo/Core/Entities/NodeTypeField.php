@@ -21,8 +21,8 @@ use RZ\Renzo\Core\Serializers\NodeTypeFieldSerializer;
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="node_type_fields",  indexes={
- *     @index(name="visible_idx", columns={"visible"}),
- *     @index(name="indexed_idx", columns={"indexed"})
+ *     @index(name="visible_nodetypefield_idx", columns={"visible"}),
+ *     @index(name="indexed_nodetypefield_idx", columns={"indexed"})
  * },
  * uniqueConstraints={@UniqueConstraint(columns={"name", "node_type_id"})})
  */

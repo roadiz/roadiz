@@ -26,8 +26,8 @@ class TranslationRepository extends EntityRepository
     {
         $query = $this->_em->createQuery('
             SELECT t FROM RZ\Renzo\Core\Entities\Translation t
-            WHERE t.defaultTranslation = 1
-            AND t.available = 1
+            WHERE t.defaultTranslation = true
+            AND t.available = true
         ');
 
         try {
@@ -46,7 +46,7 @@ class TranslationRepository extends EntityRepository
     {
         $query = $this->_em->createQuery('
             SELECT t FROM RZ\Renzo\Core\Entities\Translation t
-            WHERE t.available = 1
+            WHERE t.available = true
         ');
 
         try {

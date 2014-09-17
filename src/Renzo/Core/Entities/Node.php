@@ -25,13 +25,13 @@ use RZ\Renzo\Core\Handlers\NodeHandler;
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodeRepository")
  * @Table(name="nodes", indexes={
- *     @index(name="visible_idx",   columns={"visible"}),
- *     @index(name="published_idx", columns={"published"}),
- *     @index(name="locked_idx",    columns={"locked"}),
- *     @index(name="archived_idx",  columns={"archived"}),
- *     @index(name="position_idx", columns={"position"}),
- *     @index(name="hide_children_idx", columns={"hide_children"}),
- *     @index(name="home_idx", columns={"home"})
+ *     @index(name="visible_node_idx",   columns={"visible"}),
+ *     @index(name="published_node_idx", columns={"published"}),
+ *     @index(name="locked_node_idx",    columns={"locked"}),
+ *     @index(name="archived_node_idx",  columns={"archived"}),
+ *     @index(name="position_node_idx", columns={"position"}),
+ *     @index(name="hide_children_node_idx", columns={"hide_children"}),
+ *     @index(name="home_node_idx", columns={"home"})
  * })
  * @HasLifecycleCallbacks
  */

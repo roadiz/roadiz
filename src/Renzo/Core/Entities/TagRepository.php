@@ -73,7 +73,7 @@ class TagRepository extends EntityRepository
             INNER JOIN t.translatedTags tt
             INNER JOIN tt.translation tr
             WHERE t.id = :tag_id
-            AND tr.defaultTranslation = 1')
+            AND tr.defaultTranslation = true')
                         ->setParameter('tag_id', (int) $tagId);
 
         try {
@@ -92,7 +92,7 @@ class TagRepository extends EntityRepository
             SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t
             INNER JOIN t.translatedTags tt
             INNER JOIN tt.translation tr
-            WHERE tr.defaultTranslation = 1');
+            WHERE tr.defaultTranslation = true');
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -150,7 +150,7 @@ class TagRepository extends EntityRepository
             SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t
             INNER JOIN t.translatedTags tt
             INNER JOIN tt.translation tr
-            WHERE t.parent IS NULL AND tr.defaultTranslation = 1
+            WHERE t.parent IS NULL AND tr.defaultTranslation = true
             ORDER BY t.position ASC');
         } else {
             $query = $this->_em->createQuery('
@@ -158,7 +158,7 @@ class TagRepository extends EntityRepository
                 INNER JOIN t.translatedTags tt
                 INNER JOIN tt.translation tr
                 INNER JOIN t.parent pt
-                WHERE pt.id = :parent AND tr.defaultTranslation = 1
+                WHERE pt.id = :parent AND tr.defaultTranslation = true
                 ORDER BY t.position ASC')
                             ->setParameter('parent', $parent->getId());
         }

@@ -55,7 +55,7 @@ class NodeRepository extends EntityRepository
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             INNER JOIN ns.translation t
-            WHERE n.id = :nodeId AND t.defaultTranslation = 1')
+            WHERE n.id = :nodeId AND t.defaultTranslation = true')
         ->setParameter('nodeId', (int) $nodeId);
 
         try {
@@ -98,7 +98,7 @@ class NodeRepository extends EntityRepository
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             INNER JOIN ns.translation t
-            WHERE n.nodeName = :nodeName AND t.defaultTranslation = 1')
+            WHERE n.nodeName = :nodeName AND t.defaultTranslation = true')
         ->setParameter('nodeName', $nodeName);
 
         try {
@@ -180,7 +180,7 @@ class NodeRepository extends EntityRepository
             SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             INNER JOIN ns.translation t
-            WHERE n.parent IS NULL AND t.defaultTranslation = 1
+            WHERE n.parent IS NULL AND t.defaultTranslation = true
             ORDER BY n.position ASC');
         } else {
             $query = $this->_em->createQuery('
@@ -188,7 +188,7 @@ class NodeRepository extends EntityRepository
                 INNER JOIN n.nodeSources ns
                 INNER JOIN ns.translation t
                 INNER JOIN n.parent pn
-                WHERE pn.id = :parent AND t.defaultTranslation = 1
+                WHERE pn.id = :parent AND t.defaultTranslation = true
                 ORDER BY n.position ASC')
             ->setParameter('parent', $parent->getId());
         }

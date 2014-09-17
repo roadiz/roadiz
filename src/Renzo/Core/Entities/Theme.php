@@ -18,8 +18,8 @@ use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
  * @Table(name="themes", indexes={
- *      @index(name="backend_idx", columns={"backend"}),
- *      @index(name="available_idx", columns={"available"})
+ *      @index(name="backend_theme_idx", columns={"backend"}),
+ *      @index(name="available_theme_idx", columns={"available"})
  * })
  */
 class Theme extends AbstractEntity
