@@ -36,12 +36,12 @@
 
         &:hover {
             background-color: white;
-            border-color: #888888;
+            border-color: @grey-form-submit-border-hover;
             color: #333;
         }
         &:focus {
             background-color: @grey-verylight;
-            border-color: #888888;
+            border-color: @grey-form-submit-border-hover;
             color: #333;
         }
     }
@@ -70,8 +70,8 @@
         border-color: @grey-form-submit-border;
         .border-radius(0px);
         font-size: 11px;
-        line-height: 36px;
         font-weight: bold;
+        line-height: 37px;
         color: @grey-form-submit-color;
         text-shadow: 0 1px 0 rgba(255,255,255,.5);
         .transition(~'0.35s ease border-color, 0.5s ease background');
