@@ -1,22 +1,13 @@
-@user-panel-color: #4d4d4d;
-@user-panel-text-color: #d8d8d8;
-@user-panel-text-alt-color: #b7b7b7;
-@user-picture-size: 80px;
-@user-picture-size-mini: 68px;
-@user-panel-border-color: rgba(199,199,204, 0.14);
-
-
 .user-panel-button(){
     background: #333333;
     border-color: @user-panel-text-alt-color;
     text-shadow: none;
     display: inline-block;
     .opacity(0.3);
-
     .transition(~"border-color 0.3s linear, opacity 0.3s linear");
 
     &:hover {
-        .opacity(1);
+        .opacity(0.8);
         border-color:@contrast-color;
     }
 }
@@ -25,7 +16,7 @@
     background: @user-panel-color;
     color: @user-panel-text-alt-color;
 
-    .transition(width 0.5s ease);
+    .transition(width ease 0.5s);
 
 
     p, a, li, h1, h2, h3, h4, h5, h6 {
@@ -35,7 +26,7 @@
         font-size: 16px;
         line-height: 1.2em;
 
-        .transition(font-size 1s ease);
+        .transition(font-size ease 1s);
     }
 
     #company {
@@ -46,13 +37,14 @@
         padding: 37px 0;
 
         a {
-            font-size: 70px;
-            color: black;
+            font-size: 72px;
+            color: #333333;
             display: inline-block;
             text-decoration: none;
-            .opacity(0.6);
-
-            .transition(opacity linear 0.5s);
+            .opacity(0.95);
+            .transition(opacity ease 0.5s);
+            -webkit-font-smoothing: subpixel-antialiased;
+            padding-left: 8px;
 
             &:hover {
                 .opacity(1);
@@ -69,6 +61,7 @@
 
         .user-actions {
             padding: 10px;
+            margin-top: 16px;
             border-top: 1px solid @user-panel-border-color;
             a {
                 .user-panel-button();
@@ -93,8 +86,11 @@
             border: 0 none;
             .rounded(@user-picture-size / 2);
             background-color: #383838;
-
             .transition(~"background-color 0.5s linear, width 1s ease, height 1s ease, border-radius 1s ease");
+
+            &.uk-thumbnail {
+                padding: 0px;
+            }
         }
 
 
@@ -112,7 +108,7 @@
         i {
             display: block;
             margin: 10px;
-            font-size: 24px;
+            font-size: 26px;
 
             .transition(font-size 1s ease);
         }
@@ -124,10 +120,18 @@
             font-size: 12px;
         }
 
+        #user {
+            padding: 16px 0 16px 0;
+
+            h3 {
+                display: none;
+            }
+        }
+
         .dev-mode {
             font-size: 10px;
             i {
-                font-size: 18px;
+                font-size: 26px;
             }
         }
 
