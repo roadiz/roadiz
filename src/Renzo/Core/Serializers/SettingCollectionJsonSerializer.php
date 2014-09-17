@@ -90,6 +90,7 @@ class SettingCollectionJsonSerializer implements SerializerInterface
                 $newSetting->setVisible($setting['visible']);
 
                 $newGroup->addSetting($newSetting);
+                $newSetting->setSettingGroup($newGroup);
             }
             $collection[] = $newGroup;
         }
