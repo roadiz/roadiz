@@ -19,8 +19,8 @@ use RZ\Renzo\Core\AbstractEntities\AbstractDateTimedPositioned;
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\TagRepository")
  * @Table(name="tags", indexes={
- *     @index(name="visible_idx", columns={"visible"}),
- *     @index(name="position_idx", columns={"position"})
+ *     @index(name="visible_tag_idx", columns={"visible"}),
+ *     @index(name="position_tag_idx", columns={"position"})
  * })
  */
 class Tag extends AbstractDateTimedPositioned

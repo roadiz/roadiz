@@ -19,7 +19,7 @@ use RZ\Renzo\Core\Handlers\TranslationHandler;
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\TranslationRepository")
  * @Table(name="translations", indexes={
- *     @index(name="available_idx", columns={"available"}),
+ *     @index(name="available_translation_idx", columns={"available"}),
  *     @index(name="default_translation_idx", columns={"default_translation"})
  * })
  */

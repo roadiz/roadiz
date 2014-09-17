@@ -20,9 +20,9 @@ use RZ\Renzo\Core\Utils\StringHandler;
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodeTypeRepository")
  * @Table(name="node_types", indexes={
- *     @index(name="visible_idx",         columns={"visible"}),
- *     @index(name="newsletter_type_idx", columns={"newsletter_type"}),
- *     @index(name="hiding_nodes_idx",    columns={"hiding_nodes"})
+ *     @index(name="visible_nodetype_idx",         columns={"visible"}),
+ *     @index(name="newsletter_type_nodetype_idx", columns={"newsletter_type"}),
+ *     @index(name="hiding_nodes_nodetype_idx",    columns={"hiding_nodes"})
  * })
  */
 class NodeType extends AbstractEntity

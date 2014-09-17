@@ -104,7 +104,6 @@ class SettingsImporter implements ImporterInterface
             /*
              * Add group to setting and persist if don't exist
              */
-            */
             $setting->setSettingGroup($settingGroup);
             if ($setting->getId() === null) {
                 Kernel::getInstance()->em()->persist($setting);
