@@ -90,8 +90,9 @@
             }
         }
         #login-link {
+            position: absolute;
             text-align: left;
-            margin-top: 40px;
+            bottom: 30px;
 
             #frontend-home-link {
                 display: inline-block;
@@ -106,7 +107,8 @@
                     line-height: 38px;
                     background: @grey-verylight;
                     vertical-align: middle;
-                    color: #666666;
+                    color: @grey-form-submit-icon;
+                    .transition(~'color ease 0.35s, border-color ease 0.35s');
 
                     &:before {
                         padding-left: 2px;
@@ -114,12 +116,22 @@
                 }
                 .text {
                     display: inline-block;
-                    margin-left: 2px;
                     height: 38px;
                     line-height: 41px;
                     font-size: 11px;
                     font-weight: bold;
                     vertical-align: top;
+                    .transition(color ease 0.35s);
+                }
+
+                &:hover {
+                    .uk-icon-earth {
+                        border-color: @grey-form-submit-border-hover;
+                        color: @grey-form-submit-icon-hover;
+                    }
+                    .text {
+                        color: @grey-form-text;
+                    }
                 }
             }
             .login-link {
@@ -136,5 +148,4 @@
             }
         }
     }
-
 }
