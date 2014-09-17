@@ -11,10 +11,4 @@
 			<a href="{{ path('tagsEditNodesPage', { tagId: tag.getId }) }}">{% trans %}tag.nodes{% endtrans %}</a>
 		</li>
 	</ul>
-	<div class="uk-navbar-content">
-		<a class="uk-button" href="{{ path('tagsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.tags{% endtrans %}</a>
-	</div>
-	<div class="uk-navbar-content uk-navbar-flip">
-		<a class="uk-button uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
-	</div>
 </nav>

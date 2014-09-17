@@ -4,17 +4,21 @@
 {% block content %}
 <section id="manage-node-type">
 	<h1 id="node-type-title">{% trans %}Add a new node-type{% endtrans %}</h1>
-	<nav>
-		<a class="uk-button uk-button-small" href="{{ path('nodeTypesHomePage') }}"><span class="uk-icon-reply"></span>{% trans %}Back to node-types{% endtrans %}</a>
-	</nav>
 
 	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    <form id="add-node-type-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 
         <fieldset data-uk-margin>
-            <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> add.node-type</button>
+            {% spaceless %}
+            <button data-action-save="#add-node-type-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                <i class="uk-icon-plus"></i>
+                <span class="label">{% trans %}add.nodeType{% endtrans %}</span>
+            </button>
+            {% endspaceless %}
         </fieldset>
     </form>
+
+    {% include 'node-types/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

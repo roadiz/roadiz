@@ -4,9 +4,6 @@
 {% block content %}
 <section id="manage-document">
 	<h1 id="title">{% trans %}Document:{% endtrans %} {{ document.getFilename }}</h1>
-	<nav>
-		<a class="uk-button" href="{{ path('documentsHomePage') }}"><i class="uk-icon-chevron-left"></i> {% trans %}Back to documents{% endtrans %}</a>
-	</nav>
 
 	<div class="uk-thumbnail uk-thumbnail-large">
 		{% if document.isImage %}
@@ -15,11 +12,18 @@
 	</div>
 
 	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+	<form id="edit-document-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
+	    	{% spaceless %}
+            <button data-action-save="#edit-document-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                <i class="uk-icon-save"></i>
+                <span class="label">{% trans %}save{% endtrans %}</span>
+            </button>
+            {% endspaceless %}
    		</fieldset>
 	</form>
+
+	{% include 'documents/actionsMenu.html.twig' %}
 </section>
 {% endblock %}
