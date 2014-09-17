@@ -28,5 +28,5 @@
   		<p><button class="uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}build.database{% endtrans %}</button></p>
 	</form>
 
-    <p><a class="uk-button uk-button-success" href="{{ path('installCheckPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.requirements{% endtrans %}</a></p>
+    <p><a class="uk-button uk-button-success" href="{{ path('installCheckPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.requirements{% endtrans %}</a><a class="uk-button" href="{{ path('installImportPage') }}"><i class="uk-icon-share"></i> {% trans %}skip.database.goto.import{% endtrans %}</a></p>
 {% endblock %}
