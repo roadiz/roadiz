@@ -32,8 +32,7 @@ class Translation extends AbstractDateTimed
      */
     public static $availableLocales = array(
         "fr_FR"         => "French", // France
-        "en_GB"         => "British english",
-        "en_US"         => "American english",
+        "en_US"         => "English",
         "it_IT"         => "Italian",
         "es_ES"         => "Spanish",
         "nl_NL"         => "Dutch",
@@ -51,7 +50,6 @@ class Translation extends AbstractDateTimed
      */
     public static $availableLocalesFlags = array(
         "fr_FR"         => "fr.png", // France
-        "en_GB"         => "gb.png",
         "en_US"         => "us.png",
         "it_IT"         => "it.png",
         "es_ES"         => "es.png",
@@ -72,7 +70,6 @@ class Translation extends AbstractDateTimed
      */
     public static $availableLocalesShortcut = array(
         'fr' => "fr_FR", // France
-        'en' => "en_GB",
         'en' => "en_US",
         'it' => "it_IT",
         'es' => "es_ES",

@@ -36,6 +36,7 @@ class EntityListManager
     protected $currentPage = null;
 
     protected $assignation = null;
+    protected $itemPerPage = null;
 
     /**
      * @param Symfony\Component\HttpFoundation\Request $request
@@ -59,6 +60,26 @@ class EntityListManager
         $this->filteringArray = $preFilters;
         $this->assignation = array();
         $this->queryArray = array();
+
+        $this->itemPerPage = static::ITEM_PER_PAGE;
+    }
+
+    /**
+     * Configure a custom item count per page.
+     *
+     * @param integer $itemPerPage
+     *
+     * @return $this
+     */
+    public function setItemPerPage($itemPerPage)
+    {
+        if ($itemPerPage < 1) {
+            throw new \RuntimeException("Item count per page cannot be lesser than 1.", 1);
+        }
+
+        $this->itemPerPage = (int) $itemPerPage;
+
+        return $this;
     }
 
     /**
@@ -71,7 +92,7 @@ class EntityListManager
         $this->paginator = new \RZ\Renzo\Core\Utils\Paginator(
             $this->_em,
             $this->entityName,
-            static::ITEM_PER_PAGE,
+            $this->itemPerPage,
             $this->filteringArray
         );
 
@@ -117,7 +138,7 @@ class EntityListManager
                 'search'            => $this->searchPattern,
                 'currentPage'       => $this->currentPage,
                 'pageCount'         => $this->paginator->getPageCount(),
-                'itemPerPage'       => static::ITEM_PER_PAGE,
+                'itemPerPage'       => $this->itemPerPage,
                 'itemCount'         => $this->_em->getRepository($this->entityName)->countBy($this->filteringArray),
                 'nextPageQuery'     => null,
                 'previousPageQuery' => null

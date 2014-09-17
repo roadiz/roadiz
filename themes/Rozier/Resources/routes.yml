@@ -5,10 +5,10 @@
 # Home page
 adminHomePage:
     path:     /rz-admin
-    defaults: { _controller: Themes\Rozier\RozierApp::indexAction }
+    defaults: { _controller: Themes\Rozier\Controllers\DashboardController::indexAction }
 adminHomePageSlash:
     path:     /rz-admin/
-    defaults: { _controller: Themes\Rozier\RozierApp::indexAction }
+    defaults: { _controller: Themes\Rozier\Controllers\DashboardController::indexAction }
 
 loginPage:
     path:     /login
@@ -358,3 +358,13 @@ groupsExportPage:
     path:     /rz-admin/groups/export/{groupId}
     requirements: { groupId : "[0-9]+" }
     defaults: { _controller: Themes\Rozier\Controllers\GroupsUtilsController::exportAction }
+
+#LOGS
+historyHomePage:
+    path:     /rz-admin/history
+    defaults: { _controller: Themes\Rozier\Controllers\HistoryController::indexAction }
+historyUserPage:
+    path:     /rz-admin/history/user/{userId}
+    requirements: { userId : "[0-9]+" }
+    defaults: { _controller: Themes\Rozier\Controllers\HistoryController::userAction }
+
