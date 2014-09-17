@@ -35,7 +35,7 @@ class NodeTypeJsonSerializer implements SerializerInterface
      *
      * @return string
      */
-    public function serialize($nodeType)
+    public static function serialize($nodeType)
     {
         $data = array();
 
@@ -47,7 +47,7 @@ class NodeTypeJsonSerializer implements SerializerInterface
         $data['hidingNodes'] =    $nodeType->isHidingNodes();
         $data['fields'] =         array();
 
-        foreach ($nodeType()->getFields() as $nodeTypeField) {
+        foreach ($nodeType->getFields() as $nodeTypeField) {
             $nodeTypeFieldData = array();
             $nodeTypeFieldData['name'] =           $nodeTypeField->getName();
             $nodeTypeFieldData['label'] =          $nodeTypeField->getLabel();

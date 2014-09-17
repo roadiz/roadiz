@@ -51,7 +51,7 @@ class NodeTypesUtilsController extends RozierApp
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
         $response =  new Response(
-            NodeTypeJsonSerializer::serialize($noteType),
+            NodeTypeJsonSerializer::serialize($nodeType),
             Response::HTTP_OK,
             array()
         );
