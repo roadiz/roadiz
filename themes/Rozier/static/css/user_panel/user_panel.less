@@ -61,7 +61,7 @@
 
         .user-actions {
             padding: 10px;
-            margin-top: 16px;
+            margin-top: 9px;
             border-top: 1px solid @user-panel-border-color;
             a {
                 .user-panel-button();
@@ -73,12 +73,12 @@
         display: block;
         width: @user-picture-size;
         height: @user-picture-size;
-        .rounded(@user-picture-size / 2);
-        border: 0 none;
+        .rounded((@user-picture-size / 2)+5px);
+        border: 3px solid @user-panel-color;
+        background: darken(@user-panel-color, 5%);
         overflow: hidden;
         margin: 0 auto;
-
-        .transition(~"width 1s ease, height 1s ease, border-radius 1s ease");
+        .transition(~"width 1s ease, height 1s ease, border 0.4s ease");
 
         img {
             width: @user-picture-size;
@@ -86,7 +86,7 @@
             border: 0 none;
             .rounded(@user-picture-size / 2);
             background-color: #383838;
-            .transition(~"background-color 0.5s linear, width 1s ease, height 1s ease, border-radius 1s ease");
+            .transition(~"width 1s ease, height 1s ease, border 1s ease");
 
             &.uk-thumbnail {
                 padding: 0px;
@@ -94,8 +94,8 @@
         }
 
 
-        &:hover img {
-            background-color: @contrast-color;
+        &:hover  {
+            border: 3px solid #333;
         }
     }
     .dev-mode {
@@ -121,7 +121,7 @@
         }
 
         #user {
-            padding: 16px 0 16px 0;
+            padding: 12px 0 16px 0;
 
             h3 {
                 display: none;
@@ -138,7 +138,7 @@
         #user-picture {
             width: @user-picture-size-mini;
             height: @user-picture-size-mini;
-            .rounded(@user-picture-size-mini / 2);
+            .rounded((@user-picture-size / 2)+5px);
 
             img {
                 width: @user-picture-size-mini;
