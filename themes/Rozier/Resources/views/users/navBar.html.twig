@@ -13,10 +13,4 @@
 			<a href="{{ path('historyUserPage', { userId: user.getId }) }}">{% trans %}history{% endtrans %}</a>
 		</li>
 	</ul>
-	<div class="uk-navbar-content">
-		<a class="uk-button" href="{{ path('usersHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.users{% endtrans %}</a>
-	</div>
-	<div class="uk-navbar-content uk-navbar-flip">
-		<a class="uk-button uk-button-danger" href="{{ path('usersDeletePage', { userId: user.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
-	</div>
 </nav>

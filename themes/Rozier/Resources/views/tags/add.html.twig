@@ -4,14 +4,20 @@
 {% block content %}
 <section id="manage-tag">
 	<h1 id="tag-title">{% trans %}Add a new tag{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('tagsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to tags{% endtrans %}</a></nav>
 
 	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    <form id="add-tag-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
+	    	{% spaceless %}
+            <button data-action-save="#add-tag-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                <i class="uk-icon-plus"></i>
+                <span class="label">{% trans %}add.tag{% endtrans %}</span>
+            </button>
+            {% endspaceless %}
    		</fieldset>
 	</form>
+
+    {% include 'tags/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

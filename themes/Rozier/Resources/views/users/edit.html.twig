@@ -7,11 +7,18 @@
 	{% include 'users/navBar.html.twig' with {'user':user, current:'edit'} %}
 
 	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    <form id="edit-user-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
+            {% spaceless %}
+            <button data-action-save="#edit-user-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                <i class="uk-icon-save"></i>
+                <span class="label">{% trans %}save{% endtrans %}</span>
+            </button>
+            {% endspaceless %}
    		</fieldset>
 	</form>
+
+    {% include 'users/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

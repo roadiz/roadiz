@@ -4,14 +4,20 @@
 {% block content %}
 <section id="manage-group">
 	<h1 id="group-title">{% trans %}Add a new group{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('groupsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to groups{% endtrans %}</a></nav>
 
 	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    <form id="add-group-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
+	    	{% spaceless %}
+            <button data-action-save="#add-group-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                <i class="uk-icon-plus"></i>
+                <span class="label">{% trans %}add{% endtrans %}</span>
+            </button>
+            {% endspaceless %}
    		</fieldset>
 	</form>
+
+    {% include 'groups/actionsMenu.html.twig' %}
 </section>
 {% endblock %}
