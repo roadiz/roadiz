@@ -25,6 +25,20 @@
 
 
 /*
+ * Matrix
+ */
+@icon-size : 20px;
+@icons-picture : @icon-size*31 @icon-size*21;
+
+.matrix-icon(@x:0, @y:0) {
+    background-image:   url(../img/matrix@2x.png);
+    background-repeat:  no-repeat;
+    background-size:    @icons-picture;
+    background-position: @x @y;
+    .keep-image-aspect();
+}
+
+/*
  * Font
  */
 @main-font: 'RezoZero', Helvetica, sans-serif;

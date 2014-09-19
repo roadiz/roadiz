@@ -38,9 +38,10 @@ module.exports = function(grunt) {
 		watch: {
 			scripts: {
 				files: [
-					'js/*.js', 
-					'css/*.less', 
-					'css/*/*.less'
+					'js/*.js',
+					'css/*.less',
+					'css/*/*.less',
+					'src-img/*.{png,jpg,gif}'
 				],
 				tasks: ['less', 'jshint', 'concat','uglify'],
 				options: {
@@ -50,21 +51,21 @@ module.exports = function(grunt) {
 		},
 		jshint: {
 			all: [
-				'Gruntfile.js', 
-				'js/*.js', 
-				'js/*/*.js', 
-				'!js/vendor/*.js', 
+				'Gruntfile.js',
+				'js/*.js',
+				'js/*/*.js',
+				'!js/vendor/*.js',
 				'!js/addons/*.js'
 			]
 		},
-		imagemin: {   
-			dynamic: {  
+		imagemin: {
+			dynamic: {
 				options: {                       // Target options
 					optimizationLevel: 4,
 				},                       // Another target
 				files: [{
 					expand: true,                  // Enable dynamic expansion
-					cwd: 'src-img/',                   // Src matches are relative to this path
+					cwd: 'src-img/',               // Src matches are relative to this path
 					src: ['**/*.{png,jpg,gif}'],   // Actual patterns to match
 					dest: 'img/'                  // Destination path prefix
 				}]
@@ -77,7 +78,7 @@ module.exports = function(grunt) {
 			]
 		}
 	});
-	
+
 	/*
 	 * Watch differently LESS and JS
 	 */
@@ -88,6 +89,11 @@ module.exports = function(grunt) {
 		else if(filepath.indexOf('.less') > -1 ){
 			grunt.config('watch.scripts.tasks', ['less']);
 		}
+		else if( filepath.indexOf('.png') > -1  ||
+            filepath.indexOf('.jpg') > -1  ||
+            filepath.indexOf('.gif') > -1 ){
+            grunt.config('watch.scripts.tasks', ['imagemin']);
+        }
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-jshint');

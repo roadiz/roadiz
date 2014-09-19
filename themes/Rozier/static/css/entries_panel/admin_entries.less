@@ -5,6 +5,8 @@
 
     .uk-nav {
         display: block;
+        padding-top: 10px;
+
         a, p {
             padding: 0px;
             margin: 0px;
@@ -34,7 +36,7 @@
         border-bottom: 1px solid @admin-menu-border-color;
 
         i {
-            font-size: 30px;
+            font-size: 28px;
         }
         .info {
             display: none;
@@ -61,7 +63,6 @@
             & > p {
                 color: darken(@admin-menu-color, 25%);
             }
-
             .uk-nav-sub {
                 display: block;
             }
@@ -81,9 +82,14 @@
         color: #909090;
         font-size: 28px;
         line-height: 38px;
-
         width: 40px;
         height: 40px;
+        .transition(~'color ease 0.35s, border-color ease 0.35s');
+
+        &:hover {
+            border-color: @grey-form-submit-border-hover;
+            color: @grey-form-submit-icon-hover;
+        }
     }
 }
 
@@ -96,26 +102,17 @@
 
 
         &:after {
-            font-family: FontAwesome;
-            display: inline-block;
-            font-weight: 400;
-            font-style: normal;
-            line-height: 1;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-
-            content: "\f0d9";
-            color: #aaaaaa;
-
+            display: block;
+            width: 20px; height: 20px;
+            content: "";
+            .matrix-icon();
+            background-position: @icon-size*-1 0;
             position: absolute;
-            right: 0px;
-            font-size: 20px;
-
+            right: -15px; top: 127px;
             .transform-transition(ease 1s);
         }
 
         &.tree-panel-hidden {
-
             &:after {
                 .transform(translate(100%));
             }
@@ -129,5 +126,10 @@
         background: #d8d8d8;
         border: 0 none;
         color: #909090;
+        .transition(background ease 0.35s);
+
+        &:hover {
+            background: #CCCCCC;
+        }
     }
 }

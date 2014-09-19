@@ -10,6 +10,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 /* Icon mapping
  ========================================================================== */
 .uk-icon-node-type:before {
@@ -111,6 +112,21 @@
 .uk-icon-single-node:before {
   content: "\f233";
 }
+.uk-icon-plus:before {
+  display: block;
+  width: 20px; height: 20px;
+  content: "";
+  .matrix-icon();
+  background-position: 6px (@icon-size*-1)+4px;
+}
+.uk-icon-minus:before {
+  display: block;
+  width: 20px; height: 20px;
+  content: "";
+  .matrix-icon();
+  background-position: 6px 9px;
+}
+
 /* Mini Icon mapping
  ========================================================================== */
 .uk-icon-node-type-mini:before {
