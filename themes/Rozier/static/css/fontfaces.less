@@ -16,6 +16,15 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: 'RezoZero Mono';
+    src: url("../fonts/rezozero-sans-mono.otf");
+    // src: url("../fonts/fontawesome-webfont.eot?#iefix") format("embedded-opentype"),
+    //      url("../fonts/fontawesome-webfont.woff") format("woff"),
+    //      url("../fonts/fontawesome-webfont.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
 
 html,
 body,
@@ -25,4 +34,11 @@ p, li, a, input, button, textarea {
 }
 h1, h2, h3, h4, h5, h6 {
     -webkit-font-smoothing: antialiased;
+}
+
+.CodeMirror {
+    font-family: 'RezoZero Mono', monospace;
+    height: 300px;
+    font-size: 14px;
+    line-height: 18px;
 }
