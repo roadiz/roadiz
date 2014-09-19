@@ -26,7 +26,7 @@
         font-size: 12px;
         line-height: 14px;
         font-weight: bold;
-        width: 100%;
+        //width: 100%; // You cannot place this for a wide selector! it will break ui-kit
         color: @grey-form-text;
         padding: 10px 15px;
         //margin-bottom: 20px;
@@ -57,6 +57,10 @@
             content: "— ";
             color: @grey-form-before;
         }
+    }
+
+    input.uk-form-width-mini {
+        width: 40px;
     }
 
     // Default Button
@@ -90,6 +94,16 @@
 
         & > div {
             margin-bottom: 20px;
+
+
+            & > input[type="text"],
+            & > input[type="password"],
+            & > input[type="search"],
+            & > input[type="email"],
+            & > textarea {
+
+                width: 100%;
+            }
         }
     }
     .uk-margin-small-top {
