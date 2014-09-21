@@ -129,6 +129,8 @@ class Kernel
 
         $this->request = Request::createFromGlobals();
         $this->requestContext = new Routing\RequestContext($this->getResolvedBaseUrl());
+        $this->requestContext->setHost($this->request->server->get('HTTP_HOST'));
+        $this->requestContext->setHttpPort(intval($this->request->server->get('SERVER_PORT')));
 
         $this->dispatcher = new EventDispatcher();
         $this->resolver = new ControllerResolver();
@@ -594,8 +596,13 @@ class Kernel
     private function getFrontendThemes()
     {
         $themes = $this->em()
-            ->getRepository('RZ\Renzo\Core\Entities\Theme')
-            ->findBy(array('available'=>true, 'backendTheme'=>false));
+                      ->getRepository('RZ\Renzo\Core\Entities\Theme')
+                      ->findBy(array(
+                          'available'=>    true,
+                          'backendTheme'=> false
+                      ));
+
+
 
         if (count($themes) < 1) {
 

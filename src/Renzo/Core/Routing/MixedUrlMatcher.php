@@ -38,6 +38,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
              * Try STATIC routes
              */
             return parent::match($pathinfo);
+
         } catch (ResourceNotFoundException $e) {
             /*
              * Try nodes routes
@@ -45,7 +46,12 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             if (false !== $ret = $this->matchNode($decodedUrl)) {
                 return $ret;
             } else {
-                throw new ResourceNotFoundException();
+                //throw new ResourceNotFoundException();
+                return array(
+                    '_controller' => $this->getThemeController().'::throw404',
+                    'message' => 'Unable to find any matching route nor matching node.'.
+                                 ' Check your `Resources/routes.yml` file.'
+                );
             }
         }
     }
@@ -58,7 +64,8 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     private function matchNode($decodedUrl)
     {
         $tokens = explode('/', $decodedUrl);
-        $tokens = array_values(array_filter($tokens)); // Remove empty tokens (especially when a trailing slash is present)
+        // Remove empty tokens (especially when a trailing slash is present)
+        $tokens = array_values(array_filter($tokens));
 
         /*
          * Try with URL Aliases
@@ -80,7 +87,10 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
              * Try with node name
              */
             $translation = $this->parseTranslation($tokens);
-            Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
+
+            if (null !== $translation) {
+                Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
+            }
 
             $node = $this->parseNode($tokens, $translation);
             if ($node !== null) {
@@ -106,18 +116,36 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
      */
     public function getThemeController()
     {
+        $host = $this->context->getHost();
+        /*
+         * First we look for theme according to hostname.
+         */
         $theme = Kernel::getInstance()->em()
                         ->getRepository('RZ\Renzo\Core\Entities\Theme')
                         ->findOneBy(array(
-                            'available'=>true,
-                            'backendTheme'=> false
+                            'available'=>    true,
+                            'backendTheme'=> false,
+                            'hostname'=>     $host
                         ));
+
+        /*
+         * If no theme for current host, we look for
+         * any frontend available theme.
+         */
+        if (null === $theme) {
+            $theme = Kernel::getInstance()->em()
+                            ->getRepository('RZ\Renzo\Core\Entities\Theme')
+                            ->findOneBy(array(
+                                'available'=>    true,
+                                'backendTheme'=> false
+                            ));
+        }
 
         if (null !== $theme) {
             return $theme->getClassName();
+        } else {
+            return 'RZ\Renzo\CMS\Controllers\FrontendController';
         }
-
-        return 'RZ\Renzo\CMS\Controllers\FrontendController';
     }
 
     /**
@@ -229,6 +257,8 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             }
         }
 
-        return null;
+        return Kernel::getInstance()->em()
+                        ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                        ->findDefault();
     }
 }

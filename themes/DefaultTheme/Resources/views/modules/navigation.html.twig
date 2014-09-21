@@ -1,3 +1,4 @@
+{% if navigation|length %}
 <nav class="uk-navbar uk-navbar-attached" id="main-navigation" data-active-node="{{ node.getId }}">
 	<ul class="uk-navbar-nav ">
 		{% for cnode in navigation %}
@@ -6,3 +7,4 @@
 		{% endfor %}
 	</ul>
 </nav>
+{% endif %}

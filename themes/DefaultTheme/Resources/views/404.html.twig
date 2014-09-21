@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<h1>Error 404</h1>
+<h2>Requested page cannot be found.</h2>
+{% if errorMessage %}
+<div class="error">{{ errorMessage|markdown }}</div>
+{% endif %}
+
+{% endblock %}

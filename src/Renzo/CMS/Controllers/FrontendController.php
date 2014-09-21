@@ -183,7 +183,13 @@ class FrontendController extends AppController
                 $ctrl = new $nodeTypeController();
 
             } else {
-                throw new ResourceNotFoundException(
+                /*throw new ResourceNotFoundException(
+                    "No front-end controller found for '".
+                    $this->getRequestedNode()->getNodeName().
+                    "' node. Need a ".$nodeController." or ".
+                    $nodeTypeController." controller."
+                );*/
+                return $this->throw404(
                     "No front-end controller found for '".
                     $this->getRequestedNode()->getNodeName().
                     "' node. Need a ".$nodeController." or ".
@@ -215,8 +221,10 @@ class FrontendController extends AppController
                 $this->getRequestedNode(),
                 $this->getRequestedTranslation()
             );
+        } else {
+
+            return $this->throw404("No front-end controller found");
         }
-        throw new ResourceNotFoundException("No front-end controller found");
     }
 
 

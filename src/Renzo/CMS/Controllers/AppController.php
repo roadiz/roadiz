@@ -537,10 +537,14 @@ class AppController implements ViewableInterface
     /**
      * Return a Response with default backend 404 error page.
      *
+     * @param string $message Additionnal message to describe 404 error.
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function throw404()
+    public function throw404($message="")
     {
+        $this->assignation['errorMessage'] = $message;
+
         return new Response(
             $this->getTwig()->render('404.html.twig', $this->assignation),
             Response::HTTP_NOT_FOUND,
