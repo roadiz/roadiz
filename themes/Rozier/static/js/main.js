@@ -6,6 +6,8 @@
 var Rozier = {};
 
 Rozier.searchNodesSourcesDelay = null;
+Rozier.nodeTrees = [];
+Rozier.treeTrees = [];
 
 Rozier.onDocumentReady = function( event ) {
 	/*
@@ -16,6 +18,7 @@ Rozier.onDocumentReady = function( event ) {
 	}
 
 	new DocumentWidget();
+	Rozier.nodeStatuses = new NodeStatuses();
 
 	// TREES
 	$('.nodetree-widget .root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );

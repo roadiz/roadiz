@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 var DocumentWidget = function () {
 	var _this = this;
@@ -42,7 +42,7 @@ DocumentWidget.prototype.onNestableDocumentWidgetChange = function (event, eleme
 
 /**
  * Create document explorer
- * 
+ *
  * @param  {[type]} event [description]
  * @return false
  */
