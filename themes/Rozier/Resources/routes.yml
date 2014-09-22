@@ -68,6 +68,10 @@ nodesDeletePage:
     path:     /rz-admin/nodes/delete/{nodeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::deleteAction }
     requirements: { nodeId : "[0-9]+" }
+nodesExportPage:
+    path:     /rz-admin/nodes/export/{nodeId}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesUtilsController::exportAction }
+    requirements: { nodeId : "[0-9]+" }
 
 ## Ajax
 nodeAjaxEdit:
