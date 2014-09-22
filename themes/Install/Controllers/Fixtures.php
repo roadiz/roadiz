@@ -114,8 +114,10 @@ class Fixtures
             $user->setPlainPassword($data['password']);
             $user->setEmail($data['email']);
 
-            $user->addRole($this->getRole(Role::ROLE_BACKEND_USER));
-            $user->addRole($this->getRole(Role::ROLE_SUPER_ADMIN));
+            $existingGroup = Kernel::getInstance()->em()
+                ->getRepository('RZ\Renzo\Core\Entities\Group')
+                ->findOneByName('Admin');
+            $user->addGroup($existingGroup);
 
             Kernel::getInstance()->em()->persist($user);
             Kernel::getInstance()->em()->flush();
