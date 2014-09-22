@@ -228,6 +228,29 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
+     * @Column(type="boolean")
+     */
+    private $sterile = false;
+    /**
+     * @return boolean
+     */
+    public function isSterile()
+    {
+        return $this->sterile;
+    }
+    /**
+     * @param boolean $sterile
+     *
+     * @return $this
+     */
+    public function setSterile($sterile)
+    {
+        $this->sterile = $sterile;
+
+        return $this;
+    }
+
+    /**
      * @Column(type="string", name="children_order")
      */
     private $childrenOrder = 'order';

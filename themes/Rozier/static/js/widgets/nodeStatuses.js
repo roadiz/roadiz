@@ -28,22 +28,39 @@ NodeStatuses.prototype.onChange = function(event) {
 
     var $input = $(event.currentTarget);
 
-    console.log("Changed status of : "+$input.attr('name')+" : "+($input.is(':checked') ? "ON" : "OFF"));
+    if ($input.length) {
 
+        var statusName = $input.attr('name');
+        var statusValue = $input.is(':checked');
 
-    $.ajax({
-        url: Rozier.routes.nodesStatusesAjax,
-        type: 'post',
-        dataType: 'json',
-    })
-    .done(function() {
-        console.log("success");
-    })
-    .fail(function() {
-        console.log("error");
-    })
-    .always(function() {
-        console.log("complete");
-    });
+        //console.log("Changed status of : "+
+        //            $input.attr('name')+" : "+
+        //            (statusValue ? "ON" : "OFF"));
 
+        var postData = {
+            "_token": Rozier.ajaxToken,
+            "_action":'nodeChangeStatus',
+            "nodeId":parseInt($input.attr('data-node-id')),
+            "statusName": statusName,
+            "statusValue": statusValue
+        };
+        console.log(postData);
+
+        $.ajax({
+            url: Rozier.routes.nodesStatusesAjax,
+            type: 'post',
+            dataType: 'json',
+            data: postData
+        })
+        .done(function(data) {
+            //console.log(data.responseText);
+            Rozier.refreshMainNodeTree();
+        })
+        .fail(function(data) {
+            console.log(data.responseJSON);
+        })
+        .always(function(data) {
+
+        });
+    }
 };

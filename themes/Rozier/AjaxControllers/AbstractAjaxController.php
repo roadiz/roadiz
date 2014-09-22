@@ -36,7 +36,7 @@ abstract class AbstractAjaxController extends RozierApp
                 ->isCsrfTokenValid(static::AJAX_TOKEN_INTENTION, $request->get('_token'))) {
 
             return array(
-                'statusCode'   => '403',
+                'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
                 'responseText' => 'Wrong request'
             );

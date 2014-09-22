@@ -9684,24 +9684,41 @@ NodeStatuses.prototype.onChange = function(event) {
 
     var $input = $(event.currentTarget);
 
-    console.log("Changed status of : "+$input.attr('name')+" : "+($input.is(':checked') ? "ON" : "OFF"));
+    if ($input.length) {
 
+        var statusName = $input.attr('name');
+        var statusValue = $input.is(':checked');
 
-    $.ajax({
-        url: Rozier.routes.nodesStatusesAjax,
-        type: 'post',
-        dataType: 'json',
-    })
-    .done(function() {
-        console.log("success");
-    })
-    .fail(function() {
-        console.log("error");
-    })
-    .always(function() {
-        console.log("complete");
-    });
+        //console.log("Changed status of : "+
+        //            $input.attr('name')+" : "+
+        //            (statusValue ? "ON" : "OFF"));
 
+        var postData = {
+            "_token": Rozier.ajaxToken,
+            "_action":'nodeChangeStatus',
+            "nodeId":parseInt($input.attr('data-node-id')),
+            "statusName": statusName,
+            "statusValue": statusValue
+        };
+        console.log(postData);
+
+        $.ajax({
+            url: Rozier.routes.nodesStatusesAjax,
+            type: 'post',
+            dataType: 'json',
+            data: postData
+        })
+        .done(function(data) {
+            //console.log(data.responseText);
+            Rozier.refreshMainNodeTree();
+        })
+        .fail(function(data) {
+            console.log(data.responseJSON);
+        })
+        .always(function(data) {
+
+        });
+    }
 };;// Avoid `console` errors in browsers that lack a console.
 (function() {
     var method;
@@ -9748,9 +9765,7 @@ Rozier.onDocumentReady = function( event ) {
 	new DocumentWidget();
 	Rozier.nodeStatuses = new NodeStatuses();
 
-	// TREES
-	$('.nodetree-widget .root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );
-	$('.tagtree-widget .root-tree').on('nestable-change', Rozier.onNestableTagTreeChange );
+	Rozier.bindMainTrees();
 	// Search node
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
 	// Minify trees panel toggle button
@@ -9763,6 +9778,55 @@ Rozier.onDocumentReady = function( event ) {
 	Rozier.parseActionSaveButtons();
 };
 
+Rozier.bindMainTrees = function () {
+	// TREES
+	$('.nodetree-widget .root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );
+	$('.tagtree-widget .root-tree').on('nestable-change', Rozier.onNestableTagTreeChange );
+};
+
+/**
+ * Refresh only main nodeTree.
+ *
+ */
+Rozier.refreshMainNodeTree = function () {
+
+	var $currentNodeTree = $('#tree-container').find('.nodetree-widget');
+
+	if($currentNodeTree.length){
+
+		var postData = {
+		    "_token": Rozier.ajaxToken,
+		    "_action":'requestMainNodeTree'
+		};
+
+		$.ajax({
+			url: Rozier.routes.nodesTreeAjax,
+			type: 'post',
+			dataType: 'json',
+			data: postData,
+		})
+		.done(function(data) {
+			//console.log("success");
+			//console.log(data);
+
+			if($currentNodeTree.length &&
+				typeof data.nodeTree != "undefined"){
+
+				$currentNodeTree.fadeOut('slow', function() {
+					$currentNodeTree.replaceWith(data.nodeTree);
+					$currentNodeTree = $('#tree-container').find('.nodetree-widget');
+					$currentNodeTree.fadeIn();
+					Rozier.bindMainTrees();
+				});
+			}
+		})
+		.fail(function(data) {
+			console.log(data.responseJSON);
+		});
+	} else {
+		console.error("No main node-tree available.");
+	}
+};
 
 /*
  * Center vetically every DOM objects that have
