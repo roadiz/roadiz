@@ -501,6 +501,7 @@ class AppController implements ViewableInterface
         $this->assignation = array(
             'request' => $this->getKernel()->getRequest(),
             'head' => array(
+                'ajax' => $this->getKernel()->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => (boolean) $this->getKernel()->getConfig()['devMode'],
@@ -541,7 +542,7 @@ class AppController implements ViewableInterface
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function throw404($message="")
+    public function throw404($message = "")
     {
         $this->assignation['errorMessage'] = $message;
 

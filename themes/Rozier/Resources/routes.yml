@@ -77,6 +77,12 @@ nodeAjaxEdit:
 searchNodesSourcesAjax:
     path:     /rz-admin/ajax/nodes-sources/search
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxSearchNodesSourcesController::searchAction }
+nodesStatusesAjax:
+    path:     /rz-admin/ajax/nodes/statuses
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::statusesAction }
+nodesTreeAjax:
+    path:     /rz-admin/ajax/nodes/tree
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodeTreeController::getTreeAction }
 
 # Node TYPES
 nodeTypesHomePage:

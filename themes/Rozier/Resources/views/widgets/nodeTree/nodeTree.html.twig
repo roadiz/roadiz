@@ -1,5 +1,5 @@
 {% if nodeTree %}
-<nav class="nodetree-widget">
+<nav class="nodetree-widget" {% if head.ajax %}style="display:none;"{% endif %}">
     {% if mainNodeTree %}
     <h4>{% trans %}Node-tree{% endtrans %}</h4>
     {% endif %}

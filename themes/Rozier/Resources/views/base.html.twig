@@ -59,6 +59,9 @@
         </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+
+        {% if head.devMode %}
         <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/addons/sortable.min.js"></script>
@@ -73,12 +76,15 @@
         <script src="{{ head.resourcesUrl }}js/vendor/marked.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/addons/htmleditor.min.js"></script>
 
-        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
-
         <script src="{{ head.resourcesUrl }}js/vendor/dropzone.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/documentwidget.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/documentwidget.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/nodeStatuses.js"></script>
         <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
         <script src="{{ head.resourcesUrl }}js/main.js"></script>
+        {% else %}
+        <script src="{{ head.resourcesUrl }}dist/rozier-backend-theme.min.js"></script>
+        {% endif %}
+
         <script type="text/javascript">
             var temp = {
                 'baseUrl':      '{{ head.baseUrl }}',
@@ -88,7 +94,9 @@
                     'nodeAjaxEdit' :          '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',
                     'tagAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
                     'documentsAjaxExplorer' : '{{ path('documentsAjaxExplorerPage') }}',
-                    'searchNodesSourcesAjax' : '{{ path('searchNodesSourcesAjax') }}'
+                    'searchNodesSourcesAjax' : '{{ path('searchNodesSourcesAjax') }}',
+                    'nodesStatusesAjax' : '{{ path('nodesStatusesAjax') }}',
+                    'nodesTreeAjax' : '{{ path('nodesTreeAjax') }}'
                 }
             };
         </script>

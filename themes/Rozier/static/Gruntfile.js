@@ -8,7 +8,23 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				src: [
-					"js/documentwidget.js",
+					"js/vendor/bootstrap-switch.js",
+					"js/vendor/uikit.min.js",
+					"js/addons/sortable.min.js",
+					"js/addons/nestable.min.js",
+					"js/addons/pagination.min.js",
+					"js/addons/notify.min.js",
+					"js/vendor/codemirror.js",
+					"js/vendor/mode/markdown/markdown.js",
+					"js/vendor/mode/overlay.js",
+					"js/vendor/mode/xml/xml.js",
+					"js/vendor/mode/gfm/gfm.js",
+					"js/vendor/marked.min.js",
+					"js/addons/htmleditor.min.js",
+					"js/vendor/dropzone.min.js",
+
+					"js/widgets/documentwidget.js",
+					"js/widgets/nodeStatuses.js",
 					"js/plugins.js",
 					"js/main.js"
 				],
@@ -39,6 +55,7 @@ module.exports = function(grunt) {
 			scripts: {
 				files: [
 					'js/*.js',
+					'js/*/*.js',
 					'css/*.less',
 					'css/*/*.less',
 					'src-img/*.{png,jpg,gif}'
@@ -102,7 +119,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-imagemin');
-	grunt.loadNpmTasks("grunt-phplint");
 
 	// Default task(s).
 	grunt.registerTask('default', ['concat','uglify','less']);
