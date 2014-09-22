@@ -184,7 +184,6 @@ class InstallApp extends AppController
                 $config->setConfiguration($tempConf);
 
 
-                $config->writeConfiguration();
                 /*
                  * Test connexion
                  */
@@ -199,6 +198,9 @@ class InstallApp extends AppController
                     \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
 
                     $fixtures->installFixtures();
+
+                    $config->writeConfiguration();
+
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
@@ -210,6 +212,16 @@ class InstallApp extends AppController
                     $response->prepare($request);
 
                     return $response->send();
+                } catch (\PDOException $e) {
+                    $message = "";
+                    if (strstr($e->getMessage(), 'SQLSTATE[')) {
+                        preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
+                        $message = $matches[3];
+                    } else {
+                        $message = $e->getMessage();
+                    }
+                    $this->assignation['error'] = true;
+                    $this->assignation['errorMessage'] = ucfirst($message);
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
@@ -450,30 +462,30 @@ class InstallApp extends AppController
                 )
             ))
             ->add('host', 'text', array(
+                "required"=>false,
                 'attr'=>array(
                     "autocomplete"=>"off",
-                    "required"=>false,
                     'id' => "host"
                 )
             ))
             ->add('port', 'integer', array(
+                "required"=>false,
                 'attr'=>array(
                     "autocomplete"=>"off",
-                    "required"=>false,
                     'id' => "port"
                 )
             ))
             ->add('unix_socket', 'text', array(
+                "required"=>false,
                 'attr'=>array(
                     "autocomplete"=>"off",
-                    "required"=>false,
                     'id' => "unix_socket"
                 )
             ))
             ->add('path', 'text', array(
+                "required"=>false,
                 'attr'=>array(
                     "autocomplete"=>"off",
-                    "required"=>false,
                     'id' => "path"
                 )
             ))
@@ -481,18 +493,22 @@ class InstallApp extends AppController
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id' => "user"
+                ),
+                'constraints' => array(
+                    new NotBlank()
                 )
             ))
             ->add('password', 'password', array(
+                "required"=>false,
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id'=>'password'
                 )
             ))
             ->add('dbname', 'text', array(
+                "required"=>false,
                 'attr'=>array(
                     "autocomplete"=>"off",
-                    "required"=>false,
                     'id'=>'dbname'
                 )
             ));
