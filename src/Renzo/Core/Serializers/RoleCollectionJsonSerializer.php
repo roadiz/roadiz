@@ -24,31 +24,25 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 /**
  * Serialization class for Role.
  */
-class RoleCollectionJsonSerializer implements SerializerInterface
+class RoleCollectionJsonSerializer extends AbstractJsonSerializer
 {
     /**
-     * Serializes data into Json.
+     * Create a simple associative array with
+     * an ArrayCollection of Role.
      *
      * @param Doctrine\Common\Collections\ArrayCollection $roles
      *
-     * @return string
+     * @return array
      */
-    public static function serialize($roles)
+    public static function toArray($roles)
     {
         $data = array();
 
         foreach ($roles as $role) {
-            $tmp = array();
-            $tmp['name'] = $role->getName();
-            $data[] = $tmp;
+            $data[] = RoleJsonSerializer::toArray($role);
         }
 
-
-        if (defined('JSON_PRETTY_PRINT')) {
-            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        } else {
-            return json_encode($data, JSON_NUMERIC_CHECK);
-        }
+        return $data;
     }
 
     /**

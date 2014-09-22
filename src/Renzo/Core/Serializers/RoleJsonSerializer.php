@@ -24,30 +24,23 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 /**
  * Serialization class for Role.
  */
-class RoleJsonSerializer implements SerializerInterface
+class RoleJsonSerializer extends AbstractJsonSerializer
 {
+
     /**
-     * Serializes data.
-     *
-     * This method does not output a valid JSON string
-     * but only a ready-to-encode array. This will be encoded
-     * by the parent GroupJsonSerialize method.
+     * Create a simple associative array with Role entity.
      *
      * @param RZ\Renzo\Core\Entities\Role $role
      *
-     * @return string
-     * @see RZ\Renzo\Core\Serializers\GroupJsonSerializer::serialize
+     * @return array
      */
-    public static function serialize($role)
+    public static function toArray($role)
     {
         $data = array();
+
         $data['name'] = $role->getName();
 
-        if (defined('JSON_PRETTY_PRINT')) {
-            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        } else {
-            return json_encode($data, JSON_NUMERIC_CHECK);
-        }
+        return $data;
     }
 
     /**

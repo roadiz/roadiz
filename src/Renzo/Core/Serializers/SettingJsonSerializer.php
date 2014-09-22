@@ -24,28 +24,26 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 /**
  * Serialization class for Setting.
  */
-class SettingJsonSerializer implements SerializerInterface
+class SettingJsonSerializer extends AbstractJsonSerializer
 {
     /**
-     * Serializes data.
+     * Create a simple associative array with Setting
+     * entity.
      *
      * @param RZ\Renzo\Core\Entities\Setting $setting
      *
-     * @return strong
+     * @return array
      */
-    public static function serialize($setting)
+    public static function toArray($setting)
     {
         $data = array();
+
         $data['name'] = $setting->getName();
         $data['value'] = $setting->getValue();
         $data['type'] = $setting->getType();
         $data['visible'] = $setting->isVisible();
 
-        if (defined('JSON_PRETTY_PRINT')) {
-            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        } else {
-            return json_encode($data, JSON_NUMERIC_CHECK);
-        }
+        return $data;
     }
 
     /**
