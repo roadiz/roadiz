@@ -12,7 +12,7 @@
     </div>
     {% endif %}
 
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(databaseForm) }}>
+    <form id="formDatabase" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(databaseForm) }}>
    		{{ form_errors(databaseForm) }}
 
 	    {% for item in databaseForm %}

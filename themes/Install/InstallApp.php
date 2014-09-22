@@ -433,50 +433,67 @@ class InstallApp extends AppController
     protected function buildDatabaseForm(Request $request, Configuration $conf)
     {
         $defaults = $conf->getConfiguration()['doctrine'];
-
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
             ->add('driver', 'choice', array(
                 'choices' => array(
                     'pdo_mysql'=>'pdo_mysql',
                     'pdo_pgsql'=>'pdo_pgsql',
-                    'oci8' => 'oci8',
                     'pdo_sqlite' => 'pdo_sqlite',
+                    'oci8' => 'oci8',
                 ),
                 'constraints' => array(
                     new NotBlank()
+                ),
+                'attr' => array(
+                    "id" => "choice"
                 )
             ))
             ->add('host', 'text', array(
                 'attr'=>array(
-                    "autocomplete"=>"off"
-                ),
-                'constraints' => array(
-                    new NotBlank()
+                    "autocomplete"=>"off",
+                    "required"=>false,
+                    'id' => "host"
+                )
+            ))
+            ->add('port', 'integer', array(
+                'attr'=>array(
+                    "autocomplete"=>"off",
+                    "required"=>false,
+                    'id' => "port"
+                )
+            ))
+            ->add('unix_socket', 'text', array(
+                'attr'=>array(
+                    "autocomplete"=>"off",
+                    "required"=>false,
+                    'id' => "unix_socket"
+                )
+            ))
+            ->add('path', 'text', array(
+                'attr'=>array(
+                    "autocomplete"=>"off",
+                    "required"=>false,
+                    'id' => "path"
                 )
             ))
             ->add('user', 'text', array(
                 'attr'=>array(
-                    "autocomplete"=>"off"
-                ),
-                'constraints' => array(
-                    new NotBlank()
+                    "autocomplete"=>"off",
+                    'id' => "user"
                 )
             ))
             ->add('password', 'password', array(
                 'attr'=>array(
-                    "autocomplete"=>"off"
-                ),
-                'constraints' => array(
-                    new NotBlank()
+                    "autocomplete"=>"off",
+                    'id'=>'password'
                 )
             ))
             ->add('dbname', 'text', array(
                 'attr'=>array(
-                    "autocomplete"=>"off"
-                ),
-                'constraints' => array(
-                    new NotBlank()
+                    "autocomplete"=>"off",
+                    "required"=>false,
+                    'id'=>'dbname'
                 )
             ));
 

@@ -4,7 +4,8 @@
  * ============================================================================
  */
 var Install = {
-    importFixtures: null
+    importFixtures: null,
+    selectDatabaseField: null
 };
 
 Install.onDocumentReady = function( event ) {
@@ -12,6 +13,11 @@ Install.onDocumentReady = function( event ) {
     if(typeof Install.importRoutes != "undefined"){
         Install.importFixtures = new ImportFixtures(Install.importRoutes);
     }
+
+    if ($("#formDatabase").length) {
+        Install.selectDatabaseField = new SelectDatabaseField();
+    }
+
 };
 
 /*
