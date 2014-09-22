@@ -24,18 +24,16 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 /**
  * Json Serialization handler for NodeType.
  */
-class NodeTypeJsonSerializer implements SerializerInterface
+class NodeTypeJsonSerializer extends AbstractJsonSerializer
 {
-
-
     /**
-     * Serializes data into Json.
+     * Create a simple associative array with a NodeType.
      *
      * @param RZ\Renzo\Core\Entities\NodeType $nodeType
      *
-     * @return string
+     * @return array
      */
-    public static function serialize($nodeType)
+    public static function toArray($nodeType)
     {
         $data = array();
 
@@ -48,24 +46,12 @@ class NodeTypeJsonSerializer implements SerializerInterface
         $data['fields'] =         array();
 
         foreach ($nodeType->getFields() as $nodeTypeField) {
-            $nodeTypeFieldData = array();
-            $nodeTypeFieldData['name'] =           $nodeTypeField->getName();
-            $nodeTypeFieldData['label'] =          $nodeTypeField->getLabel();
-            $nodeTypeFieldData['description'] =    $nodeTypeField->getDescription();
-            $nodeTypeFieldData['visible'] =        $nodeTypeField->isVisible();
-            $nodeTypeFieldData['type'] =           $nodeTypeField->getType();
-            $nodeTypeFieldData['indexed'] =        $nodeTypeField->isIndexed();
-            $nodeTypeFieldData['virtual'] =        $nodeTypeField->isVirtual();
-            $nodeTypeFieldData['default_values'] = $nodeTypeField->getDefaultValues();
+            $nodeTypeFieldData = NodeTypeFieldJsonSerializer::toArray($nodeTypeField);
 
             $data['fields'][] = $nodeTypeFieldData;
         }
 
-        if (defined('JSON_PRETTY_PRINT')) {
-            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        } else {
-            return json_encode($data, JSON_NUMERIC_CHECK);
-        }
+        return $data;
     }
 
     /**

@@ -25,6 +25,16 @@ interface SerializerInterface
      */
     public static function serialize($obj);
 
+
+    /**
+     * Create a simple associative array with an entity.
+     *
+     * @param mixed $obj
+     *
+     * @return array
+     */
+    public static function toArray($obj);
+
     /**
      * Deserializes a json file into a readable array of datas.
      *

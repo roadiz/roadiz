@@ -24,32 +24,27 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 /**
  * Serialization class for Group.
  */
-class GroupJsonSerializer implements SerializerInterface
+class GroupJsonSerializer extends AbstractJsonSerializer
 {
-
     /**
-     * Serializes data into Json.
+     * Create a simple associative array with Group entity.
      *
      * @param RZ\Renzo\Core\Entities\Group $group
      *
-     * @return string
+     * @return array
      */
-    public static function serialize($group)
+    public static function toArray($group)
     {
         $data = array();
 
         $data['name'] = $group->getName();
         $data['roles'] = array();
 
-        foreach ($group->getRoles() as $role) {
-            $data['roles'][] = array('name' => $role->getName());
+        foreach ($group->getRolesEntities() as $role) {
+            $data['roles'][] = RoleJsonSerializer::toArray($role);
         }
 
-        if (defined(JSON_PRETTY_PRINT)) {
-            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        } else {
-            return json_encode($data, JSON_NUMERIC_CHECK);
-        }
+        return $data;
     }
 
     /**

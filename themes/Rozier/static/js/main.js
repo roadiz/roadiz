@@ -125,8 +125,8 @@ Rozier.toggleTreesPanel = function (event) {
 
 	$('#main-trees').toggleClass('minified');
 
-	$('#minify-tree-panel-button').toggleClass('uk-icon-minus');
-	$('#minify-tree-panel-button').toggleClass('uk-icon-plus');
+	$('#minify-tree-panel-button').toggleClass('uk-icon-minus-light');
+	$('#minify-tree-panel-button').toggleClass('uk-icon-plus-light');
 	$('#minify-tree-panel-area').toggleClass('tree-panel-hidden');
 	return false;
 };

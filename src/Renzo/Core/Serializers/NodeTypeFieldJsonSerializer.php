@@ -24,22 +24,18 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 /**
  * Serialization class for NodeTypeField.
  */
-class NodeTypeFieldJsonSerializer implements SerializerInterface
+class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
 {
 
     /**
-     * Serializes data.
-     *
-     * This method does not output a valid JSON string
-     * but only a ready-to-encode array. This will be encoded
-     * by the parent Node-type serialize method.
+     * Create a simple associative array with NodeTypeField
+     * entity.
      *
      * @param RZ\Renzo\Core\Entities\NodeTypeField $nodeTypeField
      *
      * @return array
-     * @see RZ\Renzo\Core\Serializers\NodeTypeJsonSerializer::serialize
      */
-    public static function serialize($nodeTypeField)
+    public static function toArray($nodeTypeField)
     {
         $data = array();
 
@@ -52,11 +48,7 @@ class NodeTypeFieldJsonSerializer implements SerializerInterface
         $data['virtual'] =        $nodeTypeField->isVirtual();
         $data['default_values'] = $nodeTypeField->getDefaultValues();
 
-        if (defined('JSON_PRETTY_PRINT')) {
-            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        } else {
-            return json_encode($data, JSON_NUMERIC_CHECK);
-        }
+        return $data;
     }
 
     /**

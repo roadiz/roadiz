@@ -176,6 +176,7 @@ class AjaxNodesController extends AbstractAjaxController
             'locked' => 'setLocked',
             'hideChildren' => 'setHidingChildren',
             'archived' => 'setArchived',
+            'sterile' => 'setSterile'
         );
 
         if ("nodeChangeStatus" == $request->get('_action') &&

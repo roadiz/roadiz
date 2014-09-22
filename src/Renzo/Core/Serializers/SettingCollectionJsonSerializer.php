@@ -26,37 +26,30 @@ use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 /**
  * Serialization class for Setting.
  */
-class SettingCollectionJsonSerializer implements SerializerInterface
+class SettingCollectionJsonSerializer extends AbstractJsonSerializer
 {
     /**
-     * Serializes data.
+     * Create a simple associative array with
+     * an ArrayCollection of SettingGroup.
      *
      * @param Doctrine\Common\Collections\ArrayCollection $settingGroup
      *
-     * @return string
-     *
+     * @return array
      */
-    public static function serialize($settingGroup)
+    public static function toArray($settingGroups)
     {
         $data = array();
-        foreach ($settingGroup as $group) {
+
+        foreach ($settingGroups as $group) {
             $tmpGroup = array();
             foreach ($group->getSettings() as $setting) {
-                $tmp = array(
-                    "name" => $setting->getName(),
-                    "value" => $setting->getValue(),
-                    "visible" => $setting->isVisible(),
-                    "type" => $setting->getType(),
-                );
-                $tmpGroup[] = $tmp;
+
+                $tmpGroup[] = SettingJsonSerializer::toArray($setting);
             }
             $data[$group->getName()] = $tmpGroup;
         }
-        if (defined('JSON_PRETTY_PRINT')) {
-            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        } else {
-            return json_encode($data, JSON_NUMERIC_CHECK);
-        }
+
+        return $data;
     }
 
     /**
