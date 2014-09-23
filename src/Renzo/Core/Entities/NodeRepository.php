@@ -14,8 +14,12 @@ namespace RZ\Renzo\Core\Entities;
 use RZ\Renzo\Core\Utils\EntityRepository;
 
 use RZ\Renzo\Core\Entities\Node;
+use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Kernel;
+
+use Symfony\Component\Security\Core\SecurityContext;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
 * NodeRepository
@@ -23,19 +27,81 @@ use RZ\Renzo\Core\Kernel;
 class NodeRepository extends EntityRepository
 {
     /**
+     * A secure findBy with which user must be a backend user
+     * to see unpublished nodes.
+     *
+     * @param SecurityContext $securityContext
+     * @param array           $criteria
+     * @param array           $orderBy
+     * @param integer         $limit
+     * @param integer         $offset
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function contextualFindBy(
+        SecurityContext $securityContext,
+        array $criteria,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null
+    ) {
+
+        if (!$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $criteria['published'] = true;
+        }
+
+        return parent::findBy(
+            $criteria,
+            $orderBy,
+            $limit,
+            $offset
+        );
+    }
+
+    /**
+     * A secure findOneBy with which user must be a backend user
+     * to see unpublished nodes.
+     *
+     * @param SecurityContext $securityContext
+     * @param array           $criteria
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function contextualFindOneBy(SecurityContext $securityContext, array $criteria)
+    {
+
+        if (!$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $criteria['published'] = true;
+        }
+
+        return parent::findOneBy($criteria);
+    }
+
+    /**
      * @param integer                            $nodeId
      * @param RZ\Renzo\Core\Entities\Translation $translation
+     * @param SecurityContext|null               $securityContext
      *
      * @return Node or null
      */
-    public function findWithTranslation($nodeId, Translation $translation)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
+    public function findWithTranslation(
+        $nodeId,
+        Translation $translation,
+        SecurityContext $securityContext = null
+    ) {
+
+        $txtQuery = 'SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
-            WHERE n.id = :nodeId AND ns.translation = :translation')
-        ->setParameter('nodeId', (int) $nodeId)
-        ->setParameter('translation', $translation);
+            WHERE n.id = :nodeId AND ns.translation = :translation';
+
+        if (null !== $securityContext &&
+            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $txtQuery .= ' AND n.published = true';
+        }
+
+        $query = $this->_em->createQuery($txtQuery)
+                           ->setParameter('nodeId', (int) $nodeId)
+                           ->setParameter('translation', $translation);
 
         try {
             return $query->getSingleResult();
@@ -45,18 +111,26 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param integer $nodeId
+     * @param integer              $nodeId
+     * @param SecurityContext|null $securityContext
      *
-     * @return RZ\Renzo\Core\Entities\Node or null
+     * @return RZ\Renzo\Core\Entities\Node|null
      */
-    public function findWithDefaultTranslation($nodeId)
+    public function findWithDefaultTranslation($nodeId, SecurityContext $securityContext = null)
     {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
+
+        $txtQuery = 'SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             INNER JOIN ns.translation t
-            WHERE n.id = :nodeId AND t.defaultTranslation = true')
-        ->setParameter('nodeId', (int) $nodeId);
+            WHERE n.id = :nodeId AND t.defaultTranslation = true';
+
+        if (null !== $securityContext &&
+            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $txtQuery .= ' AND n.published = true';
+        }
+
+        $query = $this->_em->createQuery($txtQuery)
+                           ->setParameter('nodeId', (int) $nodeId);
 
         try {
             return $query->getSingleResult();
@@ -68,17 +142,27 @@ class NodeRepository extends EntityRepository
     /**
      * @param string                             $nodeName
      * @param RZ\Renzo\Core\Entities\Translation $translation
+     * @param SecurityContext|null               $securityContext
      *
-     * @return RZ\Renzo\Core\Entities\Node or null
+     * @return RZ\Renzo\Core\Entities\Node|null
      */
-    public function findByNodeNameWithTranslation($nodeName, Translation $translation)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
+    public function findByNodeNameWithTranslation(
+        $nodeName,
+        Translation $translation,
+        SecurityContext $securityContext = null
+    ) {
+        $txtQuery = 'SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
-            WHERE n.nodeName = :nodeName AND ns.translation = :translation')
-        ->setParameter('nodeName', $nodeName)
-        ->setParameter('translation', $translation);
+            WHERE n.nodeName = :nodeName AND ns.translation = :translation';
+
+        if (null !== $securityContext &&
+            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $txtQuery .= ' AND n.published = true';
+        }
+
+        $query = $this->_em->createQuery($txtQuery)
+                           ->setParameter('nodeName', $nodeName)
+                           ->setParameter('translation', $translation);
 
         try {
             return $query->getSingleResult();
@@ -88,18 +172,28 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param string $nodeName
+     * @param string               $nodeName
+     * @param SecurityContext|null $securityContext
      *
-     * @return RZ\Renzo\Core\Entities\Node or null
+     * @return RZ\Renzo\Core\Entities\Node|null
      */
-    public function findByNodeNameWithDefaultTranslation($nodeName)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
+    public function findByNodeNameWithDefaultTranslation(
+        $nodeName,
+        SecurityContext $securityContext = null
+    ) {
+
+        $txtQuery = 'SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             INNER JOIN ns.translation t
-            WHERE n.nodeName = :nodeName AND t.defaultTranslation = true')
-        ->setParameter('nodeName', $nodeName);
+            WHERE n.nodeName = :nodeName AND t.defaultTranslation = true';
+
+        if (null !== $securityContext &&
+            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $txtQuery .= ' AND n.published = true';
+        }
+
+        $query = $this->_em->createQuery($txtQuery)
+                           ->setParameter('nodeName', $nodeName);
 
         try {
             return $query->getSingleResult();
@@ -109,19 +203,30 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param Node        $node
-     * @param Translation $translation
+     * @param Node                 $node
+     * @param Translation          $translation
+     * @param SecurityContext|null $securityContext
      *
-     * @return RZ\Renzo\Core\Entities\Node or null
+     * @return Doctrine\Common\Collections\ArrayCollection
      */
-    public function getChildrenWithTranslation(Node $node, Translation $translation)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
+    public function getChildrenWithTranslation(
+        Node $node,
+        Translation $translation,
+        SecurityContext $securityContext = null
+    ) {
+
+        $txtQuery = 'SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
-            WHERE n.parent = :node AND ns.translation = :translation')
-        ->setParameter('node', $node)
-        ->setParameter('translation', $translation);
+            WHERE n.parent = :node AND ns.translation = :translation';
+
+        if (null !== $securityContext &&
+            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $txtQuery .= ' AND n.published = true';
+        }
+
+        $query = $this->_em->createQuery($txtQuery)
+                           ->setParameter('node', $node)
+                           ->setParameter('translation', $translation);
 
         try {
             return $query->getResult();
@@ -133,31 +238,43 @@ class NodeRepository extends EntityRepository
     /**
      * @param RZ\Renzo\Core\Entities\Translation $translation
      * @param RZ\Renzo\Core\Entities\Node        $parent
+     * @param SecurityContext|null               $securityContext
      *
-     * @return array Doctrine result array
+     * @return Doctrine\Common\Collections\ArrayCollection
      */
-    public function findByParentWithTranslation(Translation $translation, Node $parent = null)
-    {
+    public function findByParentWithTranslation(
+        Translation $translation,
+        Node $parent = null,
+        SecurityContext $securityContext = null
+    ) {
         $query = null;
 
+        $txtQuery = 'SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
+                     INNER JOIN n.nodeSources ns
+                     INNER JOIN ns.translation t';
+
         if ($parent === null) {
-            $query = $this->_em->createQuery('
-                SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
-                INNER JOIN n.nodeSources ns
-                INNER JOIN ns.translation t
-                WHERE n.parent IS NULL AND t.id = :translation_id
-                ORDER BY n.position ASC')
-            ->setParameter('translation_id', (int) $translation->getId());
+            $txtQuery .= PHP_EOL.'WHERE n.parent IS NULL';
         } else {
-            $query = $this->_em->createQuery('
-                SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
-                INNER JOIN n.nodeSources ns
-                INNER JOIN ns.translation t
-                INNER JOIN n.parent pn
-                WHERE pn.id = :parent AND t.id = :translation_id
-                ORDER BY n.position ASC')
-            ->setParameter('parent', $parent->getId())
-            ->setParameter('translation_id', (int) $translation->getId());
+            $txtQuery .= PHP_EOL.'WHERE n.parent = :parent';
+        }
+
+        $txtQuery .= ' AND t.id = :translation_id';
+
+        if (null !== $securityContext &&
+            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $txtQuery .= ' AND n.published = true';
+        }
+
+        $txtQuery .= ' ORDER BY n.position ASC';
+
+        if ($parent === null) {
+            $query = $this->_em->createQuery($txtQuery)
+                               ->setParameter('translation_id', (int) $translation->getId());
+        } else {
+            $query = $this->_em->createQuery($txtQuery)
+                               ->setParameter('parent', $parent)
+                               ->setParameter('translation_id', (int) $translation->getId());
         }
 
         try {
@@ -168,29 +285,41 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Node        $parent
+     * @param RZ\Renzo\Core\Entities\Node $parent
+     * @param SecurityContext|null        $securityContext
      *
-     * @return array Doctrine result array
+     * @return Doctrine\Common\Collections\ArrayCollection
      */
-    public function findByParentWithDefaultTranslation(Node $parent = null)
-    {
+    public function findByParentWithDefaultTranslation(
+        Node $parent = null,
+        SecurityContext $securityContext = null
+    ) {
         $query = null;
+
+        $txtQuery = 'SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
+                     INNER JOIN n.nodeSources ns
+                     INNER JOIN ns.translation t';
+
         if ($parent === null) {
-            $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ns.translation t
-            WHERE n.parent IS NULL AND t.defaultTranslation = true
-            ORDER BY n.position ASC');
+            $txtQuery .= PHP_EOL.'WHERE n.parent IS NULL';
         } else {
-            $query = $this->_em->createQuery('
-                SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
-                INNER JOIN n.nodeSources ns
-                INNER JOIN ns.translation t
-                INNER JOIN n.parent pn
-                WHERE pn.id = :parent AND t.defaultTranslation = true
-                ORDER BY n.position ASC')
-            ->setParameter('parent', $parent->getId());
+            $txtQuery .= PHP_EOL.'WHERE n.parent = :parent';
+        }
+
+        $txtQuery .= ' AND t.defaultTranslation = true';
+
+        if (null !== $securityContext &&
+            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $txtQuery .= ' AND n.published = true';
+        }
+
+        $txtQuery .= ' ORDER BY n.position ASC';
+
+        if ($parent === null) {
+            $query = $this->_em->createQuery($txtQuery);
+        } else {
+            $query = $this->_em->createQuery($txtQuery)
+                               ->setParameter('parent', $parent);
         }
 
         try {
@@ -202,18 +331,25 @@ class NodeRepository extends EntityRepository
 
     /**
      * @param RZ\Renzo\Core\Entities\UrlAlias $urlAlias
+     * @param SecurityContext|null            $securityContext
      *
-     * @return Node or null
+     * @return Node|null
      */
-    public function findOneWithUrlAlias($urlAlias)
+    public function findOneWithUrlAlias($urlAlias, SecurityContext $securityContext = null)
     {
-        $query = $this->_em->createQuery('
-            SELECT n, ns, t FROM RZ\Renzo\Core\Entities\Node n
+        $txtQuery = 'SELECT n, ns, t FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             INNER JOIN ns.urlAliases uas
             INNER JOIN ns.translation t
-            WHERE uas.id = :urlalias_id')
-        ->setParameter('urlalias_id', (int) $urlAlias->getId());
+            WHERE uas.id = :urlalias_id';
+
+        if (null !== $securityContext &&
+            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $txtQuery .= ' AND n.published = true';
+        }
+
+        $query = $this->_em->createQuery($txtQuery)
+                           ->setParameter('urlalias_id', (int) $urlAlias->getId());
 
         try {
             return $query->getSingleResult();

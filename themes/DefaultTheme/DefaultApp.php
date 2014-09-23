@@ -70,7 +70,7 @@ class DefaultApp extends FrontendController
         if ($node === null) {
             $node = Kernel::getInstance()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Node')
-                    ->findOneBy(array('home'=>true));
+                    ->contextualFindOneBy($this->getSecurityContext(), array('home'=>true));
         }
         $this->prepareThemeAssignation($node, $translation);
 
@@ -116,17 +116,23 @@ class DefaultApp extends FrontendController
     {
         $parent = Kernel::getInstance()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Node')
-            ->findOneBy(array('home'=>true));
+            ->contextualFindOneBy($this->getSecurityContext(), array('home'=>true));
 
         if ($this->translation === null) {
             $this->translation = Kernel::getInstance()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
-                ->findOneBy(array('defaultTranslation'=>true));
+                ->findOneBy(
+                    array('defaultTranslation'=>true)
+                );
         }
         if ($parent !== null) {
             return Kernel::getInstance()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Node')
-                ->findByParentWithTranslation($this->translation, $parent);
+                ->findByParentWithTranslation(
+                    $this->translation,
+                    $parent,
+                    $this->getSecurityContext()
+                );
         }
 
         return null;

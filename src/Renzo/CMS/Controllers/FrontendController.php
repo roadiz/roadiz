@@ -12,6 +12,7 @@ namespace RZ\Renzo\CMS\Controllers;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Log\Logger;
+use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Utils\StringHandler;
@@ -164,6 +165,15 @@ class FrontendController extends AppController
 
         if ($this->getRequestedNode() !== null) {
 
+            if (null !== $this->getSecurityContext() &&
+                !$this->getSecurityContext()->isGranted(Role::ROLE_BACKEND_USER) &&
+                !$this->getRequestedNode()->isPublished()) {
+                /*
+                 * Not allowed to see unpublished nodes
+                 */
+                return $this->throw404();
+            }
+
             $nodeController = $namespace.'\\'.
                               StringHandler::classify($this->getRequestedNode()->getNodeName()).
                               'Controller';
@@ -183,12 +193,7 @@ class FrontendController extends AppController
                 $ctrl = new $nodeTypeController();
 
             } else {
-                /*throw new ResourceNotFoundException(
-                    "No front-end controller found for '".
-                    $this->getRequestedNode()->getNodeName().
-                    "' node. Need a ".$nodeController." or ".
-                    $nodeTypeController." controller."
-                );*/
+
                 return $this->throw404(
                     "No front-end controller found for '".
                     $this->getRequestedNode()->getNodeName().

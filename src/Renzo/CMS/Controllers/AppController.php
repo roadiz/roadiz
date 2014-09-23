@@ -23,6 +23,7 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -650,5 +651,25 @@ class AppController implements ViewableInterface
         EventDispatcher $dispatcher = null
     ) {
 
+    }
+
+
+    /**
+     * Custom route for redirecting routes with a trailing slash.
+     *
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function removeTrailingSlashAction(Request $request)
+    {
+        $pathInfo = $request->getPathInfo();
+        $requestUri = $request->getRequestUri();
+
+        $url = str_replace($pathInfo, rtrim($pathInfo, ' /'), $requestUri);
+
+        $response = new RedirectResponse($url, 301);
+        $response->prepare($request);
+
+        return $response->send();
     }
 }
