@@ -13,12 +13,136 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Translation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
- * EntityRepository that implements search engine query with Solr
+ * EntityRepository that implements search engine query with Solr.
  */
 class NodesSourcesRepository extends \RZ\Renzo\Core\Utils\EntityRepository
 {
+
+    /**
+     * Create a securized query with node.published = true if user is
+     * not a Backend user.
+     *
+     * @param SecurityContext $securityContext
+     * @param array           $criteria
+     * @param array\null      $orderBy
+     * @param integer|null    $limit
+     * @param integer|null    $offset
+     *
+     * @return QueryBuilder
+     */
+    protected function getContextualQuery(
+        SecurityContext $securityContext,
+        array $criteria,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null
+    ) {
+
+        $qb = $this->_em->createQueryBuilder();
+        $qb->add('select', 'ns')
+           ->add('from', $this->getEntityName() . ' ns');
+
+        if (!$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $qb->innerJoin('ns.node', 'n', 'WITH', 'n.published = true');
+        }
+
+        foreach ($criteria as $key => $value) {
+
+            if (is_array($value)) {
+                $res = $qb->expr()->in('ns.' .$key, $value);
+            } elseif (is_bool($value)) {
+                $res = $qb->expr()->eq('ns.' .$key, (boolean) $value);
+            } else {
+                $res = $qb->expr()->eq('ns.' .$key, $value);
+            }
+
+            $qb->andWhere($res);
+        }
+
+        // Add ordering
+        foreach ($orderBy as $key => $value) {
+            $qb->addOrderBy('ns.'.$key, $value);
+        }
+
+        if (null !== $offset) {
+            $qb->setFirstResult($offset);
+        }
+        if (null !== $limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb;
+    }
+
+    /**
+     * A secure findBy with which user must be a backend user
+     * to see unpublished nodes.
+     *
+     * @param SecurityContext $securityContext
+     * @param array           $criteria
+     * @param array           $orderBy
+     * @param integer         $limit
+     * @param integer         $offset
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function contextualFindBy(
+        SecurityContext $securityContext,
+        array $criteria,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null
+    ) {
+
+        $qb = $this->getContextualQuery(
+            $securityContext,
+            $criteria,
+            $orderBy,
+            $limit,
+            $offset
+        );
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (\Doctrine\ORM\Query\QueryException $e) {
+            return null;
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * A secure findOneBy with which user must be a backend user
+     * to see unpublished nodes.
+     *
+     * @param SecurityContext $securityContext
+     * @param array           $criteria
+     *
+     * @return RZ\Renzo\Core\Entities\NodesSources|null
+     */
+    public function contextualFindOneBy(SecurityContext $securityContext, array $criteria)
+    {
+
+        $qb = $this->getContextualQuery(
+            $securityContext,
+            $criteria,
+            null,
+            1,
+            null
+        );
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (\Doctrine\ORM\Query\QueryException $e) {
+            return null;
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
     /**
      * Search nodes sources by using Solr search engine.
      *
