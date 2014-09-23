@@ -12,7 +12,8 @@
             <a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-eye"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
             {% endif %}
             <a class="uk-button" href="#"><i class="uk-icon-duplicate"></i><span class="label">{% trans %}duplicate{% endtrans %}</span></a>
-            <a class="uk-button" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}"><i class="uk-icon-add"></i><span class="label">{% trans %}add.child{% endtrans %}</span></a>
+            <a class="uk-button" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}"><i class="uk-icon-plus"></i><span class="label">{% trans %}add.child{% endtrans %}</span></a>
+            <a class="uk-button" href="{{ path('nodesExportPage', { nodeId:node.getId }) }}"><i class="uk-icon-download"></i><span class="label">{% trans %}export{% endtrans %}</span></a>
         </nav>
     </div>
 

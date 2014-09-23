@@ -77,7 +77,9 @@ class GroupJsonSerializer extends AbstractJsonSerializer
 
         foreach ($tempArray['roles'] as $roleAssoc) {
             $role = RoleJsonSerializer::deserialize(json_encode($roleAssoc));
-            $role = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\Role')->findOneByName($role->getName());
+            $role = Kernel::getInstance()->em()
+                                         ->getRepository('RZ\Renzo\Core\Entities\Role')
+                                         ->findOneByName($role->getName());
             $group->addRole($role);
         }
         $data = array();
