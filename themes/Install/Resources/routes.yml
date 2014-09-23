@@ -23,6 +23,13 @@ installImportGroups:
 installImportRoles:
     path:     /install/import/roles
     defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importRolesAction }
+installImportNodeTypesPage:
+    path:     /install/import/nodetypes
+    defaults: { _controller: Themes\Install\InstallApp::nodeTypesAction }
+installImportNodeTypes:
+    path:     /install/import/nodetypes/{filename}
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importNodeTypesAction }
+    requirements: { filename : "^[a-zA-Z_]+$" }
 installUserPage:
     path:     /install/user
     defaults: { _controller: Themes\Install\InstallApp::userAction }

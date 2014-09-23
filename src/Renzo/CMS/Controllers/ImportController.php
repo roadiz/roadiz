@@ -48,7 +48,7 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importSettingsAction($themeId = null)
+    public static function importSettingsAction(Request $request, $themeId = null)
     {
         $pathFile = '/Resources/import/settings.rzt';
         $classImporter = "RZ\Renzo\CMS\Importers\SettingsImporter";
@@ -62,7 +62,7 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importRolesAction($themeId = null)
+    public static function importRolesAction(Request $request, $themeId = null)
     {
         $pathFile = '/Resources/import/roles.rzt';
         $classImporter = "RZ\Renzo\CMS\Importers\RolesImporter";
@@ -76,10 +76,24 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importGroupsAction($themeId = null)
+    public static function importGroupsAction(Request $request, $themeId = null)
     {
         $pathFile = '/Resources/import/groups.rzt';
         $classImporter = "RZ\Renzo\CMS\Importers\GroupsImporter";
+        return self::importContent($pathFile, $classImporter, $themeId);
+    }
+
+    /**
+     * Import NodeType's Groups file.
+     *
+     * @param int $themeId
+     *
+     * @return string
+     */
+    public static function importNodeTypesAction(Request $request, $filename, $themeId = null)
+    {
+        $pathFile = '/Resources/import/nodetype/' . basename($filename) . '.rzt';
+        $classImporter = "RZ\Renzo\CMS\Importers\NodeTypesImporter";
         return self::importContent($pathFile, $classImporter, $themeId);
     }
 

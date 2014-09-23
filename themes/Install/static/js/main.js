@@ -5,7 +5,8 @@
  */
 var Install = {
     importFixtures: null,
-    selectDatabaseField: null
+    selectDatabaseField: null,
+    importNodeType: null
 };
 
 Install.onDocumentReady = function( event ) {
@@ -18,6 +19,9 @@ Install.onDocumentReady = function( event ) {
         Install.selectDatabaseField = new SelectDatabaseField();
     }
 
+    if (typeof Install.importNodeTypeRoutes != "undefined"){
+        Install.importNodeType = new ImportNodeType(Install.importNodeTypeRoutes);
+    }
 };
 
 /*

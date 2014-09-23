@@ -160,6 +160,32 @@ class InstallApp extends AppController
     }
 
     /**
+     * Import nodetype screen
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function nodeTypesAction(Request $request)
+    {
+        $finder = new Finder();
+
+        // Extracting the PHP files from every Theme folder
+        $iterator = $finder
+            ->files()
+            ->name('*.rzt')
+            ->depth(0)
+            ->in(RENZO_ROOT.'/themes/Install/Resources/import/nodetype');
+        foreach ($iterator as $file) {
+            $this->assignation['names'][] = str_replace(".rzt", '', $file->getFileName());
+        }
+        return new Response(
+            $this->getTwig()->render('steps/importNodeType.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
+
+    /**
      * Install database screen
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param RZ\Renzo\Core\Entities\Node              $node
@@ -350,17 +376,21 @@ class InstallApp extends AppController
                 try {
                     $fixtures = new Fixtures();
                     $fixtures->saveInformations($infosForm->getData());
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
-                    $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
-                            'installDonePage'
-                        )
-                    );
-                    $response->prepare($request);
 
-                    return $response->send();
+                    if ($infosForm->getData()['install_frontend'] === true) {
+                        /*
+                         * Force redirect to avoid resending form when refreshing page
+                         */
+                        $response = new RedirectResponse(
+                            $this->getKernel()->getUrlGenerator()->generate(
+                                'installImportNodeTypesPage'
+                            )
+                        );
+                        $response->prepare($request);
+
+                        return $response->send();
+                    }
+
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
