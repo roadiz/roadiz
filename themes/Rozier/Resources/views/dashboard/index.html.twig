@@ -7,8 +7,10 @@
 {% endif %}
 
 {% block content %}
-<section id="dashboard">
-    <h1 id="title">{% trans %}hello{% endtrans %}, {{ displayName }}</h1>
+<section id="dashboard" class="content-global-section">
+    <header>
+        <h1 id="title">{% trans %}hello{% endtrans %}, {{ displayName }}</h1>
+    </header>
     {% include 'dashboard/navbar.html.twig' with {'current':'dashboard'} %}
 </section>
 {% endblock %}

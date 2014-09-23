@@ -1,8 +1,33 @@
 #main-content {
-
     & > div {
+        padding: 0px;
+        background-color: @maincontent-bg;
 
-        padding: 0 60px;
-        background-color: #f8f8f8;
+        header, .container {
+            padding: 0px 60px;
+        }
+        header {
+            height: 188px;
+            background-color: @maincontent-header-bg;
+            text-align: center;
+            .box-sizing();
+
+            h1 {
+                padding: 3em 0 0;
+                margin: 0px;
+                text-align: center;
+                &:after {
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    width: 16px;
+                    height: 1px;
+                    background-color: #808080;
+                    left: 50%;
+                    margin-left: -8px;
+                    margin-top: 8px;
+                }
+            }
+        }
     }
 }

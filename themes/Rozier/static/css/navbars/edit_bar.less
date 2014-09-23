@@ -4,14 +4,20 @@
 
     background: none transparent;
     border: 0 none;
-    border-bottom: 1px solid rgba(0,0,0,0.3);
+    border-bottom: 1px solid @navbars-bg;
     .rounded(0);
-
-    margin: 1em 0px;
+    margin: 0;
+    padding: 0;
 
     & > .uk-navbar-nav {
+        background-color: @maincontent-header-bg;
+        float: none;
+        text-align: center;
 
         li {
+            float: none;
+            display: inline-block;
+
             a {
                 position: relative;
                 font-family: @main-font;
