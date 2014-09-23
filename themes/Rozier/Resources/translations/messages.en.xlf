@@ -53,49 +53,77 @@
             </trans-unit>
 
             <!-- view / Admin menu -->
+            <trans-unit id="dashboard">
+                <source>dashboard</source>
+                <target>Dashboard</target>
+            </trans-unit>
+            <trans-unit id="construction">
+                <source>construction</source>
+                <target>Construction</target>
+            </trans-unit>
+            <trans-unit id="user.system">
+                <source>user.system</source>
+                <target>Users</target>
+            </trans-unit>
+            <trans-unit id="site.settings">
+                <source>site.settings</source>
+                <target>Settings</target>
+            </trans-unit>
             <trans-unit id="manage.nodes">
                 <source>manage.nodes</source>
-                <target>Manage nodes</target>
+                <target>Nodes</target>
             </trans-unit>
             <trans-unit id="manage.documents">
                 <source>manage.documents</source>
-                <target>Manage documents</target>
+                <target>Documents</target>
             </trans-unit>
             <trans-unit id="manage.tags">
                 <source>manage.tags</source>
-                <target>Manage tags</target>
+                <target>Tags</target>
             </trans-unit>
             <trans-unit id="manage.node-types">
                 <source>manage.node-types</source>
-                <target>Manage node types</target>
+                <target>Node types</target>
             </trans-unit>
             <trans-unit id="manage.translations">
                 <source>manage.translations</source>
-                <target>Manage translations</target>
+                <target>Translations</target>
             </trans-unit>
             <trans-unit id="manage.users">
                 <source>manage.users</source>
-                <target>Manage users</target>
+                <target>Users</target>
             </trans-unit>
             <trans-unit id="manage.fonts">
                 <source>manage.fonts</source>
-                <target>Manage fonts</target>
+                <target>Fonts</target>
             </trans-unit>
             <trans-unit id="manage.themes">
                 <source>manage.themes</source>
-                <target>Manage themes</target>
+                <target>Themes</target>
             </trans-unit>
             <trans-unit id="manage.settings">
                 <source>manage.settings</source>
-                <target>Manage settings</target>
+                <target>Settings</target>
             </trans-unit>
             <trans-unit id="manage.roles">
                 <source>manage.roles</source>
-                <target>Manage roles</target>
+                <target>Roles</target>
             </trans-unit>
             <trans-unit id="manage.groups">
                 <source>manage.groups</source>
-                <target>Manage groups</target>
+                <target>Groups</target>
+            </trans-unit>
+            <trans-unit id="manage.surveys">
+                <source>manage.surveys</source>
+                <target>Surveys</target>
+            </trans-unit>
+            <trans-unit id="manage.newsletters">
+                <source>manage.newsletters</source>
+                <target>Newsletter</target>
+            </trans-unit>
+            <trans-unit id="manage.comments">
+                <source>manage.comments</source>
+                <target>Comments</target>
             </trans-unit>
 
             <!-- view / User panel -->
@@ -140,8 +168,8 @@
 
             <!-- view / Filter Bar-->
             <trans-unit id="search">
-                <source>search</source>
-                <target>Search</target>
+                <source>search.node</source>
+                <target>Search…</target>
             </trans-unit>
             <trans-unit id="goto.page">
                 <source>goto.page</source>
