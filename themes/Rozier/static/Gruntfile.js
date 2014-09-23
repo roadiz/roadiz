@@ -10,6 +10,7 @@ module.exports = function(grunt) {
 				src: [
 					"js/vendor/bootstrap-switch.js",
 					"js/vendor/uikit.min.js",
+					"js/vendor/mousetrap.min.js",
 					"js/addons/sortable.min.js",
 					"js/addons/nestable.min.js",
 					"js/addons/pagination.min.js",
@@ -23,7 +24,8 @@ module.exports = function(grunt) {
 					"js/addons/htmleditor.min.js",
 					"js/vendor/dropzone.min.js",
 
-					"js/widgets/documentwidget.js",
+					"js/widgets/documentWidget.js",
+					"js/widgets/saveButtons.js",
 					"js/widgets/nodeStatuses.js",
 					"js/plugins.js",
 					"js/main.js"

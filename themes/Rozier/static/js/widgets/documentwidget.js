@@ -4,31 +4,38 @@
 var DocumentWidget = function () {
 	var _this = this;
 
-	_this.widgets = $('[data-document-widget]');
-	_this.toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
-	_this.unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
+	_this.$widgets = $('[data-document-widget]');
+	_this.$nestables = $('.documents-widget-nestable');
+	_this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
+	_this.$unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
 
 	_this.init();
 };
-DocumentWidget.prototype.explorer = null;
-DocumentWidget.prototype.widgets = null;
-DocumentWidget.prototype.toggleExplorerButtons = null;
-DocumentWidget.prototype.unlinkDocumentButtons = null;
+DocumentWidget.prototype.$explorer = null;
+DocumentWidget.prototype.$widgets = null;
+DocumentWidget.prototype.$toggleExplorerButtons = null;
+DocumentWidget.prototype.$unlinkDocumentButtons = null;
+DocumentWidget.prototype.$nestables = null;
 DocumentWidget.prototype.init = function() {
 	var _this = this;
 
-	$('.documents-widget-nestable').on('nestable-change', $.proxy(_this.onNestableDocumentWidgetChange, _this) );
-	_this.toggleExplorerButtons.on('click', $.proxy(_this.onExplorerToggle, _this));
-	_this.unlinkDocumentButtons.on('click', $.proxy(_this.onUnlinkDocument, _this));
+	var changeProxy = $.proxy(_this.onNestableDocumentWidgetChange, _this);
+
+	_this.$nestables.off('nestable-change', changeProxy);
+	_this.$nestables.on('nestable-change', changeProxy);
+
+	_this.$toggleExplorerButtons.on('click', $.proxy(_this.onExplorerToggle, _this));
+	_this.$unlinkDocumentButtons.on('click', $.proxy(_this.onUnlinkDocument, _this));
 };
 
 /**
- * Update document widget input values after being sorted
+ * Update document widget input values after being sorted.
+ *
  * @param  {[type]} event   [description]
  * @param  {[type]} element [description]
- * @return {[type]}         [description]
+ * @return {void}
  */
-DocumentWidget.prototype.onNestableDocumentWidgetChange = function (event, element) {
+DocumentWidget.prototype.onNestableDocumentWidgetChange = function(event, element) {
 	var _this = this;
 
 	console.log("Document: "+element.data('document-id'));
@@ -41,7 +48,7 @@ DocumentWidget.prototype.onNestableDocumentWidgetChange = function (event, eleme
 };
 
 /**
- * Create document explorer
+ * Create document explorer.
  *
  * @param  {[type]} event [description]
  * @return false
@@ -49,9 +56,9 @@ DocumentWidget.prototype.onNestableDocumentWidgetChange = function (event, eleme
 DocumentWidget.prototype.onExplorerToggle = function(event) {
 	var _this = this;
 
-	if (_this.explorer === null) {
+	if (_this.$explorer === null) {
 
-		_this.toggleExplorerButtons.addClass('uk-active');
+		_this.$toggleExplorerButtons.addClass('uk-active');
 
 		$.ajax({
 			url: Rozier.routes.documentsAjaxExplorer,
@@ -64,21 +71,22 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
 		})
 		.done(function(data ) {
 			console.log(data);
-			_this.createExplorer(data);
 			console.log("success");
+			_this.createExplorer(data);
 		})
 		.fail(function(data ) {
 			console.log(data);
 			console.log("error");
-		})
-		.always(function() {
-			console.log("complete");
 		});
 	}
 	else {
-		_this.toggleExplorerButtons.removeClass('uk-active');
-		_this.explorer.remove();
-		_this.explorer = null;
+		_this.$toggleExplorerButtons.removeClass('uk-active');
+		_this.$explorer.removeClass('visible');
+		_this.$explorer.one('transitionend webkitTransitionEnd mozTransitionEnd msTransitionEnd', function(event) {
+			/* Act on the event */
+			_this.$explorer.remove();
+			_this.$explorer = null;
+		});
 	}
 
 	return false;
@@ -104,10 +112,14 @@ DocumentWidget.prototype.createExplorer = function( data ) {
 	var _this = this;
 
 	$("body").append('<div class="document-widget-explorer"><ul class="uk-nestable" data-uk-nestable="{group:\'documents-widget\',maxDepth:1}"></ul></div>');
-	_this.explorer = $('.document-widget-explorer');
+	_this.$explorer = $('.document-widget-explorer');
 
 	for (var i = 0; i < data.documents.length; i++) {
 		var doc = data.documents[i];
-		_this.explorer.find('ul').append(doc.html);
+		_this.$explorer.find('ul').append(doc.html);
 	}
+
+	window.setTimeout(function () {
+		_this.$explorer.addClass('visible');
+	}, 0);
 };

@@ -5,13 +5,19 @@
 	left: 0px;
 	top: 0px;
 	bottom: 0px;
-	width: 30%;
+	width: @user-panel-width + @entries-panel-width + @trees-panel-width;
 
+	.transform(~"translate3D(-100%,0,0)");
+	.transform-transition(ease 0.5s);
 	overflow-y: auto;
 
 	li {
 		a {
 			display: none;
 		}
+	}
+
+	&.visible {
+		.transform(~"translate3D(0,0,0)");
 	}
 }
