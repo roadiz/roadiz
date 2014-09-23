@@ -281,9 +281,9 @@
                 <source>node.translated</source>
                 <target>The node “%name%” has been translated.</target>
             </trans-unit>
-            <trans-unit id="node_source.updated">
-                <source>node_source.updated</source>
-                <target>The node source “%name%” has been updated.</target>
+            <trans-unit id="node_source.%node_source%.updated.%translation%">
+                <source>node_source.%node_source%.updated.%translation%</source>
+                <target>The node source “%node_source%” has been updated for %translation% translation.</target>
             </trans-unit>
              <trans-unit id="node.tag_linked">
                 <source>node.tag_linked</source>

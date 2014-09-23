@@ -270,7 +270,7 @@ class NodesController extends RozierApp
                 if ($form->isValid()) {
                     $this->editNodeSource($form->getData(), $source);
 
-                    $msg = $this->getTranslator()->trans('node_source.updated', array(
+                    $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', array(
                         '%node_source%'=>$source->getNode()->getNodeName(),
                         '%translation%'=>$source->getTranslation()->getName()
                     ));

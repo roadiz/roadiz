@@ -285,6 +285,10 @@
                 <source>node_source.updated</source>
                 <target>Le nœud “%name%” a été mis à jour.</target>
             </trans-unit>
+            <trans-unit id="node_source.%node_source%.updated.%translation%">
+                <source>node_source.%node_source%.updated.%translation%</source>
+                <target>Le nœud  “%node_source%” a été mis à jour pour la traduction %translation%.</target>
+            </trans-unit>
              <trans-unit id="node.tag_linked">
                 <source>node.tag_linked</source>
                 <target>L'étiquette "%tag%" a été liée au nœud “%node%”.</target>
