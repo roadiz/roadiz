@@ -1,6 +1,12 @@
 ##
 # Always use plural entities' name
 ##
+rozierRemoveTrailingSlash:
+    path: /{url}
+    defaults: { _controller: Themes\Rozier\RozierApp::removeTrailingSlashAction }
+    requirements:
+        url: .*/$
+    methods: [GET]
 
 # Home page
 adminHomePage:
