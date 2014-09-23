@@ -88,6 +88,9 @@
             input[type="password"] {
                 width: 300px;
             }
+            .data-uk-margin>div {
+                margin-bottom: 15px;
+            }
         }
         #login-link {
             position: absolute;
@@ -118,9 +121,10 @@
                     display: inline-block;
                     height: 38px;
                     line-height: 41px;
-                    font-size: 11px;
+                    font-size: 12px;
                     font-weight: bold;
                     vertical-align: top;
+                    color: @grey-form-submit-textsimple;
                     .transition(color ease 0.35s);
                 }
 
@@ -139,12 +143,12 @@
                 margin: 8px 0 8px 8px;
                 height: 22px;
                 line-height: 25px;
-                font-size: 11px;
+                font-size: 12px;
                 font-weight: bold;
                 vertical-align: top;
                 border-left: 1px solid #CCCCCC;
                 padding-left: 10px;
-                color: #666666;
+                color: @grey-form-submit-textsimple;
             }
         }
     }
