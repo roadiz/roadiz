@@ -55,47 +55,47 @@
             <!-- view / Admin menu -->
             <trans-unit id="manage.nodes">
                 <source>manage.nodes</source>
-                <target>Gestion des nœuds</target>
+                <target>Nœuds</target>
             </trans-unit>
             <trans-unit id="manage.documents">
                 <source>manage.documents</source>
-                <target>Gestion des documents</target>
+                <target>Documents</target>
             </trans-unit>
             <trans-unit id="manage.tags">
                 <source>manage.tags</source>
-                <target>Gestion des étiquettes</target>
+                <target>Étiquettes</target>
             </trans-unit>
             <trans-unit id="manage.node-types">
                 <source>manage.node-types</source>
-                <target>Gestion des types de nœuds</target>
+                <target>Types de nœuds</target>
             </trans-unit>
             <trans-unit id="manage.translations">
                 <source>manage.translations</source>
-                <target>Gestion des traductions</target>
+                <target>Traductions</target>
             </trans-unit>
             <trans-unit id="manage.users">
                 <source>manage.users</source>
-                <target>Gestion des utilisateurs</target>
+                <target>Utilisateurs</target>
             </trans-unit>
             <trans-unit id="manage.fonts">
                 <source>manage.fonts</source>
-                <target>Gestion des fontes</target>
+                <target>Fontes</target>
             </trans-unit>
             <trans-unit id="manage.themes">
                 <source>manage.themes</source>
-                <target>Gestion des thèmes</target>
+                <target>Tèmes</target>
             </trans-unit>
             <trans-unit id="manage.settings">
                 <source>manage.settings</source>
-                <target>Gestion des paramètres</target>
+                <target>Paramètres</target>
             </trans-unit>
             <trans-unit id="manage.roles">
                 <source>manage.roles</source>
-                <target>Gestion des rôles</target>
+                <target>Rôles</target>
             </trans-unit>
             <trans-unit id="manage.groups">
                 <source>manage.groups</source>
-                <target>Gestion des groupes</target>
+                <target>Groupes</target>
             </trans-unit>
 
             <!-- view / User panel -->
@@ -140,8 +140,8 @@
 
             <!-- view / Filter Bar-->
             <trans-unit id="search">
-                <source>search</source>
-                <target>Rechercher</target>
+                <source>search.node</source>
+                <target>Rechercher…</target>
             </trans-unit>
             <trans-unit id="goto.page">
                 <source>goto.page</source>

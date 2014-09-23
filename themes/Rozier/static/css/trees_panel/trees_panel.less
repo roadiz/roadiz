@@ -9,39 +9,49 @@
 
 #nodes-sources-search {
     height: @global-header-height;
-    background-color: #aaaaaa;
+    background-color: @maintree-search-bg;
     text-align: center;
 
     form {
-        padding-top: 45px;
-    }
+        padding-top: 43px;
 
-    i {
-        color: #4c4c4c;
-        margin-top: -9px;
-    }
+        .uk-form-icon {
+          height: 36px;
+          width: 80%;
+          .transition(~'background ease 0.35s, color ease 0.35s');
 
-    &-input {
+            i {
+                color: @maintree-search-placeholder;
+                top: 17px;
+                left: 7px;
+            }
+            #nodes-sources-search-input {
+                background: @maintree-search-input-bg;
+                border: 0 none;
+                color: @maintree-search-placeholder;
+                font-size: 12px;
+                // height: 17px;
+                width: 100%;
+                padding: 19px 18px;
+                .rounded(20px);
+                text-indent: 5px;
 
-        background: none transparent;
-        border: 0 none;
-        color: #4c4c4c;
-        font-size: 14px;
-
-        &::-webkit-input-placeholder {
-           color: #4c4c4c;
-        }
-
-        &:-moz-placeholder { /* Firefox 18- */
-           color: #4c4c4c;
-        }
-
-        &::-moz-placeholder {  /* Firefox 19+ */
-           color: #4c4c4c;
-        }
-
-        &:-ms-input-placeholder {
-            color: #4c4c4c;
+                &::-webkit-input-placeholder {
+                   color: @maintree-search-placeholder;
+                }
+                &:-moz-placeholder { /* Firefox 18- */
+                   color: @maintree-search-placeholder;
+                }
+                &::-moz-placeholder {  /* Firefox 19+ */
+                   color: @maintree-search-placeholder;
+                }
+                &:-ms-input-placeholder {
+                    color: @maintree-search-placeholder;
+                }
+                &:hover, &:focus {
+                    background: @maintree-search-input-bg-focus;
+                }
+            }
         }
     }
 }
