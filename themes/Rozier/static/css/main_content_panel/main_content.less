@@ -3,11 +3,14 @@
         padding: 0px;
         background-color: @maincontent-bg;
 
-        header, .container {
+        .container {
             padding: 0px 60px;
         }
-        header {
+
+        // Sécurise les autres header (actionMenu par exemple)
+        & > section > header {
             height: 188px;
+            padding: 0px 60px;
             background-color: @maincontent-header-bg;
             text-align: center;
             .box-sizing();

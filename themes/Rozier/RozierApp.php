@@ -52,7 +52,7 @@ class RozierApp extends BackendController
         $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' back-office';
         $this->assignation['nodeTree'] = new NodeTreeWidget($this->getKernel()->getRequest(), $this);
         $this->assignation['tagTree'] = new TagTreeWidget($this->getKernel()->getRequest(), $this);
-        $this->assignation['grunt'] = include(dirname(__FILE__).'static/public/config/assets.config.php');
+        //$this->assignation['grunt'] = include(dirname(__FILE__).'static/public/config/assets.config.php');
 
         return $this;
     }
