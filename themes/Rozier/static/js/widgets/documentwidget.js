@@ -19,7 +19,11 @@ DocumentWidget.prototype.$nestables = null;
 DocumentWidget.prototype.init = function() {
 	var _this = this;
 
-	_this.$nestables.on('nestable-change', $.proxy(_this.onNestableDocumentWidgetChange, _this) );
+	var changeProxy = $.proxy(_this.onNestableDocumentWidgetChange, _this);
+
+	_this.$nestables.off('nestable-change', changeProxy);
+	_this.$nestables.on('nestable-change', changeProxy);
+
 	_this.$toggleExplorerButtons.on('click', $.proxy(_this.onExplorerToggle, _this));
 	_this.$unlinkDocumentButtons.on('click', $.proxy(_this.onUnlinkDocument, _this));
 };

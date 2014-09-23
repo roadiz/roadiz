@@ -18,6 +18,8 @@ Rozier.onDocumentReady = function( event ) {
 	}
 
 	new DocumentWidget();
+	new SaveButtons();
+
 	Rozier.nodeStatuses = new NodeStatuses();
 
 	Rozier.bindMainTrees();
@@ -30,7 +32,6 @@ Rozier.onDocumentReady = function( event ) {
 	$(".rz-boolean-checkbox").bootstrapSwitch();
 
 	Rozier.centerVerticalObjects();
-	Rozier.parseActionSaveButtons();
 };
 
 Rozier.bindMainTrees = function () {
@@ -96,28 +97,6 @@ Rozier.centerVerticalObjects = function() {
 			'margin-top': (element.offsetHeight/-2)+'px'
 		});
 	});
-};
-
-/*
- * You can add automatically form button to actions-menus
- * Just add them to the .rz-action-save class and use the data-action-save
- * attribute to point form ID to submit.
- */
-Rozier.parseActionSaveButtons = function(){
-
-	var $button = $($(".rz-action-save").get(0));
-	var $actionMenu = $($('.actions-menu').get(0));
-
-	if ($button.length &&
-		$actionMenu.length) {
-		var formToSave = $($button.attr('data-action-save'));
-		if (formToSave.length) {
-			$button.prependTo($actionMenu);
-			$button.on('click', function (event) {
-				formToSave.submit();
-			});
-		}
-	}
 };
 
 Rozier.toggleTreesPanel = function (event) {
