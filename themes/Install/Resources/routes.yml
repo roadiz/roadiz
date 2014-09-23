@@ -2,6 +2,9 @@
 installHomePage:
     path:     /
     defaults: { _controller: Themes\Install\InstallApp::indexAction }
+installHomePageRedirect:
+    path:     /install
+    defaults: { _controller: Themes\Install\InstallApp::redirectIndexAction }
 installCheckPage:
     path:     /install/check-requirements
     defaults: { _controller: Themes\Install\InstallApp::requirementsAction }
@@ -39,3 +42,9 @@ installDonePage:
 installFailedPage:
     path:     /install/failed
     defaults: { _controller: Themes\Install\InstallApp::failedAction }
+removeTrailingSlash:
+    path: /{url}
+    defaults: { _controller:  Themes\Install\InstallApp::removeTrailingSlashAction }
+    requirements:
+        url: .*/$
+    methods: [GET]

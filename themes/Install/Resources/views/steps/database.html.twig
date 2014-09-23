@@ -1,32 +1,57 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="uk-panel-title">{% trans %}install.database{% endtrans %}</h1>
-    <p>{% trans %}database.message{% endtrans %}</p>
 
-    {% if error %}
-    <div class="uk-alert uk-alert-danger">
-    	<a href="#" class="uk-alert-close uk-close"></a>
-    	<p>{% trans %}cannot.connect.database{% endtrans %}</p>
-   		<p>{{ errorMessage }}</p>
-    </div>
-    {% endif %}
+    <article id="content_database" class="content">
 
-    <form id="formDatabase" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(databaseForm) }}>
-   		{{ form_errors(databaseForm) }}
+        <div class="content_title_cont">
+            <h1 class="content_title">{% trans %}database.title{% endtrans %}</h1>   
+        </div>
 
-	    {% for item in databaseForm %}
-	    	{% if item.vars.name != "_token" %}
-			    <div class="uk-form-row">
-			    	<label class="uk-form-label" for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
-			        {{ form_errors(item) }}
-			        {{ form_widget(item) }}
-			    </div>
-	    	{% endif %}
-	    {% endfor %}
-	    {{ form_rest(databaseForm) }}
-  		<p><button class="uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}build.database{% endtrans %}</button></p>
-	</form>
+        <div class="content_progress">
+            <div class="content_progress_item first active"></div>
+            <div class="content_progress_item active"></div>
+            <div class="content_progress_item active"></div>
+            <div class="content_progress_item"></div>
+            <div class="content_progress_item last"></div>
+        </div>
 
-    <p><a class="uk-button uk-button-success" href="{{ path('installCheckPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.requirements{% endtrans %}</a><a class="uk-button" href="{{ path('installImportPage') }}"><i class="uk-icon-share"></i> {% trans %}skip.database.goto.import{% endtrans %}</a></p>
+        <div class="content_text_cont">
+            
+            <div class="content_text">
+                {% trans %}database.message{% endtrans %} 
+
+
+                {% if error %}
+                <div class="uk-alert uk-alert-danger">
+                    <a href="#" class="uk-alert-close uk-close"></a>
+                    <p>{% trans %}database.cannot_connect{% endtrans %}</p>
+                    <p>{{ errorMessage }}</p>
+                </div>
+                {% endif %}
+
+                <form id="formDatabase" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(databaseForm) }}>
+                    {{ form_errors(databaseForm) }}
+
+                    {% for item in databaseForm %}
+                        {% if item.vars.name != "_token" %}
+                            <div class="database_form_item {% if loop.index is odd %}odd{% else %}even{% endif %}">
+                                <label class="uk-form-label" for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
+                                {{ form_errors(item) }}
+                                {{ form_widget(item) }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    {{ form_rest(databaseForm) }}
+                    <p><button class="database_build_button uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}database.build{% endtrans %}</button></p>
+                </form>
+
+            </div> <!-- .content_text -->
+
+           <a class="content_button uk-button uk-button-success" href="{{ path('installCheckPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.requirements{% endtrans %}</a>
+           <a class="content_button uk-button" href="{{ path('installImportPage') }}"><i class="uk-icon-share"></i> {% trans %}skip.database.goto.import{% endtrans %}</a>
+        </div>
+        
+    </article>  
+
 {% endblock %}

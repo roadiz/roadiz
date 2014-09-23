@@ -1,4 +1,97 @@
-.uk-button-disabled {
-    pointer-events: none;
-    opacity: 0.5;
+.uk-form {
+    input[type="text"],
+    input[type="email"],
+    input[type="search"],
+    input[type="password"],
+    input[type="submit"],
+    input[type="image"] {
+        -webkit-appearance:none;
+        -moz-appearance:none;
+        appearance:none;
+    }
+
+    input:focus,
+    textarea:focus,
+    isindex:focus,
+    keygen:focus,
+    select:focus {
+        outline: 0px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="search"],
+    input[type="email"],
+    input[type="number"],
+    textarea {
+        font-size: 12px;
+        line-height: 14px;
+        font-weight: bold;
+        //width: 100%; // You cannot place this for a wide selector! it will break ui-kit
+        color: @grey-form-text;
+        padding: 10px 15px;
+        //margin-bottom: 20px;
+        border: 1px solid @grey-form-border;
+        .border-radius(0px);
+        .box-sizing();
+        .transition(~'0.35s ease border-color, 0.5s ease background');
+
+        &:hover {
+            background-color: white;
+            border-color: @grey-form-submit-border-hover;
+            color: #333;
+        }
+        &:focus {
+            background-color: @grey-verylight;
+            border-color: @grey-form-submit-border-hover;
+            color: #333;
+        }
+    }
+
+
+    .uk-form-label {
+        font-size: 12px;
+        line-height: 12px;
+        color: @grey-form-label;
+
+        &:before {
+            content: "— ";
+            color: @grey-form-before;
+        }
+    }
+
+    input.uk-form-width-mini {
+        width: 40px;
+    }
+
+    // Default Button
+
+    input[type="text"],
+    input[type="password"],
+    input[type="number"]{
+        height: 36px;
+    }
+    
+
+    .data-uk-margin {
+        margin-bottom: 12px;
+
+        & > div {
+            margin-bottom: 20px;
+
+
+            & > input[type="text"],
+            & > input[type="password"],
+            & > input[type="search"],
+            & > input[type="email"],
+            & > textarea {
+
+                width: 100%;
+            }
+        }
+    }
+    .uk-margin-small-top {
+        margin-top: 10px !important;
+    }
+
 }
