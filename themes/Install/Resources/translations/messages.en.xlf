@@ -2,6 +2,7 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
+
             <trans-unit id="1">
                 <source>Node name</source>
                 <target>Node name</target>
@@ -24,6 +25,7 @@
                 <target>Supprimer</target>
             </trans-unit>
 
+
             <!-- Documents -->
             <trans-unit id="document.updated">
                 <source>document.updated</source>
@@ -37,6 +39,80 @@
                 <source>document.cannot_persist</source>
                 <target>Document “%name%” could not be created</target>
             </trans-unit>
+
+
+            <!-- Welcome -->
+            <trans-unit id="welcome.title">
+                <source>welcome.title</source>
+                <target>Renzo's Installation</target>
+            </trans-unit>
+            <trans-unit id="welcome.message">
+                <source>welcome.message</source>
+                <target><![CDATA[<p>Welcome to Renzo's CMS installation</p> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.</p>]]> </target>
+            </trans-unit>
+
+
+            <!-- Requirements -->
+            <trans-unit id="requirements.title">
+                <source>requirements.title</source>
+                <target>Requirements</target>
+            </trans-unit>
+            <trans-unit id="requirements.message">
+                <source>requirements.message</source>
+                <target><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.</p>]]> </target>
+            </trans-unit>
+            <trans-unit id="requirements.requirement">
+                <source>requirements.requirement</source>
+                <target>Requirement</target>
+            </trans-unit>
+            <trans-unit id="requirements.actual_value">
+                <source>requirements.actual_value</source>
+                <target>Actual value</target>
+            </trans-unit>
+            <trans-unit id="requirements.status">
+                <source>requirements.status</source>
+                <target>Status</target>
+            </trans-unit>
+
+
+             <!-- Database -->
+            <trans-unit id="database.title">
+                <source>database.title</source>
+                <target>Database</target>
+            </trans-unit>
+            <trans-unit id="database.message">
+                <source>database.message</source>
+                <target><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.</p>]]> </target>
+            </trans-unit>
+            <trans-unit id="database.cannot_connect">
+                <source>database.cannot_connect</source>
+                <target>Cannot connect to database</target>
+            </trans-unit>
+            <trans-unit id="database.build">
+                <source>database.build</source>
+                <target>Build database</target>
+            </trans-unit>
+
+
+            <!-- Goto -->
+            <trans-unit id="goto.requirements">
+                <source>goto.requirements</source>
+                <target>Go to "requirements"</target>
+            </trans-unit>
+            <trans-unit id="goto.database">
+                <source>goto.database</source>
+                <target>Go to "database"</target>
+            </trans-unit>
+            <trans-unit id="goto.welcome">
+                <source>goto.welcome</source>
+                <target>Go to "welcome"</target>
+            </trans-unit>
+            <trans-unit id="skip.database.goto.import">
+                <source>skip.database.goto.import</source>
+                <target>Skip "database", go to "import"</target>
+            </trans-unit>
+            
+
         </body>
     </file>
 </xliff>

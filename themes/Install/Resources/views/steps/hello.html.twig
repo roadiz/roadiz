@@ -1,7 +1,30 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="uk-panel-title">{% trans %}welcome.title{% endtrans %}</h1>
-    <p>{% trans %}welcome.message{% endtrans %}</p>
-    <p><a class="uk-button uk-button-success" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a></p>
+
+    <article id="content_hello" class="content">
+
+        <div class="content_title_cont">
+            <h1 class="content_title">{% trans %}welcome.title{% endtrans %}</h1>   
+        </div>
+
+        <div class="content_progress">
+            <div class="content_progress_item first active"></div>
+            <div class="content_progress_item"></div>
+            <div class="content_progress_item"></div>
+            <div class="content_progress_item"></div>
+            <div class="content_progress_item last"></div>
+        </div>
+
+        <div class="content_text_cont">
+            
+            <div class="content_text">
+                {% trans %}welcome.message{% endtrans %} 
+            </div>
+            <a class="content_button uk-button" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+            
+        </div>
+        
+    </article>
+   
 {% endblock %}

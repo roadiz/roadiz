@@ -5,7 +5,8 @@
  */
 var Install = {
     importFixtures: null,
-    selectDatabaseField: null
+    selectDatabaseField: null,
+    resizeContainer: null
 };
 
 Install.onDocumentReady = function( event ) {
@@ -17,6 +18,8 @@ Install.onDocumentReady = function( event ) {
     if ($("#formDatabase").length) {
         Install.selectDatabaseField = new SelectDatabaseField();
     }
+
+    Install.resizeContainer = new resizeContainer();
 
 };
 

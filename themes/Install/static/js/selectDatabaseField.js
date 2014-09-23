@@ -49,14 +49,14 @@ SelectDatabaseField.prototype.changeField = function(driver) {
         _this.disableField($("#form_path"));
         _this.enableField($("#form_dbname"));
     }
-}
+};
 
 SelectDatabaseField.prototype.disableField = function (field) {
     field.parent().hide();
     field.attr("disabled", "disabled");
-}
+};
 
 SelectDatabaseField.prototype.enableField = function (field) {
     field.parent().show();
     field.removeAttr("disabled");
-}
+};

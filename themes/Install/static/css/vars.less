@@ -1,0 +1,87 @@
+/*
+ * Colors
+ */
+@contrast-color:#00deab;
+@contrast-color-darker: #32cd9b;
+@contrast-color-50-rgba: rgba(0, 222, 171, 0.5);
+
+@text-color : #333333;
+@bg-color   : #EEEEEE;
+
+@grey-interface:#4C4C4C;
+@grey-medium:#808080;
+@grey-verylight: #F8F8F8;
+@grey-form-border:#CBCBCB;
+@grey-form-before:#BBBBBB;
+@grey-form-label:#555555;
+@grey-form-text:#666666;
+@grey-form-submit:#E5E5E5;
+@grey-form-submit-hover:#CECECE;
+@grey-form-submit-border:#ADADAD;
+@grey-form-submit-border-hover:#888888;
+@grey-form-submit-color:#333333;
+@grey-form-submit-icon:#777777;
+@grey-form-submit-icon-hover:#555555;
+@grey-form-submit-textsimple:#999999;
+@grey-border:#D8D8D8;
+
+@alert-color: #DD3C5B;
+@alert-color-red: 221;@alert-color-blue: 60;@alert-color-green: 91;
+
+
+/*
+ * Sizes
+ */
+@innerWidth : 750px;
+@infosWidth : 128px;
+@contentWidth : @innerWidth - @infosWidth;
+
+
+/*
+ * Matrix
+ */
+@icon-size : 20px;
+@icons-picture : @icon-size*31 @icon-size*21;
+
+.matrix-icon(@x:0, @y:0) {
+    background-image:   url(../img/matrix@2x.png);
+    background-repeat:  no-repeat;
+    background-size:    @icons-picture;
+    background-position: @x @y;
+    .keep-image-aspect();
+}
+
+
+/*
+ * Fonts
+ */
+@font-face {
+    font-family: 'RezoZero';
+    src: url("../fonts/rezozero-sans-regular.otf");
+    // src: url("../fonts/fontawesome-webfont.eot?#iefix") format("embedded-opentype"),
+    //      url("../fonts/fontawesome-webfont.woff") format("woff"),
+    //      url("../fonts/fontawesome-webfont.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'RezoZero';
+    src: url("../fonts/rezozero-sans-light.otf");
+    // src: url("../fonts/fontawesome-webfont.eot?#iefix") format("embedded-opentype"),
+    //      url("../fonts/fontawesome-webfont.woff") format("woff"),
+    //      url("../fonts/fontawesome-webfont.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'RezoZero Mono';
+    src: url("../fonts/rezozero-sans-mono.otf");
+    // src: url("../fonts/fontawesome-webfont.eot?#iefix") format("embedded-opentype"),
+    //      url("../fonts/fontawesome-webfont.woff") format("woff"),
+    //      url("../fonts/fontawesome-webfont.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@main-font: 'RezoZero', Helvetica, sans-serif;
+

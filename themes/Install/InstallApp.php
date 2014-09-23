@@ -51,6 +51,31 @@ class InstallApp extends AppController
 
     protected $formFactory = null;
 
+
+    /**
+     * Remove trailing slash.
+     * 
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function removeTrailingSlashAction(Request $request)
+    {
+
+        $pathInfo = $request->getPathInfo();
+        $requestUri = $request->getRequestUri();
+
+        $url = str_replace($pathInfo, rtrim($pathInfo, ' /'), $requestUri);
+
+        $response = new RedirectResponse($url);
+
+        $response->prepare($request);
+
+        return $response->send();
+
+        // return $request->redirect($url, 301);
+    }
+
+
     /**
      * @return Symfony\Component\Form\Forms $formFactory
      */
@@ -67,6 +92,7 @@ class InstallApp extends AppController
 
         return $this->formFactory;
     }
+
 
     /**
      * Check if twig cache must be cleared
@@ -94,17 +120,25 @@ class InstallApp extends AppController
         $this->assignation = array(
             'request' => $this->getKernel()->getRequest(),
             'head' => array(
+                'ajax' => $this->getKernel()->getRequest()->isXmlHttpRequest(),
+                'cmsVersion' => Kernel::CMS_VERSION,
+                'cmsBuild' => Kernel::$cmsBuild,
+                'devMode' => (boolean) $this->getKernel()->getConfig()['devMode'],
                 'baseUrl' => $this->getKernel()->getRequest()->getBaseUrl(),
-                'filesUrl' => $this->getKernel()->getRequest()->getBaseUrl().'/'.Document::getFilesFolderName(),
-                'resourcesUrl' => $this->getStaticResourcesUrl()
-            )
+                'filesUrl' => $this->getKernel()
+                                   ->getRequest()
+                                   ->getBaseUrl().'/'.Document::getFilesFolderName(),
+                'resourcesUrl' => $this->getStaticResourcesUrl(),
+                'grunt' => include(dirname(__FILE__).'/static/public/config/assets.config.php')
+            ),
         );
 
         return $this;
     }
 
     /**
-     * Welcome screen
+     * Welcome screen.
+     * 
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param RZ\Renzo\Core\Entities\Node              $node
      * @param RZ\Renzo\Core\Entities\Translation       $translation
@@ -121,7 +155,29 @@ class InstallApp extends AppController
     }
 
     /**
-     * Check requirement screen
+     * Welcome screen redirect.
+     * 
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function redirectIndexAction(Request $request)
+    {
+        $response = new RedirectResponse(
+            $this->getKernel()->getUrlGenerator()->generate(
+                'installHomePage'
+            )
+        );
+
+        $response->prepare($request);
+
+        return $response->send();
+    }
+
+
+    /**
+     * Check requirement screen.
+     * 
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param RZ\Renzo\Core\Entities\Node              $node
      * @param RZ\Renzo\Core\Entities\Translation       $translation

@@ -9,6 +9,9 @@
     "grunt-contrib-concat": "~0.4.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-contrib-imagemin": "~0.7.0",
-    "grunt-phplint": "0.0.5"
+    "grunt-phplint": "0.0.5",
+    "grunt-static-versioning": "~0.2.2",
+    "jit-grunt": "~0.7.0",
+    "grunt-contrib-clean": "~0.5.0"
   }
 }
