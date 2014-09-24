@@ -46,7 +46,7 @@ Install.onDocumentReady = function( event ) {
         Install.importFixtures = new ImportFixtures(Install.importRoutes);
     }
 
-    if ($("#formDatabase").length) {
+    if ($("#databaseForm").length) {
         Install.selectDatabaseField = new SelectDatabaseField();
     }
 
@@ -200,6 +200,7 @@ SelectDatabaseField.prototype.init = function() {
 
 SelectDatabaseField.prototype.changeFieldEvent = function(event) {
     var _this = this;
+
     var $choices = $(event.currentTarget);
 
     _this.changeField($choices.val());
@@ -208,7 +209,6 @@ SelectDatabaseField.prototype.changeFieldEvent = function(event) {
 SelectDatabaseField.prototype.changeField = function(driver) {
     var _this = this;
 
-    console.log(driver);
     if (driver == "pdo_sqlite") {
         _this.disableField($("#form_host"));
         _this.disableField($("#form_port"));
@@ -237,11 +237,11 @@ SelectDatabaseField.prototype.changeField = function(driver) {
         _this.disableField($("#form_path"));
         _this.enableField($("#form_dbname"));
     }
+
+    Install.resizeContainer.init();
 };
 
 SelectDatabaseField.prototype.disableField = function (field) {
-    console.log('disable');
-    console.log(field.parent());
     field.parent().hide();
     field.attr("disabled", "disabled");
 };

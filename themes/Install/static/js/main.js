@@ -19,7 +19,7 @@ Install.onDocumentReady = function( event ) {
         Install.importFixtures = new ImportFixtures(Install.importRoutes);
     }
 
-    if ($("#formDatabase").length) {
+    if ($("#databaseForm").length) {
         Install.selectDatabaseField = new SelectDatabaseField();
     }
 
