@@ -303,6 +303,7 @@ class NodeTypeFieldsController extends RozierApp
             'description' =>    $field->getDescription(),
             'visible' =>        $field->isVisible(),
             'indexed' =>        $field->isIndexed(),
+            'defaultValues' => $field->getDefaultValues(),
         );
         $builder = $this->getFormFactory()
                     ->createBuilder('form', $defaults)
@@ -322,7 +323,17 @@ class NodeTypeFieldsController extends RozierApp
                     ))
                     ->add('description', 'text', array('required' => false))
                     ->add('visible', 'checkbox', array('required' => false))
-                    ->add('indexed', 'checkbox', array('required' => false));
+                    ->add('indexed', 'checkbox', array('required' => false))
+                    ->add(
+                        'defaultValues',
+                        'text',
+                        array(
+                            'required' => false,
+                            'attr' => array(
+                                'placeholder' => $this->getTranslator()->trans('enter_values_comma_separated')
+                            )
+                        )
+                    );
 
         return $builder->getForm();
     }
