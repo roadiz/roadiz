@@ -9,6 +9,24 @@ var ImportNodeType = function ( routesArray ) {
 ImportNodeType.prototype.routes = null;
 ImportNodeType.prototype.score = 0;
 
+ImportNodeType.prototype.always = function( index, data ) {
+    var _this = this;
+
+    if (typeof data.request != "undefined") {
+        $.ajax({
+            url:data.request,
+            type: 'GET',
+            dataType: 'json'
+        })
+        .always(function() {
+            console.log("updateSchema");
+            _this.callSingleImport(index + 1);
+        });
+    } else {
+        _this.callSingleImport(index + 1);
+    }
+};
+
 ImportNodeType.prototype.callSingleImport = function( index ) {
     var _this = this;
 
@@ -29,21 +47,10 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
             console.log("success");
             console.log(data);
 
-            if (typeof data.request != "undefined") {
-                $.ajax({
-                    url:data.request,
-                    type: 'GET',
-                    dataType: 'json'
-                })
-                .always(function(data) {
-                    console.log("updateSchema");
-                });
-            }
-
             $icon.removeClass('uk-icon-spinner');
             $icon.addClass('uk-icon-check');
             $row.addClass('uk-badge-success');
-
+            _this.always(index, data);
         })
         .fail(function(data) {
             console.log("error");
@@ -54,12 +61,14 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
             $row.addClass('uk-badge-danger');
 
             $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>");
+
+            _this.always(index, data.responseJSON);
         })
         .always(function(data) {
             console.log("complete");
+            console.log(data);
             $icon.removeClass('uk-icon-spin');
 
-            _this.callSingleImport(index + 1);
         });
     } else {
         $('#next-step-button').removeClass('uk-button-disabled');

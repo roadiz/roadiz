@@ -6,8 +6,8 @@ npm-debug.log
 **/.DS_Store
 **/._*
 ._*
-conf/config.json
-conf/*.config.json
+conf/*
+!conf/*.sample
 composer.lock
 report.txt
 TestTheme
