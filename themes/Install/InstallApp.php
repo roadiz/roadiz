@@ -54,7 +54,7 @@ class InstallApp extends AppController
 
     /**
      * Remove trailing slash.
-     * 
+     *
      * @param  Request $request [description]
      * @return [type]           [description]
      */
@@ -138,7 +138,7 @@ class InstallApp extends AppController
 
     /**
      * Welcome screen.
-     * 
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param RZ\Renzo\Core\Entities\Node              $node
      * @param RZ\Renzo\Core\Entities\Translation       $translation
@@ -156,7 +156,7 @@ class InstallApp extends AppController
 
     /**
      * Welcome screen redirect.
-     * 
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
      *
      * @return Symfony\Component\HttpFoundation\Response
@@ -177,7 +177,7 @@ class InstallApp extends AppController
 
     /**
      * Check requirement screen.
-     * 
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param RZ\Renzo\Core\Entities\Node              $node
      * @param RZ\Renzo\Core\Entities\Translation       $translation
@@ -450,6 +450,15 @@ class InstallApp extends AppController
                         $response = new RedirectResponse(
                             $this->getKernel()->getUrlGenerator()->generate(
                                 'installImportNodeTypesPage'
+                            )
+                        );
+                        $response->prepare($request);
+
+                        return $response->send();
+                    } else {
+                        $response = new RedirectResponse(
+                            $this->getKernel()->getUrlGenerator()->generate(
+                                'installDonePage'
                             )
                         );
                         $response->prepare($request);
