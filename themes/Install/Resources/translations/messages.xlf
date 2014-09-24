@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+
+            <trans-unit id="1">
+                <source>Node name</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>See tree</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>_username</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>_password</source>
+                <target/>
+            </trans-unit>
+
+            <trans-unit id="delete">
+                <source>delete</source>
+                <target/>
+            </trans-unit>
+
+
+            <!-- Documents -->
+            <trans-unit id="document.updated">
+                <source>document.updated</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="document.uploaded">
+                <source>document.uploaded</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="document.cannot_persist">
+                <source>document.cannot_persist</source>
+                <target/>
+            </trans-unit>
+
+
+            <!-- Welcome -->
+            <trans-unit id="welcome.title">
+                <source>welcome.title</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="welcome.message">
+                <source>welcome.message</source>
+                <target/>
+            </trans-unit>
+
+
+            <!-- Requirements -->
+            <trans-unit id="requirements.title">
+                <source>requirements.title</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="requirements.message">
+                <source>requirements.message</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="requirements.requirement">
+                <source>requirements.requirement</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="requirements.actual_value">
+                <source>requirements.actual_value</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="requirements.status">
+                <source>requirements.status</source>
+                <target/>
+            </trans-unit>
+
+
+             <!-- Database -->
+            <trans-unit id="database.title">
+                <source>database.title</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="database.message">
+                <source>database.message</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="database.cannot_connect">
+                <source>database.cannot_connect</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="database.build">
+                <source>database.build</source>
+                <target/>
+            </trans-unit>
+
+
+            <!-- Goto -->
+            <trans-unit id="goto.requirements">
+                <source>goto.requirements</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="goto.database">
+                <source>goto.database</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="goto.welcome">
+                <source>goto.welcome</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="skip.database.goto.import">
+                <source>skip.database.goto.import</source>
+                <target/>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>
