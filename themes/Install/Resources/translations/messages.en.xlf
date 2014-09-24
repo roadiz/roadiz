@@ -168,6 +168,26 @@
                 <target>Save information</target>
             </trans-unit>
 
+
+            <!-- Import node type -->
+            <trans-unit id="import_node_type.title">
+                <source>import_node_type.title</source>
+                <target>Import node type</target>
+            </trans-unit>
+            <trans-unit id="import_node_type.message">
+                <source>import_node_type.message</source>
+                <target><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas, aut fugit, doloremque ducimus quod dolor placeat magnam possimus rem dignissimos sed in, atque fuga quidem molestias voluptatem impedit. Ea, modi?</p>]]></target>
+            </trans-unit>
+            <trans-unit id="import_node_type.node_type">
+                <source>import_node_type.node_type</source>
+                <target>Node type</target>
+            </trans-unit>
+            <trans-unit id="import_node_type.node">
+                <source>import_node_type.node</source>
+                <target>Node</target>
+            </trans-unit>
+
+
             
             <!-- Success -->
             <trans-unit id="success.title">
@@ -216,6 +236,10 @@
             <trans-unit id="skip.user.goto.theme">
                 <source>skip.user.goto.theme</source>
                 <target>Skip "user", go to "theme"</target>
+            </trans-unit>
+            <trans-unit id="skip.user.goto.done">
+                <source>goto.done</source>
+                <target>Go to "finish"</target>
             </trans-unit>
             <trans-unit id="skip.database.goto.import">
                 <source>skip.database.goto.import</source>

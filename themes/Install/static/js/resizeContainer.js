@@ -9,6 +9,7 @@ var resizeContainer = function() {
     _this.$mainContainer = $('#main-container');
 
     _this.$window.on('resize', $.proxy(_this.init, _this));
+    _this.$window.trigger('resize');
 
 };
 
