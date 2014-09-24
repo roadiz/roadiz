@@ -1053,6 +1053,10 @@ class NodesController extends RozierApp
 
             case NodeTypeField::MARKDOWN_T:
                 return new \RZ\Renzo\CMS\Forms\MarkdownType();
+            case NodeTypeField::ENUM_T:
+                return new \RZ\Renzo\CMS\Forms\EnumerationType($field);
+            case NodeTypeField::MULTIPLE_T:
+                return new \RZ\Renzo\CMS\Forms\MultipleEnumerationType($field);
 
             default:
                 return NodeTypeField::$typeToForm[$field->getType()];
