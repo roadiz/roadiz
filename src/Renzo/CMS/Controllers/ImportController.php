@@ -136,32 +136,39 @@ class ImportController extends InstallApp
         $allNode = Kernel::getInstance()->em()
                          ->getRepository('RZ\Renzo\Core\Entities\Node')
                          ->findAll();
+        try {
+            if (empty($allNode)) {
+                $home = array(
+                    'title' => 'Home',
+                    'content' => 'sample content'
+                );
+                $about = array(
+                    'title' => 'About',
+                    'content' => 'sample about'
+                );
+                $contact = array(
+                    'title' => 'Contact',
+                    'content' => 'Contact RZ team for more awesome stuff'
+                );
 
-        if (empty($allNode)) {
-            $home = array(
-                'title' => 'Home',
-                'content' => 'sample content'
+                $homeNode = static::createNode($home);
+                $aboutNode = static::createNode($about);
+                $contactNode = static::createNode($contact);
+
+                $homeNode->setHome(true);
+                $aboutNode->setParent($homeNode);
+                $contactNode->setParent($homeNode);
+
+                Kernel::getInstance()->em()->flush();
+            }
+        } catch (\Exception $e) {
+            $data['error'] = $e->getMessage();
+            return new Response(
+                json_encode($data),
+                Response::HTTP_NOT_FOUND,
+                array('content-type' => 'application/javascript')
             );
-            $about = array(
-                'title' => 'About',
-                'content' => 'sample about'
-            );
-            $contact = array(
-                'title' => 'Contact',
-                'content' => 'Contact RZ team for more awesome stuff'
-            );
-
-            $homeNode = static::createNode($home);
-            $aboutNode = static::createNode($about);
-            $contactNode = static::createNode($contact);
-
-            $homeNode->setHome(true);
-            $aboutNode->setParent($homeNode);
-            $contactNode->setParent($homeNode);
-
-            Kernel::getInstance()->em()->flush();
         }
-
         $data['status'] = true;
         return new Response(
             json_encode($data),
