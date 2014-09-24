@@ -3,7 +3,7 @@
  * Copyright REZO ZERO 2014
  *
  *
- * @file EnumerationType.php
+ * @file MultipleEnumerationType.php
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * Group selector form field type.
  */
-class EnumerationType extends AbstractType
+class MultipleEnumerationType extends AbstractType
 {
     protected $field;
     /**
@@ -42,7 +42,8 @@ class EnumerationType extends AbstractType
         }
 
         $resolver->setDefaults(array(
-            'choices' => $choices
+            'choices' => $choices,
+            'multiple' => true
         ));
     }
     /**
