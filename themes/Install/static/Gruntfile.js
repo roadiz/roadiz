@@ -15,6 +15,7 @@ module.exports = function(grunt) {
 					"js/plugins.js",
 					"js/main.js",
 					"js/importFixtures.js",
+					"js/importNodeType.js",
 					"js/selectDatabaseField.js"
 				],
 				dest: 'js/<%= pkg.name %>.js',
@@ -44,7 +45,7 @@ module.exports = function(grunt) {
 			scripts: {
 				files: [
 					'js/*.js',
-					'!js/<%= pkg.name %>.js', 	
+					'!js/<%= pkg.name %>.js',
 					'!js/<%= pkg.name %>.min.js',
 					'css/**/*.less'
 				],
@@ -56,18 +57,18 @@ module.exports = function(grunt) {
 		},
 		jshint: {
 			all: [
-		    	'Gruntfile.js', 
-		    	'js/**/*.js', 
+		    	'Gruntfile.js',
+		    	'js/**/*.js',
 		    	'!js/*.min.js',
 		    	'!js/plugins.js',
 		    	'!js/vendor/**/*.js',
 				'!js/addons/**/*.js',
-				'!js/<%= pkg.name %>.js',				
+				'!js/<%= pkg.name %>.js',
 				'!js/<%= pkg.name %>.min.js'
 			]
 		},
-		imagemin: {   
-			dynamic: {  
+		imagemin: {
+			dynamic: {
 				options: {                       // Target options
 					optimizationLevel: 4,
 				},                       // Another target
@@ -96,7 +97,7 @@ module.exports = function(grunt) {
 					assets: [{
 			            src: [ 'js/<%= pkg.name %>.min.js' ],
 			            dest: 'js/<%= pkg.name %>.min.js'
-			        }], 
+			        }],
 					key: 'global',
 					dest: '',
 					type: 'js',
@@ -105,7 +106,7 @@ module.exports = function(grunt) {
 					assets: [{
 			            src: [ 'css/style.css' ],
 			            dest: 'css/style.css'
-			        }], 
+			        }],
 					key: 'global',
 					dest: '',
 					type: 'css',
@@ -115,7 +116,7 @@ module.exports = function(grunt) {
 		},
 		clean: ["public"]
 	});
-	
+
 	/*
 	 * Watch differently LESS and JS
 	 */
@@ -128,7 +129,7 @@ module.exports = function(grunt) {
 		}
 		else if( filepath.indexOf('.png') > -1  ||
 			filepath.indexOf('.jpg') > -1  ||
-			filepath.indexOf('.gif') > -1 ){ 
+			filepath.indexOf('.gif') > -1 ){
 			grunt.config('watch.scripts.tasks', ['imagemin']);
 		}
 	});

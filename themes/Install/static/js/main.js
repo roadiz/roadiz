@@ -6,10 +6,14 @@
 var Install = {
     importFixtures: null,
     selectDatabaseField: null,
-    resizeContainer: null
+    resizeContainer: null,
+    importNodeType: null
+
 };
 
 Install.onDocumentReady = function( event ) {
+
+    Install.resizeContainer = new resizeContainer();
 
     if(typeof Install.importRoutes != "undefined"){
         Install.importFixtures = new ImportFixtures(Install.importRoutes);
@@ -19,7 +23,9 @@ Install.onDocumentReady = function( event ) {
         Install.selectDatabaseField = new SelectDatabaseField();
     }
 
-    Install.resizeContainer = new resizeContainer();
+    if (typeof Install.importNodeTypeRoutes != "undefined"){
+        Install.importNodeType = new ImportNodeType(Install.importNodeTypeRoutes);
+    }
 
 };
 
