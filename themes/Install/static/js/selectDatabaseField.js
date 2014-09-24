@@ -52,6 +52,8 @@ SelectDatabaseField.prototype.changeField = function(driver) {
 };
 
 SelectDatabaseField.prototype.disableField = function (field) {
+    console.log('disable');
+    console.log(field.parent());
     field.parent().hide();
     field.attr("disabled", "disabled");
 };

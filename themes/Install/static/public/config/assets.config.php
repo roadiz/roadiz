@@ -6,7 +6,7 @@ return array(
                 '/style.c705c09e.css',
             ),
             'js' => array(
-                '/install-theme.850e4156.min.js',
+                '/install-theme.10775703.min.js',
             ),
         ),
     )

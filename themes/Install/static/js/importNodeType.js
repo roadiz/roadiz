@@ -53,7 +53,7 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
             $icon.addClass('uk-icon-warning');
             $row.addClass('uk-badge-danger');
 
-            $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>")
+            $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>");
         })
         .always(function(data) {
             console.log("complete");
