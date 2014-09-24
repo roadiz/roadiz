@@ -1,29 +1,55 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="uk-panel-title">{% trans %}import.json{% endtrans %}</h1>
-    <p>{% trans %}import.message{% endtrans %}</p>
 
-    <table class="uk-table">
-    	<tr>
-    		<th></th>
-    		<th>{% trans %}step.name{% endtrans %}</th>
-    		<th>{% trans %}status{% endtrans %}</th>
-    	</tr>
-    	{% for name in names %}
-    		<tr>
-                <td></td>
-    			<td>{{ name|trans }}</td>
-    			<td>
-    				<div class="uk-badge uk-badge-notification" id="{{ name }}"><i class="uk-icon-circle-o"></i></div>
-    			</td>
-    		</tr>
-    	{% endfor %}
-    </table>
-    <p>
-    	<a class="uk-button uk-button-success" href="{{ path('installDatabasePage')  }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.Database{% endtrans %}</a>
-    	<a id="next-step-button" class="uk-button uk-button-disabled" href="{{ path('installUserPage')  }}">{% trans %}goto.user{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
-    </p>
+    <article id="content-hello" class="content">
+
+        <div class="content-title-cont">
+            <h1 class="content-title">{% trans %}import.title{% endtrans %}</h1>   
+        </div>
+
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item last"></div>
+        </div>
+
+        <div class="content-text-cont">
+            
+            <div class="content-text">
+
+                {% trans %}import.message{% endtrans %}
+
+                <table id="import-table" class="install-table uk-table">
+                    <tr>
+                        <th></th>
+                        <th>{% trans %}import.step_name{% endtrans %}</th>
+                        <th class="status">{% trans %}status{% endtrans %}</th>
+                    </tr>
+                    {% for name in names %}
+                        <tr class="install-table-item">
+                            <td></td>
+                            <td>{{ name|trans }}</td>
+                            <td class="status">
+                                <div class="uk-badge uk-badge-notification" id="{{ name }}"><i class="uk-icon-circle-o"></i></div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+            </div>
+
+            <a id="next-step-button" class="content-button uk-button uk-button-disabled" href="{{ path('installUserPage')  }}">{% trans %}goto.user{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+            <a class="content-button uk-button uk-button-success" href="{{ path('installDatabasePage')  }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a>
+            
+        </div>
+        
+    </article>
+
 {% endblock %}
 
 {% block customScripts %}

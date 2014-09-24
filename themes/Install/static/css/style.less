@@ -1,30 +1,59 @@
+/*------------------------------------*\
+   LESS BASE
+\*------------------------------------*/
+
+
 /*
- * Default desktop style
+ * Entry point, import of all less files
  */
 
-// Vars
+
+/* -------- VARS -------- */
+
 @import "vars.less";
 
-// Base
+
+/* -------- BASE -------- */
+
 @import "base/elements.less";
 @import "base/normalize.less";
 @import "base/boilerplate.less";
 @import "base/easing.less";
 @import "base/uikit-reset.less";
 
-// Icons
+
+/* -------- ICONS -------- */
+
 @import "icons/icons.less";
 
-// Common
+
+/* -------- COMMON (styles for all pages) -------- */
+
 @import "common.less";
 
-// Buttons
-@import "buttons/buttons.less";
 
-// Forms
+/* -------- FORMS -------- */
+
 @import "forms/forms.less";
 
-// Pages
+
+/* -------- TABLES -------- */
+
+@import "tables/tables.less";
+
+
+/* -------- BUTTONS -------- */
+
+@import "buttons/buttons.less";
+
+
+/* -------- PAGES -------- */
+
 @import "pages/hello.less";
 @import "pages/requirements.less";
 @import "pages/database.less";
+@import "pages/database-done.less";
+@import "pages/import.less";
+@import "pages/user.less";
+@import "pages/user-summary.less";
+@import "pages/themes.less";

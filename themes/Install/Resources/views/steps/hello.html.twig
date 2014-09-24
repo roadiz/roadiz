@@ -2,26 +2,28 @@
 
 {% block content %}
 
-    <article id="content_hello" class="content">
+    <article id="content-hello" class="content">
 
-        <div class="content_title_cont">
-            <h1 class="content_title">{% trans %}welcome.title{% endtrans %}</h1>   
+        <div class="content-title-cont">
+            <h1 class="content-title">{% trans %}welcome.title{% endtrans %}</h1>   
         </div>
 
-        <div class="content_progress">
-            <div class="content_progress_item first active"></div>
-            <div class="content_progress_item"></div>
-            <div class="content_progress_item"></div>
-            <div class="content_progress_item"></div>
-            <div class="content_progress_item last"></div>
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item last"></div>
         </div>
 
-        <div class="content_text_cont">
+        <div class="content-text-cont">
             
-            <div class="content_text">
+            <div class="content-text">
                 {% trans %}welcome.message{% endtrans %} 
             </div>
-            <a class="content_button uk-button" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+            <a class="content-button uk-button" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
             
         </div>
         

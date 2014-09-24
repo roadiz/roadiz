@@ -1,3 +1,15 @@
+/*------------------------------------*\
+   BUTTONS
+\*------------------------------------*/
+
+
+/*
+ * Override ui kit buttons styles
+ */
+
+
+/* -------- STYLES -------- */
+
 .uk-button, .uk-button-primary {
     height: 36px;
     background: @grey-form-submit;
@@ -10,10 +22,13 @@
     text-shadow: 0 1px 0 rgba(255,255,255,.5);
     .transition(~'0.35s ease border-color, 0.5s ease background');
 
-
     &:hover, &:active, &:focus {
         background-color: @grey-form-submit-hover;
         border-color: #888888;
         color: #333;
+    }
+
+    [class*=uk-icon-]{
+        margin:0 4px;
     }
 }
