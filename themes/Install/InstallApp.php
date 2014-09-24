@@ -332,6 +332,16 @@ class InstallApp extends AppController
         );
     }
 
+    public function updateSchemaAction(Request $request)
+    {
+        \RZ\Renzo\Console\SchemaCommand::updateSchema();
+        return new Response(
+            json_encode(array('status' => true)),
+            Response::HTTP_OK,
+            array('content-type' => 'application/javascript')
+        );
+    }
+
     /**
      * User information screen
      * @param Symfony\Component\HttpFoundation\Request $request

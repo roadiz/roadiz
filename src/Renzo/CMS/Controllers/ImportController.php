@@ -34,6 +34,8 @@ use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Validator\Validation;
 
+use GeneratedNodeSources\NSPage;
+
 use Themes\Install\InstallApp;
 
 /**
@@ -97,6 +99,77 @@ class ImportController extends InstallApp
         return self::importContent($pathFile, $classImporter, $themeId);
     }
 
+    public static function createNode($array)
+    {
+        $nodeType = Kernel::getInstance()->em()
+                              ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+                              ->findOneByName('Page');
+        $node = new Node($nodeType);
+        $node->setNodeName($array['title']);
+        $node->setPublished(true);
+
+        Kernel::getInstance()->em()->persist($node);
+
+        $tran = Kernel::getInstance()->em()
+                          ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                          ->findDefault();
+        $src = new NSPage($node, $tran);
+        $src->setTitle($array['title']);
+        $src->setContent($array['content']);
+
+        Kernel::getInstance()->em()->persist($src);
+
+        return $node;
+    }
+
+    /**
+     * Import Nodes file.
+     *
+     *
+     * @return string
+     */
+    public static function importNodesAction(Request $request)
+    {
+        $data = array();
+        $data['status'] = false;
+
+        $allNode = Kernel::getInstance()->em()
+                         ->getRepository('RZ\Renzo\Core\Entities\Node')
+                         ->findAll();
+
+        if (empty($allNode)) {
+            $home = array(
+                'title' => 'Home',
+                'content' => 'sample content'
+            );
+            $about = array(
+                'title' => 'About',
+                'content' => 'sample about'
+            );
+            $contact = array(
+                'title' => 'Contact',
+                'content' => 'Contact RZ team for more awesome stuff'
+            );
+
+            $homeNode = static::createNode($home);
+            $aboutNode = static::createNode($about);
+            $contactNode = static::createNode($contact);
+
+            $homeNode->setHome(true);
+            $aboutNode->setParent($homeNode);
+            $contactNode->setParent($homeNode);
+
+            Kernel::getInstance()->em()->flush();
+        }
+
+        $data['status'] = true;
+        return new Response(
+            json_encode($data),
+            Response::HTTP_OK,
+            array('content-type' => 'application/javascript')
+        );
+    }
+
     /**
      * Import theme's Settings file.
      *
@@ -137,6 +210,9 @@ class ImportController extends InstallApp
             );
         }
         $data['status'] = true;
+        if ($classImporter == "RZ\Renzo\CMS\Importers\NodeTypesImporter") {
+            $data['request'] = Kernel::getInstance()->getUrlGenerator()->generate('installUpdateSchema');
+        }
         return new Response(
             json_encode($data),
             Response::HTTP_OK,

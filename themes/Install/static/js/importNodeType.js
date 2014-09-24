@@ -29,6 +29,17 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
             console.log("success");
             console.log(data);
 
+            if (typeof data.request != "undefined") {
+                $.ajax({
+                    url:data.request,
+                    type: 'GET',
+                    dataType: 'json'
+                })
+                .always(function(data) {
+                    console.log("updateSchema");
+                });
+            }
+
             $icon.removeClass('uk-icon-spinner');
             $icon.addClass('uk-icon-check');
             $row.addClass('uk-badge-success');

@@ -23,6 +23,9 @@ installImportGroups:
 installImportRoles:
     path:     /install/import/roles
     defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importRolesAction }
+installImportNodes:
+    path:     /install/import/nodes
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importNodesAction }
 installImportNodeTypesPage:
     path:     /install/import/nodetypes
     defaults: { _controller: Themes\Install\InstallApp::nodeTypesAction }
@@ -46,3 +49,6 @@ installDonePage:
 installFailedPage:
     path:     /install/failed
     defaults: { _controller: Themes\Install\InstallApp::failedAction }
+installUpdateSchema:
+    path:     /install/update
+    defaults: { _controller: Themes\Install\InstallApp::updateSchemaAction }
