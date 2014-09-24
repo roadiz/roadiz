@@ -25,6 +25,11 @@
                 <target>Supprimer</target>
             </trans-unit>
 
+            <trans-unit id="status">
+                <source>status</source>
+                <target>Status</target>
+            </trans-unit>
+
 
             <!-- Documents -->
             <trans-unit id="document.updated">
@@ -48,7 +53,7 @@
             </trans-unit>
             <trans-unit id="welcome.message">
                 <source>welcome.message</source>
-                <target><![CDATA[<p>Welcome to Renzo's CMS installation</p> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.</p>]]> </target>
+                <target><![CDATA[<p>Welcome to Renzo's CMS installation</p> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.</p>]]></target>
             </trans-unit>
 
 
@@ -59,30 +64,26 @@
             </trans-unit>
             <trans-unit id="requirements.message">
                 <source>requirements.message</source>
-                <target><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.</p>]]> </target>
+                <target><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.</p>]]></target>
             </trans-unit>
             <trans-unit id="requirements.requirement">
                 <source>requirements.requirement</source>
-                <target>Requirement</target>
+                <target>Required</target>
             </trans-unit>
             <trans-unit id="requirements.actual_value">
                 <source>requirements.actual_value</source>
                 <target>Actual value</target>
             </trans-unit>
-            <trans-unit id="requirements.status">
-                <source>requirements.status</source>
-                <target>Status</target>
-            </trans-unit>
 
 
-             <!-- Database -->
+            <!-- Database -->
             <trans-unit id="database.title">
                 <source>database.title</source>
                 <target>Database</target>
             </trans-unit>
             <trans-unit id="database.message">
                 <source>database.message</source>
-                <target><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.</p>]]> </target>
+                <target><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.</p>]]></target>
             </trans-unit>
             <trans-unit id="database.cannot_connect">
                 <source>database.cannot_connect</source>
@@ -94,18 +95,127 @@
             </trans-unit>
 
 
+            <!-- Database done -->
+            <trans-unit id="database_done.title">
+                <source>database_done.title</source>
+                <target>Database installed</target>
+            </trans-unit>
+            <trans-unit id="database_done.message">
+                <source>database_done.message</source>
+                <target><![CDATA[<p>Your database has been successfully installed</p>]]></target>
+            </trans-unit>
+
+
+             <!-- Import -->
+            <trans-unit id="import.title">
+                <source>import.title</source>
+                <target>Import default data</target>
+            </trans-unit>
+            <trans-unit id="import.message">
+                <source>import.message</source>
+                <target><![CDATA[<p>Importing default data for settings, roles and groups</p>]]></target>
+            </trans-unit>
+            <trans-unit id="import.step_name">
+                <source>import.step_name</source>
+                <target>Step</target>
+            </trans-unit>
+
+            <!-- User -->
+            <trans-unit id="user.title">
+                <source>user.title</source>
+                <target>Create user</target>
+            </trans-unit>
+            <trans-unit id="user.message">
+                <source>user.message</source>
+                <target><![CDATA[<p>Create an user for your CMS</p>]]></target>
+            </trans-unit>
+            <trans-unit id="user.create">
+                <source>user.create</source>
+                <target>Create user</target>
+            </trans-unit>
+            <trans-unit id="user.name">
+                <source>user.name</source>
+                <target>Username</target>
+            </trans-unit>
+            <trans-unit id="user.email">
+                <source>user.email</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="user.create_another">
+                <source>user.create_another</source>
+                <target>Create another user</target>
+            </trans-unit>
+
+
+            <!-- User summary -->
+            <trans-unit id="user_summary.title">
+                <source>user_summary.title</source>
+                <target>User created</target>
+            </trans-unit>
+
+
+            <!-- Themes -->
+            <trans-unit id="themes.title">
+                <source>themes.title</source>
+                <target>Information</target>
+            </trans-unit>
+            <trans-unit id="themes.message">
+                <source>themes.message</source>
+                <target><![CDATA[<p>Enter basic information about your website</p>]]></target>
+            </trans-unit>
+            <trans-unit id="themes.save_informations">
+                <source>themes.save_informations</source>
+                <target>Save information</target>
+            </trans-unit>
+
+            
+            <!-- Success -->
+            <trans-unit id="success.title">
+                <source>success.title</source>
+                <target>Success</target>
+            </trans-unit>
+            <trans-unit id="success.message">
+                <source>success.message</source>
+                <target><![CDATA[<p>Renzo has been successfully installed</p>]]></target>
+            </trans-unit>
+            <trans-unit id="success.quit_install">
+                <source>success.quit_install</source>
+                <target>Exit installation</target>
+            </trans-unit>            
+
+
             <!-- Goto -->
             <trans-unit id="goto.requirements">
                 <source>goto.requirements</source>
                 <target>Go to "requirements"</target>
             </trans-unit>
+            <trans-unit id="goto.welcome">
+                <source>goto.welcome</source>
+                <target>Go to "welcome"</target>
+            </trans-unit>
             <trans-unit id="goto.database">
                 <source>goto.database</source>
                 <target>Go to "database"</target>
             </trans-unit>
-            <trans-unit id="goto.welcome">
-                <source>goto.welcome</source>
-                <target>Go to "welcome"</target>
+            <trans-unit id="goto.import">
+                <source>goto.import</source>
+                <target>Go to "import"</target>
+            </trans-unit>
+            <trans-unit id="goto.user">
+                <source>goto.user</source>
+                <target>Go to "user"</target>
+            </trans-unit>
+            <trans-unit id="goto.theme">
+                <source>goto.theme</source>
+                <target>Go to "theme"</target>
+            </trans-unit>
+            <trans-unit id="goto.informations">
+                <source>goto.informations</source>
+                <target>Go to "information"</target>
+            </trans-unit>
+            <trans-unit id="skip.user.goto.theme">
+                <source>skip.user.goto.theme</source>
+                <target>Skip "user", go to "theme"</target>
             </trans-unit>
             <trans-unit id="skip.database.goto.import">
                 <source>skip.database.goto.import</source>

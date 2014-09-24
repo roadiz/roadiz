@@ -2,36 +2,38 @@
 
 {% block content %}
 
-    <article id="content_requirements" class="content">
+    <article id="content-requirements" class="content">
 
-        <div class="content_title_cont">
-            <h1 class="content_title">{% trans %}requirements.title{% endtrans %}</h1>   
+        <div class="content-title-cont">
+            <h1 class="content-title">{% trans %}requirements.title{% endtrans %}</h1>   
         </div>
 
-        <div class="content_progress">
-            <div class="content_progress_item first active"></div>
-            <div class="content_progress_item active"></div>
-            <div class="content_progress_item"></div>
-            <div class="content_progress_item"></div>
-            <div class="content_progress_item last"></div>
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item last"></div>
         </div>
 
-        <div class="content_text_cont">
+        <div class="content-text-cont">
             
-            <div class="content_text">
+            <div class="content-text">
 
                 {% trans %}requirements.message{% endtrans %}
 
-                <table id="requirements_table" class="uk-table">
+                <table id="requirements-table" class="install-table uk-table">
                     <tr>
                         <th></th>
                         <th>{% trans %}requirements.requirement{% endtrans %}</th>
                         <th>{% trans %}requirements.actual_value{% endtrans %}</th>
-                        <th>{% trans %}requirements.status{% endtrans %}</th>
+                        <th>{% trans %}status{% endtrans %}</th>
                     </tr>
                     {% for name, require in requirements %}
-                        <tr class="requirement_item">
-                            <td>{{ name|trans }}</td>
+                        <tr class="install-table-item requirement-item">
+                            <td class="requirement-name">{{ name|trans }}</td>
                             <td>
                                 {% if require.value_minimum %}<div class="uk-badge">{{ require.value_minimum }}</div>{% endif %}
                                 {% if require.version_minimum %}<div class="uk-badge">{{ require.version_minimum }}</div>{% endif %}
@@ -40,7 +42,7 @@
                                 {% if require.found %}<div class="uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.found }}</div>{% endif %}
                                 {% if require.folder %}<div class="uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.folder }}</div>{% endif %}
                             </td>
-                            <td class="requirement_status">
+                            <td class="status">
                             {% if require.status %}
                                 <div class="uk-badge uk-badge-notification uk-badge-success"><i class="uk-icon-check"></i></div>
                             {% else %}
@@ -57,13 +59,12 @@
                     {% endfor %}
                 </table>
 
-            </div> <!-- .content_text -->
+            </div>
             
-
             {% if totalSuccess %}
-            <a class="content_button uk-button uk-button-success" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+            <a class="content-button uk-button uk-button-success" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
             {% endif %}
-            <a class="content_button uk-button uk-button-success" href="{{ path('installHomePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.welcome{% endtrans %}</a>
+            <a class="content-button uk-button uk-button-success" href="{{ path('installHomePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.welcome{% endtrans %}</a>
 
         </div>
         

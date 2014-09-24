@@ -1,3 +1,32 @@
+/*------------------------------------*\
+   FORMS
+\*------------------------------------*/
+
+
+/*
+ * Override ui kit forms styles
+ */
+
+
+/* -------- VARS -------- */
+
+@grey-form-border               : #CBCBCB;
+@grey-form-before               : #BBBBBB;
+@grey-form-label                : #555555;
+@grey-form-text                 : #666666;
+@grey-form-submit               : #E5E5E5;
+@grey-form-submit-hover         : #CECECE;
+@grey-form-submit-border        : #ADADAD;
+@grey-form-submit-border-hover  : #888888;
+@grey-form-submit-color         : #333333;
+@grey-form-submit-icon          : #777777;
+@grey-form-submit-icon-hover    : #555555;
+@grey-form-submit-textsimple    : #999999;
+@grey-border                    : #D8D8D8;
+
+
+/* -------- STYLES -------- */
+
 .uk-form {
     input[type="text"],
     input[type="email"],
@@ -27,10 +56,8 @@
         font-size: 12px;
         line-height: 14px;
         font-weight: bold;
-        //width: 100%; // You cannot place this for a wide selector! it will break ui-kit
         color: @grey-form-text;
         padding: 10px 15px;
-        //margin-bottom: 20px;
         border: 1px solid @grey-form-border;
         .border-radius(0px);
         .box-sizing();
@@ -41,6 +68,25 @@
             border-color: @grey-form-submit-border-hover;
             color: #333;
         }
+
+        &:focus {
+            background-color: @grey-verylight;
+            border-color: @grey-form-submit-border-hover;
+            color: #333;
+        }
+    }
+
+    select{
+        height:36px;
+        color:@grey-form-text;
+        border: 1px solid @grey-form-border;
+
+         &:hover {
+            background-color: white;
+            border-color: @grey-form-submit-border-hover;
+            color: #333;
+        }
+        
         &:focus {
             background-color: @grey-verylight;
             border-color: @grey-form-submit-border-hover;
@@ -60,21 +106,23 @@
         }
     }
 
-    input.uk-form-width-mini {
-        width: 40px;
-    }
-
     // Default Button
 
     input[type="text"],
     input[type="password"],
+    input[type="search"],
+    input[type="email"],
     input[type="number"]{
         height: 36px;
     }
     
+    input[type=checkbox]:checked:before{
+        color:@grey-form-label;
+    }
+    
 
     .data-uk-margin {
-        margin-bottom: 12px;
+        margin-bottom: 6px;
 
         & > div {
             margin-bottom: 20px;
@@ -93,5 +141,25 @@
     .uk-margin-small-top {
         margin-top: 10px !important;
     }
+}
 
+
+.install-form{
+    margin-top:20px;
+} 
+
+
+.form-col{
+    display: inline-block;
+    width:44%;
+    margin:0 15px 15px;
+
+    input, select{
+        width:100%;
+    }
+}
+
+
+.form-save-button{
+    margin-left: 15px;
 }
