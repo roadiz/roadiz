@@ -659,7 +659,8 @@ class InstallApp extends AppController
     }
 
     /**
-     * Build forms
+     * Build form for theme and site informations.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
      *
      * @return Symfony\Component\Form\Forms
@@ -670,13 +671,18 @@ class InstallApp extends AppController
         $metaDescription = \RZ\Renzo\Core\Bags\SettingsBag::get('meta_description');
         $emailSender = \RZ\Renzo\Core\Bags\SettingsBag::get('email_sender');
         $emailSenderName = \RZ\Renzo\Core\Bags\SettingsBag::get('email_sender_name');
+        $timeZone = $this->getKernel()->getConfig()['timezone'];
+
+        $timeZoneList = include(dirname(__FILE__).'/Resources/import/timezones.php');
+
 
         $defaults = array(
             'site_name' => $siteName != '' ? $siteName : "My website",
             'meta_description' => $metaDescription != '' ? $metaDescription : "My website is beautiful!",
             'email_sender' => $emailSender != '' ? $emailSender : "",
             'email_sender_name' => $emailSenderName != '' ? $emailSenderName : "",
-            'install_frontend' => true
+            'install_frontend' => true,
+            'timezone' => $timeZone != '' ? $timeZone : "Europe/Paris"
         );
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
@@ -702,8 +708,11 @@ class InstallApp extends AppController
                 'required' => false
             ))
             ->add('install_frontend', 'checkbox', array(
-                'label' => 'Install the default front-end theme?',
                 'required' => false
+            ))
+            ->add('timezone', 'choice', array(
+                'choices' => $timeZoneList,
+                'required' => true
             ));
 
         return $builder->getForm();

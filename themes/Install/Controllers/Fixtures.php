@@ -181,27 +181,36 @@ class Fixtures
         $set1 = $this->getSetting('site_name');
         $set1->setValue($data['site_name']);
         $set1->setType(NodeTypeField::STRING_T);
-        Kernel::getInstance()->em()->flush();
 
         $set2 = $this->getSetting('email_sender');
         $set2->setValue($data['email_sender']);
         $set2->setType(NodeTypeField::EMAIL_T);
-        Kernel::getInstance()->em()->flush();
 
         $set2 = $this->getSetting('email_sender_name');
         $set2->setValue($data['email_sender_name']);
         $set2->setType(NodeTypeField::STRING_T);
-        Kernel::getInstance()->em()->flush();
 
         $set2 = $this->getSetting('meta_description');
         $set2->setValue($data['meta_description']);
         $set2->setType(NodeTypeField::TEXT_T);
-        Kernel::getInstance()->em()->flush();
 
         $set2 = $this->getSetting('display_debug_panel');
         $set2->setValue(false);
         $set2->setType(NodeTypeField::BOOLEAN_T);
+
         Kernel::getInstance()->em()->flush();
+
+        /*
+         * Update timezone
+         */
+        if (!empty($data['timezone'])) {
+            $conf = new Configuration();
+            $config = $conf->getConfiguration();
+            $config['timezone'] = $data['timezone'];
+
+            $conf->setConfiguration($config);
+            $conf->writeConfiguration();
+        }
 
         /*
          * Install default theme

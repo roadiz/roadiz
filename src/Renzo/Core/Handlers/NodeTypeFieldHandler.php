@@ -77,14 +77,32 @@ class NodeTypeFieldHandler
     /**
      * @Column(type="'.NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].'", nullable=true )
      */
-    '.$var.'
-    /**
-     * @return mixed
-     */
-    public function '.$this->nodeTypeField->getGetterName().'()
-    {
-        return $this->'.$this->nodeTypeField->getName().';
+    '.$var.PHP_EOL.$this->generateSourceGetter().PHP_EOL.$this->generateSourceSetter().PHP_EOL;
+
+        }
+
+        return '';
     }
+
+    /**
+     * Generate PHP code for current node-type field setter.
+     *
+     * @return string
+     */
+    protected function generateSourceSetter()
+    {
+        if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
+
+            $assignation = '$'.$this->nodeTypeField->getName();
+
+            if ($this->nodeTypeField->getType() === NodeTypeField::BOOLEAN_T) {
+                $assignation = '(boolean) $'.$this->nodeTypeField->getName();
+            }
+            if ($this->nodeTypeField->getType() === NodeTypeField::INTEGER_T) {
+                $assignation = '(int) $'.$this->nodeTypeField->getName();
+            }
+
+            return '
     /**
      * @param mixed $'.$this->nodeTypeField->getName().'
      *
@@ -92,9 +110,34 @@ class NodeTypeFieldHandler
      */
     public function '.$this->nodeTypeField->getSetterName().'($'.$this->nodeTypeField->getName().')
     {
-        $this->'.$this->nodeTypeField->getName().' = $'.$this->nodeTypeField->getName().';
+        $this->'.$this->nodeTypeField->getName().' = '.$assignation.';
 
         return $this;
+    }'.PHP_EOL;
+
+        }
+
+        return '';
+    }
+
+    /**
+     * Generate PHP code for current node-type field setter.
+     *
+     * @return string
+     */
+    protected function generateSourceGetter()
+    {
+        if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
+
+            $assignation = '$this->'.$this->nodeTypeField->getName();
+
+            return '
+    /**
+     * @return mixed
+     */
+    public function '.$this->nodeTypeField->getGetterName().'()
+    {
+        return '.$assignation.';
     }'.PHP_EOL;
 
         }
