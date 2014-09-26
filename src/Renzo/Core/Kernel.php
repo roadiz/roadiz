@@ -197,23 +197,23 @@ class Kernel
 
             $this->setEntityManager(EntityManager::create($dbParams, $configDB));
 
-            if ($this->em()->getConfiguration()->getResultCacheImpl() !== null) {
-                $this->em()->getConfiguration()
+            if ($this->em->getConfiguration()->getResultCacheImpl() !== null) {
+                $this->em->getConfiguration()
                         ->getResultCacheImpl()
                         ->setNamespace($config["appNamespace"]);
             }
-            if ($this->em()->getConfiguration()->getHydrationCacheImpl() !== null) {
-                $this->em()->getConfiguration()
+            if ($this->em->getConfiguration()->getHydrationCacheImpl() !== null) {
+                $this->em->getConfiguration()
                         ->getHydrationCacheImpl()
                         ->setNamespace($config["appNamespace"]);
             }
-            if ($this->em()->getConfiguration()->getQueryCacheImpl() !== null) {
-                $this->em()->getConfiguration()
+            if ($this->em->getConfiguration()->getQueryCacheImpl() !== null) {
+                $this->em->getConfiguration()
                         ->getQueryCacheImpl()
                         ->setNamespace($config["appNamespace"]);
             }
-            if ($this->em()->getConfiguration()->getMetadataCacheImpl()) {
-                $this->em()->getConfiguration()
+            if ($this->em->getConfiguration()->getMetadataCacheImpl()) {
+                $this->em->getConfiguration()
                         ->getMetadataCacheImpl()
                         ->setNamespace($config["appNamespace"]);
             }
@@ -444,13 +444,13 @@ class Kernel
         /*
          * set default locale
          */
-        $translation = Kernel::getInstance()->em()
-            ->getRepository('RZ\Renzo\Core\Entities\Translation')
-            ->findDefault();
+        $translation = $this->em
+                            ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                            ->findDefault();
 
         if ($translation !== null) {
             $shortLocale = $translation->getShortLocale();
-            $this->getRequest()->setLocale($shortLocale);
+            $this->request->setLocale($shortLocale);
             \Locale::setDefault($shortLocale);
         }
     }
@@ -595,7 +595,7 @@ class Kernel
      */
     private function getFrontendThemes()
     {
-        $themes = $this->em()
+        $themes = $this->em
                       ->getRepository('RZ\Renzo\Core\Entities\Theme')
                       ->findBy(array(
                           'available'=>    true,
@@ -627,9 +627,9 @@ class Kernel
      */
     private function getBackendClass()
     {
-        $theme = $this->em()
-            ->getRepository('RZ\Renzo\Core\Entities\Theme')
-            ->findOneBy(array('available'=>true, 'backendTheme'=>true));
+        $theme = $this->em
+                      ->getRepository('RZ\Renzo\Core\Entities\Theme')
+                      ->findOneBy(array('available'=>true, 'backendTheme'=>true));
 
         if ($theme !== null) {
             return $theme->getClassName();
@@ -721,12 +721,12 @@ class Kernel
     private function initializeSession()
     {
         // créer un objet session depuis le composant HttpFoundation
-        $this->getRequest()->setSession(new Session());
+        $this->request->setSession(new Session());
 
         // générer le secret CSRF depuis quelque part
         $csrfSecret = $this->getConfig()["security"]['secret'];
         $this->csrfProvider = new SessionCsrfProvider(
-            $this->getRequest()->getSession(),
+            $this->request->getSession(),
             $csrfSecret
         );
     }

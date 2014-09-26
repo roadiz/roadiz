@@ -99,7 +99,13 @@ class NodesSourcesHandler
     public function getUrl()
     {
         if ($this->nodeSource->getNode()->isHome()) {
-            return Kernel::getInstance()->getRequest()->getBaseUrl();
+
+            if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
+                return Kernel::getInstance()->getRequest()->getBaseUrl();
+            } else {
+                return Kernel::getInstance()->getRequest()->getBaseUrl() .
+                        '/' . $this->nodeSource->getTranslation()->getShortLocale();
+            }
         }
 
         $urlTokens = array();
@@ -117,9 +123,11 @@ class NodesSourcesHandler
         }
 
         /*
-         * If using node-name, we must use shortLocale
+         * If using node-name, we must use shortLocale when current
+         * translation is not the default one.
          */
-        if ($urlTokens[0] == $this->nodeSource->getNode()->getNodeName()) {
+        if ($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
+            !$this->nodeSource->getTranslation()->isDefaultTranslation()) {
             $urlTokens[] = $this->nodeSource->getTranslation()->getShortLocale();
         }
 

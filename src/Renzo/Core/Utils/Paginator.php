@@ -20,21 +20,21 @@ class Paginator
     protected $entityName;
     protected $criteria;
     protected $searchPattern = null;
-    protected $_em;
+    protected $em;
 
     /**
-     * @param Doctrine\ORM\EntityManager $_em          Entity manager
+     * @param Doctrine\ORM\EntityManager $em          Entity manager
      * @param string                     $entityName   Full qualified entity classname
      * @param integer                    $itemPerPages Item par pages
      * @param array                      $criteria     Force selection criteria
      */
     public function __construct(
-        EntityManager $_em,
+        EntityManager $em,
         $entityName,
         $itemPerPages = 10,
         array $criteria = array()
     ) {
-        $this->_em = $_em;
+        $this->em = $em;
         $this->entityName = $entityName;
         $this->setItemsPerPage($itemPerPages);
         $this->criteria = $criteria;
@@ -77,10 +77,10 @@ class Paginator
     public function getPageCount()
     {
         if ($this->searchPattern !== null) {
-            $total = $this->_em->getRepository($this->entityName)
+            $total = $this->em->getRepository($this->entityName)
                             ->countSearchBy($this->searchPattern, $this->criteria);
         } else {
-            $total = $this->_em->getRepository($this->entityName)
+            $total = $this->em->getRepository($this->entityName)
                             ->countBy($this->criteria);
         }
 
@@ -98,7 +98,7 @@ class Paginator
     public function findByAtPage(array $order = array(), $page = 1)
     {
         if ($this->searchPattern !== null) {
-            return $this->_em->getRepository($this->entityName)
+            return $this->em->getRepository($this->entityName)
                         ->searchBy(
                             $this->searchPattern,
                             $this->criteria,
@@ -107,7 +107,7 @@ class Paginator
                             $this->getItemsPerPage() * ($page - 1)
                         );
         } else {
-            return $this->_em->getRepository($this->entityName)
+            return $this->em->getRepository($this->entityName)
                         ->findBy(
                             $this->criteria,
                             $order,

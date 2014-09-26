@@ -30,8 +30,7 @@ class UserProvider implements UserProviderInterface
      * @param string $username The username
      *
      * @return RZ\Renzo\Core\Entities\User
-     * @see UsernameNotFoundException
-     * @throws UsernameNotFoundException if the user is not found
+     * @throws Symfony\Component\Security\Core\User\UsernameNotFoundException if the user is not found
      */
     public function loadUserByUsername($username)
     {
@@ -57,7 +56,7 @@ class UserProvider implements UserProviderInterface
      * @param RZ\Renzo\Core\Entities\User $user
      *
      * @return RZ\Renzo\Core\Entities\User
-     * @throws UnsupportedUserException if the account is not supported
+     * @throws Symfony\Component\Security\Core\Exception\UnsupportedUserException if the account is not supported
      */
     public function refreshUser(UserInterface $user)
     {

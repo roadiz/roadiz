@@ -63,15 +63,17 @@ class GroupHandler
     {
         if (null !== $newGroup) {
             if ("" != $newGroup->getName()) {
-                $this->getGroup()->setName($newGroup->getName());
+                $this->group>setName($newGroup->getName());
             }
 
-            $existingRolesNames = $this->getGroup()->getRoles();
+            $existingRolesNames = $this->group->getRoles();
 
             foreach ($newGroup->getRolesEntities() as $newRole) {
                 if (false == in_array($newRole->getName(), $existingRolesNames)) {
-                    $role = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\Role')->findOneByName($newRole->getName());
-                    $this->getGroup()->addRole($role);
+                    $role = Kernel::getInstance()->em()
+                                                 ->getRepository('RZ\Renzo\Core\Entities\Role')
+                                                 ->findOneByName($newRole->getName());
+                    $this->group->addRole($role);
                 }
             }
 

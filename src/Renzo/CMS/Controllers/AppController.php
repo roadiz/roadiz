@@ -84,22 +84,22 @@ class AppController implements ViewableInterface
         return $this->kernel;
     }
     /**
-     * Alias for `$this->getKernel()->getSecurityContext()`.
+     * Alias for `$this->kernel->getSecurityContext()`.
      *
      * @return Symfony\Component\Security\Core\SecurityContext
      */
     public function getSecurityContext()
     {
-        return $this->getKernel()->getSecurityContext();
+        return $this->kernel->getSecurityContext();
     }
     /**
-     * Alias for `$this->getKernel()->getEntityManager()`.
+     * Alias for `$this->kernel->getEntityManager()`.
      *
      * @return Doctrine\ORM\EntityManager
      */
     public function em()
     {
-        return $this->getKernel()->getEntityManager();
+        return $this->kernel->getEntityManager();
     }
 
     /**
@@ -292,8 +292,8 @@ class AppController implements ViewableInterface
      */
     public function initializeTranslator()
     {
-        //$this->getKernel()->getStopwatch()->start('initTranslations');
-        $lang = Kernel::getInstance()->getRequest()->getLocale();
+        //$this->kernel->getStopwatch()->start('initTranslations');
+        $lang = $this->kernel->getRequest()->getLocale();
         $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
 
         /*
@@ -315,7 +315,7 @@ class AppController implements ViewableInterface
         // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
         $this->twig->addExtension(new TranslationExtension($this->translator));
         $this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
-        //$this->getKernel()->getStopwatch()->stop('initTranslations');
+        //$this->kernel->getStopwatch()->stop('initTranslations');
 
         return $this;
     }
@@ -325,7 +325,7 @@ class AppController implements ViewableInterface
      */
     public function handleTwigCache()
     {
-        if (Kernel::getInstance()->isDebug()) {
+        if ($this->kernel->isDebug()) {
             try {
                 $fs = new Filesystem();
                 $fs->remove(array($this->getCacheDirectory()));
@@ -361,7 +361,7 @@ class AppController implements ViewableInterface
      */
     public function getStaticResourcesUrl()
     {
-        return Kernel::getInstance()->getRequest()->getBaseUrl().
+        return $this->kernel->getRequest()->getBaseUrl().
             '/themes/'.static::$themeDir.'/static/';
     }
 
@@ -405,13 +405,13 @@ class AppController implements ViewableInterface
         $this->twig->addExtension(
             new FormExtension(new TwigRenderer(
                 $formEngine,
-                Kernel::getInstance()->getCsrfProvider()
+                $this->kernel->getCsrfProvider()
             ))
         );
 
         //RoutingExtension
         $this->twig->addExtension(
-            new RoutingExtension(Kernel::getInstance()->getUrlGenerator())
+            new RoutingExtension($this->kernel->getUrlGenerator())
         );
 
         /*
@@ -500,34 +500,34 @@ class AppController implements ViewableInterface
     public function prepareBaseAssignation()
     {
         $this->assignation = array(
-            'request' => $this->getKernel()->getRequest(),
+            'request' => $this->kernel->getRequest(),
             'head' => array(
-                'ajax' => $this->getKernel()->getRequest()->isXmlHttpRequest(),
+                'ajax' => $this->kernel->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsBuild' => Kernel::$cmsBuild,
-                'devMode' => (boolean) $this->getKernel()->getConfig()['devMode'],
-                'baseUrl' => $this->getKernel()->getRequest()->getBaseUrl(),
-                'filesUrl' => $this->getKernel()
+                'devMode' => (boolean) $this->kernel->getConfig()['devMode'],
+                'baseUrl' => $this->kernel->getRequest()->getBaseUrl(),
+                'filesUrl' => $this->kernel
                                    ->getRequest()
                                    ->getBaseUrl().'/'.Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => $this->getKernel()
+                'ajaxToken' => $this->kernel
                                     ->getCsrfProvider()
                                     ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->getKernel()
+                'fontToken' => $this->kernel
                                     ->getCsrfProvider()
                                     ->generateCsrfToken(static::FONT_TOKEN_INTENTION)
             ),
             'session' => array(
-                'messages' => $this->getKernel()->getRequest()->getSession()->getFlashBag()->all(),
-                'id' => $this->getKernel()->getRequest()->getSession()->getId()
+                'messages' => $this->kernel->getRequest()->getSession()->getFlashBag()->all(),
+                'id' => $this->kernel->getRequest()->getSession()->getId()
             )
         );
 
-        if ($this->getKernel()->getSecurityContext() !== null &&
-            $this->getKernel()->getSecurityContext()->getToken() !== null ) {
+        if ($this->kernel->getSecurityContext() !== null &&
+            $this->kernel->getSecurityContext()->getToken() !== null ) {
 
-            $this->assignation['session']['user'] = $this->getKernel()
+            $this->assignation['session']['user'] = $this->kernel
                                                          ->getSecurityContext()
                                                          ->getToken()
                                                          ->getUser();

@@ -1,5 +1,13 @@
 {% if navigation|length %}
 <nav class="uk-navbar uk-navbar-attached" id="main-navigation" data-active-node="{{ node.getId }}">
+    {% if home %}
+        {% if home.getNodeSources.first.getTitle %}
+            {% set hometitle = home.getNodeSources.first.getTitle %}
+        {% else %}
+            {% set hometitle = home.getNodeName %}
+        {% endif %}
+        <a href="{{ home.getHandler.getUrl }}" class="uk-navbar-brand">{{ hometitle }}</a>
+    {% endif %}
 	<ul class="uk-navbar-nav ">
 		{% for cnode in navigation %}
 			{% set source = cnode.getNodeSources.first %}

@@ -53,13 +53,28 @@ class NodeHandler
     }
 
     /**
+     * Alias for NodesSourcesHandler::getUrl.
+     *
+     * @return string
+     * @see RZ\Renzo\Core\Handlers\NodesSourcesHandler::getUrl
+     */
+    public function getUrl()
+    {
+        return $this->node
+                    ->getNodeSources()
+                    ->first()
+                    ->getHandler()
+                    ->getUrl();
+    }
+
+    /**
      * Remove only current node children.
      *
      * @return $this
      */
     private function removeChildren()
     {
-        foreach ($this->getNode()->getChildren() as $node) {
+        foreach ($this->node->getChildren() as $node) {
             $node->getHandler()->removeWithChildrenAndAssociations();
         }
 
@@ -72,7 +87,7 @@ class NodeHandler
      */
     public function removeAssociations()
     {
-        foreach ($this->getNode()->getNodeSources() as $ns) {
+        foreach ($this->node->getNodeSources() as $ns) {
             Kernel::getInstance()->em()->remove($ns);
         }
 
@@ -89,7 +104,7 @@ class NodeHandler
         $this->removeChildren();
         $this->removeAssociations();
 
-        Kernel::getInstance()->em()->remove($this->getNode());
+        Kernel::getInstance()->em()->remove($this->node);
 
         /*
          * Final flush
@@ -111,7 +126,7 @@ class NodeHandler
             INNER JOIN t.nodeSources ns
             INNER JOIN ns.node n
             WHERE n.id = :node_id')
-                        ->setParameter('node_id', $this->getNode()->getId());
+                        ->setParameter('node_id', $this->node->getId());
 
         try {
             return $query->getResult();
@@ -130,7 +145,7 @@ class NodeHandler
             INNER JOIN n.nodeSources ns
             INNER JOIN ns.translation t
             WHERE n.id = :node_id')
-                        ->setParameter('node_id', $this->getNode()->getId());
+                        ->setParameter('node_id', $this->node->getId());
 
         try {
             $simpleArray = array();
@@ -192,7 +207,7 @@ class NodeHandler
     public function getParents()
     {
         $parentsArray = array();
-        $parent = $this->getNode();
+        $parent = $this->node;
 
         do {
             $parent = $parent->getParent();
@@ -213,8 +228,8 @@ class NodeHandler
      */
     public function cleanPositions()
     {
-        if ($this->getNode()->getParent() !== null) {
-            return $this->getNode()->getParent()->getHandler()->cleanChildrenPositions();
+        if ($this->node->getParent() !== null) {
+            return $this->node->getParent()->getHandler()->cleanChildrenPositions();
         } else {
             return static::cleanRootNodesPositions();
         }
@@ -227,7 +242,7 @@ class NodeHandler
      */
     public function cleanChildrenPositions()
     {
-        $children = $this->getNode()->getChildren();
+        $children = $this->node->getChildren();
         $i = 1;
         foreach ($children as $child) {
             $child->setPosition($i);
@@ -259,5 +274,25 @@ class NodeHandler
         Kernel::getInstance()->em()->flush();
 
         return $i;
+    }
+
+    /**
+     * Set current node as the Home node.
+     *
+     * @return $this
+     */
+    public function makeHome()
+    {
+        $defaults = Kernel::getInstance()->em()
+            ->getRepository('RZ\Renzo\Core\Entities\Node')
+            ->findBy(array('home'=>true));
+
+        foreach ($defaults as $default) {
+            $default->setHome(false);
+        }
+        $this->translation->setHome(true);
+        Kernel::getInstance()->em()->flush();
+
+        return $this;
     }
 }
