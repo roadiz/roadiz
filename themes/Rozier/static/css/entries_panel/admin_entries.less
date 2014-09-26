@@ -88,6 +88,11 @@
             white-space: nowrap;
             .box-shadow(1px 1px 7px rgba(0,0,0,0.05));
         }
+        .work-in-progress {
+            font-size: 12px;
+            color: #CCC;
+            display: none;
+        }
         .uk-nav-sub {
             display: none;
             position: absolute;
@@ -146,6 +151,18 @@
                     display: inline-block;
                 }
             }
+
+            &> a > .work-in-progress {
+                font-size: 12px;
+                color: #CCC;
+                display: block;
+                background-color: #F5F5F5;
+                position: absolute;
+                top: 7px;
+                padding: 3px 3px 3px 0px;
+                z-index: 1000;
+            }
+
             .uk-nav-sub {
                 display: block;
             }

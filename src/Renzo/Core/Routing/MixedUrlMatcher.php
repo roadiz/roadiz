@@ -161,11 +161,13 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
         if (!empty($tokens[0])) {
 
             /*
-             * If the only url token if for language, return no url alias !
+             * If the only url token is for language, return Home page
              */
             if (in_array($tokens[0], Translation::getAvailableLocalesShortcuts()) &&
                 count($tokens) == 1) {
-                return null;
+                return Kernel::getInstance()->em()
+                        ->getRepository('RZ\Renzo\Core\Entities\Node')
+                        ->findHomeWithTranslation($translation);
             } else {
                 $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
 
