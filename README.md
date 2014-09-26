@@ -67,3 +67,33 @@ Add this to your `config.json` to link your RZCMS install to your Solr server:
 ```
 phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/sources/*,*/Tests/* -p ./
 ```
+
+### Migrating with an existing database
+
+When you import your existing database, you must regenerate all node-types sources classes.
+
+```
+php index.php core:node:types --regenerateAllEntities
+```
+
+This will parse every node-types from your database and recreate PHP classes in your `sources/GeneratedNodeSources` folder.
+
+### Upgrading database schema
+
+If you just updated your *RZCMS v3* sources files, you shoud perform a database migration.
+First **be sure your node-types sources classes exist**.
+If you did’nt generate them just have a look at *Migrating with an existing database* section.
+Then you can perform migration :
+
+```
+php index.php schema --update
+```
+
+Be careful, check the output to see if any node-source data will be deleted!
+Doctrine will parse every node-type classes to see new and deprecated node-types.
+Then when you are sure to perform migration, just do:
+
+```
+php index.php schema --update --execute
+```
+

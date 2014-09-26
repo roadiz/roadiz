@@ -7,7 +7,7 @@ npm-debug.log
 **/._*
 ._*
 conf/*
-!conf/*.sample
+!conf/*.default.json
 composer.lock
 report.txt
 TestTheme
