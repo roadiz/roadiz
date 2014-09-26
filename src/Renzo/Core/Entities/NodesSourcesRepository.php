@@ -63,8 +63,10 @@ class NodesSourcesRepository extends \RZ\Renzo\Core\Utils\EntityRepository
         }
 
         // Add ordering
-        foreach ($orderBy as $key => $value) {
-            $qb->addOrderBy('ns.'.$key, $value);
+        if (null !== $orderBy) {
+            foreach ($orderBy as $key => $value) {
+                $qb->addOrderBy('ns.'.$key, $value);
+            }
         }
 
         if (null !== $offset) {

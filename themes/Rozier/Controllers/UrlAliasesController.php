@@ -114,7 +114,8 @@ class UrlAliasesController extends RozierApp
 
                 // Match edit
                 $editForm->handleRequest();
-                if ($editForm->isValid()) {
+                if ($editForm->isValid() &&
+                    $editForm->getData()['urlaliasId'] == $alias->getId()) {
 
                     if ($this->editUrlAlias($editForm->getData(), $alias)) {
 
@@ -132,8 +133,8 @@ class UrlAliasesController extends RozierApp
                      */
                     $response = new RedirectResponse(
                         $this->getKernel()->getUrlGenerator()->generate(
-                            'nodesEditAliasesPage',
-                            array('nodeId' => $node->getId())
+                            'nodesEditSEOPage',
+                            array('nodeId' => $node->getId(), 'translationId'=> $translationId)
                         )
                     );
                     $response->prepare($request);
@@ -143,7 +144,9 @@ class UrlAliasesController extends RozierApp
 
                 // Match delete
                 $deleteForm->handleRequest();
-                if ($deleteForm->isValid()) {
+
+                if ($deleteForm->isValid() &&
+                    $deleteForm->getData()['urlaliasId'] == $alias->getId()) {
 
                     $this->deleteUrlAlias($editForm->getData(), $alias);
                     $msg = $this->getTranslator()->trans('url_alias.deleted', array('%alias%'=>$alias->getAlias()));
@@ -154,8 +157,8 @@ class UrlAliasesController extends RozierApp
                      */
                     $response = new RedirectResponse(
                         $this->getKernel()->getUrlGenerator()->generate(
-                            'nodesEditAliasesPage',
-                            array('nodeId' => $node->getId())
+                            'nodesEditSEOPage',
+                            array('nodeId' => $node->getId(), 'translationId'=> $translationId)
                         )
                     );
                     $response->prepare($request);
@@ -200,8 +203,8 @@ class UrlAliasesController extends RozierApp
                  */
                 $response = new RedirectResponse(
                     $this->getKernel()->getUrlGenerator()->generate(
-                        'nodesEditAliasesPage',
-                        array('nodeId' => $node->getId())
+                        'nodesEditSEOPage',
+                        array('nodeId' => $node->getId(), 'translationId'=> $translationId)
                     )
                 );
                 $response->prepare($request);
