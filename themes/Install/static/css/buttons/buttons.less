@@ -10,17 +10,19 @@
 
 /* -------- STYLES -------- */
 
-.uk-button, .uk-button-primary {
+
+.uk-button{
     height: 36px;
-    background: @grey-form-submit;
-    border-color: @grey-form-submit-border;
-    .border-radius(0px);
     font-size: 12px;
-    font-weight: bold;
     line-height: 37px;
-    color: @grey-form-submit-color;
+    font-weight: bold;
+    .border-radius(0px);
     text-shadow: 0 1px 0 rgba(255,255,255,.5);
     .transition(~'0.35s ease border-color, 0.5s ease background');
+
+    background: @grey-form-submit;
+    border-color: @grey-form-submit-border;
+    color: @grey-form-submit-color;
 
     &:hover, &:active, &:focus {
         background-color: @grey-form-submit-hover;
@@ -30,5 +32,31 @@
 
     [class*=uk-icon-]{
         margin:0 4px;
+    }
+
+}
+
+.uk-button-success {
+    background: @grey-form-submit;
+    border-color: @grey-form-submit-border;
+    color: @grey-form-submit-color;
+
+    &:hover, &:active, &:focus {
+        background-color: @grey-form-submit-hover;
+        border-color: #888888;
+        color: #333;
+    }
+}
+
+.uk-button-primary {
+    background: @contrast-color-darker;
+    border-color: transparent;
+    color: white;
+    text-shadow: 0 1px 0 rgba(0,0,0,.5);
+
+    &:hover, &:active, &:focus {
+        background: @contrast-color-darker;
+        border-color: transparent;
+        color: @grey-verylight;
     }
 }
