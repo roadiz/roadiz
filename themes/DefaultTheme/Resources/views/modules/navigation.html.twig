@@ -6,7 +6,7 @@
         {% else %}
             {% set hometitle = home.getNodeName %}
         {% endif %}
-        <a href="{{ home.getNodeSources.first.getHandler.getUrl }}" class="uk-navbar-brand">{{ hometitle }}</a>
+        <a href="{{ home.getHandler.getUrl }}" class="uk-navbar-brand">{{ hometitle }}</a>
     {% endif %}
 	<ul class="uk-navbar-nav ">
 		{% for cnode in navigation %}

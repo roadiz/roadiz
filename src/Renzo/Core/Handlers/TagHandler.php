@@ -57,7 +57,7 @@ class TagHandler
      */
     private function removeChildren()
     {
-        foreach ($this->getTag()->getChildren() as $tag) {
+        foreach ($this->tag->getChildren() as $tag) {
             $tag->getHandler()->removeWithChildrenAndAssociations();
         }
 
@@ -70,7 +70,7 @@ class TagHandler
      */
     public function removeAssociations()
     {
-        foreach ($this->getTag()->getTranslatedTags() as $tt) {
+        foreach ($this->tag->getTranslatedTags() as $tt) {
             Kernel::getInstance()->em()->remove($tt);
         }
 
@@ -87,7 +87,7 @@ class TagHandler
         $this->removeChildren();
         $this->removeAssociations();
 
-        Kernel::getInstance()->em()->remove($this->getTag());
+        Kernel::getInstance()->em()->remove($this->tag);
 
         /*
          * Final flush
@@ -109,7 +109,7 @@ class TagHandler
             INNER JOIN tr.tagTranslations tt
             INNER JOIN tt.tag t
             WHERE t.id = :tag_id')
-                        ->setParameter('tag_id', $this->getTag()->getId());
+                        ->setParameter('tag_id', $this->tag->getId());
 
         try {
             return $query->getResult();
@@ -128,7 +128,7 @@ class TagHandler
             INNER JOIN t.translatedTags tt
             INNER JOIN tt.translation tr
             WHERE t.id = :tag_id')
-                        ->setParameter('tag_id', $this->getTag()->getId());
+                        ->setParameter('tag_id', $this->tag->getId());
 
         try {
 
@@ -194,7 +194,7 @@ class TagHandler
     public function getParents()
     {
         $parentsArray = array();
-        $parent = $this->getTag();
+        $parent = $this->tag;
 
         do {
             $parent = $parent->getParent();
@@ -215,8 +215,8 @@ class TagHandler
      */
     public function cleanPositions()
     {
-        if ($this->getTag()->getParent() !== null) {
-            return $this->getTag()->getParent()->getHandler()->cleanChildrenPositions();
+        if ($this->tag->getParent() !== null) {
+            return $this->tag->getParent()->getHandler()->cleanChildrenPositions();
         } else {
             return static::cleanRootTagsPositions();
         }
@@ -229,7 +229,7 @@ class TagHandler
      */
     public function cleanChildrenPositions()
     {
-        $children = $this->getTag()->getChildren();
+        $children = $this->tag->getChildren();
         $i = 1;
         foreach ($children as $child) {
             $child->setPosition($i);

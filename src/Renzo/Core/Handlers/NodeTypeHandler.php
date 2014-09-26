@@ -61,7 +61,7 @@ class NodeTypeHandler
     public function removeSourceEntityClass()
     {
         $folder = RENZO_ROOT.'/sources/'.NodeType::getGeneratedEntitiesNamespace();
-        $file = $folder.'/'.$this->getNodeType()->getSourceEntityClassName().'.php';
+        $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
 
         if (file_exists($file)) {
             return unlink($file);
@@ -78,7 +78,7 @@ class NodeTypeHandler
     public function generateSourceEntityClass()
     {
         $folder = RENZO_ROOT.'/sources/'.NodeType::getGeneratedEntitiesNamespace();
-        $file = $folder.'/'.$this->getNodeType()->getSourceEntityClassName().'.php';
+        $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
 
         if (!file_exists($folder)) {
             mkdir($folder, 0755, true);
@@ -86,7 +86,7 @@ class NodeTypeHandler
 
         if (!file_exists($file)) {
 
-            $fields = $this->getNodeType()->getFields();
+            $fields = $this->nodeType->getFields();
             $fieldsArray = array();
             $indexes = array();
             foreach ($fields as $field) {
@@ -108,17 +108,17 @@ use RZ\Renzo\Core\Entities\NodesSources;
  * Generated custom node-source type from RZ-CMS backoffice.
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodesSourcesRepository")
- * @Table(name="'.$this->getNodeType()->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
+ * @Table(name="'.$this->nodeType->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
  */
-class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
+class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
 {
     '.implode('', $fieldsArray).'
 }';
             file_put_contents($file, $content);
 
-            return "Source class “".$this->getNodeType()->getSourceEntityClassName()."” has been created.".PHP_EOL;
+            return "Source class “".$this->nodeType->getSourceEntityClassName()."” has been created.".PHP_EOL;
         } else {
-            return "Source class “".$this->getNodeType()->getSourceEntityClassName()."” already exists.".PHP_EOL;
+            return "Source class “".$this->nodeType->getSourceEntityClassName()."” already exists.".PHP_EOL;
         }
 
         return false;
@@ -210,15 +210,15 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
              * options
              */
             if ("" != $newNodeType->getDisplayName()) {
-                $this->getNodeType()->setDisplayName($newNodeType->getDisplayName());
+                $this->nodeType->setDisplayName($newNodeType->getDisplayName());
             }
             if ("" != $newNodeType->getDescription()) {
-                $this->getNodeType()->setDescription($newNodeType->getDescription());
+                $this->nodeType->setDescription($newNodeType->getDescription());
             }
             /*
              * make fields diff
              */
-            $existingFieldsNames = $this->getNodeType()->getFieldsNames();
+            $existingFieldsNames = $this->nodeType->getFieldsNames();
 
             foreach ($newNodeType->getFields() as $newField) {
                 if (false == in_array($newField->getName(), $existingFieldsNames)) {
@@ -226,7 +226,7 @@ class '.$this->getNodeType()->getSourceEntityClassName().' extends NodesSources
                      * Field does not exist in type,
                      * creating it.
                      */
-                    $newField->setNodeType($this->getNodeType());
+                    $newField->setNodeType($this->nodeType);
                     Kernel::getInstance()->em()->persist($newField);
                 }
             }

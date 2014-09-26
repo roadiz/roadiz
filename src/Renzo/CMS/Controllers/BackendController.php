@@ -61,7 +61,7 @@ class BackendController extends AppController
     public function handleTwigCache()
     {
 
-        if (Kernel::getInstance()->isBackendDebug()) {
+        if ($this->getKernel()->isBackendDebug()) {
             try {
                 $fs = new Filesystem();
                 $fs->remove(array($this->getCacheDirectory()));

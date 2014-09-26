@@ -50,8 +50,8 @@ class NodeTypeFieldHandler
      */
     public function generateSourceFieldIndex()
     {
-        if (NodeTypeField::$typeToDoctrine[$this->getNodeTypeField()->getType()] !== null) {
-            return '@Index(name="'.$this->getNodeTypeField()->getName().'_idx", columns={"'.$this->getNodeTypeField()->getName().'"})';
+        if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
+            return '@Index(name="'.$this->nodeTypeField->getName().'_idx", columns={"'.$this->nodeTypeField->getName().'"})';
         } else {
             return '';
         }
@@ -64,35 +64,35 @@ class NodeTypeFieldHandler
      */
     public function generateSourceField()
     {
-        if (NodeTypeField::$typeToDoctrine[$this->getNodeTypeField()->getType()] !== null) {
-            $var = 'private $'.$this->getNodeTypeField()->getName().';';
-            if ($this->getNodeTypeField()->getType() === NodeTypeField::BOOLEAN_T) {
-                $var = 'private $'.$this->getNodeTypeField()->getName().' = false;';
+        if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
+            $var = 'private $'.$this->nodeTypeField->getName().';';
+            if ($this->nodeTypeField->getType() === NodeTypeField::BOOLEAN_T) {
+                $var = 'private $'.$this->nodeTypeField->getName().' = false;';
             }
-            if ($this->getNodeTypeField()->getType() === NodeTypeField::INTEGER_T) {
-                $var = 'private $'.$this->getNodeTypeField()->getName().' = 0;';
+            if ($this->nodeTypeField->getType() === NodeTypeField::INTEGER_T) {
+                $var = 'private $'.$this->nodeTypeField->getName().' = 0;';
             }
 
             return '
     /**
-     * @Column(type="'.NodeTypeField::$typeToDoctrine[$this->getNodeTypeField()->getType()].'", nullable=true )
+     * @Column(type="'.NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].'", nullable=true )
      */
     '.$var.'
     /**
      * @return mixed
      */
-    public function '.$this->getNodeTypeField()->getGetterName().'()
+    public function '.$this->nodeTypeField->getGetterName().'()
     {
-        return $this->'.$this->getNodeTypeField()->getName().';
+        return $this->'.$this->nodeTypeField->getName().';
     }
     /**
-     * @param mixed $'.$this->getNodeTypeField()->getName().'
+     * @param mixed $'.$this->nodeTypeField->getName().'
      *
      * @return $this
      */
-    public function '.$this->getNodeTypeField()->getSetterName().'($'.$this->getNodeTypeField()->getName().')
+    public function '.$this->nodeTypeField->getSetterName().'($'.$this->nodeTypeField->getName().')
     {
-        $this->'.$this->getNodeTypeField()->getName().' = $'.$this->getNodeTypeField()->getName().';
+        $this->'.$this->nodeTypeField->getName().' = $'.$this->nodeTypeField->getName().';
 
         return $this;
     }'.PHP_EOL;

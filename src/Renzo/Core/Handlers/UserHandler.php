@@ -48,10 +48,13 @@ class UserHandler
      */
     public function encodePassword()
     {
-        if ($this->getUser()->getPlainPassword() != '') {
-            $encoder = static::getEncoderFactory()->getEncoder($this->getUser());
-            $encodedPassword = $encoder->encodePassword($this->getUser()->getPlainPassword(), $this->getUser()->getSalt());
-            $this->getUser()->setPassword($encodedPassword);
+        if ($this->user->getPlainPassword() != '') {
+            $encoder = static::getEncoderFactory()->getEncoder($this->user);
+            $encodedPassword = $encoder->encodePassword(
+                $this->user->getPlainPassword(),
+                $this->user->getSalt()
+            );
+            $this->user->setPassword($encodedPassword);
         } else {
             throw new Exception("User plain password is empty", 1);
         }
@@ -66,12 +69,12 @@ class UserHandler
      */
     public function isPasswordValid($plainPassword)
     {
-        $encoder = static::getEncoderFactory()->getEncoder($this->getUser());
+        $encoder = static::getEncoderFactory()->getEncoder($this->user);
 
         return $encoder->isPasswordValid(
-            $this->getUser()->getPassword(),
+            $this->user->getPassword(),
             $plainPassword,
-            $this->getUser()->getSalt()
+            $this->user->getSalt()
         );
     }
 

@@ -25,7 +25,7 @@ class LoggerHandler
      */
     public function __construct(Logger $log)
     {
-        $this->log =  $log;
+        $this->log = $log;
     }
 
     /**

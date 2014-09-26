@@ -123,7 +123,8 @@ class NodesSourcesHandler
         }
 
         /*
-         * If using node-name, we must use shortLocale
+         * If using node-name, we must use shortLocale when current
+         * translation is not the default one.
          */
         if ($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
             !$this->nodeSource->getTranslation()->isDefaultTranslation()) {

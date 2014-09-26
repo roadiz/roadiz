@@ -48,7 +48,7 @@ class FontHandler
         return Kernel::getInstance()->getUrlGenerator()->generate(
             'FontFile',
             array(
-                'filename'  => $this->getFont()->getHash(),
+                'filename'  => $this->font->getHash(),
                 'extension' => $extension,
                 'token'     => $token
             )

@@ -66,7 +66,7 @@ class TranslationHandler
         foreach ($defaults as $default) {
             $default->setDefaultTranslation(false);
         }
-        $this->getTranslation()->setDefaultTranslation(true);
+        $this->translation->setDefaultTranslation(true);
         Kernel::getInstance()->em()->flush();
 
         return $this;
