@@ -411,15 +411,20 @@ class NodeRepository extends EntityRepository
     /**
      * Find the Home node with a given translation.
      *
-     * @param RZ\Renzo\Core\Entities\Translation $translation
-     * @param SecurityContext|null               $securityContext
+     * @param RZ\Renzo\Core\Entities\Translation|null $translation
+     * @param SecurityContext|null                    $securityContext
      *
      * @return RZ\Renzo\Core\Entities\Node|null
      */
     public function findHomeWithTranslation(
-        Translation $translation,
+        Translation $translation = null,
         SecurityContext $securityContext = null
     ) {
+
+        if (null === $translation) {
+            return $this->findHomeWithDefaultTranslation($securityContext);
+        }
+
         $txtQuery = 'SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             WHERE n.home = true AND ns.translation = :translation';

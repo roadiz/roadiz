@@ -99,7 +99,13 @@ class NodesSourcesHandler
     public function getUrl()
     {
         if ($this->nodeSource->getNode()->isHome()) {
-            return Kernel::getInstance()->getRequest()->getBaseUrl();
+
+            if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
+                return Kernel::getInstance()->getRequest()->getBaseUrl();
+            } else {
+                return Kernel::getInstance()->getRequest()->getBaseUrl() .
+                        '/' . $this->nodeSource->getTranslation()->getShortLocale();
+            }
         }
 
         $urlTokens = array();

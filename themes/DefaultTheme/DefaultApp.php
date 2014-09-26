@@ -99,6 +99,9 @@ class DefaultApp extends FrontendController
     {
         $this->storeNodeAndTranslation($node, $translation);
         $this->assignation['navigation'] = $this->assignMainNavigation();
+        $this->assignation['home'] = $this->em()
+                                          ->getRepository('RZ\Renzo\Core\Entities\Node')
+                                          ->findHomeWithTranslation($translation);
 
         /*
          * Common image format for pages headers
@@ -114,7 +117,7 @@ class DefaultApp extends FrontendController
      */
     protected function assignMainNavigation()
     {
-        $parent = Kernel::getInstance()->em()
+        $parent = $this->em()
             ->getRepository('RZ\Renzo\Core\Entities\Node')
             ->contextualFindOneBy($this->getSecurityContext(), array('home'=>true));
 
@@ -126,7 +129,7 @@ class DefaultApp extends FrontendController
                 );
         }
         if ($parent !== null) {
-            return Kernel::getInstance()->em()
+            return $this->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Node')
                 ->findByParentWithTranslation(
                     $this->translation,
