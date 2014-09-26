@@ -125,7 +125,8 @@ class NodesSourcesHandler
         /*
          * If using node-name, we must use shortLocale
          */
-        if ($urlTokens[0] == $this->nodeSource->getNode()->getNodeName()) {
+        if ($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
+            !$this->nodeSource->getTranslation()->isDefaultTranslation()) {
             $urlTokens[] = $this->nodeSource->getTranslation()->getShortLocale();
         }
 
