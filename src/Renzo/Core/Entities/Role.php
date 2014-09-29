@@ -22,7 +22,7 @@ use RZ\Renzo\Core\Utils\StringHandler;
 class Role extends AbstractEntity
 {
     const ROLE_DEFAULT =      'ROLE_USER';
-    const ROLE_SUPER_ADMIN =  'ROLE_SUPER_ADMIN';
+    const ROLE_SUPERADMIN =   'ROLE_SUPERADMIN';
     const ROLE_BACKEND_USER = 'ROLE_BACKEND_USER';
 
     /**
@@ -127,7 +127,7 @@ class Role extends AbstractEntity
     public function required()
     {
         if ($this->getName() == static::ROLE_DEFAULT ||
-            $this->getName() == static::ROLE_SUPER_ADMIN ||
+            $this->getName() == static::ROLE_SUPERADMIN ||
             $this->getName() == static::ROLE_BACKEND_USER) {
             return true;
         }

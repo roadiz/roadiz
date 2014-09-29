@@ -526,7 +526,7 @@ class AppController implements ViewableInterface
 
         if ($this->kernel->getSecurityContext() !== null &&
             $this->kernel->getSecurityContext()->getToken() !== null ) {
-
+            $this->assignation['securityContext'] = $this->kernel->getSecurityContext();
             $this->assignation['session']['user'] = $this->kernel
                                                          ->getSecurityContext()
                                                          ->getToken()
@@ -671,5 +671,11 @@ class AppController implements ViewableInterface
         $response->prepare($request);
 
         return $response->send();
+    }
+
+    public function validedAccessForRole($role) {
+        if (!($this->getSecurityContext()->isGranted($role)
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            throw new AccessDeniedException("You don't have access to this page:" . $role);
     }
 }

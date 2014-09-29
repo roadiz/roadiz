@@ -48,11 +48,17 @@
 		            		<i class="uk-icon-plus"></i> {% trans %}add.child.node{% endtrans %}
 		            	</a>
 		            </p>
+
+		            {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 		            <p>
 		            	<a title="{% trans %}delete.node.%name%{% endtrans %}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">
 		            		<i class="uk-icon-trash-o"></i> {% trans %}delete.node{% endtrans %}
 		            	</a>
 		            </p>
+
+		            {% endif %}
+
 		        </div>
 		    </nav>
 		</div>

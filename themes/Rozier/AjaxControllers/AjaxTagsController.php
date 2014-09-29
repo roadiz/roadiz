@@ -40,6 +40,10 @@ class AjaxTagsController extends AbstractAjaxController
      */
     public function editAction(Request $request, $tagId)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         /*
          * Validate
          */

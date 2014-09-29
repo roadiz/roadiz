@@ -46,6 +46,12 @@ class RolesUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_ROLES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $existingRole = $this->getKernel()->em()
                               ->getRepository('RZ\Renzo\Core\Entities\Role')
                               ->findAll();
@@ -80,6 +86,11 @@ class RolesUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $roleId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_ROLES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            // return $this->throw404();
+
         $existingRole= $this->getKernel()->em()
                               ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
 
@@ -113,6 +124,12 @@ class RolesUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_ROLES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $form = $this->buildImportJsonFileForm();
 
         $form->handleRequest();

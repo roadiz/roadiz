@@ -30,7 +30,7 @@
                 <section class="main-container-section" id="admin-menu">
                     {% include 'includes/admin_menu.html.twig' %}
                 </section>
-
+                {% if (securityContext.isGranted('ROLE_ACCESS_NODES') or securityContext.isGranted('ROLE_SUPERADMIN')) %}
                 <section id="main-trees" class="main-container-section">
                     <div>
                         {% include 'widgets/nodesSourcesSearch.html.twig' %}
@@ -40,11 +40,12 @@
                         </ul>
                         <!-- This is the container of the content items -->
                         <ul id="tree-container" class="uk-switcher uk-margin">
-                            <li>{% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':true} only %}</li>
+                            <li>{% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':true, "securityContext":securityContext} only %}</li>
                             <li>{% include 'widgets/tagTree/tagTree.html.twig' with {"tagTree":tagTree, "tag":tagTree.getRootTag, 'mainTagTree':true} only %}</li>
                         </ul>
                     </div>
                 </section>
+                {% endif %}
                 <!-- Add your site or application content here -->
                 <section id="main-content" class="main-container-section">
                     <div>

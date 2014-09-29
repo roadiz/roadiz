@@ -43,6 +43,12 @@ class TranslationsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TRANSLATIONS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $translations = $this->getKernel()->em()
             ->getRepository('RZ\Renzo\Core\Entities\Translation')
             ->findAll();
@@ -106,6 +112,12 @@ class TranslationsController extends RozierApp
      */
     public function editAction(Request $request, $translationId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TRANSLATIONS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $translation = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
 
@@ -162,6 +174,12 @@ class TranslationsController extends RozierApp
      */
     public function addAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TRANSLATIONS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $translation = new Translation();
 
         if (null !== $translation) {
@@ -215,6 +233,11 @@ class TranslationsController extends RozierApp
      */
     public function deleteAction(Request $request, $translationId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TRANSLATIONS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $translation = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
 

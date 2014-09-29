@@ -39,6 +39,11 @@ class GroupsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         /*
          * Manage get request to filter list
          */
@@ -66,6 +71,11 @@ class GroupsController extends RozierApp
      */
     public function addAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $form = $this->buildAddForm();
         $form->handleRequest();
 
@@ -113,6 +123,11 @@ class GroupsController extends RozierApp
      */
     public function deleteAction(Request $request, $groupId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
@@ -166,6 +181,11 @@ class GroupsController extends RozierApp
      */
     public function editAction(Request $request, $groupId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $group = $this->getKernel()->em()
                     ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
@@ -225,6 +245,11 @@ class GroupsController extends RozierApp
      */
     public function editRolesAction(Request $request, $groupId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
@@ -279,6 +304,11 @@ class GroupsController extends RozierApp
      */
     public function removeRolesAction(Request $request, $groupId, $roleId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
         $role = $this->getKernel()->em()
@@ -333,6 +363,11 @@ class GroupsController extends RozierApp
      */
     public function editUsersAction(Request $request, $groupId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
@@ -387,6 +422,11 @@ class GroupsController extends RozierApp
      */
     public function removeUsersAction(Request $request, $groupId, $userId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $group = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
         $user = $this->getKernel()->em()

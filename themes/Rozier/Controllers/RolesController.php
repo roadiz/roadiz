@@ -37,6 +37,11 @@ class RolesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_ROLES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $listManager = new EntityListManager(
             $request,
             $this->getKernel()->em(),
@@ -65,6 +70,11 @@ class RolesController extends RozierApp
      */
     public function addAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_ROLES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $form = $this->buildAddForm();
         $form->handleRequest();
 
@@ -114,6 +124,11 @@ class RolesController extends RozierApp
      */
     public function deleteAction(Request $request, $roleId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_ROLES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $role = $this->getKernel()->em()
                     ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
         if ($role !== null) {
@@ -171,6 +186,11 @@ class RolesController extends RozierApp
      */
     public function editAction(Request $request, $roleId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_ROLES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $role = $this->getKernel()->em()
                     ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
 

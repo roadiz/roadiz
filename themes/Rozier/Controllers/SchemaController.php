@@ -53,6 +53,11 @@ class SchemaController extends RozierApp
      */
     public function updateNodeTypesSchemaAction(Request $request, $_token)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         if ($this->getKernel()
                 ->getCsrfProvider()
                 ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
@@ -89,6 +94,11 @@ class SchemaController extends RozierApp
      */
     public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $nodeTypeId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         if ($this->getKernel()
                 ->getCsrfProvider()
                 ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {

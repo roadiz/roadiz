@@ -43,6 +43,11 @@ class NodeTypesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         /*
          * Manage get request to filter list
          */
@@ -72,6 +77,11 @@ class NodeTypesController extends RozierApp
      */
     public function editAction(Request $request, $nodeTypeId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $nodeType = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
@@ -129,6 +139,11 @@ class NodeTypesController extends RozierApp
      */
     public function addAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $nodeType = new NodeType();
 
         if (null !== $nodeType) {
@@ -196,6 +211,11 @@ class NodeTypesController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeTypeId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES_DELETE');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES_DELETE')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $nodeType = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 

@@ -44,6 +44,11 @@ class GroupsUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $existingGroup = $this->getKernel()->em()
                               ->getRepository('RZ\Renzo\Core\Entities\Group')
                               ->findAll();
@@ -78,6 +83,11 @@ class GroupsUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $groupId)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $existingGroup = $this->getKernel()->em()
                               ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
@@ -111,6 +121,11 @@ class GroupsUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $form = $this->buildImportJsonFileForm();
 
         $form->handleRequest();

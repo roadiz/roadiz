@@ -45,6 +45,10 @@ class NodesUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $nodeId)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $existingNode = $this->getKernel()->em()
                               ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
