@@ -124,7 +124,7 @@ class TagsController extends RozierApp
 
                 $msg = $this->getTranslator()->trans('tag.updated', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -181,7 +181,7 @@ class TagsController extends RozierApp
 
                 $msg = $this->getTranslator()->trans('tag.created', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -232,7 +232,7 @@ class TagsController extends RozierApp
                 $this->deleteTag($form->getData(), $tag);
                 $msg = $this->getTranslator()->trans('tag.deleted', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -294,7 +294,7 @@ class TagsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('tag.created', array('%name%'=>$tag->getId()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
@@ -308,7 +308,7 @@ class TagsController extends RozierApp
                 } catch (EntityAlreadyExistsException $e) {
 
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(

@@ -80,14 +80,14 @@ class GroupsController extends RozierApp
                 $group = $this->addGroup($form->getData());
                 $msg = $this->getTranslator()->trans('group.created', array('%name%'=>$group->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
             } catch (EntityAlreadyExistsException $e) {
                 $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getLogger()->warning($e->getMessage());
+                $this->getService('logger')->warning($e->getMessage());
             } catch (\RuntimeException $e) {
                 $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getLogger()->warning($e->getMessage());
+                $this->getService('logger')->warning($e->getMessage());
             }
 
             /*
@@ -134,11 +134,11 @@ class GroupsController extends RozierApp
                     $this->deleteGroup($form->getData(), $group);
                     $msg = $this->getTranslator()->trans('group.deleted', array('%name%' => $group->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
 
                 } catch (\RuntimeException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
 
                 /*
@@ -191,14 +191,14 @@ class GroupsController extends RozierApp
                     $this->editGroup($form->getData(), $group);
                     $msg = $this->getTranslator()->trans('group.updated', array('%name%'=>$group->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
 
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 } catch (\RuntimeException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
 
                 /*
@@ -253,7 +253,7 @@ class GroupsController extends RozierApp
                             '%role%'=>$role->getName()
                         ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                 * Force redirect to avoid resending form when refreshing page
@@ -310,7 +310,7 @@ class GroupsController extends RozierApp
                 $this->removeRole($form->getData(), $group, $role);
                 $msg = $this->getTranslator()->trans('role.removed_from_group', array('%name%'=>$role->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -365,7 +365,7 @@ class GroupsController extends RozierApp
                             '%user%'=>$user->getUserName()
                         ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                 * Force redirect to avoid resending form when refreshing page
@@ -422,7 +422,7 @@ class GroupsController extends RozierApp
                 $this->removeUser($form->getData(), $group, $user);
                 $msg = $this->getTranslator()->trans('group.user.removed_from_group', array('%name%'=>$user->getUserName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                  * Force redirect to avoid resending form when refreshing page

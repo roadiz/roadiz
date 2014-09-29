@@ -72,7 +72,7 @@ class TranslationsController extends RozierApp
 
                 $msg = $this->getTranslator()->trans('translation.made_default', array('%name%'=>$translation->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -126,10 +126,10 @@ class TranslationsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('translation.updated', array('%name%'=>$translation->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
 
                 /*
@@ -184,10 +184,10 @@ class TranslationsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('translation.created', array('%name%'=>$translation->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -241,10 +241,10 @@ class TranslationsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('translation.deleted', array('%name%'=>$translation->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (\Exception $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page

@@ -91,10 +91,10 @@ class NodeTypesController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('nodeType.updated', array('%name%'=>$nodeType->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Redirect to update schema page
@@ -152,7 +152,7 @@ class NodeTypesController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('nodeType.created', array('%name%'=>$nodeType->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
 
                     /*
                      * Redirect to update schema page
@@ -168,7 +168,7 @@ class NodeTypesController extends RozierApp
 
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodeTypesAddPage'
@@ -223,7 +223,7 @@ class NodeTypesController extends RozierApp
 
                 $msg = $this->getTranslator()->trans('nodeType.deleted', array('%name%'=>$nodeType->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
                 /*
                  * Redirect to update schema page
                  */

@@ -162,10 +162,10 @@ class NodesController extends RozierApp
                             '%name%'=>$node->getNodeName()
                         ));
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getLogger()->info($msg);
+                        $this->getService('logger')->info($msg);
                     } catch (EntityAlreadyExistsException $e) {
                         $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                        $this->getLogger()->warning($e->getMessage());
+                        $this->getService('logger')->warning($e->getMessage());
                     }
                     /*
                      * Force redirect to avoid resending form when refreshing page
@@ -196,10 +196,10 @@ class NodesController extends RozierApp
                         '%name%'=>$node->getNodeName()
                     ));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -275,7 +275,7 @@ class NodesController extends RozierApp
                         '%translation%'=>$source->getTranslation()->getName()
                     ));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
@@ -350,7 +350,7 @@ class NodesController extends RozierApp
                         '%tag%'=>$tag->getTranslatedTags()->first()->getName()
                     ));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
@@ -408,7 +408,7 @@ class NodesController extends RozierApp
                 $this->removeNodeTag($form->getData(), $node, $tag);
                 $msg = $this->getTranslator()->trans('tag.removed', array('%name%' => $tag->getTranslatedTags()->first()->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -481,7 +481,7 @@ class NodesController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('node.created', array('%name%'=>$node->getNodeName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
@@ -495,7 +495,7 @@ class NodesController extends RozierApp
                 } catch (EntityAlreadyExistsException $e) {
 
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
@@ -560,7 +560,7 @@ class NodesController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('node.created', array('%name%'=>$node->getNodeName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
@@ -577,7 +577,7 @@ class NodesController extends RozierApp
                         'error',
                         $e->getMessage()
                     );
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
@@ -633,7 +633,7 @@ class NodesController extends RozierApp
 
                 $msg = $this->getTranslator()->trans('node.deleted', array('%name%'=>$node->getNodeName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */

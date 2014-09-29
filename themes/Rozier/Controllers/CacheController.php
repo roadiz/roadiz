@@ -51,7 +51,7 @@ class CacheController extends RozierApp
             SchemaCommand::refreshMetadata();
             $msg = $this->getTranslator()->trans('cache.deleted');
             $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getLogger()->info($msg);
+            $this->getService('logger')->info($msg);
 
             /*
              * Force redirect to avoid resending form when refreshing page

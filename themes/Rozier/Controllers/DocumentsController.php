@@ -97,7 +97,7 @@ class DocumentsController extends RozierApp
                     '%name%'=>$document->getFilename()
                 ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -151,13 +151,13 @@ class DocumentsController extends RozierApp
                     $document->getHandler()->removeWithAssets();
                     $msg = $this->getTranslator()->trans('document.deleted', array('%name%'=>$document->getFilename()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
 
                 } catch (\Exception $e) {
 
                     $msg = $this->getTranslator()->trans('document.cannot_delete', array('%name%'=>$document->getFilename()));
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getLogger()->warning($msg);
+                    $this->getService('logger')->warning($msg);
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -205,7 +205,7 @@ class DocumentsController extends RozierApp
                     '%name%'=>$document->getFilename()
                 ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 $response = new Response();
                 $response->setContent(json_encode(array(
@@ -220,7 +220,7 @@ class DocumentsController extends RozierApp
             } else {
                 $msg = $this->getTranslator()->trans('document.cannot_persist');
                 $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->getLogger()->error($msg);
+                $this->getService('logger')->error($msg);
 
                 $response = new Response();
                 $response->setContent(json_encode(array(

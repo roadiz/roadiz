@@ -136,7 +136,7 @@ class GroupsUtilsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('group.imported.updated');
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
 
                      // redirect even if its null
                     $response = new RedirectResponse(
@@ -151,7 +151,7 @@ class GroupsUtilsController extends RozierApp
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getLogger()->error($msg);
+                    $this->getService('logger')->error($msg);
 
                     // redirect even if its null
                     $response = new RedirectResponse(
@@ -166,7 +166,7 @@ class GroupsUtilsController extends RozierApp
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');
                 $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->getLogger()->error($msg);
+                $this->getService('logger')->error($msg);
             }
         }
 

@@ -94,13 +94,13 @@ class UsersController extends RozierApp
                     $this->editUser($form->getData(), $user);
                     $msg = $this->getTranslator()->trans('user.updated', array('%name%'=>$user->getUsername()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (FacebookUsernameNotFoundException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -157,7 +157,7 @@ class UsersController extends RozierApp
                             '%role%'=>$role->getName()
                         ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                 * Force redirect to avoid resending form when refreshing page
@@ -215,7 +215,7 @@ class UsersController extends RozierApp
                 $this->removeUserRole($form->getData(), $user);
                 $msg = $this->getTranslator()->trans('user.role_removed', array('%name%'=>$role->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -270,7 +270,7 @@ class UsersController extends RozierApp
                             '%group%'=>$group->getName()
                         ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                 * Force redirect to avoid resending form when refreshing page
@@ -331,7 +331,7 @@ class UsersController extends RozierApp
                             '%group%'=>$group->getName()
                         ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                 * Force redirect to avoid resending form when refreshing page
@@ -392,13 +392,13 @@ class UsersController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('user.created', array('%name%'=>$user->getUsername()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (FacebookUsernameNotFoundException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -453,10 +453,10 @@ class UsersController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('user.deleted', array('%name%'=>$user->getUsername()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page

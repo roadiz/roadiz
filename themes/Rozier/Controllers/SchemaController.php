@@ -66,11 +66,11 @@ class SchemaController extends RozierApp
 
             $msg = $this->getTranslator()->trans('database.schema.updated');
             $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getLogger()->info($msg);
+            $this->getService('logger')->info($msg);
         } else {
             $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
             $request->getSession()->getFlashBag()->add('error', $msg);
-            $this->getLogger()->error($msg);
+            $this->getService('logger')->error($msg);
         }
         /*
          * Redirect to update schema page
@@ -106,11 +106,11 @@ class SchemaController extends RozierApp
 
             $msg = $this->getTranslator()->trans('database.schema.updated');
             $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getLogger()->info($msg);
+            $this->getService('logger')->info($msg);
         } else {
             $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
             $request->getSession()->getFlashBag()->add('error', $msg);
-            $this->getLogger()->error($msg);
+            $this->getService('logger')->error($msg);
         }
         /*
          * Redirect to update schema page

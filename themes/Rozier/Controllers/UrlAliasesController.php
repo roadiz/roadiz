@@ -90,11 +90,11 @@ class UrlAliasesController extends RozierApp
                 if ($this->editSEO($seoForm->getData(), $source)) {
                     $msg = $this->getTranslator()->trans('node.seo.updated');
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } else {
                     $msg = $this->getTranslator()->trans('node.seo.not.updated');
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getLogger()->warning($msg);
+                    $this->getService('logger')->warning($msg);
                 }
 
                 /*
@@ -127,11 +127,11 @@ class UrlAliasesController extends RozierApp
 
                         $msg = $this->getTranslator()->trans('url_alias.updated', array('%alias%'=>$alias->getAlias()));
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getLogger()->info($msg);
+                        $this->getService('logger')->info($msg);
                     } else {
                         $msg = $this->getTranslator()->trans('url_alias.no_update.already_exists', array('%alias%'=>$alias->getAlias()));
                         $request->getSession()->getFlashBag()->add('error', $msg);
-                        $this->getLogger()->warning($msg);
+                        $this->getService('logger')->warning($msg);
                     }
 
                     /*
@@ -157,7 +157,7 @@ class UrlAliasesController extends RozierApp
                     $this->deleteUrlAlias($editForm->getData(), $alias);
                     $msg = $this->getTranslator()->trans('url_alias.deleted', array('%alias%'=>$alias->getAlias()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
@@ -195,14 +195,14 @@ class UrlAliasesController extends RozierApp
                         '%translation%'=>$ua->getNodeSource()->getTranslation()->getName()
                     ));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
 
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 } catch (NoTranslationAvailableException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
