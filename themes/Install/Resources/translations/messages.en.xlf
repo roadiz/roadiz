@@ -3,26 +3,26 @@
     <file source-language="en" datatype="plaintext" original="file.ext" target-language="en">
         <body>
 
-            <trans-unit id="1" approved="no">
+            <trans-unit id="1" approved="yes">
                 <source>Node name</source>
-                <target state="needs-translation">Node name</target>
+                <target state="translated">Node name</target>
             </trans-unit>
-            <trans-unit id="2" approved="no">
+            <trans-unit id="2" approved="yes">
                 <source>See tree</source>
-                <target state="needs-translation">See tree</target>
+                <target state="translated">See tree</target>
             </trans-unit>
-            <trans-unit id="3" approved="no">
+            <trans-unit id="3" approved="yes">
                 <source>_username</source>
-                <target state="needs-translation">Username</target>
+                <target state="translated">Username</target>
             </trans-unit>
-            <trans-unit id="4" approved="no">
+            <trans-unit id="4" approved="yes">
                 <source>_password</source>
-                <target state="needs-translation">Password</target>
+                <target state="translated">Password</target>
             </trans-unit>
 
-            <trans-unit id="delete" approved="no">
+            <trans-unit id="delete" approved="yes">
                 <source>delete</source>
-                <target state="needs-translation">Supprimer</target>
+                <target state="translated">Delete</target>
             </trans-unit>
 
             <trans-unit id="status" approved="yes">
@@ -62,36 +62,36 @@
                 <source>requirements.title</source>
                 <target state="needs-translation">Requirements</target>
             </trans-unit>
-            <trans-unit id="requirements.message" approved="no">
+            <trans-unit id="requirements.message" approved="yes">
                 <source>requirements.message</source>
-                <target state="needs-translation">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;To use this CMS, your server need some requirements, particularly in PHP. If you have access to your configuration file (php.ini), you could modify some of them.&lt;/p&gt;</target>
             </trans-unit>
-            <trans-unit id="requirements.requirement" approved="no">
+            <trans-unit id="requirements.requirement" approved="yes">
                 <source>requirements.requirement</source>
-                <target state="needs-translation">Requirement</target>
+                <target state="translated">Requirement</target>
             </trans-unit>
-            <trans-unit id="requirements.actual_value" approved="no">
+            <trans-unit id="requirements.actual_value" approved="yes">
                 <source>requirements.actual_value</source>
-                <target state="needs-translation">Actual value</target>
+                <target state="translated">Actual value</target>
             </trans-unit>
 
 
             <!-- Database -->
-            <trans-unit id="database.title" approved="no">
+            <trans-unit id="database.title" approved="yes">
                 <source>database.title</source>
-                <target state="needs-translation">Database</target>
+                <target state="translated">Database</target>
             </trans-unit>
-            <trans-unit id="database.message" approved="no">
+            <trans-unit id="database.message" approved="yes">
                 <source>database.message</source>
-                <target state="needs-translation">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Renzo need a databse to store all your content. You could select your favorite database driver and configure it.&lt;/p&gt;</target>
             </trans-unit>
-            <trans-unit id="database.cannot_connect" approved="no">
+            <trans-unit id="database.cannot_connect" approved="yes">
                 <source>database.cannot_connect</source>
-                <target state="needs-translation">Cannot connect to database</target>
+                <target state="translated">Cannot connect to database</target>
             </trans-unit>
-            <trans-unit id="database.build" approved="no">
+            <trans-unit id="database.build" approved="yes">
                 <source>database.build</source>
-                <target state="needs-translation">Build database</target>
+                <target state="translated">Build database</target>
             </trans-unit>
 
 
@@ -100,9 +100,9 @@
                 <source>database_done.title</source>
                 <target state="translated">Database installed</target>
             </trans-unit>
-            <trans-unit id="database_done.message">
+            <trans-unit id="database_done.message" approved="yes">
                 <source>database_done.message</source>
-                <target>&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Your database has been successfully installed.&lt;/p&gt;</target>
             </trans-unit>
 
 
@@ -127,7 +127,7 @@
             </trans-unit>
             <trans-unit id="user.message" approved="yes">
                 <source>user.message</source>
-                <target state="translated">&lt;p&gt;Create an user for your CMS&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Create an user to access to the back-office.&lt;/p&gt;</target>
             </trans-unit>
             <trans-unit id="user.create" approved="yes">
                 <source>user.create</source>
@@ -205,17 +205,17 @@
 
 
             <!-- Goto -->
-            <trans-unit id="goto.requirements" approved="no">
+            <trans-unit id="goto.requirements" approved="yes">
                 <source>goto.requirements</source>
-                <target state="needs-translation">Go to "requirements"</target>
+                <target state="translated">Go to "requirements"</target>
             </trans-unit>
-            <trans-unit id="goto.welcome" approved="no">
+            <trans-unit id="goto.welcome" approved="yes">
                 <source>goto.welcome</source>
-                <target state="needs-translation">Go to "welcome"</target>
+                <target state="translated">Back to home</target>
             </trans-unit>
-            <trans-unit id="goto.database" approved="no">
+            <trans-unit id="goto.database" approved="yes">
                 <source>goto.database</source>
-                <target state="needs-translation">Go to "database"</target>
+                <target state="translated">Go to "database"</target>
             </trans-unit>
             <trans-unit id="goto.import" approved="yes">
                 <source>goto.import</source>
