@@ -42,16 +42,13 @@ class UsersController extends RozierApp
     public function indexAction(Request $request)
     {
         $this->validedAccessForRole('ROLE_ACCESS_USERS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
         /*
          * Manage get request to filter list
          */
         $listManager = new EntityListManager(
             $request,
-            $this->getKernel()->em(),
+            $this->getService('em'),
             'RZ\Renzo\Core\Entities\User'
         );
         $listManager->handle();
@@ -81,7 +78,8 @@ class UsersController extends RozierApp
             || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
             throw AccessDeniedException("You don't have access to this page:" . $role);
         }
-        $user = $this->getKernel()->em()
+
+        $user = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -108,7 +106,7 @@ class UsersController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'usersEditPage',
                         array('userId' => $user->getId())
                     )
@@ -141,11 +139,8 @@ class UsersController extends RozierApp
     public function editRolesAction(Request $request, $userId)
     {
         $this->validedAccessForRole('ROLE_ACCESS_USERS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
-        $user = $this->getKernel()->em()
+        $user = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -168,7 +163,7 @@ class UsersController extends RozierApp
                 * Force redirect to avoid resending form when refreshing page
                 */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'usersEditRolesPage',
                         array('userId' => $user->getId())
                     )
@@ -202,13 +197,10 @@ class UsersController extends RozierApp
     public function removeRoleAction(Request $request, $userId, $roleId)
     {
         $this->validedAccessForRole('ROLE_ACCESS_USERS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
-        $user = $this->getKernel()->em()
+        $user = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
-        $role = $this->getKernel()->em()
+        $role = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
 
         if ($user !== null && $role !== null) {
@@ -229,7 +221,7 @@ class UsersController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'usersEditRolesPage',
                         array('userId' => $user->getId())
                     )
@@ -260,11 +252,8 @@ class UsersController extends RozierApp
     public function editGroupsAction(Request $request, $userId)
     {
         $this->validedAccessForRole('ROLE_ACCESS_USERS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
-        $user = $this->getKernel()->em()
+        $user = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -287,7 +276,7 @@ class UsersController extends RozierApp
                 * Force redirect to avoid resending form when refreshing page
                 */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'usersEditGroupsPage',
                         array('userId' => $user->getId())
                     )
@@ -320,16 +309,11 @@ class UsersController extends RozierApp
      */
     public function removeGroupAction(Request $request, $userId, $groupId)
     {
-
         $this->validedAccessForRole('ROLE_ACCESS_USERS');
 
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
-
-        $user = $this->getKernel()->em()
+        $user = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
-        $group = $this->getKernel()->em()
+        $group = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         if ($user !== null) {
@@ -353,7 +337,7 @@ class UsersController extends RozierApp
                 * Force redirect to avoid resending form when refreshing page
                 */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'usersEditGroupsPage',
                         array('userId' => $user->getId())
                     )
@@ -420,7 +404,7 @@ class UsersController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('usersHomePage')
+                    $this->getService('urlGenerator')->generate('usersHomePage')
                 );
                 $response->prepare($request);
 
@@ -451,11 +435,7 @@ class UsersController extends RozierApp
     {
         $this->validedAccessForRole('ROLE_ACCESS_USERS_DELETE');
 
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS_DELETE')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
-
-        $user = $this->getKernel()->em()
+        $user = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -482,7 +462,7 @@ class UsersController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('usersHomePage')
+                    $this->getService('urlGenerator')->generate('usersHomePage')
                 );
                 $response->prepare($request);
 
@@ -507,7 +487,7 @@ class UsersController extends RozierApp
     private function editUser($data, User $user)
     {
         if ($data['username'] != $user->getUsername() &&
-                $this->getKernel()->em()
+                $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\User')
                 ->usernameExists($data['username'])
             ) {
@@ -521,7 +501,7 @@ class UsersController extends RozierApp
             );
         }
         if ($data['email'] != $user->getEmail() &&
-            $this->getKernel()->em()
+            $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\User')
                 ->emailExists($data['email'])) {
 
@@ -540,7 +520,7 @@ class UsersController extends RozierApp
         }
 
         $this->updateProfileImage($user);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->flush();
     }
 
     /**
@@ -549,10 +529,10 @@ class UsersController extends RozierApp
      */
     private function addUser($data, User $user)
     {
-        if ($this->getKernel()->em()
+        if ($this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\User')
                 ->usernameExists($data['username']) ||
-            $this->getKernel()->em()
+            $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\User')
                 ->emailExists($data['email'])) {
 
@@ -571,8 +551,8 @@ class UsersController extends RozierApp
         }
 
         $this->updateProfileImage($user);
-        $this->getKernel()->em()->persist($user);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->persist($user);
+        $this->getService('em')->flush();
     }
 
     /**
@@ -603,8 +583,8 @@ class UsersController extends RozierApp
      */
     private function deleteUser($data, User $user)
     {
-        $this->getKernel()->em()->remove($user);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->remove($user);
+        $this->getService('em')->flush();
     }
 
     /**
@@ -616,11 +596,11 @@ class UsersController extends RozierApp
     private function addUserRole($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $role = $this->getKernel()->em()
+            $role = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Role', $data['roleId']);
 
             $user->addRole($role);
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->flush();
 
             return $role;
         }
@@ -637,12 +617,12 @@ class UsersController extends RozierApp
     private function removeUserRole($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $role = $this->getKernel()->em()
+            $role = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Role', $data['roleId']);
 
             if ($role !== null) {
                 $user->removeRole($role);
-                $this->getKernel()->em()->flush();
+                $this->getService('em')->flush();
             }
 
             return $role;
@@ -660,12 +640,12 @@ class UsersController extends RozierApp
     private function addUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $group = $this->getKernel()->em()
+            $group = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Group', $data['group']);
 
             if ($group !== null) {
                 $user->addGroup($group);
-                $this->getKernel()->em()->flush();
+                $this->getService('em')->flush();
             }
 
             return $group;
@@ -683,12 +663,12 @@ class UsersController extends RozierApp
     private function removeUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $group = $this->getKernel()->em()
+            $group = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Group', $data['groupId']);
 
             if ($group !== null) {
                 $user->removeGroup($group);
-                $this->getKernel()->em()->flush();
+                $this->getService('em')->flush();
             }
 
             return $group;

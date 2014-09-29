@@ -56,12 +56,12 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
 
         if ("" != $request->get('searchTerms')) {
 
-            $nodesSources = $this->getKernel()->em()
+            $nodesSources = $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
                 ->findBySearchQuery(strip_tags($request->get('searchTerms')));
 
             if (null === $nodesSources) {
-                $nodesSources = $this->getKernel()->em()
+                $nodesSources = $this->getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
                     ->searchBy(strip_tags($request->get('searchTerms')));
             }
@@ -82,7 +82,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
                         'nodeId' => $source->getNode()->getId(),
                         'translationId' => $source->getTranslation()->getId(),
                         'typeName' => $source->getNode()->getNodeType()->getDisplayName(),
-                        'url' => $this->getKernel()->getUrlGenerator()->generate(
+                        'url' => $this->getService('urlGenerator')->generate(
                             'nodesEditSourcePage',
                             array(
                                 'nodeId' => $source->getNode()->getId(),

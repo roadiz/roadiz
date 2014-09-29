@@ -31,8 +31,7 @@ abstract class AbstractAjaxController extends RozierApp
     {
         if ($request->get('_action') == "" ||
             $request->getMethod() != $method ||
-            !$this->getKernel()
-                ->getCsrfProvider()
+            !$this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::AJAX_TOKEN_INTENTION, $request->get('_token'))) {
 
             return array(

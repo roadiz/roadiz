@@ -34,7 +34,7 @@ class Fixtures
         $this->installDefaultTranslation();
         $this->installBackofficeTheme();
 
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
     }
 
     /**
@@ -63,7 +63,7 @@ class Fixtures
      */
     protected function installBackofficeTheme()
     {
-        $existing = Kernel::getInstance()->em()
+        $existing = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Theme')
             ->findOneBy(array('backendTheme'=>true, 'available'=>true));
 
@@ -73,7 +73,7 @@ class Fixtures
             $beTheme->setAvailable(true);
             $beTheme->setBackendTheme(true);
 
-            Kernel::getInstance()->em()->persist($beTheme);
+            Kernel::getService('em')->persist($beTheme);
         }
     }
 
@@ -82,7 +82,7 @@ class Fixtures
      */
     protected function installDefaultTranslation()
     {
-        $existing = Kernel::getInstance()->em()
+        $existing = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Translation')
             ->findOneBy(array('defaultTranslation'=>true, 'available'=>true));
 
@@ -93,7 +93,7 @@ class Fixtures
             $translation->setName(Translation::$availableLocales[$translation->getLocale()]);
             $translation->setAvailable(true);
 
-            Kernel::getInstance()->em()->persist($translation);
+            Kernel::getService('em')->persist($translation);
         }
     }
 
@@ -104,7 +104,7 @@ class Fixtures
      */
     public function createDefaultUser($data)
     {
-        $existing = Kernel::getInstance()->em()
+        $existing = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\User')
             ->findOneBy(array('username'=>$data['username'], 'email'=>$data['email']));
 
@@ -114,13 +114,13 @@ class Fixtures
             $user->setPlainPassword($data['password']);
             $user->setEmail($data['email']);
 
-            $existingGroup = Kernel::getInstance()->em()
+            $existingGroup = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Group')
                 ->findOneByName('Admin');
             $user->addGroup($existingGroup);
 
-            Kernel::getInstance()->em()->persist($user);
-            Kernel::getInstance()->em()->flush();
+            Kernel::getService('em')->persist($user);
+            Kernel::getService('em')->flush();
         }
 
         return true;
@@ -134,14 +134,14 @@ class Fixtures
      */
     protected function getRole($roleName = Role::ROLE_SUPER_ADMIN)
     {
-        $role = Kernel::getInstance()->em()
+        $role = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Role')
                 ->findOneBy(array('name'=>$roleName));
 
         if ($role === null) {
             $role = new Role($roleName);
-            Kernel::getInstance()->em()->persist($role);
-            Kernel::getInstance()->em()->flush();
+            Kernel::getService('em')->persist($role);
+            Kernel::getService('em')->flush();
         }
 
         return $role;
@@ -154,15 +154,15 @@ class Fixtures
      */
     protected function getSetting($name)
     {
-        $setting = Kernel::getInstance()->em()
+        $setting = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Setting')
             ->findOneBy(array('name'=>$name));
 
         if (null === $setting) {
             $setting = new Setting();
             $setting->setName($name);
-            Kernel::getInstance()->em()->persist($setting);
-            Kernel::getInstance()->em()->flush();
+            Kernel::getService('em')->persist($setting);
+            Kernel::getService('em')->flush();
         }
 
         return $setting;
@@ -198,7 +198,7 @@ class Fixtures
         $set2->setValue(false);
         $set2->setType(NodeTypeField::BOOLEAN_T);
 
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
 
         /*
          * Update timezone
@@ -223,7 +223,7 @@ class Fixtures
      */
     protected function installFrontendTheme()
     {
-        $existing = Kernel::getInstance()->em()
+        $existing = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Theme')
             ->findOneBy(array(
                 'backendTheme'=>false,
@@ -236,8 +236,8 @@ class Fixtures
             $feTheme->setAvailable(true);
             $feTheme->setBackendTheme(false);
 
-            Kernel::getInstance()->em()->persist($feTheme);
-            Kernel::getInstance()->em()->flush();
+            Kernel::getService('em')->persist($feTheme);
+            Kernel::getService('em')->flush();
         }
     }
 }

@@ -94,19 +94,19 @@ class NodesCommand extends Command
             $input->getOption('create')
         ) {
 
-            $type = Kernel::getInstance()->em()
+            $type = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\NodeType')
                 ->findOneBy(array('name'=>$typeName));
             $translation = null;
 
             if ($locale) {
-                $translation = Kernel::getInstance()->em()
+                $translation = Kernel::getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Translation')
                     ->findOneBy(array('locale'=>$locale));
             }
 
             if ($translation === null) {
-                $translation = Kernel::getInstance()->em()
+                $translation = Kernel::getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Translation')
                     ->findOneBy(array(), array('id'=> 'ASC'));
             }
@@ -120,7 +120,7 @@ class NodesCommand extends Command
             }
 
         } elseif ($nodeName) {
-            $node = Kernel::getInstance()->em()
+            $node = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Node')
                 ->findOneBy(array('nodeName'=>$nodeName));
 
@@ -130,7 +130,7 @@ class NodesCommand extends Command
                 $text = '<info>Node “'.$nodeName.'” does not exists…</info>'.PHP_EOL;
             }
         } else {
-            $nodes = Kernel::getInstance()->em()
+            $nodes = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Node')
                 ->findAll();
 
@@ -160,7 +160,7 @@ class NodesCommand extends Command
         $nodeName = $input->getArgument('node-name');
         $node = new Node($type);
         $node->setNodeName($nodeName);
-        Kernel::getInstance()->em()->persist($node);
+        Kernel::getService('em')->persist($node);
 
         // Source
         $sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
@@ -178,8 +178,8 @@ class NodesCommand extends Command
             $source->$setterName($fValue);
         }
 
-        Kernel::getInstance()->em()->persist($source);
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->persist($source);
+        Kernel::getService('em')->flush();
         $text = '<info>Node “'.$nodeName.'” created…</info>'.PHP_EOL;
 
         return $text;

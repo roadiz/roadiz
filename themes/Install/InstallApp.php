@@ -14,6 +14,7 @@ namespace Themes\Install;
 use Themes\Install\Controllers\Configuration;
 use Themes\Install\Controllers\Fixtures;
 use Themes\Install\Controllers\Requirements;
+use RZ\Renzo\Core\Events\DataInheritanceEvent;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\CMS\Controllers\AppController;
@@ -36,6 +37,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Validator\Validation;
+
+use Doctrine\ORM\Events;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 
 /**
  * Installation application
@@ -75,25 +80,6 @@ class InstallApp extends AppController
         // return $request->redirect($url, 301);
     }
 
-
-    /**
-     * @return Symfony\Component\Form\Forms $formFactory
-     */
-    protected function getFormFactory()
-    {
-        if (null === $this->formFactory) {
-
-            $validator = Validation::createValidator();
-
-            $this->formFactory = Forms::createFormFactoryBuilder()
-                ->addExtension(new ValidatorExtension($validator))
-                ->getFormFactory();
-        }
-
-        return $this->formFactory;
-    }
-
-
     /**
      * Check if twig cache must be cleared
      *
@@ -123,7 +109,7 @@ class InstallApp extends AppController
                 'ajax' => $this->getKernel()->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsBuild' => Kernel::$cmsBuild,
-                'devMode' => (boolean) $this->getKernel()->getConfig()['devMode'],
+                'devMode' => (boolean) $this->getService('config')['devMode'],
                 'baseUrl' => $this->getKernel()->getRequest()->getBaseUrl(),
                 'filesUrl' => $this->getKernel()
                                    ->getRequest()
@@ -164,7 +150,7 @@ class InstallApp extends AppController
     public function redirectIndexAction(Request $request)
     {
         $response = new RedirectResponse(
-            $this->getKernel()->getUrlGenerator()->generate(
+            $this->getService('urlGenerator')->generate(
                 'installHomePage'
             )
         );
@@ -273,21 +259,19 @@ class InstallApp extends AppController
                     $fixtures = new Fixtures();
                     $fixtures->createFolders();
 
-                    $this->getKernel()->setupEntityManager($config->getConfiguration());
-                    $this->getKernel()->em()->getConnection()->connect();
+                    $config->writeConfiguration();
+                    $this->getKernel()->setupEntityManager();
 
                     \RZ\Renzo\Console\SchemaCommand::createSchema();
                     \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
 
                     $fixtures->installFixtures();
 
-                    $config->writeConfiguration();
-
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'installDatabaseDonePage'
                         )
                     );
@@ -362,9 +346,12 @@ class InstallApp extends AppController
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
-                    $user = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\User')->findOneBy(array('username' => $userForm->getData()['username']));
+                    $user = $this->getService('em')
+                                 ->getRepository('RZ\Renzo\Core\Entities\User')
+                                 ->findOneBy(array('username' => $userForm->getData()['username']));
+
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'installUserSummaryPage',
                             array("userId" => $user->getId())
                         )
@@ -409,7 +396,7 @@ class InstallApp extends AppController
      */
     public function userSummaryAction(Request $request, $userId, Node $node = null, Translation $translation = null)
     {
-        $user = Kernel::getInstance()->em()->find('RZ\Renzo\Core\Entities\User', $userId);
+        $user = $this->getService('em')->find('RZ\Renzo\Core\Entities\User', $userId);
         $this->assignation['name'] = $user->getUsername();
         $this->assignation['email'] = $user->getEmail();
         return new Response(
@@ -448,7 +435,7 @@ class InstallApp extends AppController
                          * Force redirect to avoid resending form when refreshing page
                          */
                         $response = new RedirectResponse(
-                            $this->getKernel()->getUrlGenerator()->generate(
+                            $this->getService('urlGenerator')->generate(
                                 'installImportNodeTypesPage'
                             )
                         );
@@ -457,7 +444,7 @@ class InstallApp extends AppController
                         return $response->send();
                     } else {
                         $response = new RedirectResponse(
-                            $this->getKernel()->getUrlGenerator()->generate(
+                            $this->getService('urlGenerator')->generate(
                                 'installDonePage'
                             )
                         );
@@ -517,7 +504,7 @@ class InstallApp extends AppController
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'installHomePage'
                         )
                     );
@@ -549,7 +536,12 @@ class InstallApp extends AppController
      */
     protected function buildDatabaseForm(Request $request, Configuration $conf)
     {
-        $defaults = $conf->getConfiguration()['doctrine'];
+        if (isset($conf->getConfiguration()['doctrine'])) {
+            $defaults = $conf->getConfiguration()['doctrine'];
+        } else {
+            $defaults = array();
+        }
+
         $builder = $this->getFormFactory()
             ->createBuilder('form', $defaults)
             ->add('driver', 'choice', array(
@@ -671,7 +663,7 @@ class InstallApp extends AppController
         $metaDescription = \RZ\Renzo\Core\Bags\SettingsBag::get('meta_description');
         $emailSender = \RZ\Renzo\Core\Bags\SettingsBag::get('email_sender');
         $emailSenderName = \RZ\Renzo\Core\Bags\SettingsBag::get('email_sender_name');
-        $timeZone = $this->getKernel()->getConfig()['timezone'];
+        $timeZone = $this->getService('config')['timezone'];
 
         $timeZoneList = include(dirname(__FILE__).'/Resources/import/timezones.php');
 

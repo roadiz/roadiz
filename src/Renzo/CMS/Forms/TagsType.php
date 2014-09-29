@@ -37,7 +37,7 @@ class TagsType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $tags = Kernel::getInstance()->em()
+        $tags = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Tag')
             ->findAllWithDefaultTranslation();
 

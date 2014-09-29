@@ -101,23 +101,23 @@ class ImportController extends InstallApp
 
     public static function createNode($array)
     {
-        $nodeType = Kernel::getInstance()->em()
+        $nodeType = Kernel::getService('em')
                               ->getRepository('RZ\Renzo\Core\Entities\NodeType')
                               ->findOneByName('Page');
         $node = new Node($nodeType);
         $node->setNodeName($array['title']);
         $node->setPublished(true);
 
-        Kernel::getInstance()->em()->persist($node);
+        Kernel::getService('em')->persist($node);
 
-        $tran = Kernel::getInstance()->em()
+        $tran = Kernel::getService('em')
                           ->getRepository('RZ\Renzo\Core\Entities\Translation')
                           ->findDefault();
         $src = new NSPage($node, $tran);
         $src->setTitle($array['title']);
         $src->setContent($array['content']);
 
-        Kernel::getInstance()->em()->persist($src);
+        Kernel::getService('em')->persist($src);
 
         return $node;
     }
@@ -133,7 +133,7 @@ class ImportController extends InstallApp
         $data = array();
         $data['status'] = false;
 
-        $allNode = Kernel::getInstance()->em()
+        $allNode = Kernel::getService('em')
                          ->getRepository('RZ\Renzo\Core\Entities\Node')
                          ->findAll();
         try {
@@ -159,7 +159,7 @@ class ImportController extends InstallApp
                 $aboutNode->setParent($homeNode);
                 $contactNode->setParent($homeNode);
 
-                Kernel::getInstance()->em()->flush();
+                Kernel::getService('em')->flush();
             }
         } catch (\Exception $e) {
             $data['error'] = $e->getMessage();
@@ -194,7 +194,7 @@ class ImportController extends InstallApp
             if (null === $themeId) {
                 $path = RENZO_ROOT . '/themes/install' . $pathFile;
             } else {
-                $theme = Kernel::getInstance()->em()
+                $theme = Kernel::getService('em')
                          ->find('RZ\Renzo\Core\Entities\Theme', $themeId);
                 $dir = dir($theme->getClassName());
                 if ($theme === null) {
@@ -218,7 +218,7 @@ class ImportController extends InstallApp
         }
         $data['status'] = true;
         if ($classImporter == "RZ\Renzo\CMS\Importers\NodeTypesImporter") {
-            $data['request'] = Kernel::getInstance()->getUrlGenerator()->generate('installUpdateSchema');
+            $data['request'] = Kernel::getService('urlGenerator')->generate('installUpdateSchema');
         }
         return new Response(
             json_encode($data),

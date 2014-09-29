@@ -71,9 +71,10 @@ class DebugPanel implements EventSubscriberInterface
 
     private function getDebugView()
     {
-        Kernel::getInstance()->getStopwatch()->stop('global');
+        Kernel::getService('stopwatch')->stop('global');
+
         $assignation = array(
-            'stopwatch'=>Kernel::getInstance()->getStopwatch()
+            'stopwatch'=>Kernel::getService('stopwatch')
         );
 
         return $this->getTwig()->render('debug-panel.html.twig', $assignation);
@@ -104,7 +105,7 @@ class DebugPanel implements EventSubscriberInterface
 
         //RoutingExtension
         $this->twig->addExtension(
-            new RoutingExtension(Kernel::getInstance()->getUrlGenerator())
+            new RoutingExtension(Kernel::getService('urlGenerator'))
         );
 
         return $this;

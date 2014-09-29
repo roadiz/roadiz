@@ -68,7 +68,7 @@ class DefaultApp extends FrontendController
     public function homeAction(Request $request, Node $node = null, Translation $translation = null)
     {
         if ($node === null) {
-            $node = Kernel::getInstance()->em()
+            $node = Kernel::getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Node')
                     ->contextualFindOneBy($this->getSecurityContext(), array('home'=>true));
         }
@@ -122,7 +122,7 @@ class DefaultApp extends FrontendController
             ->contextualFindOneBy($this->getSecurityContext(), array('home'=>true));
 
         if ($this->translation === null) {
-            $this->translation = Kernel::getInstance()->em()
+            $this->translation = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findOneBy(
                     array('defaultTranslation'=>true)

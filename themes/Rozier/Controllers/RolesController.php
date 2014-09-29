@@ -38,13 +38,10 @@ class RolesController extends RozierApp
     public function indexAction(Request $request)
     {
         $this->validedAccessForRole('ROLE_ACCESS_ROLES');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_ROLES')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
         $listManager = new EntityListManager(
             $request,
-            $this->getKernel()->em(),
+            $this->getService('em'),
             'RZ\Renzo\Core\Entities\Role',
             array(),
             array('name' => 'ASC')
@@ -71,9 +68,6 @@ class RolesController extends RozierApp
     public function addAction(Request $request)
     {
         $this->validedAccessForRole('ROLE_ACCESS_ROLES');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_ROLES')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
         $form = $this->buildAddForm();
         $form->handleRequest();
@@ -98,7 +92,7 @@ class RolesController extends RozierApp
              * Force redirect to avoid resending form when refreshing page
              */
             $response = new RedirectResponse(
-                $this->getKernel()->getUrlGenerator()->generate('rolesHomePage')
+                $this->getService('urlGenerator')->generate('rolesHomePage')
             );
             $response->prepare($request);
 
@@ -125,11 +119,8 @@ class RolesController extends RozierApp
     public function deleteAction(Request $request, $roleId)
     {
         $this->validedAccessForRole('ROLE_ACCESS_ROLES');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_ROLES')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
-        $role = $this->getKernel()->em()
+        $role = $this->getService('em')
                     ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
         if ($role !== null) {
 
@@ -157,7 +148,7 @@ class RolesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('rolesHomePage')
+                    $this->getService('urlGenerator')->generate('rolesHomePage')
                 );
                 $response->prepare($request);
 
@@ -187,12 +178,9 @@ class RolesController extends RozierApp
     public function editAction(Request $request, $roleId)
     {
         $this->validedAccessForRole('ROLE_ACCESS_ROLES');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_ROLES')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
-        $role = $this->getKernel()->em()
-                    ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
+        $role = $this->getService('em')
+                     ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
 
         if ($role !== null &&
             !$role->required()) {
@@ -221,7 +209,7 @@ class RolesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('rolesHomePage')
+                    $this->getService('urlGenerator')->generate('rolesHomePage')
                 );
                 $response->prepare($request);
 
@@ -324,7 +312,7 @@ class RolesController extends RozierApp
     protected function addRole(array $data)
     {
         if (isset($data['name'])) {
-            $existing = $this->getKernel()->em()
+            $existing = $this->getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Role')
                     ->findOneBy(array('name' => $data['name']));
             if ($existing !== null) {
@@ -332,8 +320,8 @@ class RolesController extends RozierApp
             }
 
             $role = new Role($data['name']);
-            $this->getKernel()->em()->persist($role);
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->persist($role);
+            $this->getService('em')->flush();
 
             return $role;
         } else {
@@ -356,7 +344,7 @@ class RolesController extends RozierApp
         }
 
         if (isset($data['name'])) {
-            $existing = $this->getKernel()->em()
+            $existing = $this->getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Role')
                     ->findOneBy(array('name' => $data['name']));
             if ($existing !== null &&
@@ -365,7 +353,7 @@ class RolesController extends RozierApp
             }
 
             $role->setName($data['name']);
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->flush();
 
             return $role;
         } else {
@@ -382,8 +370,8 @@ class RolesController extends RozierApp
     protected function deleteRole(array $data, Role $role)
     {
         if (!$role->required()) {
-            $this->getKernel()->em()->remove($role);
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->remove($role);
+            $this->getService('em')->flush();
         } else {
             throw new EntityRequiredException($this->getTranslator()->trans("role.is.required"), 1);
         }

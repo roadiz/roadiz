@@ -45,7 +45,7 @@ class FontHandler
      */
     public function getDownloadUrl($extension, $token)
     {
-        return Kernel::getInstance()->getUrlGenerator()->generate(
+        return Kernel::getService('urlGenerator')->generate(
             'FontFile',
             array(
                 'filename'  => $this->font->getHash(),

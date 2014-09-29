@@ -20,7 +20,7 @@ class NodesSourcesRepositoryTest extends PHPUnit_Framework_TestCase
      */
     public function testFindBySearchQuery($query, $expectedClass)
     {
-        $nSources = Kernel::getInstance()->em()
+        $nSources = Kernel::getService('em')
                                 ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
                                 ->findBySearchQuery($query);
 
@@ -48,7 +48,7 @@ class NodesSourcesRepositoryTest extends PHPUnit_Framework_TestCase
      */
     public function testFindBySearchQueryAndTranslation($query, $expectedClass, Translation $translation)
     {
-        $nSources = Kernel::getInstance()->em()
+        $nSources = Kernel::getService('em')
                                 ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
                                 ->findBySearchQueryAndTranslation($query, $translation);
 

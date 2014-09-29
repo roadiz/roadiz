@@ -37,12 +37,12 @@ class DocumentHandler
      */
     public function removeWithAssets()
     {
-        Kernel::getInstance()->em()->remove($this->document);
+        Kernel::getService('em')->remove($this->document);
 
         if (file_exists($this->document->getAbsolutePath())) {
             if (unlink($this->document->getAbsolutePath())) {
                 $this->cleanParentDirectory();
-                Kernel::getInstance()->em()->flush();
+                Kernel::getService('em')->flush();
 
                 return true;
             } else {
@@ -54,7 +54,7 @@ class DocumentHandler
              * and check directory
              */
             $this->cleanParentDirectory();
-            Kernel::getInstance()->em()->flush();
+            Kernel::getService('em')->flush();
 
             return true;
         }

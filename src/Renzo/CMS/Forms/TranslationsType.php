@@ -24,7 +24,7 @@ class TranslationsType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $translations = Kernel::getInstance()->em()
+        $translations = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Translation')
             ->findAll();
 

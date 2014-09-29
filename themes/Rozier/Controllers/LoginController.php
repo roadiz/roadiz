@@ -43,7 +43,7 @@ class LoginController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        $session = $request->getSession();
+        $session = $this->getService('session');
         // get the login error if there is one
         if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
             $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);

@@ -40,7 +40,7 @@ class DocumentsType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $documents = Kernel::getInstance()->em()
+        $documents = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Document')
             ->findAll();
 

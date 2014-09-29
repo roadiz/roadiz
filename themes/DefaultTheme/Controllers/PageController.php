@@ -39,6 +39,8 @@ class PageController extends DefaultApp
     ) {
         $this->prepareThemeAssignation($node, $translation);
 
+        $this->getService('stopwatch')->start('twigRender');
+
         return new Response(
             $this->getTwig()->render('types/page.html.twig', $this->assignation),
             Response::HTTP_OK,

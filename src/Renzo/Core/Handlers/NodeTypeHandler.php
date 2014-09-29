@@ -162,7 +162,7 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
         /*
          * Delete every nodes
          */
-        $nodes = Kernel::getInstance()->em()
+        $nodes = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Node')
             ->findBy(array(
                 'nodeType' => $this->getNodeType()
@@ -180,8 +180,8 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
         /*
          * Remove node type
          */
-        Kernel::getInstance()->em()->remove($this->getNodeType());
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->remove($this->getNodeType());
+        Kernel::getService('em')->flush();
 
         return $this;
     }
@@ -227,7 +227,7 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
                      * creating it.
                      */
                     $newField->setNodeType($this->nodeType);
-                    Kernel::getInstance()->em()->persist($newField);
+                    Kernel::getService('em')->persist($newField);
                 }
             }
 

@@ -167,7 +167,7 @@ class Logger implements LoggerInterface
             $log->setClientIp(Kernel::getInstance()->getRequest()->getClientIp());
         }
 
-        Kernel::getInstance()->em()->persist($log);
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->persist($log);
+        Kernel::getService('em')->flush();
     }
 }

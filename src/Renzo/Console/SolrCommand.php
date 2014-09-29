@@ -131,7 +131,7 @@ class SolrCommand extends Command
         $update->addDeleteQuery('*:*');
 
         // Then index
-        $nSources = Kernel::getInstance()->em()
+        $nSources = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
             ->findAll();
 

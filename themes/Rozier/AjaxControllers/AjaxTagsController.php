@@ -55,7 +55,7 @@ class AjaxTagsController extends AbstractAjaxController
             );
         }
 
-        $tag = $this->getKernel()->em()
+        $tag = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
@@ -114,7 +114,7 @@ class AjaxTagsController extends AbstractAjaxController
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
 
-            $parent = $this->getKernel()->em()
+            $parent = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['newParent']);
 
             if ($parent !== null) {
@@ -129,7 +129,7 @@ class AjaxTagsController extends AbstractAjaxController
          */
         if (!empty($parameters['nextTagId']) &&
             $parameters['nextTagId'] > 0) {
-            $nextTag = $this->getKernel()->em()
+            $nextTag = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['nextTagId']);
             if ($nextTag !== null) {
                 $tag->setPosition($nextTag->getPosition() - 0.5);
@@ -137,14 +137,14 @@ class AjaxTagsController extends AbstractAjaxController
         } elseif (!empty($parameters['prevTagId']) &&
             $parameters['prevTagId'] > 0) {
 
-            $prevTag = $this->getKernel()->em()
+            $prevTag = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['prevTagId']);
             if ($prevTag !== null) {
                 $tag->setPosition($prevTag->getPosition() + 0.5);
             }
         }
         // Apply position update before cleaning
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->flush();
 
         if ($parent !== null) {
             $parent->getHandler()->cleanChildrenPositions();

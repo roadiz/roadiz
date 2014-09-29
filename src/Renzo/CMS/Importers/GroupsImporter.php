@@ -49,7 +49,7 @@ class GroupsImporter implements ImporterInterface
         $return = false;
         $groups = GroupCollectionJsonSerializer::deserialize($serializedData);
         foreach ($groups as $group) {
-            $existingGroup = Kernel::getInstance()->em()
+            $existingGroup = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Group')
                 ->findOneBy(array('name'=>$group->getName()));
 
@@ -58,17 +58,17 @@ class GroupsImporter implements ImporterInterface
                   /*
                    * then persist each role
                    */
-                    $role = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\Role')->findOneByName($role->getName());
+                    $role = Kernel::getService('em')->getRepository('RZ\Renzo\Core\Entities\Role')->findOneByName($role->getName());
                 }
 
-                Kernel::getInstance()->em()->persist($group);
+                Kernel::getService('em')->persist($group);
                 // Flush before creating group's roles.
-                Kernel::getInstance()->em()->flush();
+                Kernel::getService('em')->flush();
             } else {
                 $existingGroup->getHandler()->diff($group);
             }
 
-            Kernel::getInstance()->em()->flush();
+            Kernel::getService('em')->flush();
         }
         $return = true;
         return $return;

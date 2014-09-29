@@ -45,11 +45,8 @@ class GroupsUtilsController extends RozierApp
     public function exportAllAction(Request $request)
     {
         $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
-        $existingGroup = $this->getKernel()->em()
+        $existingGroup = $this->getService('em')
                               ->getRepository('RZ\Renzo\Core\Entities\Group')
                               ->findAll();
         $group = GroupCollectionJsonSerializer::serialize($existingGroup);
@@ -84,11 +81,8 @@ class GroupsUtilsController extends RozierApp
     public function exportAction(Request $request, $groupId)
     {
         $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
-        $existingGroup = $this->getKernel()->em()
+        $existingGroup = $this->getService('em')
                               ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         $group = GroupCollectionJsonSerializer::serialize(array($existingGroup));
@@ -122,9 +116,6 @@ class GroupsUtilsController extends RozierApp
     public function importJsonFileAction(Request $request)
     {
         $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
         $form = $this->buildImportJsonFileForm();
 
@@ -149,7 +140,7 @@ class GroupsUtilsController extends RozierApp
 
                      // redirect even if its null
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'groupsHomePage'
                         )
                     );
@@ -164,7 +155,7 @@ class GroupsUtilsController extends RozierApp
 
                     // redirect even if its null
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'groupsImportPage'
                         )
                     );

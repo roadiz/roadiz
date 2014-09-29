@@ -45,11 +45,7 @@ class TranslationsController extends RozierApp
     {
         $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TRANSLATIONS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
-
-        $translations = $this->getKernel()->em()
+        $translations = $this->getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Translation')
             ->findAll();
 
@@ -57,7 +53,7 @@ class TranslationsController extends RozierApp
 
         $listManager = new EntityListManager(
             $request,
-            $this->getKernel()->em(),
+            $this->getService('em'),
             'RZ\Renzo\Core\Entities\Translation'
         );
         $listManager->handle();
@@ -81,7 +77,7 @@ class TranslationsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'translationsHomePage'
                     )
                 );
@@ -114,11 +110,7 @@ class TranslationsController extends RozierApp
     {
         $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TRANSLATIONS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
-
-        $translation = $this->getKernel()->em()
+        $translation = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
@@ -144,7 +136,7 @@ class TranslationsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'translationsEditPage',
                         array('translationId' => $translation->getId())
                     )
@@ -176,10 +168,6 @@ class TranslationsController extends RozierApp
     {
         $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TRANSLATIONS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
-
         $translation = new Translation();
 
         if (null !== $translation) {
@@ -205,7 +193,7 @@ class TranslationsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('translationsHomePage')
+                    $this->getService('urlGenerator')->generate('translationsHomePage')
                 );
                 $response->prepare($request);
 
@@ -234,11 +222,8 @@ class TranslationsController extends RozierApp
     public function deleteAction(Request $request, $translationId)
     {
         $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TRANSLATIONS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
-        $translation = $this->getKernel()->em()
+        $translation = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
 
         if (null !== $translation) {
@@ -265,7 +250,7 @@ class TranslationsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('translationsHomePage')
+                    $this->getService('urlGenerator')->generate('translationsHomePage')
                 );
                 $response->prepare($request);
 
@@ -298,7 +283,7 @@ class TranslationsController extends RozierApp
                 $translation->$setter( $value );
             }
 
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->flush();
         } catch (\Exception $e) {
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
@@ -323,8 +308,8 @@ class TranslationsController extends RozierApp
                 $setter = 'set'.ucwords($key);
                 $translation->$setter( $value );
             }
-            $this->getKernel()->em()->persist($translation);
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->persist($translation);
+            $this->getService('em')->flush();
         } catch (\Exception $e) {
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
@@ -347,8 +332,8 @@ class TranslationsController extends RozierApp
         if ($data['translation_id'] == $translation->getId()) {
 
             if (false === $translation->isDefaultTranslation()) {
-                $this->getKernel()->em()->remove($translation);
-                $this->getKernel()->em()->flush();
+                $this->getService('em')->remove($translation);
+                $this->getService('em')->flush();
             } else {
                 throw new \Exception(
                     $this->getTranslator()->trans(

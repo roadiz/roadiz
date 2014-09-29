@@ -36,7 +36,7 @@ class DataInheritanceEvent
 
             try {
                 // List node types
-                $nodeTypes = Kernel::getInstance()->em()
+                $nodeTypes = Kernel::getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\NodeType')
                     ->findAll();
 
@@ -70,7 +70,7 @@ class DataInheritanceEvent
             /**
              *  List node types
              */
-            $nodeTypes = Kernel::getInstance()->em()
+            $nodeTypes = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\NodeType')
                 ->findAll();
 
@@ -106,7 +106,7 @@ class DataInheritanceEvent
      */
     public function checkTable($table)
     {
-        $conn = Kernel::getInstance()->em()->getConnection();
+        $conn = Kernel::getService('em')->getConnection();
         $sm = $conn->getSchemaManager();
         $tables = $sm->listTables();
 

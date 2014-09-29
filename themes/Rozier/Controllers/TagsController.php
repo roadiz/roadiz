@@ -42,15 +42,12 @@ class TagsController extends RozierApp
     {
         $this->validedAccessForRole('ROLE_ACCESS_TAGS');
 
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
         /*
          * Manage get request to filter list
          */
         $listManager = new EntityListManager(
             $request,
-            $this->getKernel()->em(),
+            $this->getService('em'),
             'RZ\Renzo\Core\Entities\Tag'
         );
         $listManager->handle();
@@ -77,15 +74,13 @@ class TagsController extends RozierApp
     public function editTranslatedAction(Request $request, $tagId, $translationId)
     {
         $this->validedAccessForRole('ROLE_ACCESS_TAGS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
-        $translation = $this->getKernel()->em()
+
+        $translation = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
 
-            $tag = $this->getKernel()->em()
+            $tag = $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Tag')
                 ->findWithTranslation((int) $tagId, $translation);
 
@@ -93,22 +88,22 @@ class TagsController extends RozierApp
              * If translation does not exist, we created it.
              */
             if ($tag === null) {
-                $baseTag = $this->getKernel()->em()
+                $baseTag = $this->getService('em')
                     ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
-                $this->getKernel()->em()->refresh($baseTag);
+                $this->getService('em')->refresh($baseTag);
 
                 if ($baseTag !== null) {
 
                     $translatedTag = new TagTranslation($baseTag, $translation);
                     $translatedTag->setName($baseTag->getTranslatedTags()->first()->getName());
-                    $this->getKernel()->em()->persist($translatedTag);
-                    $this->getKernel()->em()->flush();
+                    $this->getService('em')->persist($translatedTag);
+                    $this->getService('em')->flush();
 
-                    $tag = $this->getKernel()->em()
+                    $tag = $this->getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\Tag')
                         ->findWithTranslation((int) $tagId, $translation);
-                    $this->getKernel()->em()->refresh($tag);
+                    $this->getService('em')->refresh($tag);
                 } else {
                     return $this->throw404();
                 }
@@ -116,7 +111,7 @@ class TagsController extends RozierApp
 
             $this->assignation['tag'] = $tag;
             $this->assignation['translation'] = $translation;
-            $this->assignation['available_translations'] = $this->getKernel()->em()
+            $this->assignation['available_translations'] = $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findAllAvailable();
 
@@ -134,7 +129,7 @@ class TagsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'tagsEditTranslatedPage',
                         array('tagId' => $tag->getId(), 'translationId' => $translation->getId())
                     )
@@ -167,12 +162,9 @@ class TagsController extends RozierApp
     {
         $this->validedAccessForRole('ROLE_ACCESS_TAGS');
 
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
         $tag = new Tag();
 
-        $translation = $this->getKernel()->em()
+        $translation = $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();
 
@@ -194,7 +186,7 @@ class TagsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('tagsHomePage')
+                    $this->getService('urlGenerator')->generate('tagsHomePage')
                 );
                 $response->prepare($request);
 
@@ -224,10 +216,8 @@ class TagsController extends RozierApp
     public function deleteAction(Request $request, $tagId)
     {
         $this->validedAccessForRole('ROLE_ACCESS_TAGS_DELETE');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS_DELETE')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
-        $tag = $this->getKernel()->em()
+
+        $tag = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
@@ -248,7 +238,7 @@ class TagsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('tagsHomePage')
+                    $this->getService('urlGenerator')->generate('tagsHomePage')
                 );
                 $response->prepare($request);
 
@@ -279,18 +269,16 @@ class TagsController extends RozierApp
     public function addChildAction(Request $request, $tagId, $translationId = null)
     {
         $this->validedAccessForRole('ROLE_ACCESS_TAGS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
-        $translation = $this->getKernel()->em()
+
+        $translation = $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();
 
         if ($translationId != null) {
-            $translation = $this->getKernel()->em()
+            $translation = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
         }
-        $parentTag = $this->getKernel()->em()
+        $parentTag = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
         if ($translation !== null &&
@@ -309,7 +297,7 @@ class TagsController extends RozierApp
                     $this->getLogger()->info($msg);
 
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'tagsEditPage',
                             array('tagId' => $tag->getId())
                         )
@@ -323,7 +311,7 @@ class TagsController extends RozierApp
                     $this->getLogger()->warning($e->getMessage());
 
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'tagsAddChildPage',
                             array('tagId' => $tagId, 'translationId' => $translationId)
                         )
@@ -379,7 +367,7 @@ class TagsController extends RozierApp
             }
         }
 
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->flush();
     }
 
     /**
@@ -415,9 +403,9 @@ class TagsController extends RozierApp
         }
         $tag->getTranslatedTags()->add($translatedTag);
 
-        $this->getKernel()->em()->persist($translatedTag);
-        $this->getKernel()->em()->persist($tag);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->persist($translatedTag);
+        $this->getService('em')->persist($tag);
+        $this->getService('em')->flush();
 
         return $tag;
     }
@@ -431,7 +419,7 @@ class TagsController extends RozierApp
      */
     private function checkExists($name)
     {
-        $ttag = $this->getKernel()->em()
+        $ttag = $this->getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
                     ->findOneBy(array('name'=>$name));
 
@@ -478,9 +466,9 @@ class TagsController extends RozierApp
         }
         $tag->getTranslatedTags()->add($translatedTag);
 
-        $this->getKernel()->em()->persist($translatedTag);
-        $this->getKernel()->em()->persist($tag);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->persist($translatedTag);
+        $this->getService('em')->persist($tag);
+        $this->getService('em')->flush();
 
         return $tag;
     }
@@ -491,8 +479,8 @@ class TagsController extends RozierApp
      */
     private function deleteTag($data, Tag $tag)
     {
-        $this->getKernel()->em()->remove($tag);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->remove($tag);
+        $this->getService('em')->flush();
     }
 
     /**
@@ -599,7 +587,7 @@ class TagsController extends RozierApp
      */
     public static function getTags()
     {
-        return $this->getKernel()->em()
+        return $this->getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Tag')
             ->findAll();
     }

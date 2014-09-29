@@ -47,12 +47,12 @@ class TagTreeWidget extends AbstractWidget
     protected function getTagTreeAssignationForParent()
     {
         if ($this->translation === null) {
-            $this->translation = Kernel::getInstance()->em()
+            $this->translation = Kernel::getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Translation')
                     ->findOneBy(array('defaultTranslation'=>true));
         }
 
-        $this->tags = Kernel::getInstance()->em()
+        $this->tags = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Tag')
                 ->findBy(array('parent'=>$this->parentTag), array('position'=>'ASC'));
     }
@@ -65,12 +65,12 @@ class TagTreeWidget extends AbstractWidget
     public function getChildrenTags(Tag $parent)
     {
         if ($this->translation === null) {
-            $this->translation = Kernel::getInstance()->em()
+            $this->translation = Kernel::getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Translation')
                     ->findOneBy(array('defaultTranslation'=>true));
         }
         if ($parent !== null) {
-            return $this->tags = Kernel::getInstance()->em()
+            return $this->tags = Kernel::getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Tag')
                     ->findBy(array('parent'=>$parent), array('position'=>'ASC'));
         }

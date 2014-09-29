@@ -14,6 +14,8 @@ use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Handlers\UserProvider;
 use RZ\Renzo\Core\Handlers\UserHandler;
 
+use Pimple\Container;
+
 use RZ\Renzo\Core\Viewers\ViewableInterface;
 use \Michelf\Markdown;
 
@@ -36,6 +38,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Validator\Validation;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
@@ -84,13 +88,26 @@ class AppController implements ViewableInterface
         return $this->kernel;
     }
     /**
+     * Get mixed object from Dependency Injection container.
+     *
+     * *Alias for `$this->kernel->container[$key]`*
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function getService($key)
+    {
+        return $this->kernel->container[$key];
+    }
+    /**
      * Alias for `$this->kernel->getSecurityContext()`.
      *
      * @return Symfony\Component\Security\Core\SecurityContext
      */
     public function getSecurityContext()
     {
-        return $this->kernel->getSecurityContext();
+        return $this->kernel->container['securityContext'];
     }
     /**
      * Alias for `$this->kernel->getEntityManager()`.
@@ -99,7 +116,7 @@ class AppController implements ViewableInterface
      */
     public function em()
     {
-        return $this->kernel->getEntityManager();
+        return $this->kernel->container['em'];
     }
 
     /**
@@ -216,15 +233,11 @@ class AppController implements ViewableInterface
     }
 
     /**
-     * @var Psr\Log\LoggerInterface
-     */
-    protected $logger = null;
-    /**
      * @return Psr\Log\LoggerInterface
      */
     public function getLogger()
     {
-        return $this->logger;
+        return $this->getService('logger');
     }
 
     /**
@@ -232,16 +245,11 @@ class AppController implements ViewableInterface
      *
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
-    public function __init(SecurityContext $securityContext = null)
+    public function __init()
     {
         $this->initializeTwig()
              ->initializeTranslator()
              ->prepareBaseAssignation();
-
-        if (null !== $securityContext) {
-            $this->logger = new \RZ\Renzo\Core\Log\Logger();
-            $this->logger->setSecurityContext($securityContext);
-        }
     }
 
     /**
@@ -254,7 +262,6 @@ class AppController implements ViewableInterface
      * @param array                                            $baseAssignation
      */
     public function __initFromOtherController(
-        SecurityContext $securityContext,
         \Twig_Environment $twigEnvironment,
         Translator $translator,
         array $baseAssignation
@@ -262,11 +269,6 @@ class AppController implements ViewableInterface
         $this->twig = $twigEnvironment;
         $this->translator = $translator;
         $this->assignation = $baseAssignation;
-
-        if (null !== $securityContext) {
-            $this->logger = new \RZ\Renzo\Core\Log\Logger();
-            $this->logger->setSecurityContext($securityContext);
-        }
     }
 
     /**
@@ -405,13 +407,13 @@ class AppController implements ViewableInterface
         $this->twig->addExtension(
             new FormExtension(new TwigRenderer(
                 $formEngine,
-                $this->kernel->getCsrfProvider()
+                $this->getService('csrfProvider')
             ))
         );
 
         //RoutingExtension
         $this->twig->addExtension(
-            new RoutingExtension($this->kernel->getUrlGenerator())
+            new RoutingExtension($this->getService('urlGenerator'))
         );
 
         /*
@@ -505,17 +507,15 @@ class AppController implements ViewableInterface
                 'ajax' => $this->kernel->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsBuild' => Kernel::$cmsBuild,
-                'devMode' => (boolean) $this->kernel->getConfig()['devMode'],
+                'devMode' => (boolean) $this->kernel->container['config']['devMode'],
                 'baseUrl' => $this->kernel->getRequest()->getBaseUrl(),
                 'filesUrl' => $this->kernel
                                    ->getRequest()
                                    ->getBaseUrl().'/'.Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => $this->kernel
-                                    ->getCsrfProvider()
+                'ajaxToken' => $this->getService('csrfProvider')
                                     ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->kernel
-                                    ->getCsrfProvider()
+                'fontToken' => $this->getService('csrfProvider')
                                     ->generateCsrfToken(static::FONT_TOKEN_INTENTION)
             ),
             'session' => array(
@@ -524,11 +524,11 @@ class AppController implements ViewableInterface
             )
         );
 
-        if ($this->kernel->getSecurityContext() !== null &&
-            $this->kernel->getSecurityContext()->getToken() !== null ) {
-            $this->assignation['securityContext'] = $this->kernel->getSecurityContext();
-            $this->assignation['session']['user'] = $this->kernel
-                                                         ->getSecurityContext()
+        if ($this->getService('securityContext') !== null &&
+            $this->getService('securityContext')->getToken() !== null ) {
+
+            $this->assignation['securityContext'] = $this->getService('securityContext');
+            $this->assignation['session']['user'] = $this->getService('securityContext')
                                                          ->getToken()
                                                          ->getUser();
         }
@@ -562,7 +562,7 @@ class AppController implements ViewableInterface
     public static function setup()
     {
         $className = get_called_class();
-        $theme = Kernel::getInstance()->em()
+        $theme = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Theme')
             ->findOneBy(array('className'=>$className));
 
@@ -572,8 +572,8 @@ class AppController implements ViewableInterface
             $theme->setBackendTheme(static::isBackendTheme());
             $theme->setAvailable(true);
 
-            Kernel::getInstance()->em()->persist($theme);
-            Kernel::getInstance()->em()->flush();
+            Kernel::getService('em')->persist($theme);
+            Kernel::getService('em')->flush();
 
             return true;
         }
@@ -589,13 +589,13 @@ class AppController implements ViewableInterface
     public static function enable()
     {
         $className = get_called_class();
-        $theme = Kernel::getInstance()->em()
+        $theme = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Theme')
             ->findOneBy(array('className'=>$className));
 
         if ($theme !== null) {
             $theme->setAvailable(true);
-            Kernel::getInstance()->em()->flush();
+            Kernel::getService('em')->flush();
 
             return true;
         }
@@ -610,13 +610,13 @@ class AppController implements ViewableInterface
     public static function disable()
     {
         $className = get_called_class();
-        $theme = Kernel::getInstance()->em()
+        $theme = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Theme')
             ->findOneBy(array('className'=>$className));
 
         if ($theme !== null) {
             $theme->setAvailable(false);
-            Kernel::getInstance()->em()->flush();
+            Kernel::getService('em')->flush();
 
             return true;
         }
@@ -625,32 +625,21 @@ class AppController implements ViewableInterface
     }
 
     /**
-     * Register current AppController security scheme in Kernel firewall map.
+     * Append objects to global container.
      *
-     * Implements this method if your app controller need a security context.
-     *
-     * @param SecurityContext           $securityContext
-     * @param UserProvider              $renzoUserProvider
-     * @param DaoAuthenticationProvider $authenticationManager
-     * @param AccessDecisionManager     $accessDecisionManager
-     * @param FirewallMap               $firewallMap
-     * @param HttpKernelInterface       $httpKernel
-     * @param HttpUtils                 $httpUtils
-     * @param EventDispatcher           $dispatcher
-     *
-     * @see BackendController::appendToFirewallMap
+     * @param Pimple\Container $container
      */
-    public static function appendToFirewallMap(
-        SecurityContext $securityContext,
-        UserProvider $renzoUserProvider,
-        DaoAuthenticationProvider $authenticationManager,
-        AccessDecisionManager $accessDecisionManager,
-        FirewallMap $firewallMap,
-        HttpKernelInterface $httpKernel,
-        HttpUtils $httpUtils,
-        EventDispatcher $dispatcher = null
-    ) {
+    public static function setupDependencyInjection(Container $container)
+    {
 
+    }
+
+    /**
+     * @return Symfony\Component\Form\Forms
+     */
+    protected function getFormFactory()
+    {
+        return $this->kernel->container['formFactory'];
     }
 
 
@@ -673,9 +662,12 @@ class AppController implements ViewableInterface
         return $response->send();
     }
 
-    public function validedAccessForRole($role) {
+    public function validedAccessForRole($role)
+    {
         if (!($this->getSecurityContext()->isGranted($role)
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN'))) {
+
             throw new AccessDeniedException("You don't have access to this page:" . $role);
+        }
     }
 }

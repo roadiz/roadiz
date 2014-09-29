@@ -99,7 +99,7 @@ class NodeTypesCommand extends Command
 
         if ($name) {
 
-            $nodetype = Kernel::getInstance()->em()
+            $nodetype = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\NodeType')
                 ->findOneBy(array('name'=>$name));
 
@@ -113,18 +113,18 @@ class NodeTypesCommand extends Command
                         '<question>Are you sure to delete '.$nodetype->getName().' node-type?</question> : ',
                         false
                     )) {
-                        Kernel::getInstance()->em()->remove($nodetype);
-                        Kernel::getInstance()->em()->flush();
+                        Kernel::getService('em')->remove($nodetype);
+                        Kernel::getService('em')->flush();
                         $text = '<info>Node-type deleted…</info>'.PHP_EOL;
                     }
                 } elseif ($input->getOption('hide')) {
                     $nodetype->setVisible(false);
-                    Kernel::getInstance()->em()->flush();
+                    Kernel::getService('em')->flush();
 
                     $text .= '<info>'.$nodetype->getName()." hidden…</info>".PHP_EOL;
                 } elseif ($input->getOption('show')) {
                     $nodetype->setVisible(true);
-                    Kernel::getInstance()->em()->flush();
+                    Kernel::getService('em')->flush();
 
                     $text .= '<info>'.$nodetype->getName()." showed…</info>".PHP_EOL;
                 } elseif ($input->getOption('listFields')) {
@@ -139,7 +139,7 @@ class NodeTypesCommand extends Command
             }
         } else {
 
-            $nodetypes = Kernel::getInstance()->em()
+            $nodetypes = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\NodeType')
                 ->findAll();
 
@@ -188,7 +188,7 @@ class NodeTypesCommand extends Command
             ''
         );
         $nt->setDescription($description);
-        Kernel::getInstance()->em()->persist($nt);
+        Kernel::getService('em')->persist($nt);
 
         $i = 1;
         while (true) {
@@ -226,7 +226,7 @@ class NodeTypesCommand extends Command
             $nt->getFields()->add($field);
             $field->setNodeType($nt);
 
-            Kernel::getInstance()->em()->persist($field);
+            Kernel::getService('em')->persist($field);
 
             if (!$this->dialog->askConfirmation(
                 $output,
@@ -238,7 +238,7 @@ class NodeTypesCommand extends Command
 
             $i++;
         }
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
         $nt->getHandler()->updateSchema();
 
         return '<question>Node type '.$nt->getName().' has been created.</question>';

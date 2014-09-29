@@ -52,10 +52,10 @@ class SettingsUtilsController extends RozierApp
         //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
         //     return $this->throw404();
 
-        $groups = $this->getKernel()->em()
+        $groups = $this->getService('em')
                   ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
                   ->findAll();
-        $lonelySettings = $this->getKernel()->em()
+        $lonelySettings = $this->getService('em')
                           ->getRepository('RZ\Renzo\Core\Entities\Setting')
                           ->findBy(array('settingGroup' => null));
         //\Doctrine\Common\Util\Debug::dump($lonelySettings);
@@ -119,11 +119,11 @@ class SettingsUtilsController extends RozierApp
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
                         $this->getLogger()->info($msg);
 
-                        $this->getKernel()->em()->flush();
+                        $this->getService('em')->flush();
 
                         // redirect even if its null
                         $response = new RedirectResponse(
-                            $this->getKernel()->getUrlGenerator()->generate(
+                            $this->getService('urlGenerator')->generate(
                                 'settingsHomePage'
                             )
                         );
@@ -136,7 +136,7 @@ class SettingsUtilsController extends RozierApp
 
                         // redirect even if its null
                         $response = new RedirectResponse(
-                            $this->getKernel()->getUrlGenerator()->generate(
+                            $this->getService('urlGenerator')->generate(
                                 'settingsImportPage'
                             )
                         );
@@ -151,7 +151,7 @@ class SettingsUtilsController extends RozierApp
 
                     // redirect even if its null
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'settingsImportPage'
                         )
                     );

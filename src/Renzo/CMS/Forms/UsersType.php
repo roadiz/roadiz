@@ -35,7 +35,7 @@ class UsersType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $users = Kernel::getInstance()->em()
+        $users = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\User')
             ->findAll();
 
