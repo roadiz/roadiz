@@ -13,11 +13,11 @@ class RoleRepositoryTest extends PHPUnit_Framework_TestCase
      */
     public function testRoleValue($name, $expected)
     {
-        echo Kernel::getInstance()->em()
+        echo Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Role')
             ->countByName($name);
 
-        $role = Kernel::getInstance()->em()
+        $role = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Role')
             ->findOneByName($name);
 
@@ -47,10 +47,10 @@ class RoleRepositoryTest extends PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         foreach (static::$entityCollection as $role) {
-            Kernel::getInstance()->em()->remove($role);
+            Kernel::getService('em')->remove($role);
         }
 
-        Kernel::getInstance()->em()->flush();
-        Kernel::getInstance()->em()->clear(); // Detaches all objects from Doctrine!
+        Kernel::getService('em')->flush();
+        Kernel::getService('em')->clear(); // Detaches all objects from Doctrine!
     }
 }

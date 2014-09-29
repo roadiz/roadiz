@@ -58,24 +58,6 @@ class RozierApp extends BackendController
     }
 
     /**
-     * @return Symfony\Component\Form\Forms
-     */
-    protected function getFormFactory()
-    {
-        if (null === $this->formFactory) {
-
-            $validator = Validation::createValidator();
-
-            $this->formFactory = Forms::createFormFactoryBuilder()
-                ->addExtension(new CsrfExtension($this->getKernel()->getCsrfProvider()))
-                ->addExtension(new ValidatorExtension($validator))
-                ->getFormFactory();
-        }
-
-        return $this->formFactory;
-    }
-
-    /**
      * @param Symfony\Component\HttpFoundation\Request $request
      *
      * @return Symfony\Component\HttpFoundation\Response $response

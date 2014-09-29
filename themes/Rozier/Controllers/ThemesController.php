@@ -43,7 +43,7 @@ class ThemesController extends RozierApp
     {
         $listManager = new EntityListManager(
             $request,
-            $this->getKernel()->em(),
+            $this->getService('em'),
             'RZ\Renzo\Core\Entities\Theme'
         );
         $listManager->handle();
@@ -84,7 +84,7 @@ class ThemesController extends RozierApp
             }
 
             $response = new RedirectResponse(
-                $this->getKernel()->getUrlGenerator()->generate('themesHomePage')
+                $this->getService('urlGenerator')->generate('themesHomePage')
             );
             $response->prepare($request);
 
@@ -111,7 +111,7 @@ class ThemesController extends RozierApp
      */
     public function editAction(Request $request, $themeId)
     {
-        $theme = $this->getKernel()->em()
+        $theme = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
@@ -138,7 +138,7 @@ class ThemesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('themesHomePage')
+                    $this->getService('urlGenerator')->generate('themesHomePage')
                 );
                 $response->prepare($request);
 
@@ -167,7 +167,7 @@ class ThemesController extends RozierApp
      */
     public function deleteAction(Request $request, $themeId)
     {
-        $theme = $this->getKernel()->em()
+        $theme = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
@@ -195,7 +195,7 @@ class ThemesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('themesHomePage')
+                    $this->getService('urlGenerator')->generate('themesHomePage')
                 );
                 $response->prepare($request);
 
@@ -319,7 +319,7 @@ class ThemesController extends RozierApp
             $theme->$setter($value);
         }
 
-        $existing = $this->getKernel()->em()
+        $existing = $this->getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Theme')
             ->findOneBy(array('className'=>$theme->getClassName()));
 
@@ -333,8 +333,8 @@ class ThemesController extends RozierApp
             );
         }
 
-        $this->getKernel()->em()->persist($theme);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->persist($theme);
+        $this->getService('em')->flush();
     }
 
     /**
@@ -350,7 +350,7 @@ class ThemesController extends RozierApp
             $theme->$setter($value);
         }
 
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->flush();
 
         return true;
     }
@@ -361,7 +361,7 @@ class ThemesController extends RozierApp
      */
     protected function deleteTheme(array $data, Theme $theme)
     {
-        $this->getKernel()->em()->remove($theme);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->remove($theme);
+        $this->getService('em')->flush();
     }
 }

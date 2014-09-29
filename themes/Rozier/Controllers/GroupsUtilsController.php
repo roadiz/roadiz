@@ -44,7 +44,7 @@ class GroupsUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        $existingGroup = $this->getKernel()->em()
+        $existingGroup = $this->getService('em')
                               ->getRepository('RZ\Renzo\Core\Entities\Group')
                               ->findAll();
         $group = GroupCollectionJsonSerializer::serialize($existingGroup);
@@ -78,7 +78,7 @@ class GroupsUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $groupId)
     {
-        $existingGroup = $this->getKernel()->em()
+        $existingGroup = $this->getService('em')
                               ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
 
         $group = GroupCollectionJsonSerializer::serialize(array($existingGroup));
@@ -134,7 +134,7 @@ class GroupsUtilsController extends RozierApp
 
                      // redirect even if its null
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'groupsHomePage'
                         )
                     );
@@ -149,7 +149,7 @@ class GroupsUtilsController extends RozierApp
 
                     // redirect even if its null
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'groupsImportPage'
                         )
                     );

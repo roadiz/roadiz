@@ -45,7 +45,7 @@ class SettingsController extends RozierApp
          */
         $listManager = new EntityListManager(
             $request,
-            $this->getKernel()->em(),
+            $this->getService('em'),
             'RZ\Renzo\Core\Entities\Setting',
             array(),
             array('name'=>'ASC')
@@ -75,7 +75,7 @@ class SettingsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'settingsHomePage'
                     )
                 );
@@ -105,7 +105,7 @@ class SettingsController extends RozierApp
      */
     public function editAction(Request $request, $settingId)
     {
-        $setting = $this->getKernel()->em()
+        $setting = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Setting', (int) $settingId);
 
         if ($setting !== null) {
@@ -128,7 +128,7 @@ class SettingsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'settingsEditPage',
                         array('settingId' => $setting->getId())
                     )
@@ -184,7 +184,7 @@ class SettingsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('settingsHomePage')
+                    $this->getService('urlGenerator')->generate('settingsHomePage')
                 );
                 $response->prepare($request);
 
@@ -212,7 +212,7 @@ class SettingsController extends RozierApp
      */
     public function deleteAction(Request $request, $settingId)
     {
-        $setting = $this->getKernel()->em()
+        $setting = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Setting', (int) $settingId);
 
         if (null !== $setting) {
@@ -235,7 +235,7 @@ class SettingsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('settingsHomePage')
+                    $this->getService('urlGenerator')->generate('settingsHomePage')
                 );
                 $response->prepare($request);
 
@@ -267,7 +267,7 @@ class SettingsController extends RozierApp
 
             if (isset($data['name']) &&
                 $data['name'] != $setting->getName() &&
-                $this->getKernel()->em()
+                $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Setting')
                 ->exists($data['name'])) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
@@ -278,13 +278,13 @@ class SettingsController extends RozierApp
                         $setter = 'set'.ucwords($key);
                         $setting->$setter( $value );
                     } else {
-                        $group = $this->getKernel()->em()
+                        $group = $this->getService('em')
                                  ->find('RZ\Renzo\Core\Entities\SettingGroup', (int) $value);
                         $setting->setSettingGroup($group);
                     }
                 }
 
-                $this->getKernel()->em()->flush();
+                $this->getService('em')->flush();
 
                 return true;
             } catch (\Exception $e) {
@@ -301,7 +301,7 @@ class SettingsController extends RozierApp
      */
     private function addSetting($data, Setting $setting)
     {
-        if ($this->getKernel()->em()
+        if ($this->getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Setting')
             ->exists($data['name'])) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_creation.already_exists', array('%name%'=>$setting->getName())), 1);
@@ -313,8 +313,8 @@ class SettingsController extends RozierApp
                 $setting->$setter( $value );
             }
 
-            $this->getKernel()->em()->persist($setting);
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->persist($setting);
+            $this->getService('em')->flush();
 
             return true;
         } catch (\Exception $e) {
@@ -330,8 +330,8 @@ class SettingsController extends RozierApp
      */
     private function deleteSetting($data, Setting $setting)
     {
-        $this->getKernel()->em()->remove($setting);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->remove($setting);
+        $this->getService('em')->flush();
 
         return true;
     }
@@ -478,7 +478,7 @@ class SettingsController extends RozierApp
      */
     public static function getSettings()
     {
-        return $this->getKernel()->em()
+        return $this->getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Setting')
             ->findAll();
     }

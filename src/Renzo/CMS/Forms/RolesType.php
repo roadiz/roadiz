@@ -35,7 +35,7 @@ class RolesType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $roles = Kernel::getInstance()->em()
+        $roles = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Role')
             ->findAll();
 

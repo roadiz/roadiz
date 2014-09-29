@@ -71,7 +71,7 @@ class TagHandler
     public function removeAssociations()
     {
         foreach ($this->tag->getTranslatedTags() as $tt) {
-            Kernel::getInstance()->em()->remove($tt);
+            Kernel::getService('em')->remove($tt);
         }
 
         return $this;
@@ -87,12 +87,12 @@ class TagHandler
         $this->removeChildren();
         $this->removeAssociations();
 
-        Kernel::getInstance()->em()->remove($this->tag);
+        Kernel::getService('em')->remove($this->tag);
 
         /*
          * Final flush
          */
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
 
         return $this;
     }
@@ -102,7 +102,7 @@ class TagHandler
      */
     public function getAvailableTranslations()
     {
-        $query = Kernel::getInstance()->em()
+        $query = Kernel::getService('em')
                         ->createQuery('
             SELECT tr
             FROM RZ\Renzo\Core\Entities\Translation tr
@@ -122,7 +122,7 @@ class TagHandler
      */
     public function getAvailableTranslationsId()
     {
-        $query = Kernel::getInstance()->em()
+        $query = Kernel::getService('em')
                         ->createQuery('
             SELECT tr.id FROM RZ\Renzo\Core\Entities\Tag t
             INNER JOIN t.translatedTags tt
@@ -149,7 +149,7 @@ class TagHandler
      */
     public function getUnavailableTranslations()
     {
-        $query = Kernel::getInstance()->em()
+        $query = Kernel::getService('em')
                         ->createQuery('
             SELECT tr FROM RZ\Renzo\Core\Entities\Translation tr
             WHERE tr.id NOT IN (:translations_id)')
@@ -167,7 +167,7 @@ class TagHandler
      */
     public function getUnavailableTranslationsId()
     {
-        $query = Kernel::getInstance()->em()
+        $query = Kernel::getService('em')
                         ->createQuery('
             SELECT t.id FROM RZ\Renzo\Core\Entities\Translation t
             WHERE t.id NOT IN (:translations_id)')
@@ -236,7 +236,7 @@ class TagHandler
             $i++;
         }
 
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
 
         return $i;
     }
@@ -248,7 +248,7 @@ class TagHandler
      */
     public static function cleanRootTagsPositions()
     {
-        $tags = Kernel::getInstance()->em()
+        $tags = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Tag')
             ->findBy(array('parent' => null), array('position'=>'ASC'));
 
@@ -258,7 +258,7 @@ class TagHandler
             $i++;
         }
 
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
 
         return $i;
     }

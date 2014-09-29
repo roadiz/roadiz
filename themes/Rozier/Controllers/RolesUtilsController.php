@@ -46,7 +46,7 @@ class RolesUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        $existingRole = $this->getKernel()->em()
+        $existingRole = $this->getService('em')
                               ->getRepository('RZ\Renzo\Core\Entities\Role')
                               ->findAll();
         $role = RoleCollectionJsonSerializer::serialize($existingRole);
@@ -80,7 +80,7 @@ class RolesUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $roleId)
     {
-        $existingRole= $this->getKernel()->em()
+        $existingRole= $this->getService('em')
                               ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
 
         $role = RoleCollectionJsonSerializer::serialize(array($existingRole));
@@ -132,11 +132,11 @@ class RolesUtilsController extends RozierApp
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
                         $this->getLogger()->info($msg);
 
-                        $this->getKernel()->em()->flush();
+                        $this->getService('em')->flush();
 
                          // redirect even if its null
                         $response = new RedirectResponse(
-                            $this->getKernel()->getUrlGenerator()->generate(
+                            $this->getService('urlGenerator')->generate(
                                 'rolesHomePage'
                             )
                         );
@@ -150,7 +150,7 @@ class RolesUtilsController extends RozierApp
 
                         // redirect even if its null
                         $response = new RedirectResponse(
-                            $this->getKernel()->getUrlGenerator()->generate(
+                            $this->getService('urlGenerator')->generate(
                                 'rolesImportPage'
                             )
                         );
@@ -167,7 +167,7 @@ class RolesUtilsController extends RozierApp
 
                     // redirect even if its null
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'rolesImportPage'
                         )
                     );

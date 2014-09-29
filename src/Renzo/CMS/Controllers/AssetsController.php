@@ -32,7 +32,7 @@ class AssetsController extends AppController
      *
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
-    public function __init(SecurityContext $securityContext = null)
+    public function __init()
     {
 
     }
@@ -65,7 +65,7 @@ class AssetsController extends AppController
     {
         define('SLIR_CONFIG_CLASSNAME', '\RZ\Renzo\CMS\Utils\SLIRConfig');
 
-        Kernel::getInstance()->em()->close();
+        Kernel::getService('em')->close();
 
         $slir = new \SLIR\SLIR();
         $slir->processRequestFromURL();
@@ -85,7 +85,7 @@ class AssetsController extends AppController
      */
     public function fontFileAction(Request $request, $filename, $extension, $token)
     {
-        $font = Kernel::getInstance()->em()
+        $font = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Font')
             ->findOneBy(array('hash'=>$filename));
 
@@ -141,9 +141,10 @@ class AssetsController extends AppController
      */
     public function fontFacesAction(Request $request, $token)
     {
-        if (static::$csrfProvider->isCsrfTokenValid(static::FONT_TOKEN_INTENTION, $token)) {
+        if ($this->getService('userProvider')
+                 ->isCsrfTokenValid(static::FONT_TOKEN_INTENTION, $token)) {
 
-            $fonts = Kernel::getInstance()->em()
+            $fonts = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Font')
                 ->findAll();
             $fontOutput = array();

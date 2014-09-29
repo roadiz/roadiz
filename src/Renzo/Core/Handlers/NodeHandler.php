@@ -88,7 +88,7 @@ class NodeHandler
     public function removeAssociations()
     {
         foreach ($this->node->getNodeSources() as $ns) {
-            Kernel::getInstance()->em()->remove($ns);
+            Kernel::getService('em')->remove($ns);
         }
 
         return $this;
@@ -104,12 +104,12 @@ class NodeHandler
         $this->removeChildren();
         $this->removeAssociations();
 
-        Kernel::getInstance()->em()->remove($this->node);
+        Kernel::getService('em')->remove($this->node);
 
         /*
          * Final flush
          */
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
 
         return $this;
     }
@@ -119,7 +119,7 @@ class NodeHandler
      */
     public function getAvailableTranslations()
     {
-        $query = Kernel::getInstance()->em()
+        $query = Kernel::getService('em')
                         ->createQuery('
             SELECT t
             FROM RZ\Renzo\Core\Entities\Translation t
@@ -139,7 +139,7 @@ class NodeHandler
      */
     public function getAvailableTranslationsId()
     {
-        $query = Kernel::getInstance()->em()
+        $query = Kernel::getService('em')
                         ->createQuery('
             SELECT t.id FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
@@ -165,7 +165,7 @@ class NodeHandler
      */
     public function getUnavailableTranslations()
     {
-        $query = Kernel::getInstance()->em()
+        $query = Kernel::getService('em')
                         ->createQuery('SELECT t FROM RZ\Renzo\Core\Entities\Translation t
                                        WHERE t.id NOT IN (:translations_id)')
                         ->setParameter('translations_id', $this->getAvailableTranslationsId());
@@ -182,7 +182,7 @@ class NodeHandler
      */
     public function getUnavailableTranslationsId()
     {
-        $query = Kernel::getInstance()->em()
+        $query = Kernel::getService('em')
                         ->createQuery('SELECT t.id FROM RZ\Renzo\Core\Entities\Translation t
                                        WHERE t.id NOT IN (:translations_id)')
                         ->setParameter('translations_id', $this->getAvailableTranslationsId());
@@ -249,7 +249,7 @@ class NodeHandler
             $i++;
         }
 
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
 
         return $i;
     }
@@ -261,7 +261,7 @@ class NodeHandler
      */
     public static function cleanRootNodesPositions()
     {
-        $nodes = Kernel::getInstance()->em()
+        $nodes = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Node')
             ->findBy(array('parent' => null), array('position'=>'ASC'));
 
@@ -271,7 +271,7 @@ class NodeHandler
             $i++;
         }
 
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
 
         return $i;
     }
@@ -283,7 +283,7 @@ class NodeHandler
      */
     public function makeHome()
     {
-        $defaults = Kernel::getInstance()->em()
+        $defaults = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Node')
             ->findBy(array('home'=>true));
 
@@ -291,7 +291,7 @@ class NodeHandler
             $default->setHome(false);
         }
         $this->translation->setHome(true);
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
 
         return $this;
     }

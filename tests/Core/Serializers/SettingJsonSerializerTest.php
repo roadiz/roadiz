@@ -18,8 +18,8 @@ class SettingJsonSerializerTest extends PHPUnit_Framework_TestCase
         $setting = SettingJsonSerializer::deserialize($json);
 
         static::$entityCollection[] = $setting;
-        Kernel::getInstance()->em()->persist($setting);
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->persist($setting);
+        Kernel::getService('em')->flush();
 
 
         // Assert
@@ -86,10 +86,10 @@ class SettingJsonSerializerTest extends PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         foreach (static::$entityCollection as $setting) {
-            Kernel::getInstance()->em()->remove($setting);
+            Kernel::getService('em')->remove($setting);
         }
 
-        Kernel::getInstance()->em()->flush();
-        Kernel::getInstance()->em()->clear(); // Detaches all objects from Doctrine!
+        Kernel::getService('em')->flush();
+        Kernel::getService('em')->clear(); // Detaches all objects from Doctrine!
     }
 }

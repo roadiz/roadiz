@@ -24,7 +24,7 @@ class NodeTypesType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $nodeTypes = Kernel::getInstance()->em()
+        $nodeTypes = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\NodeType')
             ->findAll();
 

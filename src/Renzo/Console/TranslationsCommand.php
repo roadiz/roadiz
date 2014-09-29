@@ -78,7 +78,7 @@ class TranslationsCommand extends Command
         $locale = $input->getArgument('locale');
 
         if ($name) {
-            $translation = Kernel::getInstance()->em()
+            $translation = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findOneBy(array('name'=>$name));
 
@@ -91,18 +91,18 @@ class TranslationsCommand extends Command
                         '<question>Are you sure to delete '.$translation->getName().' translation?</question> : ',
                         false
                     )) {
-                        Kernel::getInstance()->em()->remove($translation);
-                        Kernel::getInstance()->em()->flush();
+                        Kernel::getService('em')->remove($translation);
+                        Kernel::getService('em')->flush();
                         $text = '<info>Translation deleted…</info>'.PHP_EOL;
                     }
                 } elseif ($input->getOption('enable')) {
                     $translation->setAvailable(true);
-                    Kernel::getInstance()->em()->flush();
+                    Kernel::getService('em')->flush();
 
                     $text .= '<info>'.$translation->getName()." enabled…</info>".PHP_EOL;
                 } elseif ($input->getOption('disable')) {
                     $translation->setAvailable(false);
-                    Kernel::getInstance()->em()->flush();
+                    Kernel::getService('em')->flush();
 
                     $text .= '<info>'.$translation->getName()." disabled…</info>".PHP_EOL;
                 }
@@ -114,8 +114,8 @@ class TranslationsCommand extends Command
                         $newTrans->setName($name)
                                 ->setLocale($locale);
 
-                        Kernel::getInstance()->em()->persist($newTrans);
-                        Kernel::getInstance()->em()->flush();
+                        Kernel::getService('em')->persist($newTrans);
+                        Kernel::getService('em')->flush();
 
                         $text = 'New translation : '.$newTrans->getName().PHP_EOL.
                         'Locale : '.$newTrans->getLocale().PHP_EOL.
@@ -129,7 +129,7 @@ class TranslationsCommand extends Command
             }
         } else {
             $text = '<info>Existing translations…</info>'.PHP_EOL;
-            $translations = Kernel::getInstance()->em()
+            $translations = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findAll();
 

@@ -45,7 +45,7 @@ class NodesUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $nodeId)
     {
-        $existingNode = $this->getKernel()->em()
+        $existingNode = $this->getService('em')
                               ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
         $node = NodeJsonSerializer::serialize($existingNode);

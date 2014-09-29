@@ -48,11 +48,11 @@ class SettingsImporter implements ImporterInterface
     {
         $return = false;
         $settingGroups = SettingCollectionJsonSerializer::deserialize($serializedData);
-        $groupsNames = Kernel::getInstance()->em()
+        $groupsNames = Kernel::getService('em')
                   ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
                   ->findAllNames();
 
-        $settingsNames = Kernel::getInstance()->em()
+        $settingsNames = Kernel::getService('em')
                   ->getRepository('RZ\Renzo\Core\Entities\Setting')
                   ->findAllNames();
 
@@ -72,7 +72,7 @@ class SettingsImporter implements ImporterInterface
                 if (!in_array($setting->getName(), $settingsNames)) {
 
                 } else {
-                    $setting = Kernel::getInstance()->em()
+                    $setting = Kernel::getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\Setting')
                         ->findOneByName($setting->getName());
                 }
@@ -93,9 +93,9 @@ class SettingsImporter implements ImporterInterface
              */
             if (null !== $settingGroup) {
                 if (!in_array($settingGroup->getName(), $groupsNames) && $settingGroup->getName() != "__default__") {
-                    Kernel::getInstance()->em()->persist($settingGroup);
+                    Kernel::getService('em')->persist($settingGroup);
                 } else {
-                    $settingGroup = Kernel::getInstance()->em()
+                    $settingGroup = Kernel::getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
                         ->findOneByName($settingGroup->getName());
 
@@ -106,11 +106,11 @@ class SettingsImporter implements ImporterInterface
              */
             $setting->setSettingGroup($settingGroup);
             if ($setting->getId() === null) {
-                Kernel::getInstance()->em()->persist($setting);
+                Kernel::getService('em')->persist($setting);
             }
         }
         $return = true;
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
         return $return;
     }
 }

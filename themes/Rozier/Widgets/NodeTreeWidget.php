@@ -53,12 +53,12 @@ class NodeTreeWidget extends AbstractWidget
     protected function getNodeTreeAssignationForParent()
     {
         if ($this->translation === null) {
-            $this->translation = Kernel::getInstance()->em()
+            $this->translation = Kernel::getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Translation')
                     ->findOneBy(array('defaultTranslation'=>true));
         }
 
-        $this->nodes = Kernel::getInstance()->em()
+        $this->nodes = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Node')
                 ->findByParentWithTranslation($this->translation, $this->parentNode);
     }
@@ -71,12 +71,12 @@ class NodeTreeWidget extends AbstractWidget
     public function getChildrenNodes(Node $parent)
     {
         if ($this->translation === null) {
-            $this->translation = Kernel::getInstance()->em()
+            $this->translation = Kernel::getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Translation')
                     ->findOneBy(array('defaultTranslation'=>true));
         }
         if ($parent !== null) {
-            return $this->nodes = Kernel::getInstance()->em()
+            return $this->nodes = Kernel::getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Node')
                     ->findByParentWithTranslation($this->translation, $parent);
         }

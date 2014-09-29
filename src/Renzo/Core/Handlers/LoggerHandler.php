@@ -33,8 +33,8 @@ class LoggerHandler
      */
     public function persistAndFlush()
     {
-        Kernel::getInstance()->em()->persist($this->log);
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->persist($this->log);
+        Kernel::getService('em')->flush();
 
         return $this;
     }

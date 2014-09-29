@@ -60,7 +60,7 @@ class RoleCollectionJsonSerializer extends AbstractJsonSerializer
         $roles = json_decode($jsonString, true);
         $data = new ArrayCollection();
         foreach ($roles as $role) {
-            $tmp = Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\Role')->findOneByName($role['name']);
+            $tmp = Kernel::getService('em')->getRepository('RZ\Renzo\Core\Entities\Role')->findOneByName($role['name']);
             $data[] = $tmp;
         }
         return $data;

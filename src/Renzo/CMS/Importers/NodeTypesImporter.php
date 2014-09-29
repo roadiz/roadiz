@@ -48,20 +48,20 @@ class NodeTypesImporter implements ImporterInterface
     {
         $return = false;
         $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
-        $existingNodeType = Kernel::getInstance()->em()
+        $existingNodeType = Kernel::getService('em')
                  ->getRepository('RZ\Renzo\Core\Entities\NodeType')
                  ->findOneByName($nodeType->getName());
         if ($existingNodeType === null) {
-            Kernel::getInstance()->em()->persist($nodeType);
+            Kernel::getService('em')->persist($nodeType);
             $existingNodeType = $nodeType;
             foreach ($nodeType->getFields() as $field) {
-                Kernel::getInstance()->em()->persist($field);
+                Kernel::getService('em')->persist($field);
                 $field->setNodeType($nodeType);
             }
         } else {
             $existingNodeType->getHandler()->diff($nodeType);
         }
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
         $nodeType->getHandler()->updateSchema();
         return $return;
     }

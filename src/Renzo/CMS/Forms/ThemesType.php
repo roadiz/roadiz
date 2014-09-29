@@ -29,7 +29,7 @@ class ThemesType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $themes = Kernel::getInstance()->em()
+        $themes = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Theme')
             ->findAll();
 

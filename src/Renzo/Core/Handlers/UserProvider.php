@@ -34,7 +34,7 @@ class UserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $user = Kernel::getInstance()->em()
+        $user = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\User')
             ->findOneBy(array('username' => $username));
 
@@ -60,7 +60,7 @@ class UserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        $refreshUser = Kernel::getInstance()->em()
+        $refreshUser = Kernel::getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $user->getId());
 
         if ($refreshUser !== null) {

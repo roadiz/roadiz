@@ -36,7 +36,7 @@ class RolesBag
     {
         if (!isset(static::$roles[$roleName])) {
             static::$roles[$roleName] =
-                    Kernel::getInstance()->em()
+                    Kernel::getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Role')
                     ->findOneBy(array('name'=>$roleName));
 
@@ -44,8 +44,8 @@ class RolesBag
                 static::$roles[$roleName] = new Role();
 
                 static::$roles[$roleName]->setName($roleName);
-                Kernel::getInstance()->em()->persist(static::$roles[$roleName]);
-                Kernel::getInstance()->em()->flush();
+                Kernel::getService('em')->persist(static::$roles[$roleName]);
+                Kernel::getService('em')->flush();
             }
         }
 

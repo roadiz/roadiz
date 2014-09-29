@@ -51,7 +51,7 @@ class AjaxNodesController extends AbstractAjaxController
             );
         }
 
-        $node = $this->getKernel()->em()
+        $node = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
         if ($node !== null) {
@@ -110,7 +110,7 @@ class AjaxNodesController extends AbstractAjaxController
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
 
-            $parent = $this->getKernel()->em()
+            $parent = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['newParent']);
 
             if ($parent !== null) {
@@ -125,21 +125,21 @@ class AjaxNodesController extends AbstractAjaxController
          */
         if (!empty($parameters['nextNodeId']) &&
             $parameters['nextNodeId'] > 0) {
-            $nextNode = $this->getKernel()->em()
+            $nextNode = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['nextNodeId']);
             if ($nextNode !== null) {
                 $node->setPosition($nextNode->getPosition() - 0.5);
             }
         } elseif (!empty($parameters['prevNodeId']) &&
             $parameters['prevNodeId'] > 0) {
-            $prevNode = $this->getKernel()->em()
+            $prevNode = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['prevNodeId']);
             if ($prevNode !== null) {
                 $node->setPosition($prevNode->getPosition() + 0.5);
             }
         }
         // Apply position update before cleaning
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->flush();
 
         if ($parent !== null) {
             $parent->getHandler()->cleanChildrenPositions();
@@ -184,7 +184,7 @@ class AjaxNodesController extends AbstractAjaxController
 
             if ($request->get('nodeId') > 0) {
 
-                $node = $this->getKernel()->em()
+                $node = $this->getService('em')
                              ->find('RZ\Renzo\Core\Entities\Node', (int) $request->get('nodeId'));
 
                 if (null !== $node) {

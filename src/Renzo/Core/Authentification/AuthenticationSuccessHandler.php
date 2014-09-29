@@ -28,7 +28,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     {
         if (null !== $user = $token->getUser()) {
             $user->setLastLogin(new \DateTime('now'));
-            Kernel::getInstance()->em()->flush();
+            Kernel::getInstance()->getService('em')->flush();
         }
 
         return parent::onAuthenticationSuccess($request, $token);

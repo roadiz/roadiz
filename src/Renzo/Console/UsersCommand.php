@@ -88,7 +88,7 @@ class UsersCommand extends Command
         $name = $input->getArgument('username');
 
         if ($name) {
-            $user = Kernel::getInstance()->em()
+            $user = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\User')
                 ->findOneBy(array('username'=>$name));
 
@@ -96,7 +96,7 @@ class UsersCommand extends Command
                 if ($input->getOption('enable')) {
 
                     if ($user !== null && $user->setEnabled(true)) {
-                        Kernel::getInstance()->em()->flush();
+                        Kernel::getService('em')->flush();
                         $text = '<info>User enabled…</info>'.PHP_EOL;
                     } else {
                         $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
@@ -104,7 +104,7 @@ class UsersCommand extends Command
                 } elseif ($input->getOption('disable')) {
 
                     if ($user !== null && $user->setEnabled(false)) {
-                        Kernel::getInstance()->em()->flush();
+                        Kernel::getService('em')->flush();
                         $text = '<info>User disabled…</info>'.PHP_EOL;
                     } else {
                         $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
@@ -116,8 +116,8 @@ class UsersCommand extends Command
                         '<question>Do you really want to delete user “'.$user->getUsername().'”?</question> : ',
                         false
                     )) {
-                        Kernel::getInstance()->em()->remove($user);
-                        Kernel::getInstance()->em()->flush();
+                        Kernel::getService('em')->remove($user);
+                        Kernel::getService('em')->flush();
                         $text = '<info>User deleted…</info>'.PHP_EOL;
                     } else {
                         $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
@@ -127,7 +127,7 @@ class UsersCommand extends Command
                         $facebook = new FacebookPictureFinder($user->getFacebookName());
                         if (false !== $url = $facebook->getPictureUrl()) {
                             $user->setPictureUrl($url);
-                            Kernel::getInstance()->em()->flush();
+                            Kernel::getService('em')->flush();
                             $text = '<info>User profile pciture updated…</info>'.PHP_EOL;
                         }
                     } else {
@@ -141,7 +141,7 @@ class UsersCommand extends Command
                     )) {
                         $user->setPlainPassword(UserHandler::generatePassword());
 
-                        Kernel::getInstance()->em()->flush();
+                        Kernel::getService('em')->flush();
                         $text = '<info>User password regenerated…</info>'.PHP_EOL;
                         $text .= '<info>Password “'.$user->getPlainPassword().'”.</info>'.PHP_EOL;
 
@@ -156,7 +156,7 @@ class UsersCommand extends Command
                         $text .= '<info>Role: '.$role.'</info>'.PHP_EOL;
                     }
 
-                    Kernel::getInstance()->em()->flush();
+                    Kernel::getService('em')->flush();
                 } else {
                     $text = '<info>'.$user.'</info>'.PHP_EOL;
                 }
@@ -169,7 +169,7 @@ class UsersCommand extends Command
             }
         } else {
             $text = '<info>Installed users…</info>'.PHP_EOL;
-            $users = Kernel::getInstance()->em()
+            $users = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\User')
                 ->findAll();
 
@@ -215,7 +215,7 @@ class UsersCommand extends Command
             );
         } while (
             !filter_var($email, FILTER_VALIDATE_EMAIL) ||
-            Kernel::getInstance()->em()->getRepository('RZ\Renzo\Core\Entities\User')->emailExists($email)
+            Kernel::getService('em')->getRepository('RZ\Renzo\Core\Entities\User')->emailExists($email)
         );
 
         $user->setEmail($email);
@@ -239,9 +239,9 @@ class UsersCommand extends Command
 
         $user->setPlainPassword(UserHandler::generatePassword());
 
-        Kernel::getInstance()->em()->persist($user);
+        Kernel::getService('em')->persist($user);
         $user->getViewer()->sendSignInConfirmation();
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
 
         $text = '<info>User “'.$username.'”<'.$email.'> created…</info>'.PHP_EOL;
         $text .= '<info>Password “'.$user->getPlainPassword().'”.</info>'.PHP_EOL;
@@ -259,14 +259,14 @@ class UsersCommand extends Command
      */
     public function getRole($roleName = Role::ROLE_SUPER_ADMIN)
     {
-        $role = Kernel::getInstance()->em()
+        $role = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Role')
                 ->findOneBy(array('name'=>$roleName));
 
         if ($role === null) {
             $role = new Role($roleName);
-            Kernel::getInstance()->em()->persist($role);
-            Kernel::getInstance()->em()->flush();
+            Kernel::getService('em')->persist($role);
+            Kernel::getService('em')->flush();
         }
 
         return $role;

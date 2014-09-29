@@ -47,7 +47,7 @@ class NodeTypesUtilsController extends RozierApp
      */
     public function exportJsonFileAction(Request $request, $nodeTypeId)
     {
-        $nodeType = $this->getKernel()->em()
+        $nodeType = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
         $response =  new Response(
@@ -94,7 +94,7 @@ class NodeTypesUtilsController extends RozierApp
                 if (null !== json_decode($serializedData)) {
 
                     $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
-                    $existingNT = $this->getKernel()->em()
+                    $existingNT = $this->getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\NodeType')
                         ->findOneBy(array('name'=>$nodeType->getName()));
 
@@ -104,17 +104,17 @@ class NodeTypesUtilsController extends RozierApp
                          *
                          * First persist node-type
                          */
-                        $this->getKernel()->em()->persist($nodeType);
+                        $this->getService('em')->persist($nodeType);
 
                         // Flush before creating node-type fields.
-                        $this->getKernel()->em()->flush();
+                        $this->getService('em')->flush();
 
                         foreach ($nodeType->getFields() as $field) {
                             /*
                              * then persist each field
                              */
                             $field->setNodeType($nodeType);
-                            $this->getKernel()->em()->persist($field);
+                            $this->getService('em')->persist($field);
                         }
 
                         $msg = $this->getTranslator()->trans('nodeType.imported.created');
@@ -133,14 +133,14 @@ class NodeTypesUtilsController extends RozierApp
                         $this->getLogger()->info($msg);
                     }
 
-                    $this->getKernel()->em()->flush();
+                    $this->getService('em')->flush();
                     $nodeType->getHandler()->updateSchema();
 
                     /*
                      * Redirect to update schema page
                      */
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'nodeTypesSchemaUpdate',
                             array(
                                 '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
@@ -157,7 +157,7 @@ class NodeTypesUtilsController extends RozierApp
 
                     // redirect even if its null
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'nodeTypesImportPage'
                         )
                     );
@@ -172,7 +172,7 @@ class NodeTypesUtilsController extends RozierApp
 
                 // redirect even if its null
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'nodeTypesImportPage'
                     )
                 );

@@ -96,7 +96,7 @@ class UserViewer implements ViewableInterface
 
         // RoutingExtension
         $this->twig->addExtension(
-            new RoutingExtension(Kernel::getInstance()->getUrlGenerator())
+            new RoutingExtension(Kernel::getService('urlGenerator'))
         );
         /*
          * ============================================================================

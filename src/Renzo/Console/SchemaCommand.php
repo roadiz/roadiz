@@ -114,14 +114,14 @@ class SchemaCommand extends Command
     {
         $text = '';
         // Empty result cache
-        $cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getResultCacheImpl();
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
         if ($cacheDriver !== null) {
             $text .= 'Result cache: '.$cacheDriver->getNamespace().' — ';
             $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
             $text .= PHP_EOL;
         } else {
             // Empty hydratation cache
-            $cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getHydrationCacheImpl();
+            $cacheDriver = Kernel::getService('em')->getConfiguration()->getHydrationCacheImpl();
             if ($cacheDriver !== null) {
                 $text .= 'Hydratation cache: '.$cacheDriver->getNamespace().' — ';
                 $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
@@ -129,7 +129,7 @@ class SchemaCommand extends Command
             } else {
 
                 // Empty query cache
-                $cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getQueryCacheImpl();
+                $cacheDriver = Kernel::getService('em')->getConfiguration()->getQueryCacheImpl();
                 if ($cacheDriver !== null) {
                     $text .= 'Query cache: '.$cacheDriver->getNamespace().' — ';
                     $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
@@ -137,7 +137,7 @@ class SchemaCommand extends Command
                 } else {
 
                     // Empty metadata cache
-                    $cacheDriver = Kernel::getInstance()->em()->getConfiguration()->getMetadataCacheImpl();
+                    $cacheDriver = Kernel::getService('em')->getConfiguration()->getMetadataCacheImpl();
                     if ($cacheDriver !== null) {
                         $text .= 'Metadata cache: '.$cacheDriver->getNamespace().' — ';
                         $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
@@ -155,8 +155,8 @@ class SchemaCommand extends Command
         $finder->files()->in(RENZO_ROOT . '/sources/Proxies');
         $fs->remove($finder);
 
-        $meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
-        $proxyFactory = Kernel::getInstance()->em()->getProxyFactory();
+        $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
+        $proxyFactory = Kernel::getService('em')->getProxyFactory();
         $proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/sources/Proxies');
         $text .= '<info>Doctrine proxiy classes has been purged…</info>'.PHP_EOL;
     }
@@ -170,12 +170,12 @@ class SchemaCommand extends Command
     {
         static::refreshMetadata();
 
-        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getInstance()->em());
-        $meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
+        $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
         $sql = $tool->getUpdateSchemaSql($meta);
 
         foreach ($sql as $statement) {
-            Kernel::getInstance()->em()->getConnection()->exec($statement);
+            Kernel::getService('em')->getConnection()->exec($statement);
         }
 
         return true;
@@ -186,12 +186,12 @@ class SchemaCommand extends Command
      */
     public static function createSchema()
     {
-        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getInstance()->em());
-        $meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
+        $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
         $sql = $tool->getUpdateSchemaSql($meta);
 
         foreach ($sql as $statement) {
-            Kernel::getInstance()->em()->getConnection()->exec($statement);
+            Kernel::getService('em')->getConnection()->exec($statement);
         }
     }
 
@@ -204,8 +204,8 @@ class SchemaCommand extends Command
     {
         static::refreshMetadata();
 
-        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getInstance()->em());
-        $meta = Kernel::getInstance()->em()->getMetadataFactory()->getAllMetadata();
+        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
+        $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
 
         return $tool->getUpdateSchemaSql($meta);
     }

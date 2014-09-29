@@ -120,7 +120,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
         /*
          * First we look for theme according to hostname.
          */
-        $theme = Kernel::getInstance()->em()
+        $theme = Kernel::getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\Theme')
                         ->findOneBy(array(
                             'available'=>    true,
@@ -133,7 +133,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
          * any frontend available theme.
          */
         if (null === $theme) {
-            $theme = Kernel::getInstance()->em()
+            $theme = Kernel::getService('em')
                             ->getRepository('RZ\Renzo\Core\Entities\Theme')
                             ->findOneBy(array(
                                 'available'=>    true,
@@ -165,7 +165,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
              */
             if (in_array($tokens[0], Translation::getAvailableLocalesShortcuts()) &&
                 count($tokens) == 1) {
-                return Kernel::getInstance()->em()
+                return Kernel::getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\Node')
                         ->findHomeWithTranslation($translation);
             } else {
@@ -174,7 +174,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                 if ($identifier !== null &&
                     $identifier != '') {
 
-                    return Kernel::getInstance()->em()
+                    return Kernel::getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\Node')
                         ->findByNodeNameWithTranslation($identifier, $translation);
                 }
@@ -206,12 +206,12 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
 
                 if ($identifier != '') {
 
-                    $ua = Kernel::getInstance()->em()
+                    $ua = Kernel::getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
                         ->findOneBy(array('alias'=>$identifier));
 
                     if ($ua !== null) {
-                        return Kernel::getInstance()->em()
+                        return Kernel::getService('em')
                             ->getRepository('RZ\Renzo\Core\Entities\Node')
                             ->findOneWithUrlAlias($ua);
                     }
@@ -248,18 +248,18 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                 }
 
                 if ($locale !== null && $locale != '') {
-                    return Kernel::getInstance()->em()
+                    return Kernel::getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\Translation')
                         ->findOneBy(array('locale'=>$locale));
                 }
             } else {
-                return Kernel::getInstance()->em()
+                return Kernel::getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\Translation')
                         ->findOneBy(array('defaultTranslation'=>true));
             }
         }
 
-        return Kernel::getInstance()->em()
+        return Kernel::getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\Translation')
                         ->findDefault();
     }

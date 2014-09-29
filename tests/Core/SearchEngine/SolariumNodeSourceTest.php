@@ -18,7 +18,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
     public function testIndex() {
         $testTitle = "Ipsum Lorem Vehicula";
 
-        $nodeSource = Kernel::getInstance()->em()
+        $nodeSource = Kernel::getService('em')
                         ->getRepository('GeneratedNodeSources\NSPage')
                         ->findOneBy(array('title'=>$testTitle));
 
@@ -57,7 +57,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
     {
         $testTitle = "Ipsum Lorem Vehicula";
 
-        $nodeSource = Kernel::getInstance()->em()
+        $nodeSource = Kernel::getService('em')
                         ->getRepository('GeneratedNodeSources\NSPage')
                         ->findOneBy(array('title'=>$testTitle));
         try {
@@ -77,7 +77,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
     {
         $testTitle = "Ipsum Lorem Vehicula";
 
-        $nodeSource = Kernel::getInstance()->em()
+        $nodeSource = Kernel::getService('em')
                         ->getRepository('GeneratedNodeSources\NSPage')
                         ->findOneBy(array('title'=>$testTitle));
 

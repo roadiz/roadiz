@@ -68,7 +68,7 @@ class ThemesCommand extends Command
 
         if ($name) {
 
-            $theme = Kernel::getInstance()->em()
+            $theme = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Theme')
                 ->findOneBy(array('className'=>$name));
 
@@ -103,7 +103,7 @@ class ThemesCommand extends Command
             }
         } else {
             $text = '<info>Installed theme…</info>'.PHP_EOL;
-            $themes = Kernel::getInstance()->em()
+            $themes = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Theme')
                 ->findAll();
 

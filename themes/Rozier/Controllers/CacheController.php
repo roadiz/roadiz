@@ -52,7 +52,7 @@ class CacheController extends RozierApp
              * Force redirect to avoid resending form when refreshing page
              */
             $response = new RedirectResponse(
-                $this->getKernel()->getUrlGenerator()->generate('adminHomePage')
+                $this->getService('urlGenerator')->generate('adminHomePage')
             );
             $response->prepare($request);
 

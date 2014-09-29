@@ -16,6 +16,8 @@ use RZ\Renzo\Core\Bags\SettingsBag;
 use RZ\Renzo\Core\Handlers\UserProvider;
 use RZ\Renzo\Core\Handlers\UserHandler;
 use RZ\Renzo\Core\Entities\Theme;
+use RZ\Renzo\Core\Authentification\AuthenticationSuccessHandler;
+use RZ\Renzo\Core\Authorization\AccessDeniedHandler;
 
 use Doctrine\ORM\Events;
 use Doctrine\ORM\EntityManager;
@@ -29,6 +31,11 @@ use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Form\Forms;
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
+use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Validator\Validation;
 use Symfony\Component\Routing;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -38,8 +45,6 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
-use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
-use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,8 +62,9 @@ use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
+use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
-
+use Pimple\Container;
 use Solarium\Client;
 
 /**
@@ -66,182 +72,402 @@ use Solarium\Client;
  */
 class Kernel
 {
-    const CMS_VERSION = 'alpha';
-    const SECURITY_DOMAIN = 'rzcms_domain';
-    const INSTALL_CLASSNAME = 'Themes\\Install\\InstallApp';
+    const CMS_VERSION =         'alpha';
+    const SECURITY_DOMAIN =     'rzcms_domain';
+    const INSTALL_CLASSNAME =   'Themes\\Install\\InstallApp';
 
-    public static $cmsBuild = null;
+    public static $cmsBuild =   null;
 
-    private static $instance = null;
-    private $em =           null;
-    private $backendDebug = false;
-    private $config =       null;
+    private static $instance =  null;
+    public $container =         null;
+    private $backendDebug =     false;
 
-    protected $httpKernel =          null;
-    protected $request =             null;
-    protected $requestContext =      null;
-    protected $response =            null;
-    protected $httpUtils =           null;
-    protected $context =             null;
-    protected $matcher =             null;
-    protected $resolver =            null;
-    protected $dispatcher =          null;
-    protected $urlMatcher =          null;
-    protected $urlGenerator =        null;
-    protected $stopwatch =           null;
-    protected $backendClass =        null;
-    protected $frontendThemes =      null;
-    protected $rootCollection =      null;
-    protected $solrService =         null;
-    /*
-     * About security and authentification.
-     *
-     * Authentification is global in RZCMS, but authorization
-     * will be handled differently by each available theme.
-     *
-     */
-    protected $csrfProvider =          null;
-    protected $userProvider =          null;
-    protected $securityContext =       null;
-    protected $accessDecisionManager = null;
-    protected $authenticationManager = null;
+    protected $request =        null;
+    protected $response =       null;
 
     /**
      * Kernel constructor.
      */
     final private function __construct()
     {
+        $this->container = new Container();
         /*
          * Get build number from txt file generated at each pre-commit
          */
         if (file_exists(RENZO_ROOT.'/BUILD.txt')) {
             static::$cmsBuild = intval(trim(file_get_contents(RENZO_ROOT.'/BUILD.txt')));
         }
+        $this->container['stopwatch'] = function ($c) {
+            return new Stopwatch();
+        };
 
-        $this->stopwatch = new Stopwatch();
-        $this->stopwatch->start('global');
-
-        $this->stopwatch->start('initKernel');
-        $this->parseConfig()
-             ->setupEntityManager($this->getConfig());
-
-        $this->rootCollection = new RouteCollection();
+        $this->container['stopwatch']->start('global');
+        $this->container['stopwatch']->start('initKernel');
 
         $this->request = Request::createFromGlobals();
-        $this->requestContext = new Routing\RequestContext($this->getResolvedBaseUrl());
-        $this->requestContext->setHost($this->request->server->get('HTTP_HOST'));
-        $this->requestContext->setHttpPort(intval($this->request->server->get('SERVER_PORT')));
 
-        $this->dispatcher = new EventDispatcher();
-        $this->resolver = new ControllerResolver();
-        $this->stopwatch->stop('initKernel');
+        $this->container['stopwatch']->stop('initKernel');
 
-        /*
-         * Define a request wide timezone
-         */
-        if (!empty($this->getConfig()["timezone"])) {
-            date_default_timezone_set($this->getConfig()["timezone"]);
-        } else {
-            date_default_timezone_set("Europe/Paris");
+        $this->setupDependencyInjection();
+
+        if ($this->isDebug() ||
+            !file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlMatcher.php') ||
+            !file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlGenerator.php')) {
+            $this->dumpUrlUtils();
         }
     }
 
     /**
-     * @return $this
+     * Get Pimple dependency injection service container.
+     *
+     * @param string $key Service name
+     *
+     * @return mixed
      */
-    public function parseConfig()
+    public static function getService($key)
     {
-        $configFile = RENZO_ROOT.'/conf/config.json';
-        if (file_exists($configFile)) {
-            $this->setConfig(
-                json_decode(file_get_contents($configFile), true)
-            );
-        } else {
-            $this->setConfig(null);
-        }
+        return static::getInstance()->container[$key];
+    }
+
+    protected function setupDependencyInjection()
+    {
+        /*
+         * Inject app config
+         */
+        $this->container['config'] = function ($c) {
+            $configFile = RENZO_ROOT.'/conf/config.json';
+            if (file_exists($configFile)) {
+                return json_decode(file_get_contents($configFile), true);
+            } else {
+                return null;
+            }
+        };
+
+        $this->container['dispatcher'] = function ($c) {
+            return new EventDispatcher();
+        };
+        $this->container['resolver'] = function ($c) {
+            return new ControllerResolver();
+        };
+        $this->container['httpKernel'] = function ($c) {
+            return new HttpKernel($c['dispatcher'], $c['resolver']);
+        };
+
+        $this->setupEntitiesPaths();
+        $this->setupEntityManager();
+        $this->setupSolrService();
+        $this->setupSecurityContext();
+        $this->setupRouteCollection();
+
+        $this->container['backendClass'] = function ($c) {
+            $theme = $c['em']
+                          ->getRepository('RZ\Renzo\Core\Entities\Theme')
+                          ->findOneBy(array('available'=>true, 'backendTheme'=>true));
+
+            if ($theme !== null) {
+                return $theme->getClassName();
+            }
+
+            return 'RZ\Renzo\CMS\Controllers\BackendController';
+        };
+
+        $this->container['frontendThemes'] = function ($c) {
+            $themes = $c['em']
+                          ->getRepository('RZ\Renzo\Core\Entities\Theme')
+                          ->findBy(array(
+                              'available'=>    true,
+                              'backendTheme'=> false
+                          ));
+
+
+
+            if (count($themes) < 1) {
+
+                $defaultTheme = new Theme();
+                $defaultTheme->setClassName('RZ\Renzo\CMS\Controllers\FrontendController');
+                $defaultTheme->setAvailable(true);
+
+                return array(
+                    $defaultTheme
+                );
+            } else {
+                return $themes;
+            }
+        };
+        $this->container['requestContext'] = function ($c) {
+            $rc = new Routing\RequestContext(Kernel::getInstance()->getResolvedBaseUrl());
+            $rc->setHost(Kernel::getInstance()->getRequest()->server->get('HTTP_HOST'));
+            $rc->setHttpPort(intval(Kernel::getInstance()->getRequest()->server->get('SERVER_PORT')));
+
+            return $rc;
+        };
+        $this->container['urlMatcher'] = function ($c) {
+            return new MixedUrlMatcher($c['requestContext']);
+        };
+        $this->container['urlGenerator'] = function ($c) {
+            return new \GlobalUrlGenerator($c['requestContext']);
+        };
+        $this->container['httpUtils'] = function ($c) {
+            return new HttpUtils($c['urlGenerator'], $c['urlMatcher']);
+        };
+
+        $this->container['formValidator'] = function ($c) {
+            return Validation::createValidator();
+        };
+        $this->container['formFactory'] = function ($c) {
+            return Forms::createFormFactoryBuilder()
+                ->addExtension(new CsrfExtension($c['csrfProvider']))
+                ->addExtension(new ValidatorExtension($c['formValidator']))
+                ->getFormFactory();
+        };
+
+        $this->container['logger'] = function ($c) {
+            $logger = new \RZ\Renzo\Core\Log\Logger();
+            $logger->setSecurityContext($c['securityContext']);
+
+            return $logger;
+        };
 
         return $this;
+
     }
 
     /**
-     * Get entities search paths.
-     *
-     * @return array
+     * Setup Solr service in DI container.
      */
-    public function getEntitiesPaths()
+    protected function setupSolrService()
     {
-        return array(
+        $this->container['solr'] = function ($c) {
+
+            if ($this->isSolrAvailable()) {
+                if (null === $this->solrService) {
+                    $this->solrService = new \Solarium\Client($c['config']['solr']);
+                    $this->solrService->setDefaultEndpoint('localhost');
+                }
+
+                return $this->solrService;
+            }
+
+            return null;
+        };
+    }
+
+    /**
+     * Setup entities search paths in DI container.
+     */
+    protected function setupEntitiesPaths()
+    {
+        $this->container['entitiesPaths'] = array(
             "src/Renzo/Core/Entities",
             "src/Renzo/Core/AbstractEntities",
             "sources/GeneratedNodeSources"
         );
     }
 
-    /**
-     * Initialize Doctrine entity manager.
-     * @param array $config
-     *
-     * @return $this
-     */
-    public function setupEntityManager($config)
+    protected function setupRouteCollection()
     {
-        // the connection configuration
-        if ($config !== null) {
-            $paths = $this->getEntitiesPaths();
+        if (!$this->isInstallMode()) {
+            $this->container['routeCollection'] = function ($c) {
+                $rCollection = new RouteCollection();
 
-            $dbParams = $config["doctrine"];
-            $configDB = Setup::createAnnotationMetadataConfiguration($paths, $this->isDebug());
+                /*
+                 * Add Assets controller routes
+                 */
+                $rCollection->addCollection(\RZ\Renzo\CMS\Controllers\AssetsController::getRoutes());
 
-            $configDB->setProxyDir(RENZO_ROOT . '/sources/Proxies');
-            $configDB->setProxyNamespace('Proxies');
+                /*
+                 * Add Backend routes
+                 */
+                $beClass = $c['backendClass'];
+                $cmsCollection = $beClass::getRoutes();
+                if ($cmsCollection !== null) {
+                    $rCollection->addCollection(
+                        $cmsCollection,
+                        '/rz-admin',
+                        array('_scheme' => 'https')
+                    );
+                }
 
-            $this->setEntityManager(EntityManager::create($dbParams, $configDB));
+                /*
+                 * Add Frontend routes
+                 *
+                 * return 'RZ\Renzo\CMS\Controllers\FrontendController';
+                 */
+                foreach ($c['frontendThemes'] as $theme) {
+                    $feClass = $theme->getClassName();
+                    $feCollection = $feClass::getRoutes();
+                    if ($feCollection !== null) {
 
-            if ($this->em->getConfiguration()->getResultCacheImpl() !== null) {
-                $this->em->getConfiguration()
-                        ->getResultCacheImpl()
-                        ->setNamespace($config["appNamespace"]);
-            }
-            if ($this->em->getConfiguration()->getHydrationCacheImpl() !== null) {
-                $this->em->getConfiguration()
-                        ->getHydrationCacheImpl()
-                        ->setNamespace($config["appNamespace"]);
-            }
-            if ($this->em->getConfiguration()->getQueryCacheImpl() !== null) {
-                $this->em->getConfiguration()
-                        ->getQueryCacheImpl()
-                        ->setNamespace($config["appNamespace"]);
-            }
-            if ($this->em->getConfiguration()->getMetadataCacheImpl()) {
-                $this->em->getConfiguration()
-                        ->getMetadataCacheImpl()
-                        ->setNamespace($config["appNamespace"]);
-            }
+                        // set host pattern if defined
+                        if ($theme->getHostname() != '*' &&
+                            $theme->getHostname() != '') {
+
+                            $feCollection->setHost($theme->getHostname());
+                        }
+                        $rCollection->addCollection($feCollection);
+                    }
+                }
+
+                return $rCollection;
+            };
+        } else {
+            $this->container['routeCollection'] = function ($c) {
+
+                $installClassname = static::INSTALL_CLASSNAME;
+                $feCollection = $installClassname::getRoutes();
+                $rCollection = new RouteCollection();
+                $rCollection->addCollection($feCollection);
+
+                return $rCollection;
+            };
         }
-
-        return $this;
     }
-    /**
-     * Set kernel Doctrine entity manager and
-     * prepare custom data inheritance for Node system.
-     *
-     * @param EntityManager $em
-     *
-     * @return Doctrine\ORM\EntityManager
-     */
-    public function setEntityManager(EntityManager $em)
+    private function setupSecurityContext()
     {
-        $this->em = $em;
+        $this->container['session'] = function ($c) {
+            $session = new Session();
+            Kernel::getInstance()->getRequest()->setSession($session);
+            return $session;
+        };
 
-        $evm = $this->em->getEventManager();
+        $this->container['csrfProvider'] = function ($c) {
+            $csrfSecret = $c['config']["security"]['secret'];
+            return new SessionCsrfProvider(
+                $c['session'],
+                $csrfSecret
+            );
+        };
+
+        $this->container['contextListener'] = function ($c) {
+
+            $c['session']; //Force session handler
+
+            return new ContextListener(
+                $c['securityContext'],
+                array($c['userProvider']),
+                static::SECURITY_DOMAIN,
+                $c['logger'],
+                $c['dispatcher']
+            );
+        };
+
+        $this->container['userProvider'] = function ($c) {
+            return new UserProvider();
+        };
+        $this->container['userChecker'] = function ($c) {
+            return new UserChecker();
+        };
+        $this->container['authentificationManager'] = function ($c) {
+            return new DaoAuthenticationProvider(
+                $c['userProvider'],
+                $c['userChecker'],
+                static::SECURITY_DOMAIN,
+                UserHandler::getEncoderFactory()
+            );
+        };
+        $this->container['accessDecisionManager'] = function ($c) {
+            return new AccessDecisionManager(
+                array(
+                    new RoleVoter('ROLE_')
+                )
+            );
+        };
+        $this->container['securityContext'] = function ($c) {
+            return new SecurityContext(
+                $c['authentificationManager'],
+                $c['accessDecisionManager']
+            );
+        };
+
+        $this->container['firewallMap'] = function ($c) {
+            return new FirewallMap();
+        };
+
+
+        $this->container['firewallExceptionListener'] = function ($c) {
+
+            return new \Symfony\Component\Security\Http\Firewall\ExceptionListener(
+                $c['securityContext'],
+                new \Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver('', ''),
+                $c['httpUtils'],
+                Kernel::SECURITY_DOMAIN,
+                new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint(
+                    $c['httpKernel'],
+                    $c['httpUtils'],
+                    '/login',
+                    true // bool $useForward
+                ),
+                null, //$errorPage
+                $c['accessDeniedHandler'],
+                $c['logger'] //LoggerInterface $logger
+            );
+        };
 
         /*
-         * Create dynamic dicriminator map for our Node system
+         * Default denied handler
          */
-        $inheritableEntityEvent = new DataInheritanceEvent();
-        $evm->addEventListener(Events::loadClassMetadata, $inheritableEntityEvent);
+        $this->container['accessDeniedHandler'] = function ($c) {
+            return new \RZ\Renzo\Core\Authorization\AccessDeniedHandler();
+        };
+    }
 
-        return $this;
+    /**
+     * Initialize Doctrine entity manager in DI container.
+     *
+     * This method can be called from InstallApp after updating
+     * doctrine configuration.
+     */
+    public function setupEntityManager()
+    {
+        if ($this->container['config'] !== null &&
+            isset($this->container['config']["doctrine"])) {
+
+            $this->container['em'] = function ($c) {
+
+                // the connection configuration
+                $dbParams = $c['config']["doctrine"];
+                $configDB = Setup::createAnnotationMetadataConfiguration(
+                    $c['entitiesPaths'],
+                    $this->isDebug()
+                );
+
+                $configDB->setProxyDir(RENZO_ROOT . '/sources/Proxies');
+                $configDB->setProxyNamespace('Proxies');
+
+                $em = EntityManager::create($dbParams, $configDB);
+
+                $evm = $em->getEventManager();
+
+                /*
+                 * Create dynamic dicriminator map for our Node system
+                 */
+                $inheritableEntityEvent = new DataInheritanceEvent();
+                $evm->addEventListener(Events::loadClassMetadata, $inheritableEntityEvent);
+
+                if ($em->getConfiguration()->getResultCacheImpl() !== null) {
+                    $em->getConfiguration()
+                            ->getResultCacheImpl()
+                            ->setNamespace($c['config']["appNamespace"]);
+                }
+                if ($em->getConfiguration()->getHydrationCacheImpl() !== null) {
+                    $em->getConfiguration()
+                            ->getHydrationCacheImpl()
+                            ->setNamespace($c['config']["appNamespace"]);
+                }
+                if ($em->getConfiguration()->getQueryCacheImpl() !== null) {
+                    $em->getConfiguration()
+                            ->getQueryCacheImpl()
+                            ->setNamespace($c['config']["appNamespace"]);
+                }
+                if ($em->getConfiguration()->getMetadataCacheImpl()) {
+                    $em->getConfiguration()
+                            ->getMetadataCacheImpl()
+                            ->setNamespace($c['config']["appNamespace"]);
+                }
+
+                return $em;
+            };
+        }
     }
 
     /**
@@ -251,13 +477,17 @@ class Kernel
     {
         $this->backendDebug = (boolean) SettingsBag::get('backend_debug');
 
-        if ($this->getConfig() === null ||
-            (isset($this->getConfig()['install']) &&
-             $this->getConfig()['install'] == true)) {
-
-            $this->prepareSetup();
+        /*
+         * Define a request wide timezone
+         */
+        if (!empty($this->container['config']["timezone"])) {
+            date_default_timezone_set($this->container['config']["timezone"]);
         } else {
-            $this->prepareUrlHandling();
+            date_default_timezone_set("Europe/Paris");
+        }
+
+        if ($this->isInstallMode()) {
+            $this->prepareSetup();
         }
 
         $application = new Application('Renzo Console Application', '0.1');
@@ -273,9 +503,24 @@ class Kernel
 
         $application->run();
 
-        $this->stopwatch->stop('global');
+        $this->container['stopwatch']->stop('global');
 
         return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInstallMode()
+    {
+        if ($this->container['config'] === null ||
+            (isset($this->container['config']['install']) &&
+             $this->container['config']['install'] == true)) {
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -285,17 +530,27 @@ class Kernel
      */
     public function runApp()
     {
-        $this->debug = (boolean) SettingsBag::get('debug');
-        $this->backendDebug = (boolean) SettingsBag::get('backend_debug');
 
-        $this->httpKernel = new HttpKernel($this->dispatcher, $this->resolver);
+        /*
+         * Define a request wide timezone
+         */
+        if (!empty($this->container['config']["timezone"])) {
+            date_default_timezone_set($this->container['config']["timezone"]);
+        } else {
+            date_default_timezone_set("Europe/Paris");
+        }
 
-        if ($this->getConfig() === null ||
-            (isset($this->getConfig()['install']) &&
-             $this->getConfig()['install'] == true)) {
+
+
+        if ($this->container['config'] === null ||
+            (isset($this->container['config']['install']) &&
+             $this->container['config']['install'] == true)) {
 
             $this->prepareSetup();
+
         } else {
+            $this->debug = (boolean) SettingsBag::get('debug');
+            $this->backendDebug = (boolean) SettingsBag::get('backend_debug');
             $this->prepareRequestHandling();
         }
 
@@ -305,9 +560,9 @@ class Kernel
              * Main Framework handle call
              * ----------------------------
              */
-            $this->response = $this->httpKernel->handle($this->request);
+            $this->response = $this->container['httpKernel']->handle($this->request);
             $this->response->send();
-            $this->httpKernel->terminate($this->request, $this->response);
+            $this->container['httpKernel']->terminate($this->request, $this->response);
 
         } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
             echo $e->getMessage().PHP_EOL;
@@ -323,70 +578,25 @@ class Kernel
      */
     public function prepareSetup()
     {
-        $installClassname = static::INSTALL_CLASSNAME;
-        $feCollection = $installClassname::getRoutes();
+        $this->container['dispatcher']->addSubscriber(new RouterListener($this->container['urlMatcher']));
 
-        if (null !== $feCollection) {
-
-            $this->rootCollection->addCollection($feCollection);
-            $this->urlMatcher =   new UrlMatcher($this->rootCollection, $this->requestContext);
-            $this->urlGenerator = new UrlGenerator($this->rootCollection, $this->requestContext);
-            $this->httpUtils =    new HttpUtils($this->urlGenerator, $this->urlMatcher);
-
-            $this->dispatcher->addSubscriber(new RouterListener($this->urlMatcher));
-
-            $this->dispatcher->addListener(
-                KernelEvents::CONTROLLER,
-                array(
-                    new \RZ\Renzo\Core\Events\ControllerMatchedEvent($this),
-                    'onControllerMatched'
-                )
-            );
-        }
+        $this->container['dispatcher']->addListener(
+            KernelEvents::CONTROLLER,
+            array(
+                new \RZ\Renzo\Core\Events\ControllerMatchedEvent($this),
+                'onControllerMatched'
+            )
+        );
 
         return $this;
     }
 
-    private function prepareRouteCollection()
+    /**
+     * Save a compiled version of UrlMatcher and UrlGenerator.
+     */
+    protected function dumpUrlUtils()
     {
-        /*
-         * Add Assets controller routes
-         */
-        $this->rootCollection->addCollection(\RZ\Renzo\CMS\Controllers\AssetsController::getRoutes());
-
-        /*
-         * Add Backend routes
-         */
-        $beClass = $this->backendClass;
-        $cmsCollection = $beClass::getRoutes();
-        if ($cmsCollection !== null) {
-            $this->rootCollection->addCollection(
-                $cmsCollection,
-                '/rz-admin',
-                array('_scheme' => 'https')
-            );
-        }
-
-        /*
-         * Add Frontend routes
-         *
-         * return 'RZ\Renzo\CMS\Controllers\FrontendController';
-         */
-        foreach ($this->frontendThemes as $theme) {
-            $feClass = $theme->getClassName();
-            $feCollection = $feClass::getRoutes();
-            if ($feCollection !== null) {
-
-                // set host pattern if defined
-                if ($theme->getHostname() != '*' &&
-                    $theme->getHostname() != '') {
-
-                    $feCollection->setHost($theme->getHostname());
-                }
-                $this->rootCollection->addCollection($feCollection);
-            }
-        }
-
+        $this->container['stopwatch']->start('prepareRouting');
         if (!file_exists(RENZO_ROOT.'/sources/Compiled')) {
             mkdir(RENZO_ROOT.'/sources/Compiled', 0755, true);
         }
@@ -394,7 +604,7 @@ class Kernel
         /*
          * Generate custom UrlMatcher
          */
-        $dumper = new PhpMatcherDumper($this->rootCollection);
+        $dumper = new PhpMatcherDumper($this->container['routeCollection']);
         $class = $dumper->dump(array(
             'class' => 'GlobalUrlMatcher'
         ));
@@ -403,37 +613,13 @@ class Kernel
         /*
          * Generate custom UrlGenerator
          */
-        $dumper = new PhpGeneratorDumper($this->rootCollection);
+        $dumper = new PhpGeneratorDumper($this->container['routeCollection']);
         $class = $dumper->dump(array(
             'class' => 'GlobalUrlGenerator'
         ));
         file_put_contents(RENZO_ROOT.'/sources/Compiled/GlobalUrlGenerator.php', $class);
 
-        return $this;
-    }
-
-
-    /**
-     * Prepare URL generation tools.
-     *
-     * @return this
-     */
-    private function prepareUrlHandling()
-    {
-        $this->backendClass = $this->getBackendClass();
-        $this->frontendThemes = $this->getFrontendThemes();
-
-        if ($this->isDebug() ||
-            !file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlMatcher.php') ||
-            !file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlGenerator.php')) {
-
-            $this->prepareRouteCollection();
-        }
-        $this->urlMatcher =   new MixedUrlMatcher($this->requestContext);
-        $this->urlGenerator = new \GlobalUrlGenerator($this->requestContext);
-        $this->httpUtils =    new HttpUtils($this->urlGenerator, $this->urlMatcher);
-
-        return $this;
+        $this->container['stopwatch']->stop('prepareRouting');
     }
 
     /**
@@ -444,7 +630,7 @@ class Kernel
         /*
          * set default locale
          */
-        $translation = $this->em
+        $translation = $this->container['em']
                             ->getRepository('RZ\Renzo\Core\Entities\Translation')
                             ->findDefault();
 
@@ -462,70 +648,40 @@ class Kernel
      */
     private function prepareRequestHandling()
     {
-        $this->stopwatch->start('prepareTranslation');
+        $this->container['stopwatch']->start('prepareTranslation');
         $this->prepareTranslation();
-        $this->stopwatch->stop('prepareTranslation');
+        $this->container['stopwatch']->stop('prepareTranslation');
 
-        $this->stopwatch->start('prepareRouting');
-        $this->prepareUrlHandling();
-        $this->stopwatch->stop('prepareRouting');
-
-        $this->dispatcher->addSubscriber(new RouterListener($this->urlMatcher));
-
+        $this->container['dispatcher']->addSubscriber(new RouterListener($this->container['urlMatcher']));
         /*
          * Security
          */
-        $this->stopwatch->start('sessionSecurity');
-        // Create session and CsrfProvider
-        $this->initializeSession();
-        // Create security context with RZCMS User/Roles system
-        $this->initializeSecurityContext();
-        $this->stopwatch->stop('sessionSecurity');
+        $this->container['stopwatch']->start('firewall');
 
-        $this->stopwatch->start('firewall');
-        $map = new FirewallMap();
         // Register back-end security scheme
-        $beClass = $this->backendClass;
-        $beClass::appendToFirewallMap(
-            $this->getSecurityContext(),
-            $this->getUserProvider(),
-            $this->getAuthenticationManager(),
-            $this->getAccessDecisionManager(),
-            $map,
-            $this->httpKernel,
-            $this->httpUtils,
-            $this->dispatcher
-        );
+        $beClass = $this->container['backendClass'];
+        $beClass::setupDependencyInjection($this->container);
 
         // Register front-end security scheme
-        foreach ($this->frontendThemes as $theme) {
+        foreach ($this->container['frontendThemes'] as $theme) {
             $feClass = $theme->getClassName();
-            $feClass::appendToFirewallMap(
-                $this->getSecurityContext(),
-                $this->getUserProvider(),
-                $this->getAuthenticationManager(),
-                $this->getAccessDecisionManager(),
-                $map,
-                $this->httpKernel,
-                $this->httpUtils,
-                $this->dispatcher
-            );
+            $feClass::setupDependencyInjection($this->container);
         }
 
-        $firewall = new Firewall($map, $this->dispatcher);
-        $this->stopwatch->stop('firewall');
+        $firewall = new Firewall($this->container['firewallMap'], $this->container['dispatcher']);
+        $this->container['stopwatch']->stop('firewall');
 
         /*
          * Events
          */
-        $this->dispatcher->addListener(
+        $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
             array(
                 $this,
                 'onStartKernelRequest'
             )
         );
-        $this->dispatcher->addListener(
+        $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
             array(
                 $firewall,
@@ -535,21 +691,21 @@ class Kernel
         /*
          * Register after controller matched listener
          */
-        $this->dispatcher->addListener(
+        $this->container['dispatcher']->addListener(
             KernelEvents::CONTROLLER,
             array(
                 $this,
                 'onControllerMatched'
             )
         );
-        $this->dispatcher->addListener(
+        $this->container['dispatcher']->addListener(
             KernelEvents::CONTROLLER,
             array(
                 new \RZ\Renzo\Core\Events\ControllerMatchedEvent($this),
                 'onControllerMatched'
             )
         );
-        $this->dispatcher->addListener(
+        $this->container['dispatcher']->addListener(
             KernelEvents::TERMINATE,
             array(
                 $this,
@@ -560,7 +716,7 @@ class Kernel
          * If debug, alter HTML responses to append Debug panel to view
          */
         if (true == SettingsBag::get('display_debug_panel')) {
-            $this->dispatcher->addSubscriber(new \RZ\Renzo\Core\Utils\DebugPanel());
+            $this->container['dispatcher']->addSubscriber(new \RZ\Renzo\Core\Utils\DebugPanel());
         }
     }
     /**
@@ -568,7 +724,7 @@ class Kernel
      */
     public function onStartKernelRequest()
     {
-        $this->stopwatch->start('requestHandling');
+        $this->container['stopwatch']->start('requestHandling');
     }
     /**
      * Stop request-handling stopwatch event and
@@ -576,87 +732,16 @@ class Kernel
      */
     public function onControllerMatched()
     {
-        $this->stopwatch->stop('matchingRoute');
-        $this->stopwatch->stop('requestHandling');
-        $this->stopwatch->start('controllerHandling');
+        $this->container['stopwatch']->stop('matchingRoute');
+        $this->container['stopwatch']->stop('requestHandling');
+        $this->container['stopwatch']->start('controllerHandling');
     }
     /**
      * Stop controller handling stopwatch event.
      */
     public function onKernelTerminate()
     {
-        $this->stopwatch->stop('controllerHandling');
-    }
-
-    /**
-     * Get frontend app themes.
-     *
-     * @return ArrayCollection of RZ\Renzo\Core\Entities\Theme
-     */
-    private function getFrontendThemes()
-    {
-        $themes = $this->em
-                      ->getRepository('RZ\Renzo\Core\Entities\Theme')
-                      ->findBy(array(
-                          'available'=>    true,
-                          'backendTheme'=> false
-                      ));
-
-
-
-        if (count($themes) < 1) {
-
-            $defaultTheme = new Theme();
-            $defaultTheme->setClassName('RZ\Renzo\CMS\Controllers\FrontendController');
-            $defaultTheme->setAvailable(true);
-
-            return array(
-                $defaultTheme
-            );
-        } else {
-            return $themes;
-        }
-    }
-
-    /**
-     * Get backend app controller full-qualified classname.
-     *
-     * Return 'RZ\Renzo\CMS\Controllers\BackendController' if none found in database.
-     *
-     * @return string
-     */
-    private function getBackendClass()
-    {
-        $theme = $this->em
-                      ->getRepository('RZ\Renzo\Core\Entities\Theme')
-                      ->findOneBy(array('available'=>true, 'backendTheme'=>true));
-
-        if ($theme !== null) {
-            return $theme->getClassName();
-        }
-
-        return 'RZ\Renzo\CMS\Controllers\BackendController';
-    }
-
-    /**
-     * Get Solr service if available.
-     *
-     *
-     * @return Apache_Solr_Service or null
-     */
-    public function getSolrService()
-    {
-        if ($this->isSolrAvailable()) {
-            if (null === $this->solrService) {
-
-                $this->solrService = new \Solarium\Client($this->getConfig()['solr']);
-                $this->solrService->setDefaultEndpoint('localhost');
-            }
-
-            return $this->solrService;
-        }
-
-        return null;
+        $this->container['stopwatch']->stop('controllerHandling');
     }
 
     /**
@@ -668,10 +753,10 @@ class Kernel
     {
         if ($this->isSolrAvailable()) {
             // create a ping query
-            $ping = $this->getSolrService()->createPing();
+            $ping = $this->container['solr']->createPing();
             // execute the ping query
             try {
-                $result = $this->getSolrService()->ping($ping);
+                $result = $this->container['solr']->ping($ping);
 
                 return true;
             } catch (\Exception $e) {
@@ -718,73 +803,6 @@ class Kernel
         }
     }
 
-    private function initializeSession()
-    {
-        // créer un objet session depuis le composant HttpFoundation
-        $this->request->setSession(new Session());
-
-        // générer le secret CSRF depuis quelque part
-        $csrfSecret = $this->getConfig()["security"]['secret'];
-        $this->csrfProvider = new SessionCsrfProvider(
-            $this->request->getSession(),
-            $csrfSecret
-        );
-    }
-
-    private function initializeSecurityContext()
-    {
-        $this->userProvider = new UserProvider();
-        $this->authenticationManager = new DaoAuthenticationProvider(
-            $this->userProvider,
-            new UserChecker(),
-            static::SECURITY_DOMAIN,
-            UserHandler::getEncoderFactory()
-        );
-        $this->accessDecisionManager = new AccessDecisionManager(
-            array(
-                new RoleVoter('ROLE_')
-            )
-        );
-        $this->securityContext = new SecurityContext(
-            $this->authenticationManager,
-            $this->accessDecisionManager
-        );
-    }
-    /**
-     * @return Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider
-     */
-    public function getCsrfProvider()
-    {
-        return $this->csrfProvider;
-    }
-    /**
-     * @return \RZ\Renzo\Core\Handlers\UserProvider
-     */
-    public function getUserProvider()
-    {
-        return $this->userProvider;
-    }
-    /**
-     * @return \Symfony\Component\Security\Core\SecurityContext
-     */
-    public function getSecurityContext()
-    {
-        return $this->securityContext;
-    }
-    /**
-     * @return Symfony\Component\Security\Core\Authorization\AccessDecisionManager
-     */
-    public function getAccessDecisionManager()
-    {
-        return $this->accessDecisionManager;
-    }
-    /**
-     * @return Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider
-     */
-    public function getAuthenticationManager()
-    {
-        return $this->authenticationManager;
-    }
     /**
      * @return Symfony\Component\HttpFoundation\Request
      */
@@ -793,46 +811,13 @@ class Kernel
         return $this->request;
     }
     /**
-     * @return Symfony\Component\Routing\Generator\UrlGenerator
-     */
-    public function getUrlGenerator()
-    {
-        return $this->urlGenerator;
-    }
-    /**
-     * @return Doctrine\ORM\EntityManager
-     */
-    public function getEntityManager()
-    {
-        return $this->em;
-    }
-    /**
      * Alias for Kernel::getEntityManager method.
      *
      * @return Doctrine\ORM\EntityManager
      */
     public function em()
     {
-        return $this->em;
-    }
-    /**
-     * @return array
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param array $config
-     *
-     * @return $config
-     */
-    public function setConfig($config)
-    {
-        $this->config = $config;
-
-        return $this;
+        return $this->container['em'];
     }
 
     /**
@@ -842,7 +827,7 @@ class Kernel
      */
     public function isDebug()
     {
-        return (boolean) $this->getConfig()['devMode'];
+        return (boolean) $this->container['config']['devMode'];
     }
 
     /**
@@ -853,12 +838,7 @@ class Kernel
      */
     public function isSolrAvailable()
     {
-        if (isset($this->getConfig()['solr']['endpoint'])) {
-
-            return true;
-        }
-
-        return false;
+        return (boolean) isset($this->container['config']['solr']['endpoint']);
     }
 
     /**
@@ -890,6 +870,6 @@ class Kernel
      */
     public function getStopwatch()
     {
-        return $this->stopwatch;
+        return $this->container['stopwatch'];
     }
 }

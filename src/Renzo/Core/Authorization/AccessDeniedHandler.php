@@ -33,7 +33,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     public function handle(Request $request, AccessDeniedException $accessDeniedException)
     {
         $response = new RedirectResponse(
-            Kernel::getInstance()->getUrlGenerator()->generate('homePage')
+            Kernel::getService('urlGenerator')->generate('homePage')
         );
         $response->prepare($request);
 

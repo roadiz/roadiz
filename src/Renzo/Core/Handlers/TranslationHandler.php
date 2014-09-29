@@ -59,7 +59,7 @@ class TranslationHandler
      */
     public function makeDefault()
     {
-        $defaults = Kernel::getInstance()->em()
+        $defaults = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Translation')
             ->findBy(array('defaultTranslation'=>true));
 
@@ -67,7 +67,7 @@ class TranslationHandler
             $default->setDefaultTranslation(false);
         }
         $this->translation->setDefaultTranslation(true);
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
 
         return $this;
     }

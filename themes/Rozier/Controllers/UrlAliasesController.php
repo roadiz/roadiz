@@ -46,16 +46,16 @@ class UrlAliasesController extends RozierApp
     public function editAliasesAction(Request $request, $nodeId, $translationId = null)
     {
         if (null === $translationId && $translationId < 1) {
-            $translation = $this->getKernel()->em()
+            $translation = $this->getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Translation')
                     ->findDefault();
         } else {
-            $translation = $this->getKernel()->em()
+            $translation = $this->getService('em')
                     ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
         }
 
 
-        $source = $this->getKernel()->em()
+        $source = $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
                 ->findOneBy(array('translation'=>$translation, 'node'=>array('id'=>(int) $nodeId)));
 
@@ -64,7 +64,7 @@ class UrlAliasesController extends RozierApp
         if ($source !== null &&
             $node !== null) {
 
-            $uas = $this->getKernel()->em()
+            $uas = $this->getService('em')
                             ->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
                             ->findAllFromNode($node->getId());
 
@@ -95,7 +95,7 @@ class UrlAliasesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'nodesEditSEOPage',
                         array('nodeId' => $node->getId(), 'translationId'=> $translationId)
                     )
@@ -132,7 +132,7 @@ class UrlAliasesController extends RozierApp
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'nodesEditSEOPage',
                             array('nodeId' => $node->getId(), 'translationId'=> $translationId)
                         )
@@ -156,7 +156,7 @@ class UrlAliasesController extends RozierApp
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'nodesEditSEOPage',
                             array('nodeId' => $node->getId(), 'translationId'=> $translationId)
                         )
@@ -202,7 +202,7 @@ class UrlAliasesController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'nodesEditSEOPage',
                         array('nodeId' => $node->getId(), 'translationId'=> $translationId)
                     )
@@ -235,10 +235,10 @@ class UrlAliasesController extends RozierApp
     {
         if ($data['nodeId'] == $node->getId()) {
 
-            $translation = $this->getKernel()->em()
+            $translation = $this->getService('em')
                         ->find('RZ\Renzo\Core\Entities\Translation', (int) $data['translationId']);
 
-            $nodeSource = $this->getKernel()->em()
+            $nodeSource = $this->getService('em')
                         ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
                         ->findOneBy(array('node'=>$node, 'translation'=>$translation));
 
@@ -256,8 +256,8 @@ class UrlAliasesController extends RozierApp
                 try {
                     $ua = new UrlAlias($nodeSource);
                     $ua->setAlias($data['alias']);
-                    $this->getKernel()->em()->persist($ua);
-                    $this->getKernel()->em()->flush();
+                    $this->getService('em')->persist($ua);
+                    $this->getService('em')->flush();
 
                     return $ua;
                 } catch (\Exception $e) {
@@ -291,7 +291,7 @@ class UrlAliasesController extends RozierApp
             $nodeSource->setMetaKeywords($data['metaKeywords']);
             $nodeSource->setMetaDescription($data['metaDescription']);
 
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->flush();
             return true;
         }
 
@@ -305,7 +305,7 @@ class UrlAliasesController extends RozierApp
      */
     private function urlAliasExists($name)
     {
-        return (boolean) $this->getKernel()->em()
+        return (boolean) $this->getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
             ->exists($name);
     }
@@ -316,7 +316,7 @@ class UrlAliasesController extends RozierApp
      */
     private function nodeNameExists($name)
     {
-        return (boolean) $this->getKernel()->em()
+        return (boolean) $this->getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Node')
             ->exists($name);
     }
@@ -346,7 +346,7 @@ class UrlAliasesController extends RozierApp
 
             try {
                 $ua->setAlias($data['alias']);
-                $this->getKernel()->em()->flush();
+                $this->getService('em')->flush();
 
                 return true;
             } catch (\Exception $e) {
@@ -364,8 +364,8 @@ class UrlAliasesController extends RozierApp
     private function deleteUrlAlias($data, UrlAlias $ua)
     {
         if ($data['urlaliasId'] == $ua->getId()) {
-            $this->getKernel()->em()->remove($ua);
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->remove($ua);
+            $this->getService('em')->flush();
         }
     }
 

@@ -58,8 +58,8 @@ class InstallCommand extends Command
                         ->setBackendTheme(true)
                         ->setClassName("Themes\Rozier\RozierApp");
 
-                    Kernel::getInstance()->em()->persist($theme);
-                    Kernel::getInstance()->em()->flush();
+                    Kernel::getService('em')->persist($theme);
+                    Kernel::getService('em')->flush();
 
                     $text .= '<info>Rozier back-end theme installed…</info>'.PHP_EOL;
                 } else {
@@ -77,8 +77,8 @@ class InstallCommand extends Command
                         ->setLocale("en_GB")
                         ->setName("Default translation");
 
-                    Kernel::getInstance()->em()->persist($defaultTrans);
-                    Kernel::getInstance()->em()->flush();
+                    Kernel::getService('em')->persist($defaultTrans);
+                    Kernel::getService('em')->flush();
 
                     $text .= '<info>Default translation installed…</info>'.PHP_EOL;
                 } else {
@@ -92,7 +92,7 @@ class InstallCommand extends Command
 
     private function hasDefaultBackend()
     {
-        $default = Kernel::getInstance()->em()
+        $default = Kernel::getService('em')
             ->getRepository("RZ\Renzo\Core\Entities\Theme")
             ->findOneBy(array("backendTheme"=>true));
 
@@ -106,7 +106,7 @@ class InstallCommand extends Command
      */
     public function hasDefaultTranslation()
     {
-        $default = Kernel::getInstance()->em()
+        $default = Kernel::getService('em')
             ->getRepository("RZ\Renzo\Core\Entities\Translation")
             ->findOneBy(array());
 

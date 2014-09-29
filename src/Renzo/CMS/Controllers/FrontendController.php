@@ -18,6 +18,7 @@ use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Handlers\UserProvider;
 use RZ\Renzo\Core\Handlers\UserHandler;
+use Pimple\Container;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -214,7 +215,6 @@ class FrontendController extends AppController
                  * environment to the next level.
                  */
                 $ctrl->__initFromOtherController(
-                    $this->getKernel()->getSecurityContext(),
                     $this->twig,
                     $this->translator,
                     $this->assignation
@@ -248,62 +248,34 @@ class FrontendController extends AppController
         return $this->translation;
     }
 
-
     /**
-     * {@inheritdoc}
+     * Append objects to global container.
      *
-     * For front-end controller, we only need to get
-     * authenticated users credentials tokens.
+     * @param Pimple\Container $container
      */
-    public static function appendToFirewallMap(
-        SecurityContext $securityContext,
-        UserProvider $userProvider,
-        DaoAuthenticationProvider $authenticationManager,
-        AccessDecisionManager $accessDecisionManager,
-        FirewallMap $firewallMap,
-        HttpKernelInterface $httpKernel,
-        HttpUtils $httpUtils,
-        EventDispatcher $dispatcher = null
-    ) {
-        /*
-         * Prepare app firewall
-         */
-        $requestMatcher = new RequestMatcher('^/');
-        // allows configuration of different access control rules for specific parts of the website.
-        //$accessMap = new AccessMap($requestMatcher, array());
+    public static function setupDependencyInjection(Container $container)
+    {
+        $container->extend('firewallMap', function ($map, $c) {
+            /*
+             * Prepare app firewall
+             */
+            $requestMatcher = new RequestMatcher('^/');
+            // allows configuration of different access control rules for specific parts of the website.
+            //$accessMap = new AccessMap($requestMatcher, array());
 
-        $listeners = array(
-            // manages the SecurityContext persistence through a session
-            new ContextListener(
-                $securityContext,
-                array($userProvider),
-                Kernel::SECURITY_DOMAIN,
-                new Logger(),
-                $dispatcher
-            ),
-            // automatically adds a Token if none is already present.
-            new AnonymousAuthenticationListener($securityContext, '') // $key
-        );
+            $listeners = array(
+                // manages the SecurityContext persistence through a session
+                $c['contextListener'],
+                // automatically adds a Token if none is already present.
+                new AnonymousAuthenticationListener($c['securityContext'], '') // $key
+            );
 
-        $exceptionListener = new ExceptionListener(
-            $securityContext,
-            new AuthenticationTrustResolver('', ''),
-            $httpUtils,
-            Kernel::SECURITY_DOMAIN,
-            new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint(
-                $httpKernel,
-                $httpUtils,
-                '/login',
-                true // bool $useForward
-            ),
-            null, //$errorPage
-            new AccessDeniedHandler(), //AccessDeniedHandlerInterface $accessDeniedHandler
-            new Logger() //LoggerInterface $logger
-        );
+            /*
+             * Inject a new firewall map element
+             */
+            $map->add($requestMatcher, $listeners, $c['firewallExceptionListener']);
 
-        /*
-         * Inject a new firewall map element
-         */
-        $firewallMap->add($requestMatcher, $listeners, $exceptionListener);
+            return $map;
+        });
     }
 }

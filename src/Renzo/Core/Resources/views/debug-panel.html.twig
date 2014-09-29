@@ -11,17 +11,20 @@
 			<dt><i class="uk-icon-clock-o"></i> Init kernel</dt>
 			<dd>{{ stopwatch.getEvent('initKernel').getDuration }}ms</dd>
 
+			{% if stopwatch.isStarted('prepareRouting') %}
 			<dt><i class="uk-icon-clock-o"></i> Prepare routing</dt>
 			<dd>{{ stopwatch.getEvent('prepareRouting').getDuration }}ms</dd>
+			{% endif %}
 
-			<dt><i class="uk-icon-clock-o"></i> Prepare session</dt>
-			<dd>{{ stopwatch.getEvent('sessionSecurity').getDuration }}ms</dd>
-
+			{% if stopwatch.isStarted('firewall') %}
 			<dt><i class="uk-icon-clock-o"></i> Prepare firewall</dt>
 			<dd>{{ stopwatch.getEvent('firewall').getDuration }}ms</dd>
+			{% endif %}
 
+			{% if stopwatch.isStarted('prepareTranslation') %}
 			<dt><i class="uk-icon-clock-o"></i> Prepare locale</dt>
 			<dd>{{ stopwatch.getEvent('prepareTranslation').getDuration }}ms</dd>
+			{% endif %}
 
 			<dt><i class="uk-icon-clock-o"></i> Matching route</dt>
 			<dd>{{ stopwatch.getEvent('matchingRoute').getDuration }}ms</dd>
@@ -29,13 +32,20 @@
 			<dt><i class="uk-icon-clock-o"></i> Request handling</dt>
 			<dd>{{ stopwatch.getEvent('requestHandling').getDuration }}ms</dd>
 
-			{# <dt><i class="uk-icon-clock-o"></i> Controller handling</dt>
-			<dd>{{ stopwatch.getEvent('controllerHandling').getDuration }}ms</dd> #}
+			{% if stopwatch.isStarted('controllerHandling') %}
+			<dt><i class="uk-icon-clock-o"></i> Controller handling</dt>
+			<dd>{{ stopwatch.getEvent('controllerHandling').getDuration }}ms</dd>
+			{% endif %}
 
-			{#
-			In controller handling
+			{% if stopwatch.isStarted('initTranslations') %}
 			<dt><i class="uk-icon-clock-o"></i> Init translations</dt>
-			<dd>{{ stopwatch.getEvent('initTranslations').getDuration }}ms</dd> #}
+			<dd>{{ stopwatch.getEvent('initTranslations').getDuration }}ms</dd>
+			{% endif %}
+
+			{% if stopwatch.isStarted('twigRender') %}
+			<dt><i class="uk-icon-clock-o"></i> Twig render</dt>
+			<dd>{{ stopwatch.getEvent('twigRender').getDuration }}ms</dd>
+			{% endif %}
 		</dl>
 	</div>
 </div>

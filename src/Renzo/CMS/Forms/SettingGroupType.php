@@ -29,7 +29,7 @@ class SettingGroupType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $groups = Kernel::getInstance()->em()
+        $groups = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
             ->findAll();
 

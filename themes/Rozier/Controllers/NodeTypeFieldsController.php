@@ -41,7 +41,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function listAction(Request $request, $nodeTypeId)
     {
-        $nodeType = $this->getKernel()->em()
+        $nodeType = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if ($nodeType !== null) {
@@ -70,7 +70,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function editAction(Request $request, $nodeTypeFieldId)
     {
-        $field = $this->getKernel()->em()
+        $field = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
         if ($field !== null) {
@@ -91,7 +91,7 @@ class NodeTypeFieldsController extends RozierApp
                  * Redirect to update schema page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'nodeTypesFieldSchemaUpdate',
                         array(
                             'nodeTypeId' => $field->getNodeType()->getId(),
@@ -129,7 +129,7 @@ class NodeTypeFieldsController extends RozierApp
     public function addAction(Request $request, $nodeTypeId)
     {
         $field = new NodeTypeField();
-        $nodeType = $this->getKernel()->em()
+        $nodeType = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if ($nodeType !== null &&
@@ -152,7 +152,7 @@ class NodeTypeFieldsController extends RozierApp
                  * Redirect to update schema page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'nodeTypesFieldSchemaUpdate',
                         array(
                             'nodeTypeId' => $nodeTypeId,
@@ -189,7 +189,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeTypeFieldId)
     {
-        $field = $this->getKernel()->em()
+        $field = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
         if ($field !== null) {
@@ -202,13 +202,13 @@ class NodeTypeFieldsController extends RozierApp
 
                 $nodeTypeId = $field->getNodeType()->getId();
 
-                $this->getKernel()->em()->remove($field);
-                $this->getKernel()->em()->flush();
+                $this->getService('em')->remove($field);
+                $this->getService('em')->flush();
 
                 /*
                  * Update Database
                  */
-                $nodeType = $this->getKernel()->em()
+                $nodeType = $this->getService('em')
                     ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
                 $nodeType->getHandler()->updateSchema();
@@ -224,7 +224,7 @@ class NodeTypeFieldsController extends RozierApp
                  * Redirect to update schema page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'nodeTypesFieldSchemaUpdate',
                         array(
                             'nodeTypeId' => $nodeTypeId,
@@ -262,7 +262,7 @@ class NodeTypeFieldsController extends RozierApp
             $field->$setter($value);
         }
 
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->flush();
         $field->getNodeType()->getHandler()->updateSchema();
     }
 
@@ -283,8 +283,8 @@ class NodeTypeFieldsController extends RozierApp
 
         $field->setNodeType($nodeType);
 
-        $this->getKernel()->em()->persist($field);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->persist($field);
+        $this->getService('em')->flush();
 
         $nodeType->getHandler()->updateSchema();
     }

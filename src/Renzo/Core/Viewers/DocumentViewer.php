@@ -108,7 +108,7 @@ class DocumentViewer implements ViewableInterface
 
             //RoutingExtension
             static::$twig->addExtension(
-                new RoutingExtension(Kernel::getInstance()->getUrlGenerator())
+                new RoutingExtension(Kernel::getService('urlGenerator'))
             );
             /*
              * ============================================================================
@@ -202,7 +202,7 @@ class DocumentViewer implements ViewableInterface
         }
         if (!empty($args['alt'])) {
             $assignation['alt'] = $args['alt'];
-        } elseif (!empty($this->getDocument()->getName())) {
+        } elseif ("" != $this->getDocument()->getName()) {
             $assignation['alt'] = $this->getDocument()->getName();
         } else {
             $assignation['alt'] = $this->getDocument()->getFileName();
@@ -256,7 +256,7 @@ class DocumentViewer implements ViewableInterface
             return false;
         }
 
-        $sourcesDocs = Kernel::getInstance()->em()
+        $sourcesDocs = Kernel::getService('em')
             ->getRepository("RZ\Renzo\Core\Entities\Document")
             ->findBy(array("filename" => $sourcesDocsName));
 
@@ -317,7 +317,7 @@ class DocumentViewer implements ViewableInterface
                 $slirArgs['p'] = 'p1';
             }
 
-            return Kernel::getInstance()->getUrlGenerator()->generate('SLIRProcess', array(
+            return Kernel::getService('urlGenerator')->generate('SLIRProcess', array(
                 'queryString' => implode('-', $slirArgs),
                 'filename' => $this->getDocument()->getRelativeUrl()
             ));

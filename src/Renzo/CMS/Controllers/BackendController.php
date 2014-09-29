@@ -15,6 +15,7 @@ use RZ\Renzo\Core\Handlers\UserProvider;
 use RZ\Renzo\Core\Handlers\UserHandler;
 use RZ\Renzo\Core\Authentification\AuthenticationSuccessHandler;
 use RZ\Renzo\Core\Authorization\AccessDeniedHandler;
+use Pimple\Container;
 
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -72,107 +73,81 @@ class BackendController extends AppController
     }
 
     /**
-     * {@inheritdoc}
+     * Append objects to global container.
+     *
+     * @param Pimple\Container $container
      */
-    public static function appendToFirewallMap(
-        SecurityContext $securityContext,
-        UserProvider $renzoUserProvider,
-        DaoAuthenticationProvider $authenticationManager,
-        AccessDecisionManager $accessDecisionManager,
-        FirewallMap $firewallMap,
-        HttpKernelInterface $httpKernel,
-        HttpUtils $httpUtils,
-        EventDispatcher $dispatcher = null
-    ) {
-        /*
-         * Prepare app firewall
-         */
-        $requestMatcher = new RequestMatcher('^/rz-admin');
-        // allows configuration of different access control rules for specific parts of the website.
-        $accessMap = new AccessMap($requestMatcher, array(Role::ROLE_BACKEND_USER));
-        $accessMap->add(new RequestMatcher('^/rz-admin'), array(Role::ROLE_BACKEND_USER));
+    public static function setupDependencyInjection(Container $container)
+    {
+        $container->extend('firewallMap', function ($map, $c) {
 
-        /*
-         * Listener
-         */
-        $logoutListener = new LogoutListener(
-            $securityContext,
-            $httpUtils,
-            //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
-            new DefaultLogoutSuccessHandler($httpUtils),
-            array(
-                'logout_path'    => '/rz-admin/logout',
-            )
-        );
-        //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
-        $logoutListener->addHandler(new \Symfony\Component\Security\Http\Logout\SessionLogoutHandler());
+            /*
+             * Prepare app firewall
+             */
+            $requestMatcher = new RequestMatcher('^/rz-admin');
+            // allows configuration of different access control rules for specific parts of the website.
+            $accessMap = new AccessMap($requestMatcher, array(Role::ROLE_BACKEND_USER));
+            $accessMap->add(new RequestMatcher('^/rz-admin'), array(Role::ROLE_BACKEND_USER));
 
-        $listeners = array(
-            // manages the SecurityContext persistence through a session
-            new ContextListener(
-                $securityContext,
-                array($renzoUserProvider),
-                Kernel::SECURITY_DOMAIN,
-                new Logger(),
-                $dispatcher
-            ),
-            // logout users
-            $logoutListener,
-            // authentication via a simple form composed of a username and a password
-            new UsernamePasswordFormAuthenticationListener(
-                $securityContext,
-                $authenticationManager,
-                new SessionAuthenticationStrategy(SessionAuthenticationStrategy::INVALIDATE),
-                $httpUtils,
-                Kernel::SECURITY_DOMAIN,
-                new AuthenticationSuccessHandler($httpUtils, array(
-                    'always_use_default_target_path' => false,
-                    'default_target_path'            => '/rz-admin',
-                    'login_path'                     => '/login',
-                    'target_path_parameter'          => '_target_path',
-                    'use_referer'                    => false,
-                )),
-                new DefaultAuthenticationFailureHandler($httpKernel, $httpUtils, array(
-                    'failure_path'           => '/login_failed',
-                    'failure_forward'        => false,
-                    'login_path'             => '/login',
-                    'failure_path_parameter' => '_failure_path'
-                )),
+            /*
+             * Listener
+             */
+            $logoutListener = new LogoutListener(
+                $c['securityContext'],
+                $c['httpUtils'],
+                //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
+                new DefaultLogoutSuccessHandler($c['httpUtils']),
                 array(
-                    'check_path' => '/rz-admin/login_check',
+                    'logout_path'    => '/rz-admin/logout',
+                )
+            );
+            //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
+            $logoutListener->addHandler(new \Symfony\Component\Security\Http\Logout\SessionLogoutHandler());
+
+            $listeners = array(
+                // manages the SecurityContext persistence through a session
+                $c['contextListener'],
+                // logout users
+                $logoutListener,
+                // authentication via a simple form composed of a username and a password
+                new UsernamePasswordFormAuthenticationListener(
+                    $c['securityContext'],
+                    $c['authentificationManager'],
+                    new SessionAuthenticationStrategy(SessionAuthenticationStrategy::INVALIDATE),
+                    $c['httpUtils'],
+                    Kernel::SECURITY_DOMAIN,
+                    new AuthenticationSuccessHandler($c['httpUtils'], array(
+                        'always_use_default_target_path' => false,
+                        'default_target_path'            => '/rz-admin',
+                        'login_path'                     => '/login',
+                        'target_path_parameter'          => '_target_path',
+                        'use_referer'                    => false,
+                    )),
+                    new DefaultAuthenticationFailureHandler($c['httpKernel'], $c['httpUtils'], array(
+                        'failure_path'           => '/login_failed',
+                        'failure_forward'        => false,
+                        'login_path'             => '/login',
+                        'failure_path_parameter' => '_failure_path'
+                    )),
+                    array(
+                        'check_path' => '/rz-admin/login_check',
+                    ),
+                    $c['logger'], // A LoggerInterface instance
+                    $c['dispatcher'],
+                    null//$c['csrfProvider'] //csrfTokenManager
                 ),
-                new Logger(), // A LoggerInterface instance
-                $dispatcher,
-                null //csrfTokenManager
-            ),
-            // enforces access control rules
-            new AccessListener(
-                $securityContext,
-                $accessDecisionManager,
-                $accessMap,
-                $authenticationManager
-            )
-        );
+                // enforces access control rules
+                new AccessListener(
+                    $c['securityContext'],
+                    $c['accessDecisionManager'],
+                    $accessMap,
+                    $c['authentificationManager']
+                )
+            );
 
-        $exceptionListener = new ExceptionListener(
-            $securityContext,
-            new AuthenticationTrustResolver('', ''),
-            $httpUtils,
-            Kernel::SECURITY_DOMAIN,
-            new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint(
-                $httpKernel,
-                $httpUtils,
-                '/login',
-                true // bool $useForward
-            ),
-            null, //$errorPage
-            new AccessDeniedHandler(), //AccessDeniedHandlerInterface $accessDeniedHandler
-            new Logger() //LoggerInterface $logger
-        );
+            $map->add($requestMatcher, $listeners, $c['firewallExceptionListener']);
 
-        /*
-         * Inject a new firewall map element
-         */
-        $firewallMap->add($requestMatcher, $listeners, $exceptionListener);
+            return $map;
+        });
     }
 }

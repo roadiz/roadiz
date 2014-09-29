@@ -40,7 +40,7 @@ class DocumentsController extends RozierApp
          */
         $listManager = new EntityListManager(
             $request,
-            $this->getKernel()->em(),
+            $this->getService('em'),
             'RZ\Renzo\Core\Entities\Document'
         );
 
@@ -70,7 +70,7 @@ class DocumentsController extends RozierApp
      */
     public function editAction(Request $request, $documentId)
     {
-        $document = $this->getKernel()->em()
+        $document = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
@@ -99,7 +99,7 @@ class DocumentsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'documentsEditPage',
                         array('documentId' => $document->getId())
                     )
@@ -131,7 +131,7 @@ class DocumentsController extends RozierApp
      */
     public function deleteAction(Request $request, $documentId)
     {
-        $document = $this->getKernel()->em()
+        $document = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
@@ -158,7 +158,7 @@ class DocumentsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('documentsHomePage')
+                    $this->getService('urlGenerator')->generate('documentsHomePage')
                 );
                 $response->prepare($request);
 
@@ -304,7 +304,7 @@ class DocumentsController extends RozierApp
             $document->$setter($value);
         }
 
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->flush();
     }
 
     /**
@@ -337,8 +337,8 @@ class DocumentsController extends RozierApp
                     $document->setFilename($uploadedFile->getClientOriginalName());
                     $document->setMimeType($uploadedFile->getMimeType());
 
-                    $this->getKernel()->em()->persist($document);
-                    $this->getKernel()->em()->flush();
+                    $this->getService('em')->persist($document);
+                    $this->getService('em')->flush();
 
                     $uploadedFile->move(Document::getFilesFolder().'/'.$document->getFolder(), $document->getFilename());
 

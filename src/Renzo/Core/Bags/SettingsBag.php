@@ -33,11 +33,11 @@ class SettingsBag
     public static function get($settingName)
     {
         if (!isset(static::$settings[$settingName]) &&
-            Kernel::getInstance()->em() !== null) {
+            Kernel::getService('em') !== null) {
 
             try {
                 static::$settings[$settingName] =
-                            Kernel::getInstance()->em()
+                            Kernel::getService('em')
                             ->getRepository('RZ\Renzo\Core\Entities\Setting')
                             ->getValue($settingName);
             } catch (\Exception $e) {

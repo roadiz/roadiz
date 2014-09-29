@@ -12,7 +12,7 @@ class SettingTest extends PHPUnit_Framework_TestCase
      */
     public function testGetValue($name, $expected)
     {
-        $value = Kernel::getInstance()->em()
+        $value = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Setting')
             ->getValue($name);
 
@@ -40,12 +40,12 @@ class SettingTest extends PHPUnit_Framework_TestCase
             $s = new Setting();
             $s->setName($setting[0]);
             $s->setValue($setting[1]);
-            Kernel::getInstance()->em()->persist($s);
+            Kernel::getService('em')->persist($s);
 
             static::$entityCollection[] = $s;
         }
 
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->flush();
     }
     /**
      * Remove test entities.
@@ -53,10 +53,10 @@ class SettingTest extends PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         foreach (static::$entityCollection as $setting) {
-            Kernel::getInstance()->em()->remove($setting);
+            Kernel::getService('em')->remove($setting);
         }
 
-        Kernel::getInstance()->em()->flush();
-        Kernel::getInstance()->em()->clear(); // Detaches all objects from Doctrine!
+        Kernel::getService('em')->flush();
+        Kernel::getService('em')->clear(); // Detaches all objects from Doctrine!
     }
 }

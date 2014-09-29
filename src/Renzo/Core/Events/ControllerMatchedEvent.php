@@ -44,7 +44,7 @@ class ControllerMatchedEvent extends Event
         if ($matchedCtrl instanceof AppController) {
 
             $matchedCtrl->setKernel($this->kernel);
-            $matchedCtrl->__init($this->kernel->getSecurityContext());
+            $matchedCtrl->__init();
         }
     }
 }

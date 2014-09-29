@@ -43,13 +43,13 @@ class NodesSourcesHandler
      */
     public function cleanDocumentsFromField(NodeTypeField $field)
     {
-        $nsDocuments = Kernel::getInstance()->em()
+        $nsDocuments = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\NodesSourcesDocuments')
                 ->findBy(array('nodeSource'=>$this->nodeSource, 'field'=>$field));
 
         foreach ($nsDocuments as $nsDoc) {
-            Kernel::getInstance()->em()->remove($nsDoc);
-            Kernel::getInstance()->em()->flush();
+            Kernel::getService('em')->remove($nsDoc);
+            Kernel::getService('em')->flush();
         }
 
         return $this;
@@ -67,14 +67,14 @@ class NodesSourcesHandler
     {
         $nsDoc = new NodesSourcesDocuments($this->nodeSource, $document, $field);
 
-        $latestPosition = Kernel::getInstance()->em()
+        $latestPosition = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\NodesSourcesDocuments')
                 ->getLatestPosition($this->nodeSource, $field);
 
         $nsDoc->setPosition($latestPosition + 1);
 
-        Kernel::getInstance()->em()->persist($nsDoc);
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->persist($nsDoc);
+        Kernel::getService('em')->flush();
 
         return $this;
     }
@@ -88,7 +88,7 @@ class NodesSourcesHandler
      */
     public function getDocumentsFromFieldName($fieldName)
     {
-        return Kernel::getInstance()->em()
+        return Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Document')
                 ->findByNodeSourceAndFieldName($this->nodeSource, $fieldName);
     }
@@ -163,7 +163,7 @@ class NodesSourcesHandler
     {
         $parent = $this->nodeSource->getNode()->getParent();
         if ($parent !== null) {
-            $query = Kernel::getInstance()->em()
+            $query = Kernel::getService('em')
                             ->createQuery('SELECT ns FROM RZ\Renzo\Core\Entities\NodesSources ns
                                            WHERE ns.node = :node
                                            AND ns.translation = :translation')
@@ -187,7 +187,7 @@ class NodesSourcesHandler
      */
     public function getChildren()
     {
-         $query = Kernel::getInstance()->em()
+         $query = Kernel::getService('em')
                         ->createQuery('
             SELECT ns FROM RZ\Renzo\Core\Entities\NodesSources ns
             INNER JOIN ns.node n
