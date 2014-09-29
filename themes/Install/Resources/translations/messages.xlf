@@ -5,113 +5,247 @@
 
             <trans-unit id="1">
                 <source>Node name</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="2">
                 <source>See tree</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="3">
                 <source>_username</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="4">
                 <source>_password</source>
-                <target/>
+                <target />
             </trans-unit>
 
             <trans-unit id="delete">
                 <source>delete</source>
-                <target/>
+                <target />
+            </trans-unit>
+
+            <trans-unit id="status">
+                <source>status</source>
+                <target />
             </trans-unit>
 
 
             <!-- Documents -->
             <trans-unit id="document.updated">
                 <source>document.updated</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="document.uploaded">
                 <source>document.uploaded</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="document.cannot_persist">
                 <source>document.cannot_persist</source>
-                <target/>
+                <target />
             </trans-unit>
 
 
             <!-- Welcome -->
             <trans-unit id="welcome.title">
                 <source>welcome.title</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="welcome.message">
                 <source>welcome.message</source>
-                <target/>
+                <target />
             </trans-unit>
 
 
             <!-- Requirements -->
             <trans-unit id="requirements.title">
                 <source>requirements.title</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="requirements.message">
                 <source>requirements.message</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="requirements.requirement">
                 <source>requirements.requirement</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="requirements.actual_value">
                 <source>requirements.actual_value</source>
-                <target/>
-            </trans-unit>
-            <trans-unit id="requirements.status">
-                <source>requirements.status</source>
-                <target/>
+                <target />
             </trans-unit>
 
 
-             <!-- Database -->
+            <!-- Database -->
             <trans-unit id="database.title">
                 <source>database.title</source>
-                <target/>
+                <target>Database</target>
             </trans-unit>
             <trans-unit id="database.message">
                 <source>database.message</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="database.cannot_connect">
                 <source>database.cannot_connect</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="database.build">
                 <source>database.build</source>
-                <target/>
+                <target />
             </trans-unit>
+
+
+            <!-- Database done -->
+            <trans-unit id="database_done.title">
+                <source>database_done.title</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="database_done.message">
+                <source>database_done.message</source>
+                <target />
+            </trans-unit>
+
+
+             <!-- Import -->
+            <trans-unit id="import.title">
+                <source>import.title</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="import.message">
+                <source>import.message</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="import.step_name">
+                <source>import.step_name</source>
+                <target />
+            </trans-unit>
+
+            <!-- User -->
+            <trans-unit id="user.title">
+                <source>user.title</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="user.message">
+                <source>user.message</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="user.create">
+                <source>user.create</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="user.name">
+                <source>user.name</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="user.email">
+                <source>user.email</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="user.create_another">
+                <source>user.create_another</source>
+                <target />
+            </trans-unit>
+
+
+            <!-- User summary -->
+            <trans-unit id="user_summary.title">
+                <source>user_summary.title</source>
+                <target />
+            </trans-unit>
+
+
+            <!-- Themes -->
+            <trans-unit id="themes.title">
+                <source>themes.title</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="themes.message">
+                <source>themes.message</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="themes.save_informations">
+                <source>themes.save_informations</source>
+                <target />
+            </trans-unit>
+
+
+            <!-- Import node type -->
+            <trans-unit id="import_node_type.title">
+                <source>import_node_type.title</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="import_node_type.message">
+                <source>import_node_type.message</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="import_node_type.node_type">
+                <source>import_node_type.node_type</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="import_node_type.node">
+                <source>import_node_type.node</source>
+                <target />
+            </trans-unit>
+
+
+            
+            <!-- Success -->
+            <trans-unit id="success.title">
+                <source>success.title</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="success.message">
+                <source>success.message</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="success.quit_install">
+                <source>success.quit_install</source>
+                <target />
+            </trans-unit>            
 
 
             <!-- Goto -->
             <trans-unit id="goto.requirements">
                 <source>goto.requirements</source>
-                <target/>
-            </trans-unit>
-            <trans-unit id="goto.database">
-                <source>goto.database</source>
-                <target/>
+                <target />
             </trans-unit>
             <trans-unit id="goto.welcome">
                 <source>goto.welcome</source>
-                <target/>
+                <target />
+            </trans-unit>
+            <trans-unit id="goto.database">
+                <source>goto.database</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="goto.import">
+                <source>goto.import</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="goto.user">
+                <source>goto.user</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="goto.theme">
+                <source>goto.theme</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="goto.informations">
+                <source>goto.informations</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="skip.user.goto.theme">
+                <source>skip.user.goto.theme</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="skip.user.goto.done">
+                <source>goto.done</source>
+                <target />
             </trans-unit>
             <trans-unit id="skip.database.goto.import">
                 <source>skip.database.goto.import</source>
-                <target/>
+                <target />
             </trans-unit>
-
+            
 
         </body>
     </file>

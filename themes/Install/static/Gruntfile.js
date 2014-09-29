@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				src: [
+					"js/vendor/bootstrap-switch.js",
 					"js/vendor/uikit.min.js",
 					"js/plugins.js",
 					"js/main.js",

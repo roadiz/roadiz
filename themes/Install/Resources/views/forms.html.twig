@@ -12,7 +12,6 @@
 {%- endblock form_start %}
 
 
-
 {% block form_label -%}
     {% if label is not sameas(false) -%}
         {% if not compound -%}
@@ -27,6 +26,7 @@
         <label class="uk-form-label"{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</label>
     {%- endif %}
 {%- endblock form_label %}
+
 
 {% block form_widget_compound -%}
     <div class="data-uk-margin" {{ block('widget_container_attributes') }}>
@@ -60,6 +60,12 @@
         </select>
     </div>
 {%- endblock choice_widget_collapsed %}
+
+
+{% block checkbox_widget -%}
+    <input class="rz-boolean-checkbox" type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock checkbox_widget %}
+
 
 {% block form_row -%}
     <div class="form-col">

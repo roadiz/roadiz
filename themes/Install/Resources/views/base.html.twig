@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit/uikit.min.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit/uikit.gradient.min.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit/addons/uikit.addons.min.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/bootstrap3/bootstrap-switch.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.css[0] }}" />
 
         <!-- Modernizr -->
@@ -53,6 +54,7 @@
         <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
 
         {% if head.devMode %}
+        <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
         <script src="{{ head.resourcesUrl }}js/main.js"></script>

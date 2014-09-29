@@ -12,7 +12,7 @@ var Install = {
 };
 
 Install.onDocumentReady = function( event ) {
-
+    
     Install.resizeContainer = new resizeContainer();
 
     if(typeof Install.importRoutes != "undefined"){
@@ -26,6 +26,9 @@ Install.onDocumentReady = function( event ) {
     if (typeof Install.importNodeTypeRoutes != "undefined"){
         Install.importNodeType = new ImportNodeType(Install.importNodeTypeRoutes);
     }
+
+    // Add boostrap switch to checkbox
+    $(".rz-boolean-checkbox").bootstrapSwitch();
 
 };
 
