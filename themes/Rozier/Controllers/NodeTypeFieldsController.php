@@ -99,7 +99,7 @@ class NodeTypeFieldsController extends RozierApp
                         'nodeTypesFieldSchemaUpdate',
                         array(
                             'nodeTypeId' => $field->getNodeType()->getId(),
-                            '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(
+                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(
                                 static::SCHEMA_TOKEN_INTENTION
                             )
                         )
@@ -162,7 +162,7 @@ class NodeTypeFieldsController extends RozierApp
                         'nodeTypesFieldSchemaUpdate',
                         array(
                             'nodeTypeId' => $nodeTypeId,
-                            '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(
+                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(
                                 static::SCHEMA_TOKEN_INTENTION
                             )
                         )
@@ -236,7 +236,7 @@ class NodeTypeFieldsController extends RozierApp
                         'nodeTypesFieldSchemaUpdate',
                         array(
                             'nodeTypeId' => $nodeTypeId,
-                            '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(
+                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(
                                 static::SCHEMA_TOKEN_INTENTION
                             )
                         )

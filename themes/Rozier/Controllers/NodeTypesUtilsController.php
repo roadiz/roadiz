@@ -147,7 +147,7 @@ class NodeTypesUtilsController extends RozierApp
                         $this->getService('urlGenerator')->generate(
                             'nodeTypesSchemaUpdate',
                             array(
-                                '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                                '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
                             )
                         )
                     );
