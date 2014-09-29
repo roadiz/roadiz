@@ -17,34 +17,21 @@ use RZ\Renzo\Core\Services\SecurityServiceProvider;
 use RZ\Renzo\Core\Services\FormServiceProvider;
 use RZ\Renzo\Core\Services\RoutingServiceProvider;
 use RZ\Renzo\Core\Services\DoctrineServiceProvider;
-
-use Doctrine\ORM\Events;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
+use RZ\Renzo\Core\Services\ConfigurationServiceProvider;
+use RZ\Renzo\Core\Services\SolrServiceProvider;
 
 use Symfony\Component\Console\Application;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
-use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Firewall;
 use Pimple\Container;
@@ -91,14 +78,13 @@ class Kernel implements \Pimple\ServiceProviderInterface
 
         $this->request = Request::createFromGlobals();
 
-        $this->container['stopwatch']->stop('initKernel');
-
-
         if ($this->isDebug() ||
             !file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlMatcher.php') ||
             !file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlGenerator.php')) {
             $this->dumpUrlUtils();
         }
+
+        $this->container['stopwatch']->stop('initKernel');
     }
 
     /**
@@ -123,22 +109,11 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $container['stopwatch'] = function ($c) {
             return new Stopwatch();
         };
-        /*
-         * Inject app config
-         */
-        $container['config'] = function ($c) {
-            $configFile = RENZO_ROOT.'/conf/config.json';
-            if (file_exists($configFile)) {
-                return json_decode(file_get_contents($configFile), true);
-            } else {
-                return null;
-            }
-        };
 
         $container['dispatcher'] = function ($c) {
 
             $dispatcher = new EventDispatcher();
-            $dispatcher->addSubscriber(new RouterListener($this->container['urlMatcher']));
+            $dispatcher->addSubscriber(new RouterListener($c['urlMatcher']));
             $dispatcher->addListener(
                 KernelEvents::CONTROLLER,
                 array(
@@ -155,37 +130,10 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $container['httpKernel'] = function ($c) {
             return new HttpKernel($c['dispatcher'], $c['resolver']);
         };
-        $container['entitiesPaths'] = array(
-            "src/Renzo/Core/Entities",
-            "src/Renzo/Core/AbstractEntities",
-            "sources/GeneratedNodeSources"
-        );
-
-        $this->setupSolrService();
-
-        $container->register(new SecurityServiceProvider());
-        $container->register(new FormServiceProvider());
-        $container->register(new RoutingServiceProvider());
-        $container->register(new DoctrineServiceProvider());
-
-        if (!$this->isInstallMode()) {
-            $container->register(new RoutingServiceProvider());
-        } else {
-            $container['routeCollection'] = function ($c) {
-
-                $installClassname = static::INSTALL_CLASSNAME;
-                $feCollection = $installClassname::getRoutes();
-                $rCollection = new RouteCollection();
-                $rCollection->addCollection($feCollection);
-
-                return $rCollection;
-            };
-        }
-
         $container['requestContext'] = function ($c) {
-            $rc = new Routing\RequestContext(Kernel::getInstance()->getResolvedBaseUrl());
-            $rc->setHost(Kernel::getInstance()->getRequest()->server->get('HTTP_HOST'));
-            $rc->setHttpPort(intval(Kernel::getInstance()->getRequest()->server->get('SERVER_PORT')));
+            $rc = new RequestContext($this->getResolvedBaseUrl());
+            $rc->setHost($this->getRequest()->server->get('HTTP_HOST'));
+            $rc->setHttpPort(intval($this->getRequest()->server->get('SERVER_PORT')));
 
             return $rc;
         };
@@ -199,35 +147,12 @@ class Kernel implements \Pimple\ServiceProviderInterface
             return new HttpUtils($c['urlGenerator'], $c['urlMatcher']);
         };
 
-        $container['logger'] = function ($c) {
-            $logger = new \RZ\Renzo\Core\Log\Logger();
-            $logger->setSecurityContext($c['securityContext']);
-
-            return $logger;
-        };
-
-        return $this;
-
-    }
-
-    /**
-     * Setup Solr service in DI container.
-     */
-    protected function setupSolrService()
-    {
-        $this->container['solr'] = function ($c) {
-
-            if ($this->isSolrAvailable()) {
-                if (null === $this->solrService) {
-                    $this->solrService = new \Solarium\Client($c['config']['solr']);
-                    $this->solrService->setDefaultEndpoint('localhost');
-                }
-
-                return $this->solrService;
-            }
-
-            return null;
-        };
+        $container->register(new ConfigurationServiceProvider());
+        $container->register(new SecurityServiceProvider());
+        $container->register(new FormServiceProvider());
+        $container->register(new RoutingServiceProvider());
+        $container->register(new DoctrineServiceProvider());
+        $container->register(new SolrServiceProvider());
     }
 
     /**
@@ -395,8 +320,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
         /*
          * Security
          */
-        $this->container['stopwatch']->start('firewall');
-
         // Register back-end security scheme
         $beClass = $this->container['backendClass'];
         $beClass::setupDependencyInjection($this->container);
@@ -407,6 +330,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
             $feClass::setupDependencyInjection($this->container);
         }
 
+        $this->container['stopwatch']->start('firewall');
         $firewall = new Firewall($this->container['firewallMap'], $this->container['dispatcher']);
         $this->container['stopwatch']->stop('firewall');
 
@@ -561,7 +485,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function isSolrAvailable()
     {
-        return (boolean) isset($this->container['config']['solr']['endpoint']);
+        return isset($this->container['solr']);
     }
 
     /**

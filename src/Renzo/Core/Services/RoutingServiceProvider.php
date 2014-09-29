@@ -7,7 +7,7 @@ use Symfony\Component\Routing\RouteCollection;
 use RZ\Renzo\Core\Kernel;
 
 /**
- * Register form services for dependency injection container.
+ * Register routing services for dependency injection container.
  */
 class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
 {
@@ -47,48 +47,67 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
             }
         };
 
-        $container['routeCollection'] = function ($c) {
-            $rCollection = new RouteCollection();
-
+        if (isset($c['config']['install']) &&
+            true === $c['config']['install']) {
             /*
-             * Add Assets controller routes
+             * Get Install routes
              */
-            $rCollection->addCollection(\RZ\Renzo\CMS\Controllers\AssetsController::getRoutes());
+            $container['routeCollection'] = function ($c) {
 
+                $installClassname = static::INSTALL_CLASSNAME;
+                $feCollection = $installClassname::getRoutes();
+                $rCollection = new RouteCollection();
+                $rCollection->addCollection($feCollection);
+
+                return $rCollection;
+            };
+        } else {
             /*
-             * Add Backend routes
+             * Get App routes
              */
-            $beClass = $c['backendClass'];
-            $cmsCollection = $beClass::getRoutes();
-            if ($cmsCollection !== null) {
-                $rCollection->addCollection(
-                    $cmsCollection,
-                    '/rz-admin',
-                    array('_scheme' => 'https')
-                );
-            }
+            $container['routeCollection'] = function ($c) {
+                $rCollection = new RouteCollection();
 
-            /*
-             * Add Frontend routes
-             *
-             * return 'RZ\Renzo\CMS\Controllers\FrontendController';
-             */
-            foreach ($c['frontendThemes'] as $theme) {
-                $feClass = $theme->getClassName();
-                $feCollection = $feClass::getRoutes();
-                if ($feCollection !== null) {
+                /*
+                 * Add Assets controller routes
+                 */
+                $rCollection->addCollection(\RZ\Renzo\CMS\Controllers\AssetsController::getRoutes());
 
-                    // set host pattern if defined
-                    if ($theme->getHostname() != '*' &&
-                        $theme->getHostname() != '') {
-
-                        $feCollection->setHost($theme->getHostname());
-                    }
-                    $rCollection->addCollection($feCollection);
+                /*
+                 * Add Backend routes
+                 */
+                $beClass = $c['backendClass'];
+                $cmsCollection = $beClass::getRoutes();
+                if ($cmsCollection !== null) {
+                    $rCollection->addCollection(
+                        $cmsCollection,
+                        '/rz-admin',
+                        array('_scheme' => 'https')
+                    );
                 }
-            }
 
-            return $rCollection;
-        };
+                /*
+                 * Add Frontend routes
+                 *
+                 * return 'RZ\Renzo\CMS\Controllers\FrontendController';
+                 */
+                foreach ($c['frontendThemes'] as $theme) {
+                    $feClass = $theme->getClassName();
+                    $feCollection = $feClass::getRoutes();
+                    if ($feCollection !== null) {
+
+                        // set host pattern if defined
+                        if ($theme->getHostname() != '*' &&
+                            $theme->getHostname() != '') {
+
+                            $feCollection->setHost($theme->getHostname());
+                        }
+                        $rCollection->addCollection($feCollection);
+                    }
+                }
+
+                return $rCollection;
+            };
+        }
     }
 }

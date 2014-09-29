@@ -46,6 +46,13 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             );
         };
 
+        $container['logger'] = function ($c) {
+            $logger = new \RZ\Renzo\Core\Log\Logger();
+            $logger->setSecurityContext($c['securityContext']);
+
+            return $logger;
+        };
+
         $container['contextListener'] = function ($c) {
 
             $c['session']; //Force session handler
