@@ -192,7 +192,7 @@ class ImportController extends InstallApp
         $data['status'] = false;
         try {
             if (null === $themeId) {
-                $path = RENZO_ROOT . '/themes/install' . $pathFile;
+                $path = RENZO_ROOT . '/themes/Install' . $pathFile;
             } else {
                 $theme = Kernel::getService('em')
                          ->find('RZ\Renzo\Core\Entities\Theme', $themeId);
