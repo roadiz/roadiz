@@ -27,6 +27,14 @@
 						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">{% trans %}Delete{% endtrans %}</a>
 					</td>
 				</tr>
+				{% else %}
+				<tr>
+					<td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">{{ tag.getId }}</a></td>
+					<td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">tag_{{ tag.getId }} <span class="uk-badge uk-badge-warning">{% trans %}notranslation_available.tag{% endtrans %}</span></a></td>
+					<td>
+						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+					</td>
+				</tr>
 				{% endif %}
 			{% endfor %}
 		</tbody>

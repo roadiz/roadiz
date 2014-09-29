@@ -67,16 +67,22 @@ class TagsController extends RozierApp
      *
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param integer                                  $tagId
-     * @param integer                                  $translationId
+     * @param integer | null                           $translationId
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function editTranslatedAction(Request $request, $tagId, $translationId)
+    public function editTranslatedAction(Request $request, $tagId, $translationId = null)
     {
         $this->validedAccessForRole('ROLE_ACCESS_TAGS');
 
-        $translation = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
+        if (null === $translationId) {
+            $translation = $this->getService('em')
+                ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                ->findDefault();
+        } else {
+            $translation = $this->getService('em')
+                    ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
+        }
 
         if ($translation !== null) {
 
@@ -95,8 +101,15 @@ class TagsController extends RozierApp
 
                 if ($baseTag !== null) {
 
+                    $baseTranslation = $baseTag->getTranslatedTags()->first();
+
                     $translatedTag = new TagTranslation($baseTag, $translation);
-                    $translatedTag->setName($baseTag->getTranslatedTags()->first()->getName());
+
+                    if (false !== $baseTranslation) {
+                        $translatedTag->setName($baseTranslation->getName());
+                    } else {
+                        $translatedTag->setName('tag_'.$baseTag->getId());
+                    }
                     $this->getService('em')->persist($translatedTag);
                     $this->getService('em')->flush();
 

@@ -329,7 +329,7 @@ class TranslationsController extends RozierApp
      */
     private function deleteTranslation($data, Translation $translation)
     {
-        if ($data['translation_id'] == $translation->getId()) {
+        if ($data['translationId'] == $translation->getId()) {
 
             if (false === $translation->isDefaultTranslation()) {
                 $this->getService('em')->remove($translation);
@@ -396,7 +396,7 @@ class TranslationsController extends RozierApp
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add(
-                'translation_id',
+                'translationId',
                 'hidden',
                 array(
                     'data' => $translation->getId(),
@@ -419,7 +419,7 @@ class TranslationsController extends RozierApp
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add(
-                'translation_id',
+                'translationId',
                 'hidden',
                 array(
                     'data' => $translation->getId(),

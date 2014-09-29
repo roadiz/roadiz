@@ -1,5 +1,12 @@
 {% set tTag = tag.getTranslatedTags.first %}
+{% if tTag %}
 {% set name = tTag.getName %}
+{% set editUrl = path('tagsEditTranslatedPage', { tagId:tag.getId, translationId:tTag.getTranslation.getId }) %}
+{% else %}
+{% set name = "tag_" ~ tag.getId %}
+{% set editUrl = path('tagsEditPage', { tagId:tag.getId }) %}
+{% endif %}
+
 <li data-tag-id="{{ tag.getId }}"
 	class="tagtree-element">
 
@@ -13,7 +20,7 @@
 			{% if tag.isHidingChildren %}
 				<a href="{{ path('tagsTreePage', { tagId:tag.getId }) }}">{{ name }}</a>
 			{% else %}
-				<a href="{{ path('tagsEditTranslatedPage', { tagId:tag.getId, translationId:tTag.getTranslation.getId }) }}">{{ name }}</a>
+				<a href="{{ editUrl }}">{{ name }}</a>
 			{% endif %}
 		</div>
 
@@ -22,7 +29,7 @@
 		    <nav class="uk-dropdown uk-dropdown-small">
 		        <div class="uk-nav uk-nav-dropdown">
 		            <p>
-		            	<a title="{% trans %}edit.tag.%name%{% endtrans %}" href="{{ path('tagsEditTranslatedPage', { tagId:tag.getId, translationId:tTag.getTranslation.getId }) }}">
+		            	<a title="{% trans %}edit.tag.%name%{% endtrans %}" href="{{ editUrl }}">
 		            		<i class="uk-icon-pencil"></i> {% trans %}edit.tag{% endtrans %}
 		            	</a>
 		            </p>
