@@ -41,9 +41,10 @@ class UsersController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         /*
          * Manage get request to filter list
@@ -77,9 +78,9 @@ class UsersController extends RozierApp
     {
         if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
             || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')
-            || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId))
-            return $this->throw404();
-
+            || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
+            throw AccessDeniedException("You don't have access to this page:" . $role);
+        }
         $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
 
@@ -139,9 +140,10 @@ class UsersController extends RozierApp
      */
     public function editRolesAction(Request $request, $userId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
@@ -199,9 +201,10 @@ class UsersController extends RozierApp
      */
     public function removeRoleAction(Request $request, $userId, $roleId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
@@ -256,9 +259,10 @@ class UsersController extends RozierApp
      */
     public function editGroupsAction(Request $request, $userId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
@@ -316,9 +320,12 @@ class UsersController extends RozierApp
      */
     public function removeGroupAction(Request $request, $userId, $groupId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+
+        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
@@ -377,9 +384,12 @@ class UsersController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+
+
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $user = new User();
 
@@ -439,9 +449,11 @@ class UsersController extends RozierApp
      */
     public function deleteAction(Request $request, $userId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS_DELETE')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_USERS_DELETE');
+
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS_DELETE')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $user = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);

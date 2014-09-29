@@ -40,9 +40,11 @@ class SettingsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_SETTINGS');
+
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         /*
          * Manage get request to filter list
@@ -109,9 +111,10 @@ class SettingsController extends RozierApp
      */
     public function editAction(Request $request, $settingId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_SETTINGS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $setting = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Setting', (int) $settingId);
@@ -166,9 +169,10 @@ class SettingsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_SETTINGS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $setting = new Setting();
 
@@ -224,9 +228,10 @@ class SettingsController extends RozierApp
      */
     public function deleteAction(Request $request, $settingId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_SETTINGS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $setting = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Setting', (int) $settingId);

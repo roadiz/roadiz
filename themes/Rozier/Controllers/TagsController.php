@@ -40,9 +40,11 @@ class TagsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_TAGS');
+
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
         /*
          * Manage get request to filter list
          */
@@ -74,9 +76,10 @@ class TagsController extends RozierApp
      */
     public function editTranslatedAction(Request $request, $tagId, $translationId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_TAGS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
         $translation = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
 
@@ -162,9 +165,11 @@ class TagsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_TAGS');
+
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
         $tag = new Tag();
 
         $translation = $this->getKernel()->em()
@@ -218,9 +223,10 @@ class TagsController extends RozierApp
      */
     public function deleteAction(Request $request, $tagId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS_DELETE')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_TAGS_DELETE');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS_DELETE')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
         $tag = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
@@ -272,9 +278,10 @@ class TagsController extends RozierApp
      */
     public function addChildAction(Request $request, $tagId, $translationId = null)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_TAGS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_TAGS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
         $translation = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();

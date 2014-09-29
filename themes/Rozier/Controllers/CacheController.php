@@ -38,9 +38,10 @@ class CacheController extends RozierApp
      */
     public function deleteDoctrineCache(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_DOCTRINE_CACHE_DELETE');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $form = $this->buildDeleteDoctrineForm();
         $form->handleRequest();

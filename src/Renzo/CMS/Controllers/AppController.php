@@ -672,4 +672,10 @@ class AppController implements ViewableInterface
 
         return $response->send();
     }
+
+    public function validedAccessForRole($role) {
+        if (!($this->getSecurityContext()->isGranted($role)
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            throw new AccessDeniedException("You don't have access to this page:" . $role);
+    }
 }

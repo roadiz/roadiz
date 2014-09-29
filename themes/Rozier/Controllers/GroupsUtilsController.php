@@ -44,9 +44,10 @@ class GroupsUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $existingGroup = $this->getKernel()->em()
                               ->getRepository('RZ\Renzo\Core\Entities\Group')
@@ -82,9 +83,10 @@ class GroupsUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $groupId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $existingGroup = $this->getKernel()->em()
                               ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
@@ -119,9 +121,10 @@ class GroupsUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_GROUPS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_GROUPS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $form = $this->buildImportJsonFileForm();
 

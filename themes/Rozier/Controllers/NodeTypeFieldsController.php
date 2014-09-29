@@ -41,9 +41,10 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function listAction(Request $request, $nodeTypeId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $nodeType = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
@@ -74,9 +75,10 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function editAction(Request $request, $nodeTypeFieldId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $field = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
@@ -136,9 +138,10 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function addAction(Request $request, $nodeTypeId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $field = new NodeTypeField();
         $nodeType = $this->getKernel()->em()
@@ -201,9 +204,10 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeTypeFieldId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODEFIELDS_DELETE')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODEFIELDS_DELETE')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
         $field = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);

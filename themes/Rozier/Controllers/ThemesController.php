@@ -41,9 +41,10 @@ class ThemesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_THEMES')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_THEMES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_THEMES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
         $listManager = new EntityListManager(
             $request,
             $this->getKernel()->em(),
@@ -70,9 +71,10 @@ class ThemesController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_THEMES')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_THEMES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_THEMES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
         $theme = new Theme();
 
         $form = $this->buildAddForm($theme);
@@ -117,9 +119,10 @@ class ThemesController extends RozierApp
      */
     public function editAction(Request $request, $themeId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_THEMES')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_THEMES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_THEMES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
         $theme = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);
 
@@ -176,9 +179,10 @@ class ThemesController extends RozierApp
      */
     public function deleteAction(Request $request, $themeId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_THEMES')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
+        $this->validedAccessForRole('ROLE_ACCESS_THEMES');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_THEMES')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
         $theme = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);
 
