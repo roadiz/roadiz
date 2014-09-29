@@ -17,7 +17,7 @@
 		</div>
 		{% endif %}
 	</header>
-
+	{% spaceless %}
 	<ul class="uk-nav uk-nav-parent-icon">
 		<li><a href="{{ path('adminHomePage') }}"><i class="uk-icon-dashboard"></i><span class="info">{% trans %}dashboard{% endtrans %}</span></a></li>
 
@@ -92,6 +92,11 @@
 			<p><i class="uk-icon-construction"></i><span class="info">{% trans %}construction{% endtrans %}</span></p>
 			<ul class="uk-nav-sub">
 
+			{% if (securityContext.Granted('ROLE_ACCESS_NODES') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
+				<li><a href="{{ path('nodesHomePage') }}"><i class="uk-icon-nodes"></i><span class="info">{% trans %}manage.nodes{% endtrans %}</span></a></li>
+
+			{% endif %}
 			{% if (securityContext.Granted('ROLE_ACCESS_NODETYPES') or securityContext.Granted('ROLE_SUPERADMIN')) %}
 
 				<li><a href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-node-type"></i><span class="info">{% trans %}manage.node-types{% endtrans %}</span></a></li>
@@ -154,4 +159,5 @@
 
 		{% endif %}
 	</ul>
+	{% endspaceless %}
 </nav>
