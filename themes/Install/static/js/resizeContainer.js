@@ -29,8 +29,6 @@ resizeContainer.prototype.margin = 50;
 resizeContainer.prototype.init = function() {
     var _this = this;
 
-    console.log('RESIZE');
-
     _this.windowHeight = _this.$window.height();  
     _this.mainContainerHeight = _this.$mainContainer.height();
     _this.windowHeightLimit = _this.windowHeight-(_this.margin*2);

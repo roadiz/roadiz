@@ -27,13 +27,13 @@
 
 /* -------- STYLES -------- */
 
-.uk-form {
+.uk-form{
     input[type="text"],
     input[type="email"],
     input[type="search"],
     input[type="password"],
     input[type="submit"],
-    input[type="image"] {
+    input[type="image"]{
         -webkit-appearance:none;
         -moz-appearance:none;
         appearance:none;
@@ -52,7 +52,7 @@
     input[type="search"],
     input[type="email"],
     input[type="number"],
-    textarea {
+    textarea{
         font-size: 12px;
         line-height: 14px;
         font-weight: bold;
@@ -76,24 +76,44 @@
         }
     }
 
-    select{
-        height:36px;
-        color:@grey-form-text;
+    .select-style {
+        position: relative;
+        width: 100%; height:36px;
+        font-weight: bold;
+        color: @grey-form-text;
+        background-color: white;
         border: 1px solid @grey-form-border;
+        .border-radius(0px);
+        overflow: hidden;
 
-         &:hover {
-            background-color: white;
-            border-color: @grey-form-submit-border-hover;
-            color: #333;
+        &:after{
+            position: absolute;
+            top:0; right:0; bottom:0;
+            content: "\f0d7";
+            padding:10px 15px;
+            font:normal 12px/16px 'FontAwesome';
         }
-        
-        &:focus {
-            background-color: @grey-verylight;
-            border-color: @grey-form-submit-border-hover;
-            color: #333;
+
+        select{
+            width: 110%; max-width: 110%; 
+            height:36px;
+            padding:10px 15px;
+            background-color: white;
+            font-family: @main-font;
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            background-image: none;
+            -webkit-appearance: none;
+            -moz-appearance:none;
+            appearance:none;
+
+            &:focus, &:active{
+                background-color: @grey-verylight;
+                outline:none;
+            }
         }
     }
-
 
     .uk-form-label {
         font-size: 12px;
@@ -107,7 +127,6 @@
     }
 
     // Default Button
-
     input[type="text"],
     input[type="password"],
     input[type="search"],
@@ -115,11 +134,11 @@
     input[type="number"]{
         height: 36px;
     }
-    
+
     input[type=checkbox]:checked:before{
         color:@grey-form-label;
     }
-    
+
 
     .data-uk-margin {
         margin-bottom: 6px;
@@ -150,7 +169,7 @@
 
 
 .form-col{
-    display: inline-block;
+    display: inline-block; vertical-align: top;
     width:44%;
     margin:0 15px 15px;
 

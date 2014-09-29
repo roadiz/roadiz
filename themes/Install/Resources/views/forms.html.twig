@@ -38,6 +38,29 @@
     </div>
 {%- endblock form_widget_compound %}
 
+
+{% block choice_widget_collapsed -%}
+    {% if required and empty_value is none and not empty_value_in_choices and not multiple -%}
+        {% set required = false %}
+    {%- endif -%}
+    <div class="select-style">
+        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+            {% if empty_value is not none -%}
+                <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+            {%- endif %}
+            {%- if preferred_choices|length > 0 -%}
+                {% set options = preferred_choices %}
+                {{- block('choice_widget_options') -}}
+                {% if choices|length > 0 and separator is not none -%}
+                    <option disabled="disabled">{{ separator }}</option>
+                {%- endif %}
+            {%- endif -%}
+            {% set options = choices -%}
+            {{- block('choice_widget_options') -}}
+        </select>
+    </div>
+{%- endblock choice_widget_collapsed %}
+
 {% block form_row -%}
     <div class="form-col">
         {{- form_label(form) -}}
