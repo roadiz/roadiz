@@ -30,7 +30,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
      */
     public function match($pathinfo)
     {
-        Kernel::getInstance()->getStopwatch()->start('matchingRoute');
+        Kernel::getService('stopwatch')->start('matchingRoute');
         $decodedUrl = rawurldecode($pathinfo);
 
         try {
