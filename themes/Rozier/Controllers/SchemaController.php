@@ -58,8 +58,7 @@ class SchemaController extends RozierApp
         //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
         //     return $this->throw404();
 
-        if ($this->getKernel()
-                ->getCsrfProvider()
+        if ($this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
 
             \RZ\Renzo\Console\SchemaCommand::updateSchema();
@@ -99,8 +98,7 @@ class SchemaController extends RozierApp
         //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
         //     return $this->throw404();
 
-        if ($this->getKernel()
-                ->getCsrfProvider()
+        if ($this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
             \RZ\Renzo\Console\SchemaCommand::updateSchema();
 
