@@ -90,7 +90,7 @@ class AssetsController extends AppController
             ->findOneBy(array('hash'=>$filename));
 
         if (null !== $font &&
-            static::$csrfProvider->isCsrfTokenValid($font->getHash().$extension, $token)) {
+            $this->getService('csrfProvider')->isCsrfTokenValid($font->getHash().$extension, $token)) {
 
             switch ($extension) {
                 case 'eot':
@@ -141,7 +141,7 @@ class AssetsController extends AppController
      */
     public function fontFacesAction(Request $request, $token)
     {
-        if ($this->getService('userProvider')
+        if ($this->getService('csrfProvider')
                  ->isCsrfTokenValid(static::FONT_TOKEN_INTENTION, $token)) {
 
             $fonts = Kernel::getService('em')
@@ -150,7 +150,7 @@ class AssetsController extends AppController
             $fontOutput = array();
 
             foreach ($fonts as $font) {
-                $fontOutput[] = $font->getViewer()->getCSSFontFace(static::$csrfProvider);
+                $fontOutput[] = $font->getViewer()->getCSSFontFace($this->getService('csrfProvider'));
             }
 
             return new Response(
