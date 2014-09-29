@@ -684,7 +684,7 @@ class UsersController extends RozierApp
      */
     private function buildAddForm(User $user)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                         ->createBuilder('form')
                         ->add('email', 'email', array(
                             'constraints' => array(
@@ -725,7 +725,7 @@ class UsersController extends RozierApp
         $defaults = array(
             'userId' =>  $user->getId()
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add(
                 'userId',
@@ -764,7 +764,7 @@ class UsersController extends RozierApp
             'facebookName' => $user->getFacebookName(),
         );
 
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                         ->createBuilder('form', $defaults)
                         ->add(
                             'email',
@@ -848,7 +848,7 @@ class UsersController extends RozierApp
      */
     private function buildDeleteForm(User $user)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add(
                 'userId',
@@ -872,7 +872,7 @@ class UsersController extends RozierApp
      */
     private function buildRemoveRoleForm(User $user, Role $role)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add(
                 'userId',
@@ -908,7 +908,7 @@ class UsersController extends RozierApp
         $defaults = array(
             'userId' =>  $user->getId()
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add(
                         'userId',
@@ -937,7 +937,7 @@ class UsersController extends RozierApp
      */
     private function buildRemoveGroupForm(User $user, Group $group)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add(
                 'userId',

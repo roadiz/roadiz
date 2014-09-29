@@ -253,7 +253,7 @@ class DocumentsController extends RozierApp
         $defaults = array(
             'documentId' => $doc->getId()
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('documentId', 'hidden', array(
                         'data' => $doc->getId(),
@@ -278,7 +278,7 @@ class DocumentsController extends RozierApp
             'copyright' => $document->getCopyright(),
         );
 
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('name', 'text', array('required' => false))
                     ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array('required' => false))
@@ -293,7 +293,7 @@ class DocumentsController extends RozierApp
      */
     private function buildUploadForm()
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form')
                     ->add('attachment', 'file');
 

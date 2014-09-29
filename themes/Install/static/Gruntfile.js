@@ -14,10 +14,11 @@ module.exports = function(grunt) {
 					"js/vendor/bootstrap-switch.js",
 					"js/vendor/uikit.min.js",
 					"js/plugins.js",
-					"js/main.js",
 					"js/importFixtures.js",
 					"js/importNodeType.js",
-					"js/selectDatabaseField.js"
+					"js/selectDatabaseField.js",
+					"js/resizeContainer.js",
+					"js/main.js"
 				],
 				dest: 'js/<%= pkg.name %>.js',
 			},

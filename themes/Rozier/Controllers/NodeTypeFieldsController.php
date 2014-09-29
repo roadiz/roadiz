@@ -313,7 +313,7 @@ class NodeTypeFieldsController extends RozierApp
             'indexed' =>        $field->isIndexed(),
             'defaultValues' => $field->getDefaultValues(),
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('name', 'text', array(
                         'constraints' => array(
@@ -353,7 +353,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     private function buildDeleteForm(NodeTypeField $field)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('nodeTypeFieldId', 'hidden', array(
                 'data' => $field->getId(),

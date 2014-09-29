@@ -63,7 +63,7 @@ class GroupHandler
     {
         if (null !== $newGroup) {
             if ("" != $newGroup->getName()) {
-                $this->group>setName($newGroup->getName());
+                $this->group->setName($newGroup->getName());
             }
 
             $existingRolesNames = $this->group->getRoles();

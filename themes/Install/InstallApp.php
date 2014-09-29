@@ -15,6 +15,7 @@ use Themes\Install\Controllers\Configuration;
 use Themes\Install\Controllers\Fixtures;
 use Themes\Install\Controllers\Requirements;
 use RZ\Renzo\Core\Events\DataInheritanceEvent;
+use RZ\Renzo\Core\Services\DoctrineServiceProvider;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\CMS\Controllers\AppController;
@@ -47,38 +48,12 @@ use Doctrine\ORM\Tools\Setup;
  */
 class InstallApp extends AppController
 {
-
     protected static $themeName =      'Install theme';
     protected static $themeAuthor =    'Ambroise Maupate';
     protected static $themeCopyright = 'REZO ZERO';
     protected static $themeDir =       'Install';
     protected static $backendTheme =    false;
 
-    protected $formFactory = null;
-
-
-    /**
-     * Remove trailing slash.
-     *
-     * @param  Request $request [description]
-     * @return [type]           [description]
-     */
-    public function removeTrailingSlashAction(Request $request)
-    {
-
-        $pathInfo = $request->getPathInfo();
-        $requestUri = $request->getRequestUri();
-
-        $url = str_replace($pathInfo, rtrim($pathInfo, ' /'), $requestUri);
-
-        $response = new RedirectResponse($url);
-
-        $response->prepare($request);
-
-        return $response->send();
-
-        // return $request->redirect($url, 301);
-    }
 
     /**
      * Check if twig cache must be cleared
@@ -87,14 +62,14 @@ class InstallApp extends AppController
      */
     public function handleTwigCache()
     {
-
-        if (/*$this->getKernel()->isDebug()*/true) {
-            try {
-                $fs = new Filesystem();
-                $fs->remove(array($this->getCacheDirectory()));
-            } catch (IOExceptionInterface $e) {
-                echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
-            }
+        /*
+         * No twig cache on install
+         */
+        try {
+            $fs = new Filesystem();
+            $fs->remove(array($this->getCacheDirectory()));
+        } catch (IOExceptionInterface $e) {
+            echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
         }
     }
 
@@ -131,7 +106,7 @@ class InstallApp extends AppController
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request, Node $node = null, Translation $translation = null)
+    public function indexAction(Request $request)
     {
         return new Response(
             $this->getTwig()->render('steps/hello.html.twig', $this->assignation),
@@ -170,7 +145,7 @@ class InstallApp extends AppController
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function requirementsAction(Request $request, Node $node = null, Translation $translation = null)
+    public function requirementsAction(Request $request)
     {
         $config = new Configuration();
         $config->writeConfiguration();
@@ -202,7 +177,8 @@ class InstallApp extends AppController
     }
 
     /**
-     * Import nodetype screen
+     * Import nodetype screen.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
      *
      * @return Symfony\Component\HttpFoundation\Response
@@ -228,14 +204,13 @@ class InstallApp extends AppController
     }
 
     /**
-     * Install database screen
+     * Install database screen.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function databaseAction(Request $request, Node $node = null, Translation $translation = null)
+    public function databaseAction(Request $request)
     {
         $config = new Configuration();
         $databaseForm = $this->buildDatabaseForm($request, $config);
@@ -260,19 +235,13 @@ class InstallApp extends AppController
                     $fixtures->createFolders();
 
                     $config->writeConfiguration();
-                    $this->getKernel()->setupEntityManager();
-
-                    \RZ\Renzo\Console\SchemaCommand::createSchema();
-                    \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
-
-                    $fixtures->installFixtures();
 
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
-                            'installDatabaseDonePage'
+                            'installDatabaseSchemaPage'
                         )
                     );
                     $response->prepare($request);
@@ -305,15 +274,40 @@ class InstallApp extends AppController
     }
 
     /**
-     * Database success screen
+     * Perform database schema migration.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function databaseDoneAction(Request $request, Node $node = null, Translation $translation = null)
+    public function databaseSchemaAction(Request $request)
     {
+        /*
+         * Test connexion
+         */
+        try {
+            $fixtures = new Fixtures();
+
+            \RZ\Renzo\Console\SchemaCommand::createSchema();
+            \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
+
+            $fixtures->installFixtures();
+
+        } catch (\PDOException $e) {
+            $message = "";
+            if (strstr($e->getMessage(), 'SQLSTATE[')) {
+                preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
+                $message = $matches[3];
+            } else {
+                $message = $e->getMessage();
+            }
+            $this->assignation['error'] = true;
+            $this->assignation['errorMessage'] = ucfirst($message);
+        } catch (\Exception $e) {
+            $this->assignation['error'] = true;
+            $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+        }
+
         return new Response(
             $this->getTwig()->render('steps/databaseDone.html.twig', $this->assignation),
             Response::HTTP_OK,
@@ -322,14 +316,13 @@ class InstallApp extends AppController
     }
 
     /**
-     * User creation screen
+     * User creation screen.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function userAction(Request $request, Node $node = null, Translation $translation = null)
+    public function userAction(Request $request)
     {
         $userForm = $this->buildUserForm($request);
 
@@ -375,6 +368,12 @@ class InstallApp extends AppController
         );
     }
 
+    /**
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
     public function updateSchemaAction(Request $request)
     {
         \RZ\Renzo\Console\SchemaCommand::updateSchema();
@@ -386,15 +385,14 @@ class InstallApp extends AppController
     }
 
     /**
-     * User information screen
+     * User information screen.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param int                                      $userId
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function userSummaryAction(Request $request, $userId, Node $node = null, Translation $translation = null)
+    public function userSummaryAction(Request $request, $userId)
     {
         $user = $this->getService('em')->find('RZ\Renzo\Core\Entities\User', $userId);
         $this->assignation['name'] = $user->getUsername();
@@ -407,14 +405,13 @@ class InstallApp extends AppController
     }
 
     /**
-     * Theme install screen
+     * Theme install screen.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function themesAction(Request $request, Node $node = null, Translation $translation = null)
+    public function themesAction(Request $request)
     {
         $infosForm = $this->buildInformationsForm($request);
 
@@ -470,14 +467,13 @@ class InstallApp extends AppController
     }
 
     /**
-     * Install success screen
+     * Install success screen.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function doneAction(Request $request, Node $node = null, Translation $translation = null)
+    public function doneAction(Request $request)
     {
         $doneForm = $this->buildDoneForm($request);
 
@@ -542,7 +538,7 @@ class InstallApp extends AppController
             $defaults = array();
         }
 
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('driver', 'choice', array(
                 'choices' => array(
@@ -621,8 +617,7 @@ class InstallApp extends AppController
      */
     protected function buildUserForm(Request $request)
     {
-
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('username', 'text', array(
                 'required' => true,
@@ -676,7 +671,7 @@ class InstallApp extends AppController
             'install_frontend' => true,
             'timezone' => $timeZone != '' ? $timeZone : "Europe/Paris"
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('site_name', 'text', array(
                 'required' => true,
@@ -718,7 +713,7 @@ class InstallApp extends AppController
      */
     protected function buildDoneForm(Request $request)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('action', 'hidden', array(
                 'data' => 'quit_install'

@@ -100,9 +100,19 @@
                 <source>database_done.title</source>
                 <target state="translated">Base de données installée</target>
             </trans-unit>
-            <trans-unit id="database_done.message">
+            <trans-unit id="database_done.message" approved="yes">
                 <source>database_done.message</source>
-                <target>&lt;p&gt;Renzo a besoin d'une base de données pour stocker vos contenus de qualités. Vous pouvez même sélectionner votre moteur de base de données préféré!&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Renzo a besoin d'une base de données pour stocker vos contenus de qualité. Vous pouvez même sélectionner votre moteur de base de données préféré!&lt;/p&gt;</target>
+            </trans-unit>
+
+            <!-- Database fail -->
+            <trans-unit id="database_fail.title" approved="yes">
+                <source>database_fail.title</source>
+                <target state="translated">Erreur de base de données</target>
+            </trans-unit>
+            <trans-unit id="database_fail.message" approved="yes">
+                <source>database_fail.message</source>
+                <target state="translated">&lt;p&gt;La base de données n’a pas pu être installée.&lt;/p&gt;</target>
             </trans-unit>
 
 
@@ -113,7 +123,7 @@
             </trans-unit>
             <trans-unit id="import.message" approved="yes">
                 <source>import.message</source>
-                <target state="translated">&lt;p&gt;Si vous le souhaitez vous pouvez importer des paramètres, des rôles et des groupes d'utilisateur de base. </target>
+                <target state="translated">&lt;p&gt;Si vous le souhaitez vous pouvez importer des paramètres, des rôles et des groupes d'utilisateur de base.</target>
             </trans-unit>
             <trans-unit id="import.step_name" approved="yes">
                 <source>import.step_name</source>
@@ -133,9 +143,9 @@
                 <source>user.create</source>
                 <target state="translated">Créer un utilisateur</target>
             </trans-unit>
-            <trans-unit id="user.name">
+            <trans-unit id="user.name" approved="yes">
                 <source>user.name</source>
-                <target>Nom d’utilisateur</target>
+                <target state="translated">Nom d’utilisateur</target>
             </trans-unit>
             <trans-unit id="user.email" approved="yes">
                 <source>user.email</source>
@@ -174,9 +184,9 @@
                 <source>import_node_type.title</source>
                 <target state="translated">Importation de contenu type</target>
             </trans-unit>
-            <trans-unit id="import_node_type.message">
+            <trans-unit id="import_node_type.message" approved="yes">
                 <source>import_node_type.message</source>
-                <target/>
+                <target state="translated">Types de nœud</target>
             </trans-unit>
             <trans-unit id="import_node_type.node_type" approved="yes">
                 <source>import_node_type.node_type</source>
@@ -188,7 +198,7 @@
             </trans-unit>
 
 
-            
+
             <!-- Success -->
             <trans-unit id="success.title" approved="yes">
                 <source>success.title</source>
@@ -201,7 +211,7 @@
             <trans-unit id="success.quit_install" approved="yes">
                 <source>success.quit_install</source>
                 <target state="translated">Quitter l'installation</target>
-            </trans-unit>            
+            </trans-unit>
 
 
             <!-- Goto -->
@@ -245,7 +255,7 @@
                 <source>skip.database.goto.import</source>
                 <target state="translated">Passer "Base de données", aller à "Importation"</target>
             </trans-unit>
-            
+
 
         </body>
     </file>

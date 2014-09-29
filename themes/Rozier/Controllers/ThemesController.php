@@ -231,7 +231,7 @@ class ThemesController extends RozierApp
      */
     protected function buildAddForm(Theme $theme)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add(
                 'className',
@@ -281,7 +281,7 @@ class ThemesController extends RozierApp
             'backendTheme' => $theme->isBackendTheme()
         );
 
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('available', 'checkbox', array(
                 'data' => $theme->isAvailable(),
@@ -307,7 +307,7 @@ class ThemesController extends RozierApp
      */
     protected function buildDeleteForm(Theme $theme)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('themeId', 'hidden', array(
                 'data'=>$theme->getId()

@@ -494,7 +494,7 @@ class TagsController extends RozierApp
             'visible' => $tag->isVisible()
         );
 
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('name', 'text', array(
                         'constraints' => array(
@@ -518,7 +518,7 @@ class TagsController extends RozierApp
             'visible' => $tag->isVisible()
         );
 
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('name', 'text', array(
                         'constraints' => array(
@@ -550,7 +550,7 @@ class TagsController extends RozierApp
             'description' => $translation->getDescription(),
         );
 
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('name', 'text', array(
                 'constraints' => array(
@@ -570,7 +570,7 @@ class TagsController extends RozierApp
      */
     private function buildDeleteForm(Tag $tag)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('tagId', 'hidden', array(
                 'data' => $tag->getId(),

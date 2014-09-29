@@ -1,6 +1,6 @@
 {
 	"appNamespace": "chooseAnUniqueNameForYourApp",
-	"install": false,
+	"install": true,
 	"devMode": true,
 	"timezone": "Europe/Paris",
 	"doctrine": {

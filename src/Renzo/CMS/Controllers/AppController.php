@@ -233,14 +233,6 @@ class AppController implements ViewableInterface
     }
 
     /**
-     * @return Psr\Log\LoggerInterface
-     */
-    public function getLogger()
-    {
-        return $this->getService('logger');
-    }
-
-    /**
      * Initialize controller with its twig environment.
      *
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
@@ -294,7 +286,7 @@ class AppController implements ViewableInterface
      */
     public function initializeTranslator()
     {
-        //$this->kernel->getStopwatch()->start('initTranslations');
+        $this->getService('stopwatch')->start('initTranslations');
         $lang = $this->kernel->getRequest()->getLocale();
         $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
 
@@ -317,7 +309,7 @@ class AppController implements ViewableInterface
         // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
         $this->twig->addExtension(new TranslationExtension($this->translator));
         $this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
-        //$this->kernel->getStopwatch()->stop('initTranslations');
+        $this->getService('stopwatch')->stop('initTranslations');
 
         return $this;
     }
@@ -485,9 +477,12 @@ class AppController implements ViewableInterface
      *
      * ## Available contents
      *
-     * - request: Main http_kernel request object
+     * - request: Main request object
      * - head
-     *     - devMode: boolean
+     *     - ajax: `boolean`
+     *     - cmsVersion
+     *     - cmsBuild
+     *     - devMode: `boolean`
      *     - baseUrl
      *     - filesUrl
      *     - resourcesUrl
@@ -496,6 +491,8 @@ class AppController implements ViewableInterface
      * - session
      *     - messages
      *     - id
+     *     - user
+     * - securityContext
      *
      * @return $this
      */
@@ -625,7 +622,7 @@ class AppController implements ViewableInterface
     }
 
     /**
-     * Append objects to global container.
+     * Append objects to the global dependency injection container.
      *
      * @param Pimple\Container $container
      */
@@ -633,15 +630,6 @@ class AppController implements ViewableInterface
     {
 
     }
-
-    /**
-     * @return Symfony\Component\Form\Forms
-     */
-    protected function getFormFactory()
-    {
-        return $this->kernel->container['formFactory'];
-    }
-
 
     /**
      * Custom route for redirecting routes with a trailing slash.
@@ -664,8 +652,8 @@ class AppController implements ViewableInterface
 
     public function validedAccessForRole($role)
     {
-        if (!($this->getSecurityContext()->isGranted($role)
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN'))) {
+        if (!($this->getService('securityContext')->isGranted($role)
+            || $this->getService('securityContext')->isGranted('ROLE_SUPERADMIN'))) {
 
             throw new AccessDeniedException("You don't have access to this page:" . $role);
         }

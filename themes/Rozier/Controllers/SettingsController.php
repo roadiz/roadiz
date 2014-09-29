@@ -359,7 +359,7 @@ class SettingsController extends RozierApp
             'visible' => $setting->isVisible(),
             'type' =>    $setting->getType(),
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('name', 'text', array(
                 'constraints' => array(
@@ -396,7 +396,7 @@ class SettingsController extends RozierApp
         } else {
             $default['group'] = $setting->getSettingGroup()->getId();
         }
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add(
                 'name',
@@ -450,7 +450,7 @@ class SettingsController extends RozierApp
             'id' =>      $setting->getId(),
             'Value' =>   $setting->getValue()
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('id', 'hidden', array(
                 'data'=>$setting->getId(),
@@ -471,7 +471,7 @@ class SettingsController extends RozierApp
      */
     private function buildDeleteForm(Setting $setting)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('settingId', 'hidden', array(
                 'data' => $setting->getId(),

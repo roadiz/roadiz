@@ -78,7 +78,7 @@ class CacheController extends RozierApp
      */
     private function buildDeleteDoctrineForm()
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form');
 
         return $builder->getForm();

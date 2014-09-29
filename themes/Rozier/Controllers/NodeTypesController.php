@@ -317,7 +317,7 @@ class NodeTypesController extends RozierApp
             'newsletterType' => $nodeType->isNewsletterType(),
             'hidingNodes' =>    $nodeType->isHidingNodes(),
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('name', 'text', array(
                 'constraints' => array(
@@ -349,7 +349,7 @@ class NodeTypesController extends RozierApp
             'newsletterType' => $nodeType->isNewsletterType(),
             'hidingNodes' =>    $nodeType->isHidingNodes(),
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('displayName', 'text', array(
                 'constraints' => array(
@@ -370,7 +370,7 @@ class NodeTypesController extends RozierApp
      */
     private function buildDeleteForm(NodeType $nodeType)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('nodeTypeId', 'hidden', array(
                 'data' => $nodeType->getId(),

@@ -11,9 +11,9 @@ installCheckPage:
 installDatabasePage:
     path:     /install/database
     defaults: { _controller: Themes\Install\InstallApp::databaseAction }
-installDatabaseDonePage:
-    path:     /install/database/done
-    defaults: { _controller: Themes\Install\InstallApp::databaseDoneAction }
+installDatabaseSchemaPage:
+    path:     /install/database/schema
+    defaults: { _controller: Themes\Install\InstallApp::databaseSchemaAction }
 installImportPage:
     path:     /install/import
     defaults: { _controller: Themes\Install\InstallApp::importAction }
@@ -52,12 +52,12 @@ installDonePage:
 installFailedPage:
     path:     /install/failed
     defaults: { _controller: Themes\Install\InstallApp::failedAction }
+installUpdateSchema:
+    path:     /install/update
+    defaults: { _controller: Themes\Install\InstallApp::updateSchemaAction }
 removeTrailingSlash:
     path: /{url}
     defaults: { _controller:  Themes\Install\InstallApp::removeTrailingSlashAction }
     requirements:
         url: .*/$
     methods: [GET]
-installUpdateSchema:
-    path:     /install/update
-    defaults: { _controller: Themes\Install\InstallApp::updateSchemaAction }

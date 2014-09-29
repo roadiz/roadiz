@@ -13,48 +13,14 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container['backendClass'] = function ($c) {
-            $theme = $c['em']->getRepository('RZ\Renzo\Core\Entities\Theme')
-                             ->findOneBy(array('available'=>true, 'backendTheme'=>true));
-
-            if ($theme !== null) {
-                return $theme->getClassName();
-            }
-
-            return 'RZ\Renzo\CMS\Controllers\BackendController';
-        };
-
-        $container['frontendThemes'] = function ($c) {
-            $themes = $c['em']->getRepository('RZ\Renzo\Core\Entities\Theme')
-                              ->findBy(array(
-                                  'available'=>    true,
-                                  'backendTheme'=> false
-                              ));
-
-
-
-            if (count($themes) < 1) {
-
-                $defaultTheme = new Theme();
-                $defaultTheme->setClassName('RZ\Renzo\CMS\Controllers\FrontendController');
-                $defaultTheme->setAvailable(true);
-
-                return array(
-                    $defaultTheme
-                );
-            } else {
-                return $themes;
-            }
-        };
-
-        if (isset($c['config']['install']) &&
-            true === $c['config']['install']) {
+        if (isset($container['config']['install']) &&
+            true === $container['config']['install']) {
             /*
              * Get Install routes
              */
             $container['routeCollection'] = function ($c) {
 
-                $installClassname = static::INSTALL_CLASSNAME;
+                $installClassname = Kernel::INSTALL_CLASSNAME;
                 $feCollection = $installClassname::getRoutes();
                 $rCollection = new RouteCollection();
                 $rCollection->addCollection($feCollection);
@@ -62,6 +28,42 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                 return $rCollection;
             };
         } else {
+            /*
+             * Parse existing themes
+             */
+            $container['backendClass'] = function ($c) {
+                $theme = $c['em']->getRepository('RZ\Renzo\Core\Entities\Theme')
+                                 ->findOneBy(array('available'=>true, 'backendTheme'=>true));
+
+                if ($theme !== null) {
+                    return $theme->getClassName();
+                }
+
+                return 'RZ\Renzo\CMS\Controllers\BackendController';
+            };
+
+            $container['frontendThemes'] = function ($c) {
+                $themes = $c['em']->getRepository('RZ\Renzo\Core\Entities\Theme')
+                                  ->findBy(array(
+                                      'available'=>    true,
+                                      'backendTheme'=> false
+                                  ));
+
+
+
+                if (count($themes) < 1) {
+
+                    $defaultTheme = new Theme();
+                    $defaultTheme->setClassName('RZ\Renzo\CMS\Controllers\FrontendController');
+                    $defaultTheme->setAvailable(true);
+
+                    return array(
+                        $defaultTheme
+                    );
+                } else {
+                    return $themes;
+                }
+            };
             /*
              * Get App routes
              */

@@ -8,11 +8,10 @@ var Install = {
     selectDatabaseField: null,
     resizeContainer: null,
     importNodeType: null
-
 };
 
 Install.onDocumentReady = function( event ) {
-    
+
     Install.resizeContainer = new resizeContainer();
 
     if(typeof Install.importRoutes != "undefined"){

@@ -5,7 +5,7 @@
     <article id="content-import-node-type" class="content">
 
         <div class="content-title-cont">
-            <h1 class="content-title">{% trans %}import_node_type.title{% endtrans %}</h1>   
+            <h1 class="content-title">{% trans %}import_node_type.title{% endtrans %}</h1>
         </div>
 
         <div class="content-progress">
@@ -20,7 +20,7 @@
         </div>
 
         <div class="content-text-cont">
-            
+
             <div class="content-text">
 
                 <p>{% trans %}import_node_type.node_type{% endtrans %}</p>
@@ -40,7 +40,7 @@
                         </tr>
                     {% endfor %}
                 </table>
-                
+
                 <p>{% trans %}import_node_type.node{% endtrans %}</p>
                 <table class="install-table uk-table">
                     <tr>
@@ -61,19 +61,21 @@
 
             <a id="next-step-button" class="content-button uk-button uk-button-primary" href="{{ path('installDonePage') }}">{% trans %}goto.done{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
             <a class="content-button uk-button" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.theme{% endtrans %}</a>
-            
+
         </div>
-        
+
     </article>
 
 {% endblock %}
 
 {% block customScripts %}
 <script type="text/javascript">
-    Install.importNodeTypeRoutes = [];
-    {% for name in names %}
-    Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodeTypes', {'filename': name}) }}",'id':'{{ name }}'});
-    {% endfor %}
-    Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodes') }}",'id':"Nodes"});;
+    (function() {
+        Install.importNodeTypeRoutes = [];
+        {% for name in names %}
+        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodeTypes', {'filename': name}) }}",'id':'{{ name }}'});
+        {% endfor %}
+        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodes') }}",'id':"Nodes"});
+    })();
 </script>
 {% endblock %}

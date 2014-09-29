@@ -21,21 +21,22 @@ use RZ\Renzo\Core\Services\ConfigurationServiceProvider;
 use RZ\Renzo\Core\Services\SolrServiceProvider;
 
 use Symfony\Component\Console\Application;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
+use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Firewall;
+
 use Pimple\Container;
-use Solarium\Client;
 
 /**
  * Main renzo CMS entry point.
@@ -47,11 +48,10 @@ class Kernel implements \Pimple\ServiceProviderInterface
     const INSTALL_CLASSNAME =   'Themes\\Install\\InstallApp';
 
     public static $cmsBuild =   null;
-
     private static $instance =  null;
+
     public $container =         null;
     private $backendDebug =     false;
-
     protected $request =        null;
     protected $response =       null;
 
@@ -77,7 +77,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $this->container['stopwatch']->start('initKernel');
 
         $this->request = Request::createFromGlobals();
-
         if ($this->isDebug() ||
             !file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlMatcher.php') ||
             !file_exists(RENZO_ROOT.'/sources/Compiled/GlobalUrlGenerator.php')) {
@@ -224,8 +223,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
         } else {
             date_default_timezone_set("Europe/Paris");
         }
-
-
 
         if ($this->container['config'] === null ||
             (isset($this->container['config']['install']) &&

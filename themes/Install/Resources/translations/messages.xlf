@@ -105,6 +105,16 @@
                 <target />
             </trans-unit>
 
+            <!-- Database fail -->
+            <trans-unit id="database_fail.title">
+                <source>database_fail.title</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="database_fail.message">
+                <source>database_fail.message</source>
+                <target />
+            </trans-unit>
+
 
              <!-- Import -->
             <trans-unit id="import.title">
@@ -188,7 +198,7 @@
             </trans-unit>
 
 
-            
+
             <!-- Success -->
             <trans-unit id="success.title">
                 <source>success.title</source>
@@ -201,7 +211,7 @@
             <trans-unit id="success.quit_install">
                 <source>success.quit_install</source>
                 <target />
-            </trans-unit>            
+            </trans-unit>
 
 
             <!-- Goto -->
@@ -245,7 +255,7 @@
                 <source>skip.database.goto.import</source>
                 <target />
             </trans-unit>
-            
+
 
         </body>
     </file>

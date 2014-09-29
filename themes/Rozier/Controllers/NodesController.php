@@ -464,7 +464,7 @@ class NodesController extends RozierApp
         if ($type !== null &&
             $translation !== null) {
 
-            $form = $this->getFormFactory()
+            $form = $this->getService('formFactory')
                 ->createBuilder()
                 ->add('nodeName', 'text', array(
                     'constraints' => array(
@@ -898,7 +898,7 @@ class NodesController extends RozierApp
 
         if ($translations !== null && count($choices) > 0) {
 
-            $builder = $this->getFormFactory()
+            $builder = $this->getService('formFactory')
                 ->createBuilder('form')
                 ->add('nodeId', 'hidden', array(
                     'data' => $node->getId(),
@@ -927,7 +927,7 @@ class NodesController extends RozierApp
         $defaults = array(
 
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('nodeName', 'text', array(
                 'constraints' => array(
@@ -959,7 +959,7 @@ class NodesController extends RozierApp
             'home' => $node->isHome(),
             'priority' => $node->getPriority(),
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add(
                 'nodeName',
@@ -994,7 +994,7 @@ class NodesController extends RozierApp
         $defaults = array(
             'nodeId' =>  $node->getId()
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('nodeId', 'hidden', array(
                         'data' => $node->getId(),
@@ -1030,7 +1030,7 @@ class NodesController extends RozierApp
         /*
          * Create subform for source
          */
-        $sourceBuilder = $this->getFormFactory()
+        $sourceBuilder = $this->getService('formFactory')
             ->createNamedBuilder('source', 'form', $sourceDefaults);
         foreach ($fields as $field) {
             $sourceBuilder->add(
@@ -1109,7 +1109,7 @@ class NodesController extends RozierApp
      */
     private function buildDeleteForm(Node $node)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('nodeId', 'hidden', array(
                 'data' => $node->getId(),
@@ -1129,7 +1129,7 @@ class NodesController extends RozierApp
      */
     private function buildRemoveTagForm(Node $node, Tag $tag)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('nodeId', 'hidden', array(
                 'data' => $node->getId(),

@@ -385,7 +385,7 @@ class UrlAliasesController extends RozierApp
         $defaults = array(
             'nodeId' =>  $node->getId()
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('nodeId', 'hidden', array(
                 'data' => $node->getId(),
@@ -410,7 +410,7 @@ class UrlAliasesController extends RozierApp
             'urlaliasId' =>  $ua->getId(),
             'alias' =>  $ua->getAlias()
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('urlaliasId', 'hidden', array(
                         'data' => $ua->getId(),
@@ -440,7 +440,7 @@ class UrlAliasesController extends RozierApp
             'metaKeywords' =>  $ns->getMetaKeywords(),
             'metaDescription' =>  $ns->getMetaDescription()
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('id', 'hidden', array(
                         'data' => $ns->getId(),
@@ -471,7 +471,7 @@ class UrlAliasesController extends RozierApp
         $defaults = array(
             'urlaliasId' =>  $ua->getId()
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('urlaliasId', 'hidden', array(
                         'data' => $ua->getId(),

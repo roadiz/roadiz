@@ -57,13 +57,13 @@
         <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
-        <script src="{{ head.resourcesUrl }}js/main.js"></script>
         <script src="{{ head.resourcesUrl }}js/importFixtures.js"></script>
         <script src="{{ head.resourcesUrl }}js/selectDatabaseField.js"></script>
         <script src="{{ head.resourcesUrl }}js/importNodeType.js"></script>
         <script src="{{ head.resourcesUrl }}js/resizeContainer.js"></script>
+        <script src="{{ head.resourcesUrl }}js/main.js"></script>
         {% else %}
-        <script src="{{ head.resourcesUrl }}dist/install-theme.min.js"></script>
+        <script src="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.js[0] }}"></script>
         {% endif %}
 
         <script type="text/javascript">
