@@ -35,6 +35,10 @@ class DocumentsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_DOCUMENTS')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         /*
          * Manage get request to filter list
          */
@@ -70,6 +74,10 @@ class DocumentsController extends RozierApp
      */
     public function editAction(Request $request, $documentId)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_DOCUMENTS')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $document = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
 
@@ -131,6 +139,10 @@ class DocumentsController extends RozierApp
      */
     public function deleteAction(Request $request, $documentId)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_DOCUMENTS_DELETE')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $document = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
 
@@ -184,6 +196,10 @@ class DocumentsController extends RozierApp
      */
     public function uploadAction(Request $request)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_DOCUMENTS')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         /*
          * Handle main form
          */

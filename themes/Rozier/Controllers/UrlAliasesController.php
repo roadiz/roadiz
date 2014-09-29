@@ -45,6 +45,9 @@ class UrlAliasesController extends RozierApp
      */
     public function editAliasesAction(Request $request, $nodeId, $translationId = null)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
         if (null === $translationId && $translationId < 1) {
             $translation = $this->getKernel()->em()
                     ->getRepository('RZ\Renzo\Core\Entities\Translation')

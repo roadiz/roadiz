@@ -1,1 +1,18 @@
-[{"name":"Admin","roles":[{"name":"ROLE_BACKEND_USER"},{"name":"ROLE_SUPER_ADMIN"}]},{"name":"Administrators","roles":[{"name":"ROLE_BACKEND_USER"},{"name":"ROLE_SUPER_ADMIN"}]},{"name":"Backendusers","roles":[]},{"name":"Owner","roles":[{"name":"ROLE_ACCESSABOUT"},{"name":"ROLE_ACCESSADMINISTRATION"},{"name":"ROLE_ACCESSCONTAINERNODETREE"},{"name":"ROLE_ACCESSCUSTOMERS"},{"name":"ROLE_ACCESSDOCUMENTS"},{"name":"ROLE_ACCESSGLOBALNODETREE"},{"name":"ROLE_ACCESSHOMENODETREE"},{"name":"ROLE_ACCESSNEWSLETTERS"},{"name":"ROLE_ACCESSNEWSLETTERSSTATS"},{"name":"ROLE_ACCESSNODEMASSCREATIONTAB"},{"name":"ROLE_ACCESSNODES"},{"name":"ROLE_ACCESSNODESEOTAB"},{"name":"ROLE_ACCESSNODETAGSTAB"},{"name":"ROLE_ACCESSNODETRANSLATIONTAB"},{"name":"ROLE_ACCESSNODETRANSTYPE"},{"name":"ROLE_ACCESSOWNUSER"},{"name":"ROLE_ACCESSSHOP"},{"name":"ROLE_ACCESSSUBSCRIBERS"},{"name":"ROLE_ACCESSSURVEYS"},{"name":"ROLE_ACCESSSURVEYSEDITION"},{"name":"ROLE_ACCESSSURVEYSQUESTIONS"},{"name":"ROLE_ACCESSSURVEYSSUBMISSIONS"},{"name":"ROLE_ACCESSTAGS"},{"name":"ROLE_CLEARDBCACHE"},{"name":"ROLE_POSTONFACEBOOK"},{"name":"ROLE_TOTOTOTOTOTOTO"}]}]
+[
+    {
+        "name": "Admin",
+        "roles": [
+            {
+                "name": "ROLE_SUPERADMIN"
+            }
+        ]
+    },
+    {
+        "name": "Backend User",
+        "roles": [
+            {
+                "name": "ROLE_BACKEND_USER"
+            }
+        ]
+    }
+]

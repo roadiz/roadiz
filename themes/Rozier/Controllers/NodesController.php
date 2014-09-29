@@ -50,6 +50,10 @@ class NodesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         /*
          * Security
          */
@@ -95,6 +99,10 @@ class NodesController extends RozierApp
      */
     public function treeAction(Request $request, $nodeId, $translationId = null)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $node = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
         $this->getKernel()->em()->refresh($node);
@@ -136,6 +144,10 @@ class NodesController extends RozierApp
      */
     public function editAction(Request $request, $nodeId, $translationId = null)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_SETTINGS')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $node = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
         $this->getKernel()->em()->refresh($node);
@@ -239,6 +251,9 @@ class NodesController extends RozierApp
      */
     public function editSourceAction(Request $request, $nodeId, $translationId)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
         $translation = $this->getKernel()->em()
                 ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
 
@@ -314,6 +329,10 @@ class NodesController extends RozierApp
      */
     public function editTagsAction(Request $request, $nodeId)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $translation = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();
@@ -387,6 +406,10 @@ class NodesController extends RozierApp
      */
     public function removeTagAction(Request $request, $nodeId, $tagId)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_DELETE')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $node = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
         $tag = $this->getKernel()->em()
@@ -443,6 +466,10 @@ class NodesController extends RozierApp
      */
     public function addAction(Request $request, $nodeTypeId, $translationId = null)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $type = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', $nodeTypeId);
 
@@ -528,6 +555,10 @@ class NodesController extends RozierApp
      */
     public function addChildAction(Request $request, $nodeId, $translationId = null)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $translation = $this->getKernel()->em()
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findDefault();
@@ -607,6 +638,10 @@ class NodesController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeId)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_DELETE')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $node = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 

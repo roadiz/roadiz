@@ -47,6 +47,10 @@ class NodeTypesUtilsController extends RozierApp
      */
     public function exportJsonFileAction(Request $request, $nodeTypeId)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $nodeType = $this->getKernel()->em()
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
@@ -78,6 +82,10 @@ class NodeTypesUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         $form = $this->buildImportJsonFileForm();
 
         $form->handleRequest();

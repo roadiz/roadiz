@@ -34,6 +34,10 @@ class AjaxNodeTreeController extends AbstractAjaxController
 {
     public function getTreeAction(Request $request)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         /*
          * Validate
          */

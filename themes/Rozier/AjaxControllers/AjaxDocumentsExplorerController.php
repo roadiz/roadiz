@@ -36,6 +36,10 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_DOCUMENTS')
+            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+            return $this->throw404();
+
         /*
          * Validate
          */
