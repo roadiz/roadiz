@@ -72,7 +72,7 @@
         "name": "ROLE_ACCESS_NODES_DELETE"
     },
     {
-        "name": "ROLE_ACCESS_NODES_PUBLISH"
+        "name": "ROLE_ACCESS_NODES_STATUS"
     },
     {
         "name": "ROLE_ACCESS_NEWSLETTERS_SEND"

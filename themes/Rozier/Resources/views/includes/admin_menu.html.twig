@@ -7,6 +7,7 @@
 			   target="_blank"
 			   href="{{ path('homePage') }}"></a>
 		</div>
+		{% if (securityContext.Granted('ROLE_ACCESS_NODES') or securityContext.Granted('ROLE_SUPERADMIN')) %}
 		<hr/>
 		<div id="minify-tree-panel-area">
 			<a id="minify-tree-panel-button"
@@ -14,57 +15,143 @@
 				class="uk-icon-button uk-icon-minus-light">
 			</a>
 		</div>
+		{% endif %}
 	</header>
 
 	<ul class="uk-nav uk-nav-parent-icon">
 		<li><a href="{{ path('adminHomePage') }}"><i class="uk-icon-dashboard"></i><span class="info">{% trans %}dashboard{% endtrans %}</span></a></li>
+
+		{% if (securityContext.Granted('ROLE_ACCESS_SURVEYS') or securityContext.Granted('ROLE_ACCESS_NEWSLETTERS') or securityContext.Granted('ROLE_ACCESS_MANAGE_SUBSCRIBERS') or securityContext.Granted('ROLE_ACCESS_COMMENTS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 		<li class="uk-parent">
 			<p><i class="uk-icon-interactions"></i><span class="info">{% trans %}interactions{% endtrans %}</span></p>
 			<ul class="uk-nav-sub">
+
+			{% if (securityContext.Granted('ROLE_ACCESS_SURVEYS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 				<li><a href="#">
 					<i class="uk-icon-surveys"></i><span class="info">{% trans %}manage.surveys{% endtrans %}</span>
 					<span class="work-in-progress"><i class="uk-icon-gear uk-icon-spin"></i></span>
 					</a>
 				</li>
+
+			{% endif %}
+
+			{% if (securityContext.Granted('ROLE_ACCESS_NEWSLETTERS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 				<li><a href="#">
 					<i class="uk-icon-newsletter"></i><span class="info">{% trans %}manage.newsletters{% endtrans %}</span>
 					<span class="work-in-progress"><i class="uk-icon-gear uk-icon-spin"></i></span>
 					</a>
 				</li>
+
+			{% endif %}
+
+			{% if (securityContext.Granted('ROLE_ACCESS_MANAGE_SUBSCRIBERS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 				<li><a href="#">
 					<i class="uk-icon-subscribers"></i><span class="info">{% trans %}manage.subscribers{% endtrans %}</span>
 					<span class="work-in-progress"><i class="uk-icon-gear uk-icon-spin"></i></span>
 					</a>
 				</li>
+
+			{% endif %}
+
+			{% if (securityContext.Granted('ROLE_ACCESS_COMMENTS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 				<li><a href="#">
 					<i class="uk-icon-comments"></i><span class="info">{% trans %}manage.comments{% endtrans %}</span>
 					<span class="work-in-progress"><i class="uk-icon-gear uk-icon-spin"></i></span>
 					</a>
 				</li>
+
+			{% endif %}
+
 			</ul>
 		</li>
+
+		{% endif %}
+
 		{# <li><a href="{{ path('nodesHomePage') }}"><i class="uk-icon-tree-big"></i><span class="info">{% trans %}manage.nodes{% endtrans %}</span></a></li> #}
+
+		{% if (securityContext.Granted('ROLE_ACCESS_TAGS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 		<li><a href="{{ path('tagsHomePage') }}"><i class="uk-icon-tags"></i><span class="info">{% trans %}manage.tags{% endtrans %}</span></a></li>
+
+		{% endif %}
+
+		{% if (securityContext.Granted('ROLE_ACCESS_DOCUMENTS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 		<li><a href="{{ path('documentsHomePage') }}"><i class="uk-icon-documents"></i><span class="info">{% trans %}manage.documents{% endtrans %}</span></a></li>
+
+		{% endif %}
+
+		{% if (securityContext.Granted('ROLE_ACCESS_NODETYPES') or securityContext.Granted('ROLE_ACCESS_TRANSLATIONS') or securityContext.Granted('ROLE_ACCESS_THEMES') or securityContext.Granted('ROLE_ACCESS_FONTS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
 
 		<li class="uk-parent">
 			<p><i class="uk-icon-construction"></i><span class="info">{% trans %}construction{% endtrans %}</span></p>
 			<ul class="uk-nav-sub">
+
+			{% if (securityContext.Granted('ROLE_ACCESS_NODETYPES') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 				<li><a href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-node-type"></i><span class="info">{% trans %}manage.node-types{% endtrans %}</span></a></li>
+
+			{% endif %}
+
+			{% if (securityContext.Granted('ROLE_ACCESS_TRANSLATIONS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 				<li><a href="{{ path('translationsHomePage') }}"><i class="uk-icon-translate"></i><span class="info">{% trans %}manage.translations{% endtrans %}</span></a></li>
+			{% endif %}
+
+			{% if (securityContext.Granted('ROLE_ACCESS_THEMES') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 				<li><a href="{{ path('themesHomePage') }}"><i class="uk-icon-themes"></i><span class="info">{% trans %}manage.themes{% endtrans %}</span></a></li>
+
+			{% endif %}
+
+			{% if (securityContext.Granted('ROLE_ACCESS_FONTS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 				<li><a href="{{ path('fontsHomePage') }}"><i class="uk-icon-font"></i><span class="info">{% trans %}manage.fonts{% endtrans %}</span></a></li>
+			{% endif %}
 			</ul>
 		</li>
+
+		{% endif %}
+
 		{# uk-icon-user-fill #}
+		{% if (securityContext.Granted('ROLE_ACCESS_USERS') or securityContext.Granted('ROLE_ACCESS_ROLES') or securityContext.Granted('ROLE_ACCESS_GROUPS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 		<li class="uk-parent">
 			<p><i class="uk-icon-user-fill"></i><span class="info">{% trans %}user.system{% endtrans %}</span></p>
 			<ul class="uk-nav-sub">
+
+				{% if (securityContext.Granted('ROLE_ACCESS_USERS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 				<li><a href="{{ path('usersHomePage') }}"><i class="uk-icon-user"></i><span class="info">{% trans %}manage.users{% endtrans %}</span></a></li>
+
+				{% endif %}
+
+				{% if (securityContext.Granted('ROLE_ACCESS_ROLES') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 				<li><a href="{{ path('rolesHomePage') }}"><i class="uk-icon-roles"></i><span class="info">{% trans %}manage.roles{% endtrans %}</span></a></li>
+
+				{% endif %}
+
+				{% if (securityContext.Granted('ROLE_ACCESS_GROUPS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 				<li><a href="{{ path('groupsHomePage') }}"><i class="uk-icon-groups"></i><span class="info">{% trans %}manage.groups{% endtrans %}</span></a></li>
+
+				{% endif %}
+
 			</ul>
 		</li>
+
+		{% endif %}
+
+		{% if (securityContext.Granted('ROLE_ACCESS_SETTINGS') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+
 		<li><a href="{{ path('settingsHomePage') }}"><i class="uk-icon-settings"></i><span class="info">{% trans %}site.settings{% endtrans %}</span></a></li>
+
+		{% endif %}
 	</ul>
 </nav>

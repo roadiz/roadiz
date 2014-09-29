@@ -40,7 +40,7 @@ class SettingsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETINGS')
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
             || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
             return $this->throw404();
 
@@ -109,7 +109,7 @@ class SettingsController extends RozierApp
      */
     public function editAction(Request $request, $settingId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETINGS')
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
             || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
             return $this->throw404();
 
@@ -166,7 +166,7 @@ class SettingsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETINGS')
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
             || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
             return $this->throw404();
 
@@ -224,7 +224,7 @@ class SettingsController extends RozierApp
      */
     public function deleteAction(Request $request, $settingId)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETINGS')
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
             || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
             return $this->throw404();
 

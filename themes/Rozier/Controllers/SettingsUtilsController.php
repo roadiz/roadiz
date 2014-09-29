@@ -47,7 +47,7 @@ class SettingsUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETINGS')
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
             || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
             return $this->throw404();
 
@@ -94,7 +94,7 @@ class SettingsUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETINGS')
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
             || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
             return $this->throw404();
 

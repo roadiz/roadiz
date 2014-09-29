@@ -526,7 +526,7 @@ class AppController implements ViewableInterface
 
         if ($this->kernel->getSecurityContext() !== null &&
             $this->kernel->getSecurityContext()->getToken() !== null ) {
-
+            $this->assignation['securityContext'] = $this->kernel->getSecurityContext();
             $this->assignation['session']['user'] = $this->kernel
                                                          ->getSecurityContext()
                                                          ->getToken()

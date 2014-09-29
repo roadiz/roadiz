@@ -196,15 +196,12 @@ class AjaxNodesController extends AbstractAjaxController
 
                         $setter = $availableStatuses[$request->get('statusName')];
                         $value = filter_var($request->get('statusValue'), FILTER_VALIDATE_BOOLEAN);
-                        if ($request->get('statusName') == 'published') {
-                            if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_PUBLISH')
-                                || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-                                $node->$setter(false);
-                            $node->$setter($value);
+                        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_STATUS')
+                                || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN'))) {
                         } else {
                             $node->$setter($value);
+                            $this->em()->flush();
                         }
-                        $this->em()->flush();
 
                         $responseArray = array(
                             'statusCode' => Response::HTTP_OK,

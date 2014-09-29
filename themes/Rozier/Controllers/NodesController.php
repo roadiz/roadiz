@@ -144,7 +144,7 @@ class NodesController extends RozierApp
      */
     public function editAction(Request $request, $nodeId, $translationId = null)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_SETTINGS')
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_SETTING')
             || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
             return $this->throw404();
 
