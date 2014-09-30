@@ -19,7 +19,7 @@ use RZ\Renzo\Core\Utils\StringHandler;
  * @Entity(repositoryClass="RZ\Renzo\Core\Entities\RoleRepository")
  * @Table(name="roles")
  */
-class Role extends AbstractEntity
+class Role extends AbstractEntity implements \Symfony\Component\Security\Core\Role\RoleInterface
 {
     const ROLE_DEFAULT =      'ROLE_USER';
     const ROLE_SUPERADMIN =   'ROLE_SUPERADMIN';
@@ -35,6 +35,15 @@ class Role extends AbstractEntity
      * @return string
      */
     public function getName()
+    {
+        return $this->name;
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getRole()
     {
         return $this->name;
     }

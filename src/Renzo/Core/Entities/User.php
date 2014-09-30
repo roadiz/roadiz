@@ -454,6 +454,21 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @param User $user
+     *
+     * @return boolean
+     */
+    public function equals(User $user)
+    {
+        return (
+            $this->username == $user->getUsername() ||
+            $this->email == $user->getEmail()
+        );
+    }
+
+    /**
      * @var boolean
      * @Column(type="boolean", name="credentials_expired")
      */
