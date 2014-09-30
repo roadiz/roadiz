@@ -45,7 +45,7 @@ class UrlAliasesController extends RozierApp
      */
     public function editAliasesAction(Request $request, $nodeId, $translationId = null)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
         //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))

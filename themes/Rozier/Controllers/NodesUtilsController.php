@@ -45,7 +45,7 @@ class NodesUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $nodeId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $existingNode = $this->getService('em')
                               ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);

@@ -53,7 +53,7 @@ class SchemaController extends RozierApp
      */
     public function updateNodeTypesSchemaAction(Request $request, $_token)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
         // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
         //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
         //     return $this->throw404();
@@ -93,7 +93,7 @@ class SchemaController extends RozierApp
      */
     public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $nodeTypeId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
         // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
         //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
         //     return $this->throw404();

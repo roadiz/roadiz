@@ -41,7 +41,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function listAction(Request $request, $nodeTypeId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $nodeType = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
@@ -72,7 +72,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function editAction(Request $request, $nodeTypeFieldId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $field = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
@@ -132,7 +132,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function addAction(Request $request, $nodeTypeId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $field = new NodeTypeField();
         $nodeType = $this->getService('em')
@@ -195,7 +195,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeTypeFieldId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
+        $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
 
         $field = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);

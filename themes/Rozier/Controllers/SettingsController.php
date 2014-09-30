@@ -40,7 +40,7 @@ class SettingsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
         /*
          * Manage get request to filter list
          */
@@ -106,7 +106,7 @@ class SettingsController extends RozierApp
      */
     public function editAction(Request $request, $settingId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $setting = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Setting', (int) $settingId);
@@ -161,7 +161,7 @@ class SettingsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
         // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
         //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
         //     return $this->throw404();
@@ -220,7 +220,7 @@ class SettingsController extends RozierApp
      */
     public function deleteAction(Request $request, $settingId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $setting = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Setting', (int) $settingId);

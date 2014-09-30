@@ -650,7 +650,7 @@ class AppController implements ViewableInterface
         return $response->send();
     }
 
-    public function validedAccessForRole($role)
+    public function validateAccessForRole($role)
     {
         if (!($this->getService('securityContext')->isGranted($role)
             || $this->getService('securityContext')->isGranted('ROLE_SUPERADMIN'))) {

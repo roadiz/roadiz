@@ -41,7 +41,7 @@ class ThemesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_THEMES');
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $listManager = new EntityListManager(
             $request,
@@ -69,7 +69,7 @@ class ThemesController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_THEMES');
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = new Theme();
 
@@ -115,7 +115,7 @@ class ThemesController extends RozierApp
      */
     public function editAction(Request $request, $themeId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_THEMES');
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);
@@ -173,7 +173,7 @@ class ThemesController extends RozierApp
      */
     public function deleteAction(Request $request, $themeId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_THEMES');
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);

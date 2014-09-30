@@ -43,7 +43,7 @@ class TranslationsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
         $translations = $this->getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Translation')
@@ -108,7 +108,7 @@ class TranslationsController extends RozierApp
      */
     public function editAction(Request $request, $translationId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
         $translation = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
@@ -166,7 +166,7 @@ class TranslationsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
         $translation = new Translation();
 
@@ -221,7 +221,7 @@ class TranslationsController extends RozierApp
      */
     public function deleteAction(Request $request, $translationId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
         $translation = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);

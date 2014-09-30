@@ -37,7 +37,7 @@ class RolesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $listManager = new EntityListManager(
             $request,
@@ -67,7 +67,7 @@ class RolesController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $form = $this->buildAddForm();
         $form->handleRequest();
@@ -118,7 +118,7 @@ class RolesController extends RozierApp
      */
     public function deleteAction(Request $request, $roleId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $role = $this->getService('em')
                     ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
@@ -177,7 +177,7 @@ class RolesController extends RozierApp
      */
     public function editAction(Request $request, $roleId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $role = $this->getService('em')
                      ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);

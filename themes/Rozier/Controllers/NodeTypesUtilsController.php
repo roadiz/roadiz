@@ -47,7 +47,7 @@ class NodeTypesUtilsController extends RozierApp
      */
     public function exportJsonFileAction(Request $request, $nodeTypeId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $nodeType = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
@@ -80,7 +80,7 @@ class NodeTypesUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $form = $this->buildImportJsonFileForm();
 

@@ -35,7 +35,7 @@ class DocumentsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
         /*
          * Manage get request to filter list
          */
@@ -71,7 +71,7 @@ class DocumentsController extends RozierApp
      */
     public function editAction(Request $request, $documentId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $document = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
@@ -134,7 +134,7 @@ class DocumentsController extends RozierApp
      */
     public function deleteAction(Request $request, $documentId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
 
         $document = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
@@ -189,7 +189,7 @@ class DocumentsController extends RozierApp
      */
     public function uploadAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         /*
          * Handle main form

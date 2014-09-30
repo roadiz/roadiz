@@ -41,7 +41,7 @@ class UsersController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         /*
          * Manage get request to filter list
@@ -138,7 +138,7 @@ class UsersController extends RozierApp
      */
     public function editRolesAction(Request $request, $userId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
@@ -196,7 +196,7 @@ class UsersController extends RozierApp
      */
     public function removeRoleAction(Request $request, $userId, $roleId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
@@ -251,7 +251,7 @@ class UsersController extends RozierApp
      */
     public function editGroupsAction(Request $request, $userId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
@@ -309,7 +309,7 @@ class UsersController extends RozierApp
      */
     public function removeGroupAction(Request $request, $userId, $groupId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
@@ -368,7 +368,7 @@ class UsersController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_USERS');
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
 
         // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
@@ -433,7 +433,7 @@ class UsersController extends RozierApp
      */
     public function deleteAction(Request $request, $userId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_USERS_DELETE');
+        $this->validateAccessForRole('ROLE_ACCESS_USERS_DELETE');
 
         $user = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\User', (int) $userId);

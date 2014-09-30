@@ -43,7 +43,7 @@ class NodeTypesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
         /*
          * Manage get request to filter list
          */
@@ -73,7 +73,7 @@ class NodeTypesController extends RozierApp
      */
     public function editAction(Request $request, $nodeTypeId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $nodeType = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
@@ -132,7 +132,7 @@ class NodeTypesController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $nodeType = new NodeType();
 
@@ -201,7 +201,7 @@ class NodeTypesController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeTypeId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_NODETYPES_DELETE');
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES_DELETE');
 
         $nodeType = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);

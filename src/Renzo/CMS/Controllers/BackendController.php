@@ -86,8 +86,8 @@ class BackendController extends AppController
              */
             $requestMatcher = new RequestMatcher('^/rz-admin');
             // allows configuration of different access control rules for specific parts of the website.
-            $accessMap = new AccessMap($requestMatcher, array(Role::ROLE_BACKEND_USER));
-            $accessMap->add(new RequestMatcher('^/rz-admin'), array(Role::ROLE_BACKEND_USER));
+            $accessMap = new AccessMap($requestMatcher, array(Role::ROLE_BACKEND_USER, Role::ROLE_SUPERADMIN));
+            $accessMap->add(new RequestMatcher('^/rz-admin'), array(Role::ROLE_BACKEND_USER, Role::ROLE_SUPERADMIN));
 
             /*
              * Listener

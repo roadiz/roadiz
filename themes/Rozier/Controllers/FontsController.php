@@ -39,7 +39,7 @@ class FontsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_FONTS');
+        $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
         $listManager = new EntityListManager(
             $request,
@@ -66,7 +66,7 @@ class FontsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_FONTS');
+        $this->validateAccessForRole('ROLE_ACCESS_FONTS');
         // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_FONTS')
         //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
         //     return $this->throw404();
@@ -120,7 +120,7 @@ class FontsController extends RozierApp
      */
     public function deleteAction(Request $request, $fontId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_FONTS');
+        $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
         $font = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Font', (int) $fontId);
@@ -178,7 +178,7 @@ class FontsController extends RozierApp
      */
     public function editAction(Request $request, $fontId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_FONTS');
+        $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
         $font = $this->getService('em')
                     ->find('RZ\Renzo\Core\Entities\Font', (int) $fontId);
@@ -237,7 +237,7 @@ class FontsController extends RozierApp
      */
     public function downloadAction(Request $request, $fontId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_FONTS');
+        $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
         $font = $this->getService('em')
                     ->find('RZ\Renzo\Core\Entities\Font', (int) $fontId);

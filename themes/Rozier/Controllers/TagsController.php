@@ -40,7 +40,7 @@ class TagsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_TAGS');
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         /*
          * Manage get request to filter list
@@ -73,7 +73,7 @@ class TagsController extends RozierApp
      */
     public function editTranslatedAction(Request $request, $tagId, $translationId = null)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_TAGS');
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         if (null === $translationId) {
             $translation = $this->getService('em')
@@ -173,7 +173,7 @@ class TagsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_TAGS');
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $tag = new Tag();
 
@@ -228,7 +228,7 @@ class TagsController extends RozierApp
      */
     public function deleteAction(Request $request, $tagId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_TAGS_DELETE');
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS_DELETE');
 
         $tag = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
@@ -281,7 +281,7 @@ class TagsController extends RozierApp
      */
     public function addChildAction(Request $request, $tagId, $translationId = null)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_TAGS');
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $translation = $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')

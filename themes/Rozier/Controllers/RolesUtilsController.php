@@ -46,7 +46,7 @@ class RolesUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $existingRole = $this->getService('em')
                               ->getRepository('RZ\Renzo\Core\Entities\Role')
@@ -82,7 +82,7 @@ class RolesUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $roleId)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $existingRole= $this->getService('em')
                             ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
@@ -117,7 +117,7 @@ class RolesUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
-        $this->validedAccessForRole('ROLE_ACCESS_ROLES');
+        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $form = $this->buildImportJsonFileForm();
 
