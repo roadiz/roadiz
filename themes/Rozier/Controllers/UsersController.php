@@ -74,7 +74,6 @@ class UsersController extends RozierApp
     public function editAction(Request $request, $userId)
     {
         if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')
             || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
             throw AccessDeniedException("You don't have access to this page:" . $role);
         }

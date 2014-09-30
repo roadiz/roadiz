@@ -49,7 +49,7 @@
 		            	</a>
 		            </p>
 
-		            {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+		            {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE')) %}
 
 		            <p>
 		            	<a title="{% trans %}delete.node.%name%{% endtrans %}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">

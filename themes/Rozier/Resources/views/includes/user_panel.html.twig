@@ -18,7 +18,7 @@
         <nav class="user-actions">
             <a title="{% trans %}edit.account{% endtrans %}" class="uk-icon-button uk-icon-user" href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"></a>
             <a title="{% trans %}logout{% endtrans %}" class="uk-icon-button uk-icon-turn-off" href="{{ path('logoutPage') }}"></a>
-            {% if (securityContext.Granted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+            {% if (securityContext.Granted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE')) %}
             <a title="{% trans %}delete.caches{% endtrans %}" class="uk-icon-button uk-icon-flash" href="{{ path('deleteDoctrineCache') }}"></a>
             {% endif %}
             {% if head.devMode %}

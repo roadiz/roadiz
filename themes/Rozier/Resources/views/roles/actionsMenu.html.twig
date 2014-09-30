@@ -1,7 +1,7 @@
 <nav data-action-menu class="actions-menu uk-navbar rz-vertical-align">
     <a class="uk-button" href="{{ path('rolesHomePage') }}"><i class="uk-icon-reply"></i><span class="label">{% trans %}back.to.roles{% endtrans %}</span></a>
     {# Delete current node #}
-    {% if (securityContext.Granted('ROLE_ACCESS_ROLES') or securityContext.Granted('ROLE_SUPERADMIN')) %}
+    {% if (securityContext.Granted('ROLE_ACCESS_ROLES')) %}
     {% if role.getId %}
     <a class="uk-button uk-button-danger" href="{{ path('rolesDeletePage', { roleId: role.getId}) }}"><i class="uk-icon-trash-o"></i><span class="label">{% trans %}delete.role{% endtrans %}</span></a>
     {% endif %}

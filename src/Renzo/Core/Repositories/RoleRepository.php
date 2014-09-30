@@ -58,4 +58,27 @@ class RoleRepository extends EntityRepository
             return $query->getSingleResult();
         }
     }
+
+    /**
+     * Get every Roles names except for ROLE_SUPERADMIN.
+     *
+     * @return array
+     */
+    public function getAllBasicRoleName()
+    {
+        $names = array();
+
+        $query = $this->_em->createQuery('
+            SELECT r.name FROM RZ\Renzo\Core\Entities\Role r
+            WHERE r.name != :name')
+            ->setParameter('name', Role::ROLE_SUPERADMIN);
+
+        $rolesNames = $query->getScalarResult();
+
+        foreach ($rolesNames as $role) {
+            $names[] = $role['name'];
+        }
+
+        return $names;
+    }
 }

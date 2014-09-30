@@ -14,6 +14,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserChecker;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
+use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
@@ -89,7 +91,8 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         $container['accessDecisionManager'] = function ($c) {
             return new AccessDecisionManager(
                 array(
-                    new RoleVoter('ROLE_')
+                    //new RoleVoter('ROLE_')
+                    $c['roleHierarchyVoter']
                 )
             );
         };
@@ -98,6 +101,21 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 $c['authentificationManager'],
                 $c['accessDecisionManager']
             );
+        };
+
+        $container['roleHierarchy'] = function ($c) {
+            return new RoleHierarchy(array(
+                'ROLE_SUPERADMIN' => $c['allBasicRoles'],
+            ));
+        };
+
+        $container['allBasicRoles'] = function ($c) {
+            return $c['em']->getRepository('RZ\Renzo\Core\Entities\Role')
+                             ->getAllBasicRoleName();
+        };
+
+        $container['roleHierarchyVoter'] = function ($c) {
+            return new RoleHierarchyVoter($c['roleHierarchy']);
         };
 
         $container['firewallMap'] = function ($c) {

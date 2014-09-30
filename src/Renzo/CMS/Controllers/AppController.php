@@ -650,10 +650,17 @@ class AppController implements ViewableInterface
         return $response->send();
     }
 
+    /**
+     * Validate a request against a given ROLE_* and throws
+     * an AccessDeniedException exception.
+     *
+     * @param string $role
+     *
+     * @throws AccessDeniedException
+     */
     public function validateAccessForRole($role)
     {
-        if (!($this->getService('securityContext')->isGranted($role)
-            || $this->getService('securityContext')->isGranted('ROLE_SUPERADMIN'))) {
+        if (!$this->getService('securityContext')->isGranted($role)) {
 
             throw new AccessDeniedException("You don't have access to this page:" . $role);
         }
