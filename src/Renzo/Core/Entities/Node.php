@@ -23,7 +23,7 @@ use RZ\Renzo\Core\Handlers\NodeHandler;
  * it describes a document-like object which can be inherited
  * with *NodesSources* to create complex data structures.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodeRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\NodeRepository")
  * @Table(name="nodes", indexes={
  *     @index(name="visible_node_idx",   columns={"visible"}),
  *     @index(name="published_node_idx", columns={"published"}),

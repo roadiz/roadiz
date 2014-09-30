@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
  * User Entity.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Entities\UserRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\UserRepository")
  * @Table(name="users")
  * @HasLifecycleCallbacks
  */

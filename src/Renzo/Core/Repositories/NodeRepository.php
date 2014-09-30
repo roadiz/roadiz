@@ -9,9 +9,8 @@
  * @author Ambroise Maupate
  */
 
-namespace RZ\Renzo\Core\Entities;
+namespace RZ\Renzo\Core\Repositories;
 
-use RZ\Renzo\Core\Utils\EntityRepository;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Entities\Translation;

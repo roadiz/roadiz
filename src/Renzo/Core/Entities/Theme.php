@@ -16,7 +16,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
  * Themes describe a database entity to store
  * front-end and back-end controllers.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
  * @Table(name="themes", indexes={
  *      @index(name="backend_theme_idx", columns={"backend"}),
  *      @index(name="available_theme_idx", columns={"available"})

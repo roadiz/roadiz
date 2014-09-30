@@ -7,9 +7,8 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-namespace RZ\Renzo\Core\Entities;
+namespace RZ\Renzo\Core\Repositories;
 
-use RZ\Renzo\Core\Utils\EntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 use RZ\Renzo\Core\Utils\StringHandler;

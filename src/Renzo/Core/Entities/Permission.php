@@ -14,7 +14,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 /**
  * Not implemented yet
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
  * @Table(name="permissions")
  */
 class Permission extends AbstractEntity

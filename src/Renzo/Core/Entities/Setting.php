@@ -17,7 +17,7 @@ use RZ\Renzo\Core\Entities\SettingGroup;
 /**
  * Settings entity are a simple key-value configuration system.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Entities\SettingRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\SettingRepository")
  * @Table(name="settings")
  */
 class Setting extends AbstractEntity

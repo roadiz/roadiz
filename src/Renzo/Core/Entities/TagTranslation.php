@@ -16,7 +16,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
  *
  * It stores their name and description.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
  * @Table(name="tags_translations", uniqueConstraints={@UniqueConstraint(columns={"tag_id", "translation_id"})})
  */
 class TagTranslation extends AbstractEntity

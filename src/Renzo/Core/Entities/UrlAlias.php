@@ -16,7 +16,7 @@ use RZ\Renzo\Core\Utils\StringHandler;
 /**
  * UrlAliases are used to translate Nodes URLs.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Entities\UrlAliasRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\UrlAliasRepository")
  * @Table(name="url_aliases")
  */
 class UrlAlias extends AbstractEntity

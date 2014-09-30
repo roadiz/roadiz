@@ -18,7 +18,7 @@ use RZ\Renzo\Core\Handlers\DocumentHandler;
 /**
  * Documents entity represent a file on server with datetime and naming.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Entities\DocumentRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\DocumentRepository")
  * @Table(name="documents")
  */
 class Document extends AbstractDateTimed

@@ -7,7 +7,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-namespace RZ\Renzo\Core\Utils;
+namespace RZ\Renzo\Core\Repositories;
 
 use Doctrine\Common\Collections\Criteria;
 

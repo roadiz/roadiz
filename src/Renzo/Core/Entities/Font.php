@@ -18,7 +18,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractDateTimed;
  * Fonts are entities which store each webfont file for a
  * font-family and a font-variant.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
  * @Table(name="fonts",uniqueConstraints={
  *     @UniqueConstraint(name="name_variant_idx", columns={"name", "variant"})})
  */

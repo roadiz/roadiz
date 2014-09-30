@@ -7,7 +7,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-namespace RZ\Renzo\Core\Entities;
+namespace RZ\Renzo\Core\Repositories;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Translation;
@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 /**
  * EntityRepository that implements search engine query with Solr.
  */
-class NodesSourcesRepository extends \RZ\Renzo\Core\Utils\EntityRepository
+class NodesSourcesRepository extends EntityRepository
 {
 
     /**

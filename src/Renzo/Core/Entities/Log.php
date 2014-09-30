@@ -17,7 +17,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 /**
  * Log Entity
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
  * @Table(name="log")
  * @HasLifecycleCallbacks
  */

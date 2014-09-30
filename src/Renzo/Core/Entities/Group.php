@@ -16,7 +16,7 @@ use RZ\Renzo\Core\Handlers\GroupHandler;
 /**
  * A group gather User and Roles.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
  * @Table(name="groups")
  */
 class Group extends AbstractEntity

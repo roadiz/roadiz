@@ -17,7 +17,7 @@ use RZ\Renzo\Core\Handlers\TranslationHandler;
  * Translations describe language locales to be used by Nodes,
  * Tags, UrlAliases and Documents.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Entities\TranslationRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\TranslationRepository")
  * @Table(name="translations", indexes={
  *     @index(name="available_translation_idx", columns={"available"}),
  *     @index(name="default_translation_idx", columns={"default_translation"})

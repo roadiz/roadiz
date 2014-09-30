@@ -17,7 +17,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractDateTimedPositioned;
  * Tags are hierarchical entities used
  * to qualify Nodes, Documents, Subscribers.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Entities\TagRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\TagRepository")
  * @Table(name="tags", indexes={
  *     @index(name="visible_tag_idx", columns={"visible"}),
  *     @index(name="position_tag_idx", columns={"position"})

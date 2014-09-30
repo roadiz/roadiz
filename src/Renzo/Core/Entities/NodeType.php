@@ -18,7 +18,7 @@ use RZ\Renzo\Core\Utils\StringHandler;
  * NodeTypes describe each node structure family,
  * They are mandatory before creating any Node.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodeTypeRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\NodeTypeRepository")
  * @Table(name="node_types", indexes={
  *     @index(name="visible_nodetype_idx",         columns={"visible"}),
  *     @index(name="newsletter_type_nodetype_idx", columns={"newsletter_type"}),

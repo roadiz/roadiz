@@ -17,7 +17,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
  * Subscribers in order to render a HTML Email and send it over
  * MailTransportAgent.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
  * @Table(name="newsletters")
  */
 class Newsletter extends AbstractEntity

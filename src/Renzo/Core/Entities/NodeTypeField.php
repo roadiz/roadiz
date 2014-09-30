@@ -19,7 +19,7 @@ use RZ\Renzo\Core\Serializers\NodeTypeFieldSerializer;
  * NodeTypeField entities are used to create NodeTypes with
  * custom data structure.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
  * @Table(name="node_type_fields",  indexes={
  *     @index(name="visible_nodetypefield_idx", columns={"visible"}),
  *     @index(name="indexed_nodetypefield_idx", columns={"indexed"})

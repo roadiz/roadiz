@@ -19,7 +19,7 @@ use RZ\Renzo\Core\Entities\NodeTypeField;
  * Describes a complexe ManyToMany relation
  * between NodesSources, Documents and NodeTypeFields.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodesSourcesDocumentsRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\NodesSourcesDocumentsRepository")
  * @Table(name="nodes_sources_documents")
  */
 class NodesSourcesDocuments extends AbstractPositioned implements PersistableInterface

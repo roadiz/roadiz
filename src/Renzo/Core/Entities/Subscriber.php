@@ -16,7 +16,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractHuman;
  * A Subscriber is a light User which only can subscribe
  * to newsletter feeds and can be tagged.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Utils\EntityRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
  * @Table(name="subscribers")
  */
 class Subscriber extends AbstractHuman

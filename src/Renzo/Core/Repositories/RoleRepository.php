@@ -7,9 +7,8 @@
  * @copyright REZO ZERO 2014
  * @author Thomas Aufresne
  */
-namespace RZ\Renzo\Core\Entities;
+namespace RZ\Renzo\Core\Repositories;
 
-use RZ\Renzo\Core\Utils\EntityRepository;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Kernel;
 

@@ -16,7 +16,7 @@ use RZ\Renzo\Core\Utils\StringHandler;
 /**
  * Roles are persisted version of string Symfony's roles.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Entities\RoleRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\RoleRepository")
  * @Table(name="roles")
  */
 class Role extends AbstractEntity implements \Symfony\Component\Security\Core\Role\RoleInterface

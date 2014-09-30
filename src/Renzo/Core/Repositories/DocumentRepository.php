@@ -7,9 +7,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-namespace RZ\Renzo\Core\Entities;
-
-use RZ\Renzo\Core\Utils\EntityRepository;
+namespace RZ\Renzo\Core\Repositories;
 
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Entities\NodeTypeField;

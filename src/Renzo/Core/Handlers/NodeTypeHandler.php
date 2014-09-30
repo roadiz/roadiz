@@ -104,16 +104,18 @@ class NodeTypeHandler
 namespace '.NodeType::getGeneratedEntitiesNamespace().';
 
 use RZ\Renzo\Core\Entities\NodesSources;
+
 /**
  * Generated custom node-source type from RZ-CMS backoffice.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Entities\NodesSourcesRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\NodesSourcesRepository")
  * @Table(name="'.$this->nodeType->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
  */
 class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
 {
     '.implode('', $fieldsArray).'
-}';
+}
+';
             file_put_contents($file, $content);
 
             return "Source class “".$this->nodeType->getSourceEntityClassName()."” has been created.".PHP_EOL;
