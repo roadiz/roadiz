@@ -9,10 +9,9 @@
  */
 namespace RZ\Renzo\Core\Handlers;
 
+use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\User;
 use RZ\Renzo\Core\Log\Logger;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Util\SecureRandom;
 
 /**
@@ -20,7 +19,6 @@ use Symfony\Component\Security\Core\Util\SecureRandom;
  */
 class UserHandler
 {
-    private static $encoderFactory = null;
     private $user;
 
     /**
@@ -49,7 +47,7 @@ class UserHandler
     public function encodePassword()
     {
         if ($this->user->getPlainPassword() != '') {
-            $encoder = static::getEncoderFactory()->getEncoder($this->user);
+            $encoder = Kernel::getService('userEncoderFactory')->getEncoder($this->user);
             $encodedPassword = $encoder->encodePassword(
                 $this->user->getPlainPassword(),
                 $this->user->getSalt()
@@ -69,34 +67,13 @@ class UserHandler
      */
     public function isPasswordValid($plainPassword)
     {
-        $encoder = static::getEncoderFactory()->getEncoder($this->user);
+        $encoder = Kernel::getService('userEncoderFactory')->getEncoder($this->user);
 
         return $encoder->isPasswordValid(
             $this->user->getPassword(),
             $plainPassword,
             $this->user->getSalt()
         );
-    }
-
-    /**
-     * Get default encoder factory for RZ-CMS Entities.
-     *
-     * @return Symfony\Component\Security\Core\Encoder\EncoderFactory
-     */
-    public static function getEncoderFactory()
-    {
-        if (null === static::$encoderFactory) {
-            $defaultEncoder = new MessageDigestPasswordEncoder('sha512', true, 5000);
-
-            $encoders = array(
-                'Symfony\\Component\\Security\\Core\\User\\User' => $defaultEncoder,
-                'RZ\\Renzo\\Core\\Entities\\User' => $defaultEncoder,
-            );
-
-            static::$encoderFactory = new EncoderFactory($encoders);
-        }
-
-        return static::$encoderFactory;
     }
 
     /**

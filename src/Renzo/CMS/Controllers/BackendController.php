@@ -95,7 +95,6 @@ class BackendController extends AppController
             $logoutListener = new LogoutListener(
                 $c['securityContext'],
                 $c['httpUtils'],
-                //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
                 new DefaultLogoutSuccessHandler($c['httpUtils']),
                 array(
                     'logout_path'    => '/rz-admin/logout',
@@ -121,7 +120,7 @@ class BackendController extends AppController
                         'default_target_path'            => '/rz-admin',
                         'login_path'                     => '/login',
                         'target_path_parameter'          => '_target_path',
-                        'use_referer'                    => false,
+                        'use_referer'                    => true,
                     )),
                     new DefaultAuthenticationFailureHandler($c['httpKernel'], $c['httpUtils'], array(
                         'failure_path'           => '/login_failed',

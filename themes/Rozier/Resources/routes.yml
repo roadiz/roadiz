@@ -27,7 +27,6 @@ loginFailedPage:
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
 loginCheckPage:
     path:     /rz-admin/login_check
-    defaults: { _controller: Themes\Rozier\Controllers\LoginController::checkAction }
 
 # CACHES
 deleteDoctrineCache:

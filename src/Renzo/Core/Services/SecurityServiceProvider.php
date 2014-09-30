@@ -21,6 +21,9 @@ use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Handlers\UserProvider;
 use RZ\Renzo\Core\Handlers\UserHandler;
@@ -77,9 +80,12 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 $c['userProvider'],
                 $c['userChecker'],
                 Kernel::SECURITY_DOMAIN,
-                UserHandler::getEncoderFactory()
+                $c['userEncoderFactory']
             );
         };
+        /*
+         * Main decision manager, set your voters here.
+         */
         $container['accessDecisionManager'] = function ($c) {
             return new AccessDecisionManager(
                 array(
@@ -98,7 +104,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             return new FirewallMap();
         };
 
-
         $container['firewallExceptionListener'] = function ($c) {
 
             return new \Symfony\Component\Security\Http\Firewall\ExceptionListener(
@@ -106,17 +111,36 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 new \Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver('', ''),
                 $c['httpUtils'],
                 Kernel::SECURITY_DOMAIN,
-                new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint(
-                    $c['httpKernel'],
-                    $c['httpUtils'],
-                    '/login',
-                    true // bool $useForward
-                ),
+                $c['formAuthentificationEntryPoint'],
                 null, //$errorPage
                 $c['accessDeniedHandler'],
                 $c['logger'] //LoggerInterface $logger
             );
         };
+
+        $container['formAuthentificationEntryPoint'] = function ($c) {
+            return new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint(
+                $c['httpKernel'],
+                $c['httpUtils'],
+                '/login',
+                true // bool $useForward
+            );
+        };
+
+        $container['passwordEncoder'] = function ($c) {
+            return new MessageDigestPasswordEncoder('sha512', true, 5000);
+        };
+
+        $container['userEncoderFactory'] = function ($c) {
+            $encoders = array(
+                'Symfony\\Component\\Security\\Core\\User\\User' => $c['passwordEncoder'],
+                'RZ\\Renzo\\Core\\Entities\\User' => $c['passwordEncoder'],
+            );
+
+            return new EncoderFactory($encoders);
+        };
+
+
 
         /*
          * Default denied handler
