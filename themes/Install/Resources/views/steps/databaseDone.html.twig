@@ -29,21 +29,20 @@
             
             <div class="content-text">
                 
-                <div class="content-intro content-intro-big">
-
-                    {% if error %}                
+                {% if error %}  
+                    <div class="content-intro content-intro-only">          
                         {% trans %}database_fail.message{% endtrans %}
-                        </div>
                         <div class="uk-alert uk-alert-danger">
                             <a href="#" class="uk-alert-close uk-close"></a>
                             <p>{% trans %}database.cannot_connect{% endtrans %}</p>
                             <p>{{ errorMessage }}</p>
                         </div>
-                    {% else %}
+                    </div>  
+                {% else %}
+                    <div class="content-intro content-intro-big">
                         {% trans %}database_done.message{% endtrans %}
-                    {% endif %}
-
-                </div>
+                    </div>
+                {% endif %}
 
             </div>
 
