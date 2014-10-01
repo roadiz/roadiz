@@ -10,8 +10,9 @@
 namespace RZ\Renzo\Core\Entities;
 
 use RZ\Renzo\Core\Handlers\TagHandler;
-use Doctrine\Common\Collections\ArrayCollection;
+use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\AbstractEntities\AbstractDateTimedPositioned;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Tags are hierarchical entities used
@@ -20,11 +21,35 @@ use RZ\Renzo\Core\AbstractEntities\AbstractDateTimedPositioned;
  * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\TagRepository")
  * @Table(name="tags", indexes={
  *     @index(name="visible_tag_idx", columns={"visible"}),
+ *     @index(name="locked_tag_idx", columns={"locked"}),
  *     @index(name="position_tag_idx", columns={"position"})
  * })
  */
 class Tag extends AbstractDateTimedPositioned
 {
+    /**
+     * @Column(type="string", name="tag_name", unique=true)
+     */
+    private $tagName;
+    /**
+     * @return string
+     */
+    public function getTagName()
+    {
+        return $this->tagName;
+    }
+    /**
+     * @param string $tagName
+     *
+     * @return $this
+     */
+    public function setTagName($tagName)
+    {
+        $this->tagName = StringHandler::slugify($tagName);
+
+        return $this;
+    }
+
     /**
      * @Column(type="boolean")
      */
@@ -44,6 +69,29 @@ class Tag extends AbstractDateTimedPositioned
     public function setVisible($visible)
     {
         $this->visible = (boolean) $visible;
+
+        return $this;
+    }
+
+    /**
+     * @Column(type="boolean")
+     */
+    private $locked = false;
+    /**
+     * @return boolean
+     */
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+    /**
+     * @param boolean $locked
+     *
+     * @return $this
+     */
+    public function setLocked($locked)
+    {
+        $this->locked = (boolean) $locked;
 
         return $this;
     }
