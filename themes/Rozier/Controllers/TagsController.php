@@ -17,6 +17,8 @@ use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Renzo\Core\Utils\StringHandler;
+use Themes\Rozier\Widgets\TagTreeWidget;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -192,7 +194,7 @@ class TagsController extends RozierApp
             if ($form->isValid()) {
                 $this->addTag($form->getData(), $tag, $translation);
 
-                $msg = $this->getTranslator()->trans('tag.created', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
+                $msg = $this->getTranslator()->trans('tag.created', array('%name%'=>$tag->getTagName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
                 /*
@@ -216,6 +218,104 @@ class TagsController extends RozierApp
         } else {
             return $this->throw404();
         }
+    }
+
+    /**
+     * Return a edition form for requested tag settings .
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $tagId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function editSettingsAction(Request $request, $tagId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        $translation = $this->getService('em')
+            ->getRepository('RZ\Renzo\Core\Entities\Translation')
+            ->findDefault();
+
+        $tag = $this->getService('em')
+            ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
+
+        if ($tag !== null) {
+
+            $form = $this->buildEditSettingsForm($tag);
+
+            $form->handleRequest();
+
+            if ($form->isValid()) {
+                $this->editTagSettings($form->getData(), $tag);
+
+                $msg = $this->getTranslator()->trans('tag.updated', array('%name%'=>$tag->getTagName()));
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                $this->getService('logger')->info($msg);
+
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate(
+                        'tagsSettingsPage',
+                        array('tagId' => $tag->getId())
+                    )
+                );
+                $response->prepare($request);
+
+                return $response->send();
+            }
+
+            $this->assignation['form'] = $form->createView();
+            $this->assignation['tag'] = $tag;
+            $this->assignation['translation'] = $translation;
+
+            return new Response(
+                $this->getTwig()->render('tags/settings.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        }
+    }
+
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $tagId
+     * @param int                                      $translationId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function treeAction(Request $request, $tagId, $translationId = null)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        $tag = $this->getService('em')
+            ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
+        $this->getService('em')->refresh($tag);
+
+        $translation = null;
+        if (null !== $translationId) {
+            $translation = $this->getService('em')
+                ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                ->findOneBy(array('id'=>(int) $translationId));
+        } else {
+            $translation = $this->getService('em')
+                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->findDefault();
+        }
+
+        if (null !== $tag) {
+            $widget = new TagTreeWidget($request, $this, $tag);
+            $this->assignation['tag'] = $tag;
+            $this->assignation['translation'] = $translation;
+            $this->assignation['specificTagTree'] = $widget;
+        }
+
+        return new Response(
+            $this->getTwig()->render('tags/tree.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
     }
 
     /**
@@ -305,7 +405,7 @@ class TagsController extends RozierApp
                 try {
                     $tag = $this->addChildTag($form->getData(), $parentTag, $translation);
 
-                    $msg = $this->getTranslator()->trans('tag.created', array('%name%'=>$tag->getId()));
+                    $msg = $this->getTranslator()->trans('child.tag.created', array('%name%'=>$tag->getTagName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -350,6 +450,58 @@ class TagsController extends RozierApp
     }
 
     /**
+     * Handle tag nodes page.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $tagId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function editNodesAction(Request $request, $tagId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $tag = $this->getService('em')
+                    ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
+
+        if (null !== $tag) {
+
+            $translation = $this->getService('em')
+                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->findDefault();
+
+            $this->assignation['tag'] = $tag;
+
+            /*
+             * Manage get request to filter list
+             */
+            $listManager = new EntityListManager(
+                $request,
+                $this->getService('em'),
+                'RZ\Renzo\Core\Entities\Node',
+                array(
+                    'tags' => $tag
+                )
+            );
+            $listManager->handle();
+
+            $this->assignation['filters'] = $listManager->getAssignation();
+            $this->assignation['nodes'] = $listManager->getEntities();
+
+            $this->assignation['translation'] = $translation;
+
+            return new Response(
+                $this->getTwig()->render('tags/nodes.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+
+        } else {
+
+            return $this->throw404();
+        }
+    }
+
+    /**
      * @param array                      $data
      * @param RZ\Renzo\Core\Entities\Tag $tag
      *
@@ -359,17 +511,6 @@ class TagsController extends RozierApp
     {
         $translatedTag = $tag->getTranslatedTags()->first();
 
-        if ($translatedTag->getName() != $data['name'] &&
-            $this->checkExists($data['name'])) {
-            throw new EntityAlreadyExistsException(
-                $this->getTranslator()->trans(
-                    'tag.no_update.already_exists',
-                    array('%name%'=>$data['name'])
-                ),
-                1
-            );
-        }
-
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
 
@@ -378,6 +519,33 @@ class TagsController extends RozierApp
             } else {
                 $tag->$setter($value);
             }
+        }
+
+        $this->getService('em')->flush();
+    }
+
+    /**
+     * @param array                      $data
+     * @param RZ\Renzo\Core\Entities\Tag $tag
+     *
+     * @throws EntityAlreadyExistsException
+     */
+    private function editTagSettings($data, Tag $tag)
+    {
+        if ($tag->getTagName() != $data['tagName'] &&
+            $this->checkExists($data['tagName'])) {
+            throw new EntityAlreadyExistsException(
+                $this->getTranslator()->trans(
+                    'tag.no_update.already_exists',
+                    array('%name%'=>$data['tagName'])
+                ),
+                1
+            );
+        }
+
+        foreach ($data as $key => $value) {
+            $setter = 'set'.ucwords($key);
+            $tag->$setter($value);
         }
 
         $this->getService('em')->flush();
@@ -411,9 +579,14 @@ class TagsController extends RozierApp
             if ($key == 'name' || $key == 'description') {
                 $translatedTag->$setter( $value );
             } else {
-                $tag->$setter( $value );
+                $tag->$setter($value);
             }
         }
+        /*
+         * Use the same name for tagName key
+         */
+        $tag->setTagName($data['name']);
+
         $tag->getTranslatedTags()->add($translatedTag);
 
         $this->getService('em')->persist($translatedTag);
@@ -424,7 +597,7 @@ class TagsController extends RozierApp
     }
 
     /**
-     * Check if a tag already uses this name.
+     * Check if a tag already uses this tagName.
      *
      * @param string $name
      *
@@ -433,8 +606,8 @@ class TagsController extends RozierApp
     private function checkExists($name)
     {
         $ttag = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
-                    ->findOneBy(array('name'=>$name));
+                    ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                    ->findOneBy(array('tagName'=>StringHandler::slugify($name)));
 
         return $ttag !== null;
     }
@@ -465,6 +638,8 @@ class TagsController extends RozierApp
 
         $tag = new Tag();
         $tag->setParent($parentTag);
+        $tag->setTagName($data['name']);
+
         $translatedTag = new TagTranslation($tag, $translation);
 
         foreach ($data as $key => $value) {
@@ -504,7 +679,8 @@ class TagsController extends RozierApp
     private function buildAddForm(Tag $tag)
     {
         $defaults = array(
-            'visible' => $tag->isVisible()
+            'visible' => $tag->isVisible(),
+            'locked' => $tag->isLocked()
         );
 
         $builder = $this->getService('formFactory')
@@ -514,6 +690,7 @@ class TagsController extends RozierApp
                             new NotBlank()
                         )
                     ))
+                    ->add('locked', 'checkbox', array('required' => false))
                     ->add('visible', 'checkbox', array('required' => false))
                     ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array('required' => false));
 
@@ -558,7 +735,6 @@ class TagsController extends RozierApp
         $translation = $tag->getTranslatedTags()->first();
 
         $defaults = array(
-            'visible' => $tag->isVisible(),
             'name' => $translation->getName(),
             'description' => $translation->getDescription(),
         );
@@ -570,8 +746,33 @@ class TagsController extends RozierApp
                     new NotBlank()
                 )
             ))
-            ->add('visible', 'checkbox', array('required' => false))
             ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array('required' => false));
+
+        return $builder->getForm();
+    }
+
+    /**
+     * @param RZ\Renzo\Core\Entities\Tag $tag
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildEditSettingsForm(Tag $tag)
+    {
+        $defaults = array(
+            'tagName' => $tag->getTagName(),
+            'visible' => $tag->isVisible(),
+            'locked' => $tag->isLocked()
+        );
+
+        $builder = $this->getService('formFactory')
+            ->createBuilder('form', $defaults)
+            ->add('tagName', 'text', array(
+                'constraints' => array(
+                    new NotBlank()
+                )
+            ))
+            ->add('visible', 'checkbox', array('required' => false))
+            ->add('locked', 'checkbox', array('required' => false));
 
         return $builder->getForm();
     }
