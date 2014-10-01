@@ -22,9 +22,21 @@
         <div class="content-text-cont">
             
             <div class="content-text">
-                {% trans %}welcome.message{% endtrans %} 
+
+                <div class="content-intro content-intro-only">
+                    <h3>{% trans %}welcome.subtitle{% endtrans %}</h3>
+                    {% trans %}welcome.message{% endtrans %}
+                </div>
+                
             </div>
-            <a class="content-button uk-button uk-button-primary" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+
+            {% spaceless %}
+            <div class="content-buttons">
+
+                <a class="content-button uk-button uk-button-primary" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+
+            </div>                    
+            {% endspaceless %}
             
         </div>
         

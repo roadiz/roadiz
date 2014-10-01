@@ -135,23 +135,22 @@
         height: 36px;
     }
 
-    // input[type=checkbox]:checked:before{
-    //     color:@grey-form-label;
-    // }
+    input[type=checkbox]:checked:before{
+        color:@grey-form-label;
+    }
 
 
     .data-uk-margin {
         margin-bottom: 6px;
 
         & > div {
-            margin-bottom: 20px;
+            // margin-bottom: 17px;
 
             & > input[type="text"],
             & > input[type="password"],
             & > input[type="search"],
             & > input[type="email"],
             & > textarea {
-
                 width: 100%;
             }
         }
@@ -162,22 +161,22 @@
 }
 
 
-.install-form{
-    margin-top:20px;
-} 
-
-
 .form-col{
     display: inline-block; vertical-align: top;
-    width:44%;
-    margin:0 15px 15px;
+    width:237px;
+    margin:0 12px 15px;
 
     input, select{
         width:100%;
     }
 }
 
+.form-col-separator{
+    width:100%;
+    margin:0 0 4px 0;
+}
+
 
 .form-save-button{
-    margin-left: 15px;
+    margin-right: 0;
 }

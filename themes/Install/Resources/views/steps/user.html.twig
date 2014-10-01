@@ -19,11 +19,11 @@
             <div class="content-progress-item last"></div>
         </div>
 
-        <div class="content-text-cont">
+        <div class="content-text-cont">            
             
-            <div class="content-text">
-
-                {% trans %}user.message{% endtrans %} 
+                <div class="content-intro">
+                    {% trans %}user.message{% endtrans %}
+                </div>
 
                 {% if error %}
                 <div class="uk-alert uk-alert-danger">
@@ -35,15 +35,22 @@
                 
                 {% form_theme userForm 'forms.html.twig' %}
                 <form id="formUser" class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(userForm) }}>
-                    {{ form_widget(userForm) }}
+
+                    <div class="content-text content-text-form">
+                        {{ form_widget(userForm) }}
+                    </div>
                     
-                    <button class="form-save-button uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}user.create{% endtrans %}</button>
-                </form>
+                    {% spaceless %}
+                        <div class="content-buttons">
+                            
+                            <a class="content-button uk-button uk-button-success" href="{{ path('installImportPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.import{% endtrans %}</a>
+                            <a class="content-button uk-button" href="{{ path('installThemesPage') }}"><i class="uk-icon-share"></i> {% trans %}skip.user.goto.theme{% endtrans %}</a>
+                            <button class="content-button form-save-button uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}user.create{% endtrans %}</button>
 
-            </div>
-
-            <a class="content-button uk-button" href="{{ path('installThemesPage') }}"><i class="uk-icon-share"></i> {% trans %}skip.user.goto.theme{% endtrans %}</a>
-            <a class="content-button uk-button uk-button-success" href="{{ path('installImportPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.import{% endtrans %}</a>
+                        </div>
+                    {% endspaceless %}
+                    
+                </form>            
 
         </div>
         

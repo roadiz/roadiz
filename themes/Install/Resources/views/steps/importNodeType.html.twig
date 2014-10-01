@@ -23,8 +23,8 @@
 
             <div class="content-text">
 
-                <p>{% trans %}import_node_type.node_type{% endtrans %}</p>
-                <table class="install-table uk-table">
+                <p class="import-nodetypes-part">{% trans %}import_node_type.node_type{% endtrans %}</p>
+                <table class="install-table import-nodetypes-part1-table uk-table">
                     <tr>
                         <th></th>
                         <th>{% trans %}step.name{% endtrans %}</th>
@@ -41,7 +41,7 @@
                     {% endfor %}
                 </table>
 
-                <p>{% trans %}import_node_type.node{% endtrans %}</p>
+                <p class="import-nodetypes-part">{% trans %}import_node_type.node{% endtrans %}</p>
                 <table class="install-table uk-table">
                     <tr>
                         <th></th>
@@ -59,8 +59,14 @@
 
             </div>
 
-            <a id="next-step-button" class="content-button uk-button uk-button-primary" href="{{ path('installDonePage') }}">{% trans %}goto.done{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
-            <a class="content-button uk-button" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.theme{% endtrans %}</a>
+            {% spaceless %}
+            <div class="content-buttons">
+                <a class="content-button uk-button" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.theme{% endtrans %}</a>
+                <a id="next-step-button" class="content-button uk-button uk-button-primary" href="{{ path('installDonePage') }}">{% trans %}goto.done{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+            </div>
+            {% endspaceless %}
+
+            
 
         </div>
 

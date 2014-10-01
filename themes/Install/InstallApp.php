@@ -24,6 +24,7 @@ use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Entities\User;
 use RZ\Renzo\Core\Entities\Role;
+use RZ\Renzo\CMS\Forms\SeparatorType;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
@@ -702,12 +703,15 @@ class InstallApp extends AppController
             ->add('meta_description', 'text', array(
                 'required' => false
             ))
-            ->add('install_frontend', 'checkbox', array(
-                'required' => false
-            ))
             ->add('timezone', 'choice', array(
                 'choices' => $timeZoneList,
                 'required' => true
+            ))
+            ->add('separator_1', new SeparatorType(), array(
+                'label' => $this->getTranslator()->trans('themes.frontend.description')
+            ))
+            ->add('install_frontend', 'checkbox', array(
+                'required' => false
             ));
 
         return $builder->getForm();

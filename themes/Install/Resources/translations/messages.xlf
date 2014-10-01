@@ -31,24 +31,13 @@
             </trans-unit>
 
 
-            <!-- Documents -->
-            <trans-unit id="document.updated">
-                <source>document.updated</source>
-                <target />
-            </trans-unit>
-            <trans-unit id="document.uploaded">
-                <source>document.uploaded</source>
-                <target />
-            </trans-unit>
-            <trans-unit id="document.cannot_persist">
-                <source>document.cannot_persist</source>
-                <target />
-            </trans-unit>
-
-
             <!-- Welcome -->
             <trans-unit id="welcome.title">
                 <source>welcome.title</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="welcome.subtitle">
+                <source>welcome.subtitle</source>
                 <target />
             </trans-unit>
             <trans-unit id="welcome.message">
@@ -64,6 +53,10 @@
             </trans-unit>
             <trans-unit id="requirements.message">
                 <source>requirements.message</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="requirements.spec">
+                <source>requirements.spec</source>
                 <target />
             </trans-unit>
             <trans-unit id="requirements.requirement">
@@ -177,7 +170,10 @@
                 <source>themes.save_informations</source>
                 <target />
             </trans-unit>
-
+            <trans-unit id="themes.frontend.description">
+                <source>themes.frontend.description</source>
+                <target />
+            </trans-unit>
 
             <!-- Import node type -->
             <trans-unit id="import_node_type.title">

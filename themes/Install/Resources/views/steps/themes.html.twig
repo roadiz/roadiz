@@ -21,27 +21,37 @@
 
         <div class="content-text-cont">
             
-            <div class="content-text">
-
+            <div class="content-intro">
                 {% trans %}themes.message{% endtrans %}
+            </div>
 
-                {% if error %}
-                <div class="uk-alert uk-alert-danger">
-                    <a href="#" class="uk-alert-close uk-close"></a>
-                    <p>{{ errorMessage }}</p>
-                </div>
-                {% endif %}
+            {% if error %}
+            <div class="uk-alert uk-alert-danger">
+                <a href="#" class="uk-alert-close uk-close"></a>
+                <p>{{ errorMessage }}</p>
+            </div>
+            {% endif %}
 
-                {% form_theme infosForm 'forms.html.twig' %}
-                <form id="infosForm" class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(infosForm) }}>
+            {% form_theme infosForm 'forms.html.twig' %}
+            <form id="infosForm" class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(infosForm) }}>
+
+                <div class="content-text content-text-form">
+
                     {{ form_widget(infosForm) }}
-                    
-                    <button class="form-save-button uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}themes.save_informations{% endtrans %}</button>
-                </form>
+                
+                </div>
 
-            </div> <!-- .content-text -->
+                {% spaceless %}
+                    <div class="content-buttons">
 
-            <a class="content-button uk-button uk-button-success" href="{{ path('installUserPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.user{% endtrans %}</a>
+                        <a class="content-button uk-button uk-button-success" href="{{ path('installUserPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.user{% endtrans %}</a>
+                        <button class="content-button form-save-button uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}themes.save_informations{% endtrans %}</button>
+
+                    </div>
+
+                {% endspaceless %}
+                
+            </form>
 
         </div>
         
