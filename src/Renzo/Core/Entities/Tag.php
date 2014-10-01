@@ -222,6 +222,8 @@ class Tag extends AbstractDateTimedPositioned
      */
     public function __construct()
     {
+        //$this->setTagName('Tag '.uniqid());
+
         $this->nodes = new ArrayCollection();
         $this->subscribers = new ArrayCollection();
         $this->documents = new ArrayCollection();

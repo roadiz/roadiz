@@ -18,6 +18,7 @@ use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Renzo\Core\Utils\StringHandler;
+use Themes\Rozier\Widgets\TagTreeWidget;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -193,7 +194,7 @@ class TagsController extends RozierApp
             if ($form->isValid()) {
                 $this->addTag($form->getData(), $tag, $translation);
 
-                $msg = $this->getTranslator()->trans('tag.created', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
+                $msg = $this->getTranslator()->trans('tag.created', array('%name%'=>$tag->getTagName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
                 /*
@@ -275,6 +276,46 @@ class TagsController extends RozierApp
                 array('content-type' => 'text/html')
             );
         }
+    }
+
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $tagId
+     * @param int                                      $translationId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function treeAction(Request $request, $tagId, $translationId = null)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        $tag = $this->getService('em')
+            ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
+        $this->getService('em')->refresh($tag);
+
+        $translation = null;
+        if (null !== $translationId) {
+            $translation = $this->getService('em')
+                ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                ->findOneBy(array('id'=>(int) $translationId));
+        } else {
+            $translation = $this->getService('em')
+                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->findDefault();
+        }
+
+        if (null !== $tag) {
+            $widget = new TagTreeWidget($request, $this, $tag);
+            $this->assignation['tag'] = $tag;
+            $this->assignation['translation'] = $translation;
+            $this->assignation['specificTagTree'] = $widget;
+        }
+
+        return new Response(
+            $this->getTwig()->render('tags/tree.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
     }
 
     /**
@@ -364,7 +405,7 @@ class TagsController extends RozierApp
                 try {
                     $tag = $this->addChildTag($form->getData(), $parentTag, $translation);
 
-                    $msg = $this->getTranslator()->trans('tag.created', array('%name%'=>$tag->getId()));
+                    $msg = $this->getTranslator()->trans('child.tag.created', array('%name%'=>$tag->getTagName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -461,29 +502,6 @@ class TagsController extends RozierApp
     }
 
     /**
-     * Handle tag tree page.
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $tagId
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function treeAction(Request $request, $tagId)
-    {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
-
-        $tag = $this->getService('em')
-                    ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
-
-        if (null !== $tag) {
-
-        } else {
-
-            return $this->throw404();
-        }
-    }
-
-    /**
      * @param array                      $data
      * @param RZ\Renzo\Core\Entities\Tag $tag
      *
@@ -563,14 +581,12 @@ class TagsController extends RozierApp
             } else {
                 $tag->$setter($value);
             }
-
-            /*
-             * Use the same name for tagName key
-             */
-            if ($key == 'name') {
-                $tag->setTagName($value);
-            }
         }
+        /*
+         * Use the same name for tagName key
+         */
+        $tag->setTagName($data['name']);
+
         $tag->getTranslatedTags()->add($translatedTag);
 
         $this->getService('em')->persist($translatedTag);
@@ -622,6 +638,8 @@ class TagsController extends RozierApp
 
         $tag = new Tag();
         $tag->setParent($parentTag);
+        $tag->setTagName($data['name']);
+
         $translatedTag = new TagTranslation($tag, $translation);
 
         foreach ($data as $key => $value) {
