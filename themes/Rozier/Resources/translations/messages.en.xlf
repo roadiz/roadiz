@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
-<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" datatype="plaintext" original="file.ext">
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext" target-language="en">
         <body>
             <!-- Common words -->
             <trans-unit id="delete">
@@ -143,9 +143,9 @@
                 <source>delete.caches</source>
                 <target>Delete cache</target>
             </trans-unit>
-            <trans-unit id="Dev.mode.activated">
+            <trans-unit id="Dev.mode.activated" approved="yes">
                 <source>Dev mode activated</source>
-                <target>Dev mode enabled</target>
+                <target state="translated">Dev mode</target>
             </trans-unit>
 
             <!-- view / Tag Tree -->
@@ -203,9 +203,9 @@
                 <source>document.updated</source>
                 <target>The document “%name%” has been updated.</target>
             </trans-unit>
-            <trans-unit id="document.uploaded">
+            <trans-unit id="document.uploaded" approved="yes">
                 <source>document.uploaded</source>
-                <target>The document “%name%” has been uploaded.</target>
+                <target state="translated">The document “%name%” has been uploaded.</target>
             </trans-unit>
             <trans-unit id="document.deleted">
                 <source>document.deleted</source>
