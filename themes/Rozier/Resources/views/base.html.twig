@@ -25,25 +25,14 @@
         <div id="main-container" >
             <div id="main-container-inner">
                 <section class="main-container-section minified" id="user-panel">
-                    {% include 'includes/user_panel.html.twig' %}
+                    {% include 'panels/user_panel.html.twig' %}
                 </section>
                 <section class="main-container-section" id="admin-menu">
-                    {% include 'includes/admin_menu.html.twig' %}
+                    {% include 'panels/admin_menu.html.twig' %}
                 </section>
                 {% if (securityContext.isGranted('ROLE_ACCESS_NODES') or securityContext.isGranted('ROLE_SUPERADMIN')) %}
                 <section id="main-trees" class="main-container-section">
-                    <div>
-                        {% include 'widgets/nodesSourcesSearch.html.twig' %}
-                        <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
-                            <li class="tabs"><a href=""><i class="uk-icon-node-tree"></i><span class="label">{% trans %}nodes{% endtrans %}</span></a></li>
-                            <li class="tabs"><a href=""><i class="uk-icon-tags"></i><span class="label">{% trans %}tags{% endtrans %}</span></a></li>
-                        </ul>
-                        <!-- This is the container of the content items -->
-                        <ul id="tree-container" class="uk-switcher uk-margin">
-                            <li>{% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':true, "securityContext":securityContext} only %}</li>
-                            <li>{% include 'widgets/tagTree/tagTree.html.twig' with {"tagTree":tagTree, "tag":tagTree.getRootTag, 'mainTagTree':true} only %}</li>
-                        </ul>
-                    </div>
+                    {% include 'panels/tree_panel.html.twig' %}
                 </section>
                 {% endif %}
                 <!-- Add your site or application content here -->
