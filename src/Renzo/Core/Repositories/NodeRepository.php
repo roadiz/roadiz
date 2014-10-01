@@ -18,12 +18,88 @@ use RZ\Renzo\Core\Kernel;
 
 use Symfony\Component\Security\Core\SecurityContext;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Query\Expr;
 
 /**
-* NodeRepository
-*/
+ * NodeRepository
+ */
 class NodeRepository extends EntityRepository
 {
+    /**
+     * Add a tag filtering to queryBuilder
+     *
+     * @param array        $criteria
+     * @param QueryBuilder $qb
+     */
+    protected function filterByTag(array &$criteria, &$qb)
+    {
+        if (in_array('tags', array_keys($criteria))) {
+
+            if (is_array($criteria['tags'])) {
+                $qb->innerJoin(
+                    'n.tags',
+                    'tg',
+                    'WITH',
+                    'tg.id IN :tags'
+                );
+            } else {
+                $qb->innerJoin(
+                    'n.tags',
+                    'tg',
+                    'WITH',
+                    'tg.id = :tags'
+                );
+            }
+        }
+    }
+
+    /**
+     * Reimplementing findBy features…
+     *
+     * @param array        $criteria
+     * @param QueryBuilder $qb
+     */
+    protected function filterByCriteria(array &$criteria, &$qb)
+    {
+        /*
+         * Reimplementing findBy features…
+         */
+        foreach ($criteria as $key => $value) {
+
+            if ($key == "tags") {
+                continue;
+            }
+
+            if (is_array($value)) {
+                $res = $qb->expr()->in('n.' .$key, $value);
+            } elseif (is_bool($value)) {
+                $res = $qb->expr()->eq('n.' .$key, (boolean) $value);
+            } else {
+                $res = $qb->expr()->eq('n.' .$key, $value);
+            }
+
+            $qb->andWhere($res);
+        }
+    }
+    /**
+     * Bind tag parameter to final query
+     *
+     * @param array $criteria
+     * @param Query $finalQuery
+     */
+    protected function applyFilterByTag(array &$criteria, &$finalQuery)
+    {
+        if (in_array('tags', array_keys($criteria))) {
+            if (is_object($criteria['tags'])) {
+                $finalQuery->setParameter('tags', $criteria['tags']->getId());
+            } elseif (is_array($criteria['tags'])) {
+                $finalQuery->setParameter('tags', $criteria['tags']);
+            } elseif (is_integer($criteria['tags'])) {
+                $finalQuery->setParameter('tags', (int) $criteria['tags']);
+            }
+        }
+    }
 
     /**
      * Create a securized query with node.published = true if user is
@@ -76,6 +152,12 @@ class NodeRepository extends EntityRepository
             );
         }
 
+        /*
+         * Filtering by tag
+         */
+        $this->filterByTag($criteria, $qb);
+        $this->filterByCriteria($criteria, $qb);
+
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
             /*
@@ -84,21 +166,6 @@ class NodeRepository extends EntityRepository
             $qb->andWhere($qb->expr()->eq('n.published', true));
         }
 
-        /*
-         * Reimplementing findBy features…
-         */
-        foreach ($criteria as $key => $value) {
-
-            if (is_array($value)) {
-                $res = $qb->expr()->in('n.' .$key, $value);
-            } elseif (is_bool($value)) {
-                $res = $qb->expr()->eq('n.' .$key, (boolean) $value);
-            } else {
-                $res = $qb->expr()->eq('n.' .$key, $value);
-            }
-
-            $qb->andWhere($res);
-        }
 
         // Add ordering
         if (null !== $orderBy) {
@@ -116,7 +183,122 @@ class NodeRepository extends EntityRepository
 
         return $qb;
     }
+    /**
+     * Create a securized count query with node.published = true if user is
+     * not a Backend user and if securityContext is defined.
+     *
+     * This method allows to pre-filter Nodes with a given translation.
+     *
+     * @param array                                   $criteria
+     * @param RZ\Renzo\Core\Entities\Translation|null $securityContext
+     * @param SecurityContext|null                    $securityContext
+     *
+     * @return QueryBuilder
+     */
+    protected function getCountContextualQueryWithTranslation(
+        array $criteria,
+        Translation $translation = null,
+        SecurityContext $securityContext = null
+    ) {
 
+        $qb = $this->_em->createQueryBuilder();
+        $qb->add('select', 'count(n.id)')
+           ->add('from', $this->getEntityName() . ' n');
+
+        if (null !== $translation) {
+            /*
+             * With a given translation
+             */
+            $qb->innerJoin(
+                'n.nodeSources',
+                'ns',
+                'WITH',
+                'ns.translation = :translation'
+            );
+        } else {
+            /*
+             * With a null translation, just take the default one.
+             */
+            $qb->innerJoin('n.nodeSources', 'ns');
+            $qb->innerJoin(
+                'ns.translation',
+                't',
+                'WITH',
+                't.defaultTranslation = true'
+            );
+        }
+        /*
+         * Filtering by tag
+         */
+        $this->filterByTag($criteria, $qb);
+        $this->filterByCriteria($criteria, $qb);
+
+        return $qb;
+    }
+    /**
+     * Just like the findBy method but with relational criteria.
+     *
+     * @param array                                   $criteria
+     * @param array|null                              $orderBy
+     * @param integer|null                            $limit
+     * @param integer|null                            $offset
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function findBy(
+        array $criteria,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null
+    ) {
+
+        $query = $this->getContextualQueryWithTranslation(
+            $criteria,
+            $orderBy,
+            $limit,
+            $offset,
+            null,
+            null
+        );
+
+        $finalQuery = $query->getQuery();
+        $this->applyFilterByTag($criteria, $finalQuery);
+
+        try {
+            return $finalQuery->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+    /**
+     * Just like the countBy method but with relational criteria.
+     *
+     * @param array                                   $criteria
+     * @param RZ\Renzo\Core\Entities\Translation|null $translation
+     * @param SecurityContext|null                    $securityContext
+     *
+     * @return int
+     */
+    public function countBy(
+        $criteria,
+        Translation $translation = null,
+        SecurityContext $securityContext = null
+    ) {
+        $query = $this->getCountContextualQueryWithTranslation(
+            $criteria,
+            $translation,
+            $securityContext
+        );
+
+        $finalQuery = $query->getQuery();
+        $this->applyFilterByTag($criteria, $finalQuery);
+
+        try {
+            return $finalQuery->getSingleScalarResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
     /**
      * Just like the findBy method but with a given Translation and optional
      * SecurityContext.
@@ -157,6 +339,8 @@ class NodeRepository extends EntityRepository
             if (null !== $translation) {
                 $finalQuery->setParameter('translation', $translation);
             }
+
+            $this->applyFilterByTag($criteria, $finalQuery);
 
             try {
                 return $finalQuery->getResult();
@@ -207,6 +391,8 @@ class NodeRepository extends EntityRepository
             if (null !== $translation) {
                 $finalQuery->setParameter('translation', $translation);
             }
+
+            $this->applyFilterByTag($criteria, $finalQuery);
 
             try {
                 return $finalQuery->getSingleResult();
@@ -630,6 +816,74 @@ class NodeRepository extends EntityRepository
     }
 
     /**
+    * Create a Criteria object from a search pattern and additionnal fields.
+    *
+    * @param string                  $pattern  Search pattern
+    * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
+    * @param array                   $criteria Additionnal criteria
+    * @param string                  $alias    SQL query table alias
+    *
+    * @return \Doctrine\ORM\QueryBuilder
+    */
+    protected function createSearchBy(
+        $pattern,
+        \Doctrine\ORM\QueryBuilder $qb,
+        array $criteria = array(),
+        $alias = "obj"
+    ) {
+        /*
+         * get fields needed for a search
+         * query
+         */
+        $types = array('string', 'text');
+        $criteriaFields = array();
+        $cols = $this->_em->getClassMetadata($this->getEntityName())->getColumnNames();
+        foreach ($cols as $col) {
+            $field = $this->_em->getClassMetadata($this->getEntityName())->getFieldName($col);
+            $type = $this->_em->getClassMetadata($this->getEntityName())->getTypeOfField($field);
+
+            if (in_array($type, $types)) {
+                $criteriaFields[$this->_em->getClassMetadata($this->getEntityName())->getFieldName($col)] =
+                    '%'.strip_tags($pattern).'%';
+            }
+        }
+
+        foreach ($criteriaFields as $key => $value) {
+            $qb->orWhere($qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value)));
+        }
+
+        /*
+         * Handle Tag relational queries
+         */
+        if (isset($criteria['tags'])) {
+            if (is_object($criteria['tags'])) {
+                $qb->innerJoin($alias.'.tags', 'tg', Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']->getId()));
+            } elseif (is_array($criteria['tags'])) {
+                $qb->innerJoin($alias.'.tags', 'tg', Expr\Join::WITH, $qb->expr()->in('tg.id', $criteria['tags']));
+            } elseif (is_integer($criteria['tags'])) {
+                $qb->innerJoin($alias.'.tags', 'tg', Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']));
+            }
+
+            unset($criteria['tags']);
+        }
+
+        foreach ($criteria as $key => $value) {
+
+            if (is_array($value)) {
+                $res = $qb->expr()->in($alias . '.' .$key, $value);
+            } elseif (is_bool($value)) {
+                $res = $qb->expr()->eq($alias . '.' .$key, (int) $value);
+            } else {
+                $res = $qb->expr()->eq($alias . '.' .$key, $value);
+            }
+
+            $qb->andWhere($res);
+        }
+
+        return $qb;
+    }
+
+    /**
      * @param string $nodeName
      *
      * @return boolean
@@ -639,7 +893,7 @@ class NodeRepository extends EntityRepository
         $query = $this->_em->createQuery('
             SELECT COUNT(n.nodeName) FROM RZ\Renzo\Core\Entities\Node n
             WHERE n.nodeName = :node_name')
-        ->setParameter('node_name', $nodeName);
+            ->setParameter('node_name', $nodeName);
 
         try {
             return (boolean) $query->getSingleScalarResult();

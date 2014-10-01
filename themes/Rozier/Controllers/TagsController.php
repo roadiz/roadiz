@@ -350,6 +350,81 @@ class TagsController extends RozierApp
     }
 
     /**
+     * Handle tag nodes page.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $tagId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function editNodesAction(Request $request, $tagId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $tag = $this->getService('em')
+                    ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
+
+        if (null !== $tag) {
+
+            $translation = $this->getService('em')
+                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->findDefault();
+
+            $this->assignation['tag'] = $tag;
+
+            /*
+             * Manage get request to filter list
+             */
+            $listManager = new EntityListManager(
+                $request,
+                $this->getService('em'),
+                'RZ\Renzo\Core\Entities\Node',
+                array(
+                    'tags' => $tag
+                )
+            );
+            $listManager->handle();
+
+            $this->assignation['filters'] = $listManager->getAssignation();
+            $this->assignation['nodes'] = $listManager->getEntities();
+
+            $this->assignation['translation'] = $translation;
+
+            return new Response(
+                $this->getTwig()->render('tags/nodes.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+
+        } else {
+
+            return $this->throw404();
+        }
+    }
+
+    /**
+     * Handle tag tree page.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $tagId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function treeAction(Request $request, $tagId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        $tag = $this->getService('em')
+                    ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
+
+        if (null !== $tag) {
+
+        } else {
+
+            return $this->throw404();
+        }
+    }
+
+    /**
      * @param array                      $data
      * @param RZ\Renzo\Core\Entities\Tag $tag
      *
