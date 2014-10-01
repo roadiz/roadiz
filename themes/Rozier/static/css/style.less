@@ -1,37 +1,83 @@
+/*------------------------------------*\
+   LESS BASE
+\*------------------------------------*/
+
+
 /*
- *
+ * Entry point, import of all less files
  */
+
+/* -------- VARS -------- */
+
 @import "vars.less";
 
-@import "icons/icons.less";
-@import "bootstrap3/custom_switch.less";
-@import "elements.less";
-@import "normalize.less";
-@import "main.less";
-@import "dropzone.less";
 
-@import "fontfaces.less";
+/* -------- BASE -------- */
+
+@import "base/elements.less";
+@import "base/normalize.less";
+@import "base/boilerplate.less";
+@import "base/easing.less";
+
+
+/* -------- DROPZONE -------- */
+
+@import "dropzone/dropzone.less";
+
+/* -------- ICONS -------- */
+
+@import "icons/icons.less";
+
+/* -------- COMMON (styles for all pages : font face, etc.) -------- */
+
+@import "common.less";
+
+/* -------- GRID -------- */
+
+@import "grid/grid_layout.less";
+
+/* -------- PANELS -------- */
+
+@import "panels/entries_panel/admin_entries.less";
+@import "panels/user_panel/user_panel.less";
+@import "panels/trees_panel/trees_panel.less";
+@import "panels/trees_panel/nestable.less";
+@import "panels/main_content_panel/main_content.less";
+
+/* -------- MENU -------- */
+@import "navbars/edit_bar.less";
+@import "actions_menu/actions_menu.less";
+
+
+/* -------- FORMS -------- */
+
+@import "forms/forms.less";
+@import "forms/markdown_editor.less";
+@import "forms/custom_switch.less";
+
+/* -------- BUTTONS -------- */
+
+@import "buttons/buttons.less";
+
+/* -------- ALERTS -------- */
+
+@import "alerts/alerts.less";
+
+/* -------- BADGES -------- */
+
+// @import "badges/badges.less";
+
+
+/* -------- WIDGETS -------- */
 
 @import "widgets/debugpanel.less";
 @import "widgets/nodetree.less";
 @import "widgets/tagtree.less";
 @import "widgets/documentexplorer.less";
+
+
+/* -------- PAGES -------- */
+
 @import "users/users.less";
 @import "login/login.less";
 
-
-@import "grid/grid_layout.less";
-@import "form/form.less";
-@import "form/markdown_editor.less";
-@import "alerts/alerts.less";
-@import "button/button.less";
-
-@import "entries_panel/admin_entries.less";
-@import "user_panel/user_panel.less";
-@import "trees_panel/trees_panel.less";
-@import "trees_panel/nestable.less";
-
-@import "main_content_panel/main_content.less";
-
-@import "navbars/edit_bar.less";
-@import "actions_menu/actions_menu.less";

@@ -1,3 +1,15 @@
+/*------------------------------------*\
+   FORMS
+\*------------------------------------*/
+
+
+/*
+ * Override ui kit forms styles
+ */
+
+
+/* -------- STYLES -------- */
+
 .uk-form {
     input[type="text"],
     input[type="email"],
@@ -22,6 +34,7 @@
     input[type="password"],
     input[type="search"],
     input[type="email"],
+    input[type="number"],
     textarea {
         font-size: 12px;
         line-height: 14px;
@@ -47,6 +60,44 @@
         }
     }
 
+    .select-style {
+        position: relative;
+        width: 100%; height:36px;
+        font-weight: bold;
+        color: @grey-form-text;
+        background-color: white;
+        border: 1px solid @grey-form-border;
+        .border-radius(0px);
+        overflow: hidden;
+
+        &:after{
+            position: absolute;
+            top:0; right:0; bottom:0;
+            content: "\f0d7";
+            padding:10px 15px;
+            font:normal 12px/16px 'FontAwesome';
+        }
+
+        select{
+            width: 110%; max-width: 110%; 
+            height:36px;
+            padding:10px 15px;
+            background-color: white;
+            font-family: @main-font;
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            background-image: none;
+            -webkit-appearance: none;
+            -moz-appearance:none;
+            appearance:none;
+
+            &:focus, &:active{
+                background-color: @grey-verylight;
+                outline:none;
+            }
+        }
+    }
 
     .uk-form-label {
         font-size: 12px;
@@ -66,7 +117,10 @@
     // Default Button
 
     input[type="text"],
-    input[type="password"] {
+    input[type="password"],
+    input[type="search"],
+    input[type="email"],
+    input[type="number"] {
         height: 36px;
     }
 
@@ -86,6 +140,7 @@
             }
         }
     }
+    
     .uk-margin-small-top {
         margin-top: 10px !important;
     }

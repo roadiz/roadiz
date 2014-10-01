@@ -1,0 +1,61 @@
+/*------------------------------------*\
+   BUTTONS
+\*------------------------------------*/
+
+
+/*
+ * Override ui kit buttons styles & colors
+ */
+
+
+/* -------- STYLES -------- */
+
+.uk-button{
+    height: 36px;
+    font-size: 13px;
+    line-height: 37px;
+    font-weight: bold;
+    .border-radius(0px);
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    .transition(~'0.35s ease border-color, 0.5s ease background');
+
+    background: @grey-form-submit;
+    border-color: @grey-form-submit-border;
+    color: @grey-form-submit-color;
+
+    &:hover, &:active, &:focus {
+        background-color: @grey-form-submit-hover;
+        border-color: #888888;
+        color: #333;
+    }
+
+    [class*=uk-icon-]{
+        margin:0 4px;
+    }
+
+}
+
+.uk-button-success {
+    background: @grey-form-submit;
+    border-color: @grey-form-submit-border;
+    color: @grey-form-submit-color;
+
+    &:hover, &:active, &:focus {
+        background-color: @grey-form-submit-hover;
+        border-color: #888888;
+        color: #333;
+    }
+}
+
+.uk-button-primary {
+    background: @contrast-color-darker;
+    border-color: transparent;
+    color: white;
+    text-shadow: none;
+
+    &:hover, &:active, &:focus {
+        background: @contrast-color;
+        border-color: transparent;
+        color: white;
+    }
+}
