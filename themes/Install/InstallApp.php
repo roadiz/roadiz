@@ -285,28 +285,36 @@ class InstallApp extends AppController
         /*
          * Test connexion
          */
-        try {
-            $fixtures = new Fixtures();
+        if (null === $this->getService('em')) {
+            $this->assignation['error'] = true;
+            $this->assignation['errorMessage'] = $c['session']->getFlashBag()->all();
 
-            \RZ\Renzo\Console\SchemaCommand::createSchema();
-            \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
+        } else {
 
-            $fixtures->installFixtures();
+            try {
+                $fixtures = new Fixtures();
 
-        } catch (\PDOException $e) {
-            $message = "";
-            if (strstr($e->getMessage(), 'SQLSTATE[')) {
-                preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
-                $message = $matches[3];
-            } else {
-                $message = $e->getMessage();
+                \RZ\Renzo\Console\SchemaCommand::createSchema();
+                \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
+
+                $fixtures->installFixtures();
+
+            } catch (\PDOException $e) {
+                $message = "";
+                if (strstr($e->getMessage(), 'SQLSTATE[')) {
+                    preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
+                    $message = $matches[3];
+                } else {
+                    $message = $e->getMessage();
+                }
+                $this->assignation['error'] = true;
+                $this->assignation['errorMessage'] = ucfirst($message);
+            } catch (\Exception $e) {
+                $this->assignation['error'] = true;
+                $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
             }
-            $this->assignation['error'] = true;
-            $this->assignation['errorMessage'] = ucfirst($message);
-        } catch (\Exception $e) {
-            $this->assignation['error'] = true;
-            $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
         }
+
 
         return new Response(
             $this->getTwig()->render('steps/databaseDone.html.twig', $this->assignation),
