@@ -21,18 +21,21 @@
 
         <div class="content-text-cont">
             
-            <div class="content-text">
+            <div class="content-intro content-intro-big">
+                {% trans %}success.message{% endtrans %}
+            </div> 
 
-                {% trans %}success.message{% endtrans %} 
+            {% if error %}
+            <div class="uk-alert uk-alert-danger">
+                <a href="#" class="uk-alert-close uk-close"></a>
+                <p>{{ errorMessage }}</p>
+            </div>
+            {% endif %}
 
-                {% if error %}
-                <div class="uk-alert uk-alert-danger">
-                    <a href="#" class="uk-alert-close uk-close"></a>
-                    <p>{{ errorMessage }}</p>
-                </div>
-                {% endif %}
+            <form class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(doneForm) }}>
 
-                <form class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(doneForm) }}>
+                <div class="content-text">
+
                     {{ form_errors(doneForm) }}
 
                     {% for item in doneForm %}
@@ -40,12 +43,19 @@
                             {{ form_widget(item) }}
                     {% endfor %}
                     {{ form_rest(doneForm) }}
-                    <p><button class="uk-button uk-button-primary"><i class="uk-icon-check"></i> {% trans %}success.quit_install{% endtrans %}</button></p>
-                </form>
 
-            </div> <!-- .content-text -->
+                </div>
 
-            <a class="content-button uk-button uk-button-success" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.informations{% endtrans %}</a>
+                {% spaceless %}
+                <div class="content-buttons">
+
+                    <a class="content-button uk-button uk-button-success" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.informations{% endtrans %}</a>
+                    <button class="content-button uk-button uk-button-primary"><i class="uk-icon-check"></i> {% trans %}success.quit_install{% endtrans %}</button>
+
+                </div>
+                {% endspaceless %}
+
+            </form>
 
         </div>
         

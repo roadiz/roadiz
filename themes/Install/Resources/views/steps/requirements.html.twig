@@ -23,11 +23,13 @@
             
             <div class="content-text">
 
-                {% trans %}requirements.message{% endtrans %}
+                <div class="content-intro content-intro-only">
+                    {% trans %}requirements.message{% endtrans %}
+                </div>
 
                 <table id="requirements-table" class="install-table uk-table">
                     <tr>
-                        <th></th>
+                        <th>{% trans %}requirements.spec{% endtrans %}</th>
                         <th>{% trans %}requirements.requirement{% endtrans %}</th>
                         <th>{% trans %}requirements.actual_value{% endtrans %}</th>
                         <th>{% trans %}status{% endtrans %}</th>
@@ -40,8 +42,16 @@
                                 {% if require.version_minimum %}<div class="uk-badge">{{ require.version_minimum }}</div>{% endif %}
                             </td>
                             <td>
-                                {% if require.found %}<div class="uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.found }}</div>{% endif %}
-                                {% if require.folder %}<div class="uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.folder }}</div>{% endif %}
+                                {% if require.found %}
+                                    <div class="uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.found }}</div>
+                                {% endif %}
+                                {% if require.folder %}
+                                    <div class="uk-badge-folder uk-badge uk-badge-notification">
+                                        <i class="uk-icon-informations"></i>
+                                         <div class="uk-badge-folder-content uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.folder }}</div>
+                                    </div>
+                                   
+                                {% endif %}
                             </td>
                             <td class="status">
                             {% if require.status %}
@@ -61,11 +71,15 @@
                 </table>
 
             </div>
-            
-            {% if totalSuccess %}
-            <a class="content-button uk-button uk-button-primary" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
-            {% endif %}
-            <a class="content-button uk-button" href="{{ path('installHomePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.welcome{% endtrans %}</a>
+
+            {% spaceless %}
+            <div class="content-buttons">          
+                <a class="content-button uk-button" href="{{ path('installHomePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.welcome{% endtrans %}</a>
+                {% if totalSuccess %}
+                <a class="content-button uk-button uk-button-primary" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+                {% endif %}
+            </div>
+            {% endspaceless %}            
 
         </div>
         

@@ -23,7 +23,9 @@
 
             <div class="content-text">
 
-                {% trans %}import.message{% endtrans %}
+                <div class="content-intro">
+                    {% trans %}import.message{% endtrans %}
+                </div>
 
                 <table id="import-table" class="install-table uk-table">
                     <tr>
@@ -44,8 +46,14 @@
 
             </div>
 
-            <a id="next-step-button" class="content-button uk-button uk-button-primary" href="{{ path('installUserPage')  }}">{% trans %}goto.user{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
-            <a class="content-button uk-button" href="{{ path('installDatabasePage')  }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a>
+            {% spaceless %}
+            <div class="content-buttons">  
+
+                <a class="content-button uk-button" href="{{ path('installDatabasePage')  }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a>
+                <a id="next-step-button" class="content-button uk-button uk-button-primary" href="{{ path('installUserPage')  }}">{% trans %}goto.user{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+                
+            </div>                    
+            {% endspaceless %} 
 
         </div>
 

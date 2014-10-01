@@ -68,8 +68,10 @@
 
 
 {% block form_row -%}
-    <div class="form-col">
-        {{- form_label(form) -}}
+    <div class="form-col form-col-{{ form.vars.block_prefixes[1] }}">
+        {% if form.vars.block_prefixes[1] != 'separator' %}
+           {{- form_label(form) -}}
+        {% endif %}
         {{- form_errors(form) -}}
         {{- form_widget(form) -}}
     </div>

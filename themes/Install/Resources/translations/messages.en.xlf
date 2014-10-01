@@ -31,29 +31,18 @@
             </trans-unit>
 
 
-            <!-- Documents -->
-            <trans-unit id="document.updated" approved="yes">
-                <source>document.updated</source>
-                <target state="translated">Document “%name%” has been updated</target>
-            </trans-unit>
-            <trans-unit id="document.uploaded" approved="yes">
-                <source>document.uploaded</source>
-                <target state="translated">Document “%name%” has been uploaded.</target>
-            </trans-unit>
-            <trans-unit id="document.cannot_persist" approved="yes">
-                <source>document.cannot_persist</source>
-                <target state="translated">Document “%name%” could not be created.</target>
-            </trans-unit>
-
-
             <!-- Welcome -->
             <trans-unit id="welcome.title" approved="yes">
                 <source>welcome.title</source>
                 <target state="translated">Renzo's Installation</target>
             </trans-unit>
+            <trans-unit id="welcome.subtitle" approved="yes">
+                <source>welcome.subtitle</source>
+                <target state="translated">Welcome to Renzo CMS Installation</target>
+            </trans-unit>
             <trans-unit id="welcome.message" approved="yes">
                 <source>welcome.message</source>
-                <target state="translated">&lt;p&gt;Welcome to Renzo's CMS installation&lt;/p&gt; &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.&lt;/p&gt;</target>
             </trans-unit>
 
 
@@ -65,6 +54,10 @@
             <trans-unit id="requirements.message" approved="yes">
                 <source>requirements.message</source>
                 <target state="translated">&lt;p&gt;To use this CMS, your server need some requirements, particularly in PHP. If you have access to your configuration file (php.ini), you could modify some of them.&lt;/p&gt;</target>
+            </trans-unit>
+            <trans-unit id="requirements.spec" approved="yes">
+                <source>requirements.spec</source>
+                <target state="translated">Spécification</target>
             </trans-unit>
             <trans-unit id="requirements.requirement" approved="yes">
                 <source>requirements.requirement</source>
@@ -177,7 +170,10 @@
                 <source>themes.save_informations</source>
                 <target state="translated">Save information</target>
             </trans-unit>
-
+            <trans-unit id="themes.frontend.description" approved="yes">
+                <source>themes.frontend.description</source>
+                <target state="translated">You could install some default theme(s) and content to your CMS</target>
+            </trans-unit>
 
             <!-- Import node type -->
             <trans-unit id="import_node_type.title" approved="yes">
@@ -245,7 +241,7 @@
             </trans-unit>
             <trans-unit id="skip.user.goto.theme" approved="yes">
                 <source>skip.user.goto.theme</source>
-                <target state="translated">Skip "user", go to "theme"</target>
+                <target state="translated">Skip "user"</target>
             </trans-unit>
             <trans-unit id="skip.user.goto.done" approved="yes">
                 <source>goto.done</source>
@@ -253,7 +249,7 @@
             </trans-unit>
             <trans-unit id="skip.database.goto.import" approved="yes">
                 <source>skip.database.goto.import</source>
-                <target state="translated">Skip "database", go to "import"</target>
+                <target state="translated">Skip "database"</target>
             </trans-unit>
 
 

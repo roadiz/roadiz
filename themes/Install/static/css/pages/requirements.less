@@ -9,3 +9,21 @@
 .requirement-name{
     padding-left:15px;
 }
+
+.uk-badge-folder{
+    position: relative;
+
+    &:hover{
+        .uk-badge-folder-content{
+            .opacity(1);
+        }
+    }
+    
+}
+
+.uk-badge-folder-content{
+    position: absolute;
+    top:0; left:25px;
+    .opacity(0);
+    .transition(0.4s opacity ease);
+}
