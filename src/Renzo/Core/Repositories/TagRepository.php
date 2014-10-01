@@ -10,6 +10,7 @@
 namespace RZ\Renzo\Core\Repositories;
 
 use RZ\Renzo\Core\Entities\Tag;
+use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Kernel;
 
 /**
