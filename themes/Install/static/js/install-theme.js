@@ -586,7 +586,6 @@ ImportFixtures.prototype.callSingleImport = function( index ) {
         })
         .done(function(data) {
             console.log("success");
-            console.log(data);
             _this.score++;
 
             $icon.removeClass('uk-icon-spinner');
@@ -596,13 +595,13 @@ ImportFixtures.prototype.callSingleImport = function( index ) {
         })
         .fail(function(data) {
             console.log("error");
-            console.log(data.responseJSON);
 
             $icon.removeClass('uk-icon-spinner');
             $icon.addClass('uk-icon-warning');
             $row.addClass('uk-badge-danger');
-
-            $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>");
+            if (typeof data.responseJSON != "undefined" && typeof data.responseJSON.error != "undefined") {
+                $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>");
+            }
         })
         .always(function(data) {
             console.log("complete");
