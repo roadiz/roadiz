@@ -1,26 +1,28 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-<section id="manage-node">
+<section id="manage-node-source">
 
-	<header class="content-header header-node-edit" id="header-manage-node">
+	<header class="content-header header-node header-node-edit" id="header-node-edit-source">
 		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-		<h1 class="content-title" id="node-title"><!-- {% trans %}edit.node{% endtrans %} --> {{ source.getTitle }}</h1>
+		<h1 class="content-title" id="node-edit-title">{% trans %}edit.node{% endtrans %} {{ source.getTitle }}</h1>
 	</header>
 	{% include 'nodes/navBar.html.twig' with {"current": 'source'} %}
 	{% include 'nodes/translationBar.html.twig' with {"current": translation.getId} %}
-
-	{% form_theme form 'forms.html.twig' %}
-	<form id="edit-source-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-	    	<button data-action-save="#edit-source-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-	    		<i class="uk-icon-save"></i>
-	    		<span class="label">{% trans %}save{% endtrans %}</span>
-	    	</button>
-	    	{% endspaceless %}
-   		</fieldset>
-	</form>
+	
+	<article class="content" id="content-node-edit-source">
+		{% form_theme form 'forms.html.twig' %}
+		<form id="edit-node-source-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	{% spaceless %}
+		    	<button data-action-save="#edit-node-source-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+		    		<i class="uk-icon-save"></i>
+		    		<span class="label">{% trans %}save{% endtrans %}</span>
+		    	</button>
+		    	{% endspaceless %}
+	   		</fieldset>
+		</form>
+	</article>	
 
 	{% include 'nodes/actionsMenu.html.twig' %}
 </section>

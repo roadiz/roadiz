@@ -1,44 +1,48 @@
 {% extends 'base.html.twig' %}
 {% block content %}
 <section id="manage-node-tags">
-	<h1 id="node-title">Edit {{ source.getTitle }} tags</h1>
 
-	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+	<header class="content-header header-node header-node-edit-tags" id="header-node-edit-tags">
+		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+		<h1 class="content-title" id="node-edit-tags-title">Edit {{ source.getTitle }} tags</h1>
+	</header>
 	{% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
+	
+	<article class="content" id="content-node-edit-tags">    
+		<h2 class="content-subtitle">{% trans %}Add a tag{% endtrans %}</h2>
+		{% form_theme form 'forms.html.twig' %}
+		<form id="edit-node-tags-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<input class="uk-button uk-button-primary" type="submit" />
+	   		</fieldset>
+		</form>
 
-	<h2>{% trans %}Add a tag{% endtrans %}</h2>
+		<hr />
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
-
-	<hr />
-	<h2>{% trans %}Tags{% endtrans %}</h2>
-	<table class="tags uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}Id{% endtrans %}</th>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for tag in node.getTags %}
-			{% set ttag = tag.getTranslatedTags.first %}
-			<tr>
-				<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
-				<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesRemoveTagsPage', { nodeId: node.getId, tagId: tag.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+		<h2 class="content-subtitle">{% trans %}Tags{% endtrans %}</h2>
+		<table class="tags uk-table">
+			<thead>
+		        <tr>
+		            <th>{% trans %}Id{% endtrans %}</th>
+		            <th>{% trans %}Name{% endtrans %}</th>
+		            <th>{% trans %}Actions{% endtrans %}</th>
+		        </tr>
+		    </thead>
+			<tbody>
+				{% for tag in node.getTags %}
+				{% set ttag = tag.getTranslatedTags.first %}
+				<tr>
+					<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
+					<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
+					<td>
+						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesRemoveTagsPage', { nodeId: node.getId, tagId: tag.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</article>
 
 	{% include 'nodes/actionsMenu.html.twig' %}
 </section>

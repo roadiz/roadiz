@@ -1,9 +1,11 @@
 <nav class="node-translations-navigation uk-navbar">
+    {% spaceless %}
 	<ul class="uk-navbar-nav">
 		{% for translation in available_translations %}
-		    <li class="{% if current == translation.getId %}uk-active{% endif %}">
-		    	<a href="{{ path('nodesEditSEOPage', { nodeId: node.getId, translationId:translation.getId }) }}">{{ translation.getName }}</a>
+		    <li class="node-translation-navigation-item {% if current == translation.getId %} uk-active{% endif %}">
+		    	<a class="node-translation-navigation-link uk-navbar-link" href="{{ path('nodesEditSEOPage', { nodeId: node.getId, translationId:translation.getId }) }}">{{ translation.getShortLocale }}</a>
 		    </li>
 		{% endfor %}
-	</ul>
+	</ul>        
+    {% endspaceless %}
 </nav>

@@ -1,55 +1,58 @@
 {% extends 'base.html.twig' %}
 {% block content %}
 <section id="manage-node-aliases">
-	<h1 id="node-title">Edit {{ source.getTitle }} aliases</h1>
 
-	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+	<header class="content-header header-node header-node-edit-seo" id="header-node-edit-seo">
+		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+		<h1 class="content-title" id="node-edit-seo-title">Edit {{ source.getTitle }} aliases</h1>
+	</header>
 	{% include 'nodes/navBar.html.twig' with {"current": 'seo'} %}
 	{% include 'nodes/translationSEOBar.html.twig' with {"current": translation.getId} %}
+	
+	<article class="content" id="content-node-edit-aliases">    
+		<h2 class="content-subtitle">{% trans %}edit.node.seo{% endtrans %}</h2>
 
-	<h2>{% trans %}edit.node.seo{% endtrans %}</h2>
-
-	{% form_theme seoForm 'forms.html.twig' %}
-	<form id="edit-seo-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(seoForm) }}>
-	    {{ form_widget(seoForm) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-	    	<button data-action-save="#edit-seo-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-	    		<i class="uk-icon-save"></i>
-	    		<span class="label">{% trans %}save{% endtrans %}</span>
-	    	</button>
-	    	{% endspaceless %}
-   		</fieldset>
-	</form>
+		{% form_theme seoForm 'forms.html.twig' %}
+		<form id="edit-seo-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(seoForm) }}>
+		    {{ form_widget(seoForm) }}
+		    <fieldset data-uk-margin>
+		    	{% spaceless %}
+		    	<button data-action-save="#edit-seo-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+		    		<i class="uk-icon-save"></i>
+		    		<span class="label">{% trans %}save{% endtrans %}</span>
+		    	</button>
+		    	{% endspaceless %}
+	   		</fieldset>
+		</form>
 
 
-	<h2>{% trans %}alias{% endtrans %}</h2>
+		<h2 class="content-subtitle">{% trans %}alias{% endtrans %}</h2>
 
-	<h3>{% trans %}add.alias{% endtrans %}</h3>
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+		<h3>{% trans %}add.alias{% endtrans %}</h3>
+		{% form_theme form 'forms.html.twig' %}
+		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<input class="uk-button uk-button-primary" type="submit" />
+	   		</fieldset>
+		</form>
 
-	<hr />
-	<table class="aliases uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}Alias{% endtrans %}</th>
-	            <th>{% trans %}Translation{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for urlAlias in aliases %}
-				{% include 'url-aliases/editRow.html.twig' %}
-			{% endfor %}
-		</tbody>
-	</table>
-
+		<hr />
+		<table class="aliases uk-table">
+			<thead>
+		        <tr>
+		            <th>{% trans %}Alias{% endtrans %}</th>
+		            <th>{% trans %}Translation{% endtrans %}</th>
+		            <th>{% trans %}Actions{% endtrans %}</th>
+		        </tr>
+		    </thead>
+			<tbody>
+				{% for urlAlias in aliases %}
+					{% include 'url-aliases/editRow.html.twig' %}
+				{% endfor %}
+			</tbody>
+		</table>
+	</article>
 
 	{% include 'nodes/actionsMenu.html.twig' %}
 </section>
