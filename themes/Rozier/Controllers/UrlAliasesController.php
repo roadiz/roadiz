@@ -75,6 +75,7 @@ class UrlAliasesController extends RozierApp
                             ->findAllFromNode($node->getId());
 
             $this->assignation['node'] = $node;
+            $this->assignation['source'] = $source;
             $this->assignation['aliases'] = array();
             $this->assignation['translation'] = $translation;
             $this->assignation['available_translations'] = $node->getHandler()->getAvailableTranslations();
