@@ -86,7 +86,10 @@
 
 		{% endif %}
 
-		{% if (securityContext.Granted('ROLE_ACCESS_NODETYPES') or securityContext.Granted('ROLE_ACCESS_TRANSLATIONS') or securityContext.Granted('ROLE_ACCESS_THEMES') or securityContext.Granted('ROLE_ACCESS_FONTS')) %}
+		{% if (securityContext.Granted('ROLE_ACCESS_NODETYPES') or
+		       securityContext.Granted('ROLE_ACCESS_TRANSLATIONS') or
+		       securityContext.Granted('ROLE_ACCESS_THEMES') or
+		       securityContext.Granted('ROLE_ACCESS_FONTS')) %}
 
 		<li class="uk-parent">
 			<p><i class="uk-icon-rz-construction"></i><span class="info">{% trans %}construction{% endtrans %}</span></p>
@@ -99,7 +102,7 @@
 			{% endif %}
 			{% if (securityContext.Granted('ROLE_ACCESS_NODETYPES')) %}
 
-				<li><a href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-rz-node-type"></i><span class="info">{% trans %}manage.node-types{% endtrans %}</span></a></li>
+				<li><a href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-rz-node-type"></i><span class="info">{% trans %}manage.nodeTypes{% endtrans %}</span></a></li>
 
 			{% endif %}
 

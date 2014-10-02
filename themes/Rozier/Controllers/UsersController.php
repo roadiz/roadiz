@@ -91,7 +91,7 @@ class UsersController extends RozierApp
 
                 try {
                     $this->editUser($form->getData(), $user);
-                    $msg = $this->getTranslator()->trans('user.updated', array('%name%'=>$user->getUsername()));
+                    $msg = $this->getTranslator()->trans('user.%name%.updated', array('%name%'=>$user->getUsername()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
                 } catch (FacebookUsernameNotFoundException $e) {
@@ -151,7 +151,7 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
                 $role = $this->addUserRole($form->getData(), $user);
 
-                $msg = $this->getTranslator()->trans('user.role_linked', array(
+                $msg = $this->getTranslator()->trans('user.%user%.role.%role%.linked', array(
                             '%user%'=>$user->getUserName(),
                             '%role%'=>$role->getName()
                         ));
@@ -212,7 +212,7 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
 
                 $this->removeUserRole($form->getData(), $user);
-                $msg = $this->getTranslator()->trans('user.role_removed', array('%name%'=>$role->getName()));
+                $msg = $this->getTranslator()->trans('user.%name%.role_removed', array('%name%'=>$role->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -264,7 +264,7 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
                 $group = $this->addUserGroup($form->getData(), $user);
 
-                $msg = $this->getTranslator()->trans('user.group_linked', array(
+                $msg = $this->getTranslator()->trans('user.%user%.group.%group%.linked', array(
                             '%user%'=>$user->getUserName(),
                             '%group%'=>$group->getName()
                         ));
@@ -325,7 +325,7 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
                 $group = $this->removeUserGroup($form->getData(), $user);
 
-                $msg = $this->getTranslator()->trans('user.group_removed', array(
+                $msg = $this->getTranslator()->trans('user.%user%.group.%group%.removed', array(
                             '%user%'=>$user->getUserName(),
                             '%group%'=>$group->getName()
                         ));
@@ -389,7 +389,7 @@ class UsersController extends RozierApp
                     $this->addUser($form->getData(), $user);
                     $user->getViewer()->sendSignInConfirmation();
 
-                    $msg = $this->getTranslator()->trans('user.created', array('%name%'=>$user->getUsername()));
+                    $msg = $this->getTranslator()->trans('user.%name%.created', array('%name%'=>$user->getUsername()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
                 } catch (FacebookUsernameNotFoundException $e) {
@@ -450,7 +450,7 @@ class UsersController extends RozierApp
                 try {
                     $this->deleteUser($form->getData(), $user);
 
-                    $msg = $this->getTranslator()->trans('user.deleted', array('%name%'=>$user->getUsername()));
+                    $msg = $this->getTranslator()->trans('user.%name%.deleted', array('%name%'=>$user->getUsername()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
@@ -493,7 +493,7 @@ class UsersController extends RozierApp
 
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
-                    'user.cannot_update.name_already_exists',
+                    'user.%name%.cannot_update.name_already_exists',
                     array('%name%'=>$data['username'])
                 ),
                 1
@@ -506,7 +506,7 @@ class UsersController extends RozierApp
 
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
-                    'user.cannot_update.email_already_exists',
+                    'user.%name%.cannot_update.email_already_exists',
                     array('%email%'=>$data['email'])
                 ),
                 1
@@ -537,7 +537,7 @@ class UsersController extends RozierApp
 
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
-                    'user.cannot_create_already_exists',
+                    'user.%name%.cannot_create_already_exists',
                     array('%name%'=>$data['username'])
                 ),
                 1
@@ -566,7 +566,7 @@ class UsersController extends RozierApp
             } else {
                 throw new FacebookUsernameNotFoundException(
                     $this->getTranslator()->trans(
-                        'user.facebook_name_does_not_exist',
+                        'user.facebook_name.%name%._does_not_exist',
                         array('%name%'=>$user->getFacebookName())
                     ),
                     1
@@ -686,11 +686,13 @@ class UsersController extends RozierApp
         $builder = $this->getService('formFactory')
                         ->createBuilder('form')
                         ->add('email', 'email', array(
+                            'label'=>$this->getTranslator()->trans('email'),
                             'constraints' => array(
                                 new NotBlank()
                             )
                         ))
                         ->add('username', 'text', array(
+                            'label'=>$this->getTranslator()->trans('username'),
                             'constraints' => array(
                                 new NotBlank()
                             )
@@ -698,18 +700,40 @@ class UsersController extends RozierApp
                         ->add('plainPassword', 'repeated', array(
                             'type' => 'password',
                             'invalid_message' => 'Passwords must match',
-                            'first_options'  => array('label' => 'password'),
-                            'second_options' => array('label' => 'passwordVerify'),
+                            'first_options'  => array(
+                                'label'=>$this->getTranslator()->trans('password'),
+                            ),
+                            'second_options' => array(
+                                'label'=>$this->getTranslator()->trans('passwordVerify'),
+                            ),
                             'constraints' => array(
                                 new NotBlank()
                             )
                         ))
-                        ->add('firstName', 'text', array('required' => false))
-                        ->add('lastName', 'text', array('required' => false))
-                        ->add('company', 'text', array('required' => false))
-                        ->add('job', 'text', array('required' => false))
-                        ->add('birthday', 'date', array('required' => false))
-                        ->add('facebookName', 'text', array('required' => false));
+                        ->add('firstName', 'text', array(
+                            'label'=>$this->getTranslator()->trans('firstName'),
+                            'required' => false
+                        ))
+                        ->add('lastName', 'text', array(
+                            'label'=>$this->getTranslator()->trans('lastName'),
+                            'required' => false
+                        ))
+                        ->add('company', 'text', array(
+                            'label'=>$this->getTranslator()->trans('company'),
+                            'required' => false
+                        ))
+                        ->add('job', 'text', array(
+                            'label'=>$this->getTranslator()->trans('job'),
+                            'required' => false
+                        ))
+                        ->add('birthday', 'date', array(
+                            'label'=>$this->getTranslator()->trans('birthday'),
+                            'required' => false
+                        ))
+                        ->add('facebookName', 'text', array(
+                            'label'=>$this->getTranslator()->trans('facebookName'),
+                            'required' => false
+                        ));
 
         return $builder->getForm();
     }
@@ -769,6 +793,7 @@ class UsersController extends RozierApp
                             'email',
                             'email',
                             array(
+                                'label'=>$this->getTranslator()->trans('email'),
                                 'constraints' => array(
                                     new NotBlank()
                                 )
@@ -778,6 +803,7 @@ class UsersController extends RozierApp
                             'username',
                             'text',
                             array(
+                                'label'=>$this->getTranslator()->trans('username'),
                                 'constraints' => array(
                                     new NotBlank()
                                 )
@@ -798,6 +824,7 @@ class UsersController extends RozierApp
                             'firstName',
                             'text',
                             array(
+                                'label'=>$this->getTranslator()->trans('firstName'),
                                 'required' => false
                             )
                         )
@@ -805,6 +832,7 @@ class UsersController extends RozierApp
                             'lastName',
                             'text',
                             array(
+                                'label'=>$this->getTranslator()->trans('lastName'),
                                 'required' => false
                             )
                         )
@@ -812,6 +840,7 @@ class UsersController extends RozierApp
                             'company',
                             'text',
                             array(
+                                'label'=>$this->getTranslator()->trans('company'),
                                 'required' => false
                             )
                         )
@@ -819,6 +848,7 @@ class UsersController extends RozierApp
                             'job',
                             'text',
                             array(
+                                'label'=>$this->getTranslator()->trans('job'),
                                 'required' => false
                             )
                         )
@@ -826,6 +856,7 @@ class UsersController extends RozierApp
                             'birthday',
                             'date',
                             array(
+                                'label'=>$this->getTranslator()->trans('birthday'),
                                 'required' => false
                             )
                         )
@@ -833,6 +864,7 @@ class UsersController extends RozierApp
                             'facebookName',
                             'text',
                             array(
+                                'label'=>$this->getTranslator()->trans('facebookName'),
                                 'required' => false
                             )
                         );

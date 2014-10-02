@@ -3,16 +3,16 @@
 
 {% block content %}
 <section id="manage-translations">
-	<h1 id="title">{% trans %}Translations{% endtrans %}</h1>
-	<nav><a class="uk-button" href="{{ path('translationsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a translation{% endtrans %}</a></nav>
+	<h1 id="title">{% trans %}translations{% endtrans %}</h1>
+	<nav><a class="uk-button" href="{{ path('translationsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.translation{% endtrans %}</a></nav>
 	{% include 'widgets/filtersBar.html.twig' %}
 	<table class="translations uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Locale{% endtrans %}</th>
-	            <th>{% trans %}Status{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}name{% endtrans %}</th>
+	            <th>{% trans %}translation.locale{% endtrans %}</th>
+	            <th>{% trans %}status{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -21,7 +21,7 @@
 				<td><a href="{{ path('translationsEditPage', { translationId: t.translation.getId }) }}">{{ t.translation.getName }}</a></td>
 				<td>{{ t.translation.getLocale }}</td>
 				<td>
-				{% if t.translation.isAvailable == false %}<div class="uk-badge uk-badge-warning">{% trans %}Not available{% endtrans %}</div>{% endif %}
+				{% if t.translation.isAvailable == false %}<div class="uk-badge uk-badge-warning">{% trans %}not_available{% endtrans %}</div>{% endif %}
 				{% if t.translation.isDefaultTranslation == true %}
 				<div class="uk-badge uk-badge-notification"><i class="uk-icon-star"></i></div>
 				{% endif %}
@@ -31,9 +31,11 @@
 					{% form_theme t.defaultForm 'forms.html.twig' %}
 					<form action="#" method="post" {{ form_enctype(t.defaultForm) }}>
 						{{ form_widget(t.defaultForm) }}
-						<button class="uk-button uk-button-small" type="submit"><i class="uk-icon-star"></i> {% trans %}Set as default{% endtrans %}</button>
+						<button class="uk-button uk-button-small" type="submit"><i class="uk-icon-star"></i> {% trans %}set.default{% endtrans %}</button>
 					</form>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}Delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}">
+						<i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}
+					</a>
 				{% endif %}
 				</td>
 			</tr>

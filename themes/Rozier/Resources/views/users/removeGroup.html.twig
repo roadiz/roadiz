@@ -3,14 +3,14 @@
 {% block content %}
 
 <section id="manage-group">
-	<h1 id="group-title">{% trans %}Remove group:{% endtrans %} {{ group.getName }}</h1>
+	<h1 id="group-title">{{ "remove.user.%name%.from.group.%group%"|trans({'%name%': user.getUserName, '%group%': group.getName}) }}</h1>
 
 	{% form_theme form 'forms.html.twig' %}
     <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to remove this group?{% endtrans %}</legend>
-	    	<a href="{{ path('usersEditGroupsPage', { userId: user.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<legend>{% trans %}are_you_sure.remove.user.from.group{% endtrans %}</legend>
+	    	<a href="{{ path('usersEditGroupsPage', { userId: user.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

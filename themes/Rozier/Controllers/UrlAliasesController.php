@@ -125,11 +125,11 @@ class UrlAliasesController extends RozierApp
 
                     if ($this->editUrlAlias($editForm->getData(), $alias)) {
 
-                        $msg = $this->getTranslator()->trans('url_alias.updated', array('%alias%'=>$alias->getAlias()));
+                        $msg = $this->getTranslator()->trans('url_alias.%alias%.updated', array('%alias%'=>$alias->getAlias()));
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
                         $this->getService('logger')->info($msg);
                     } else {
-                        $msg = $this->getTranslator()->trans('url_alias.no_update.already_exists', array('%alias%'=>$alias->getAlias()));
+                        $msg = $this->getTranslator()->trans('url_alias.%alias%.no_update.already_exists', array('%alias%'=>$alias->getAlias()));
                         $request->getSession()->getFlashBag()->add('error', $msg);
                         $this->getService('logger')->warning($msg);
                     }
@@ -155,7 +155,7 @@ class UrlAliasesController extends RozierApp
                     $deleteForm->getData()['urlaliasId'] == $alias->getId()) {
 
                     $this->deleteUrlAlias($editForm->getData(), $alias);
-                    $msg = $this->getTranslator()->trans('url_alias.deleted', array('%alias%'=>$alias->getAlias()));
+                    $msg = $this->getTranslator()->trans('url_alias.%alias%.deleted', array('%alias%'=>$alias->getAlias()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
                     /*
@@ -190,7 +190,7 @@ class UrlAliasesController extends RozierApp
 
                 try {
                     $ua = $this->addNodeUrlAlias($form->getData(), $node);
-                    $msg = $this->getTranslator()->trans('url_alias.created', array(
+                    $msg = $this->getTranslator()->trans('url_alias.%alias%.created.%translation%', array(
                         '%alias%'=>$ua->getAlias(),
                         '%translation%'=>$ua->getNodeSource()->getTranslation()->getName()
                     ));
@@ -255,7 +255,7 @@ class UrlAliasesController extends RozierApp
                 if ($this->nodeNameExists($testingAlias) ||
                         $this->urlAliasExists($testingAlias)) {
 
-                    $msg = $this->getTranslator()->trans('url_alias.no_creation.already_exists', array('%alias%'=>$data['alias']));
+                    $msg = $this->getTranslator()->trans('url_alias.%alias%.no_creation.already_exists', array('%alias%'=>$data['alias']));
                     throw new EntityAlreadyExistsException($msg, 1);
                 }
 
@@ -267,12 +267,12 @@ class UrlAliasesController extends RozierApp
 
                     return $ua;
                 } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('url_alias.no_creation.already_exists', array('%alias%'=>$testingAlias));
+                    $msg = $this->getTranslator()->trans('url_alias.%alias%.no_creation.already_exists', array('%alias%'=>$testingAlias));
 
                     throw new EntityAlreadyExistsException($msg, 1);
                 }
             } else {
-                $msg = $this->getTranslator()->trans('url_alias.no_translation', array('%translation%'=>$translation->getName()));
+                $msg = $this->getTranslator()->trans('url_alias.no_translation.%translation%', array('%translation%'=>$translation->getName()));
 
                 throw new NoTranslationAvailableException($msg, 1);
             }
@@ -341,7 +341,7 @@ class UrlAliasesController extends RozierApp
                 $this->urlAliasExists($testingAlias))) {
 
             $msg = $this->getTranslator()->trans(
-                'url_alias.no_update.already_exists',
+                'url_alias.%alias%.no_update.already_exists',
                 array('%alias%'=>$data['alias'])
             );
 
@@ -393,8 +393,12 @@ class UrlAliasesController extends RozierApp
                     new NotBlank()
                 )
             ))
-            ->add('alias', 'text')
-            ->add('translationId', new \RZ\Renzo\CMS\Forms\TranslationsType());
+            ->add('alias', 'text', array(
+                'label'=>$this->getTranslator()->trans('urlAlias'),
+            ))
+            ->add('translationId', new \RZ\Renzo\CMS\Forms\TranslationsType(), array(
+                'label'=>$this->getTranslator()->trans('translation'),
+            ));
 
         return $builder->getForm();
     }
@@ -419,6 +423,7 @@ class UrlAliasesController extends RozierApp
                         )
                     ))
                     ->add('alias', 'text', array(
+                        'label'=>$this->getTranslator()->trans('urlAlias'),
                         'constraints' => array(
                             new NotBlank()
                         )
@@ -449,12 +454,15 @@ class UrlAliasesController extends RozierApp
                         )
                     ))
                     ->add('metaTitle', 'text', array(
+                        'label'=>$this->getTranslator()->trans('metaTitle'),
                         'required' => false
                     ))
                     ->add('metaKeywords', 'text', array(
+                        'label'=>$this->getTranslator()->trans('metaKeywords'),
                         'required' => false
                     ))
                     ->add('metaDescription', 'textarea', array(
+                        'label'=>$this->getTranslator()->trans('metaDescription'),
                         'required' => false
                     ));
 

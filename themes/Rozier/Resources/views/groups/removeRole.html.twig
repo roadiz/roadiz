@@ -3,14 +3,14 @@
 
 {% block content %}
 <section id="manage-role">
-	<h1 id="role-title">{% trans %}Unlink role:{% endtrans %} {{ role.getName }}</h1>
+	<h1 id="role-title">{{ "unlink.role.%name%"|trans({'%name%': role.getName}) }}</h1>
 
 	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to remove this role from group?{% endtrans %}</legend>
-	    	<a href="{{ path('groupsEditRolesPage', { groupId: group.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<legend>{% trans %}are_you_sure.remove.role.from.group{% endtrans %}</legend>
+	    	<a href="{{ path('groupsEditRolesPage', { groupId: group.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

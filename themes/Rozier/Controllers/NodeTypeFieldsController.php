@@ -87,7 +87,7 @@ class NodeTypeFieldsController extends RozierApp
             if ($form->isValid()) {
                 $this->editNodeTypeField($form->getData(), $field);
 
-                $msg = $this->getTranslator()->trans('nodeTypeField.updated', array('%name%'=>$field->getName()));
+                $msg = $this->getTranslator()->trans('nodeTypeField.%name%.updated', array('%name%'=>$field->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -149,7 +149,7 @@ class NodeTypeFieldsController extends RozierApp
             if ($form->isValid()) {
                 $this->addNodeTypeField($form->getData(), $field, $nodeType);
 
-                $msg = $this->getTranslator()->trans('nodeTypeField.created', array('%name%'=>$field->getName()));
+                $msg = $this->getTranslator()->trans('nodeTypeField.%name%.created', array('%name%'=>$field->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -222,7 +222,7 @@ class NodeTypeFieldsController extends RozierApp
                 $nodeType->getHandler()->updateSchema();
 
                 $msg = $this->getTranslator()->trans(
-                    'nodeTypeField.deleted',
+                    'nodeTypeField.%name%.deleted',
                     array('%name%'=>$field->getName())
                 );
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -316,26 +316,39 @@ class NodeTypeFieldsController extends RozierApp
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('name', 'text', array(
+                        'label' => $this->getTranslator()->trans('name'),
                         'constraints' => array(
                             new NotBlank()
                         )
                     ))
                     ->add('label', 'text', array(
+                        'label' => $this->getTranslator()->trans('label'),
                         'constraints' => array(
                             new NotBlank()
                         )
                     ))
                     ->add('type', 'choice', array(
+                        'label' => $this->getTranslator()->trans('type'),
                         'required' => true,
                         'choices' => NodeTypeField::$typeToHuman
                     ))
-                    ->add('description', 'text', array('required' => false))
-                    ->add('visible', 'checkbox', array('required' => false))
-                    ->add('indexed', 'checkbox', array('required' => false))
+                    ->add('description', 'text', array(
+                        'label' => $this->getTranslator()->trans('description'),
+                        'required' => false
+                    ))
+                    ->add('visible', 'checkbox', array(
+                        'label' => $this->getTranslator()->trans('visible'),
+                        'required' => false
+                    ))
+                    ->add('indexed', 'checkbox', array(
+                        'label' => $this->getTranslator()->trans('indexed'),
+                        'required' => false
+                    ))
                     ->add(
                         'defaultValues',
                         'text',
                         array(
+                            'label' => $this->getTranslator()->trans('defaultValues'),
                             'required' => false,
                             'attr' => array(
                                 'placeholder' => $this->getTranslator()->trans('enter_values_comma_separated')

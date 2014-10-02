@@ -2,18 +2,18 @@
 
 {% block content %}
 <section id="manage-roles">
-	<h1 id="title">{% trans %}Roles{% endtrans %}</h1>
+	<h1 id="title">{% trans %}roles{% endtrans %}</h1>
 	<nav>
-		<a class="uk-button" href="{{ path('rolesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a role{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('rolesImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}Import a roles (.rzt){% endtrans %}</a>
-        <a class="uk-button" href="{{ path('rolesExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}Export all roles (.rzt){% endtrans %}</a>
+		<a class="uk-button" href="{{ path('rolesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.role{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('rolesImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}import.role{% endtrans %}</a>
+        <a class="uk-button" href="{{ path('rolesExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}export.all.roles{% endtrans %}</a>
     </nav>
 	{% include 'widgets/filtersBar.html.twig' %}
 	<table class="roles uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}name{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -25,8 +25,8 @@
 				</td>
 				<td>
 					{% if not role.required %}
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('rolesDeletePage', { roleId: role.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}Delete{% endtrans %}</a>
-					<a class="uk-button uk-button-small uk-button-success" href="{{ path('rolesExportPage', { roleId: role.getId }) }}"><i class="uk-icon-download"></i> {% trans %}Export{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('rolesDeletePage', { roleId: role.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-success" href="{{ path('rolesExportPage', { roleId: role.getId }) }}"><i class="uk-icon-download"></i> {% trans %}export{% endtrans %}</a>
 					{% else %}
 					<div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}role.required{% endtrans %}</div>
 					{% endif %}

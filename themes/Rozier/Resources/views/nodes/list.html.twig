@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="manage-nodes">
-	<h1 id="node-title">{% trans %}Nodes{% endtrans %}</h1>
+	<h1 id="node-title">{% trans %}nodes{% endtrans %}</h1>
 	{# Add node control #}
 	{% if nodeTypes|length %}
 	<div class="uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
@@ -23,7 +23,7 @@
 	<table class="nodes uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}node.name{% endtrans %}
+	            <th>{% trans %}nodeName{% endtrans %}
 	            {% if request.query.get("field") == 'nodeName' and request.query.get("ordering") == "DESC" %}
 	            	<a href="?field=nodeName&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
 	            {% else %}

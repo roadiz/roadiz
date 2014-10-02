@@ -3,14 +3,14 @@
 
 {% block content %}
 <section id="manage-node">
-	<h1 id="node-title">{% trans %}Delete node:{% endtrans %} {{ node.getNodeName }}</h1>
+	<h1 id="node-title">{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}</h1>
 
 	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to delete this node and its data?{% endtrans %}</legend>
-	    	<a href="{{ path('nodesEditPage', {nodeId: node.getId}) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<legend>{% trans %}are_you_sure.delete.node.and.data{% endtrans %}</legend>
+	    	<a href="{{ path('nodesEditPage', {nodeId: node.getId}) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

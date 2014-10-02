@@ -2,15 +2,15 @@
 
 {% block content %}
 <section id="manage-user-roles">
-	<h1 id="user-title">Edit {{ user.getDefaultTranslatedTag.getName }} roles</h1>
+	<h1 id="user-title">{{ "edi.user.%name%.roles"|trans({'%name%': user.getUserName}) }}</h1>
 
 	{% include 'users/navBar.html.twig' with {'user':user, current:'roles'} %}
 
 	<table class="users-roles uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Specific roles{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}specific.roles{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -18,7 +18,7 @@
 			<tr>
 				<td>{{ role.getName }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveRolesPage', { userId: user.getId, roleId: role.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveRolesPage', { userId: user.getId, roleId: role.getId }) }}">{% trans %}unlink{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}
@@ -27,7 +27,7 @@
 	<table class="users--inherited-roles uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Inherited roles{% endtrans %}</th>
+	            <th>{% trans %}inherited.roles{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -38,7 +38,7 @@
 			{% endfor %}
 		</tbody>
 	</table>
-	<h2>{% trans %}Add a specific role{% endtrans %}</h2>
+	<h2>{% trans %}add.specific.role{% endtrans %}</h2>
 
 	{% form_theme form 'forms.html.twig' %}
     <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>

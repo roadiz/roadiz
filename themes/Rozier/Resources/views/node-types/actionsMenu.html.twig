@@ -1,9 +1,15 @@
+{% spaceless %}
 <nav data-action-menu class="actions-menu uk-navbar rz-vertical-align">
-    <a class="uk-button" href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-reply"></i><span class="label">{% trans %}back.to.nodeTypes{% endtrans %}</span></a>
+    <a class="uk-button" href="{{ path('nodeTypesHomePage') }}">
+        <i class="uk-icon-reply"></i><span class="label">{% trans %}back_to.nodeTypes{% endtrans %}</span>
+    </a>
     {# Delete current node #}
     {% if (securityContext.Granted('ROLE_ACCESS_NODETYPES_DELETE')) %}
     {% if nodeType.getId %}
-    <a class="uk-button uk-button-danger" href="{{ path('nodeTypesDeletePage', { nodeTypeId: nodeType.getId}) }}"><i class="uk-icon-trash-o"></i><span class="label">{% trans %}delete.nodeType{% endtrans %}</span></a>
+    <a class="uk-button uk-button-danger" href="{{ path('nodeTypesDeletePage', { nodeTypeId: nodeType.getId}) }}">
+        <i class="uk-icon-trash-o"></i><span class="label">{% trans %}delete.nodeType{% endtrans %}</span>
+    </a>
     {% endif %}
     {% endif %}
 </nav>
+{% endspaceless %}

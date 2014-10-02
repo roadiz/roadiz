@@ -3,7 +3,7 @@
 {% block content %}
 <section id="manage-theme">
 	<h1 id="theme-title">{% trans %}edit.theme{% endtrans %} {{ theme.getClassName }}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('themesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.themes{% endtrans %}</a></nav>
+	<nav><a class="uk-button uk-button-small" href="{{ path('themesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.themes{% endtrans %}</a></nav>
 
 	{% form_theme form 'forms.html.twig' %}
     <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>

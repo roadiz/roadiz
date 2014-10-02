@@ -450,6 +450,10 @@ class AppController implements ViewableInterface
             } catch (IOExceptionInterface $e) {
                 echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
             }
+
+            /*
+             * Theme templates
+             */
             $iterator = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator(static::getViewsFolder()),
                 \RecursiveIteratorIterator::LEAVES_ONLY
@@ -459,6 +463,20 @@ class AppController implements ViewableInterface
                 if ($file->isFile() &&
                     $file->getExtension() == 'twig') {
                     $ctrl->getTwig()->loadTemplate(str_replace(static::getViewsFolder().'/', '', $file));
+                }
+            }
+            /*
+             * Common templates
+             */
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator(RENZO_ROOT.'/src/Renzo/CMS/Resources/views/forms'),
+                \RecursiveIteratorIterator::LEAVES_ONLY
+            );
+            foreach ($iterator as $file) {
+                // force compilation
+                if ($file->isFile() &&
+                    $file->getExtension() == 'twig') {
+                    $ctrl->getTwig()->loadTemplate(str_replace(RENZO_ROOT.'/src/Renzo/CMS/Resources/views/forms/', '', $file));
                 }
             }
 

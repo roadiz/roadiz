@@ -76,7 +76,7 @@ class RolesController extends RozierApp
 
             try {
                 $role = $this->addRole($form->getData());
-                $msg = $this->getTranslator()->trans('role.created', array('%name%'=>$role->getName()));
+                $msg = $this->getTranslator()->trans('role.%name%.created', array('%name%'=>$role->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -132,7 +132,7 @@ class RolesController extends RozierApp
 
                 try {
                     $this->deleteRole($form->getData(), $role);
-                    $msg = $this->getTranslator()->trans('role.deleted', array('%name%'=>$role->getName()));
+                    $msg = $this->getTranslator()->trans('role.%name%.deleted', array('%name%'=>$role->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -193,7 +193,7 @@ class RolesController extends RozierApp
 
                 try {
                     $this->editRole($form->getData(), $role);
-                    $msg = $this->getTranslator()->trans('role.updated', array('%name%'=>$role->getName()));
+                    $msg = $this->getTranslator()->trans('role.%name%.updated', array('%name%'=>$role->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -238,11 +238,11 @@ class RolesController extends RozierApp
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('name', 'text', array(
-                'label' => $this->getTranslator()->trans('role.name'),
+                'label' => $this->getTranslator()->trans('name'),
                 'constraints' => array(
                     new Regex(array(
                         'pattern' => '#^ROLE_([A-Z\_]+)$#',
-                        'message' => $this->getTranslator()->trans('Role definition must be prefixed with “ROLE_” and contains only uppercase letters and underscores.')
+                        'message' => $this->getTranslator()->trans('role.name.must_comply_with_standard')
                     ))
                 )
             ));
@@ -293,10 +293,11 @@ class RolesController extends RozierApp
             ))
             ->add('name', 'text', array(
                 'data'=>$role->getName(),
+                'label' => $this->getTranslator()->trans('name'),
                 'constraints' => array(
                     new Regex(array(
                         'pattern' => '#^ROLE_([A-Z\_]+)$#',
-                        'message' => $this->getTranslator()->trans('Role definition must be prefixed with “ROLE_” and contains only uppercase letters and underscores.')
+                        'message' => $this->getTranslator()->trans('role.name.must_comply_with_standard')
                     ))
                 )
             ));

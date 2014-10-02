@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="manage-user">
-	<h1 id="user-title">Edit {{ user.getFirstname }}</h1>
+	<h1 id="user-title"{{ "edit.user.%name%"|trans({'%name%': user.getUserName }) }}</h1>
 	{% include 'users/navBar.html.twig' with {'user':user, current:'edit'} %}
 
 	{% form_theme form 'forms.html.twig' %}

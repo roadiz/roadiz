@@ -3,9 +3,9 @@
 
 {% block content %}
 <section id="manage-documents">
-	<h1 id="title">{% trans %}Documents{% endtrans %}</h1>
+	<h1 id="title">{% trans %}documents{% endtrans %}</h1>
 	<nav>
-		<a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-plus"></i> {% trans %}Upload a document{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-plus"></i> {% trans %}upload.document{% endtrans %}</a>
 	</nav>
 	{% include 'widgets/filtersBar.html.twig' %}
 	<table class="documents uk-table">
@@ -37,7 +37,7 @@
 				</td>
 				<td>{{ document.getCreatedAt|localizeddate('full', 'none') }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}">{% trans %}delete{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}

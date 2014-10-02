@@ -2,7 +2,7 @@
 
 {% block content %}
 <section id="manage-tag-tree">
-	<h1 id="tag-title">Tree {{ tag.getTagTranslations.first.getName }}</h1>
+	<h1 id="tag-title">{{ "tag.%name%.tree"|trans({'%name%': tag.getTagName }) }}</h1>
 	{% include 'tags/navBar.html.twig' with {"current": 'tree'} %}
 	{% include 'widgets/tagTree/tagTree.html.twig' with { "tagTree":specificTagTree, "tag":specificTagTree.getRootTag } only %}
 

@@ -3,11 +3,11 @@
 
 {% block content %}
 <section id="manage-settings">
-	<h1 id="title">{% trans %}Settings{% endtrans %}</h1>
+	<h1 id="title">{% trans %}settings{% endtrans %}</h1>
 	<nav>
-		<a class="uk-button" href="{{ path('settingsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Add a new setting{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('settingsImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}Import{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('settingsExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}Export{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('settingsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.setting{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('settingsImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('settingsExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}export{% endtrans %}</a>
 	</nav>
 
 	{% include 'widgets/filtersBar.html.twig' %}
@@ -15,8 +15,8 @@
 	<table class="settings uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Value{% endtrans %}</th>
+	            <th>{% trans %}name{% endtrans %}</th>
+	            <th>{% trans %}value{% endtrans %}</th>
 	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>

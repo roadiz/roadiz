@@ -78,7 +78,7 @@ class ThemesController extends RozierApp
         if ($form->isValid()) {
             try {
                 $this->addTheme($form->getData(), $theme);
-                $msg = $this->getTranslator()->trans('theme.created', array('%name%'=>$theme->getClassName()));
+                $msg = $this->getTranslator()->trans('theme.%name%.created', array('%name%'=>$theme->getClassName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -129,7 +129,7 @@ class ThemesController extends RozierApp
 
                 try {
                     $this->editTheme($form->getData(), $theme);
-                    $msg = $this->getTranslator()->trans('theme.updated', array('%name%'=>$theme->getClassName()));
+                    $msg = $this->getTranslator()->trans('theme.%name%.updated', array('%name%'=>$theme->getClassName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
@@ -187,7 +187,7 @@ class ThemesController extends RozierApp
 
                 try {
                     $this->deleteTheme($form->getData(), $theme);
-                    $msg = $this->getTranslator()->trans('theme.deleted', array('%name%'=>$theme->getClassName()));
+                    $msg = $this->getTranslator()->trans('theme.%name%.deleted', array('%name%'=>$theme->getClassName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -236,12 +236,13 @@ class ThemesController extends RozierApp
             ->add(
                 'className',
                 new \RZ\Renzo\CMS\Forms\ThemesType(),
-                array('label' => 'Theme')
+                array('label' => $this->getTranslator()->trans('themeClass'))
             )
             ->add(
                 'available',
                 'checkbox',
                 array(
+                    'label' => $this->getTranslator()->trans('available'),
                     'data' => $theme->isAvailable(),
                     'required' => false
                 )
@@ -250,6 +251,7 @@ class ThemesController extends RozierApp
                 'hostname',
                 'text',
                 array(
+                    'label' => $this->getTranslator()->trans('hostname'),
                     'data' => $theme->getHostname()
                 )
             )
@@ -257,6 +259,7 @@ class ThemesController extends RozierApp
                 'backendTheme',
                 'checkbox',
                 array(
+                    'label' => $this->getTranslator()->trans('backendTheme'),
                     'data' => $theme->isBackendTheme(),
                     'required' => false
                 )
@@ -284,13 +287,16 @@ class ThemesController extends RozierApp
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('available', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('available'),
                 'data' => $theme->isAvailable(),
                 'required' => false
             ))
             ->add('hostname', 'text', array(
+                'label' => $this->getTranslator()->trans('hostname'),
                 'data' => $theme->getHostname()
             ))
             ->add('backendTheme', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('backendTheme'),
                 'data' => $theme->isBackendTheme(),
                 'required' => false
             ));
@@ -334,7 +340,7 @@ class ThemesController extends RozierApp
         if ($existing !== null) {
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
-                    'theme.no_creation.already_exists',
+                    'theme.%name%.no_creation.already_exists',
                     array('%name%'=>$theme->getClassName())
                 ),
                 1

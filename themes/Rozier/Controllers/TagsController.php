@@ -137,7 +137,7 @@ class TagsController extends RozierApp
             if ($form->isValid()) {
                 $this->editTag($form->getData(), $tag);
 
-                $msg = $this->getTranslator()->trans('tag.updated', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
+                $msg = $this->getTranslator()->trans('tag.%name%.updated', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
                 /*
@@ -194,7 +194,7 @@ class TagsController extends RozierApp
             if ($form->isValid()) {
                 $this->addTag($form->getData(), $tag, $translation);
 
-                $msg = $this->getTranslator()->trans('tag.created', array('%name%'=>$tag->getTagName()));
+                $msg = $this->getTranslator()->trans('tag.%name%.created', array('%name%'=>$tag->getTagName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
                 /*
@@ -248,7 +248,7 @@ class TagsController extends RozierApp
             if ($form->isValid()) {
                 $this->editTagSettings($form->getData(), $tag);
 
-                $msg = $this->getTranslator()->trans('tag.updated', array('%name%'=>$tag->getTagName()));
+                $msg = $this->getTranslator()->trans('tag.%name%.updated', array('%name%'=>$tag->getTagName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -343,7 +343,7 @@ class TagsController extends RozierApp
                 $form->getData()['tagId'] == $tag->getId()) {
 
                 $this->deleteTag($form->getData(), $tag);
-                $msg = $this->getTranslator()->trans('tag.deleted', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
+                $msg = $this->getTranslator()->trans('tag.%name%.deleted', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -405,7 +405,7 @@ class TagsController extends RozierApp
                 try {
                     $tag = $this->addChildTag($form->getData(), $parentTag, $translation);
 
-                    $msg = $this->getTranslator()->trans('child.tag.created', array('%name%'=>$tag->getTagName()));
+                    $msg = $this->getTranslator()->trans('child.tag.%name%.created', array('%name%'=>$tag->getTagName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -536,7 +536,7 @@ class TagsController extends RozierApp
             $this->checkExists($data['tagName'])) {
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
-                    'tag.no_update.already_exists',
+                    'tag.%name%.no_update.already_exists',
                     array('%name%'=>$data['tagName'])
                 ),
                 1
@@ -564,7 +564,7 @@ class TagsController extends RozierApp
         if ($this->checkExists($data['name'])) {
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
-                    'tag.no_creation.already_exists',
+                    'tag.%name%.no_creation.already_exists',
                     array('%name%'=>$data['name'])
                 ),
                 1
@@ -629,7 +629,7 @@ class TagsController extends RozierApp
         if ($this->checkExists($data['name'])) {
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
-                    'tag.already_added',
+                    'tag.%name%.already_added',
                     array('%name%'=>$data['name'])
                 ),
                 1
@@ -686,13 +686,23 @@ class TagsController extends RozierApp
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('name', 'text', array(
+                        'label' => $this->getTranslator()->trans('name'),
                         'constraints' => array(
                             new NotBlank()
                         )
                     ))
-                    ->add('locked', 'checkbox', array('required' => false))
-                    ->add('visible', 'checkbox', array('required' => false))
-                    ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array('required' => false));
+                    ->add('locked', 'checkbox', array(
+                        'label' => $this->getTranslator()->trans('locked'),
+                        'required' => false
+                    ))
+                    ->add('visible', 'checkbox', array(
+                        'label' => $this->getTranslator()->trans('visible'),
+                        'required' => false
+                    ))
+                    ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array(
+                        'label' => $this->getTranslator()->trans('description'),
+                        'required' => false
+                    ));
 
         return $builder->getForm();
     }
@@ -711,13 +721,21 @@ class TagsController extends RozierApp
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('name', 'text', array(
+                        'label' => $this->getTranslator()->trans('name'),
                         'constraints' => array(
                             new NotBlank()
                         )
                     ))
-                    ->add('visible', 'checkbox', array('required' => false))
-                    ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array('required' => false))
+                    ->add('visible', 'checkbox', array(
+                        'label' => $this->getTranslator()->trans('visible'),
+                        'required' => false
+                    ))
+                    ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array(
+                        'label' => $this->getTranslator()->trans('description'),
+                        'required' => false
+                    ))
                     ->add('parent_tagId', 'hidden', array(
+                        'label' => $this->getTranslator()->trans('parent_tagId'),
                         "data" => $tag->getId(),
                         'required' => true
                     ));
@@ -742,11 +760,15 @@ class TagsController extends RozierApp
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('name', 'text', array(
+                'label' => $this->getTranslator()->trans('name'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
-            ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array('required' => false));
+            ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array(
+                'label' => $this->getTranslator()->trans('description'),
+                'required' => false
+            ));
 
         return $builder->getForm();
     }
@@ -767,12 +789,19 @@ class TagsController extends RozierApp
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('tagName', 'text', array(
+                'label' => $this->getTranslator()->trans('tagName'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
-            ->add('visible', 'checkbox', array('required' => false))
-            ->add('locked', 'checkbox', array('required' => false));
+            ->add('visible', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('visible'),
+                'required' => false
+            ))
+            ->add('locked', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('locked'),
+                'required' => false
+            ));
 
         return $builder->getForm();
     }

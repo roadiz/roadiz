@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="manage-node-type">
-	<h1 id="node-type-title">Edit {{ node_type.getDisplayName }}</h1>
+	<h1 id="node-type-title">{{ "edit.nodeType.%name%"|trans({'%name%': nodeType.getDisplayName}) }}</h1>
 
 	{% form_theme form 'forms.html.twig' %}
 	<form id="edit-node-type-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>

@@ -3,14 +3,14 @@
 
 {% block content %}
 <section id="manage-setting">
-	<h1 id="setting-title">{% trans %}Delete setting:{% endtrans %} {{ setting.getName }}</h1>
+	<h1 id="setting-title">{{ "delete.setting.%name%"|trans({'%name%': setting.getName }) }}</h1>
 
 	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to delete this setting?{% endtrans %}</legend>
-	    	<a href="{{ path('settingsHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<legend>{% trans %}are_you_sure.delete.setting{% endtrans %}</legend>
+	    	<a href="{{ path('settingsHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

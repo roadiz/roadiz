@@ -4,12 +4,12 @@
 
 	<header class="content-header header-node header-node-edit-seo" id="header-node-edit-seo">
 		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-		<h1 class="content-title" id="node-edit-seo-title">Edit {{ source.getTitle }} aliases</h1>
+		<h1 class="content-title" id="node-edit-seo-title">{{ "edit.node.%name%.seo"|trans({'%name%': source.getTitle}) }}</h1>
 	</header>
 	{% include 'nodes/navBar.html.twig' with {"current": 'seo'} %}
 	{% include 'nodes/translationSEOBar.html.twig' with {"current": translation.getId} %}
-	
-	<article class="content" id="content-node-edit-aliases">    
+
+	<article class="content" id="content-node-edit-aliases">
 		<h2 class="content-subtitle">{% trans %}edit.node.seo{% endtrans %}</h2>
 
 		{% form_theme seoForm 'forms.html.twig' %}
@@ -26,7 +26,7 @@
 		</form>
 
 
-		<h2 class="content-subtitle">{% trans %}alias{% endtrans %}</h2>
+		<h2 class="content-subtitle">{% trans %}urlAlias{% endtrans %}</h2>
 
 		<h3>{% trans %}add.alias{% endtrans %}</h3>
 		{% form_theme form 'forms.html.twig' %}
@@ -41,9 +41,9 @@
 		<table class="aliases uk-table">
 			<thead>
 		        <tr>
-		            <th>{% trans %}Alias{% endtrans %}</th>
-		            <th>{% trans %}Translation{% endtrans %}</th>
-		            <th>{% trans %}Actions{% endtrans %}</th>
+		            <th>{% trans %}urlAlias{% endtrans %}</th>
+		            <th>{% trans %}translation{% endtrans %}</th>
+		            <th>{% trans %}actions{% endtrans %}</th>
 		        </tr>
 		    </thead>
 			<tbody>

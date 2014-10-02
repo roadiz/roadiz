@@ -1,6 +1,6 @@
 <nav class="uk-navbar">
 	<div class="uk-navbar-content">
-   		<a class="uk-button" href="?">{% transchoice filters.itemCount %}{0} No item|{1} 1 item|]1,Inf] %count% items{% endtranschoice %}</a>
+   		<a class="uk-button" href="?">{% transchoice filters.itemCount %}{0} no.item|{1} 1.item|]1,Inf] %count%.items{% endtranschoice %}</a>
     </div>
 	{% if filters.description %}<a class="uk-navbar-brand">{{ filters.description }}</a>{% endif %}
 	<div class="uk-navbar-content uk-hidden-small">

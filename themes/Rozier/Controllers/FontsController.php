@@ -79,7 +79,7 @@ class FontsController extends RozierApp
             try {
                 $font = $this->addFont($form); // only pass form for file handling
 
-                $msg = $this->getTranslator()->trans('font.created', array('%name%'=>$font->getName()));
+                $msg = $this->getTranslator()->trans('font.%name%.created', array('%name%'=>$font->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -134,7 +134,7 @@ class FontsController extends RozierApp
 
                 try {
                     $this->deleteFont($form->getData(), $font);
-                    $msg = $this->getTranslator()->trans('font.deleted', array('%name%'=>$font->getName()));
+                    $msg = $this->getTranslator()->trans('font.%name%.deleted', array('%name%'=>$font->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -193,7 +193,7 @@ class FontsController extends RozierApp
 
                 try {
                     $this->editFont($form, $font); // only pass form for file handling
-                    $msg = $this->getTranslator()->trans('font.updated', array('%name%'=>$font->getName()));
+                    $msg = $this->getTranslator()->trans('font.%name%.updated', array('%name%'=>$font->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 

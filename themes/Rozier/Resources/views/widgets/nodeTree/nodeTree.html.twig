@@ -1,7 +1,7 @@
 {% if nodeTree %}
 <nav class="nodetree-widget" {% if head.ajax %}style="display:none;"{% endif %}">
     {% if mainNodeTree %}
-    <h4>{% trans %}Node-tree{% endtrans %}</h4>
+    <h4>{% trans %}nodeTree{% endtrans %}</h4>
     {% endif %}
 	<ul class="root-tree uk-nestable" data-uk-nestable="{'group':'nodeTree'}" data-parent-node-id="{{ node.getId }}">
 		{% for cnode in nodeTree.getNodes %}

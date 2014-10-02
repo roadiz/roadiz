@@ -14,7 +14,7 @@
     </div>
 	<div id="user">
         <a id="user-picture" href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"><img width="200" height="200" class="uk-thumbnail" src="{{ session.user.getPictureUrl }}" alt="{{ session.user.getUsername }}" /></a>
-        <h3>Hello, <span class="username">{{ displayName }}</span></h3>
+        <h3>{{ "hello.%name%"|trans({'%name%': displayName}) }}</h3>
         <nav class="user-actions">
             {# <a title="{% trans %}edit.account{% endtrans %}" class="uk-icon-button uk-icon-user" href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"></a> #}
             {% if (securityContext.Granted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE')) %}
@@ -25,7 +25,7 @@
             {% endif %}
             <a title="{% trans %}logout{% endtrans %}" class="uk-icon-button uk-icon-rz-turn-off" href="{{ path('logoutPage') }}"></a>
             {% if head.devMode %}
-            <p class="dev-mode"><i class="uk-icon-rz-cogs"></i> {% trans %}Dev mode activated{% endtrans %}</p>
+            <p class="dev-mode"><i class="uk-icon-rz-cogs"></i> {% trans %}dev_mode.activated{% endtrans %}</p>
             {% endif %}
         </nav>
 

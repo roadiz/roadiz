@@ -2,15 +2,15 @@
 
 {% block content %}
 <section id="manage-group-roles">
-	<h1 id="group-title">Edit {{ group.getName }} roles</h1>
+	<h1 id="group-title">{{ "edit.group.%name%.roles"|trans({'%name%': group.getName}) }}</h1>
 
 	{% include 'groups/navBar.html.twig' with {'group':group, current:'roles'} %}
 
 	<table class="groups-roles uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Role{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}role{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -18,13 +18,13 @@
 			<tr>
 				<td>{{ role.getName }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsRemoveRolesPage', { groupId: group.getId, roleId: role.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsRemoveRolesPage', { groupId: group.getId, roleId: role.getId }) }}">{% trans %}unlink.role{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
-	<h2>{% trans %}Add a role{% endtrans %}</h2>
+	<h2>{% trans %}add.role{% endtrans %}</h2>
 
 	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
