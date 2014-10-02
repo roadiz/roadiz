@@ -38,20 +38,23 @@
 		</form>
 
 		<hr />
-		<table class="aliases uk-table">
-			<thead>
-		        <tr>
-		            <th>{% trans %}urlAlias{% endtrans %}</th>
-		            <th>{% trans %}translation{% endtrans %}</th>
-		            <th>{% trans %}actions{% endtrans %}</th>
-		        </tr>
-		    </thead>
-			<tbody>
-				{% for urlAlias in aliases %}
-					{% include 'url-aliases/editRow.html.twig' %}
-				{% endfor %}
-			</tbody>
-		</table>
+
+		<div class="content-table-cont">
+			<table class="aliases uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}urlAlias{% endtrans %}</th>
+			            <th>{% trans %}translation{% endtrans %}</th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for urlAlias in aliases %}
+						{% include 'url-aliases/editRow.html.twig' %}
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 	</article>
 
 	{% include 'nodes/actionsMenu.html.twig' %}

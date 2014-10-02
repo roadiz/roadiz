@@ -20,27 +20,29 @@
 		<hr />
 
 		<h2 class="content-subtitle">{% trans %}tags{% endtrans %}</h2>
-		<table class="tags uk-table">
-			<thead>
-		        <tr>
-		            <th>{% trans %}id{% endtrans %}</th>
-		            <th>{% trans %}name{% endtrans %}</th>
-		            <th>{% trans %}actions{% endtrans %}</th>
-		        </tr>
-		    </thead>
-			<tbody>
-				{% for tag in node.getTags %}
-				{% set ttag = tag.getTranslatedTags.first %}
-				<tr>
-					<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
-					<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
-					<td>
-						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesRemoveTagsPage', { nodeId: node.getId, tagId: tag.getId }) }}">{% trans %}unlink{% endtrans %}</a>
-					</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+		<div class="content-table-cont">
+			<table class="tags uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}id{% endtrans %}</th>
+			            <th>{% trans %}name{% endtrans %}</th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for tag in node.getTags %}
+					{% set ttag = tag.getTranslatedTags.first %}
+					<tr>
+						<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
+						<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
+						<td>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesRemoveTagsPage', { nodeId: node.getId, tagId: tag.getId }) }}">{% trans %}unlink{% endtrans %}</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 	</article>
 
 	{% include 'nodes/actionsMenu.html.twig' %}
