@@ -1,12 +1,20 @@
 <div>
     {% include 'widgets/nodesSourcesSearch.html.twig' %}
     <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
+        {% if (securityContext.isGranted('ROLE_ACCESS_NODES')%}
         <li class="tabs"><a href=""><i class="uk-icon-rz-node-tree"></i><span class="label">{% trans %}nodes{% endtrans %}</span></a></li>
+        {% endif %}
+        {% if (securityContext.isGranted('ROLE_ACCESS_TAGS')%}
         <li class="tabs"><a href=""><i class="uk-icon-rz-tags-tree"></i><span class="label">{% trans %}tags{% endtrans %}</span></a></li>
+        {% endif %}
     </ul>
     <!-- This is the container of the content items -->
     <ul id="tree-container" class="uk-switcher uk-margin">
+        {% if (securityContext.isGranted('ROLE_ACCESS_NODES')%}
         <li>{% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':true, "securityContext":securityContext} only %}</li>
-        <li>{% include 'widgets/tagTree/tagTree.html.twig' with {"tagTree":tagTree, "tag":tagTree.getRootTag, 'mainTagTree':true} only %}</li>
+        {% endif %}
+        {% if (securityContext.isGranted('ROLE_ACCESS_TAGS')%}
+        <li>{% include 'widgets/tagTree/tagTree.html.twig' with {"tagTree":tagTree, "tag":tagTree.getRootTag, 'mainTagTree':true, "securityContext":securityContext} only %}</li>
+        {% endif %}
     </ul>
 </div>
