@@ -30,7 +30,7 @@
                 <section class="main-container-section" id="admin-menu">
                     {% include 'panels/admin_menu.html.twig' %}
                 </section>
-                {% if (securityContext.isGranted('ROLE_ACCESS_NODES') or securityContext.isGranted('ROLE_ACCESS_TAGS') %}
+                {% if (securityContext.isGranted('ROLE_ACCESS_NODES') or securityContext.isGranted('ROLE_ACCESS_TAGS')) %}
                 <section id="main-trees" class="main-container-section">
                     {% include 'panels/tree_panel.html.twig' %}
                 </section>
