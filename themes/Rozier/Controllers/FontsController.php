@@ -403,7 +403,7 @@ class FontsController extends RozierApp
 
             $font = new Font();
             $font->setName($data['name']);
-            $font->setHash($this->getKernel()->getConfig()['security']['secret']);
+            $font->setHash($this->getService('config')['security']['secret']);
             $font->setVariant($data['variant']);
 
             $this->uploadFontFiles($rawData, $font);
@@ -538,7 +538,7 @@ class FontsController extends RozierApp
             }
 
             $font->setName($data['name']);
-            $font->setHash($this->getKernel()->getConfig()['security']['secret']);
+            $font->setHash($this->getService('config')['security']['secret']);
             $font->setVariant($data['variant']);
 
             $this->uploadFontFiles($rawData, $font);
