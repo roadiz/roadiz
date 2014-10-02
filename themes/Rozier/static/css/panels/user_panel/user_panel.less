@@ -1,7 +1,18 @@
+/*------------------------------------*\
+   USER PANELs
+\*------------------------------------*/
+
+
+/*
+ * Override ui kit buttons styles & colors
+ */
+
+
+/* -------- STYLES -------- */
+
 #user-panel {
     background: @user-panel-color;
     color: @user-panel-text-alt-color;
-
     .transition(width ease 0.5s);
 
 
@@ -11,7 +22,6 @@
     p, li, h1, h2, h3, h4, h5, h6 {
         font-size: 16px;
         line-height: 1.2em;
-
         .transition(font-size ease 1s);
     }
 
@@ -20,10 +30,10 @@
         height: @global-header-height;
         text-align: center;
         .box-sizing();
-        padding: 37px 0;
+        padding: 34px 0 0;
 
         a {
-            font-size: 57px;
+            font-size: 55px;
             color: #333333;
             display: inline-block;
             text-decoration: none;
@@ -46,20 +56,26 @@
         &:hover {
             .opacity(0.8);
         }
-
-        &.uk-icon-rz-flashimage{
-            margin: 0px;
-        }
         &.uk-icon-rz-turn-off {
-            margin: 2px 0 0;
+            margin-right: 0px;
             border-color: @contrast-color;
             .opacity(0.5);
+
+            &:hover {
+                .opacity(0.8);
+            }
         }
     }
 
     #user {
         text-align: center;
-        padding: 24px 0 24px 0;
+        padding: 20px 0 10px 0;
+
+        h3 {
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 6px;
+        }
 
         .username {
             color: @user-panel-text-color;
@@ -102,6 +118,7 @@
     .dev-mode {
         .opacity(0.75);
         padding: 10px 0px;
+        margin: 0;
         font-size: 10px;
         .transition(font-size 1s ease);
         text-shadow: 0 1px 0 rgba(0,0,0,.8);
@@ -140,6 +157,14 @@
                 width: @user-picture-size-mini;
                 height: @user-picture-size-mini;
                 .rounded(@user-picture-size-mini / 2);
+            }
+        }
+        .uk-icon-button {
+            &.uk-icon-rz-flashimage{
+                margin: 0px;
+            }
+            &.uk-icon-rz-turn-off {
+                margin: 2px 0 0;
             }
         }
     }

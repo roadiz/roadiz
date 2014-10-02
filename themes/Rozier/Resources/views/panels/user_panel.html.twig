@@ -14,7 +14,7 @@
     </div>
 	<div id="user">
         <a id="user-picture" href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"><img width="200" height="200" class="uk-thumbnail" src="{{ session.user.getPictureUrl }}" alt="{{ session.user.getUsername }}" /></a>
-        <h3>Hello <span class="username">{{ displayName }}</span></h3>
+        <h3>Hello, <span class="username">{{ displayName }}</span></h3>
         <nav class="user-actions">
             {# <a title="{% trans %}edit.account{% endtrans %}" class="uk-icon-button uk-icon-user" href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"></a> #}
             {% if (securityContext.Granted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE')) %}

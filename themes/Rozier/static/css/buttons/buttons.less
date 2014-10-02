@@ -35,6 +35,18 @@
 
 }
 
+.uk-button-mini {
+    width: 17px; height: 17px;
+    padding: 0px;
+    min-width: 17px; min-height: 17px;
+    line-height: 19px;
+    font-size: 10px;
+    .rounded(100%);
+    border: none;
+    background: darken(@maintree-global-bg, 5%);
+    color: darken(@maintree-global-bg, 30%);
+}
+
 .uk-button-success {
     background: @grey-form-submit;
     border-color: @grey-form-submit-border;
@@ -77,9 +89,9 @@
     .opacity(0.8);
     .transition(~"border-color 0.3s linear, background 0.3s linear, opacity 0.3s linear");
 
-    &:before {
-        margin-left: 1px;
-    }
+    // &:before {
+    //     margin-left: 1px;
+    // }
 
     &:hover {
         .opacity(0.8);

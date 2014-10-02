@@ -3,7 +3,7 @@
     .transform-transition(~"1s ease 0s, width 1s ease 0s");
 
     & > div {
-        background-color: #d3d3d3;
+        background-color: @maintree-global-bg;
     }
 }
 
@@ -13,7 +13,7 @@
     text-align: center;
 
     form {
-        padding-top: 43px;
+        padding-top: 36px;
 
         .uk-form-icon {
           height: 36px;
@@ -48,8 +48,11 @@
                 &:-ms-input-placeholder {
                     color: @maintree-search-placeholder;
                 }
-                &:hover, &:focus {
-                    background: @maintree-search-input-bg-focus;
+                &:hover {
+                    background: darken(@maintree-search-input-bg, 4%);
+                }
+                &:focus {
+                    background: darken(@maintree-search-input-bg, 8%);
                 }
             }
         }

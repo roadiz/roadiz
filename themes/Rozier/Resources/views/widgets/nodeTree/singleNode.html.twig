@@ -14,7 +14,6 @@
 		{% if not node.isArchived %}archived-node {% endif %}
 		{% if not node.isLocked %}locked-node {% endif %}">
 		<div class="uk-nestable-handle"></div>
-		{% if not node.isHidingChildren %}<div data-nestable-action="toggle"></div>{% endif %}
 		<div class="nodetree-element-name">
 			{% if node.isHidingChildren %}
 				<a href="{{ path('nodesTreePage', { nodeId:node.getId }) }}">{{ name }}</a>
@@ -62,6 +61,7 @@
 		        </div>
 		    </nav>
 		</div>
+		{% if not node.isHidingChildren %}<div data-nestable-action="toggle"></div>{% endif %}
 	</div>
 	{% spaceless %}
 	<ul class="uk-nestable-list" data-parent-node-id="{{ node.getId }}">

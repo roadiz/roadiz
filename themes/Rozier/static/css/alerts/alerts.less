@@ -1,25 +1,29 @@
 /*------------------------------------*\
-   FORMS
+   ALERTS
 \*------------------------------------*/
-
-
-/*
- * Override ui kit forms styles
- */
 
 
 /* -------- STYLES -------- */
 
 .uk-alert {
-    position: relative;
-    width: 100%;
-    margin: 15px auto 10px;
-    padding: 9px;
+    position: absolute;
+    width: 400px;
+    right: 15px;
+    left: 50%;
+    text-align: center;
+    margin: 0 auto 0 -200px;
+    padding: 18px;
     z-index: 99999;
-    font-size: 14px;
-    .border-radius(0px);
+    font-size: 12px;
+    font-weight: bold;
+    .rounded(0px);
     .box-sizing();
-    -webkit-font-smoothing: subpixel-antialiased;;
+    -webkit-font-smoothing: antialiased;
+    background: @contrast-color-darker;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+    color: white;
+    border-color: darken(@contrast-color-darker, 5%);
+    border-top: none;
 }
 
 .uk-alert-danger {

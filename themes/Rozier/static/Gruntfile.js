@@ -59,7 +59,7 @@ module.exports = function(grunt) {
 					'js/*.js',
 					'js/*/*.js',
 					'css/*.less',
-					'css/*/*.less',
+					'css/**/*.less',
 					'src-img/*.{png,jpg,gif}'
 				],
 				tasks: ['less', 'jshint', 'concat','uglify'],

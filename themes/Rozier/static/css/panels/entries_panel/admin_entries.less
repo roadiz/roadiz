@@ -1,3 +1,18 @@
+/*------------------------------------*\
+   ENTRIES PANEL
+\*------------------------------------*/
+
+
+/*
+ * Override ui kit buttons styles & colors
+ */
+
+/* -------- VARS -------- */
+@minify-tree-panel-area-width: 35px;
+
+
+/* -------- STYLES -------- */
+
 #admin-menu {
 
     .uk-nav {
@@ -185,19 +200,24 @@
 
 #frontend-home {
     &-area {
-        height: 113px;
+        height: @global-header-height - @minify-tree-panel-area-width - 2px;
         .box-sizing();
         text-align: center;
-        padding: 40px 0;
+        padding: 35px 0;
     }
     &-link {
         background: white;
         color: #909090;
         font-size: 28px;
         line-height: 38px;
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
         .transition(~'color ease 0.35s, border-color ease 0.35s');
+        text-align: center;
+
+        &:before {
+            margin: 0 0 0 2px;
+        }
 
         &:hover {
             border-color: @grey-form-submit-border-hover;
@@ -208,7 +228,7 @@
 
 #minify-tree-panel {
     &-area {
-        height: 35px;
+        height: @minify-tree-panel-area-width;
         .box-sizing();
         text-align: center;
         padding: 7px 0;
@@ -220,7 +240,7 @@
             .matrix-icon();
             background-position: @icon-size*-1 0;
             position: absolute;
-            right: -15px; top: 127px;
+            right: -15px; top: 117px;
             .transform-transition(ease 1s);
         }
 
@@ -235,13 +255,12 @@
         height: 20px;
         font-size: 10px;
         line-height: 20px;
-        background: #d8d8d8;
+        background: darken(@global-header-color, 10%);
         border: 0 none;
-        color: #909090;
         .transition(background ease 0.35s);
 
         &:hover {
-            background: #CCCCCC;
+            background: darken(@global-header-color, 15%);
         }
     }
 }
