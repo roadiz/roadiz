@@ -3,9 +3,9 @@
 <div>
 	<section id="manage-node">
 
-		<header class="header" id="header-manage-node">
-			<h1 class="title" id="node-title">{% trans %}edit.node{% endtrans %} "{{ source.getTitle }}"</h1>
+		<header class="content-header" id="header-manage-node">
 			{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+			<h1 class="content-title" id="node-title">{% trans %}edit.node{% endtrans %} "{{ source.getTitle }}"</h1>
 			{% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}
 		</header>	
 

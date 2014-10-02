@@ -1,36 +1,40 @@
 #main-content {
-    & > div {
-        padding: 0px;
-        background-color: @maincontent-bg;
+    
+}
 
-        .container {
-            padding: 0px 60px;
-        }
+#main-content-scrollable{
+    padding: 0px;
+    background-color: @maincontent-bg;
+    overflow-y: auto;
 
-        // Sécurise les autres header (actionMenu par exemple)
-        & > section > header {
-            height: 188px;
-            padding: 0px 60px;
-            background-color: @maincontent-header-bg;
-            text-align: center;
-            .box-sizing();
+    .container {
+        padding: 0px 60px;
+    }
 
-            h1 {
-                padding: 3em 0 0;
-                margin: 0px;
-                text-align: center;
-                &:after {
-                    content: "";
-                    display: block;
-                    position: absolute;
-                    width: 16px;
-                    height: 1px;
-                    background-color: #808080;
-                    left: 50%;
-                    margin-left: -8px;
-                    margin-top: 8px;
-                }
-            }
-        }
+}
+
+.content-header { // header
+    height: 188px;
+    padding: 0px 60px;
+    background-color: @maincontent-header-bg;
+    text-align: center;
+    .box-sizing();
+
+}
+
+.content-title { // h1
+    padding: 3em 0 0;
+    margin: 0px;
+    text-align: center;
+    &:after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 16px;
+        height: 1px;
+        background-color: #808080;
+        left: 50%;
+        margin-left: -8px;
+        margin-top: 8px;
     }
 }

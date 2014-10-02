@@ -1,0 +1,110 @@
+/*------------------------------------*\
+   NODES - EDIT
+\*------------------------------------*/
+
+
+/*
+ * Nodes edit page
+ */
+
+
+/* -------- VARS -------- */
+
+@translation-nav-color:         #E2E2E2;
+@translation-nav-active-color:  #686868;
+
+
+/* -------- STYLES -------- */
+
+.header-node-edit{
+    
+    .content-title{
+        padding:0;
+    }
+
+}
+
+.node-navbar-navigation{
+
+    .uk-navbar-content{
+        position: absolute;
+        top:20px; left:20px;
+    }   
+
+
+    .uk-navbar-item{
+        margin:0 5px;
+    }
+
+    .uk-navbar-link{
+        padding:0 6px;
+    }
+}
+
+.node-translations-navigation{
+    position: absolute;
+    top:197px; right:50px;
+    border:none;
+
+    .uk-navbar-nav{
+        float: none;
+        text-align: center;
+
+        & > li{
+            position: relative;
+            float: none;
+            display: inline-block;
+            margin:0 2px;
+            height:30px;
+            background: none transparent;
+
+            &:after{     
+                background: @translation-nav-color;    
+                height:@active-border-size;
+                .transition(0.3s color ease);
+            }
+
+            a{
+                position: relative;
+                top:0px;
+                height:100%;
+                color:@translation-nav-color;
+                text-transform: capitalize;
+                font-size:10px; line-height:30px;
+                .transition(0.3s color ease);
+            }
+
+            &:hover{
+
+               a{
+                    box-shadow: none;
+                    color:@translation-nav-active-color;
+                }
+
+                &:after{  
+                    background: @translation-nav-active-color;    
+                }
+
+            }
+            
+            &.uk-active{
+                cursor: default;
+                
+                a{
+                    color:@translation-nav-active-color;
+                }
+
+                &:after{  
+                    background: @translation-nav-active-color;    
+                }
+
+            }
+
+        }
+    }
+}
+
+
+.node-form{
+    padding:40px 100px 40px 50px;
+}
