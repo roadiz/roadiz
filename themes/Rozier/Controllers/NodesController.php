@@ -682,6 +682,8 @@ class NodesController extends RozierApp
 
             $sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
             $source = new $sourceClass($node, $translation);
+            $source->setTitle($data['nodeName']);
+
             $this->getService('em')->persist($source);
             $this->getService('em')->flush();
 
@@ -727,8 +729,10 @@ class NodesController extends RozierApp
             $node->setParent($parentNode);
             $node->setNodeName($data['nodeName']);
             $this->getService('em')->persist($node);
+
             $sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
             $source = new $sourceClass($node, $translation);
+            $source->setTitle($data['nodeName']);
             $this->getService('em')->persist($source);
             $this->getService('em')->flush();
 
@@ -862,6 +866,10 @@ class NodesController extends RozierApp
      */
     private function editNodeSource($data, $nodeSource)
     {
+        if (isset($data['title'])) {
+            $nodeSource->setTitle($data['title']);
+        }
+
         $fields = $nodeSource->getNode()->getNodeType()->getFields();
         foreach ($fields as $field) {
             if (isset($data[$field->getName()])) {
@@ -1031,7 +1039,9 @@ class NodesController extends RozierApp
         /*
          * Create source default values
          */
-        $sourceDefaults = array();
+        $sourceDefaults = array(
+            'title' => $source->getTitle()
+        );
         foreach ($fields as $field) {
             if (!$field->isVirtual()) {
                 $getter = $field->getGetterName();
@@ -1043,7 +1053,15 @@ class NodesController extends RozierApp
          * Create subform for source
          */
         $sourceBuilder = $this->getService('formFactory')
-            ->createNamedBuilder('source', 'form', $sourceDefaults);
+            ->createNamedBuilder('source', 'form', $sourceDefaults)
+            ->add(
+                'title',
+                'text',
+                array(
+                    'label' => $this->getTranslator()->trans('title'),
+                    'required' => false
+                )
+            );
         foreach ($fields as $field) {
             $sourceBuilder->add(
                 $field->getName(),

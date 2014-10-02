@@ -38,6 +38,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
         $data = array();
 
         $data['translation'] = $nodeSource->getTranslation()->getLocale();
+        $data['title'] = $nodeSource->getTitle();
         $data['meta_title'] = $nodeSource->getMetaTitle();
         $data['meta_keywords'] = $nodeSource->getMetaKeywords();
         $data['meta_description'] = $nodeSource->getMetaDescription();
@@ -103,6 +104,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
          * Create source default values
          */
         $sourceDefaults = array(
+            "title",
             "meta_title",
             "meta_keywords",
             "meta_description"
