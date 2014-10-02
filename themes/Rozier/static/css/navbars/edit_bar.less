@@ -14,28 +14,39 @@
         float: none;
         text-align: center;
 
-        li {
+        li { // .navbar-item
+            position: relative;
             float: none;
             display: inline-block;
+            background: none transparent;
 
-            a {
+            a { // .navbar-link
                 position: relative;
                 font-family: @main-font;
                 font-weight: bold;
+                line-height:44px;
                 color: #666666;
                 border: 0 none;
-                top: @active-border-size;
+                top: 0px;
                 margin: 0px;
             }
 
+            &:after{
+                position: absolute;
+                content:'';
+                top:100%; left:0;
+                width:100%; height:0px;
+                background:#686868;
+                .transition(0.4s height ease);
+            }
 
             &:hover {
                 & > a {
                     box-shadow: none;
-                    .rounded(0);
-                    border: 0 none;
-                    border-bottom: @active-border-size solid #686868;
-                    top: @active-border-size;
+                }
+
+                &:after{
+                    height:@active-border-size;
                 }
             }
         }
@@ -54,16 +65,14 @@
         }
 
         .uk-active {
-            background: none transparent;
 
             & > a {
-                position: relative;
                 box-shadow: none;
-                .rounded(0);
-                border: 0 none;
-                border-bottom: @active-border-size solid #686868;
-                top: @active-border-size;
                 color: #1a1a1a;
+            }
+
+            &:after{
+                height:@active-border-size;
             }
         }
 
