@@ -8,8 +8,8 @@
 
 {% block content %}
 <section id="dashboard" class="content-global-section">
-    <header>
-        <h1 id="title">{% trans %}hello{% endtrans %}, {{ displayName }}</h1>
+    <header class="content-header" id="dashboard-header">
+        <h1 class="content-title" id="dashboard-title">{% trans %}hello{% endtrans %}, {{ displayName }}</h1>
     </header>
     {% include 'dashboard/navBar.html.twig' with {'current':'dashboard'} %}
 </section>

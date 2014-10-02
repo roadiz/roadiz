@@ -1,6 +1,6 @@
 <ul class="node-breadcrumb uk-breadcrumb">
     {% for parent in node.getHandler.getParents %}
-    <li class=""><a href="{{ path('nodesEditPage', { nodeId: parent.getId }) }}">{{ parent.getNodeSources.first.getTitle }}</a></li>
+    <li class="node-breadcrumb-item"><a class="node-breadcrumb-link" href="{{ path('nodesEditPage', { nodeId: parent.getId }) }}">{{ parent.getNodeSources.first.getTitle }}</a></li>
     {% endfor %}
-    <li class="uk-active"><span>{{ node.getNodeSources.first.getTitle }}</span></li>
+    <li class="node-breadcrumb-item uk-active"><span>{{ node.getNodeSources.first.getTitle }}</span></li>
 </ul>

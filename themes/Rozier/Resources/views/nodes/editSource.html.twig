@@ -1,14 +1,16 @@
 {% extends 'base.html.twig' %}
 {% block content %}
 <section id="manage-node">
-	<h1 id="node-title">Edit {{ source.getTitle }}</h1>
 
-	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+	<header class="content-header header-node-edit" id="header-manage-node">
+		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+		<h1 class="content-title" id="node-title"><!-- {% trans %}edit.node{% endtrans %} --> {{ source.getTitle }}</h1>
+	</header>
 	{% include 'nodes/navBar.html.twig' with {"current": 'source'} %}
 	{% include 'nodes/translationBar.html.twig' with {"current": translation.getId} %}
 
 	{% form_theme form 'forms.html.twig' %}
-	<form id="edit-source-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+	<form id="edit-source-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
 	    	{% spaceless %}

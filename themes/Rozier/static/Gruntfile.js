@@ -23,7 +23,6 @@ module.exports = function(grunt) {
 					"js/vendor/marked.min.js",
 					"js/addons/htmleditor.min.js",
 					"js/vendor/dropzone.min.js",
-
 					"js/widgets/documentWidget.js",
 					"js/widgets/saveButtons.js",
 					"js/widgets/nodeStatuses.js",
@@ -58,8 +57,7 @@ module.exports = function(grunt) {
 				files: [
 					'js/*.js',
 					'js/*/*.js',
-					'css/*.less',
-					'css/*/*.less',
+					'css/**/*.less',
 					'src-img/*.{png,jpg,gif}'
 				],
 				tasks: ['less', 'jshint', 'concat','uglify'],

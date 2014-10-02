@@ -1,0 +1,52 @@
+/*------------------------------------*\
+   BREADCRUMB
+\*------------------------------------*/
+
+
+/*
+ * Override ui kit breadcrumb styles and set new styles
+ */
+
+
+/* -------- VARS -------- */
+
+@breadcrumb-link-hover : #d3d3d3;
+
+
+/* -------- STYLES -------- */
+
+
+.uk-breadcrumb{
+
+    > li{
+        font-size:10px; line-height:12px;
+
+        &:nth-child(n+2):before{
+            content:'\2192';
+            -webkit-font-smoothing: none;
+        }
+    }
+}
+
+.node-breadcrumb{
+    height:12px;
+    padding:50px 0;
+    
+}
+
+
+.node-breadcrumb-item{    
+    color:@grey-medium;
+    text-transform:uppercase;
+}
+
+.node-breadcrumb-link{
+    color:@grey-medium;
+    .transition(0.4s color ease);
+
+    &:hover{
+        color: @breadcrumb-link-hover;
+        text-decoration: none;
+
+    }
+}
