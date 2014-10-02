@@ -1,13 +1,10 @@
 /vendor
-/files/*
 .AppleDouble
 node_modules
 npm-debug.log
 **/.DS_Store
 **/._*
 ._*
-conf/*
-!conf/*.default.json
 composer.lock
 report.txt
 TestTheme

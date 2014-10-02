@@ -73,7 +73,7 @@ phpcs --report=full --report-file=./report.txt --extensions=php --warning-severi
 When you import your existing database, you must regenerate all node-types sources classes.
 
 ```
-php index.php core:node:types --regenerateAllEntities
+bin/renzo core:node:types --regenerateAllEntities
 ```
 
 This will parse every node-types from your database and recreate PHP classes in your `sources/GeneratedNodeSources` folder.
@@ -86,7 +86,7 @@ If you did’nt generate them just have a look at *Migrating with an existing da
 Then you can perform migration :
 
 ```
-php index.php schema --update
+bin/renzo schema --update
 ```
 
 Be careful, check the output to see if any node-source data will be deleted!
@@ -94,6 +94,6 @@ Doctrine will parse every node-type classes to see new and deprecated node-types
 Then when you are sure to perform migration, just do:
 
 ```
-php index.php schema --update --execute
+bin/renzo schema --update --execute
 ```
 

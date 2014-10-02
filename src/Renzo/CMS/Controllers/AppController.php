@@ -440,6 +440,7 @@ class AppController implements ViewableInterface
     {
         if (file_exists(static::getViewsFolder())) {
             $ctrl = new static();
+            $ctrl->setKernel(Kernel::getInstance());
             $ctrl->initializeTwig();
             $ctrl->initializeTranslator();
 
@@ -455,7 +456,8 @@ class AppController implements ViewableInterface
             );
             foreach ($iterator as $file) {
                 // force compilation
-                if ($file->isFile()) {
+                if ($file->isFile() &&
+                    $file->getExtension() == 'twig') {
                     $ctrl->getTwig()->loadTemplate(str_replace(static::getViewsFolder().'/', '', $file));
                 }
             }
