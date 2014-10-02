@@ -82,11 +82,11 @@ class DefaultApp extends FrontendController
         /*
          * Second choice, render Homepage manually
          */
-        /*return new Response(
-            $this->getTwig()->render('home.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );*/
+        // return new Response(
+        //     $this->getTwig()->render('home.html.twig', $this->assignation),
+        //     Response::HTTP_OK,
+        //     array('content-type' => 'text/html')
+        // );
     }
 
     /**
