@@ -686,11 +686,13 @@ class UsersController extends RozierApp
         $builder = $this->getService('formFactory')
                         ->createBuilder('form')
                         ->add('email', 'email', array(
+                            'label'=>$this->getTranslator()->trans('email'),
                             'constraints' => array(
                                 new NotBlank()
                             )
                         ))
                         ->add('username', 'text', array(
+                            'label'=>$this->getTranslator()->trans('username'),
                             'constraints' => array(
                                 new NotBlank()
                             )
@@ -698,18 +700,40 @@ class UsersController extends RozierApp
                         ->add('plainPassword', 'repeated', array(
                             'type' => 'password',
                             'invalid_message' => 'Passwords must match',
-                            'first_options'  => array('label' => 'password'),
-                            'second_options' => array('label' => 'passwordVerify'),
+                            'first_options'  => array(
+                                'label'=>$this->getTranslator()->trans('password'),
+                            ),
+                            'second_options' => array(
+                                'label'=>$this->getTranslator()->trans('passwordVerify'),
+                            ),
                             'constraints' => array(
                                 new NotBlank()
                             )
                         ))
-                        ->add('firstName', 'text', array('required' => false))
-                        ->add('lastName', 'text', array('required' => false))
-                        ->add('company', 'text', array('required' => false))
-                        ->add('job', 'text', array('required' => false))
-                        ->add('birthday', 'date', array('required' => false))
-                        ->add('facebookName', 'text', array('required' => false));
+                        ->add('firstName', 'text', array(
+                            'label'=>$this->getTranslator()->trans('firstName'),
+                            'required' => false
+                        ))
+                        ->add('lastName', 'text', array(
+                            'label'=>$this->getTranslator()->trans('lastName'),
+                            'required' => false
+                        ))
+                        ->add('company', 'text', array(
+                            'label'=>$this->getTranslator()->trans('company'),
+                            'required' => false
+                        ))
+                        ->add('job', 'text', array(
+                            'label'=>$this->getTranslator()->trans('job'),
+                            'required' => false
+                        ))
+                        ->add('birthday', 'date', array(
+                            'label'=>$this->getTranslator()->trans('birthday'),
+                            'required' => false
+                        ))
+                        ->add('facebookName', 'text', array(
+                            'label'=>$this->getTranslator()->trans('facebookName'),
+                            'required' => false
+                        ));
 
         return $builder->getForm();
     }
