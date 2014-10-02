@@ -71,7 +71,9 @@ class AjaxNodesController extends AbstractAjaxController
                 $responseArray = array(
                     'statusCode' => '200',
                     'status' => 'success',
-                    'responseText' => ('Node '.$nodeId.' edited ')
+                    'responseText' => $this->getTranslator()->trans('node.%name%.updated', array(
+                        '%name%' => $node->getNodeName()
+                    ))
                 );
             }
 
@@ -86,7 +88,9 @@ class AjaxNodesController extends AbstractAjaxController
         $responseArray = array(
             'statusCode' => '403',
             'status'    => 'danger',
-            'responseText' => 'Node '.$nodeId.' does not exists'
+            'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', array(
+                '%nodeId%' => $nodeId
+            ))
         );
 
         return new Response(
@@ -206,16 +210,19 @@ class AjaxNodesController extends AbstractAjaxController
                         $responseArray = array(
                             'statusCode' => Response::HTTP_OK,
                             'status'    => 'success',
-                            'responseText' => 'Node '.$request->get('nodeId').'’s '.
-                                              $request->get('statusName').' status has been updated.'.
-                                              '['.$setter.'('.$value.' '.gettype($value).')]'
+                            'responseText' => $this->getTranslator()->trans('node.%name%.status.%field%.updated', array(
+                                '%name%' => $node->getNodeName(),
+                                '%field%' => $request->get('statusName')
+                            ))
                         );
 
                     } else {
                         $responseArray = array(
                             'statusCode' => Response::HTTP_FORBIDDEN,
                             'status'    => 'danger',
-                            'responseText' => 'Node has no field '.$request->get('statusName').'.'
+                            'responseText' => $this->getTranslator()->trans('node.has_no.field.%field%', array(
+                                '%field%' => $request->get('statusName')
+                            ))
                         );
                     }
 
@@ -223,7 +230,9 @@ class AjaxNodesController extends AbstractAjaxController
                     $responseArray = array(
                         'statusCode' => Response::HTTP_FORBIDDEN,
                         'status'    => 'danger',
-                        'responseText' => 'Node '.$request->get('nodeId').' does not exists'
+                        'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', array(
+                            '%nodeId%' => $request->get('nodeId')
+                        ))
                     );
                 }
 
@@ -231,7 +240,7 @@ class AjaxNodesController extends AbstractAjaxController
                 $responseArray = array(
                     'statusCode' => Response::HTTP_FORBIDDEN,
                     'status'    => 'danger',
-                    'responseText' => 'No node-id specified.'
+                    'responseText' => $this->getTranslator()->trans('node.id.not_specified')
                 );
             }
 
@@ -239,7 +248,9 @@ class AjaxNodesController extends AbstractAjaxController
             $responseArray = array(
                 'statusCode' => Response::HTTP_FORBIDDEN,
                 'status'    => 'danger',
-                'responseText' => 'Node '.$request->get('nodeId').' does not exists'
+                'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', array(
+                    '%nodeId%' => $request->get('nodeId')
+                ))
             );
         }
 

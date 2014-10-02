@@ -186,7 +186,9 @@ class GroupsUtilsController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('group_file', 'file');
+            ->add('group_file', 'file', array(
+                'label' => $this->getTranslator()->trans('group.file')
+            ));
 
         return $builder->getForm();
     }

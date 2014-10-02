@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="manage-document">
-	<h1 id="title">{% trans %}Document:{% endtrans %} {{ document.getFilename }}</h1>
+	<h1 id="title">{{ "edit.document.%name%"|trans({'%name%': document.getFilename}) }}</h1>
 
 	<div class="uk-thumbnail uk-thumbnail-large">
 		{% if document.isImage %}

@@ -2,14 +2,14 @@
 
 {% block content %}
 <section id="manage-node-type">
-	<h1 id="node-type-title">{% trans %}Delete node-type:{% endtrans %} {{ node_type.getName }}</h1>
+	<h1 id="node-type-title">{{ "delete.nodeType.%name%"|trans({'%name%': nodeType.getDisplayName}) }}</h1>
 
 	{% form_theme form 'forms.html.twig' %}
     <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to delete this node-type and all its inherited nodes and newsletters?{% endtrans %}</legend>
-	    	<a href="{{ path('nodeTypesHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<legend>{% trans %}are_you_sure.delete.nodeType.and.nodes.newsletters{% endtrans %}</legend>
+	    	<a href="{{ path('nodeTypesHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

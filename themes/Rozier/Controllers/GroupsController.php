@@ -78,7 +78,7 @@ class GroupsController extends RozierApp
 
             try {
                 $group = $this->addGroup($form->getData());
-                $msg = $this->getTranslator()->trans('group.created', array('%name%'=>$group->getName()));
+                $msg = $this->getTranslator()->trans('group.%name%.created', array('%name%'=>$group->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -132,7 +132,7 @@ class GroupsController extends RozierApp
 
                 try {
                     $this->deleteGroup($form->getData(), $group);
-                    $msg = $this->getTranslator()->trans('group.deleted', array('%name%' => $group->getName()));
+                    $msg = $this->getTranslator()->trans('group.%name%.deleted', array('%name%' => $group->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -189,7 +189,7 @@ class GroupsController extends RozierApp
 
                 try {
                     $this->editGroup($form->getData(), $group);
-                    $msg = $this->getTranslator()->trans('group.updated', array('%name%'=>$group->getName()));
+                    $msg = $this->getTranslator()->trans('group.%name%.updated', array('%name%'=>$group->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -248,7 +248,7 @@ class GroupsController extends RozierApp
             if ($form->isValid()) {
                 $role = $this->addRole($form->getData(), $group);
 
-                $msg = $this->getTranslator()->trans('group.role_linked', array(
+                $msg = $this->getTranslator()->trans('role.%role%.linked_group.%group%', array(
                             '%group%'=>$group->getName(),
                             '%role%'=>$role->getName()
                         ));
@@ -308,7 +308,10 @@ class GroupsController extends RozierApp
             if ($form->isValid()) {
 
                 $this->removeRole($form->getData(), $group, $role);
-                $msg = $this->getTranslator()->trans('role.removed_from_group', array('%name%'=>$role->getName()));
+                $msg = $this->getTranslator()->trans('role.%role%.removed_from_group.%group%', array(
+                    '%role%'=>$role->getName(),
+                    '%group%'=>$group->getName()
+                ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -360,7 +363,7 @@ class GroupsController extends RozierApp
             if ($form->isValid()) {
                 $user = $this->addUser($form->getData(), $group);
 
-                $msg = $this->getTranslator()->trans('group.user_linked', array(
+                $msg = $this->getTranslator()->trans('user.%user%.linked.group.%group%', array(
                             '%group%'=>$group->getName(),
                             '%user%'=>$user->getUserName()
                         ));
@@ -420,7 +423,10 @@ class GroupsController extends RozierApp
             if ($form->isValid()) {
 
                 $this->removeUser($form->getData(), $group, $user);
-                $msg = $this->getTranslator()->trans('group.user.removed_from_group', array('%name%'=>$user->getUserName()));
+                $msg = $this->getTranslator()->trans('user.%user%.removed_from_group.%group%', array(
+                    '%user%'=>$user->getUserName(),
+                    '%group%'=>$group->getName()
+                ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -491,6 +497,7 @@ class GroupsController extends RozierApp
                 )
             ))
             ->add('name', 'text', array(
+                'label' => $this->getTranslator()->trans('group.name'),
                 'data'=>$group->getName(),
                 'constraints' => array(
                     new NotBlank()
@@ -542,7 +549,7 @@ class GroupsController extends RozierApp
             ->add(
                 'roleId',
                 new \RZ\Renzo\CMS\Forms\RolesType($group->getRolesEntities()),
-                array('label' => 'Role')
+                array('label' => $this->getTranslator()->trans('choose.role'))
             );
 
         return $builder->getForm();
@@ -570,7 +577,7 @@ class GroupsController extends RozierApp
                 'userId',
                 new \RZ\Renzo\CMS\Forms\UsersType($group->getUsers()),
                 array(
-                    'label' => 'User',
+                    'label' => $this->getTranslator()->trans('choose.user'),
                     'constraints' => array(
                         new NotBlank()
                     )

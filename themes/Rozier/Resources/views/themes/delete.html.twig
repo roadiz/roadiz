@@ -2,14 +2,14 @@
 
 {% block content %}
 <section id="manage-theme">
-	<h1 id="theme-title">{% trans %}Delete theme:{% endtrans %} {{ theme.getClassName }}</h1>
+	<h1 id="theme-title">{{ "delete.theme.%name%"|trans({'%name%': theme.getClassName }) }}</h1>
 
 	{% form_theme form 'forms.html.twig' %}
     <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to delete this theme?{% endtrans %}</legend>
-	    	<a href="{{ path('themesHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<legend>{% trans %}are_you_sure.delete.theme{% endtrans %}</legend>
+	    	<a href="{{ path('themesHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

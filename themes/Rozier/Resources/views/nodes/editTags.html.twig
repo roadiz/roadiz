@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block content %}
 <section id="manage-node-tags">
-	<h1 id="node-title">Edit {{ source.getTitle }} tags</h1>
+	<h1 id="node-title">{{ "edit.node.%name%.tags"|trans({'%name%': node.getNodeName}) }}</h1>
 
 	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
 	{% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
 
-	<h2>{% trans %}Add a tag{% endtrans %}</h2>
+	<h2>{% trans %}add.tag{% endtrans %}</h2>
 
 	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
@@ -17,13 +17,13 @@
 	</form>
 
 	<hr />
-	<h2>{% trans %}Tags{% endtrans %}</h2>
+	<h2>{% trans %}tags{% endtrans %}</h2>
 	<table class="tags uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Id{% endtrans %}</th>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}id{% endtrans %}</th>
+	            <th>{% trans %}name{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -33,7 +33,7 @@
 				<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
 				<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesRemoveTagsPage', { nodeId: node.getId, tagId: tag.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesRemoveTagsPage', { nodeId: node.getId, tagId: tag.getId }) }}">{% trans %}unlink{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}

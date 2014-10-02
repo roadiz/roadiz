@@ -93,7 +93,7 @@ class DocumentsController extends RozierApp
             if ($form->isValid()) {
 
                 $this->editDocument($form->getData(), $document);
-                $msg = $this->getTranslator()->trans('document.updated', array(
+                $msg = $this->getTranslator()->trans('document.%name%.updated', array(
                     '%name%'=>$document->getFilename()
                 ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -149,13 +149,13 @@ class DocumentsController extends RozierApp
 
                 try {
                     $document->getHandler()->removeWithAssets();
-                    $msg = $this->getTranslator()->trans('document.deleted', array('%name%'=>$document->getFilename()));
+                    $msg = $this->getTranslator()->trans('document.%name%.deleted', array('%name%'=>$document->getFilename()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
                 } catch (\Exception $e) {
 
-                    $msg = $this->getTranslator()->trans('document.cannot_delete', array('%name%'=>$document->getFilename()));
+                    $msg = $this->getTranslator()->trans('document.%name%.cannot_delete', array('%name%'=>$document->getFilename()));
                     $request->getSession()->getFlashBag()->add('error', $msg);
                     $this->getService('logger')->warning($msg);
                 }
@@ -201,7 +201,7 @@ class DocumentsController extends RozierApp
 
             if (false !== $document = $this->uploadDocument($form)) {
 
-                $msg = $this->getTranslator()->trans('document.uploaded', array(
+                $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
                     '%name%'=>$document->getFilename()
                 ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -280,10 +280,22 @@ class DocumentsController extends RozierApp
 
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
-                    ->add('name', 'text', array('required' => false))
-                    ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array('required' => false))
-                    ->add('copyright', 'text', array('required' => false))
-                    ->add('private', 'checkbox', array('required' => false));
+                    ->add('name', 'text', array(
+                        'label' => $this->getTranslator()->trans('name'),
+                        'required' => false
+                    ))
+                    ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array(
+                        'label' => $this->getTranslator()->trans('description'),
+                        'required' => false
+                    ))
+                    ->add('copyright', 'text', array(
+                        'label' => $this->getTranslator()->trans('copyright'),
+                        'required' => false
+                    ))
+                    ->add('private', 'checkbox', array(
+                        'label' => $this->getTranslator()->trans('private'),
+                        'required' => false
+                    ));
 
         return $builder->getForm();
     }
@@ -295,7 +307,9 @@ class DocumentsController extends RozierApp
     {
         $builder = $this->getService('formFactory')
                     ->createBuilder('form')
-                    ->add('attachment', 'file');
+                    ->add('attachment', 'file', array(
+                        'label' => $this->getTranslator()->trans('choose.documents.to_upload')
+                    ));
 
         return $builder->getForm();
     }

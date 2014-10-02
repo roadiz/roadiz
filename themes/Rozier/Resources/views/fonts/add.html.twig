@@ -3,14 +3,14 @@
 {% block content %}
 
 <section id="manage-font">
-	<h1 id="font-title">{% trans %}Add a new font{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('fontsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to font{% endtrans %}</a></nav>
+	<h1 id="font-title">{% trans %}add.font{% endtrans %}</h1>
+	<nav><a class="uk-button uk-button-small" href="{{ path('fontsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.fonts{% endtrans %}</a></nav>
 
 	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-		    <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> add.font</button>
+		    <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.font{% endtrans %}</button>
 	   	</fieldset>
 	</form>
 </section>

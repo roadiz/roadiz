@@ -158,7 +158,7 @@ class NodesController extends RozierApp
 
                     try {
                         $this->translateNode($translationForm->getData(), $node);
-                        $msg = $this->getTranslator()->trans('node.translated', array(
+                        $msg = $this->getTranslator()->trans('node.%name%.translated', array(
                             '%name%'=>$node->getNodeName()
                         ));
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -192,7 +192,7 @@ class NodesController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $this->editNode($form->getData(), $node);
-                    $msg = $this->getTranslator()->trans('node.updated', array(
+                    $msg = $this->getTranslator()->trans('node.%name%.updated', array(
                         '%name%'=>$node->getNodeName()
                     ));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -345,7 +345,7 @@ class NodesController extends RozierApp
                 if ($form->isValid()) {
                     $tag = $this->addNodeTag($form->getData(), $node);
 
-                    $msg = $this->getTranslator()->trans('node.tag_linked', array(
+                    $msg = $this->getTranslator()->trans('node.%node%.linked.tag.%tag%', array(
                         '%node%'=>$node->getNodeName(),
                         '%tag%'=>$tag->getTranslatedTags()->first()->getName()
                     ));
@@ -406,7 +406,7 @@ class NodesController extends RozierApp
             if ($form->isValid()) {
 
                 $this->removeNodeTag($form->getData(), $node, $tag);
-                $msg = $this->getTranslator()->trans('tag.removed', array('%name%' => $tag->getTranslatedTags()->first()->getName()));
+                $msg = $this->getTranslator()->trans('tag.%name%.removed', array('%name%' => $tag->getTranslatedTags()->first()->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -479,7 +479,7 @@ class NodesController extends RozierApp
                 try {
                     $node = $this->createNode($form->getData(), $type, $translation);
 
-                    $msg = $this->getTranslator()->trans('node.created', array('%name%'=>$node->getNodeName()));
+                    $msg = $this->getTranslator()->trans('node.%name%.created', array('%name%'=>$node->getNodeName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -558,7 +558,7 @@ class NodesController extends RozierApp
                 try {
                     $node = $this->createChildNode($form->getData(), $parentNode, $translation);
 
-                    $msg = $this->getTranslator()->trans('node.created', array('%name%'=>$node->getNodeName()));
+                    $msg = $this->getTranslator()->trans('node.%name%.created', array('%name%'=>$node->getNodeName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -631,7 +631,7 @@ class NodesController extends RozierApp
 
                 $node->getHandler()->removeWithChildrenAndAssociations();
 
-                $msg = $this->getTranslator()->trans('node.deleted', array('%name%'=>$node->getNodeName()));
+                $msg = $this->getTranslator()->trans('node.%name%.deleted', array('%name%'=>$node->getNodeName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
                 /*
@@ -668,7 +668,7 @@ class NodesController extends RozierApp
     {
         if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
-                'node.noCreation.urlAlias.alreadyExists',
+                'node.%name%.noCreation.urlAlias.alreadyExists',
                 array('%name%'=>$data['nodeName'])
             );
 
@@ -687,7 +687,7 @@ class NodesController extends RozierApp
 
             return $node;
         } catch (\Exception $e) {
-            $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists', array('%name%'=>$node->getNodeName()));
+            $msg = $this->getTranslator()->trans('node.%name%.noCreation.alreadyExists', array('%name%'=>$node->getNodeName()));
             throw new EntityAlreadyExistsException($msg, 1);
         }
     }
@@ -702,7 +702,7 @@ class NodesController extends RozierApp
     private function createChildNode($data, Node $parentNode, Translation $translation)
     {
         if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
-            $msg = $this->getTranslator()->trans('node.no_creation.url_alias.already_exists', array('%name%'=>$data['nodeName']));
+            $msg = $this->getTranslator()->trans('node.%name%.no_creation.url_alias.already_exists', array('%name%'=>$data['nodeName']));
 
             throw new EntityAlreadyExistsException($msg, 1);
         }
@@ -734,7 +734,7 @@ class NodesController extends RozierApp
 
             return $node;
         } catch (\Exception $e) {
-            $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists', array('%name%'=>$node->getNodeName()));
+            $msg = $this->getTranslator()->trans('node.%name%.noCreation.alreadyExists', array('%name%'=>$node->getNodeName()));
 
             throw new EntityAlreadyExistsException($msg, 1);
         }
@@ -777,7 +777,7 @@ class NodesController extends RozierApp
                 ($this->nodeNameExists($testingNodeName) ||
                 $this->urlAliasExists($testingNodeName))) {
 
-            $msg = $this->getTranslator()->trans('node.noUpdate.alreadyExists', array('%name%'=>$data['nodeName']));
+            $msg = $this->getTranslator()->trans('node.%name%.noUpdate.alreadyExists', array('%name%'=>$data['nodeName']));
             throw new EntityAlreadyExistsException($msg, 1);
         }
         foreach ($data as $key => $value) {
@@ -907,6 +907,7 @@ class NodesController extends RozierApp
                     )
                 ))
                 ->add('translationId', 'choice', array(
+                    'label' => $this->getTranslator()->trans('translation'),
                     'choices' => $choices,
                     'required' => true
                 ));
@@ -930,6 +931,7 @@ class NodesController extends RozierApp
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('nodeName', 'text', array(
+                'label' => $this->getTranslator()->trans('nodeName'),
                 'constraints' => array(
                     new NotBlank()
                 )
@@ -940,7 +942,9 @@ class NodesController extends RozierApp
                     new NotBlank()
                 )
             ))
-            ->add('nodeTypeId', new \RZ\Renzo\CMS\Forms\NodeTypesType());
+            ->add('nodeTypeId', new \RZ\Renzo\CMS\Forms\NodeTypesType(), array(
+                'label' => $this->getTranslator()->trans('nodeType'),
+            ));
 
         return $builder->getForm();
     }
@@ -965,20 +969,26 @@ class NodesController extends RozierApp
                 'nodeName',
                 'text',
                 array(
-                'constraints' => array(
-                    new NotBlank()
-                        )
+                    'label' => $this->getTranslator()->trans('nodeName'),
+                    'constraints' => array(new NotBlank())
                 )
             )
             ->add(
                 'priority',
                 'number',
-                array('constraints' => array(new NotBlank()))
+                array(
+                    'label' => $this->getTranslator()->trans('priority'),
+                    'constraints' => array(new NotBlank())
+                )
             )
             ->add(
                 'home',
                 'checkbox',
-                array('required' => false, 'attr' => array('class' => 'rz-boolean-checkbox'))
+                array(
+                    'label' => $this->getTranslator()->trans('node.isHome'),
+                    'required' => false,
+                    'attr' => array('class' => 'rz-boolean-checkbox')
+                )
             );
 
         return $builder->getForm();
@@ -1002,7 +1012,9 @@ class NodesController extends RozierApp
                             new NotBlank()
                         )
                     ))
-                    ->add('tagId', new \RZ\Renzo\CMS\Forms\TagsType($node->getTags()));
+                    ->add('tagId', new \RZ\Renzo\CMS\Forms\TagsType($node->getTags()), array(
+                        'label' => $this->getTranslator()->trans('choose.tag'),
+                    ));
 
         return $builder->getForm();
     }

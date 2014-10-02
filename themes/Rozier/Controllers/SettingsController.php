@@ -65,7 +65,7 @@ class SettingsController extends RozierApp
                 $form->getData()['id'] == $setting->getId()) {
                 try {
                     $this->editSetting($form->getData(), $setting);
-                    $msg = $this->getTranslator()->trans('setting.updated', array('%name%'=>$setting->getName()));
+                    $msg = $this->getTranslator()->trans('setting.%name%.updated', array('%name%'=>$setting->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
@@ -120,7 +120,7 @@ class SettingsController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $this->editSetting($form->getData(), $setting);
-                    $msg = $this->getTranslator()->trans('setting.updated', array('%name%'=>$setting->getName()));
+                    $msg = $this->getTranslator()->trans('setting.%name%.updated', array('%name%'=>$setting->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
@@ -179,7 +179,7 @@ class SettingsController extends RozierApp
 
                 try {
                     $this->addSetting($form->getData(), $setting);
-                    $msg = $this->getTranslator()->trans('setting.created', array('%name%'=>$setting->getName()));
+                    $msg = $this->getTranslator()->trans('setting.%name%.created', array('%name%'=>$setting->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
@@ -237,7 +237,7 @@ class SettingsController extends RozierApp
 
                 $this->deleteSetting($form->getData(), $setting);
 
-                $msg = $this->getTranslator()->trans('setting.deleted', array('%name%'=>$setting->getName()));
+                $msg = $this->getTranslator()->trans('setting.%name%.deleted', array('%name%'=>$setting->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
@@ -280,7 +280,7 @@ class SettingsController extends RozierApp
                 $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Setting')
                 ->exists($data['name'])) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
+                throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
             }
             try {
                 foreach ($data as $key => $value) {
@@ -298,7 +298,7 @@ class SettingsController extends RozierApp
 
                 return true;
             } catch (\Exception $e) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
+                throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
             }
         }
     }
@@ -314,7 +314,7 @@ class SettingsController extends RozierApp
         if ($this->getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Setting')
             ->exists($data['name'])) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_creation.already_exists', array('%name%'=>$setting->getName())), 1);
+            throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_creation.already_exists', array('%name%'=>$setting->getName())), 1);
         }
 
         try {
@@ -328,7 +328,7 @@ class SettingsController extends RozierApp
 
             return true;
         } catch (\Exception $e) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.no_creation.already_exists', array('%name%'=>$setting->getName())), 1);
+            throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_creation.already_exists', array('%name%'=>$setting->getName())), 1);
         }
     }
 
@@ -362,13 +362,21 @@ class SettingsController extends RozierApp
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('name', 'text', array(
+                'label' => $this->getTranslator()->trans('name'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
-            ->add('Value', NodeTypeField::$typeToForm[$setting->getType()], array('required' => false))
-            ->add('visible', 'checkbox', array('required' => false))
+            ->add('Value', NodeTypeField::$typeToForm[$setting->getType()], array(
+                'label' => $this->getTranslator()->trans('value'),
+                'required' => false
+            ))
+            ->add('visible', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('visible'),
+                'required' => false
+            ))
             ->add('type', 'choice', array(
+                'label' => $this->getTranslator()->trans('type'),
                 'required' => true,
                 'choices' => NodeTypeField::$typeToHuman
             ));
@@ -401,39 +409,50 @@ class SettingsController extends RozierApp
             ->add(
                 'name',
                 'text',
-                array('constraints' => array(
-                    new NotBlank())
+                array(
+                    'label' => $this->getTranslator()->trans('name'),
+                    'constraints' => array(new NotBlank())
                 )
             )
             ->add(
                 'id',
                 'hidden',
                 array(
-                'data'=>$setting->getId(),
-                'required' => true
+                    'data'=>$setting->getId(),
+                    'required' => true
                 )
             )
             ->add(
                 'Value',
                 NodeTypeField::$typeToForm[$setting->getType()],
-                array('required' => false)
+                array(
+                    'label' => $this->getTranslator()->trans('value'),
+                    'required' => false
+                )
             )
             ->add(
                 'visible',
                 'checkbox',
-                array('required' => false)
+                array(
+                    'label' => $this->getTranslator()->trans('visible'),
+                    'required' => false
+                )
             )
             ->add(
                 'type',
                 'choice',
                 array(
+                    'label' => $this->getTranslator()->trans('type'),
                     'required' => true,
                     'choices' => NodeTypeField::$typeToHuman
                 )
             )
             ->add(
                 'group',
-                new \RZ\Renzo\CMS\Forms\SettingGroupType()
+                new \RZ\Renzo\CMS\Forms\SettingGroupType(),
+                array(
+                    'label' => $this->getTranslator()->trans('setting.group')
+                )
             );
 
         return $builder->getForm();

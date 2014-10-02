@@ -3,14 +3,14 @@
 
 {% block content %}
 <section id="manage-cache">
-    <h1 id="group-title">{% trans %}clear.doctrine.cache{% endtrans %}</h1>
+    <h1 id="group-title">{% trans %}purge.cache{% endtrans %}</h1>
 
     {% form_theme form 'forms.html.twig' %}
     <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
         <fieldset data-uk-margin>
-            <legend>{% trans %}Are you sure you want to clear doctrine cache?{% endtrans %}</legend>
-            <a href="{{ path('adminHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+            <legend>{% trans %}are_you_sure.purge.cache{% endtrans %}</legend>
+            <a href="{{ path('adminHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
             <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}clear{% endtrans %}</button>
         </fieldset>
     </form>

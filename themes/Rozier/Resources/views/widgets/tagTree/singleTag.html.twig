@@ -29,17 +29,17 @@
 		    <nav class="uk-dropdown uk-dropdown-small">
 		        <div class="uk-nav uk-nav-dropdown">
 		            <p>
-		            	<a title="{% trans %}edit.tag.%name%{% endtrans %}" href="{{ editUrl }}">
+		            	<a title="{{ "edit.tag.%name%"|trans({'%name%': tag.getTagName}) }}" href="{{ editUrl }}">
 		            		<i class="uk-icon-pencil"></i> {% trans %}edit.tag{% endtrans %}
 		            	</a>
 		            </p>
 		            <p>
-		            	<a title="{% trans %}add.child.tag.%name%{% endtrans %}" href="{{ path('tagsAddChildPage', { tagId:tag.getId }) }}">
+		            	<a title="{{ "add.tag.%name%.child"|trans({'%name%': tag.getTagName}) }}" href="{{ path('tagsAddChildPage', { tagId:tag.getId }) }}">
 		            		<i class="uk-icon-plus"></i> {% trans %}add.child.tag{% endtrans %}
 		            	</a>
 		            </p>
 		            <p>
-		            	<a title="{% trans %}delete.tag.%name%{% endtrans %}" href="{{ path('tagsDeletePage', { tagId:tag.getId }) }}">
+		            	<a title="{{ "delete.tag.%name%"|trans({'%name%': tag.getTagName}) }}" href="{{ path('tagsDeletePage', { tagId:tag.getId }) }}">
 		            		<i class="uk-icon-trash-o"></i> {% trans %}delete.tag{% endtrans %}
 		            	</a>
 		            </p>

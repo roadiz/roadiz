@@ -2,14 +2,14 @@
 
 {% block content %}
 <section id="manage-role">
-	<h1 id="role-title">{% trans %}Remove role:{% endtrans %} {{ role.getName }}</h1>
+	<h1 id="role-title">{{ "remove.user.%name%.role.%role%"|trans({'%name%': user.getUserName, '%role%': role.getName}) }}</h1>
 
 	{% form_theme form 'forms.html.twig' %}
     <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to remove this role?{% endtrans %}</legend>
-	    	<a href="{{ path('usersEditRolesPage', { userId: user.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<legend>{% trans %}are_you_sure.remove.user.role{% endtrans %}</legend>
+	    	<a href="{{ path('usersEditRolesPage', { userId: user.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

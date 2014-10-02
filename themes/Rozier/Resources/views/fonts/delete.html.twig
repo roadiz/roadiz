@@ -2,14 +2,14 @@
 
 {% block content %}
 <section id="manage-font">
-	<h1 id="font-title">{% trans %}Delete font:{% endtrans %} {{ font.getName }}</h1>
+	<h1 id="font-title">{{ "delete.font.%name%"|trans({'%name%': font.getName}) }}</h1>
 
 	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to delete this font?{% endtrans %}</legend>
-	    	<a href="{{ path('fontsHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
+	    	<legend>{% trans %}are_you_sure.delete.font{% endtrans %}</legend>
+	    	<a href="{{ path('fontsHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
 	    	<input class="uk-button uk-button-danger" type="submit" />
    		</fieldset>
 	</form>

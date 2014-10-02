@@ -4,7 +4,7 @@
 		{% form_theme urlAlias.editForm 'forms.html.twig' %}
 		<form class="uk-form" action="#" method="post" {{ form_enctype(urlAlias.editForm) }}>
 	        {{ form_widget(urlAlias.editForm) }}
-			<input class="uk-button uk-button-small uk-button-primary" type="submit" value="{% trans %}Edit{% endtrans %}" />
+			<input class="uk-button uk-button-small uk-button-primary" type="submit" value="{% trans %}edit{% endtrans %}" />
 		</form>
 	</td>
 	<td>{{ urlAlias.alias.getNodeSource.getTranslation.getName }}</td>
@@ -13,7 +13,7 @@
 		{% form_theme urlAlias.deleteForm 'forms.html.twig' %}
 		<form class="uk-form" action="#" method="post" {{ form_enctype(urlAlias.deleteForm) }}>
 			{{ form_widget(urlAlias.deleteForm) }}
-			<input class="uk-button uk-button-small uk-button-danger" type="submit" value="{% trans %}Delete{% endtrans %}" />
+			<input class="uk-button uk-button-small uk-button-danger" type="submit" value="{% trans %}delete{% endtrans %}" />
 		</form>
 	</td>
 </tr>

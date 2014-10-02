@@ -3,18 +3,18 @@
 
 {% block content %}
 <section id="manage-node-type-fields">
-	<h1 id="title">{% trans %}Fields: {% endtrans %}{{ nodeType.getDisplayName }}</h1>
+	<h1 id="title">{{ "edit.nodeTypeFields.for.nodeType.%name%"|trans({'%name%': nodetype.getDisplayName}) }}</h1>
 	<nav>
-		<a class="uk-button" href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to node-types{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('nodeTypeFieldsAddPage', { nodeTypeId: nodeType.getId }) }}"><i class="uk-icon-plus"></i> {% trans %}Add a field{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.nodeTypes{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('nodeTypeFieldsAddPage', { nodeTypeId: nodeType.getId }) }}"><i class="uk-icon-plus"></i> {% trans %}add.nodeTypeField{% endtrans %}</a>
 	</nav>
 	<table class="node-type-fields uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Label{% endtrans %}</th>
-	            <th>{% trans %}Type{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}name{% endtrans %}</th>
+	            <th>{% trans %}label{% endtrans %}</th>
+	            <th>{% trans %}type{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -24,7 +24,7 @@
 				<td>{{ field.getLabel }}</td>
 				<td>{{ field.getTypeName }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}">{% trans %}delete{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}

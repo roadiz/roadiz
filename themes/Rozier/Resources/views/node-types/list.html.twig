@@ -3,22 +3,23 @@
 
 {% block content %}
 <section id="manage-node-types">
-	<h1 id="title">{% trans %}Node types{% endtrans %}</h1>
+	<h1 id="title">{% trans %}nodeTypes{% endtrans %}</h1>
 	<td>
-		<a class="uk-button" href="{{ path('nodeTypesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a node-type{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('nodeTypesImportPage') }}"><i class="uk-icon-plus"></i> {% trans %}Import a node type (.rzt){% endtrans %}</a>
+		<a class="uk-button" href="{{ path('nodeTypesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.nodeType{% endtrans %}</a>
+		<a class="uk-button" href="{{ path('nodeTypesImportPage') }}"><i class="uk-icon-plus"></i> {% trans %}import.nodeType{% endtrans %}</a>
 	</td>
 
 	{% include 'widgets/filtersBar.html.twig' %}
 
+	{% spaceless %}
 	<table class="node-types uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Display name{% endtrans %}</th>
-	            <th>{% trans %}Entity name{% endtrans %}</th>
+	            <th>{% trans %}name{% endtrans %}</th>
+	            <th>{% trans %}nodeType.displayName{% endtrans %}</th>
+	            <th>{% trans %}nodeType.entityName{% endtrans %}</th>
 	            <th></th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -29,13 +30,16 @@
 					<td>{{ type.getSourceEntityClassName }}</td>
 					<td><div class="uk-badge">{{ type.getFields|length }} {% trans %}fields{% endtrans %}</div></td>
 					<td>
-						<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: type.getId }) }}"><i class="uk-icon-node-type-fields"></i> {% trans %}Manage fields{% endtrans %}</a>
-						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypesDeletePage', { nodeTypeId: type.getId }) }}">{% trans %}Delete{% endtrans %}</a>
-						<a class="uk-button uk-button-small" href="{{ path('nodesTypesExportPage', { nodeTypeId: type.getId }) }}">{% trans %}Export{% endtrans %}</a>
+						<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: type.getId }) }}">
+							<i class="uk-icon-node-type-fields"></i> {% trans %}manage.nodeTypeFields{% endtrans %}
+						</a>
+						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypesDeletePage', { nodeTypeId: type.getId }) }}">{% trans %}delete{% endtrans %}</a>
+						<a class="uk-button uk-button-small" href="{{ path('nodesTypesExportPage', { nodeTypeId: type.getId }) }}">{% trans %}export{% endtrans %}</a>
 					</td>
 				</tr>
 			{% endfor %}
 		</tbody>
 	</table>
+	{% endspaceless %}
 </section>
 {% endblock %}

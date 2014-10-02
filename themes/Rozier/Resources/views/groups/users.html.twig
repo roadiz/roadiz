@@ -2,15 +2,15 @@
 
 {% block content %}
 <section id="manage-group-users">
-	<h1 id="group-title">Edit {{ group.getName }} users</h1>
+	<h1 id="group-title">{{ "edit.group.%name%.users"|trans({'%name%': group.getName}) }}</h1>
 
 	{% include 'groups/navBar.html.twig' with {'group':group, current:'users'} %}
 
 	<table class="groups-users uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}User{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}user{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -18,13 +18,13 @@
 			<tr>
 				<td>{{ user.getUserName }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsRemoveUsersPage', { groupId: group.getId, userId: user.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsRemoveUsersPage', { groupId: group.getId, userId: user.getId }) }}">{% trans %}unlink.user{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
-	<h2>{% trans %}Add a user{% endtrans %}</h2>
+	<h2>{% trans %}add.user{% endtrans %}</h2>
 
 	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>

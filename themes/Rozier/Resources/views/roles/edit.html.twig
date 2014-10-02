@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="manage-role">
-	<h1 id="role-title">Edit {{ role.getName }}</h1>
+	<h1 id="role-title">{{ "edit.role.%name%"|trans({'%name%': role.getName }) }}</h1>
 
 	{% form_theme form 'forms.html.twig' %}
 	<form id="edit-role-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>

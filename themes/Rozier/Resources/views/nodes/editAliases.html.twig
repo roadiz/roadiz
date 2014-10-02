@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block content %}
 <section id="manage-node-aliases">
-	<h1 id="node-title">Edit {{ source.getTitle }} aliases</h1>
+	<h1 id="node-title">{{ "edit.node.%name%.seo"|trans({'%name%': source.getTitle}) }}</h1>
 
 	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
 	{% include 'nodes/navBar.html.twig' with {"current": 'seo'} %}
@@ -23,9 +23,9 @@
 	</form>
 
 
-	<h2>{% trans %}alias{% endtrans %}</h2>
+	<h2>{% trans %}urlAlias{% endtrans %}</h2>
 
-	<h3>{% trans %}add.alias{% endtrans %}</h3>
+	<h3>{% trans %}add.urlAlias{% endtrans %}</h3>
 	{% form_theme form 'forms.html.twig' %}
 	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 	    {{ form_widget(form) }}
@@ -38,9 +38,9 @@
 	<table class="aliases uk-table">
 		<thead>
 	        <tr>
-	            <th>{% trans %}Alias{% endtrans %}</th>
-	            <th>{% trans %}Translation{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
+	            <th>{% trans %}urlAlias{% endtrans %}</th>
+	            <th>{% trans %}translation{% endtrans %}</th>
+	            <th>{% trans %}actions{% endtrans %}</th>
 	        </tr>
 	    </thead>
 		<tbody>

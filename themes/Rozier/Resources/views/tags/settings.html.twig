@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="manage-tag-settings">
-	<h1 id="tag-title">{% trans %}Edit{% endtrans %} {{ tag.getTranslatedTags.first.getName }}</h1>
+	<h1 id="tag-title">{{ "edit.tag.%name%.settings"|trans({'%name%': tag.getTagName }) }}</h1>
 
 	{% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'settings'} %}
 

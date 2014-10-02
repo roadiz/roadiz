@@ -3,8 +3,8 @@
 
 {% block content %}
 <section id="manage-setting">
-	<h1 id="setting-title">{% trans %}Add a new setting{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('settingsHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back to settings{% endtrans %}</a></nav>
+	<h1 id="setting-title">{% trans %}add.setting{% endtrans %}</h1>
+	<nav><a class="uk-button uk-button-small" href="{{ path('settingsHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}back_to.settings{% endtrans %}</a></nav>
 
 	{% form_theme form 'forms.html.twig' %}
     <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>

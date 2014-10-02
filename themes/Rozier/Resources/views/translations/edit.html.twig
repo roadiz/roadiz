@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="manage-translation">
-	<h1 id="translation-title">Edit {{ translation.getName }}</h1>
+	<h1 id="translation-title">{{ "edit.translation.%name%"|trans({'%name%': translation.getName }) }}</h1>
 
 	{% form_theme form 'forms.html.twig' %}
     <form id="edit-translation-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>

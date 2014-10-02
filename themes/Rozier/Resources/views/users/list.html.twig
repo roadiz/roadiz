@@ -3,9 +3,9 @@
 {% block content %}
 <section id="manage-users">
 	<header>
-		<h1 id="title">{% trans %}Users{% endtrans %}</h1>
+		<h1 id="title">{% trans %}users{% endtrans %}</h1>
 	</header>
-	<nav><a class="uk-button" href="{{ path('usersAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a user{% endtrans %}</a></nav>
+	<nav><a class="uk-button" href="{{ path('usersAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.user{% endtrans %}</a></nav>
 
 	{% include 'widgets/filtersBar.html.twig' %}
 	<div class="container">
@@ -38,10 +38,10 @@
 					<td><a href="{{ path('usersEditPage', { userId: user.getId }) }}">{{ user.getUsername }}</a></td>
 					<td>{{ user.getEmail }}</td>
 					<td>
-						<i class="uk-icon-star"></i> {% transchoice user.getRoles|length %}{0} No roles|{1} 1 role|]1,Inf] %count% roles{% endtranschoice %}
+						<i class="uk-icon-star"></i> {% transchoice user.getRoles|length %}{0} no.roles|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}
 					</td>
 					<td>
-						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersDeletePage', { userId: user.getId }) }}">{% trans %}Delete{% endtrans %}</a>
+						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersDeletePage', { userId: user.getId }) }}">{% trans %}delete{% endtrans %}</a>
 					</td>
 				</tr>
 				{% endfor %}

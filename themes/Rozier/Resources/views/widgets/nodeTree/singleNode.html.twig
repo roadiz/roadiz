@@ -39,12 +39,12 @@
 		    <nav class="uk-dropdown uk-dropdown-small uk-dropdown-flip">
 		        <div class="uk-nav uk-nav-dropdown uk-dropdown-flip">
 		            <p>
-		            	<a title="{% trans %}edit.node.%name%{% endtrans %}" href="{{ path('nodesEditPage', { nodeId:node.getId }) }}">
+		            	<a title="{{ "edit.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesEditPage', { nodeId:node.getId }) }}">
 		            		<i class="uk-icon-pencil"></i> {% trans %}edit.node{% endtrans %}
 		            	</a>
 		            </p>
 		            <p>
-		            	<a title="{% trans %}add.child.node.%name%{% endtrans %}" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}">
+		            	<a title="{{ "add.node.%name%.child"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}">
 		            		<i class="uk-icon-plus"></i> {% trans %}add.child.node{% endtrans %}
 		            	</a>
 		            </p>
@@ -52,7 +52,7 @@
 		            {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE')) %}
 
 		            <p>
-		            	<a title="{% trans %}delete.node.%name%{% endtrans %}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">
+		            	<a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">
 		            		<i class="uk-icon-trash-o"></i> {% trans %}delete.node{% endtrans %}
 		            	</a>
 		            </p>
