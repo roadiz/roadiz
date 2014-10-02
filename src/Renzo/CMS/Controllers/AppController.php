@@ -469,14 +469,14 @@ class AppController implements ViewableInterface
              * Common templates
              */
             $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(RENZO_ROOT.'/src/Renzo/CMS/Resources/views'),
+                new \RecursiveDirectoryIterator(RENZO_ROOT.'/src/Renzo/CMS/Resources/views/forms'),
                 \RecursiveIteratorIterator::LEAVES_ONLY
             );
             foreach ($iterator as $file) {
                 // force compilation
                 if ($file->isFile() &&
                     $file->getExtension() == 'twig') {
-                    $ctrl->getTwig()->loadTemplate(str_replace(static::getViewsFolder().'/', '', $file));
+                    $ctrl->getTwig()->loadTemplate(str_replace(RENZO_ROOT.'/src/Renzo/CMS/Resources/views/forms/', '', $file));
                 }
             }
 
