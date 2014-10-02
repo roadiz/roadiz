@@ -1,7 +1,22 @@
+/*------------------------------------*\
+   LOGIN
+\*------------------------------------*/
+
+
+/* -------- VARS -------- */
+
+@login-H: 420px;
+@login-FormW: 400px;
+@login-BarW: 128px;
+@login-W: @login-FormW + @login-BarW;
+
+
+/* -------- STYLES -------- */
+
 #main_content {
     position: absolute;
     top: 0px; bottom: 0px; left: 0px; right: 0px;
-    background-color: #EEEEEE;
+    background-color: @global-background;
 }
 
 #login {
@@ -25,10 +40,10 @@
             background-color: @contrast-color;
             top: 0px; left: 0;
 
-            .uk-icon-rezozero {
+            .uk-icon-rz-rezozero {
                 display: table-cell;
                 width: 128px; height: 116px;
-                font-size: 65px;
+                font-size: 50px;
                 vertical-align: middle;
                 padding-left: 5px;
                 -webkit-font-smoothing: subpixel-antialiased;
@@ -41,11 +56,11 @@
             background-color: @grey-interface;
             top: 116px; left: 0;
 
-            .uk-icon-rezozero {
-                font-size: 22px;
+            .uk-icon-rz-rezozero {
+                font-size: 18px;
             }
 
-            .uk-icon-rezozero{
+            .uk-icon-rz-rezozero{
                 position: absolute;
                 color: @grey-medium;
                 bottom: 50px;
@@ -70,7 +85,7 @@
         width: @login-FormW;
         height: @login-H;
         left: @login-BarW;
-        padding: 50px 35px;
+        padding: 50px 40px;
         .box-sizing();
 
         h1 {
@@ -83,10 +98,9 @@
             .uk-icon-sign-in {
                 display: none;
             }
-
             input[type="text"],
             input[type="password"] {
-                width: 300px;
+                width: 100%;
             }
             .data-uk-margin>div {
                 margin-bottom: 15px;
@@ -102,7 +116,7 @@
                 text-decoration: none;
                 width: auto; height: 38px;
 
-                .uk-icon-earth {
+                .uk-icon-rz-earth {
                     display: inline-block;
                     width: 38px;
                     height: 38px;
@@ -127,9 +141,8 @@
                     color: @grey-form-submit-textsimple;
                     .transition(color ease 0.35s);
                 }
-
                 &:hover {
-                    .uk-icon-earth {
+                    .uk-icon-rz-earth {
                         border-color: @grey-form-submit-border-hover;
                         color: @grey-form-submit-icon-hover;
                     }
@@ -146,7 +159,7 @@
                 font-size: 12px;
                 font-weight: bold;
                 vertical-align: top;
-                border-left: 1px solid #CCCCCC;
+                border-left: 1px solid @grey-form-border;
                 padding-left: 10px;
                 color: @grey-form-submit-textsimple;
             }
