@@ -16,12 +16,12 @@ Content-Transfer-Encoding: 8bit
 X-Generator: Translate Toolkit 1.9.0
 </source>
         <target state="translated">Project-Id-Version: PACKAGE VERSION
-Report-Msgid-Bugs-To: 
+Report-Msgid-Bugs-To:
 POT-Creation-Date: 2014-10-02 15:29+0200
 PO-Revision-Date: 2014-10-02 15:43+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
-Language: 
+Language:
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -4190,6 +4190,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="405" approved="yes">
         <source>translate.node</source>
         <target state="translated">Translate node</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="406" approved="yes">
+        <source>title</source>
+        <target state="translated">Title</target>
       </trans-unit>
     </body>
   </file>
