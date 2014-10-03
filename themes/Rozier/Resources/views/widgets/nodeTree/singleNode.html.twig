@@ -13,12 +13,17 @@
 		{% if not node.isPublished %}unpublished-node {% endif %}
 		{% if not node.isArchived %}archived-node {% endif %}
 		{% if not node.isLocked %}locked-node {% endif %}">
-		<div class="uk-nestable-handle"></div>
+		<div class="uk-nestable-handle">
+			{% if node.isHidingChildren %}
+				<i class="uk-icon-folder"></i>
+				<span class="icon-stack-folder"></span>
+				<span class="icon-stack-folder icon-stack-folder-final"></span>
+			{% endif %}
+		</div>
 		{#
 		 # Node statuses
 		 #}
 		{% if node.isHome %}<i class="uk-icon-home"></i> {% endif %}
-		{% if node.isHidingChildren %}<i class="uk-icon-folder"><span class="icon-stack-folder"></span></i> {% endif %}
 		{# {% if not node.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %} #}
 		{% if node.isLocked %}<i class="uk-icon-locked-on"></i> {% endif %}
 		{# {% if not node.isPublished %}<i class="uk-icon-unpublished"></i> {% endif %} #}
