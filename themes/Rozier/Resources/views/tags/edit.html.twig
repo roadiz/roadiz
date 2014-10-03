@@ -2,24 +2,28 @@
 
 
 {% block content %}
-<section id="manage-tag">
-	<h1 id="tag-title">{{ "edit.tag.%name%"|trans({'%name%': tag.getTagName }) }}</h1>
+<section class="content-global edit-tag">
 
-	{% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'edit'} %}
-	{% include 'tags/translationBar.html.twig' with {"tag": tag, "current":translation.getId} %}
+    <header class="content-header header-tag header-tag-edit">
+        <h1 class="content-title tag-edit-title">{{ "edit.tag.%name%"|trans({'%name%': tag.getTagName }) }}</h1>
+        {% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'edit'} %}
+        {% include 'tags/translationBar.html.twig' with {"tag": tag, "current":translation.getId} %}
+    </header>
 
-	{% form_theme form 'forms.html.twig' %}
-    <form id="edit-tag-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-            <button data-action-save="#edit-tag-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                <i class="uk-icon-save"></i>
-                <span class="label">{% trans %}save{% endtrans %}</span>
-            </button>
-            {% endspaceless %}
-   		</fieldset>
-	</form>
+    <article class="content content-tag-edit">
+    	{% form_theme form 'forms.html.twig' %}
+        <form id="edit-tag-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	{% spaceless %}
+                <button data-action-save="#edit-tag-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-save"></i>
+                    <span class="label">{% trans %}save{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+       		</fieldset>
+    	</form>
+    </article>
 
     {% include 'tags/actionsMenu.html.twig' %}
 </section>

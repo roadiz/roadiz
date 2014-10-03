@@ -19,9 +19,6 @@
 
 .header-node{
     
-    // .content-title{
-    //     padding:0;
-    // }
 
 }
 
@@ -37,70 +34,5 @@
 
     .uk-navbar-link{
         padding:0 6px;
-    }
-}
-
-.node-translations-navigation{
-    position: absolute;
-    right:50px; bottom:2px; 
-    border:none;
-
-    .uk-navbar-nav{
-        float: none;
-        text-align: center;
-
-        & > li{
-            position: relative;
-            float: none;
-            display: inline-block;
-            margin:0;
-            height:30px;
-            background: none transparent;
-
-            &:after{     
-                background: @translation-nav-color;    
-                height:@active-border-size;
-                .transition(0.3s background-color ease);
-            }
-
-            a{
-                position: relative;
-                top:0px;
-                height:100%;
-                padding:0 6px;
-                color:@translation-nav-color;
-                text-transform: capitalize;
-                font-size:10px; line-height:30px;
-                .transition(0.3s color ease);
-            }
-
-            &:hover{
-
-               a{
-                    box-shadow: none;
-                    color:@translation-nav-hover-color;
-                }
-
-                &:after{  
-                    background: @translation-nav-hover-color;    
-                }
-
-            }
-            
-            &.uk-active{
-                cursor: default;
-                
-                a{
-                    color:@translation-nav-active-color;
-                    cursor: default;
-                }
-
-                &:after{  
-                    background: @translation-nav-active-color;    
-                }
-
-            }
-
-        }
     }
 }

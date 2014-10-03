@@ -1,9 +1,9 @@
-<nav id="node-translations-navigation" class="node-translations-navigation uk-navbar">
+<nav class="node-translation-bar translation-bar uk-navbar">
     {% spaceless %}
 	<ul class="uk-navbar-nav">
 		{% for translation in available_translations %}
-		    <li class="node-translation-navigation-item uk-navbar-item{% if current == translation.getId %} uk-active{% endif %}">
-		    	<a class="node-translation-navigation-link uk-navbar-link" href="{{ path('nodesEditSourcePage', { nodeId: node.getId, translationId:translation.getId }) }}">{{ translation.getShortLocale }}</a>
+		    <li class="node-translation-bar-item uk-navbar-item{% if current == translation.getId %} uk-active{% endif %}">
+		    	<a class="node-translation-bar-link uk-navbar-link" href="{{ path('nodesEditSourcePage', { nodeId: node.getId, translationId:translation.getId }) }}">{{ translation.getShortLocale }}</a>
 		    </li>
 		{% endfor %}
 	</ul>        
