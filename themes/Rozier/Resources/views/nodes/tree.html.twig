@@ -6,7 +6,6 @@
 	{% include 'nodes/navBar.html.twig' with {"current": 'tree'} %}
 	{% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
 
-
     {% include 'nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

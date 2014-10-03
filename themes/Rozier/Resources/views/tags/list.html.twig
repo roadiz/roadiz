@@ -1,43 +1,52 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
-<section id="manage-tags">
-	<h1 id="title">{% trans %}tags{% endtrans %}</h1>
-	<nav><a class="uk-button" href="{{ path('tagsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.tag{% endtrans %}</a></nav>
+<section class="content-global">
 
-	{% include 'widgets/filtersBar.html.twig' %}
+    <header class="content-header header-tags header-nodes-list">
+        <h1 class="content-title nodes-list-title">{% trans %}tags{% endtrans %}</h1>
+        <div class="content-header-action-menu">
+            <nav><a class="uk-button" href="{{ path('tagsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.tag{% endtrans %}</a></nav>
+        </div>
+    </header>   
 
-	<table class="tags uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}id{% endtrans %}</th>
-	            <th>{% trans %}name{% endtrans %}</th>
-	            <th>{% trans %}actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for tag in tags %}
-				{% set ttag = tag.getTranslatedTags.first %}
-				{% if ttag %}
-				<tr>
-					<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
-					<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
-					<td>
-						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">{% trans %}delete{% endtrans %}</a>
-					</td>
-				</tr>
-				{% else %}
-				<tr>
-					<td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">{{ tag.getId }}</a></td>
-					<td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">tag_{{ tag.getId }} <span class="uk-badge uk-badge-warning">{% trans %}notranslation_available.tag{% endtrans %}</span></a></td>
-					<td>
-						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">{% trans %}delete{% endtrans %}</a>
-					</td>
-				</tr>
-				{% endif %}
-			{% endfor %}
-		</tbody>
-	</table>
+    {% include 'widgets/filtersBar.html.twig' %}
+    
+    <article class="content content-no-action-menu content-tags-list">
+        <div class="content-table-cont">
+            <table class="tags content-table uk-table">
+                <thead>
+                    <tr>
+                        <th>{% trans %}id{% endtrans %}</th>
+                        <th>{% trans %}name{% endtrans %}</th>
+                        <th>{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tag in tags %}
+                        {% set ttag = tag.getTranslatedTags.first %}
+                        {% if ttag %}
+                        <tr>
+                            <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
+                            <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
+                            <td>
+                                <a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">{% trans %}delete{% endtrans %}</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">{{ tag.getId }}</a></td>
+                            <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">tag_{{ tag.getId }} <span class="uk-badge uk-badge-warning">{% trans %}notranslation_available.tag{% endtrans %}</span></a></td>
+                            <td>
+                                <a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">{% trans %}delete{% endtrans %}</a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
 </section>
 {% endblock %}

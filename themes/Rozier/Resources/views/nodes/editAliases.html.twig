@@ -6,16 +6,16 @@
 
 {% extends 'base.html.twig' %}
 {% block content %}
-<section id="manage-node-aliases">
+<section class="content-global">
 
-	<header class="content-header header-node header-node-edit-seo" id="header-node-edit-seo">
+	<header class="content-header header-node header-node-edit-seo">
 		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-		<h1 class="content-title" id="node-edit-seo-title">{{ "edit.node.%name%.seo"|trans({'%name%': currentTitle}) }}</h1>
+		<h1 class="content-title node-edit-seo-title">{{ "edit.node.%name%.seo"|trans({'%name%': currentTitle}) }}</h1>
 		{% include 'nodes/navBar.html.twig' with {"current": 'seo'} %}
 		{% include 'nodes/translationSEOBar.html.twig' with {"current": translation.getId} %}
 	</header>
 
-	<article class="content" id="content-node-edit-aliases">
+	<article class="content content-node-edit-seo">
 		<h2 class="content-subtitle">{% trans %}edit.node.seo{% endtrans %}</h2>
 
 		{% form_theme seoForm 'forms.html.twig' %}
@@ -31,7 +31,6 @@
 	   		</fieldset>
 		</form>
 
-
 		<h2 class="content-subtitle">{% trans %}urlAlias{% endtrans %}</h2>
 
 		<h3>{% trans %}add.urlAlias{% endtrans %}</h3>
@@ -46,7 +45,7 @@
 		<hr />
 
 		<div class="content-table-cont">
-			<table class="aliases uk-table">
+			<table class="aliases content-table uk-table">
 				<thead>
 			        <tr>
 			            <th>{% trans %}urlAlias{% endtrans %}</th>

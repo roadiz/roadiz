@@ -1,15 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-history" class="content-global content-nav-and-filters">
-	<header class="content-header content-header-filters" id="manage-history-header">
-		<h1 class="content-title" id="manage-history-title">{% trans %}history{% endtrans %}</h1>
+<section class="content-global content-nav-and-filters">
+
+	<header class="content-header content-header-filters manage-history-header">
+		<h1 class="content-title manage-history-title">{% trans %}history{% endtrans %}</h1>
 		{% include 'widgets/countFiltersBar.html.twig' %}
 		{% include 'dashboard/navBar.html.twig' with {'current':'history'} %}
 	</header>
+
 	{% include 'widgets/filtersBar.html.twig' %}
 
-	<article class="content" id="content-manage-history">
+	<article class="content content-manage-history">
 		<div class="content-table-cont">
 	        <table class="history content-table uk-table">
 				<thead>
@@ -34,6 +36,7 @@
 				</tbody>
 			</table>
 		</div>
-    </article>	
+    </article>
+
 </section>
 {% endblock %}

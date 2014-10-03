@@ -6,15 +6,15 @@
 
 {% extends 'base.html.twig' %}
 {% block content %}
-<section id="manage-node-tags">
+<section class="content-global">
 
-	<header class="content-header header-node header-node-edit-tags" id="header-node-edit-tags">
+	<header class="content-header header-node header-node-edit-tags">
 		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-		<h1 class="content-title" id="node-edit-tags-title">{{ "edit.node.%name%.tags"|trans({'%name%': currentTitle}) }}</h1>
+		<h1 class="content-title node-edit-tags-title">{{ "edit.node.%name%.tags"|trans({'%name%': currentTitle}) }}</h1>
 		{% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
 	</header>
 
-	<article class="content" id="content-node-edit-tags">
+	<article class="content content-node-edit-tags">
 		<h2 class="content-subtitle">{% trans %}add.tag{% endtrans %}</h2>
 		{% form_theme form 'forms.html.twig' %}
 		<form id="edit-node-tags-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
@@ -28,7 +28,7 @@
 
 		<h2 class="content-subtitle">{% trans %}tags{% endtrans %}</h2>
 		<div class="content-table-cont">
-			<table class="tags uk-table">
+			<table class="tags content-table  uk-table">
 				<thead>
 			        <tr>
 			            <th>{% trans %}id{% endtrans %}</th>
