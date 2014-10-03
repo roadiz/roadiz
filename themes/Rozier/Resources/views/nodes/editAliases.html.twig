@@ -1,10 +1,16 @@
+{% if source.getTitle %}
+{% set currentTitle = source.getTitle %}
+{% else %}
+{% set currentTitle = node.getNodeName %}
+{% endif %}
+
 {% extends 'base.html.twig' %}
 {% block content %}
 <section id="manage-node-aliases">
 
 	<header class="content-header header-node header-node-edit-seo" id="header-node-edit-seo">
 		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-		<h1 class="content-title" id="node-edit-seo-title">{{ "edit.node.%name%.seo"|trans({'%name%': source.getTitle}) }}</h1>
+		<h1 class="content-title" id="node-edit-seo-title">{{ "edit.node.%name%.seo"|trans({'%name%': currentTitle}) }}</h1>
 	</header>
 	{% include 'nodes/navBar.html.twig' with {"current": 'seo'} %}
 	{% include 'nodes/translationSEOBar.html.twig' with {"current": translation.getId} %}
