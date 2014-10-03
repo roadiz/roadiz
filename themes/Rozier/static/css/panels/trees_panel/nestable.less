@@ -4,7 +4,6 @@
 .nodetree-widget {
 
     -webkit-user-select: none;
-
     padding: 0;
 
     h4 {
@@ -21,12 +20,6 @@
 
         & > ul {
 
-            & > li:first-child {
-                padding-top: 7px;
-                margin-top: -7px;
-            }
-
-
             & > li:last-child {
                 border-left: 0 none;
                 position: relative;
@@ -41,6 +34,23 @@
                     background: transparent;
                     top: 0px;
                     border-left: 1px solid #b2b2b2;
+                    border-bottom: 1px solid #b2b2b2;
+                }
+            }
+            & > li:first-child {
+                padding-top: 7px;
+                margin-top: -6px;
+                position: relative;
+
+                &:before {
+                    content: "";
+                    display: block;
+                    width: 13px;
+                    position: absolute;
+                    left: 0px;
+                    height: 19px;
+                    background: transparent;
+                    top: 0px;
                     border-bottom: 1px solid #b2b2b2;
                 }
             }
@@ -90,7 +100,7 @@
         }
 
         .uk-icon-home { display: none; }
-        .uk-icon-folder { display: none; }
+        //.uk-icon-folder { display: none; }
     }
 
     .nodetree-element-inner {
@@ -100,6 +110,7 @@
             .uk-nestable-handle:after {
                 color: #333333;
                 border-color: #333333;
+                background: #555555;
             }
         }
     }
@@ -131,17 +142,17 @@
         color: #999999;
         font-size: 12px;
         .rounded(100%);
-
         background-color: white;
-        border:  1px solid #999999;
-        width:   10px;
+        border: 1px solid #999999;
+        width: 10px;
         display: inline-block;
-        height:  10px;
-        top: 2px;
+        height: 10px;
+        top: 3px;
         position: relative;
     }
 
     .uk-nestable-item {
+
 
         &.home-node {
             padding-left: @node-icon-offset - 2;
@@ -157,20 +168,67 @@
                 top: 0px;
             }
         }
-
         &.stack-node {
             padding-left: @node-icon-offset - 3;
 
             & > .uk-nestable-handle:after {
-                content: "\f230";
-                font-family: FontAwesome;
-                font-size: 16px;
-                background-color: #d3d3d3;
-                border: 0 none;
-                width: auto;
-                height: auto;
-                top: 0px;
+                left: -1px;
             }
+
+            .uk-icon-folder:before, .icon-stack-folder  {
+                content: "";
+                font-family: FontAwesome;
+                color: #999999;
+                font-size: 12px;
+                .rounded(100%);
+                background-color: white;
+                border: 1px solid #999999;
+                width: 10px;
+                display: inline-block;
+                height: 10px;
+                top: 2px;
+                left: -10px;
+                position: relative;
+            }
+            .icon-stack-folder {
+                left: -19px;
+                &:after {
+                    position: relative;
+                    display: block;
+                    content: "";
+                    font-family: FontAwesome;
+                    color: #999999;
+                    font-size: 12px;
+                    .rounded(100%);
+                    background-color: #999999;
+                    width: 4px;
+                    height: 4px;
+                    top: 3px;
+                    left: 3px;
+                }
+            }
+            .nodetree-element-name {
+                left: -20px;
+            }
+        }
+        &.hidden-node {
+            padding-left: @node-icon-offset - 3;
+
+            & > .nodetree-element-name {
+                a {
+                    text-decoration: line-through;
+                    .opacity(0.8);
+                }
+            }
+        }
+        &.unpublished-node {
+
+           & > .uk-nestable-handle:after {
+                 width: 9px;
+                height: 9px;
+               .rounded(2px);
+               .rotation(45deg);
+           }
         }
     }
 

@@ -14,22 +14,22 @@
 		{% if not node.isArchived %}archived-node {% endif %}
 		{% if not node.isLocked %}locked-node {% endif %}">
 		<div class="uk-nestable-handle"></div>
+		{#
+		 # Node statuses
+		 #}
+		{% if node.isHome %}<i class="uk-icon-home"></i> {% endif %}
+		{% if node.isHidingChildren %}<i class="uk-icon-folder"><span class="icon-stack-folder"></span></i> {% endif %}
+		{# {% if not node.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %} #}
+		{% if node.isLocked %}<i class="uk-icon-locked-on"></i> {% endif %}
+		{# {% if not node.isPublished %}<i class="uk-icon-unpublished"></i> {% endif %} #}
+		{% if node.isArchived %}<i class="uk-icon-archive"></i> {% endif %}
+
 		<div class="nodetree-element-name">
 			{% if node.isHidingChildren %}
 				<a href="{{ path('nodesTreePage', { nodeId:node.getId }) }}">{{ name }}</a>
 			{% else %}
 				<a href="{{ path('nodesEditSourcePage', { nodeId:node.getId, translationId:nodeTree.getTranslation.getId}) }}">{{ name }}</a>
 			{% endif %}
-
-			{#
-			 # Node statuses
-			 #}
-			{% if node.isHome %}<i class="uk-icon-home"></i> {% endif %}
-			{% if node.isHidingChildren %}<i class="uk-icon-folder"></i> {% endif %}
-			{% if not node.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %}
-			{% if node.isLocked %}<i class="uk-icon-locked-on"></i> {% endif %}
-			{% if not node.isPublished %}<i class="uk-icon-unpublished"></i> {% endif %}
-			{% if node.isArchived %}<i class="uk-icon-archive"></i> {% endif %}
 
 		</div>
 
