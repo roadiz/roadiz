@@ -360,6 +360,31 @@ class AppController implements ViewableInterface
     }
 
     /**
+     * Return every paths to search for twig templates.
+     *
+     * Extend this method in your custom theme if you need to
+     * search additionnal templates.
+     *
+     * @return \Twig_Loader_Filesystem
+     */
+    public function getTwigLoader()
+    {
+        $vendorDir = realpath(RENZO_ROOT . '/vendor');
+
+        // le chemin vers TwigBridge pour que Twig puisse localiser
+        // le fichier form_div_layout.html.twig
+        $vendorTwigBridgeDir =
+            $vendorDir . '/symfony/twig-bridge/Symfony/Bridge/Twig';
+
+        // le chemin vers les autres templates
+        return new \Twig_Loader_Filesystem(array(
+            static::getViewsFolder(), // Theme templates
+            RENZO_ROOT . '/src/Renzo/CMS/Resources/views/forms', // Form extension templates
+            $vendorTwigBridgeDir . '/Resources/views/Form' // Form extension templates
+        ));
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function initializeTwig()
@@ -372,20 +397,7 @@ class AppController implements ViewableInterface
         // ce fichier vient avoir le TwigBridge
         $defaultFormTheme = 'form_div_layout.html.twig';
 
-        $vendorDir = realpath(RENZO_ROOT . '/vendor');
-        // le chemin vers TwigBridge pour que Twig puisse localiser
-        // le fichier form_div_layout.html.twig
-        $vendorTwigBridgeDir =
-            $vendorDir . '/symfony/twig-bridge/Symfony/Bridge/Twig';
-        // le chemin vers les autres templates
-
-
-        $loader = new \Twig_Loader_Filesystem(array(
-            static::getViewsFolder(), // Theme templates
-            RENZO_ROOT . '/src/Renzo/CMS/Resources/views/forms', // Form extension templates
-            $vendorTwigBridgeDir . '/Resources/views/Form' // Form extension templates
-        ));
-        $this->twig = new \Twig_Environment($loader, array(
+        $this->twig = new \Twig_Environment($this->getTwigLoader(), array(
             'cache' => $this->getCacheDirectory(),
         ));
 

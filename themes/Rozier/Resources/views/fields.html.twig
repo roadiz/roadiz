@@ -1,0 +1,91 @@
+{#
+ #
+ # This file extends default symfony2 fields types
+ # It adds Renzo CMS special types templates such as
+ # Markdown, document and childrenNodeTree fields
+ #
+ #
+ #}
+{% block markdown_widget %}
+    {% spaceless %}
+        {# just let the textarea widget render the select tag #}
+        <textarea {{ block('widget_attributes') }} data-uk-htmleditor="{markdown:true, mode:'tab'}">{{ value }}</textarea>
+    {% endspaceless %}
+{% endblock markdown_widget %}
+
+{% block documents_widget %}
+    {% spaceless %}
+    <div class="uk-form-row uk-margin-small-top documents-widget" data-document-widget>
+        <nav class="documents-widget-nav uk-navbar">
+            <ul class="uk-navbar-nav">
+                <li class="uk-navbar-brand"><i class="uk-icon-rz-documents"></i></li>
+            </ul>
+            <div class="uk-navbar-content uk-navbar-flip">
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-explorer><i class="uk-icon-document-explorer"></i> {% trans %}documents.toggle-explorer{% endtrans %}</a>
+                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-cloud-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
+                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-embedder><i class="uk-icon-embed"></i> {% trans %}documents.toggle-embedder{% endtrans %}</a>
+                </div>
+            </div>
+        </nav>
+        <ul class="uk-nestable documents-widget-nestable" data-uk-nestable="{group:'documents-widget',maxDepth:1}" data-input-name="{{ name }}">
+            {% for doc in data %}
+            {% include 'widgets/documentSmallThumbnail.html.twig' with {
+                'document':doc,
+                'name': name,
+                'full_name':full_name,
+                'read_only': read_only,
+                'disabled':disabled,
+                'required':required,
+                'attr': attr
+            } %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endspaceless %}
+{% endblock documents_widget %}
+
+
+{% block separator_widget %}
+    {% spaceless %}
+        {# just let the textarea widget render the select tag #}
+        <p {{ block('widget_attributes') }}>{{label}}</p>
+    {% endspaceless %}
+{% endblock separator_widget %}
+
+
+{# Override default error block #}
+{% block form_errors -%}
+    {% if errors|length > 0 -%}
+    <ul class="errors">
+        {%- for error in errors -%}
+        <li class="uk-alert uk-alert-danger">{{ error.message }}</li>
+        {%- endfor -%}
+    </ul>
+    {%- endif %}
+{%- endblock form_errors %}
+
+{# Children node tree field #}
+{% block childrennodes_widget %}
+    {% spaceless %}
+    <div class="uk-form-row uk-margin-small-top children-nodes-widget" data-children-nodes-widget>
+        <nav class="children-nodes-nav uk-navbar">
+            <ul class="uk-navbar-nav">
+                <li class="uk-navbar-brand"><i class="uk-icon-rz-nodes"></i></li>
+            </ul>
+            <div class="uk-navbar-content uk-navbar-flip">
+                <div class="children-nodes-quick-creation uk-button-group">
+                    {% for linkedType in linkedTypes %}
+                    <a class="uk-button uk-button-small" href="#" data-children-node-type="{{ linkedType.getId }}" data-children-parent-node="{{ nodeTree.getRootNode.getId }}">
+                        <i class="uk-icon-plus"></i> {{ "add.a.%nodeType%"|trans({'%nodeType%': linkedType.getDisplayName}) }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </nav>
+        <div class="children-nodes-tree">
+            {% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':false, "securityContext":securityContext} only %}
+        </div>
+    </div>
+    {% endspaceless %}
+{% endblock childrennodes_widget %}

@@ -24,7 +24,7 @@
 				<td>{{ field.getLabel }}</td>
 				<td>{{ field.getTypeName }}</td>
 				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}">{% trans %}delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}
