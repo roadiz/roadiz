@@ -9,9 +9,9 @@
 <section id="manage-node">
     <header class="content-header header-node header-node-edit" id="header-node-edit">
         {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-        <h1 class="content-title" id="node-edit-title">{{ "edit.node.%name%"|trans({'%name%': currentTitle}) }}</h1>
+         <h1 class="content-title" id="node-edit-title">{{ "edit.node.%name%"|trans({'%name%': currentTitle}) }}</h1>
+        {% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}
     </header>
-    {% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}
 
     <article class="content" id="content-node-edit">
         {% form_theme form 'forms.html.twig' %}

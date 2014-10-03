@@ -34,13 +34,43 @@
 
 }
 
+.content-global{
+
+    &.content-nav-and-filters{
+
+        .content-title{
+            padding:1.5em 0 0;
+        }
+
+        #uk-navbar-filter{
+            margin-top:30px;
+        }
+    }
+
+}
+
 .content-header { // header
-    height: 188px;
+    position: relative;
+    height: 220px;
     padding: 0px 60px;
     background-color: @maincontent-header-bg;
     text-align: center;
     .box-sizing();
+    border-bottom: 1px solid @navbars-bg;
 
+    .navbar-navigation{
+        position: absolute;
+        right:0; bottom:0; left:0;
+    }
+
+    .count-filters-bar{
+        position: absolute;
+        right:0; bottom:85px; left:0;
+    }
+
+    // &.content-header-filters{
+    //     height:160px;
+    // }
 }
 
 .content-title { // h1

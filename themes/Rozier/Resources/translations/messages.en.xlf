@@ -18,8 +18,8 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-10-03 10:35+0000
-Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
+PO-Revision-Date: 2014-10-03 08:19+0000
+Last-Translator: Maxime Bérard &lt;maxime@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
 MIME-Version: 1.0
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1412332515.864238
+X-POOTLE-MTIME: 1412324394.643788
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -45,7 +45,7 @@ This file is distributed under the same license as the PACKAGE package.
 FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="2" approved="yes">
         <source>node.%name%.updated</source>
-        <target state="translated">Node "%name%" has been updated.</target>
+        <target state="translated">Document %name% has been updated.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/AjaxControllers/AjaxNodesController.php</context>
           <context context-type="linenumber">74</context>
@@ -4198,116 +4198,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="407" approved="yes">
         <source>page</source>
         <target state="translated">Page</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="408" approved="yes">
-        <source>choose.value</source>
-        <target state="translated">-- Choose a value --</target>
-      <note/></trans-unit>
-
-      <!-- Count translations -->
-      <trans-unit xml:space="preserve" id="409" approved="yes">
-        <source>{0} no.item|{1} 1.item|]1,Inf] %count%.items</source>
-        <target state="translated">{0} No item|{1} 1 item|]1,Inf] %count% items</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="410" approved="yes">
-        <source>1.item</source>
-        <target state="translated">1 item</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="411" approved="yes">
-        <source>%count%.items</source>
-        <target state="translated">%count% items</target>
-      <note/></trans-unit>
-
-      <trans-unit xml:space="preserve" id="412" approved="yes">
-        <source>{0} no.role|{1} 1.role|]1,Inf] %count%.roles</source>
-        <target state="translated">{0} No role|{1} 1 role|]1,Inf] %count% roles</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="413" approved="yes">
-        <source>1.role</source>
-        <target state="translated">1 role</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="414" approved="yes">
-        <source>%count%.roles</source>
-        <target state="translated">%count% roles</target>
-      <note/></trans-unit>
-
-      <trans-unit xml:space="preserve" id="415" approved="yes">
-        <source>{0} no.group|{1} 1.group|]1,Inf] %count%.groups</source>
-        <target state="translated">{0} No group|{1} 1 group|]1,Inf] %count% groups</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="416" approved="yes">
-        <source>1.group</source>
-        <target state="translated">1 group</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="417" approved="yes">
-        <source>%count%.groups</source>
-        <target state="translated">%count% groups</target>
-      <note/></trans-unit>
-
-      <trans-unit xml:space="preserve" id="418" approved="yes">
-        <source>{0} no.user|{1} 1.user|]1,Inf] %count%.users</source>
-        <target state="translated">{0} No user|{1} 1 user|]1,Inf] %count% users</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="419" approved="yes">
-        <source>1.user</source>
-        <target state="translated">1 user</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="420" approved="yes">
-        <source>%count%.users</source>
-        <target state="translated">%count% users</target>
-      <note/></trans-unit>
-
-      <trans-unit xml:space="preserve" id="421" approved="yes">
-        <source>{0} no.tag|{1} 1.tag|]1,Inf] %count%.tags</source>
-        <target state="translated">{0} No tag|{1} 1 tag|]1,Inf] %count% tags</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="422" approved="yes">
-        <source>1.tag</source>
-        <target state="translated">1 tag</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="423" approved="yes">
-        <source>%count%.tags</source>
-        <target state="translated">%count% tags</target>
-      <note/></trans-unit>
-
-      <trans-unit xml:space="preserve" id="424" approved="yes">
-        <source>{0} no.document|{1} 1.document|]1,Inf] %count%.documents</source>
-        <target state="translated">{0} No document|{1} 1 document|]1,Inf] %count% documents</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="425" approved="yes">
-        <source>1.document</source>
-        <target state="translated">1 document</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="426" approved="yes">
-        <source>%count%.documents</source>
-        <target state="translated">%count% documents</target>
-      <note/></trans-unit>
-
-      <trans-unit xml:space="preserve" id="427" approved="yes">
-        <source>{0} no.node|{1} 1.node|]1,Inf] %count%.nodes</source>
-        <target state="translated">{0} No node|{1} 1 node|]1,Inf] %count% nodes</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="428" approved="yes">
-        <source>1.node</source>
-        <target state="translated">1 node</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="429" approved="yes">
-        <source>%count%.nodes</source>
-        <target state="translated">%count% nodes</target>
-      <note/></trans-unit>
-
-      <trans-unit xml:space="preserve" id="430" approved="yes">
-        <source>{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields</source>
-        <target state="translated">{0} No field|{1} 1 field|]1,Inf] %count% fields</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="431" approved="yes">
-        <source>1.nodeTypeField</source>
-        <target state="translated">1 field</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="432" approved="yes">
-        <source>%count%.nodeTypeFields</source>
-        <target state="translated">%count% fields</target>
-      <note/></trans-unit>
+      </trans-unit>
     </body>
   </file>
 </xliff>

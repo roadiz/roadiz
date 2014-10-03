@@ -5,7 +5,7 @@
 {% endif %}
 
 {% spaceless %}
-<ul class="node-breadcrumb uk-breadcrumb">
+<ul class="uk-breadcrumb content-breadcrumb node-breadcrumb">
     {% for parent in node.getHandler.getParents %}
         {% if parent.getNodeSources.first.getTitle %}
         {% set title = parent.getNodeSources.first.getTitle %}

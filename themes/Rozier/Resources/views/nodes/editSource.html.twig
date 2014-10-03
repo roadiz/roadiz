@@ -12,9 +12,9 @@
 	<header class="content-header header-node header-node-edit" id="header-node-edit-source">
 		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
 		<h1 class="content-title" id="node-edit-title">{{ "edit.nodeSource.%name%"|trans({'%name%': currentTitle}) }}</h1>
+		{% include 'nodes/navBar.html.twig' with {"current": 'source'} %}
+		{% include 'nodes/translationBar.html.twig' with {"current": translation.getId} %}
 	</header>
-	{% include 'nodes/navBar.html.twig' with {"current": 'source'} %}
-	{% include 'nodes/translationBar.html.twig' with {"current": translation.getId} %}
 
 	<article class="content" id="content-node-edit-source">
 		{% form_theme form 'forms.html.twig' %}
