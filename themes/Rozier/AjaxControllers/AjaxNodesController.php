@@ -51,6 +51,8 @@ class AjaxNodesController extends AbstractAjaxController
             );
         }
 
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
         $node = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
@@ -172,6 +174,8 @@ class AjaxNodesController extends AbstractAjaxController
             );
         }
 
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
         $responseArray = null;
 
         $availableStatuses = array(
@@ -251,6 +255,108 @@ class AjaxNodesController extends AbstractAjaxController
                 'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', array(
                     '%nodeId%' => $request->get('nodeId')
                 ))
+            );
+        }
+
+        return new Response(
+            json_encode($responseArray),
+            $responseArray['statusCode'],
+            array('content-type' => 'application/javascript')
+        );
+    }
+
+    public function quickAddAction(Request $request)
+    {
+        /*
+         * Validate
+         */
+        if (true !== $notValid = $this->validateRequest($request)) {
+            return new Response(
+                json_encode($notValid),
+                Response::HTTP_FORBIDDEN,
+                array('content-type' => 'application/javascript')
+            );
+        }
+
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
+        $responseArray = array();
+
+        if ($request->get('nodeTypeId') > 0 &&
+            $request->get('parentNodeId') > 0) {
+
+            $nodeType = $this->getService('em')
+                            ->find(
+                                'RZ\Renzo\Core\Entities\NodeType',
+                                (int) $request->get('nodeTypeId')
+                            );
+
+            $parent = $this->getService('em')
+                            ->find(
+                                'RZ\Renzo\Core\Entities\Node',
+                                (int) $request->get('parentNodeId')
+                            );
+
+            if (null !== $nodeType &&
+                null !== $parent) {
+
+                $translation = $parent->getNodeSources()->first()->getTranslation();
+
+                if (null === $translation) {
+                    $translation = $this->getService('em')
+                                        ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                                        ->findDefault();
+                }
+
+                try {
+                    $name = "Untitled ".uniqid();
+
+                    $node = new Node($nodeType);
+                    $node->setParent($parent);
+                    $node->setNodeName($name);
+                    $this->getService('em')->persist($node);
+
+                    $sourceClass = "GeneratedNodeSources\\".$nodeType->getSourceEntityClassName();
+                    $source = new $sourceClass($node, $translation);
+                    $source->setTitle($name);
+                    $this->getService('em')->persist($source);
+                    $this->getService('em')->flush();
+
+                    $responseArray = array(
+                        'statusCode' => Response::HTTP_OK,
+                        'status'    => 'success',
+                        'responseText' => $this->getTranslator()->trans(
+                            'added.node.%name%',
+                            array(
+                                '%name%' => $source->getTitle()
+                            )
+                        )
+                    );
+
+                } catch (\Exception $e) {
+                    $msg = $this->getTranslator()->trans('node.%name%.noCreation.alreadyExists', array('%name%'=>$node->getNodeName()));
+
+                    $responseArray = array(
+                        'statusCode' => Response::HTTP_FORBIDDEN,
+                        'status'    => 'danger',
+                        'responseText' => $msg
+                    );
+                }
+
+
+            } else {
+                $responseArray = array(
+                    'statusCode' => Response::HTTP_FORBIDDEN,
+                    'status'    => 'danger',
+                    'responseText' => $this->getTranslator()->trans('bad.request')
+                );
+            }
+
+        } else {
+            $responseArray = array(
+                'statusCode' => Response::HTTP_FORBIDDEN,
+                'status'    => 'danger',
+                'responseText' => $this->getTranslator()->trans('bad.request')
             );
         }
 

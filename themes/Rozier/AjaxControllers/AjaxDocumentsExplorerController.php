@@ -36,10 +36,6 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_DOCUMENTS')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
-
         /*
          * Validate
          */
@@ -50,6 +46,8 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
                 array('content-type' => 'application/javascript')
             );
         }
+
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $documents = $this->getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Document')

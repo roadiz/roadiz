@@ -34,10 +34,6 @@ class AjaxNodeTreeController extends AbstractAjaxController
 {
     public function getTreeAction(Request $request)
     {
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
-            || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-            return $this->throw404();
-
         /*
          * Validate
          */
@@ -49,8 +45,47 @@ class AjaxNodeTreeController extends AbstractAjaxController
             );
         }
 
-        $this->assignation['nodeTree'] = new NodeTreeWidget($this->getKernel()->getRequest(), $this);
-        $this->assignation['mainNodeTree'] = true;
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
+
+        switch ($request->get("_action")) {
+            /*
+             * Inner node edit for nodeTree
+             */
+            case 'requestNodeTree':
+                if ($request->get('parentNodeId') > 0) {
+
+                    $node = $this->getService('em')
+                                 ->find(
+                                    '\RZ\Renzo\Core\Entities\Node',
+                                    (int) $request->get('parentNodeId')
+                                 );
+
+                    $this->assignation['nodeTree'] = new NodeTreeWidget(
+                        $this->getKernel()->getRequest(),
+                        $this,
+                        $node
+                    );
+                    $this->assignation['mainNodeTree'] = false;
+
+                } else {
+                    throw new \RuntimeException("No root node specified", 1);
+                }
+
+                break;
+            /*
+             * Main panel tree nodeTree
+             */
+            case 'requestMainNodeTree':
+                $this->assignation['nodeTree'] = new NodeTreeWidget(
+                    $this->getKernel()->getRequest(),
+                    $this
+                );
+                $this->assignation['mainNodeTree'] = true;
+
+                break;
+        }
+
 
 
 
