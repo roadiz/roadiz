@@ -4303,6 +4303,62 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <source>%count%.nodeTypeFields</source>
         <target></target>
       </trans-unit>
+
+      <!-- Node type fields datatypes -->
+      <trans-unit xml:space="preserve" id="433">
+        <source>string.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="434">
+        <source>date-time.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="435">
+        <source>text.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="436">
+        <source>markdown.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="437">
+        <source>boolean.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="438">
+        <source>integer.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="439">
+        <source>decimal.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="440">
+        <source>email.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="441">
+        <source>single-choice.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="442">
+        <source>multiple-choice.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="443">
+        <source>documents.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="444">
+        <source>children-nodes.type</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- Dynamic button in nodeTree add.a.%nodeType% -->
+      <trans-unit xml:space="preserve" id="445">
+        <source>add.a.%nodeType%</source>
+        <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

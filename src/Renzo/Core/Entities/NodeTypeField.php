@@ -133,20 +133,23 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
     /**
      * Associates node-type field type to a readable string.
      *
+     * These string will be used as translation key.
+     *
      * @var array
      */
     public static $typeToHuman = array(
-        NodeTypeField::STRING_T =>   'string',
-        NodeTypeField::DATETIME_T => 'date-time',
-        NodeTypeField::TEXT_T =>     'text',
-        NodeTypeField::MARKDOWN_T => 'markdown',
-        NodeTypeField::BOOLEAN_T =>  'boolean',
-        NodeTypeField::INTEGER_T =>  'integer',
-        NodeTypeField::DECIMAL_T =>  'decimal',
-        NodeTypeField::EMAIL_T =>    'email',
-        NodeTypeField::ENUM_T =>     'single-choice',
-        NodeTypeField::MULTIPLE_T => 'multiple-choice',
-        NodeTypeField::DOCUMENTS_T =>'documents',
+        NodeTypeField::STRING_T =>   'string.type',
+        NodeTypeField::DATETIME_T => 'date-time.type',
+        NodeTypeField::TEXT_T =>     'text.type',
+        NodeTypeField::MARKDOWN_T => 'markdown.type',
+        NodeTypeField::BOOLEAN_T =>  'boolean.type',
+        NodeTypeField::INTEGER_T =>  'integer.type',
+        NodeTypeField::DECIMAL_T =>  'decimal.type',
+        NodeTypeField::EMAIL_T =>    'email.type',
+        NodeTypeField::ENUM_T =>     'single-choice.type',
+        NodeTypeField::MULTIPLE_T => 'multiple-choice.type',
+        NodeTypeField::DOCUMENTS_T =>'documents.type',
+        NodeTypeField::CHILDREN_T => 'children-nodes.type',
     );
     /**
      * Associates node-type field type to a Doctrine type.
@@ -166,6 +169,7 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
         NodeTypeField::ENUM_T =>     'string',
         NodeTypeField::MULTIPLE_T => 'simple_array',
         NodeTypeField::DOCUMENTS_T => null,
+        NodeTypeField::CHILDREN_T =>  null,
     );
     /**
      * Associates node-type field type to a Symfony Form type.
@@ -185,6 +189,7 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
         NodeTypeField::ENUM_T =>     'enumeration',
         NodeTypeField::MULTIPLE_T => 'multiple_enumeration',
         NodeTypeField::DOCUMENTS_T =>'documents',
+        NodeTypeField::CHILDREN_T => 'children_nodes',
     );
 
     /**
