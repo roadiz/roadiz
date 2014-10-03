@@ -26,6 +26,7 @@ module.exports = function(grunt) {
 					"js/widgets/documentWidget.js",
 					"js/widgets/saveButtons.js",
 					"js/widgets/nodeStatuses.js",
+					"js/widgets/childrenNodesField.js",
 					"js/plugins.js",
 					"js/main.js"
 				],

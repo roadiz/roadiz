@@ -18,6 +18,7 @@ Rozier.onDocumentReady = function( event ) {
 	}
 
 	new DocumentWidget();
+	new ChildrenNodesField();
 	new SaveButtons();
 
 	Rozier.nodeStatuses = new NodeStatuses();

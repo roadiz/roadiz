@@ -33,10 +33,6 @@ NodeStatuses.prototype.onChange = function(event) {
         var statusName = $input.attr('name');
         var statusValue = $input.is(':checked');
 
-        //console.log("Changed status of : "+
-        //            $input.attr('name')+" : "+
-        //            (statusValue ? "ON" : "OFF"));
-
         var postData = {
             "_token": Rozier.ajaxToken,
             "_action":'nodeChangeStatus',

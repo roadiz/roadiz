@@ -92,6 +92,9 @@ nodesStatusesAjax:
 nodesTreeAjax:
     path:     /rz-admin/ajax/nodes/tree
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodeTreeController::getTreeAction }
+nodesQuickAddAjax:
+    path:     /rz-admin/ajax/nodes/add
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::quickAddAction }
 
 # Node TYPES
 nodeTypesHomePage:
