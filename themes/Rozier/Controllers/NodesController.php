@@ -33,6 +33,7 @@ use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Nodes controller
@@ -1066,10 +1067,7 @@ class NodesController extends RozierApp
             $sourceBuilder->add(
                 $field->getName(),
                 static::getFormTypeFromFieldType($source, $field),
-                array(
-                    'label' => $field->getLabel(),
-                    'required' => false
-                )
+                static::getFormOptionsFromFieldType($source, $field, $this->getTranslator())
             );
         }
 
@@ -1100,6 +1098,24 @@ class NodesController extends RozierApp
 
             default:
                 return NodeTypeField::$typeToForm[$field->getType()];
+        }
+    }
+
+    public static function getFormOptionsFromFieldType($nodeSource, NodeTypeField $field, Translator $translator)
+    {
+        switch ($field->getType()) {
+            case NodeTypeField::ENUM_T:
+                return array(
+                    'label' => $field->getLabel(),
+                    'empty_value' => $translator->trans('choose.value'),
+                    'required' => false
+                );
+
+            default:
+                return array(
+                    'label' => $field->getLabel(),
+                    'required' => false
+                );
         }
     }
 

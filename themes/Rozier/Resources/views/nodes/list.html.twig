@@ -51,7 +51,11 @@
 		<tbody>
 			{% for node in nodes %}
 			<tr>
+				{% if node.getNodeSources.first.getTitle %}
+				<td><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeSources.first.getTitle }}</a></td>
+				{% else %}
 				<td><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeName }}</a></td>
+				{% endif %}
 				<td>{{ node.getNodeType.getDisplayName }}</td>
 				<td>
 					{% if node.isPublished == false %}<div class="uk-badge uk-badge-warning">{% trans %}node.not.published{% endtrans %}</div>{% endif %}
@@ -61,8 +65,8 @@
 				</td>
 				<td>{{ node.getUpdatedAt|localizeddate('full', 'none') }}</td>
 				<td>
-					<a class="uk-button uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}">{% trans %}see.nodetree{% endtrans %}</a>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}">{% trans %}delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-node-tree"></i> {% trans %}see.nodetree{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 				</td>
 			</tr>
 			{% endfor %}

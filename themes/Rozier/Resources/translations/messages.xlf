@@ -4190,6 +4190,119 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <source>title</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="407">
+        <source>page</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="408">
+        <source>choose.value</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- Count translations -->
+      <trans-unit xml:space="preserve" id="409">
+        <source>{0} no.item|{1} 1.item|]1,Inf] %count%.items</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="410">
+        <source>1.item</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="411">
+        <source>%count%.items</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="412">
+        <source>{0} no.role|{1} 1.role|]1,Inf] %count%.roles</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="413">
+        <source>1.role</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="414">
+        <source>%count%.roles</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="415">
+        <source>{0} no.group|{1} 1.group|]1,Inf] %count%.groups</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="416">
+        <source>1.group</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="417">
+        <source>%count%.groups</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="418">
+        <source>{0} no.user|{1} 1.user|]1,Inf] %count%.users</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="419">
+        <source>1.user</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="420">
+        <source>%count%.users</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="421">
+        <source>{0} no.tag|{1} 1.tag|]1,Inf] %count%.tags</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="422">
+        <source>1.tag</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="423">
+        <source>%count%.tags</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="424">
+        <source>{0} no.document|{1} 1.document|]1,Inf] %count%.documents</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="425">
+        <source>1.document</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="426">
+        <source>%count%.documents</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="427">
+        <source>{0} no.node|{1} 1.node|]1,Inf] %count%.nodes</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="428">
+        <source>1.node</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="429">
+        <source>%count%.nodes</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="430">
+        <source>{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="431">
+        <source>1.nodeTypeField</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="432">
+        <source>%count%.nodeTypeFields</source>
+        <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
