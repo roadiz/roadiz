@@ -49,6 +49,7 @@
 
 }
 
+
 .content-header { // header
     position: relative;
     height: 220px;
@@ -67,10 +68,6 @@
         position: absolute;
         right:0; bottom:85px; left:0;
     }
-
-    // &.content-header-filters{
-    //     height:160px;
-    // }
 }
 
 .content-title { // h1
@@ -90,6 +87,15 @@
     }
 }
 
+.content-header-nav-back{
+    position: absolute;
+    top:20px; left:30px;
+} 
+
+.content-header-action-menu{
+    position: absolute;
+    top:20px; right:30px;
+}
 
 
 .content{
@@ -97,6 +103,16 @@
 
     & > *{
         padding:0 @main-content-padding-right 0 @main-content-padding-left;
+    }
+
+    &.content-no-action-menu{
+        & > *{
+            padding:0 @main-content-padding-left 0 @main-content-padding-left;
+        }
+    }
+
+    &.content-delete{
+        text-align: center;
     }
 }
 

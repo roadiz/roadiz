@@ -5,15 +5,17 @@
 {% endif %}
 
 {% extends 'base.html.twig' %}
+
 {% block content %}
-<section id="manage-node">
-    <header class="content-header header-node header-node-edit" id="header-node-edit">
+<section class="content-global manage-node">
+
+    <header class="content-header header-node header-node-edit">
         {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-         <h1 class="content-title" id="node-edit-title">{{ "edit.node.%name%"|trans({'%name%': currentTitle}) }}</h1>
+         <h1 class="content-title node-edit-title">{{ "edit.node.%name%"|trans({'%name%': currentTitle}) }}</h1>
         {% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}
     </header>
 
-    <article class="content" id="content-node-edit">
+    <article class="content content-node-edit">
         {% form_theme form 'forms.html.twig' %}
         <form id="edit-node-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}

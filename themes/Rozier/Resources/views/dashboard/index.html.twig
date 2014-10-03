@@ -7,13 +7,14 @@
 {% endif %}
 
 {% block content %}
-<section id="dashboard" class="content-global-section">
-    <header class="content-header" id="dashboard-header">
-        <h1 class="content-title" id="dashboard-title">{{ "hello.%name%"|trans({'%name%': displayName}) }}</h1>
+<section class="content-global">
+
+    <header class="content-header dashboard-header">
+        <h1 class="content-title dashboard-title">{{ "hello.%name%"|trans({'%name%': displayName}) }}</h1>
         {% include 'dashboard/navBar.html.twig' with {'current':'dashboard'} %}
     </header>
 
-    <article class="content" id="content-dashboard">
+    <article class="content content-dashboard">
         
     </article>
 
