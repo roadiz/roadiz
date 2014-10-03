@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-10-03 15:14+0000
+PO-Revision-Date: 2014-10-03 16:57+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1412349271.211072
+X-POOTLE-MTIME: 1412355461.087187
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -1669,7 +1669,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="157" approved="yes">
         <source>translation.%name%.cannot_delete_default_translation</source>
-        <target state="translated">Translation "%locale%" can't be deleted, it is the default translation.</target>
+        <target state="translated">Translation "%name%" can't be deleted, it is the default translation.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
           <context context-type="linenumber">340</context>
@@ -4363,6 +4363,11 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="445" approved="yes">
         <source>add.a.%nodeType%</source>
         <target state="translated">Add a %nodeType%</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="446" approved="yes">
+        <source>bad.request</source>
+        <target state="translated">Bad request</target>
       </trans-unit>
     </body>
   </file>

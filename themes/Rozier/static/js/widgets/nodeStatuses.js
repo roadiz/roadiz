@@ -51,9 +51,24 @@ NodeStatuses.prototype.onChange = function(event) {
         .done(function(data) {
             //console.log(data.responseText);
             Rozier.refreshMainNodeTree();
+            $.UIkit.notify({
+                message : data.responseText,
+                status  : data.status,
+                timeout : 3000,
+                pos     : 'top-center'
+            });
         })
         .fail(function(data) {
             console.log(data.responseJSON);
+
+            data = JSON.parse(data.responseText);
+
+            $.UIkit.notify({
+                message : data.responseText,
+                status  : data.status,
+                timeout : 3000,
+                pos     : 'top-center'
+            });
         })
         .always(function(data) {
 
