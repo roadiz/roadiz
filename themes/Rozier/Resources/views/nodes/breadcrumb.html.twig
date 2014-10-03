@@ -1,6 +1,19 @@
+{% if node.getNodeSources.first.getTitle %}
+{% set currentTitle = node.getNodeSources.first.getTitle %}
+{% else %}
+{% set currentTitle = node.getNodeName %}
+{% endif %}
+
+{% spaceless %}
 <ul class="node-breadcrumb uk-breadcrumb">
     {% for parent in node.getHandler.getParents %}
-    <li class="node-breadcrumb-item"><a class="node-breadcrumb-link" href="{{ path('nodesEditPage', { nodeId: parent.getId }) }}">{{ parent.getNodeSources.first.getTitle }}</a></li>
+        {% if parent.getNodeSources.first.getTitle %}
+        {% set title = parent.getNodeSources.first.getTitle %}
+        {% else %}
+        {% set title = parent.getNodeName %}
+        {% endif %}
+        <li class="node-breadcrumb-item"><a class="node-breadcrumb-link" href="{{ path('nodesEditPage', { nodeId: parent.getId }) }}">{{ title }}</a></li>
     {% endfor %}
-    <li class="node-breadcrumb-item uk-active"><span>{{ node.getNodeSources.first.getTitle }}</span></li>
+    <li class="node-breadcrumb-item uk-active"><span>{{ currentTitle }}</span></li>
 </ul>
+{% endspaceless %}

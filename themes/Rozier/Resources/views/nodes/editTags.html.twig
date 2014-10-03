@@ -1,9 +1,15 @@
+{% if node.getNodeSources.first.getTitle %}
+{% set currentTitle = node.getNodeSources.first.getTitle %}
+{% else %}
+{% set currentTitle = node.getNodeName %}
+{% endif %}
+
 {% extends 'base.html.twig' %}
 {% block content %}
 <section id="manage-node-tags">
 	<header class="content-header header-node header-node-edit-tags" id="header-node-edit-tags">
 		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-		<h1 class="content-title" id="node-edit-tags-title">{{ "edit.node.%name%.tags"|trans({'%name%': node.getNodeName}) }}</h1>
+		<h1 class="content-title" id="node-edit-tags-title">{{ "edit.node.%name%.tags"|trans({'%name%': currentTitle}) }}</h1>
 	</header>
 	{% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
 
