@@ -28,10 +28,10 @@
                     {{ group.getName }}{% endif %}
                 </td>
                 <td>
-                    <i class="uk-icon-star"></i> {% transchoice group.getRolesEntities.count %}{0} no.roles|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}
+                    <i class="uk-icon-star"></i> {% transchoice group.getRolesEntities.count %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}
                 </td>
                 <td>
-                    <i class="uk-icon-user"></i> {% transchoice group.getUsers.count %}{0} no.users|{1} 1.user|]1,Inf] %count%.user{% endtranschoice %}
+                    <i class="uk-icon-user"></i> {% transchoice group.getUsers.count %}{0} no.user|{1} 1.user|]1,Inf] %count%.users{% endtranschoice %}
                 </td>
                 <td>
                     {% if not group.required %}

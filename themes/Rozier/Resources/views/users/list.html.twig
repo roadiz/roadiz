@@ -38,7 +38,7 @@
 					<td><a href="{{ path('usersEditPage', { userId: user.getId }) }}">{{ user.getUsername }}</a></td>
 					<td>{{ user.getEmail }}</td>
 					<td>
-						<i class="uk-icon-star"></i> {% transchoice user.getRoles|length %}{0} no.roles|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}
+						<i class="uk-icon-star"></i> {% transchoice user.getRoles|length %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}
 					</td>
 					<td>
 						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersDeletePage', { userId: user.getId }) }}">{% trans %}delete{% endtrans %}</a>
