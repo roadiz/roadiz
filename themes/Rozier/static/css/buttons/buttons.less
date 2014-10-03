@@ -30,10 +30,13 @@
     }
 
     [class*=uk-icon-]{
+        font-size:14px;
         margin:0 4px;
+        // line-height: 37px;
     }
 
 }
+
 
 .uk-button-mini {
     width: 17px; height: 17px;
@@ -47,6 +50,7 @@
     color: darken(@maintree-global-bg, 30%);
 }
 
+
 .uk-button-success {
     background: @grey-form-submit;
     border-color: @grey-form-submit-border;
@@ -58,6 +62,7 @@
         color: #333;
     }
 }
+
 
 .uk-button-primary {
     background: @contrast-color-darker;
@@ -71,6 +76,28 @@
         color: white;
     }
 }
+
+
+.uk-button-filter{
+    background: white;
+    text-shadow: none;
+    color:#909090;
+    border-color:@grey-form-border;
+
+    [class*=uk-icon-]{
+        color:#909090;
+    }
+
+    &:hover{
+        background-color:@grey-verylight;
+        color: #333;
+        
+        [class*=uk-icon-]{
+            color:#333;
+        }
+    }    
+}
+
 
 .uk-icon-button {
     display: inline-block;

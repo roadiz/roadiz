@@ -1,0 +1,75 @@
+/*------------------------------------*\
+   TABLES
+\*------------------------------------*/
+
+
+/*
+ * Override ui kit tables styles & colors
+ */
+
+/* -------- VARS -------- */
+
+@form-head-color :          #323232;
+@form-head-border-color :   #cccccc;
+@form-row-border-color :     #e2e2e2;
+
+
+/* -------- STYLES -------- */
+
+.content-table {
+    font-size:13px;
+
+    thead{
+
+        th{
+            vertical-align: top;
+            height:48px; 
+            position: relative;
+            color:@form-head-color;
+            padding:10px 15px 0;
+            border-left:1px solid @form-head-border-color;
+            .box-sizing();
+
+            &:before{
+                position: absolute;
+                content:'';
+                top:0; left:1px;
+                width:1px; height:100%;
+                background:white;
+            }
+
+        }
+
+    }
+
+    tbody{
+
+        tr{
+            height:54px; 
+            background:white;
+            border-top:1px solid white;
+            border-bottom:1px solid @form-row-border-color;
+
+            &:nth-child(2n){
+                background:@grey-verylight;
+            }
+        }
+
+        td{
+            vertical-align: middle;
+            padding:0 15px;
+        }
+
+    }
+
+    a{
+        color:@grey-medium;
+        .transition(0.4s color ease);
+
+        &:hover{
+            text-decoration:none;
+            color:@grey-interface;
+        }
+    }
+
+}

@@ -1,4 +1,4 @@
-<ul class="node-breadcrumb uk-breadcrumb">
+<ul class="uk-breadcrumb content-breadcrumb node-breadcrumb">
     {% for parent in node.getHandler.getParents %}
     <li class="node-breadcrumb-item"><a class="node-breadcrumb-link" href="{{ path('nodesEditPage', { nodeId: parent.getId }) }}">{{ parent.getNodeSources.first.getTitle }}</a></li>
     {% endfor %}

@@ -4,8 +4,8 @@
 	<header class="content-header header-node header-node-edit-tags" id="header-node-edit-tags">
 		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
 		<h1 class="content-title" id="node-edit-tags-title">{{ "edit.node.%name%.tags"|trans({'%name%': node.getNodeName}) }}</h1>
+		{% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
 	</header>
-	{% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
 
 	<article class="content" id="content-node-edit-tags">
 		<h2 class="content-subtitle">{% trans %}add.tag{% endtrans %}</h2>
