@@ -64,7 +64,9 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
             return new ContextListener(
                 $c['securityContext'],
-                array($c['userProvider']),
+                array(
+                    $c['userProvider']
+                ),
                 Kernel::SECURITY_DOMAIN,
                 $c['logger'],
                 $c['dispatcher']
@@ -91,7 +93,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         $container['accessDecisionManager'] = function ($c) {
             return new AccessDecisionManager(
                 array(
-                    //new RoleVoter('ROLE_')
                     $c['roleHierarchyVoter']
                 )
             );

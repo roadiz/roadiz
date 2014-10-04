@@ -317,21 +317,6 @@ class AppController implements ViewableInterface
     /**
      * {@inheritdoc}
      */
-    public function handleTwigCache()
-    {
-        if ($this->kernel->isDebug()) {
-            try {
-                $fs = new Filesystem();
-                $fs->remove(array($this->getCacheDirectory()));
-            } catch (IOExceptionInterface $e) {
-                echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
-            }
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheDirectory()
     {
         return RENZO_ROOT.'/cache/'.static::$themeDir.'/twig_cache';
@@ -389,18 +374,17 @@ class AppController implements ViewableInterface
      */
     public function initializeTwig()
     {
-        $this->handleTwigCache();
+        $this->twig = new \Twig_Environment($this->getTwigLoader(), array(
+            'debug' => $this->kernel->isDebug(),
+            'cache' => $this->getCacheDirectory(),
+        ));
+
         /*
          * Enabling forms
          */
         // le fichier Twig contenant toutes les balises pour afficher les formulaires
         // ce fichier vient avoir le TwigBridge
         $defaultFormTheme = 'form_div_layout.html.twig';
-
-        $this->twig = new \Twig_Environment($this->getTwigLoader(), array(
-            'cache' => $this->getCacheDirectory(),
-        ));
-
         $formEngine = new TwigRendererEngine(array(
             $defaultFormTheme,
             'fields.html.twig'
@@ -419,16 +403,6 @@ class AppController implements ViewableInterface
         $this->twig->addExtension(
             new RoutingExtension($this->getService('urlGenerator'))
         );
-
-        /*
-         * ============================================================================
-         * Dump
-         * ============================================================================
-         */
-        $dump = new \Twig_SimpleFilter('dump', function ($object) {
-            return var_dump($object);
-        });
-        $this->twig->addFilter($dump);
 
         /*
          * ============================================================================

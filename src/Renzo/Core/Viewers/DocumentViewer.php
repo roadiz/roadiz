@@ -74,21 +74,6 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
-     * Check if twig cache must be cleared .
-     */
-    public function handleTwigCache()
-    {
-        if (Kernel::getInstance()->isDebug()) {
-            try {
-                $fs = new Filesystem();
-                $fs->remove(array($this->getCacheDirectory()));
-            } catch (IOExceptionInterface $e) {
-                echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
-            }
-        }
-    }
-
-    /**
      * Create a Twig Environment instance
      *
      * @return \Twig_Loader_Filesystem
@@ -97,28 +82,18 @@ class DocumentViewer implements ViewableInterface
     {
         if (null === static::$twig) {
 
-            $this->handleTwigCache();
-
             $loader = new \Twig_Loader_Filesystem(array(
                 RENZO_ROOT . '/src/Renzo/Core/Resources/views',
             ));
             static::$twig = new \Twig_Environment($loader, array(
                 'cache' => $this->getCacheDirectory(),
+                'debug' => Kernel::getInstance()->isDebug()
             ));
 
             //RoutingExtension
             static::$twig->addExtension(
                 new RoutingExtension(Kernel::getService('urlGenerator'))
             );
-            /*
-             * ============================================================================
-             * Dump
-             * ============================================================================
-             */
-            $dump = new \Twig_SimpleFilter('dump', function ($object) {
-                return var_dump($object);
-            });
-            static::$twig->addFilter($dump);
         }
 
         return $this;

@@ -87,20 +87,12 @@ class DebugPanel implements EventSubscriberInterface
     {
         $cacheDir = RENZO_ROOT.'/cache/debug_panel/twig_cache';
 
-        if (Kernel::getInstance()->isBackendDebug()) {
-            try {
-                $fs = new Filesystem();
-                $fs->remove(array($cacheDir));
-            } catch (IOExceptionInterface $e) {
-                echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
-            }
-        }
-
         $loader = new \Twig_Loader_Filesystem(array(
             RENZO_ROOT.'/src/Renzo/Core/Resources/views', // Theme templates
         ));
         $this->twig = new \Twig_Environment($loader, array(
-            'cache' => $cacheDir,
+            'debug' => Kernel::getInstance()->isDebug(),
+            'cache' => $cacheDir
         ));
 
         //RoutingExtension

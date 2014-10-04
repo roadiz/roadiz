@@ -62,21 +62,6 @@ class FontViewer implements ViewableInterface
     }
 
     /**
-     * Check if twig cache must be cleared
-     */
-    public function handleTwigCache()
-    {
-
-        if (Kernel::getInstance()->isDebug()) {
-            try {
-                $fs = new Filesystem();
-                $fs->remove(array($this->getCacheDirectory()));
-            } catch (IOExceptionInterface $e) {
-                echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
-            }
-        }
-    }
-    /**
      * @{inheritdoc}
      */
     public function initializeTranslator()
@@ -91,28 +76,18 @@ class FontViewer implements ViewableInterface
      */
     public function initializeTwig()
     {
-        $this->handleTwigCache();
-
         $loader = new \Twig_Loader_Filesystem(array(
             RENZO_ROOT . '/src/Renzo/Core/Resources/views',
         ));
         $this->twig = new \Twig_Environment($loader, array(
             'cache' => $this->getCacheDirectory(),
+            'debug' => Kernel::getInstance()->isDebug()
         ));
 
         // RoutingExtension
         $this->twig->addExtension(
             new RoutingExtension(Kernel::getService('urlGenerator'))
         );
-        /*
-         * ============================================================================
-         * Dump
-         * ============================================================================
-         */
-        $dump = new \Twig_SimpleFilter('dump', function ($object) {
-            return var_dump($object);
-        });
-        $this->twig->addFilter($dump);
 
         return $this;
     }

@@ -50,26 +50,10 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
  * Special controller app file for backend themes.
  *
  * This AppController implementation will use a security scheme
- *
  */
 class BackendController extends AppController
 {
     protected static $backendTheme = true;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handleTwigCache()
-    {
-        if ($this->getKernel()->isBackendDebug()) {
-            try {
-                $fs = new Filesystem();
-                $fs->remove(array($this->getCacheDirectory()));
-            } catch (IOExceptionInterface $e) {
-                echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
-            }
-        }
-    }
 
     /**
      * Append objects to global container.
@@ -85,8 +69,10 @@ class BackendController extends AppController
              */
             $requestMatcher = new RequestMatcher('^/rz-admin');
             // allows configuration of different access control rules for specific parts of the website.
-            $accessMap = new AccessMap($requestMatcher, array(Role::ROLE_BACKEND_USER, Role::ROLE_SUPERADMIN));
-            $accessMap->add(new RequestMatcher('^/rz-admin'), array(Role::ROLE_BACKEND_USER, Role::ROLE_SUPERADMIN));
+            $accessMap = new AccessMap($requestMatcher, array(
+                Role::ROLE_BACKEND_USER,
+                Role::ROLE_SUPERADMIN
+            ));
 
             /*
              * Listener

@@ -1,12 +1,5 @@
 {
-    "default": [],
-    "Dieux": [
-        {
-            "name": "backend_debug",
-            "value": true,
-            "visible": true,
-            "type": 5
-        },
+    "Emails": [
         {
             "name": "email_sender_name",
             "value": "REZO ZERO",
@@ -14,14 +7,10 @@
             "type": 0
         },
         {
-            "name": "birthday",
-            "value": {
-                "date": "2014-07-24 17:24:00.000000",
-                "timezone_type": 3,
-                "timezone": "Europe/Paris"
-            },
+            "name": "email_sender",
+            "value": "contact@rezo-zero.com",
             "visible": true,
-            "type": 1
+            "type": 8
         }
     ],
     "__default__": [
@@ -38,20 +27,8 @@
             "type": 0
         },
         {
-            "name": "email_sender",
-            "value": "contact@rezo-zero.com",
-            "visible": true,
-            "type": 8
-        },
-        {
             "name": "display_debug_panel",
             "value": true,
-            "visible": true,
-            "type": 5
-        },
-        {
-            "name": "debug",
-            "value": false,
             "visible": true,
             "type": 5
         },
@@ -60,12 +37,6 @@
             "value": "My website is beautiful!",
             "visible": true,
             "type": 2
-        },
-        {
-            "name": "toto",
-            "value": "tata",
-            "visible": true,
-            "type": 0
         }
     ]
 }

@@ -23,13 +23,6 @@ interface ViewableInterface
     public function getCacheDirectory();
 
     /**
-     * Empty twig renderer cache if Kernel is in debug mode.
-     *
-     * @return void
-     */
-    public function handleTwigCache();
-
-    /**
      * Create a twig renderer engine instance.
      *
      * @return void

@@ -51,7 +51,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
     private static $instance =  null;
 
     public $container =         null;
-    private $backendDebug =     false;
     protected $request =        null;
     protected $response =       null;
 
@@ -159,8 +158,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function runConsole()
     {
-        $this->backendDebug = (boolean) SettingsBag::get('backend_debug');
-
         /*
          * Define a request wide timezone
          */
@@ -231,8 +228,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
             // nothing to prepare
 
         } else {
-            $this->debug = (boolean) SettingsBag::get('debug');
-            $this->backendDebug = (boolean) SettingsBag::get('backend_debug');
             $this->prepareRequestHandling();
         }
 
@@ -483,16 +478,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
     public function isSolrAvailable()
     {
         return isset($this->container['solr']);
-    }
-
-    /**
-     * Get backend application debug status.
-     *
-     * @return boolean
-     */
-    public function isBackendDebug()
-    {
-        return $this->backendDebug;
     }
 
     /**
