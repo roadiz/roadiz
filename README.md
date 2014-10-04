@@ -97,3 +97,26 @@ Then when you are sure to perform migration, just do:
 bin/renzo schema --update --execute
 ```
 
+### Managing your own database entities
+
+You can create a theme with your own entities. Just add your `Entities` folder
+to the global configuration file.
+
+```
+"entities": [
+    "src/Renzo/Core/Entities",
+    "src/Renzo/Core/AbstractEntities",
+    "sources/GeneratedNodeSources",
+    "add/here/your/entities/folder",
+    …
+]
+```
+
+Verify if everything is OK by checking migrations:
+
+```
+bin/renzo schema --update
+```
+
+If you see your entities being created and no system database erased, just `--execute` your migration.
+

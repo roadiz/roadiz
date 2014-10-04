@@ -32,10 +32,16 @@ class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
         /*
          * Every path to parse to find doctrine entities
          */
-        $container['entitiesPaths'] = array(
-            "src/Renzo/Core/Entities",
-            "src/Renzo/Core/AbstractEntities",
-            "sources/GeneratedNodeSources"
-        );
+        $container['entitiesPaths'] = function ($c) {
+            if (isset($c['config']['entities'])) {
+                return $c['config']['entities'];
+            } else {
+                return array(
+                    "src/Renzo/Core/Entities",
+                    "src/Renzo/Core/AbstractEntities",
+                    "sources/GeneratedNodeSources"
+                );
+            }
+        };
     }
 }
