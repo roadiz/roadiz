@@ -282,6 +282,8 @@ class NodesSourcesController extends RozierApp
                     }
                 }
                 break;
+            case NodeTypeField::CHILDREN_T:
+                break;
             default:
                 $setter = $field->getSetterName();
                 $nodeSource->$setter( $data[$field->getName()] );
