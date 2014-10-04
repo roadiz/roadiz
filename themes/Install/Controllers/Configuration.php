@@ -62,13 +62,15 @@ class Configuration
             "devMode" => true,
             "doctrine" => array(
                 "driver" =>   "pdo_mysql",
-                "host" =>     "localhost",
-                "user" =>     "",
-                "password" => "",
-                "dbname" =>   ""
+                "host" =>     "localhost"
             ),
             "security" => array(
                 "secret" => "change#this#secret#very#important"
+            ),
+            "entities" => array(
+                "src/Renzo/Core/Entities",
+                "src/Renzo/Core/AbstractEntities",
+                "sources/GeneratedNodeSources"
             )
         );
     }
@@ -104,6 +106,12 @@ class Configuration
             unlink($writePath);
         }
 
-        file_put_contents($writePath, json_encode($this->getConfiguration(), JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE));
+        file_put_contents(
+            $writePath,
+            json_encode(
+                $this->getConfiguration(),
+                JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE
+            )
+        );
     }
 }
