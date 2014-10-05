@@ -289,6 +289,14 @@ documentsEditPage:
     path:     /rz-admin/documents/edit/{documentId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::editAction }
     requirements: { documentId : "[0-9]+" }
+documentsPreviewPage:
+    path:     /rz-admin/documents/preview/{documentId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::previewAction }
+    requirements: { documentId : "[0-9]+" }
+documentsUsagePage:
+    path:     /rz-admin/documents/usage/{documentId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::usageAction }
+    requirements: { documentId : "[0-9]+" }
 documentsUploadPage:
     path:     /rz-admin/documents/upload
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::uploadAction }
@@ -340,7 +348,7 @@ rolesExportPage:
     requirements: { roleId : "[0-9]+" }
     defaults: { _controller: Themes\Rozier\Controllers\RolesUtilsController::exportAction }
 rolesImportPage:
-    path:     /rz-admin/roles/import/
+    path:     /rz-admin/roles/import
     defaults: { _controller: Themes\Rozier\Controllers\RolesUtilsController::importJsonFileAction }
 
 # GROUPS
@@ -367,7 +375,7 @@ groupsDeletePage:
     defaults: { _controller: Themes\Rozier\Controllers\GroupsController::deleteAction }
     requirements: { groupId : "[0-9]+" }
 groupsImportPage:
-    path:     /rz-admin/groups/import/
+    path:     /rz-admin/groups/import
     defaults: { _controller: Themes\Rozier\Controllers\GroupsUtilsController::importJsonFileAction }
 groupsEditUsersPage:
     path:     /rz-admin/groups/edit/{groupId}/users

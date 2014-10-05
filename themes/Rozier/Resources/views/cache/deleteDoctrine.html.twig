@@ -2,17 +2,22 @@
 
 
 {% block content %}
-<section id="manage-cache">
-    <h1 id="group-title">{% trans %}purge.cache{% endtrans %}</h1>
+<section class="content-global purge-cache">
 
-    {% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <fieldset data-uk-margin>
-            <legend>{% trans %}are_you_sure.purge.cache{% endtrans %}</legend>
-            <a href="{{ path('adminHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
-            <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}clear{% endtrans %}</button>
-        </fieldset>
-    </form>
+    <header class="content-header header-cache header-cache-purge">
+        <h1 class="content-title cache-purge-title">{% trans %}purge.cache{% endtrans %}</h1>
+    </header>
+
+    <article class="content content-delete content-no-action-menu">
+        {% form_theme form 'forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <legend>{% trans %}are_you_sure.purge.cache{% endtrans %}</legend>
+                <a href="{{ path('adminHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
+                <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}clear{% endtrans %}</button>
+            </fieldset>
+        </form>
+    </article>
 </section>
 {% endblock %}

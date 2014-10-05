@@ -2,30 +2,35 @@
 
 
 {% block content %}
-<section id="upload-document">
-	<h1 id="document-title">{% trans %}upload.document{% endtrans %}</h1>
-	<nav>
-		<a class="uk-button" href="{{ path('documentsHomePage') }}"><span class="uk-icon-chevron-left"></span> {% trans %}back_to.documents{% endtrans %}</a>
-	</nav>
+<section class="content-global upload-document">
 
-	<form id="upload-dropzone-document" class="uk-form uk-form-stacked dropzone" action="#" method="post" {{ form_enctype(form) }}>
-   		{{ form_errors(form) }}
+	<header class="content-header header-document header-document-upload">
+        <h1 class="content-title document-upload-title">{% trans %}upload.document{% endtrans %}</h1>
+		<div class="content-header-action-menu">
+			<a class="uk-button" href="{{ path('documentsHomePage') }}"><span class="uk-icon-chevron-left"></span> {% trans %}back_to.documents{% endtrans %}</a>
+		</div>
+    </header>
 
-   		<div class="fallback">
-		    {% for item in form %}
-		    	{# Node fields  #}
-		        {% if item.vars.name != "_token" %}
-		    	<div class="uk-form-row">
-		        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label }}{% else %}{{ item.vars.name }}{% endif %}</label>
-			        {{ form_errors(item) }}
-			        {{ form_widget(item) }}
-		    	</div>
-		        {% endif %}
-		    {% endfor %}
-		     <input class="uk-button uk-button-primary" type="submit" value="{% trans %}upload{% endtrans %}" />
-   		</div>
-	    {{ form_rest(form) }}
-	</form>
+    <article class="content content-upload">
+		<form id="upload-dropzone-document" class="uk-form uk-form-stacked dropzone" action="#" method="post" {{ form_enctype(form) }}>
+	   		{{ form_errors(form) }}
+
+	   		<div class="fallback">
+			    {% for item in form %}
+			    	{# Node fields  #}
+			        {% if item.vars.name != "_token" %}
+			    	<div class="uk-form-row">
+			        	<label class="uk-form-label"for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label }}{% else %}{{ item.vars.name }}{% endif %}</label>
+				        {{ form_errors(item) }}
+				        {{ form_widget(item) }}
+			    	</div>
+			        {% endif %}
+			    {% endfor %}
+			    <input class="uk-button uk-button-primary" type="submit" value="{% trans %}upload{% endtrans %}" />
+	   		</div>
+		    {{ form_rest(form) }}
+		</form>
+	</article>
 </section>
 {% endblock %}
 

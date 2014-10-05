@@ -1,13 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-groups">
-    <h1 id="title">{% trans %}import.group{% endtrans %}</h1>
+<section class="content-global import-group">
 
-    {% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <button type="submit" class="uk-button uk-button-primary"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</button>
-    </form>
+    <header class="content-header header-group header-group-import">
+        <h1 class="content-title group-import-title">{% trans %}import.group{% endtrans %}</h1>
+    </header>
+
+    <article class="content content-import">
+        {% form_theme form 'forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <button type="submit" class="uk-button uk-button-primary"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</button>
+        </form>
+    </article>
 </section>
 {% endblock %}

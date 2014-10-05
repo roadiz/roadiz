@@ -2,17 +2,21 @@
 
 
 {% block content %}
-<section id="manage-group">
-	<h1 id="group-title">{{ "delete.group.%name%"|trans({'%name%': group.getName}) }}</h1>
+<section class="content-global add-group">
+	<header class="content-header header-group header-group-edit">
+        <h1 class="content-title group-add-title">{{ "delete.group.%name%"|trans({'%name%': group.getName}) }}</h1>
+    </header>
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}are_you_sure.delete.group{% endtrans %}</legend>
-	    	<a href="{{ path('groupsHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
-	    	<input class="uk-button uk-button-danger" type="submit" />
-   		</fieldset>
-	</form>
+    <article class="content content-delete content-no-action-menu">
+		{% form_theme form 'forms.html.twig' %}
+		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<legend>{% trans %}are_you_sure.delete.group{% endtrans %}</legend>
+		    	<a href="{{ path('groupsHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
+		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+	</article>
 </section>
 {% endblock %}

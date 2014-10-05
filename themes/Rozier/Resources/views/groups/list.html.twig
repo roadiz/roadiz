@@ -1,49 +1,55 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-groups">
-    <h1 id="title">{% trans %}groups{% endtrans %}</h1>
-    <nav>
-        <a class="uk-button" href="{{ path('groupsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.group{% endtrans %}</a>
-        <a class="uk-button" href="{{ path('groupsImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}import.group{% endtrans %}</a>
-        <a class="uk-button" href="{{ path('groupsExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}export.all.groups{% endtrans %}</a>
-    </nav>
+<section class="content-global edit-group">
+
+    <header class="content-header header-group header-group-list">
+        <h1 class="content-title group-list-title">{% trans %}groups{% endtrans %}</h1>
+        <div class="content-header-action-menu">
+            <a class="uk-button" href="{{ path('groupsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.group{% endtrans %}</a>
+            <a class="uk-button" href="{{ path('groupsImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}import.group{% endtrans %}</a>
+            <a class="uk-button" href="{{ path('groupsExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}export.all.groups{% endtrans %}</a>
+        </div>
+    </header>
 
     {% include 'widgets/filtersBar.html.twig' %}
-
-    <table class="groups uk-table">
-        <thead>
-            <tr>
-                <th>{% trans %}name{% endtrans %}</th>
-                <th>{% trans %}roles{% endtrans %}</th>
-                <th>{% trans %}users{% endtrans %}</th>
-                <th>{% trans %}actions{% endtrans %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for group in groups %}
-            <tr>
-                <td>
-                    {% if not group.required %}<a href="{{ path('groupsEditPage', { groupId: group.getId }) }}">{{ group.getName }}</a>{% else %}
-                    {{ group.getName }}{% endif %}
-                </td>
-                <td>
-                    <i class="uk-icon-star"></i> {% transchoice group.getRolesEntities.count %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}
-                </td>
-                <td>
-                    <i class="uk-icon-user"></i> {% transchoice group.getUsers.count %}{0} no.user|{1} 1.user|]1,Inf] %count%.users{% endtranschoice %}
-                </td>
-                <td>
-                    {% if not group.required %}
-                    <a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsDeletePage', { groupId: group.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
-                    <a class="uk-button uk-button-small uk-button-success" href="{{ path('groupsExportPage', { groupId: group.getId }) }}"><i class="uk-icon-download"></i> {% trans %}export{% endtrans %}</a>
-                    {% else %}
-                    <div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}group.required{% endtrans %}</div>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <article class="content content-no-action-menu">
+        <div class="content-table-cont">
+            <table class="groups content-table uk-table">
+                <thead>
+                    <tr>
+                        <th>{% trans %}name{% endtrans %}</th>
+                        <th>{% trans %}roles{% endtrans %}</th>
+                        <th>{% trans %}users{% endtrans %}</th>
+                        <th>{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in groups %}
+                    <tr>
+                        <td>
+                            {% if not group.required %}<a href="{{ path('groupsEditPage', { groupId: group.getId }) }}">{{ group.getName }}</a>{% else %}
+                            {{ group.getName }}{% endif %}
+                        </td>
+                        <td>
+                            <i class="uk-icon-star"></i> {% transchoice group.getRolesEntities.count %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}
+                        </td>
+                        <td>
+                            <i class="uk-icon-user"></i> {% transchoice group.getUsers.count %}{0} no.user|{1} 1.user|]1,Inf] %count%.users{% endtranschoice %}
+                        </td>
+                        <td>
+                            {% if not group.required %}
+                            <a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsDeletePage', { groupId: group.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+                            <a class="uk-button uk-button-small uk-button-success" href="{{ path('groupsExportPage', { groupId: group.getId }) }}"><i class="uk-icon-download"></i> {% trans %}export{% endtrans %}</a>
+                            {% else %}
+                            <div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}group.required{% endtrans %}</div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
 </section>
 {% endblock %}

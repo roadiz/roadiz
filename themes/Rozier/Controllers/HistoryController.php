@@ -118,6 +118,7 @@ class HistoryController extends RozierApp
             $this->assignation['filters'] = $listManager->getAssignation();
             $this->assignation['logs'] = $listManager->getEntities();
             $this->assignation['levels'] = static::$levelToHuman;
+            $this->assignation['user'] = $user;
 
             return new Response(
                 $this->getTwig()->render('history/list.html.twig', $this->assignation),

@@ -6,8 +6,8 @@
 	<header class="content-header header-node header-node-delete">
         <h1 class="content-title node-delete-title">{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}</h1>
     </header>
-	
-	<article class="content content-delete content-node-delete">
+
+	<article class="content content-delete content-node-delete content-no-action-menu">
 		{% form_theme form 'forms.html.twig' %}
 		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}

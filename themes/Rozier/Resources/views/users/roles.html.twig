@@ -1,52 +1,62 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-user-roles">
-	<h1 id="user-title">{{ "edi.user.%name%.roles"|trans({'%name%': user.getUserName}) }}</h1>
+<section class="content-global edit-user">
 
-	{% include 'users/navBar.html.twig' with {'user':user, current:'roles'} %}
+	<header class="content-header header-user header-user-edit">
+        <h1 class="content-title user-add-title">{{ "edit.user.%name%.roles"|trans({'%name%': user.getUserName }) }}</h1>
+	    {% include 'users/navBar.html.twig' with {'user':user, current:'roles'} %}
+    </header>
 
-	<table class="users-roles uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}specific.roles{% endtrans %}</th>
-	            <th>{% trans %}actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for role in user.getRolesEntities %}
-			<tr>
-				<td>{{ role.getName }}</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveRolesPage', { userId: user.getId, roleId: role.getId }) }}">{% trans %}unlink{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	<table class="users--inherited-roles uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}inherited.roles{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for role in user.getRoles %}
-			<tr>
-				<td>{{ role }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	<h2>{% trans %}add.specific.role{% endtrans %}</h2>
+    <article class="content content-user-roles">
+		<div class="content-table-cont">
+			<table class="content-table users--inherited-roles uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}inherited.roles{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for role in user.getRoles %}
+					<tr>
+						<td>{{ role }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<hr />
+		<div class="content-table-cont">
+			<table class="content-table users-roles uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}specific.roles{% endtrans %}</th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for role in user.getRolesEntities %}
+					<tr>
+						<td>{{ role.getName }}</td>
+						<td>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveRolesPage', { userId: user.getId, roleId: role.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}unlink{% endtrans %}</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<hr />
+		<h2>{% trans %}add.specific.role{% endtrans %}</h2>
 
-	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+		{% form_theme form 'forms.html.twig' %}
+	    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+	        {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.role{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+	</article>
 
 	{% include 'users/actionsMenu.html.twig' %}
 </section>

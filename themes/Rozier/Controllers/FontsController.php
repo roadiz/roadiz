@@ -216,6 +216,7 @@ class FontsController extends RozierApp
                 return $response->send();
             }
 
+            $this->assignation['font'] = $font;
             $this->assignation['form'] = $form->createView();
 
             return new Response(
