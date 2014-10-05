@@ -2,46 +2,58 @@
 
 
 {% block content %}
-<section id="manage-documents">
-	<h1 id="title">{% trans %}documents{% endtrans %}</h1>
-	<nav>
-		<a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-plus"></i> {% trans %}upload.document{% endtrans %}</a>
-	</nav>
-	{% include 'widgets/filtersBar.html.twig' %}
-	<table class="documents uk-table">
-		<thead>
-	        <tr>
-	            <th class="uk-text-center">{% trans %}document.thumbnail{% endtrans %}</th>
-	            <th>{% trans %}document.filename{% endtrans %}</th>
-	            <th>{% trans %}document.createdAt{% endtrans %}</th>
-	            <th>{% trans %}actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for document in documents %}
-			<tr>
-				{% if document.isImage %}
-				<td class="uk-text-center">
-					<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}">
-						{# <img width="100" alt="" src="{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}" /> #}
-						{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
-					</a>
-				</td>
-				{% else %}
-				<td class="uk-text-center">
-					<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}"><i class='uk-icon-large uk-icon-file-{{ document.getShortType }}-o'></i></a>
-				</td>
-				{% endif %}
-				<td>
-					<p>{{ document.getFilename }}</p>
-				</td>
-				<td>{{ document.getCreatedAt|localizeddate('full', 'none') }}</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}">{% trans %}delete{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+<section class="content-global">
+
+
+	<header class="content-header header-document header-document-list">
+        <h1 class="content-title">{% trans %}documents{% endtrans %}</h1>
+
+        <div class="content-header-action-menu">
+            <a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-plus"></i> {% trans %}upload.document{% endtrans %}</a>
+        </div>
+    </header>
+
+    {% include 'widgets/filtersBar.html.twig' %}
+
+    <article class="content content-no-action-menu">
+        <div class="content-table-cont">
+			<table class="documents content-table uk-table">
+				<thead>
+			        <tr>
+			            <th class="uk-text-center">{% trans %}document.thumbnail{% endtrans %}</th>
+			            <th>{% trans %}document.filename{% endtrans %}</th>
+			            <th>{% trans %}document.createdAt{% endtrans %}</th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for document in documents %}
+					<tr>
+						{% if document.isImage %}
+						<td class="uk-text-center">
+							<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}">
+								{# <img width="100" alt="" src="{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}" /> #}
+								{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
+							</a>
+						</td>
+						{% else %}
+						<td class="uk-text-center">
+							<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}"><i class='uk-icon-large uk-icon-file-{{ document.getShortType }}-o'></i></a>
+						</td>
+						{% endif %}
+						<td>
+							<p>{{ document.getFilename }}</p>
+						</td>
+						<td>{{ document.getCreatedAt|localizeddate('short', 'none') }}</td>
+						<td>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</article>
+
 </section>
 {% endblock %}

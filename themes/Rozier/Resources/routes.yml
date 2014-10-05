@@ -289,6 +289,14 @@ documentsEditPage:
     path:     /rz-admin/documents/edit/{documentId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::editAction }
     requirements: { documentId : "[0-9]+" }
+documentsPreviewPage:
+    path:     /rz-admin/documents/preview/{documentId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::previewAction }
+    requirements: { documentId : "[0-9]+" }
+documentsUsagePage:
+    path:     /rz-admin/documents/usage/{documentId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::usageAction }
+    requirements: { documentId : "[0-9]+" }
 documentsUploadPage:
     path:     /rz-admin/documents/upload
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::uploadAction }

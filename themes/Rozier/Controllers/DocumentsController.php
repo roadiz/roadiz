@@ -79,10 +79,6 @@ class DocumentsController extends RozierApp
         if ($document !== null) {
 
             $this->assignation['document'] = $document;
-            $this->assignation['thumbnailFormat'] = array(
-                'width' => 500,
-                'quality' => 70
-            );
 
             /*
              * Handle main form
@@ -116,6 +112,37 @@ class DocumentsController extends RozierApp
 
             return new Response(
                 $this->getTwig()->render('documents/edit.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        } else {
+            return $this->throw404();
+        }
+    }
+
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $documentId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function previewAction(Request $request, $documentId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        $document = $this->getService('em')
+            ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
+
+        if ($document !== null) {
+
+            $this->assignation['document'] = $document;
+            $this->assignation['thumbnailFormat'] = array(
+                'width' => 500,
+                'quality' => 70
+            );
+
+            return new Response(
+                $this->getTwig()->render('documents/preview.html.twig', $this->assignation),
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );

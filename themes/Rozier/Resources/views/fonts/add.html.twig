@@ -1,17 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
+<section class="content-global add-font">
 
-<section id="manage-font">
-	<h1 id="font-title">{% trans %}add.font{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('fontsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.fonts{% endtrans %}</a></nav>
+    <header class="content-header header-font header-font-add">
+        <h1 class="content-title font-add-title">{% trans %}add.font{% endtrans %}</h1>
+    </header>
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-		    <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.font{% endtrans %}</button>
-	   	</fieldset>
-	</form>
+    <article class="content content-add">
+    	{% form_theme form 'forms.html.twig' %}
+    	<form id="add-font-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    	    {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    		    <button data-action-save="#add-font-form" class="uk-button uk-button-primary rz-action-save" type="submit"><i class="uk-icon-plus"></i><span class="label">{% trans %}add.font{% endtrans %}</span></button>
+    	   	</fieldset>
+    	</form>
+    </article>
+
+    {% include 'fonts/actionsMenu.html.twig' with {"font": font} only %}
 </section>
 {% endblock %}
