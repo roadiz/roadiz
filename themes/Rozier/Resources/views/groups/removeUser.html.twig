@@ -2,17 +2,21 @@
 
 
 {% block content %}
-<section id="manage-user">
-	<h1 id="user-title">{{ "unlink.user.%name%"|trans({'%name%': user.getUserName}) }}</h1>
+<section class="content-global unlink-user-group">
+	<header class="content-header header-group header-group-edit">
+        <h1 class="content-title group-add-title">{{ "unlink.user.%name%"|trans({'%name%': user.getUserName}) }}</h1>
+    </header>
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}are_you_sure.remove.user.from.group{% endtrans %}</legend>
-	    	<a href="{{ path('groupsEditUsersPage', { groupId: group.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
-	    	<input class="uk-button uk-button-danger" type="submit" />
-   		</fieldset>
-	</form>
+    <article class="content content-delete">
+		{% form_theme form 'forms.html.twig' %}
+		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<legend>{% trans %}are_you_sure.remove.user.from.group{% endtrans %}</legend>
+		    	<a href="{{ path('groupsEditUsersPage', { groupId: group.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
+		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}unlink{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+	</article>
 </section>
 {% endblock %}

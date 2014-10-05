@@ -2,23 +2,27 @@
 
 
 {% block content %}
-<section id="manage-group">
-    <h1 id="group-title">{{ "edit.group.%name%"|trans({'%name%': group.getName}) }}</h1>
+<section class="content-global edit-group">
 
-    {% include 'groups/navBar.html.twig' with {'group':group, current:'edit'} %}
+    <header class="content-header header-group header-group-edit">
+        <h1 class="content-title group-add-title">{{ "edit.group.%name%"|trans({'%name%': group.getName}) }}</h1>
+        {% include 'groups/navBar.html.twig' with {'group':group, current:'edit'} %}
+    </header>
 
-    {% form_theme form 'forms.html.twig' %}
-    <form id="edit-group-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <fieldset data-uk-margin>
-            {% spaceless %}
-            <button data-action-save="#edit-group-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                <i class="uk-icon-save"></i>
-                <span class="label">{% trans %}save{% endtrans %}</span>
-            </button>
-            {% endspaceless %}
-        </fieldset>
-    </form>
+    <article class="content content-edit">
+        {% form_theme form 'forms.html.twig' %}
+        <form id="edit-group-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-group-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-save"></i>
+                    <span class="label">{% trans %}save{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+    </article>
 
     {% include 'groups/actionsMenu.html.twig' %}
 </section>

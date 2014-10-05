@@ -2,16 +2,24 @@
 
 
 {% block content %}
-<section id="manage-user">
-	<h1 id="user-title">{% trans %}add.user{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('usersHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.users{% endtrans %}</a></nav>
+<section class="content-global add-user">
 
-	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+    <header class="content-header header-user header-user-edit">
+        <h1 class="content-title user-add-title">{% trans %}add.user{% endtrans %}</h1>
+    </header>
+
+    <article class="content content-add">
+    	{% form_theme form 'forms.html.twig' %}
+        <form id="add-user-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	<button data-action-save="#add-user-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-plus"></i><span class="label">{% trans %}add.user{% endtrans %}</span>
+                </button>
+       		</fieldset>
+    	</form>
+    </article>
+
+    {% include 'users/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

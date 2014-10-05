@@ -18,12 +18,12 @@
                     </ul>
                 </div>
             </div>
-        </div>        
+        </div>
         {% endif %}
     </header>
 
     {% include 'widgets/filtersBar.html.twig' %}
-    
+
     <article class="content content-no-action-menu">
         <div class="content-table-cont">
             <table class="nodes content-table uk-table">
@@ -69,7 +69,7 @@
                             {% if node.isLocked %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-lock"></span></div>{% endif %}
                             {% if node.isArchived %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-archive"></span></div>{% endif %}
                         </td>
-                        <td>{{ node.getUpdatedAt|localizeddate('full', 'none') }}</td>
+                        <td>{{ node.getUpdatedAt|localizeddate('short', 'none') }}</td>
                         <td>
                             <a class="uk-button uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-node-tree"></i> {% trans %}see.nodetree{% endtrans %}</a>
                             <a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>

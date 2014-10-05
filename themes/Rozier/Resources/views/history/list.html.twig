@@ -4,9 +4,18 @@
 <section class="content-global content-nav-and-filters">
 
 	<header class="content-header content-header-filters manage-history-header">
+		{% if user %}
+		<h1 class="content-title manage-history-title">{{ "history.for.%name%"|trans({"%name%":user.getUsername}) }}</h1>
+		{% else %}
 		<h1 class="content-title manage-history-title">{% trans %}history{% endtrans %}</h1>
+		{% endif %}
 		{% include 'widgets/countFiltersBar.html.twig' %}
+
+		{% if user %}
+		{% include 'users/navBar.html.twig' with {'user':user, current:'history'} %}
+		{% else %}
 		{% include 'dashboard/navBar.html.twig' with {'current':'history'} %}
+		{% endif %}
 	</header>
 
 	{% include 'widgets/filtersBar.html.twig' %}
@@ -18,7 +27,9 @@
 			        <tr>
 			            <th>{% trans %}datetime{% endtrans %}</th>
 			            <th>{% trans %}level{% endtrans %}</th>
+			            {% if not user %}
 			            <th>{% trans %}user{% endtrans %}</th>
+			            {% endif %}
 			            <th>{% trans %}message{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -27,9 +38,11 @@
 					<tr>
 						<td>{{ log.getDatetime|date }}</td>
 						<td>{{ levels[log.getLevel] }}</td>
+						{% if not user %}
 						<td>{% if log.getUser %}
 							<a href="{{ path("usersEditPage", {"userId":log.getUser.getId }) }}">{{ log.getUser.getUsername }}</a>
 						{% endif %}</td>
+						{% endif %}
 						<td>{{ log.getMessage }}</td>
 					</tr>
 					{% endfor %}

@@ -1,38 +1,45 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-group-roles">
-	<h1 id="group-title">{{ "edit.group.%name%.roles"|trans({'%name%': group.getName}) }}</h1>
+<section class="content-global edit-group">
 
-	{% include 'groups/navBar.html.twig' with {'group':group, current:'roles'} %}
+	<header class="content-header header-group header-group-roles">
+        <h1 class="content-title group-add-title">{{ "edit.group.%name%.roles"|trans({'%name%': group.getName}) }}</h1>
+		{% include 'groups/navBar.html.twig' with {'group':group, current:'roles'} %}
+    </header>
 
-	<table class="groups-roles uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}role{% endtrans %}</th>
-	            <th>{% trans %}actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for role in group.getRolesEntities %}
-			<tr>
-				<td>{{ role.getName }}</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsRemoveRolesPage', { groupId: group.getId, roleId: role.getId }) }}">{% trans %}unlink.role{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	<h2>{% trans %}add.role{% endtrans %}</h2>
+    <article class="content content-edit">
+    	<div class="content-table-cont">
+			<table class="content-table groups-roles uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}role{% endtrans %}</th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for role in group.getRolesEntities %}
+					<tr>
+						<td>{{ role.getName }}</td>
+						<td>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsRemoveRolesPage', { groupId: group.getId, roleId: role.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}unlink.role{% endtrans %}</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<hr />
+		<h2>{% trans %}add.role{% endtrans %}</h2>
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+		{% form_theme form 'forms.html.twig' %}
+		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.role{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+	</article>
 
 	{% include 'groups/actionsMenu.html.twig' %}
 </section>

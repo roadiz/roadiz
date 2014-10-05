@@ -2,21 +2,25 @@
 
 
 {% block content %}
-<section id="manage-group">
-	<h1 id="group-title">{% trans %}add.group{% endtrans %}</h1>
+<section class="content-global add-group">
+    <header class="content-header header-group header-group-edit">
+        <h1 class="content-title group-add-title">{% trans %}add.group{% endtrans %}</h1>
+    </header>
 
-	{% form_theme form 'forms.html.twig' %}
-    <form id="add-group-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-            <button data-action-save="#add-group-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                <i class="uk-icon-plus"></i>
-                <span class="label">{% trans %}add{% endtrans %}</span>
-            </button>
-            {% endspaceless %}
-   		</fieldset>
-	</form>
+    <article class="content content-add">
+    	{% form_theme form 'forms.html.twig' %}
+        <form id="add-group-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	{% spaceless %}
+                <button data-action-save="#add-group-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-plus"></i>
+                    <span class="label">{% trans %}add.group{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+       		</fieldset>
+    	</form>
+    </article>
 
     {% include 'groups/actionsMenu.html.twig' %}
 </section>
