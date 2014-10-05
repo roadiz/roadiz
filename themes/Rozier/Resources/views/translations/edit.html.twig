@@ -2,21 +2,26 @@
 
 
 {% block content %}
-<section id="manage-translation">
-	<h1 id="translation-title">{{ "edit.translation.%name%"|trans({'%name%': translation.getName }) }}</h1>
+<section class="content-global edit-translation">
 
-	{% form_theme form 'forms.html.twig' %}
-    <form id="edit-translation-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-            <button data-action-save="#edit-translation-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                <i class="uk-icon-save"></i>
-                <span class="label">{% trans %}save{% endtrans %}</span>
-            </button>
-            {% endspaceless %}
-   		</fieldset>
-	</form>
+    <header class="content-header header-translation header-translation-list">
+        <h1 class="content-title translation-add-title">{{ "edit.translation.%name%"|trans({'%name%': translation.getName }) }}</h1>
+    </header>
+
+    <article class="content content-edit-translation">
+    	{% form_theme form 'forms.html.twig' %}
+        <form id="edit-translation-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	{% spaceless %}
+                <button data-action-save="#edit-translation-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-save"></i>
+                    <span class="label">{% trans %}save{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+       		</fieldset>
+    	</form>
+    </article>
     {% include 'translations/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

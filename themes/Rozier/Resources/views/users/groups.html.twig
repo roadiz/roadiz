@@ -1,39 +1,46 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-user-groups">
-	<h1 id="user-title">{{ "edit.user.%name%.groups"|trans({'%name%': user.getUserName }) }}</h1>
+<section class="content-global edit-user">
 
-	{% include 'users/navBar.html.twig' with {'user':user, current:'groups'} %}
+	<header class="content-header header-user header-user-edit">
+        <h1 class="content-title user-add-title">{{ "edit.user.%name%.groups"|trans({'%name%': user.getUserName }) }}</h1>
+	    {% include 'users/navBar.html.twig' with {'user':user, current:'groups'} %}
+    </header>
 
-	<table class="users-groups uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}group{% endtrans %}</th>
-	            <th>{% trans %}actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for group in user.getGroups %}
-			<tr>
-				<td>{{ group.getName }}</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveGroupsPage', { userId: user.getId, groupId: group.getId }) }}">{% trans %}unlink{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	<h2>{% trans %}add.group{% endtrans %}</h2>
+    <article class="content content-user-groups">
+        <div class="content-table-cont">
+			<table class="content-table users-groups uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}group{% endtrans %}</th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for group in user.getGroups %}
+					<tr>
+						<td><a href="{{ path('groupsEditPage', {'groupId':group.getId}) }}">{{ group.getName }}</a></td>
+						<td>
+							<a class="uk-button uk-button-small" href="{{ path('groupsEditRolesPage', { groupId: group.getId }) }}"><i class="uk-icon-star-o"></i> {% trans %}roles{% endtrans %}</a>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveGroupsPage', { userId: user.getId, groupId: group.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}unlink{% endtrans %}</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<hr />
+		<h2>{% trans %}add.group{% endtrans %}</h2>
 
-	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
-
+		{% form_theme form 'forms.html.twig' %}
+	    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+	        {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.group{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+	</article>
 	{% include 'users/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

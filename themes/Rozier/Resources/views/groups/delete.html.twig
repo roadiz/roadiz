@@ -7,7 +7,7 @@
         <h1 class="content-title group-add-title">{{ "delete.group.%name%"|trans({'%name%': group.getName}) }}</h1>
     </header>
 
-    <article class="content content-delete">
+    <article class="content content-delete content-no-action-menu">
 		{% form_theme form 'forms.html.twig' %}
 		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}

@@ -5,7 +5,7 @@
 	<header class="content-header header-document header-document-preview">
         <h1 class="content-title document-delete-title">{{ "delete.font.%name%"|trans({'%name%': font.getName}) }}</h1>
     </header>
-    <article class="content content-delete">
+    <article class="content content-delete content-no-action-menu">
 		{% form_theme form 'forms.html.twig' %}
 		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}

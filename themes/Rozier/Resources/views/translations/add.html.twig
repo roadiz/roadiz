@@ -2,21 +2,26 @@
 
 
 {% block content %}
-<section id="manage-translation">
-	<h1 id="translation-title">{% trans %}add.translation{% endtrans %}</h1>
+<section class="content-global add-translation">
 
-	{% form_theme form 'forms.html.twig' %}
-    <form id="add-translation-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-            <button data-action-save="#add-translation-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                <i class="uk-icon-plus"></i>
-                <span class="label">{% trans %}add{% endtrans %}</span>
-            </button>
-            {% endspaceless %}
-   		</fieldset>
-	</form>
+    <header class="content-header header-translation header-translation-add">
+        <h1 class="content-title translation-add-title">{% trans %}add.translation{% endtrans %}</h1>
+    </header>
+
+    <article class="content content-add-translation">
+    	{% form_theme form 'forms.html.twig' %}
+        <form id="add-translation-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	{% spaceless %}
+                <button data-action-save="#add-translation-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-plus"></i>
+                    <span class="label">{% trans %}add{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+       		</fieldset>
+    	</form>
+    </article>
     {% include 'translations/actionsMenu.html.twig' %}
 </section>
 {% endblock %}
