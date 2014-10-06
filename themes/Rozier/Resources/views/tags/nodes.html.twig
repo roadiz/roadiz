@@ -1,60 +1,68 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
-<section id="manage-tag-nodes">
-	<h1 id="node-title">{% trans %}tagged.nodes{% endtrans %}</h1>
+<section class="content-global content-nav-and-filters">
 
-	{% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'nodes'} %}
+    <header class="content-header header-tags header-tags-nodes">
+        <h1 class="content-title tags-nodes-title">{% trans %}tagged.nodes{% endtrans %}</h1>
+
+		{% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'nodes'} %}
+	</header>
+
 	{% include 'widgets/filtersBar.html.twig' %}
 
-	<table class="nodes uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}nodeName{% endtrans %}
-	            {% if request.query.get("field") == 'nodeName' and request.query.get("ordering") == "DESC" %}
-	            	<a href="?field=nodeName&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
-	            {% else %}
-	            	<a href="?field=nodeName&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
-	            {% endif %}
-	            </th>
-	            <th>{% trans %}node.type{% endtrans %}
-	            {% if request.query.get("field") == 'nodeType' and request.query.get("ordering") == "DESC" %}
-	            	<a href="?field=nodeType&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a></th>
-	            {% else %}
-	            	<a href="?field=nodeType&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a></th>
-	            {% endif %}
-	            </th>
-	            <th>{% trans %}node.status{% endtrans %}</th>
-	            <th>{% trans %}last.modification{% endtrans %}
-	            {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
-	            	<a href="?field=updatedAt&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a></th>
-	            {% else %}
-	            	<a href="?field=updatedAt&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a></th>
-	            {% endif %}
-	            </th>
-	            <th>{% trans %}actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for node in nodes %}
-			<tr>
-				<td><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeName }}</a></td>
-				<td>{{ node.getNodeType.getDisplayName }}</td>
-				<td>
-					{% if node.isPublished == false %}<div class="uk-badge uk-badge-warning">{% trans %}node.not.published{% endtrans %}</div>{% endif %}
-					{% if node.isVisible == false %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-eye-slash"></span></div>{% endif %}
-					{% if node.isLocked %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-lock"></span></div>{% endif %}
-					{% if node.isArchived %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-archive"></span></div>{% endif %}
-				</td>
-				<td>{{ node.getUpdatedAt|localizeddate('full', 'none') }}</td>
-				<td>
-					<a class="uk-button uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}">{% trans %}see.nodetree{% endtrans %}</a>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}">{% trans %}delete{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	<article class="content content-no-action-menu content-tags-nodes">
+        <div class="content-table-cont">
+			<table class="nodes uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}nodeName{% endtrans %}
+			            {% if request.query.get("field") == 'nodeName' and request.query.get("ordering") == "DESC" %}
+			            	<a href="?field=nodeName&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
+			            {% else %}
+			            	<a href="?field=nodeName&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
+			            {% endif %}
+			            </th>
+			            <th>{% trans %}node.type{% endtrans %}
+			            {% if request.query.get("field") == 'nodeType' and request.query.get("ordering") == "DESC" %}
+			            	<a href="?field=nodeType&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a></th>
+			            {% else %}
+			            	<a href="?field=nodeType&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a></th>
+			            {% endif %}
+			            </th>
+			            <th>{% trans %}node.status{% endtrans %}</th>
+			            <th>{% trans %}last.modification{% endtrans %}
+			            {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
+			            	<a href="?field=updatedAt&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a></th>
+			            {% else %}
+			            	<a href="?field=updatedAt&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a></th>
+			            {% endif %}
+			            </th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for node in nodes %}
+					<tr>
+						<td><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeName }}</a></td>
+						<td>{{ node.getNodeType.getDisplayName }}</td>
+						<td>
+							{% if node.isPublished == false %}<div class="uk-badge uk-badge-warning">{% trans %}node.not.published{% endtrans %}</div>{% endif %}
+							{% if node.isVisible == false %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-eye-slash"></span></div>{% endif %}
+							{% if node.isLocked %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-lock"></span></div>{% endif %}
+							{% if node.isArchived %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-archive"></span></div>{% endif %}
+						</td>
+						<td>{{ node.getUpdatedAt|localizeddate('full', 'none') }}</td>
+						<td>
+							<a class="uk-button uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}">{% trans %}see.nodetree{% endtrans %}</a>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}">{% trans %}delete{% endtrans %}</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+        </div>
+    </article>
+
 </section>
 {% endblock %}

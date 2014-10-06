@@ -2,21 +2,26 @@
 
 
 {% block content %}
-<section id="manage-tag">
-	<h1 id="tag-title">{% trans %}add.tag{% endtrans %}</h1>
+<section class="content-global">
 
-	{% form_theme form 'forms.html.twig' %}
-    <form id="add-tag-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-            <button data-action-save="#add-tag-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                <i class="uk-icon-plus"></i>
-                <span class="label">{% trans %}add.tag{% endtrans %}</span>
-            </button>
-            {% endspaceless %}
-   		</fieldset>
-	</form>
+    <header class="content-header header-tags header-tags-add">
+	   <h1 class="content-title nodes-list-title">{% trans %}add.tag{% endtrans %}</h1>
+    </header>
+    
+    <article class="content content-tags-add">
+    	{% form_theme form 'forms.html.twig' %}
+        <form id="add-tag-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	{% spaceless %}
+                <button data-action-save="#add-tag-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-plus"></i>
+                    <span class="label">{% trans %}add.tag{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+       		</fieldset>
+    	</form>
+    </article>
 
     {% include 'tags/actionsMenu.html.twig' %}
 </section>
