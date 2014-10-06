@@ -27,21 +27,19 @@
 {%- endblock form_label %}
 
 {% block form_widget_compound -%}
-    <div class="data-uk-margin" {{ block('widget_container_attributes') }}>
-        {%- if form.parent is empty -%}
-            {{ form_errors(form) }}
-        {%- endif -%}
-        {{- block('form_rows') -}}
-        {{- form_rest(form) -}}
-    </div>
+    {%- if form.parent is empty -%}
+        {{ form_errors(form) }}
+    {%- endif -%}
+    {{- block('form_rows') -}}
+    {{- form_rest(form) -}}
 {%- endblock form_widget_compound %}
 
 {% block form_row -%}
-    <div class="uk-form-row form-col form-col-{{ form.vars.block_prefixes[1] }}">
+    <span class="form-col-{{ form.vars.block_prefixes[1] }}">
         {% if form.vars.block_prefixes[1] != 'separator' %}
            {{- form_label(form) -}}
         {% endif %}
         {{- form_errors(form) -}}
         {{- form_widget(form) -}}
-    </div>
+    </span>
 {%- endblock form_row %}

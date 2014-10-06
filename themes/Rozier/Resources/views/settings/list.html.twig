@@ -2,41 +2,49 @@
 
 
 {% block content %}
-<section id="manage-settings">
-	<h1 id="title">{% trans %}settings{% endtrans %}</h1>
-	<nav>
-		<a class="uk-button" href="{{ path('settingsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.setting{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('settingsImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('settingsExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}export{% endtrans %}</a>
-	</nav>
+<section class="content-global">
+	<header class="content-header header-setting header-setting-add">
+	   <h1 class="content-title setting-list-title">{% trans %}settings{% endtrans %}</h1>
+	   <div class="content-header-action-menu">
+	        <nav>
+	        	<a class="uk-button" href="{{ path('settingsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.setting{% endtrans %}</a>
+	        	<a class="uk-button" href="{{ path('settingsImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</a>
+	        	<a class="uk-button" href="{{ path('settingsExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}export{% endtrans %}</a>
+	        </nav>
+	   </div>
+    </header>
 
 	{% include 'widgets/filtersBar.html.twig' %}
 
-	<table class="settings uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}name{% endtrans %}</th>
-	            <th>{% trans %}value{% endtrans %}</th>
-	            <th>{% trans %}actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for setting in settings %}
-			<tr>
-				<td><a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">{{ setting.setting.getName }}</a></td>
-				<td>
-					{% form_theme setting.form 'forms.html.twig' %}
-					<form class="uk-form " action="#" method="post" {{ form_enctype(setting.form) }}>
-					    {{ form_widget(setting.form) }}
-						<button class="uk-button uk-button-primary uk-button-small" type="submit"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</button>
-					</form>
-				</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('settingsDeletePage', { settingId: setting.setting.getId }) }}">{% trans %}Delete{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	<article class="content content-no-action-menu content-settings-list">
+        <div class="content-table-cont">
+			<table class="content-table settings uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}name{% endtrans %}</th>
+			            <th>{% trans %}value{% endtrans %}</th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for setting in settings %}
+					<tr>
+						<td><a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">{{ setting.setting.getName }}</a></td>
+						<td>
+							{% form_theme setting.form 'horizontalForms.html.twig' %}
+							<form class="uk-form uk-form-horizontal" action="#" method="post" {{ form_enctype(setting.form) }}>
+							    {{ form_widget(setting.form) }}
+								<button class="uk-button uk-button-primary uk-button-small" type="submit"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</button>
+							</form>
+						</td>
+						<td>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('settingsDeletePage', { settingId: setting.setting.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}Delete{% endtrans %}</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</article>
 </section>
 {% endblock %}

@@ -1,13 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-settings">
-    <h1 id="title">{% trans %}import.setting{% endtrans %}</h1>
+<section class="content-global">
 
+    <header class="content-header header-setting header-setting-add">
+       <h1 class="content-title setting-list-title">{% trans %}import.setting{% endtrans %}</h1>
+       <div class="content-header-action-menu">
+            <nav>
+                <a class="uk-button" href="{{ path('settingsHomePage') }}"><i class="uk-icon-reply"></i><span class="label">{% trans %}back_to.settings{% endtrans %}</span></a>
+            </nav>
+       </div>
+    </header>
+
+    <article class="content content-no-action-menu">
     {% form_theme form 'forms.html.twig' %}
     <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
         <button type="submit" class="uk-button uk-button-primary"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</button>
     </form>
+    </article>
+
 </section>
 {% endblock %}
