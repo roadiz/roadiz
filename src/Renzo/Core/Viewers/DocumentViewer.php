@@ -13,6 +13,7 @@ namespace RZ\Renzo\Core\Viewers;
 
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Kernel;
+use RZ\Renzo\Core\Exceptions\EmbedPlatformNotSupportedException;
 
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -38,6 +39,7 @@ class DocumentViewer implements ViewableInterface
     protected static $twig = null;
 
     private $document;
+    private $embedFinder;
 
     /**
      * @return RZ\Renzo\Core\Entities\Document
@@ -127,6 +129,7 @@ class DocumentViewer implements ViewableInterface
      *
      * ## HTML output options
      *
+     * - embed (true|false), display an embed as iframe instead of its thumbnail
      * - identifier
      * - class
      * - **alt**: If not filled, it will get the document name, then the document filename
@@ -183,7 +186,13 @@ class DocumentViewer implements ViewableInterface
             $assignation['alt'] = $this->getDocument()->getFileName();
         }
 
-        if ($this->getDocument()->isImage()) {
+        if (isset($args['embed']) &&
+            true === $args['embed'] &&
+            $this->getDocument()->isEmbed()) {
+
+            return $this->getEmbedByArray($args);
+
+        } elseif ($this->getDocument()->isImage()) {
             return $this->getTwig()->render('documents/image.html.twig', $assignation);
         } elseif ($this->getDocument()->isVideo()) {
             $assignation['sources'] = $this->getSourcesFiles();
@@ -196,6 +205,40 @@ class DocumentViewer implements ViewableInterface
         } else {
             return 'document.format.unknown';
         }
+    }
+
+
+    public function getEmbedFinder()
+    {
+        if (null === $this->embedFinder) {
+
+            $handlers = Kernel::getService('document.platforms');
+
+            if (in_array($this->getDocument()->getEmbedPlatform(),
+                array_keys($handlers))) {
+
+                $class = $handlers[$this->getDocument()->getEmbedPlatform()];
+                $this->embedFinder = new $class($this->getDocument()->getEmbedId());
+
+            } else {
+                throw new EmbedPlatformNotSupportedException(
+                    "“".$this->getDocument()->getEmbedPlatform()."” is not a supported platform."
+                );
+            }
+        }
+
+        return $this->embedFinder;
+    }
+
+    /**
+     *
+     * @param array|null $args
+     *
+     * @return string
+     */
+    public function getEmbedByArray($args = null)
+    {
+        return $this->getEmbedFinder()->getIFrame($args);
     }
 
     /**

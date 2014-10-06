@@ -399,6 +399,11 @@ class DocumentsController extends RozierApp
      */
     private function buildEmbedForm()
     {
+        $services = array();
+        foreach (array_keys($this->getService('document.platforms')) as $value) {
+            $services[$value] = ucwords($value);
+        }
+
         $builder = $this->getService('formFactory')
                     ->createBuilder('form')
                     ->add('embedId', 'text', array(
@@ -406,10 +411,7 @@ class DocumentsController extends RozierApp
                     ))
                     ->add('embedPlatform', 'choice', array(
                         'label' => $this->getTranslator()->trans('document.platform'),
-                        'choices' => array(
-                            'youtube' => 'Youtube',
-                            'vimeo' => 'Vimeo'
-                        )
+                        'choices' => $services
                     ));
 
         return $builder->getForm();
@@ -417,10 +419,7 @@ class DocumentsController extends RozierApp
 
     private function embedDocument($data)
     {
-        $handlers = array(
-            'youtube' => '\RZ\Renzo\Core\Utils\YoutubeEmbedFinder',
-            'vimeo' => '\RZ\Renzo\Core\Utils\VimeoEmbedFinder',
-        );
+        $handlers = $this->getService('document.platforms');
 
         if (isset($data['embedId']) &&
             isset($data['embedPlatform']) &&

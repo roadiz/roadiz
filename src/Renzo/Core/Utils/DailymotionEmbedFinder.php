@@ -4,25 +4,25 @@
  *
  *
  *
- * @file YoutubeFinder.php
+ * @file DailymotionFinder.php
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Renzo\Core\Utils;
 
 /**
- * Youtube tools class.
+ * Dailymotion tools class.
  *
  * Manage a youtube video feed
  */
-class YoutubeEmbedFinder extends AbstractEmbedFinder
+class DailymotionEmbedFinder extends AbstractEmbedFinder
 {
-    protected static $platform = 'youtube';
+    protected static $platform = 'dailymotion';
 
     /**
-     * Create a new Youtube video handler with its embed id.
+     * Create a new Dailymotion video handler with its embed id.
      *
-     * @param string $embedId Youtube video identifier
+     * @param string $embedId Dailymotion video identifier
      */
     public function __construct($embedId)
     {
@@ -34,21 +34,21 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
      */
     public function getMediaTitle()
     {
-        return $this->getFeed()['entry']['title']['$t'];
+        return $this->getFeed()['title'];
     }
     /**
      * {@inheritdoc}
      */
     public function getMediaDescription()
     {
-        return $this->getFeed()['entry']['media$group']['media$description']['$t'];
+        return "";
     }
     /**
      * {@inheritdoc}
      */
     public function getThumbnailURL()
     {
-        return $this->getFeed()['entry']['media$group']['media$thumbnail'][2]['url'];
+        return $this->getFeed()['thumbnail_url'];
     }
 
 
@@ -57,12 +57,7 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
      */
     public function getSearchFeed( $searchTerm, $author, $maxResults=15 )
     {
-        $url = "http://gdata.youtube.com/feeds/api/videos/?q=".$searchTerm."&v=2&alt=json&max-results=".$maxResults;
-        if (!empty($author)) {
-            $url .= '&author='.$author;
-        }
-
-        return $this->downloadFeedFromAPI($url);
+        return null;
     }
 
     /**
@@ -72,7 +67,9 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
     {
         // http://gdata.youtube.com/feeds/api/videos/<Code de la vidéo>?v=2&alt=json ---> JSON
         //
-        $url = "http://gdata.youtube.com/feeds/api/videos/".$this->embedId."?v=2&alt=json";
+        $url = "http://www.dailymotion.com/services/oembed?format=json&url=".
+                "http://www.dailymotion.com/video/".
+                $this->embedId;
 
         return $this->downloadFeedFromAPI($url);
     }
@@ -82,6 +79,8 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
      */
     public function getSource($args = array())
     {
-        return '//www.youtube.com/embed/'.$this->embedId.'?rel=0&html5=1&wmode=transparent';
+        $uri = '//www.dailymotion.com/embed/video/'.$this->embedId;
+
+        return $uri;
     }
 }

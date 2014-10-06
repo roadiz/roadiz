@@ -19,6 +19,7 @@ use RZ\Renzo\Core\Services\RoutingServiceProvider;
 use RZ\Renzo\Core\Services\DoctrineServiceProvider;
 use RZ\Renzo\Core\Services\ConfigurationServiceProvider;
 use RZ\Renzo\Core\Services\SolrServiceProvider;
+use RZ\Renzo\Core\Services\EmbedDocumentsServiceProvider;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -151,6 +152,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $container->register(new RoutingServiceProvider());
         $container->register(new DoctrineServiceProvider());
         $container->register(new SolrServiceProvider());
+        $container->register(new EmbedDocumentsServiceProvider());
     }
 
     /**

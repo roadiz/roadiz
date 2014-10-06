@@ -12,6 +12,7 @@ namespace RZ\Renzo\Core\Utils;
 
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Renzo\Core\Exceptions\APINeedsAuthentificationException;
 use Pimple\Container;
 
 /**
@@ -47,11 +48,13 @@ abstract class AbstractEmbedFinder
     public function getFeed()
     {
         if (null === $this->feed) {
-            $this->feed = $this->getVideoFeed();
+            $this->feed = $this->getMediaFeed();
             if (false !== $this->feed) {
                 $this->feed = json_decode($this->feed, true);
             }
         }
+        // var_dump($this->feed);
+        // exit();
         return $this->feed;
     }
 
@@ -71,7 +74,7 @@ abstract class AbstractEmbedFinder
      *
      * @return string
      */
-    public abstract function getVideoFeed($search = null);
+    public abstract function getMediaFeed($search = null);
 
     /**
      * Crawl an embed API to get a Json feed against a search query.
@@ -180,6 +183,7 @@ abstract class AbstractEmbedFinder
              * Move file from documents file root to its folder.
              */
             $document->setFilename($url);
+            $document->setMimeType('image/jpeg');
             mkdir(Document::getFilesFolder().'/'.$document->getFolder());
             rename(Document::getFilesFolder().'/'.$url, $document->getAbsolutePath());
         }

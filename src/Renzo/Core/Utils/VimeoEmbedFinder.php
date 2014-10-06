@@ -8,7 +8,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-namespace RZ\Core\Utils;
+namespace RZ\Renzo\Core\Utils;
 
 /**
  * Vimeo tools class.
@@ -34,21 +34,21 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
      */
     public function getMediaTitle()
     {
-        return $this->getFeed()['title'];
+        return $this->getFeed()[0]['title'];
     }
     /**
      * {@inheritdoc}
      */
     public function getMediaDescription()
     {
-        return $this->getFeed()['description'];
+        return $this->getFeed()[0]['description'];
     }
     /**
      * {@inheritdoc}
      */
     public function getThumbnailURL()
     {
-        return $this->getFeed()['thumbnail_large'];
+        return $this->getFeed()[0]['thumbnail_large'];
     }
 
 
@@ -68,7 +68,7 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
-    public function getVideoFeed($search = null)
+    public function getMediaFeed($search = null)
     {
         // http://gdata.youtube.com/feeds/api/videos/<Code de la vidéo>?v=2&alt=json ---> JSON
         //
@@ -82,7 +82,7 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
      */
     public function getSource($args = array())
     {
-        $uri = '://player.vimeo.com/video/'.$this->embedId.'?api=1';
+        $uri = '//player.vimeo.com/video/'.$this->embedId.'?api=1';
 
         if(isset($args['displayTitle'])) $uri .= '&title='.$args['displayTitle'];
         if(isset($args['byline'])) $uri .= '&byline='.$args['byline'];

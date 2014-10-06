@@ -12,6 +12,13 @@
     <article class="content content-document-edit">
     	<figure class="uk-thumbnail">{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}</figure>
         <p><code>{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}</code></p>
+
+        {% if document.isEmbed %}
+        <hr />
+        <h3>{% trans %}embed.preview{% endtrans %}</h3>
+        <figure class="uk-thumbnail">{{ document.getViewer.getEmbedByArray(thumbnailFormat)|raw }}</figure>
+        <p><code>{{ document.getViewer.getEmbedFinder.getSource }}</code></p>
+        {% endif %}
     </article>
 
 	{% include 'documents/actionsMenu.html.twig' %}

@@ -23,6 +23,7 @@
 			        <tr>
 			            <th class="uk-text-center">{% trans %}document.thumbnail{% endtrans %}</th>
 			            <th>{% trans %}document.filename{% endtrans %}</th>
+			            <th>{# {% trans %}document.platform{% endtrans %} #}</th>
 			            <th>{% trans %}document.createdAt{% endtrans %}</th>
 			            <th>{% trans %}actions{% endtrans %}</th>
 			        </tr>
@@ -42,9 +43,16 @@
 							<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}"><i class='uk-icon-large uk-icon-file-{{ document.getShortType }}-o'></i></a>
 						</td>
 						{% endif %}
+						{% if document.isEmbed %}
 						<td>
 							<p>{{ document.getFilename }}</p>
 						</td>
+						<td class="platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></td>
+						{% else %}
+						<td colspan="2">
+							<p>{{ document.getFilename }}</p>
+						</td>
+						{% endif %}
 						<td>{{ document.getCreatedAt|localizeddate('short', 'none') }}</td>
 						<td>
 							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>

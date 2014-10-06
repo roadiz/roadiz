@@ -315,6 +315,15 @@ class Document extends AbstractDateTimed
         return $this;
     }
 
+    /**
+     * Tells if current document has embed media informations.
+     *
+     * @return boolean
+     */
+    public function isEmbed()
+    {
+        return (null !== $this->embedId && null !== $this->embedPlatform);
+    }
 
     /**
      * @Column(type="boolean")
