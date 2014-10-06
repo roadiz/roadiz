@@ -10,13 +10,13 @@
 /* -------- VARS -------- */
 @item-border-color: #B2B2B2;
 @item-color: #999999;
+@item-color-name-color-hover: #3a3a3a;
 @nestable-handle-border-color-hover: #555555;
 @nestable-handle-bgcolor-hover: #D3D3D3;
+@node-icon-offset: 12px;
 
 
 /* -------- STYLES -------- */
-
-@node-icon-offset: 12px;
 
 .tagtree-widget,
 .nodetree-widget {
@@ -108,15 +108,10 @@
         margin-bottom: 0px;
 
         a {
-            color: #3a3a3a;
+            color: @item-color-name-color-hover;
             text-decoration: none;
             font-weight: bold;
-
-            &:hover {
-                color: black;
-            }
         }
-        .uk-icon-home { display: none; }
     }
 
     .nodetree-element-inner {
@@ -128,6 +123,9 @@
                 border-color: @nestable-handle-border-color-hover;
                 background: @nestable-handle-bgcolor-hover;
             }
+            .nodetree-element-name a {
+                color: @item-color-name-color-hover;
+            }
         }
     }
 
@@ -135,6 +133,7 @@
 
         max-width: 60%;
         white-space: nowrap;
+        .transition(color ease 0.35s);
 
         & > i {
             color: red;
@@ -170,18 +169,34 @@
 
     .uk-nestable-item {
 
+        i {
+            .transition(color ease 0.2s);
+        }
+
         &.home-node {
-            padding-left: @node-icon-offset - 2;
+            padding-left: 4px;
+
+            .uk-icon-rz-home {
+                position: relative;
+                font-size: 20px;
+                color: @item-color;
+                vertical-align: middle;
+                top: -2px;
+            }
+            &.unpublished-node .uk-icon-rz-home:before {
+                content: "\e620";
+            }
 
             & > .uk-nestable-handle:after {
-                content: "\f015";
-                font-family: FontAwesome;
-                font-size: 16px;
-                background-color: transparent;
-                border: 0 none;
-                width: auto;
-                height: auto;
-                top: 0px;
+                display: none;
+            }
+            &:hover {
+                .nodetree-element-name a {
+                    color: @item-color-name-color-hover;
+                }
+                .uk-icon-rz-home {
+                    color: @nestable-handle-border-color-hover;
+                }
             }
         }
         &.stack-node {

@@ -1,0 +1,135 @@
+/*------------------------------------*\
+   ENTRIES PANEL
+\*------------------------------------*/
+
+
+/*
+ * Override ui kit buttons styles & colors
+ */
+
+/* -------- VARS -------- */
+@contextualdropdown-p-height: 30px;
+
+
+/* -------- STYLES -------- */
+
+.uk-dropdown {
+    .box-sizing();
+    width: 220px;
+    margin-top: 5px;
+    padding: 10px;
+    background: #fff;
+    color: #444;
+    font-size: 13px;
+    .rounded(0px);
+    //box-shadow: 0 2px 5px rgba(0,0,0,.1);
+}
+
+.uk-dropdown-small {
+    min-width: 220px;
+    width: auto;
+    padding: 5px;
+    white-space: nowrap;
+}
+
+.uk-dropdown-flip {
+    left: auto;
+    right: 0;
+}
+
+.nodetree-contextualmenu {
+    .uk-dropdown, .uk-dropdown-small {
+        padding: 0 0 0 26px;
+        background-color: #F4F4F4;
+        .opacity(0.8);
+
+        .uk-nav {
+            margin: 0px;
+
+            p {
+                margin: 0px;
+                padding: 0 15px 0 20px;
+                font-size: 12px;
+                height: @contextualdropdown-p-height;
+
+                i {
+                    float: right;
+                    line-height: @contextualdropdown-p-height;
+                    font-size: 14px;
+                }
+            }
+            .add-child {
+                height: 40px;
+                line-height: 40px;
+                background-color: white;
+                border-bottom: 1px dashed #CCC;
+                padding-left: 16px;
+                font-weight: bold;
+
+                i {
+                    line-height: 40px;
+                }
+            }
+            .uk-nav-header {
+                font-size: 11px;
+            }
+            .wrapper {
+                padding: 0 0 0 15px;
+
+                p {
+                    background-color: #ebebeb;
+                    line-height: @contextualdropdown-p-height + 2;
+                    border-bottom: 1px solid #CCC;
+                    padding: 0 13px;
+                    color: #666666;
+                    .transition(~'background ease 0.2s, color ease 0.2s');
+
+                    &+p {
+                        border-top: 1px solid #FFF;
+                    }
+                    &:last-child {
+                        border-bottom: none;
+                    }
+                    a {
+                        color: #666666;
+                    }
+                    &:hover {
+                        background-color: #E0E0E0;
+                        a {
+                            color: #333333;
+                        }
+                    }
+                }
+                .uk-nav-header {
+                    font-size: 11px;
+                    margin: 0px;
+                    padding: 7px 0 3px;
+                    text-transform: capitalize;
+                    color: #333;
+                }
+                &+.wrapper{
+                    border-top: 1px dashed #CCC;
+                }
+            }
+         }
+    }
+    .vertical-nodetype {
+        position: absolute;
+        background-color: @contrast-color;
+        width: 26px;
+        top: 0; bottom: 0; left: 0;
+
+        .text {
+            .transform-origin(left, bottom);
+            .rotation(-90deg);
+            position: absolute;
+            bottom: 0;
+            left: 25px;
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 1px;
+        }
+    }
+}
