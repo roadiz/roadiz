@@ -52,7 +52,8 @@ class SolrCommand extends Command
         $this->dialog = $this->getHelperSet()->get('dialog');
         $text="";
 
-        $solr = Kernel::getInstance()->getSolrService();
+        $solr = Kernel::getService('solr');
+
         if (null !== $solr) {
 
             if (true === Kernel::getInstance()->pingSolrServer()) {
