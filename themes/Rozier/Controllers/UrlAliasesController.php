@@ -424,7 +424,7 @@ class UrlAliasesController extends RozierApp
                         )
                     ))
                     ->add('alias', 'text', array(
-                        'label'=>$this->getTranslator()->trans('urlAlias'),
+                        'label'=>false,
                         'constraints' => array(
                             new NotBlank()
                         )

@@ -31,7 +31,7 @@
 		    	{% endspaceless %}
 	   		</fieldset>
 		</form>
-
+		<hr />
 		<h2 class="content-subtitle">{% trans %}urlAlias{% endtrans %}</h2>
 
 		<h3>{% trans %}add.urlAlias{% endtrans %}</h3>
@@ -39,7 +39,9 @@
 		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}
 		    <fieldset data-uk-margin>
-		    	<input class="uk-button uk-button-primary" type="submit" />
+		    	<button class="uk-button uk-button-primary" type="submit">
+		    		<i class="uk-icon-plus"></i> {% trans %}add.urlAlias{% endtrans %}
+		    	</button>
 	   		</fieldset>
 		</form>
 
