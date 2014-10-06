@@ -16,20 +16,6 @@ namespace RZ\Renzo\Core\Viewers;
 interface ViewableInterface
 {
     /**
-     * Get cache directory path for current viewable template engine.
-     *
-     * @return string
-     */
-    public function getCacheDirectory();
-
-    /**
-     * Create a twig renderer engine instance.
-     *
-     * @return void
-     */
-    public function initializeTwig();
-
-    /**
      * Return current viewable twig engine instance.
      *
      * @return \Twig_Environment

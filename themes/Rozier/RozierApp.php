@@ -33,32 +33,12 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class RozierApp extends BackendController
 {
-
     protected static $themeName =      'Rozier administration theme';
     protected static $themeAuthor =    'Ambroise Maupate, Julien Blanchet';
     protected static $themeCopyright = 'REZO ZERO';
     protected static $themeDir =       'Rozier';
 
     protected $formFactory = null;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTwigLoader()
-    {
-        $vendorDir = realpath(RENZO_ROOT . '/vendor');
-
-        // le chemin vers TwigBridge pour que Twig puisse localiser
-        // le fichier form_div_layout.html.twig
-        $vendorTwigBridgeDir =
-            $vendorDir . '/symfony/twig-bridge/Symfony/Bridge/Twig';
-
-        // le chemin vers les autres templates
-        return new \Twig_Loader_Filesystem(array(
-            static::getViewsFolder(), // Theme templates and Custom Form extension templates
-            $vendorTwigBridgeDir . '/Resources/views/Form' // Form extension templates
-        ));
-    }
 
     /**
      * @return array $assignation
