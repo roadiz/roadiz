@@ -75,8 +75,10 @@ class NodeRepository extends EntityRepository
                 $res = $qb->expr()->in('n.' .$key, $value);
             } elseif (is_bool($value)) {
                 $res = $qb->expr()->eq('n.' .$key, (boolean) $value);
-            } else {
+            } elseif (isset($value)) {
                 $res = $qb->expr()->eq('n.' .$key, $value);
+            } elseif (null === $value) {
+                $res = $qb->expr()->isNull('n.' .$key);
             }
 
             $qb->andWhere($res);
