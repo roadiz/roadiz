@@ -26,7 +26,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
 
             $solrDoc = new SolariumNodeSource(
                 $nodeSource,
-                Kernel::getInstance()->getSolrService()
+                Kernel::getService('solr')
             );
 
             $result = $solrDoc->indexAndCommit();
@@ -38,11 +38,11 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
              * Now query the database
              */
             // get a select query instance
-            $query = Kernel::getInstance()->getSolrService()->createSelect();
+            $query = Kernel::getService('solr')->createSelect();
             $query->setQuery('title:"'.$testTitle.'"');
 
             // this executes the query and returns the result
-            $resultset = Kernel::getInstance()->getSolrService()->select($query);
+            $resultset = Kernel::getService('solr')->select($query);
 
             foreach ($resultset as $document) {
                 // Assert
@@ -63,7 +63,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
         try {
             $solrDoc = new SolariumNodeSource(
                 $nodeSource,
-                Kernel::getInstance()->getSolrService()
+                Kernel::getService('solr')
             );
 
             $this->assertTrue($solrDoc->getDocumentFromIndex());
@@ -85,7 +85,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
 
             $solrDoc = new SolariumNodeSource(
                 $nodeSource,
-                Kernel::getInstance()->getSolrService()
+                Kernel::getService('solr')
             );
 
             $solrDoc->cleanAndCommit();
@@ -111,7 +111,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        $solr = Kernel::getInstance()->getSolrService();
+        $solr = Kernel::getService('solr');
 
         if (null !== $solr) {
 

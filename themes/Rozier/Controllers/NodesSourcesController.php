@@ -148,7 +148,7 @@ class NodesSourcesController extends RozierApp
         if (true === $this->getKernel()->pingSolrServer()) {
             $solrSource = new \RZ\Renzo\Core\SearchEngine\SolariumNodeSource(
                 $nodeSource,
-                $this->getKernel()->getSolrService()
+                $this->getService('solr')
             );
             $solrSource->getDocumentFromIndex();
             $solrSource->updateAndCommit();

@@ -13,7 +13,7 @@ class SolrWrapperTest extends PHPUnit_Framework_TestCase
 
     public function testIndex()
     {
-        $solr = Kernel::getInstance()->getSolrService();
+        $solr = Kernel::getService('solr');
 
         if (null !== $solr) {
 
@@ -76,7 +76,7 @@ class SolrWrapperTest extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        $solr = Kernel::getInstance()->getSolrService();
+        $solr = Kernel::getService('solr');
 
         if (null !== $solr) {
 
