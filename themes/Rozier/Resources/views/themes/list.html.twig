@@ -1,52 +1,63 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
-<section id="manage-themes">
-	<h1 id="title">{% trans %}themes{% endtrans %}</h1>
-	<nav>
-		<a class="uk-button" href="{{ path('themesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.theme{% endtrans %}</a>
-	</nav>
-	{% include 'widgets/filtersBar.html.twig' %}
-	<table class="themes uk-table">
-		<thead>
-	        <tr>
-	            <th class="informations">{% trans %}theme{% endtrans %}</th>
-	            <th>{% trans %}theme.classname{% endtrans %}</th>
-	            <th>{% trans %}theme.host{% endtrans %}</th>
-	            <th>{% trans %}status{% endtrans %}</th>
-	            <th>{% trans %}actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for theme in themes %}
-			<tr>
-				<td class="informations">
-					{% for type, info in theme.getInformations %}
-						<p class="{{type}}">{{ info }}</p>
+<section class="content-global">
+
+    <header class="content-header header-themes header-nodes-list">
+        <h1 class="content-title themes-list-title">{% trans %}themes{% endtrans %}</h1>
+        <div class="content-header-action-menu">
+            <nav>
+				<a class="uk-button" href="{{ path('themesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.theme{% endtrans %}</a>
+			</nav>
+        </div>
+    </header>   
+
+    {% include 'widgets/filtersBar.html.twig' %}
+    
+    <article class="content content-no-action-menu content-themes-list">
+        <div class="content-table-cont">
+            <table class="themes content-table uk-table">
+				<thead>
+			        <tr>
+			            <th class="informations">{% trans %}theme{% endtrans %}</th>
+			            <th>{% trans %}theme.classname{% endtrans %}</th>
+			            <th>{% trans %}theme.host{% endtrans %}</th>
+			            <th>{% trans %}status{% endtrans %}</th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for theme in themes %}
+					<tr>
+						<td class="informations">
+							{% for type, info in theme.getInformations %}
+								<p class="{{type}}">{{ info }}</p>
+							{% endfor %}
+						</td>
+						<td>
+							<a href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{{ theme.getClassName }}</a>
+						</td>
+						<td>
+							{% if theme.getHostname != "*" %}
+							{{ theme.getHostname }}
+							{% else %}
+							<div class="uk-badge uk-badge-success">{% trans %}all.hostnames{% endtrans %}</div>
+							{% endif %}
+						</td>
+						<td>
+						{% if not theme.isAvailable %}<div class="uk-badge uk-badge-warning"><span class="uk-icon-eye-slash"></span> {% trans %}theme.disabled{% endtrans %}</div>{% endif %}
+						{% if theme.isBackendTheme %}<div class="uk-badge uk-badge-success"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
+						</td>
+						<td>
+							<a class="uk-button uk-button-small uk-button-primary" href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{% trans %}edit{% endtrans %}</a>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('themesDeletePage', { themeId: theme.getId }) }}">{% trans %}delete{% endtrans %}</a>
+						</td>
+					</tr>
 					{% endfor %}
-				</td>
-				<td>
-					<a href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{{ theme.getClassName }}</a>
-				</td>
-				<td>
-					{% if theme.getHostname != "*" %}
-					{{ theme.getHostname }}
-					{% else %}
-					<div class="uk-badge uk-badge-success">{% trans %}all.hostnames{% endtrans %}</div>
-					{% endif %}
-				</td>
-				<td>
-				{% if not theme.isAvailable %}<div class="uk-badge uk-badge-warning"><span class="uk-icon-eye-slash"></span> {% trans %}theme.disabled{% endtrans %}</div>{% endif %}
-				{% if theme.isBackendTheme %}<div class="uk-badge uk-badge-success"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
-				</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-primary" href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{% trans %}edit{% endtrans %}</a>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('themesDeletePage', { themeId: theme.getId }) }}">{% trans %}delete{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+				</tbody>
+			</table>
+        </div>
+    </article>
+
 </section>
 {% endblock %}

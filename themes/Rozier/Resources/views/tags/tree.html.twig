@@ -1,11 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-tag-tree">
-	<h1 id="tag-title">{{ "tag.%name%.tree"|trans({'%name%': tag.getTagName }) }}</h1>
-	{% include 'tags/navBar.html.twig' with {"current": 'tree'} %}
-	{% include 'widgets/tagTree/tagTree.html.twig' with { "tagTree":specificTagTree, "tag":specificTagTree.getRootTag } only %}
+<section class="content-global">
+
+    <header class="content-header header-tags header-tags-tree">
+        <h1 class="content-title tags-tree-title">{{ "tag.%name%.tree"|trans({'%name%': tag.getTagName }) }}</h1>
+
+        {% include 'tags/navBar.html.twig' with {"current": 'tree'} %}
+    
+    </header>
+
+    <article class="content content-no-action-menu content-tags-tree">
+        {% include 'widgets/tagTree/tagTree.html.twig' with { "tagTree":specificTagTree, "tag":specificTagTree.getRootTag } only %}
+    </article>
 
     {% include 'tags/actionsMenu.html.twig' %}
+
 </section>
 {% endblock %}

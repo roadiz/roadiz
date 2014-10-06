@@ -1,11 +1,21 @@
 {% extends 'base.html.twig' %}
+
 {% block content %}
-<section id="manage-node">
-	<h1 id="node-title">{{ "edit.node.%name%.tree"|trans({'%name%': source.getTitle}) }}</h1>
-	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-	{% include 'nodes/navBar.html.twig' with {"current": 'tree'} %}
-	{% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
+<section class="content-global content-nav-and-filters">
+
+    <header class="content-header header-node header-nodes-tree">
+        <h1 class="content-title">{{ "edit.node.%name%.tree"|trans({'%name%': source.getTitle}) }}</h1>
+        {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+        {% include 'nodes/navBar.html.twig' with {"current": 'tree'} %}
+    </header>
+
+    {% include 'widgets/filtersBar.html.twig' %}
+
+    <article class="content content-no-action-menu">
+        {% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
+    </article>
 
     {% include 'nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}
+

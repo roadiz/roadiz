@@ -1,23 +1,27 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
-<section id="manage-node-type">
-	<h1 id="node-type-field-title">{% trans %}add.nodeTypeField{% endtrans %}</h1>
+<section class="content-global">
 
-	{% form_theme form 'forms.html.twig' %}
-	<form id="add-node-type-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-            <button data-action-save="#add-node-type-field-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                <i class="uk-icon-save"></i>
-                <span class="label">{% trans %}add.nodeTypeField{% endtrans %}</span>
-            </button>
-            {% endspaceless %}
-   		</fieldset>
-	</form>
+    <header class="content-header header-node-type-fields header-node-type-fields-add">
+        <h1 class="content-title">{% trans %}add.nodeTypeField{% endtrans %}</h1>
+    </header>
+    
+    <article class="content">
+        {% form_theme form 'forms.html.twig' %}
+        <form id="add-node-type-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#add-node-type-field-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-save"></i>
+                    <span class="label">{% trans %}add.nodeTypeField{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+    </article>
 
-	{% include 'node-type-fields/actionsMenu.html.twig' %}
+    {% include 'node-type-fields/actionsMenu.html.twig' %}
 </section>
 {% endblock %}
