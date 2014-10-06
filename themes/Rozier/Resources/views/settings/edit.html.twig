@@ -1,16 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-setting">
-	<h1 id="setting-title">{{ "edit.setting.%name%"|trans({'%name%': setting.getName }) }}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('settingsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.settings{% endtrans %}</a></nav>
+<section class="content-global">
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+    <header class="content-header header-setting header-setting-add">
+       <h1 class="content-title setting-list-title">{{ "edit.setting.%name%"|trans({'%name%': setting.getName }) }}</h1>
+    </header>
+
+    <article class="content content-setting-edit">
+    	{% form_theme form 'forms.html.twig' %}
+    	<form id="edit-setting-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    	    {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	<button data-action-save="#edit-setting-form" class="uk-button uk-button-primary rz-action-save" type="submit"><i class="uk-icon-save"></i>
+                    <span class="label">{% trans %}save.tag{% endtrans %}</span></button>
+       		</fieldset>
+    	</form>
+    </article>
+
+    {% include 'settings/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

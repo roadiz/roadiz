@@ -355,9 +355,9 @@ class SettingsController extends RozierApp
     {
         $defaults = array(
             'name' =>    $setting->getName(),
-            'Value' =>   $setting->getValue(),
+            'value' =>   $setting->getValue(),
             'visible' => $setting->isVisible(),
-            'type' =>    $setting->getType(),
+            'type' =>    $setting->getType()
         );
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
@@ -367,7 +367,7 @@ class SettingsController extends RozierApp
                     new NotBlank()
                 )
             ))
-            ->add('Value', NodeTypeField::$typeToForm[$setting->getType()], array(
+            ->add('value', NodeTypeField::$typeToForm[$setting->getType()], array(
                 'label' => $this->getTranslator()->trans('value'),
                 'required' => false
             ))
@@ -379,7 +379,14 @@ class SettingsController extends RozierApp
                 'label' => $this->getTranslator()->trans('type'),
                 'required' => true,
                 'choices' => NodeTypeField::$typeToHuman
-            ));
+            ))
+            ->add(
+                'group',
+                new \RZ\Renzo\CMS\Forms\SettingGroupType(),
+                array(
+                    'label' => $this->getTranslator()->trans('setting.group')
+                )
+            );
 
         return $builder->getForm();
     }
@@ -395,9 +402,10 @@ class SettingsController extends RozierApp
         $defaults = array(
             'id' =>      $setting->getId(),
             'name' =>    $setting->getName(),
-            'Value' =>   $setting->getValue(),
+            'value' =>   $setting->getValue(),
             'visible' => $setting->isVisible(),
             'type' =>    $setting->getType(),
+            'group' =>   $setting->getSettingGroup()->getId(),
         );
         if ($setting->getSettingGroup() == null) {
             $default['group'] = null;
@@ -423,7 +431,7 @@ class SettingsController extends RozierApp
                 )
             )
             ->add(
-                'Value',
+                'value',
                 NodeTypeField::$typeToForm[$setting->getType()],
                 array(
                     'label' => $this->getTranslator()->trans('value'),
@@ -467,7 +475,7 @@ class SettingsController extends RozierApp
     {
         $defaults = array(
             'id' =>      $setting->getId(),
-            'Value' =>   $setting->getValue()
+            'value' =>   $setting->getValue()
         );
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
@@ -475,7 +483,7 @@ class SettingsController extends RozierApp
                 'data'=>$setting->getId(),
                 'required' => true
             ))
-            ->add('Value', NodeTypeField::$typeToForm[$setting->getType()], array(
+            ->add('value', NodeTypeField::$typeToForm[$setting->getType()], array(
                 'label' => false,
                 'required' => false
             ));

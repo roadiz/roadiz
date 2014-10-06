@@ -2,16 +2,22 @@
 
 
 {% block content %}
-<section id="manage-setting">
-	<h1 id="setting-title">{% trans %}add.setting{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('settingsHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}back_to.settings{% endtrans %}</a></nav>
+<section class="content-global">
 
-	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+<header class="content-header header-setting header-setting-add">
+       <h1 class="content-title setting-list-title">{% trans %}add.setting{% endtrans %}</h1>
+    </header>
+
+    <article class="content content-setting-add">
+    	{% form_theme form 'forms.html.twig' %}
+        <form id="add-setting-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	<button data-action-save="#add-setting-form" class="uk-button uk-button-primary rz-action-save" type="submit"><i class="uk-icon-plus"></i><span class="label">{% trans %}add.setting{% endtrans %}</span></button>
+       		</fieldset>
+    	</form>
+    </article>
+
+    {% include 'settings/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

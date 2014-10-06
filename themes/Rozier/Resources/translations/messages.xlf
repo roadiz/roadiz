@@ -4364,6 +4364,20 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <source>bad.request</source>
         <target></target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="447">
+        <source>filename</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="448">
+        <source>document.platform</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="449">
+        <source>document.embedId</source>
+        <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

@@ -90,6 +90,11 @@ abstract class AbstractEmbedFinder
     /**
      * Compose an HTML iframe for viewing embed media.
      *
+     * * width
+     * * height
+     * * title
+     * * id
+     *
      * @param  array | null $args
      *
      * @return string
@@ -131,9 +136,6 @@ abstract class AbstractEmbedFinder
         $attributes['webkitAllowFullScreen'] = "1";
         $attributes['mozallowfullscreen'] = "1";
         $attributes['allowFullScreen'] = "1";
-
-        /* <iframe id="video_<?php echo $i ?>" frameborder="0" allowfullscreen="1" title="YouTube video player" width="586" height="360"
-        // src="http://www.youtube.com/embed/<?php echo $production->embed ?>"></iframe>*/
 
         $htmlTag = '<iframe';
         foreach ($attributes as $key => $value) {
