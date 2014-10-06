@@ -10,10 +10,10 @@
 				<a class="uk-button" href="{{ path('themesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.theme{% endtrans %}</a>
 			</nav>
         </div>
-    </header>   
+    </header>
 
     {% include 'widgets/filtersBar.html.twig' %}
-    
+
     <article class="content content-no-action-menu content-themes-list">
         <div class="content-table-cont">
             <table class="themes content-table uk-table">
@@ -49,8 +49,8 @@
 						{% if theme.isBackendTheme %}<div class="uk-badge uk-badge-success"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
 						</td>
 						<td>
-							<a class="uk-button uk-button-small uk-button-primary" href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{% trans %}edit{% endtrans %}</a>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('themesDeletePage', { themeId: theme.getId }) }}">{% trans %}delete{% endtrans %}</a>
+							<a class="uk-button uk-button-small" href="{{ path('themesEditPage', { themeId: theme.getId }) }}"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</a>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('themesDeletePage', { themeId: theme.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 						</td>
 					</tr>
 					{% endfor %}
