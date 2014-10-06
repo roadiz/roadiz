@@ -153,9 +153,8 @@ class Node extends AbstractDateTimedPositioned
         return $this;
     }
 
-
     /**
-     * @Column(type="decimal", precision=2)
+     * @Column(type="decimal", precision=2, scale=1)
      */
     private $priority = 0.8;
 

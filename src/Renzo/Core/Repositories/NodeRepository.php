@@ -11,6 +11,7 @@
 
 namespace RZ\Renzo\Core\Repositories;
 
+use \RZ\Renzo\Core\AbstractEntities\PersistableInterface;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Entities\Translation;
@@ -71,7 +72,9 @@ class NodeRepository extends EntityRepository
                 continue;
             }
 
-            if (is_array($value)) {
+            if (is_object($value) && $value instanceof PersistableInterface) {
+                $res = $qb->expr()->eq('n.' .$key, $value->getId());
+            } elseif (is_array($value)) {
                 $res = $qb->expr()->in('n.' .$key, $value);
             } elseif (is_bool($value)) {
                 $res = $qb->expr()->eq('n.' .$key, (boolean) $value);
