@@ -31,13 +31,6 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
  */
 class DocumentViewer implements ViewableInterface
 {
-    /**
-     * We use a static Twig instance
-     * for performance issue, not to recreate it at
-     * each `getDocumentByArray` call.
-     */
-    protected static $twig = null;
-
     private $document;
     private $embedFinder;
 
@@ -54,7 +47,6 @@ class DocumentViewer implements ViewableInterface
      */
     public function __construct(Document $document)
     {
-        $this->initializeTwig();
         $this->document = $document;
     }
 
@@ -67,46 +59,11 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
-     * Get twig cache folder for current Viewer.
-     * @return string
-     */
-    public function getCacheDirectory()
-    {
-        return RENZO_ROOT.'/cache/Core/DocumentViewer/twig_cache';
-    }
-
-    /**
-     * Create a Twig Environment instance
-     *
-     * @return \Twig_Loader_Filesystem
-     */
-    public function initializeTwig()
-    {
-        if (null === static::$twig) {
-
-            $loader = new \Twig_Loader_Filesystem(array(
-                RENZO_ROOT . '/src/Renzo/Core/Resources/views',
-            ));
-            static::$twig = new \Twig_Environment($loader, array(
-                'cache' => $this->getCacheDirectory(),
-                'debug' => Kernel::getInstance()->isDebug()
-            ));
-
-            //RoutingExtension
-            static::$twig->addExtension(
-                new RoutingExtension(Kernel::getService('urlGenerator'))
-            );
-        }
-
-        return $this;
-    }
-
-    /**
      * @return \Twig_Environment
      */
     public function getTwig()
     {
-        return static::$twig;
+        return Kernel::getService('twig.environment');
     }
 
     /**

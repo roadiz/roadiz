@@ -245,7 +245,8 @@ class AppController implements ViewableInterface
      */
     public function __init()
     {
-        $this->initializeTwig()
+        $this->getTwigLoader()
+             ->initializeTwig()
              ->initializeTranslator()
              ->prepareBaseAssignation();
     }
@@ -261,8 +262,8 @@ class AppController implements ViewableInterface
      */
     public function __initFromOtherController(
         \Twig_Environment $twigEnvironment,
-        Translator $translator,
-        array $baseAssignation
+        Translator $translator = null,
+        array $baseAssignation = null
     ) {
         $this->twig = $twigEnvironment;
         $this->translator = $translator;
@@ -301,32 +302,29 @@ class AppController implements ViewableInterface
          */
         if (!file_exists($msgPath)) {
             $lang = 'en';
+            $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
         }
 
-        // instancier un objet de la classe Translator
-        $this->translator = new Translator($lang);
-        // charger, en quelque sorte, des traductions dans ce translator
-        $this->translator->addLoader('xlf', new XliffFileLoader());
-        $this->translator->addResource(
-            'xlf',
-            static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf',
-            $lang
-        );
-        // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
-        $this->twig->addExtension(new TranslationExtension($this->translator));
+        if (file_exists($msgPath)) {
+            // instancier un objet de la classe Translator
+            $this->translator = new Translator($lang);
+            // charger, en quelque sorte, des traductions dans ce translator
+            $this->translator->addLoader('xlf', new XliffFileLoader());
+            $this->translator->addResource(
+                'xlf',
+                $msgPath,
+                $lang
+            );
+            // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
+            $this->twig->addExtension(new TranslationExtension($this->translator));
+        }
+
         $this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
         $this->getService('stopwatch')->stop('initTranslations');
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCacheDirectory()
-    {
-        return RENZO_ROOT.'/cache/'.static::$themeDir.'/twig_cache';
-    }
     /**
      * @return string
      */
@@ -356,87 +354,22 @@ class AppController implements ViewableInterface
      * Extend this method in your custom theme if you need to
      * search additionnal templates.
      *
-     * @return \Twig_Loader_Filesystem
+     * @return $this
      */
     public function getTwigLoader()
     {
-        $vendorDir = realpath(RENZO_ROOT . '/vendor');
+        $this->getService()->extend('twig.loaderFileSystem', function ($loader, $c) {
+            $loader->addPath(static::getViewsFolder());
+            return $loader;
+        });
 
-        // le chemin vers TwigBridge pour que Twig puisse localiser
-        // le fichier form_div_layout.html.twig
-        $vendorTwigBridgeDir =
-            $vendorDir . '/symfony/twig-bridge/Symfony/Bridge/Twig';
-
-        // le chemin vers les autres templates
-        return new \Twig_Loader_Filesystem(array(
-            static::getViewsFolder(), // Theme templates
-            RENZO_ROOT . '/src/Renzo/CMS/Resources/views/forms', // Form extension templates
-            $vendorTwigBridgeDir . '/Resources/views/Form' // Form extension templates
-        ));
+        return $this;
     }
-
     /**
      * {@inheritdoc}
      */
-    public function initializeTwig()
-    {
-        $this->twig = new \Twig_Environment($this->getTwigLoader(), array(
-            'debug' => $this->kernel->isDebug(),
-            'cache' => $this->getCacheDirectory(),
-        ));
-
-        /*
-         * Enabling forms
-         */
-        // le fichier Twig contenant toutes les balises pour afficher les formulaires
-        // ce fichier vient avoir le TwigBridge
-        $defaultFormTheme = 'form_div_layout.html.twig';
-        $formEngine = new TwigRendererEngine(array(
-            $defaultFormTheme,
-            'fields.html.twig'
-        ));
-
-        $formEngine->setEnvironment($this->twig);
-        // ajoutez à Twig la FormExtension
-        $this->twig->addExtension(
-            new FormExtension(new TwigRenderer(
-                $formEngine,
-                $this->getService('csrfProvider')
-            ))
-        );
-
-        //RoutingExtension
-        $this->twig->addExtension(
-            new RoutingExtension($this->getService('urlGenerator'))
-        );
-
-
-        /*
-         * ============================================================================
-         * Trucate
-         * ============================================================================
-         */
-        $this->twig->addExtension(new \Twig_Extensions_Extension_Text());
-
-        /*
-         * ============================================================================
-         * Dump
-         * ============================================================================
-         */
-
-        if ($this->kernel->isDebug()) {
-            $this->twig->addExtension(new \Twig_Extension_Debug());
-        }
-
-        /*
-         * ============================================================================
-         * Markdown
-         * ============================================================================
-         */
-        $markdown = new \Twig_SimpleFilter('markdown', function ($object) {
-            return Markdown::defaultTransform($object);
-        }, array('is_safe' => array('html')));
-        $this->twig->addFilter($markdown);
+    public function initializeTwig(){
+        $this->twig = $this->getService('twig.environment');
 
         return $this;
     }
@@ -449,6 +382,7 @@ class AppController implements ViewableInterface
     public static function forceTwigCompilation()
     {
         if (file_exists(static::getViewsFolder())) {
+
             $ctrl = new static();
             $ctrl->setKernel(Kernel::getInstance());
             $ctrl->initializeTwig();
@@ -456,7 +390,7 @@ class AppController implements ViewableInterface
 
             try {
                 $fs = new Filesystem();
-                $fs->remove(array($ctrl->getCacheDirectory()));
+                $fs->remove(array(Kernel::getService('twig.cacheFolder')));
             } catch (IOExceptionInterface $e) {
                 echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
             }
@@ -486,12 +420,17 @@ class AppController implements ViewableInterface
                 // force compilation
                 if ($file->isFile() &&
                     $file->getExtension() == 'twig') {
-                    $ctrl->getTwig()->loadTemplate(str_replace(RENZO_ROOT.'/src/Renzo/CMS/Resources/views/forms/', '', $file));
+                    $ctrl->getTwig()->loadTemplate(str_replace(
+                        RENZO_ROOT.'/src/Renzo/CMS/Resources/views/forms/',
+                        '',
+                        $file
+                    ));
                 }
             }
 
             return true;
         } else {
+
             return false;
         }
     }
