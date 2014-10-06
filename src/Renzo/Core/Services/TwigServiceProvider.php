@@ -47,11 +47,9 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 $vendorDir . '/symfony/twig-bridge/Symfony/Bridge/Twig';
 
             return new \Twig_Loader_Filesystem(array(
-                RENZO_ROOT.'/src/Renzo/Core/Resources/views',
-                // Custom Form extension templates
-                RENZO_ROOT.'/src/Renzo/CMS/Resources/views/forms',
                 // Default Form extension templates
                 $vendorTwigBridgeDir.'/Resources/views/Form',
+                RENZO_ROOT.'/src/Renzo/Core/Resources/views',
             ));
         };
 
@@ -85,18 +83,8 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
              */
             $twig->addExtension(new \Twig_Extensions_Extension_Intl());
             $twig->addExtension($c['twig.routingExtension']);
-
-            /*
-             * ============================================================================
-             * Trucate
-             * ============================================================================
-             */
             $twig->addExtension(new \Twig_Extensions_Extension_Text());
-            /*
-             * ============================================================================
-             * Dump
-             * ============================================================================
-             */
+
             if ($devMode) {
                 $twig->addExtension(new \Twig_Extension_Debug());
             }
@@ -108,11 +96,9 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
          * Twig form renderer extension
          */
         $container['twig.formRenderer'] = function ($c) {
-            $defaultFormTheme = 'form_div_layout.html.twig';
 
             return new TwigRendererEngine(array(
-                $defaultFormTheme,
-                'fields.html.twig'
+                'form_div_layout.html.twig'
             ));
         };
 
