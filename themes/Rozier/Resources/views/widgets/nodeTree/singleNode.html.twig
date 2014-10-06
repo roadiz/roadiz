@@ -3,6 +3,7 @@
 {% else %}
 {% set name = node.getNodeName %}
 {% endif %}
+{% set type = node.getNodeType.getName() %}
 <li data-node-id="{{ node.getId }}"
 	class="nodetree-element">
 
@@ -23,7 +24,7 @@
 		{#
 		 # Node statuses
 		 #}
-		{% if node.isHome %}<i class="uk-icon-home"></i> {% endif %}
+		{% if node.isHome %}<i class="uk-icon-rz-home"></i> {% endif %}
 		{# {% if not node.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %} #}
 		{% if node.isLocked %}<i class="uk-icon-locked-on"></i> {% endif %}
 		{# {% if not node.isPublished %}<i class="uk-icon-unpublished"></i> {% endif %} #}
@@ -41,32 +42,44 @@
 		<div class="nodetree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
 		    <button class="uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></button>
 		    <nav class="uk-dropdown uk-dropdown-small uk-dropdown-flip">
+		    	<div class="vertical-nodetype"><p class="text">{{ type }}</p></div>
 		        <div class="uk-nav uk-nav-dropdown uk-dropdown-flip">
-		            <p>
-		            	<a title="{{ "edit.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesEditPage', { nodeId:node.getId }) }}">
-		            		<i class="uk-icon-pencil"></i> {% trans %}edit.node{% endtrans %}
-		            	</a>
-		            </p>
-		            <p>
-		            	<a title="{{ "add.node.%name%.child"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}">
-		            		<i class="uk-icon-plus"></i> {% trans %}add.child.node{% endtrans %}
-		            	</a>
-		            </p>
-
-		            {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE')) %}
-
-		            <p>
-		            	<a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">
-		            		<i class="uk-icon-trash-o"></i> {% trans %}delete.node{% endtrans %}
-		            	</a>
-		            </p>
-
-		            {% endif %}
-
+		        	<p class="add-child">
+		        		<a title="{{ "add.node.%name%.child"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}">
+		        			<i class="uk-icon-plus"></i> {% trans %}add.child.node{% endtrans %}
+		        		</a>
+		        	</p>
+		        	<div class="wrapper">
+			        	<header class="uk-nav-header">Actions</header>
+			            <p>
+			            	<a title="{{ "edit.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesEditPage', { nodeId:node.getId }) }}">
+			            		<i class="uk-icon-pencil"></i> {% trans %}edit.node{% endtrans %}
+			            	</a>
+			            </p>
+			            {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE')) %}
+			            <p>
+			            	<a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">
+			            		<i class="uk-icon-trash-o"></i> {% trans %}delete.node{% endtrans %}
+			            	</a>
+			            </p>
+			            {% endif %}
+		        	</div>
+					<div class="wrapper">
+						<header class="uk-nav-header">Statuses</header>
+					    <p>
+					    	<a title="" href="#"><i class="uk-icon-pencil"></i> Hide</a>
+					    </p>
+					    <p>
+					    	<a title="" href="#"><i class="uk-icon-pencil"></i> Unpublished</a>
+					    </p>
+					    <p>
+					    	<a title="" href="#"><i class="uk-icon-pencil"></i> Archive</a>
+					    </p>
+					</div>
 		        </div>
 		    </nav>
 		</div>
-		{% if not node.isHidingChildren %}<div data-nestable-action="toggle"></div>{% endif %}
+		{% if not node.isHidingChildren %}<div class="minus" data-nestable-action="toggle"></div>{% endif %}
 	</div>
 	{% spaceless %}
 	<ul class="uk-nestable-list" data-parent-node-id="{{ node.getId }}">
