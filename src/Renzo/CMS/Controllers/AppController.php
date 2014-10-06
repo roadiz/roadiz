@@ -410,6 +410,24 @@ class AppController implements ViewableInterface
             new RoutingExtension($this->getService('urlGenerator'))
         );
 
+
+        /*
+         * ============================================================================
+         * Trucate
+         * ============================================================================
+         */
+        $this->twig->addExtension(new \Twig_Extensions_Extension_Text());
+
+        /*
+         * ============================================================================
+         * Dump
+         * ============================================================================
+         */
+
+        if ($this->kernel->isDebug()) {
+            $this->twig->addExtension(new \Twig_Extension_Debug());
+        }
+
         /*
          * ============================================================================
          * Markdown
