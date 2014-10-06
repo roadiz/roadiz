@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section class="content-global embed-document">
+
+	<header class="content-header header-document header-document-embed">
+        <h1 class="content-title document-embed-title">{% trans %}embed.document{% endtrans %}</h1>
+		<div class="content-header-action-menu">
+			<a class="uk-button" href="{{ path('documentsHomePage') }}"><span class="uk-icon-chevron-left"></span> {% trans %}back_to.documents{% endtrans %}</a>
+		</div>
+    </header>
+
+    <article class="content content-embed">
+    	{% form_theme form 'forms.html.twig' %}
+		<form id="embed-dropzone-document" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+	   		{{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	{% spaceless %}
+                <button data-action-save="#embed-dropzone-document" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-upload"></i>
+                    <span class="label">{% trans %}embed{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+       		</fieldset>
+		</form>
+	</article>
+</section>
+{% endblock %}
+

@@ -210,6 +210,59 @@ class DocumentsController extends RozierApp
     }
 
     /**
+     * Embed external document page.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function embedAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        /*
+         * Handle main form
+         */
+        $form = $this->buildEmbedForm();
+        $form->handleRequest();
+
+        if ($form->isValid()) {
+
+            try {
+                $document = $this->embedDocument($form->getData());
+
+                $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
+                    '%name%'=>$document->getName()
+                ));
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                $this->getService('logger')->info($msg);
+
+            } catch(\Exception $e) {
+                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+                $this->getService('logger')->error($e->getMessage());
+            }
+            /*
+             * Force redirect to avoid resending form when refreshing page
+             */
+            $response = new RedirectResponse(
+                $this->getService('urlGenerator')->generate('documentsHomePage')
+            );
+            $response->prepare($request);
+
+            return $response->send();
+        }
+
+
+        $this->assignation['form'] = $form->createView();
+
+        return new Response(
+            $this->getTwig()->render('documents/embed.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
+
+    /**
      * @param Symfony\Component\HttpFoundation\Request $request
      *
      * @return Symfony\Component\HttpFoundation\Response
@@ -339,6 +392,53 @@ class DocumentsController extends RozierApp
                     ));
 
         return $builder->getForm();
+    }
+
+    /**
+     * @return Symfony\Component\Form\Form
+     */
+    private function buildEmbedForm()
+    {
+        $builder = $this->getService('formFactory')
+                    ->createBuilder('form')
+                    ->add('embedId', 'text', array(
+                        'label' => $this->getTranslator()->trans('document.embedId')
+                    ))
+                    ->add('embedPlatform', 'choice', array(
+                        'label' => $this->getTranslator()->trans('document.platform'),
+                        'choices' => array(
+                            'youtube' => 'Youtube',
+                            'vimeo' => 'Vimeo'
+                        )
+                    ));
+
+        return $builder->getForm();
+    }
+
+    private function embedDocument($data)
+    {
+        $handlers = array(
+            'youtube' => '\RZ\Renzo\Core\Utils\YoutubeEmbedFinder',
+            'vimeo' => '\RZ\Renzo\Core\Utils\VimeoEmbedFinder',
+        );
+
+        if (isset($data['embedId']) &&
+            isset($data['embedPlatform']) &&
+            in_array($data['embedPlatform'], array_keys($handlers))) {
+
+            $class = $handlers[$data['embedPlatform']];
+            $finder = new $class($data['embedId']);
+
+            if ($finder->exists()) {
+                return $finder->createDocumentFromFeed($this->getService());
+
+            } else {
+                 throw new \RuntimeException("embedId.does_not_exist", 1);
+            }
+
+        } else {
+            throw new \RuntimeException("bad.request", 1);
+        }
     }
 
     /**

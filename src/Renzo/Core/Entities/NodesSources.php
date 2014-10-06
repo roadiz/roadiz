@@ -100,7 +100,7 @@ class NodesSources extends AbstractEntity
     }
 
     /**
-     * @Column(type="string", name="title", unique=false)
+     * @Column(type="string", name="title", unique=false, nullable=true)
      */
     protected $title = '';
 
