@@ -156,7 +156,7 @@ class NodesSourcesRepository extends EntityRepository
     {
         // Update Solr Serach engine if setup
         if (true === Kernel::getInstance()->pingSolrServer()) {
-            $service = Kernel::getInstance()->getSolrService();
+            $service = Kernel::getService('solr');
 
             $queryObj = $service->createSelect();
 
@@ -198,7 +198,7 @@ class NodesSourcesRepository extends EntityRepository
     {
         // Update Solr Serach engine if setup
         if (true === Kernel::getInstance()->pingSolrServer()) {
-            $service = Kernel::getInstance()->getSolrService();
+            $service = Kernel::getService('solr');
 
             $queryObj = $service->createSelect();
 
