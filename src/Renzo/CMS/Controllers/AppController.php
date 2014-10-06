@@ -92,13 +92,19 @@ class AppController implements ViewableInterface
      *
      * *Alias for `$this->kernel->container[$key]`*
      *
-     * @param string $key
+     * Return the container if no key defined.
+     *
+     * @param string|null $key
      *
      * @return mixed
      */
-    public function getService($key)
+    public function getService($key = null)
     {
-        return $this->kernel->container[$key];
+        if (null === $key) {
+            return $this->kernel->container;
+        } else {
+            return $this->kernel->container[$key];
+        }
     }
     /**
      * Alias for `$this->kernel->getSecurityContext()`.

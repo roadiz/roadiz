@@ -89,7 +89,7 @@ class Document extends AbstractDateTimed
     );
 
     /**
-     * @Column(type="string", nullable=false)
+     * @Column(type="string", nullable=true)
      */
     private $filename;
     /**
@@ -212,7 +212,11 @@ class Document extends AbstractDateTimed
      */
     public function getRelativeUrl()
     {
-        return $this->getFolder().'/'.$this->getFilename();
+        if (null !== $this->filename) {
+            return $this->getFolder().'/'.$this->getFilename();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -220,7 +224,11 @@ class Document extends AbstractDateTimed
      */
     public function getAbsolutePath()
     {
-        return static::getFilesFolder().'/'.$this->getRelativeUrl();
+        if (null !== $this->filename) {
+            return static::getFilesFolder().'/'.$this->getRelativeUrl();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -267,6 +275,54 @@ class Document extends AbstractDateTimed
         $this->copyright = $copyright;
 
         return $this;
+    }
+
+    /**
+     * @Column(type="string", name="embedId", unique=false, nullable=true)
+     */
+    protected $embedId = null;
+    /**
+     * @return string
+     */
+    public function getEmbedId() {
+        return $this->embedId;
+    }
+    /**
+     * @param string $embedId
+     */
+    public function setEmbedId($embedId) {
+        $this->embedId = $embedId;
+
+        return $this;
+    }
+
+    /**
+     * @Column(type="string", name="embedPlatform", unique=false, nullable=true)
+     */
+    protected $embedPlatform = null;
+    /**
+     * @return string
+     */
+    public function getEmbedPlatform() {
+        return $this->embedPlatform;
+    }
+    /**
+     * @param string $embedPlatform
+     */
+    public function setEmbedPlatform($embedPlatform) {
+        $this->embedPlatform = $embedPlatform;
+
+        return $this;
+    }
+
+    /**
+     * Tells if current document has embed media informations.
+     *
+     * @return boolean
+     */
+    public function isEmbed()
+    {
+        return (null !== $this->embedId && null !== $this->embedPlatform);
     }
 
     /**
