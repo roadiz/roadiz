@@ -356,12 +356,17 @@ class DocumentsController extends RozierApp
             'name' => $document->getName(),
             'description' => $document->getDescription(),
             'copyright' => $document->getCopyright(),
+            'filename' => $document->getFilename()
         );
 
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add('name', 'text', array(
                         'label' => $this->getTranslator()->trans('name'),
+                        'required' => false
+                    ))
+                    ->add('filename', 'text', array(
+                        'label' => $this->getTranslator()->trans('filename'),
                         'required' => false
                     ))
                     ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array(
@@ -446,6 +451,24 @@ class DocumentsController extends RozierApp
      */
     private function editDocument($data, Document $document)
     {
+        if (!empty($data['filename']) &&
+            $data['filename'] != $document->getFilename()) {
+
+            $oldUrl = $document->getAbsolutePath();
+
+            /*
+             * If file exists, just rename it
+             */
+            // set filename to clean given string before renaming file.
+            $document->setFilename($data['filename']);
+            rename(
+                $oldUrl,
+                $document->getAbsolutePath()
+            );
+
+            unset($data['filename']);
+        }
+
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
             $document->$setter($value);

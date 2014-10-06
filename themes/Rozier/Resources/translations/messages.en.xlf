@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-10-03 16:57+0000
+PO-Revision-Date: 2014-10-06 14:38+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1412355461.087187
+X-POOTLE-MTIME: 1412606295.915857
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -2561,7 +2561,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="219" approved="yes">
         <source>remove.user.%name%.from.group.%group%</source>
-        <target state="translated">Remove %name% form group %groups%</target>
+        <target state="translated">Remove %name% form group %group%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/bb/05/3e465f9f17976280fe8af115c529fb5a48db95f9004b652cae5202baf8bb.php</context>
           <context context-type="linenumber">35</context>
@@ -4105,7 +4105,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="394" approved="yes">
         <source>document.thumbnail</source>
-        <target state="translated">Document thumbnail</target>
+        <target state="translated">Thumbnail</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/41/8d/7960bb87be336f81a137e8312c241bf87671ced5b671a5a284994a30ec3b.php</context>
           <context context-type="linenumber">53</context>
@@ -4113,7 +4113,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="395" approved="yes">
         <source>document.filename</source>
-        <target state="translated">Document filename</target>
+        <target state="translated">Filename</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/41/8d/7960bb87be336f81a137e8312c241bf87671ced5b671a5a284994a30ec3b.php</context>
           <context context-type="linenumber">57</context>
@@ -4121,7 +4121,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="396" approved="yes">
         <source>document.createdAt</source>
-        <target state="translated">Document created at</target>
+        <target state="translated">Created at</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/41/8d/7960bb87be336f81a137e8312c241bf87671ced5b671a5a284994a30ec3b.php</context>
           <context context-type="linenumber">61</context>
@@ -4129,7 +4129,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="397" approved="yes">
         <source>documents.toggle-explorer</source>
-        <target state="translated">Documents explorer</target>
+        <target state="translated">Explorer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/3b/07/54bf9e944525336f9466e763bd0756b69c61d3b33a5a118cd8c860642770.php</context>
           <context context-type="linenumber">77</context>
@@ -4137,7 +4137,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="398" approved="yes">
         <source>documents.toggle-uploader</source>
-        <target state="translated">Documents uploader</target>
+        <target state="translated">Uploader</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/3b/07/54bf9e944525336f9466e763bd0756b69c61d3b33a5a118cd8c860642770.php</context>
           <context context-type="linenumber">81</context>
@@ -4145,7 +4145,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="399" approved="yes">
         <source>documents.toggle-embedder</source>
-        <target state="translated">Documents embedder</target>
+        <target state="translated">Embedder</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/3b/07/54bf9e944525336f9466e763bd0756b69c61d3b33a5a118cd8c860642770.php</context>
           <context context-type="linenumber">85</context>
@@ -4368,7 +4368,21 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="446" approved="yes">
         <source>bad.request</source>
         <target state="translated">Bad request</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="447" approved="yes">
+        <source>filename</source>
+        <target state="translated">File name</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="448" approved="yes">
+        <source>document.platform</source>
+        <target state="translated">Media platform</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="449" approved="yes">
+        <source>document.embedId</source>
+        <target state="translated">Platform media identifier</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

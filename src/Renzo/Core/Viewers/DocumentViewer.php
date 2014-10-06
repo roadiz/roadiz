@@ -231,10 +231,12 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
+     * Output an external media with an iframe according to the arguments array.
      *
      * @param array|null $args
      *
      * @return string
+     * @see RZ\Renzo\Core\Utils\AbstractEmbedFinder::getIFrame
      */
     public function getEmbedByArray($args = null)
     {
