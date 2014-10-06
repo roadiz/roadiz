@@ -1,23 +1,27 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
-<section id="manage-node-type">
-	<h1 id="node-type-title">{% trans %}add.nodeType{% endtrans %}</h1>
+<section class="content-global">
 
-	{% form_theme form 'forms.html.twig' %}
-    <form id="add-node-type-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
+    <header class="content-header header-node-types header-node-types-add">
+        <h1 class="content-title">{% trans %}add.nodeType{% endtrans %}</h1>
+    </header>
+    
+    <article class="content">
+        {% form_theme form 'forms.html.twig' %}
+        <form id="add-node-type-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
 
-        <fieldset data-uk-margin>
-            {% spaceless %}
-            <button data-action-save="#add-node-type-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                <i class="uk-icon-plus"></i>
-                <span class="label">{% trans %}add.nodeType{% endtrans %}</span>
-            </button>
-            {% endspaceless %}
-        </fieldset>
-    </form>
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#add-node-type-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-plus"></i>
+                    <span class="label">{% trans %}add.nodeType{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+    </article>
 
     {% include 'node-types/actionsMenu.html.twig' %}
 </section>

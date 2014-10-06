@@ -1,23 +1,27 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
-<section id="manage-node-type-field">
-	<h1 id="node-type-field-title">{{ "edit.nodeTypeField.%name%"|trans({'%name%': field.getName}) }}</h1>
+<section class="content-global manage-node-type-field">
 
-	{% form_theme form 'forms.html.twig' %}
-	<form id="edit-node-type-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-            <button data-action-save="#edit-node-type-field-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                <i class="uk-icon-save"></i>
-                <span class="label">{% trans %}save{% endtrans %}</span>
-            </button>
-            {% endspaceless %}
-   		</fieldset>
-	</form>
+    <header class="content-header header-node-type-fields header-node-type-field-edit">
+         <h1 class="content-title node-type-field-edit-title">{{ "edit.nodeTypeField.%name%"|trans({'%name%': field.getName}) }}</h1>
+    </header>
 
-	{% include 'node-type-fields/actionsMenu.html.twig' %}
+    <article class="content content-node-type-field-edit">
+       {% form_theme form 'forms.html.twig' %}
+        <form id="edit-node-type-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-node-type-field-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-save"></i>
+                    <span class="label">{% trans %}save{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+    </article>
+
+    {% include 'node-type-fields/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

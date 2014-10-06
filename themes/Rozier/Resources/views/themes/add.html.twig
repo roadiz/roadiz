@@ -1,16 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-theme">
-	<h1 id="theme-title">{% trans %}add.theme{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('themesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.themes{% endtrans %}</a></nav>
+<section class="content-global manage-themes">
 
-	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+    <header class="content-header header-themes header-themes-add">
+        <h1 class="content-title themes-list-title">{% trans %}add.theme{% endtrans %}</h1>
+        <div class="content-header-nav-back">
+            <nav><a class="uk-button uk-button-small" href="{{ path('themesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.themes{% endtrans %}</a></nav>
+        </div>
+    </header>
+    
+    <article class="content content-no-action-menu content-themes-add">
+        {% form_theme form 'forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <input class="uk-button uk-button-primary" type="submit" />
+            </fieldset>
+        </form>
+    </article>
+
 </section>
 {% endblock %}

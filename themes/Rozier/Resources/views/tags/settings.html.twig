@@ -1,25 +1,30 @@
 {% extends 'base.html.twig' %}
 
-
 {% block content %}
-<section id="manage-tag-settings">
-	<h1 id="tag-title">{{ "edit.tag.%name%.settings"|trans({'%name%': tag.getTagName }) }}</h1>
+<section class="content-global">
 
-	{% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'settings'} %}
+    <header class="content-header header-tags header-tags-settings">
+        <h1 class="content-title tags-settings-title">{{ "edit.tag.%name%.settings"|trans({'%name%': tag.getTagName }) }}</h1>
 
-	{% form_theme form 'forms.html.twig' %}
-    <form id="edit-tag-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-            <button data-action-save="#edit-tag-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                <i class="uk-icon-save"></i>
-                <span class="label">{% trans %}save{% endtrans %}</span>
-            </button>
-            {% endspaceless %}
-   		</fieldset>
-	</form>
+        {% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'settings'} %}
+    </header>
+
+    <article class="content content-tags-settings">
+        {% form_theme form 'forms.html.twig' %}
+        <form id="edit-tag-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-tag-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-save"></i>
+                    <span class="label">{% trans %}save{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+    </article>
 
     {% include 'tags/actionsMenu.html.twig' %}
+
 </section>
 {% endblock %}
