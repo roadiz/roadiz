@@ -50,8 +50,8 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 RENZO_ROOT.'/src/Renzo/Core/Resources/views',
                 // Custom Form extension templates
                 RENZO_ROOT.'/src/Renzo/CMS/Resources/views/forms',
-                 // Default Form extension templates
-                $vendorTwigBridgeDir.'/Resources/views/Form'
+                // Default Form extension templates
+                $vendorTwigBridgeDir.'/Resources/views/Form',
             ));
         };
 

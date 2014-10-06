@@ -54,11 +54,6 @@
 {% endblock separator_widget %}
 
 
-{% block checkbox_widget -%}
-    <input class="rz-boolean-checkbox" type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-{%- endblock checkbox_widget %}
-
-
 {# Override default error block #}
 {% block form_errors -%}
     {% if errors|length > 0 -%}
