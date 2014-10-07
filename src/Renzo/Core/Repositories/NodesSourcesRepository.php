@@ -23,7 +23,7 @@ use RZ\Renzo\Core\AbstractEntities\PersistableInterface;
 class NodesSourcesRepository extends EntityRepository
 {
     /**
-     * Add a tag filtering to queryBuilder
+     * Add a tag filtering to queryBuilder.
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
@@ -55,8 +55,8 @@ class NodesSourcesRepository extends EntityRepository
         }
     }
 
-     /**
-     * Bind tag parameter to final query
+    /**
+     * Bind tag parameters to final query
      *
      * @param array $criteria
      * @param Query $finalQuery
@@ -76,7 +76,7 @@ class NodesSourcesRepository extends EntityRepository
     }
 
     /**
-     * Reimplementing findBy features… with extra things
+     * Reimplementing findBy features… with extra things.
      *
      * * key => array('<=', $value)
      * * key => array('<', $value)
@@ -85,6 +85,11 @@ class NodesSourcesRepository extends EntityRepository
      * * key => array('BETWEEN', $value, $value)
      * * key => array('LIKE', $value)
      * * key => 'NOT NULL'
+     *
+     * You even can filter with node fields, examples:
+     *
+     * * `node.published => true`
+     * * `node.nodeName => 'page1'`
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
@@ -191,10 +196,10 @@ class NodesSourcesRepository extends EntityRepository
     }
 
     /**
+     * Bind parameters to generated query.
      *
      * @param array $criteria
      * @param Query $qb
-     *
      */
     protected function applyFilterByCriteria(&$criteria, &$finalQuery)
     {
@@ -349,6 +354,7 @@ class NodesSourcesRepository extends EntityRepository
     /**
      * A secure findOneBy with which user must be a backend user
      * to see unpublished nodes.
+     *
      *
      * @param array           $criteria
      * @param SecurityContext $securityContext

@@ -28,7 +28,7 @@ use Doctrine\ORM\Query\Expr;
 class NodeRepository extends EntityRepository
 {
     /**
-     * Add a tag filtering to queryBuilder
+     * Add a tag filtering to queryBuilder.
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
@@ -65,6 +65,11 @@ class NodeRepository extends EntityRepository
      * * key => array('BETWEEN', $value, $value)
      * * key => array('LIKE', $value)
      * * key => 'NOT NULL'
+     *
+     * You can filter with translations relation, examples:
+     *
+     * * `translation => $object`
+     * * `translation.locale => 'fr_FR'`
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
@@ -166,7 +171,7 @@ class NodeRepository extends EntityRepository
         }
     }
     /**
-     *
+     * Bind parameters to generated query.
      *
      * @param array $criteria
      * @param Query $finalQuery
