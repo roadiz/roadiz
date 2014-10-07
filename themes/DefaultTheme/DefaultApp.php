@@ -66,7 +66,6 @@ class DefaultApp extends FrontendController
      */
     public function homeAction(Request $request, Node $node = null, Translation $translation = null)
     {
-
         if ($node === null) {
             $node = $this->getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Node')

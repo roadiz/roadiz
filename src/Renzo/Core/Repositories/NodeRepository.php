@@ -80,8 +80,30 @@ class NodeRepository extends EntityRepository
                 continue;
             }
 
+            /*
+             * compute prefix for
+             * filtering node, and sources relation fields
+             */
+            $prefix = 'n.';
+
+            // Dots are forbidden in field definitions
+            $baseKey = str_replace('.','_',$key);
+            /*
+             * Search in translation fields
+             */
+            if (false !== strpos($key, 'translation.')) {
+                $prefix = 't.';
+                $key = str_replace('translation.', '', $key);
+            }
+             /*
+             * Search in nodeSource fields
+             */
+            if ($key == 'translation') {
+                $prefix = 'ns.';
+            }
+
             if (is_object($value) && $value instanceof PersistableInterface) {
-                $res = $qb->expr()->eq('n.' .$key, $value->getId());
+                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
             } elseif (is_array($value)) {
                 /*
                  * array
@@ -98,55 +120,110 @@ class NodeRepository extends EntityRepository
                     switch ($value[0]) {
                         case '<=':
                             # lte
-                            $res = $qb->expr()->lte('n.' .$key, $value[1]);
-                            unset($criteria[$key]);
+                            $res = $qb->expr()->lte($prefix.$key, ':'.$baseKey);
                             break;
                         case '<':
                             # lt
-                            $res = $qb->expr()->lt('n.' .$key, $value[1]);
-                            unset($criteria[$key]);
+                            $res = $qb->expr()->lt($prefix.$key, ':'.$baseKey);
                             break;
                         case '>=':
                             # gte
-                            $res = $qb->expr()->gte('n.' .$key, $value[1]);
-                            unset($criteria[$key]);
+                            $res = $qb->expr()->gte($prefix.$key, ':'.$baseKey);
                             break;
                         case '>':
                             # gt
-                            $res = $qb->expr()->gt('n.' .$key, $value[1]);
-                            unset($criteria[$key]);
+                            $res = $qb->expr()->gt($prefix.$key, ':'.$baseKey);
                             break;
                         case 'BETWEEN':
-                            $res = $qb->expr()->between('n.' .$key, $value[1], $value[2]);
-                            unset($criteria[$key]);
+                            $res = $qb->expr()->between(
+                                $prefix.$key,
+                                ':'.$baseKey.'_1',
+                                ':'.$baseKey.'_2'
+                            );
                             break;
                         case 'LIKE':
-                            $res = $qb->expr()->like('n.' .$key, $qb->expr()->literal($value[1]));
-                            unset($criteria[$key]);
+                            $res = $qb->expr()->like($prefix.$key, $qb->expr()->literal($value[1]));
                             break;
                         default:
-                            $res = $qb->expr()->in('n.' .$key, $value);
+                            $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
                             break;
                     }
                 } else {
-                    $res = $qb->expr()->in('n.' .$key, $value);
+                    $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
                 }
 
             } elseif (is_bool($value)) {
-               $res = $qb->expr()->eq('n.' .$key, $value);
+               $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
             }  elseif ('NOT NULL' == $value) {
-                $res = $qb->expr()->isNotNull('n.' .$key);
-                unset($criteria[$key]);
+                $res = $qb->expr()->isNotNull($prefix.$key);
             } elseif (isset($value)) {
-                $res = $qb->expr()->eq('n.' .$key, $value);
+                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
             } elseif (null === $value) {
-                $res = $qb->expr()->isNull('n.' .$key);
-                unset($criteria[$key]);
+                $res = $qb->expr()->isNull($prefix.$key);
             }
 
             $qb->andWhere($res);
         }
     }
+    /**
+     *
+     *
+     * @param array $criteria
+     * @param Query $finalQuery
+     */
+    protected function applyFilterByCriteria(&$criteria, &$finalQuery)
+    {
+        /*
+         * Reimplementing findBy features…
+         */
+        foreach ($criteria as $key => $value) {
+
+            if ($key == "tags") {
+                continue;
+            }
+
+            // Dots are forbidden in field definitions
+            $key = str_replace('.','_',$key);
+
+            if (is_object($value) && $value instanceof PersistableInterface) {
+                $finalQuery->setParameter($key, $value->getId());
+            } elseif (is_array($value)) {
+
+                if (count($value) > 1) {
+                    switch ($value[0]) {
+                        case '<=':
+                        case '<':
+                        case '>=':
+                        case '>':
+                            $finalQuery->setParameter($key, $value[1]);
+                            break;
+                        case 'BETWEEN':
+                            $finalQuery->setParameter($key.'_1', $value[1]);
+                            $finalQuery->setParameter($key.'_2', $value[2]);
+                            break;
+                        case 'LIKE':
+                            // param is setted in filterBy
+                            break;
+                        default:
+                            $finalQuery->setParameter($key, $value);
+                            break;
+                    }
+                } else {
+                    $finalQuery->setParameter($key, $value);
+                }
+
+            } elseif (is_bool($value)) {
+                $finalQuery->setParameter($key, $value);
+            }  elseif ('NOT NULL' == $value) {
+                // param is not needed
+            } elseif (isset($value)) {
+                $finalQuery->setParameter($key, $value);
+            } elseif (null === $value) {
+                // param is not needed
+            }
+        }
+    }
+
     /**
      * Bind tag parameter to final query
      *
@@ -195,27 +272,37 @@ class NodeRepository extends EntityRepository
         $qb->add('select', 'n, ns')
            ->add('from', $this->getEntityName() . ' n');
 
-        if (null !== $translation) {
-            /*
-             * With a given translation
-             */
-            $qb->innerJoin(
-                'n.nodeSources',
-                'ns',
-                'WITH',
-                'ns.translation = :translation'
-            );
-        } else {
-            /*
-             * With a null translation, just take the default one.
-             */
+        if (isset($criteria['translation']) ||
+            isset($criteria['translation.locale']) ||
+            isset($criteria['translation.id'])) {
+
             $qb->innerJoin('n.nodeSources', 'ns');
-            $qb->innerJoin(
-                'ns.translation',
-                't',
-                'WITH',
-                't.defaultTranslation = true'
-            );
+            $qb->innerJoin('ns.translation', 't');
+
+        } else {
+
+            if (null !== $translation) {
+                /*
+                 * With a given translation
+                 */
+                $qb->innerJoin(
+                    'n.nodeSources',
+                    'ns',
+                    'WITH',
+                    'ns.translation = :translation'
+                );
+            } else {
+                /*
+                 * With a null translation, just take the default one.
+                 */
+                $qb->innerJoin('n.nodeSources', 'ns');
+                $qb->innerJoin(
+                    'ns.translation',
+                    't',
+                    'WITH',
+                    't.defaultTranslation = true'
+                );
+            }
         }
 
         /*
@@ -332,6 +419,7 @@ class NodeRepository extends EntityRepository
 
         $finalQuery = $query->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
+        $this->applyFilterByCriteria($criteria, $finalQuery);
 
         try {
             return $finalQuery->getResult();
@@ -366,7 +454,9 @@ class NodeRepository extends EntityRepository
         );
 
         $finalQuery = $query->getQuery();
+
         $this->applyFilterByTag($criteria, $finalQuery);
+        $this->applyFilterByCriteria($criteria, $finalQuery);
 
         try {
             return $finalQuery->getSingleResult();
@@ -396,6 +486,7 @@ class NodeRepository extends EntityRepository
 
         $finalQuery = $query->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
+        $this->applyFilterByCriteria($criteria, $finalQuery);
 
         try {
             return $finalQuery->getSingleScalarResult();

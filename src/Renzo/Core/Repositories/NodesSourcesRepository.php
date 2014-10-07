@@ -96,11 +96,18 @@ class NodesSourcesRepository extends EntityRepository
          */
         foreach ($criteria as $key => $value) {
 
+            if ($key == "tags") {
+                continue;
+            }
+
             /*
              * compute prefix for
              * filtering node relation fields
              */
             $prefix = 'ns.';
+
+            // Dots are forbidden in field definitions
+            $baseKey = str_replace('.','_',$key);
 
             if (false !== strpos($key, 'node.')) {
                 if (!$joinedNode) {
@@ -115,12 +122,9 @@ class NodesSourcesRepository extends EntityRepository
                 $key = str_replace('node.', '', $key);
             }
 
-            if ($key == "tags") {
-                continue;
-            }
 
             if (is_object($value) && $value instanceof PersistableInterface) {
-                $res = $qb->expr()->eq($prefix.$key, $value->getId());
+                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
             } elseif (is_array($value)) {
                 /*
                  * array
@@ -136,46 +140,112 @@ class NodesSourcesRepository extends EntityRepository
                 if (count($value) > 1) {
                     switch ($value[0]) {
                         case '<=':
-                            # lte
-                            $res = $qb->expr()->lte($prefix.$key, $value[1]);
+                            # lte -> $value[1]
+                            $res = $qb->expr()->lte($prefix.$key, ':'.$baseKey);
                             break;
                         case '<':
-                            # lt
-                            $res = $qb->expr()->lt($prefix.$key, $value[1]);
+                            # lt -> $value[1]
+                            $res = $qb->expr()->lt($prefix.$key, ':'.$baseKey);
                             break;
                         case '>=':
-                            # gte
-                            $res = $qb->expr()->gte($prefix.$key, $value[1]);
+                            # gte -> $value[1]
+                            $res = $qb->expr()->gte($prefix.$key, ':'.$baseKey);
                             break;
                         case '>':
-                            # gt
-                            $res = $qb->expr()->gt($prefix.$key, $value[1]);
+                            # gt -> $value[1]
+                            $res = $qb->expr()->gt($prefix.$key, ':'.$baseKey);
                             break;
                         case 'BETWEEN':
-                            $res = $qb->expr()->between($prefix.$key, $value[1], $value[2]);
+                            $res = $qb->expr()->between(
+                                $prefix.$key,
+                                ':'.$baseKey.'_1',
+                                ':'.$baseKey.'_2'
+                            );
                             break;
                         case 'LIKE':
-                            $res = $qb->expr()->like($prefix.$key, $qb->expr()->literal($value[1]));
+                            $res = $qb->expr()->like(
+                                $prefix.$key,
+                                $qb->expr()->literal($value[1])
+                            );
                             break;
                         default:
-                            $res = $qb->expr()->in($prefix.$key, $value);
+                            $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
                             break;
                     }
                 } else {
-                    $res = $qb->expr()->in($prefix.$key, $value);
+                    $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
                 }
 
             } elseif (is_bool($value)) {
-               $res = $qb->expr()->eq($prefix.$key, $value);
+               $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
             }  elseif ($value == 'NOT NULL') {
                 $res = $qb->expr()->isNotNull($prefix.$key);
             } elseif (isset($value)) {
-                $res = $qb->expr()->eq($prefix.$key, $value);
+                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
             } elseif (null === $value) {
                 $res = $qb->expr()->isNull($prefix.$key);
             }
 
             $qb->andWhere($res);
+        }
+    }
+
+    /**
+     *
+     * @param array $criteria
+     * @param Query $qb
+     *
+     */
+    protected function applyFilterByCriteria(&$criteria, &$finalQuery)
+    {
+        /*
+         * Reimplementing findBy features…
+         */
+        foreach ($criteria as $key => $value) {
+
+            if ($key == "tags") {
+                continue;
+            }
+
+            // Dots are forbidden in field definitions
+            $key = str_replace('.','_',$key);
+
+            if (is_object($value) && $value instanceof PersistableInterface) {
+                $finalQuery->setParameter($key, $value->getId());
+            } elseif (is_array($value)) {
+
+                if (count($value) > 1) {
+                    switch ($value[0]) {
+                        case '<=':
+                        case '<':
+                        case '>=':
+                        case '>':
+                            $finalQuery->setParameter($key, $value[1]);
+                            break;
+                        case 'BETWEEN':
+                            $finalQuery->setParameter($key.'_1', $value[1]);
+                            $finalQuery->setParameter($key.'_2', $value[2]);
+                            break;
+                        case 'LIKE':
+                            // no need to bind a parameter here
+                            break;
+                        default:
+                            $finalQuery->setParameter($key, $value);
+                            break;
+                    }
+                } else {
+                    $finalQuery->setParameter($key, $value);
+                }
+
+            } elseif (is_bool($value)) {
+               $finalQuery->setParameter($key, $value);
+            }  elseif ($value == 'NOT NULL') {
+                // no need to bind a parameter here
+            } elseif (isset($value)) {
+                $finalQuery->setParameter($key, $value);
+            } elseif (null === $value) {
+                // no need to bind a parameter here
+            }
         }
     }
 
@@ -265,6 +335,7 @@ class NodesSourcesRepository extends EntityRepository
 
         $finalQuery = $qb->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
+        $this->applyFilterByCriteria($criteria, $finalQuery);
 
         try {
             return $finalQuery->getResult();
@@ -300,6 +371,7 @@ class NodesSourcesRepository extends EntityRepository
 
         $finalQuery = $qb->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
+        $this->applyFilterByCriteria($criteria, $finalQuery);
 
 
         try {
