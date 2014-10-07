@@ -11,7 +11,15 @@
 
 namespace RZ\Renzo\CMS\Utils;
 
+use RZ\Renzo\Core\Kernel;
+
 abstract class AbstractApi {
+
+    protected $context;
+
+    function __construct() {
+        $this->context = Kernel::getService('securityContext');
+    }
 
     abstract public function getRepository();
 

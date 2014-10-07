@@ -21,8 +21,8 @@ class NodeTypeApi extends AbstractApi
         return $result;
     }
 
-    public function getOneBy( array $criteria) {
-        $result = Kernel::getService('em')->getRepository("RZ\Renzo\Core\Entities\NodeType")->findOneBy($criteria);
+    public function getOneBy( array $criteria, array $order = null) {
+        $result = Kernel::getService('em')->getRepository("RZ\Renzo\Core\Entities\NodeType")->findOneBy($criteria, $order);
         return $result;
     }
 

@@ -16,13 +16,13 @@ class NodeApi extends AbstractApi
         return Kernel::getService('em')->getRepository("RZ\Renzo\Core\Entities\Node");
     }
 
-    public function getBy( array $criteria, array $order = null, $limit = null, $offset = null ) {
-        $result = Kernel::getService('em')->getRepository("RZ\Renzo\Core\Entities\Node")->findBy($criteria, $order, $limit, $offset);
+    public function getBy( array $criteria, array $order = null, $limit = null, $offset = null) {
+        $result = Kernel::getService('em')->getRepository("RZ\Renzo\Core\Entities\Node")->findBy($criteria, $order, $limit, $offset, null, $this->context);
         return $result;
     }
 
-    public function getOneBy( array $criteria) {
-        $result = Kernel::getService('em')->getRepository("RZ\Renzo\Core\Entities\Node")->findOneBy($criteria);
+    public function getOneBy( array $criteria, array $order = null) {
+        $result = Kernel::getService('em')->getRepository("RZ\Renzo\Core\Entities\Node")->findOneBy($criteria, $order, null, $this->context);
         return $result;
     }
 
