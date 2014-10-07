@@ -48,7 +48,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
 {
     const CMS_VERSION =         'alpha';
     const SECURITY_DOMAIN =     'rzcms_domain';
-    const INSTALL_CLASSNAME =   'Themes\\Install\\InstallApp';
+    const INSTALL_CLASSNAME =   '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild =   null;
     private static $instance =  null;

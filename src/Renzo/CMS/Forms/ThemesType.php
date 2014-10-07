@@ -50,7 +50,7 @@ class ThemesType extends AbstractType
             $classPath = RENZO_ROOT.'/themes/'.$file->getRelativePathname();
             include_once $classPath;
             $namespace = str_replace('/', '\\', $file->getRelativePathname());
-            $classname = 'Themes\\'.str_replace('.php', '', $namespace);
+            $classname = '\Themes\\'.str_replace('.php', '', $namespace);
             ob_end_clean();
 
             /*
