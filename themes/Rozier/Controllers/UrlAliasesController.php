@@ -63,7 +63,7 @@ class UrlAliasesController extends RozierApp
 
         $source = $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
-                ->findOneBy(array('translation'=>$translation, 'node'=>array('id'=>(int) $nodeId)));
+                ->findOneBy(array('translation'=>$translation, 'node.id'=>(int) $nodeId));
 
         $node = $source->getNode();
 

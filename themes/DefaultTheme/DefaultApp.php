@@ -51,7 +51,6 @@ class DefaultApp extends FrontendController
      * {@inheritdoc}
      */
     protected static $specificNodesControllers = array(
-        'home',
         // Put here your nodes which need a specific controller
         // instead of a node-type controller
     );
@@ -67,10 +66,16 @@ class DefaultApp extends FrontendController
      */
     public function homeAction(Request $request, Node $node = null, Translation $translation = null)
     {
+
         if ($node === null) {
-            $node = Kernel::getService('em')
+            $node = $this->getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Node')
-                    ->contextualFindOneBy($this->getSecurityContext(), array('home'=>true));
+                    ->findOneBy(
+                        array('home'=>true),
+                        null,
+                        $translation,
+                        $this->getSecurityContext()
+                    );
         }
         $this->prepareThemeAssignation($node, $translation);
 
@@ -99,7 +104,8 @@ class DefaultApp extends FrontendController
     {
         $this->storeNodeAndTranslation($node, $translation);
         $this->assignation['navigation'] = $this->assignMainNavigation();
-        $this->assignation['home'] = $this->em()
+
+        $this->assignation['home'] = $this->getService('em')
                                           ->getRepository('RZ\Renzo\Core\Entities\Node')
                                           ->findHomeWithTranslation($translation);
 
@@ -117,19 +123,19 @@ class DefaultApp extends FrontendController
      */
     protected function assignMainNavigation()
     {
-        $parent = $this->em()
-            ->getRepository('RZ\Renzo\Core\Entities\Node')
-            ->contextualFindOneBy($this->getSecurityContext(), array('home'=>true));
-
         if ($this->translation === null) {
-            $this->translation = Kernel::getService('em')
+            $this->translation = $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                 ->findOneBy(
                     array('defaultTranslation'=>true)
                 );
         }
+        $parent = $this->getService('em')
+                       ->getRepository('RZ\Renzo\Core\Entities\Node')
+                       ->findHomeWithTranslation($this->translation);
+
         if ($parent !== null) {
-            return $this->em()
+            return $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Node')
                 ->findByParentWithTranslation(
                     $this->translation,
