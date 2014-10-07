@@ -21,7 +21,7 @@ use RZ\Renzo\Core\Services\ConfigurationServiceProvider;
 use RZ\Renzo\Core\Services\SolrServiceProvider;
 use RZ\Renzo\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Renzo\Core\Services\TwigServiceProvider;
-
+use RZ\Renzo\Core\Services\EntityApiServiceProvider;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -156,6 +156,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $container->register(new SolrServiceProvider());
         $container->register(new EmbedDocumentsServiceProvider());
         $container->register(new TwigServiceProvider());
+        $container->register(new EntityApiServiceProvider());
     }
 
     /**
