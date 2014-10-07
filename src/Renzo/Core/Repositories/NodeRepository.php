@@ -33,7 +33,7 @@ class NodeRepository extends EntityRepository
      * @param array        $criteria
      * @param QueryBuilder $qb
      */
-    protected function filterByTag(array &$criteria, &$qb)
+    protected function filterByTag(&$criteria, &$qb)
     {
         if (in_array('tags', array_keys($criteria))) {
 
@@ -42,7 +42,7 @@ class NodeRepository extends EntityRepository
                     'n.tags',
                     'tg',
                     'WITH',
-                    'tg.id IN :tags'
+                    'tg.id IN (:tags)'
                 );
             } else {
                 $qb->innerJoin(
@@ -56,12 +56,20 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * Reimplementing findBy features…
+     * Reimplementing findBy features… with extra things
+     *
+     * * key => array('<=', $value)
+     * * key => array('<', $value)
+     * * key => array('>=', $value)
+     * * key => array('>', $value)
+     * * key => array('BETWEEN', $value, $value)
+     * * key => array('LIKE', $value)
+     * * key => 'NOT NULL'
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
      */
-    protected function filterByCriteria(array &$criteria, &$qb)
+    protected function filterByCriteria(&$criteria, &$qb)
     {
         /*
          * Reimplementing findBy features…
@@ -75,13 +83,65 @@ class NodeRepository extends EntityRepository
             if (is_object($value) && $value instanceof PersistableInterface) {
                 $res = $qb->expr()->eq('n.' .$key, $value->getId());
             } elseif (is_array($value)) {
-                $res = $qb->expr()->in('n.' .$key, $value);
+                /*
+                 * array
+                 *
+                 * ['<=', $value]
+                 * ['<', $value]
+                 * ['>=', $value]
+                 * ['>', $value]
+                 * ['BETWEEN', $value, $value]
+                 * ['LIKE', $value]
+                 * in [$value, $value]
+                 */
+                if (count($value) > 1) {
+                    switch ($value[0]) {
+                        case '<=':
+                            # lte
+                            $res = $qb->expr()->lte('n.' .$key, $value[1]);
+                            unset($criteria[$key]);
+                            break;
+                        case '<':
+                            # lt
+                            $res = $qb->expr()->lt('n.' .$key, $value[1]);
+                            unset($criteria[$key]);
+                            break;
+                        case '>=':
+                            # gte
+                            $res = $qb->expr()->gte('n.' .$key, $value[1]);
+                            unset($criteria[$key]);
+                            break;
+                        case '>':
+                            # gt
+                            $res = $qb->expr()->gt('n.' .$key, $value[1]);
+                            unset($criteria[$key]);
+                            break;
+                        case 'BETWEEN':
+                            $res = $qb->expr()->between('n.' .$key, $value[1], $value[2]);
+                            unset($criteria[$key]);
+                            break;
+                        case 'LIKE':
+                            $res = $qb->expr()->like('n.' .$key, $qb->expr()->literal($value[1]));
+                            unset($criteria[$key]);
+                            break;
+                        default:
+                            $res = $qb->expr()->in('n.' .$key, $value);
+                            break;
+                    }
+                } else {
+                    $res = $qb->expr()->in('n.' .$key, $value);
+                }
+
             } elseif (is_bool($value)) {
-                $res = $qb->expr()->eq('n.' .$key, (boolean) $value);
+               $res = $qb->expr()->eq('n.' .$key, $value);
+            }  elseif ('NOT NULL' == $value) {
+                $res = $qb->expr()->isNotNull('n.' .$key);
+                unset($criteria[$key]);
             } elseif (isset($value)) {
                 $res = $qb->expr()->eq('n.' .$key, $value);
             } elseif (null === $value) {
                 $res = $qb->expr()->isNull('n.' .$key);
+                unset($criteria[$key]);
             }
 
             $qb->andWhere($res);
@@ -103,6 +163,7 @@ class NodeRepository extends EntityRepository
             } elseif (is_integer($criteria['tags'])) {
                 $finalQuery->setParameter('tags', (int) $criteria['tags']);
             }
+            unset($criteria['tags']);
         }
     }
 
@@ -247,6 +308,8 @@ class NodeRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
+     * @param RZ\Renzo\Core\Entities\Translation|null $translation
+     * @param SecurityContext|null                    $securityContext
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
@@ -254,16 +317,17 @@ class NodeRepository extends EntityRepository
         array $criteria,
         array $orderBy = null,
         $limit = null,
-        $offset = null
+        $offset = null,
+        Translation $translation = null,
+        SecurityContext $securityContext = null
     ) {
-
         $query = $this->getContextualQueryWithTranslation(
             $criteria,
             $orderBy,
             $limit,
             $offset,
-            null,
-            null
+            $translation,
+            $securityContext
         );
 
         $finalQuery = $query->getQuery();
@@ -271,6 +335,41 @@ class NodeRepository extends EntityRepository
 
         try {
             return $finalQuery->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+    /**
+     * Just like the findOneBy method but with relational criteria.
+     *
+     * @param array                                   $criteria
+     * @param array|null                              $orderBy
+     * @param RZ\Renzo\Core\Entities\Translation|null $translation
+     * @param SecurityContext|null                    $securityContext
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function findOneBy(
+        array $criteria,
+        array $orderBy = null,
+        Translation $translation = null,
+        SecurityContext $securityContext = null
+    ) {
+
+        $query = $this->getContextualQueryWithTranslation(
+            $criteria,
+            $orderBy,
+            1,
+            0,
+            $translation,
+            $securityContext
+        );
+
+        $finalQuery = $query->getQuery();
+        $this->applyFilterByTag($criteria, $finalQuery);
+
+        try {
+            return $finalQuery->getSingleResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
             return null;
         }
@@ -328,38 +427,14 @@ class NodeRepository extends EntityRepository
         Translation $translation = null,
         SecurityContext $securityContext = null
     ) {
-        if (null !== $translation ||
-            null !== $securityContext) {
-            $query = $this->getContextualQueryWithTranslation(
-                $criteria,
-                $orderBy,
-                $limit,
-                $offset,
-                $translation,
-                $securityContext
-            );
-
-            $finalQuery = $query->getQuery();
-
-            if (null !== $translation) {
-                $finalQuery->setParameter('translation', $translation);
-            }
-
-            $this->applyFilterByTag($criteria, $finalQuery);
-
-            try {
-                return $finalQuery->getResult();
-            } catch (\Doctrine\ORM\NoResultException $e) {
-                return null;
-            }
-
-        } else {
-            /*
-             * If no translation nor securityContext found,
-             * just use vanilly findBy method.
-             */
-            return $this->findBy($criteria, $orderBy, $limit, $offset);
-        }
+        return $this->findBy(
+            $criteria,
+            $orderBy,
+            $limit,
+            $offset,
+            $translation,
+            $securityContext
+        );
     }
 
     /**
@@ -380,89 +455,12 @@ class NodeRepository extends EntityRepository
         Translation $translation = null,
         SecurityContext $securityContext = null
     ) {
-        if (null !== $translation ||
-            null !== $securityContext) {
-            $query = $this->getContextualQueryWithTranslation(
-                $criteria,
-                null,
-                1,
-                0,
-                $translation,
-                $securityContext
-            );
-
-            $finalQuery = $query->getQuery();
-
-            if (null !== $translation) {
-                $finalQuery->setParameter('translation', $translation);
-            }
-
-            $this->applyFilterByTag($criteria, $finalQuery);
-
-            try {
-                return $finalQuery->getSingleResult();
-            } catch (\Doctrine\ORM\NoResultException $e) {
-                return null;
-            }
-
-        } else {
-            /*
-             * If no translation nor securityContext found,
-             * just use vanilla findOneBy method.
-             */
-            return $this->findOneBy($criteria);
-        }
-    }
-
-    /**
-     * A secure findBy with which user must be a backend user
-     * to see unpublished nodes.
-     *
-     * @param SecurityContext $securityContext
-     * @param array           $criteria
-     * @param array           $orderBy
-     * @param integer         $limit
-     * @param integer         $offset
-     *
-     * @return Doctrine\Common\Collections\ArrayCollection
-     */
-    public function contextualFindBy(
-        SecurityContext $securityContext,
-        array $criteria,
-        array $orderBy = null,
-        $limit = null,
-        $offset = null
-    ) {
-
-        if (!$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $criteria['published'] = true;
-        }
-
-        return parent::findBy(
+        return $this->findOneBy(
             $criteria,
-            $orderBy,
-            $limit,
-            $offset
+            null,
+            $translation,
+            $securityContext
         );
-    }
-
-    /**
-     * A secure findOneBy with which user must be a backend user
-     * to see unpublished nodes.
-     *
-     * @param SecurityContext $securityContext
-     * @param array           $criteria
-     *
-     * @return Doctrine\Common\Collections\ArrayCollection
-     */
-    public function contextualFindOneBy(SecurityContext $securityContext, array $criteria)
-    {
-
-        if (!$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $criteria['published'] = true;
-        }
-
-        return parent::findOneBy($criteria);
     }
 
     /**
@@ -508,8 +506,10 @@ class NodeRepository extends EntityRepository
      *
      * @return RZ\Renzo\Core\Entities\Node|null
      */
-    public function findWithDefaultTranslation($nodeId, SecurityContext $securityContext = null)
-    {
+    public function findWithDefaultTranslation(
+        $nodeId,
+        SecurityContext $securityContext = null
+    ) {
 
         $txtQuery = 'SELECT n, ns FROM RZ\Renzo\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
@@ -877,7 +877,7 @@ class NodeRepository extends EntityRepository
             if (is_array($value)) {
                 $res = $qb->expr()->in($alias . '.' .$key, $value);
             } elseif (is_bool($value)) {
-                $res = $qb->expr()->eq($alias . '.' .$key, (int) $value);
+                $res = $qb->expr()->eq($alias . '.' .$key, (boolean) $value);
             } else {
                 $res = $qb->expr()->eq($alias . '.' .$key, $value);
             }

@@ -89,7 +89,7 @@
 	 #}
 	{% if not node.isHidingChildren %}
 		{% for subNode in nodeTree.getChildrenNodes(node) %}
-			{% include 'widgets/nodeTree/singleNode.html.twig' with {"node":subNode, "parent":node, "nodeTree":nodeTree} %}
+			{% include 'widgets/nodeTree/singleNode.html.twig' with {"node":subNode, "parent":node, "nodeTree":nodeTree} only %}
 		{% endfor %}
 	{% endif %}
 	</ul>

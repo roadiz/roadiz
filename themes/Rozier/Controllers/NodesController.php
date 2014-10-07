@@ -249,7 +249,7 @@ class NodesController extends RozierApp
                 ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
                 ->findOneBy(array(
                     'translation'=>$translation,
-                    'node'=>array('id'=>(int) $nodeId)
+                    'node.id'=>(int) $nodeId
                 ));
 
             if (null !== $source &&
