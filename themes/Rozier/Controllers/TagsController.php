@@ -88,16 +88,16 @@ class TagsController extends RozierApp
 
         if (null !== $translation) {
 
-            // $tag = $this->getService('em')
-            //     ->getRepository('RZ\Renzo\Core\Entities\Tag')
-            //     ->findWithTranslation((int) $tagId, $translation);
-
             $tag = $this->getService('em')
-                        ->getRepository('RZ\Renzo\Core\Entities\Tag')
-                        ->findOneBy(array(
-                            'id' => (int) $tagId,
-                            'translation' => $translation
-                        ));
+                ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                ->findWithTranslation((int) $tagId, $translation);
+
+            // $tag = $this->getService('em')
+            //             ->getRepository('RZ\Renzo\Core\Entities\Tag')
+            //             ->findOneBy(array(
+            //                 'id' => (int) $tagId,
+            //                 'translation' => $translation
+            //             ));
 
             echo '<pre>';
             \Doctrine\Common\Util\Debug::dump($translation,1);

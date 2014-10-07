@@ -422,9 +422,9 @@ class TagRepository extends EntityRepository
     public function findWithTranslation($tagId, Translation $translation)
     {
         $query = $this->_em->createQuery('
-            SELECT tg, tt FROM RZ\Renzo\Core\Entities\Tag tg
-            INNER JOIN tg.translatedTags tt
-            WHERE tg.id = :tag_id
+            SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t
+            INNER JOIN t.translatedTags tt
+            WHERE t.id = :tag_id
             AND tt.translation = :translation')
                         ->setParameter('tag_id', (int) $tagId)
                         ->setParameter('translation', $translation);
