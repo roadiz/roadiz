@@ -19,6 +19,14 @@
                 <source>_password</source>
                 <target />
             </trans-unit>
+            <trans-unit id="password">
+                <source>password</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="password.verify">
+                <source>password.verify</source>
+                <target />
+            </trans-unit>
 
             <trans-unit id="delete">
                 <source>delete</source>
@@ -252,6 +260,14 @@
                 <target />
             </trans-unit>
 
+            <trans-unit id="choose.language">
+                <source>choose.language</source>
+                <target />
+            </trans-unit>
+            <trans-unit id="choose.a.language">
+                <source>choose.a.language</source>
+                <target />
+            </trans-unit>
 
         </body>
     </file>

@@ -39,6 +39,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Validator\Validation;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
 
 use Doctrine\ORM\Events;
 use Doctrine\ORM\EntityManager;
@@ -54,25 +57,6 @@ class InstallApp extends AppController
     protected static $themeCopyright = 'REZO ZERO';
     protected static $themeDir =       'Install';
     protected static $backendTheme =    false;
-
-
-    /**
-     * Check if twig cache must be cleared
-     *
-     * @return void
-     */
-    public function handleTwigCache()
-    {
-        /*
-         * No twig cache on install
-         */
-        try {
-            $fs = new Filesystem();
-            $fs->remove(array($this->getCacheDirectory()));
-        } catch (IOExceptionInterface $e) {
-            echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
-        }
-    }
 
     /**
      * @return array $assignation
@@ -99,6 +83,18 @@ class InstallApp extends AppController
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function initializeTranslator()
+    {
+        $this->getKernel()->getRequest()->setLocale(
+            $this->getKernel()->getRequest()->getSession()->get('_locale', 'en')
+        );
+
+        return parent::initializeTranslator();
+    }
+
+    /**
      * Welcome screen.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
@@ -109,6 +105,28 @@ class InstallApp extends AppController
      */
     public function indexAction(Request $request)
     {
+        $form = $this->buildLanguageForm($request);
+        $form->handleRequest();
+
+        if ($form->isValid()) {
+
+            $locale = $form->getData()['language'];
+            $request->setLocale($locale);
+            $this->getService('session')->set('_locale', $locale);
+            /*
+             * Force redirect to avoid resending form when refreshing page
+             */
+            $response = new RedirectResponse(
+                $this->getService('urlGenerator')->generate(
+                    'installHomePage'
+                )
+            );
+            $response->prepare($request);
+            return $response->send();
+        }
+
+        $this->assignation['form'] = $form->createView();
+
         return new Response(
             $this->getTwig()->render('steps/hello.html.twig', $this->assignation),
             Response::HTTP_OK,
@@ -530,6 +548,35 @@ class InstallApp extends AppController
             Response::HTTP_OK,
             array('content-type' => 'text/html')
         );
+    }
+
+    /**
+     * Build forms
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Themes\Install\Controllers\Configuration $conf
+     *
+     * @return Symfony\Component\Form\Forms
+     */
+    protected function buildLanguageForm(Request $request)
+    {
+        $builder = $this->getService('formFactory')
+            ->createBuilder('form')
+            ->add('language', 'choice', array(
+                'choices' => array(
+                    'en'=>'English',
+                    'fr'=>'Français'
+                ),
+                'constraints' => array(
+                    new NotBlank()
+                ),
+                'label'=>'choose.a.language',
+                'attr' => array(
+                    "id" => "language"
+                ),
+                'data' => $request->getLocale()
+            ));
+
+        return $builder->getForm();
     }
 
     /**
