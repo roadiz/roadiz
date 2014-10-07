@@ -296,7 +296,18 @@ class NodesSourcesRepository extends EntityRepository
         // Add ordering
         if (null !== $orderBy) {
             foreach ($orderBy as $key => $value) {
-                $qb->addOrderBy('ns.'.$key, $value);
+
+                if (false !== strpos($key, 'node.')) {
+                    if (!$joinedNode) {
+                        $qb->innerJoin('ns.node', 'n');
+                    }
+                    $simpleKey = str_replace('node.', '', $key);
+
+                    $qb->addOrderBy('n.'.$simpleKey, $value);
+
+                } else {
+                    $qb->addOrderBy('ns.'.$key, $value);
+                }
             }
         }
 
@@ -342,6 +353,7 @@ class NodesSourcesRepository extends EntityRepository
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
 
+        //var_dump($finalQuery->getDQL());exit();
         try {
             return $finalQuery->getResult();
         } catch (\Doctrine\ORM\Query\QueryException $e) {
