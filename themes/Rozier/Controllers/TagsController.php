@@ -86,11 +86,25 @@ class TagsController extends RozierApp
                     ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
         }
 
-        if ($translation !== null) {
+        if (null !== $translation) {
+
+            // $tag = $this->getService('em')
+            //     ->getRepository('RZ\Renzo\Core\Entities\Tag')
+            //     ->findWithTranslation((int) $tagId, $translation);
 
             $tag = $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Tag')
-                ->findWithTranslation((int) $tagId, $translation);
+                        ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                        ->findOneBy(array(
+                            'id' => (int) $tagId,
+                            'translation' => $translation
+                        ));
+
+            echo '<pre>';
+            \Doctrine\Common\Util\Debug::dump($translation,1);
+            echo '</pre>';
+            echo '<pre>';
+            \Doctrine\Common\Util\Debug::dump($tag->getTranslatedTags()->first(), 2);
+            echo '</pre>';exit();
 
             /*
              * If translation does not exist, we created it.
@@ -137,7 +151,9 @@ class TagsController extends RozierApp
             if ($form->isValid()) {
                 $this->editTag($form->getData(), $tag);
 
-                $msg = $this->getTranslator()->trans('tag.%name%.updated', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
+                $msg = $this->getTranslator()->trans('tag.%name%.updated', array(
+                    '%name%'=>$tag->getTranslatedTags()->first()->getName()
+                ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
                 /*

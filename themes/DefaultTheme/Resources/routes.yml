@@ -2,6 +2,11 @@
 homePage:
     path:     /
     defaults: { _controller: Themes\DefaultTheme\DefaultApp::homeAction }
+homePageLocale:
+    path:     /{_locale}
+    defaults: { _controller: Themes\DefaultTheme\DefaultApp::homeAction, _locale: fr }
+    requirements:
+        _locale: en|fr
 feedRSS:
     path:     /feed
     defaults: { _controller: Themes\DefaultTheme\Controllers\FeedController::indexAction }

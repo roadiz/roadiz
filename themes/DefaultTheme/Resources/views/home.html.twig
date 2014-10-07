@@ -3,7 +3,7 @@
 
 <h1>Hello World !</h1>
 {% if node %}
-<p>This is node : {{ node.getNodeName }}</p>
+<p>This is node : {{ node.nodeSources.first.title }}</p>
 {% endif %}
 {% if translation %}
 <p>This is translation : {{ translation.getName }}</p>

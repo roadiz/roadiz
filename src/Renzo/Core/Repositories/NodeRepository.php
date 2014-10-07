@@ -250,33 +250,30 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * Create a securized query with node.published = true if user is
-     * not a Backend user and if securityContext is defined.
+     * Bind translation parameter to final query
      *
-     * This method allows to pre-filter Nodes with a given translation.
-     *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
-     * @param integer|null                            $limit
-     * @param integer|null                            $offset
-     * @param RZ\Renzo\Core\Entities\Translation|null $securityContext
-     * @param SecurityContext|null                    $securityContext
-     *
-     * @return QueryBuilder
+     * @param array $criteria
+     * @param Query $finalQuery
      */
-    protected function getContextualQueryWithTranslation(
-        array $criteria,
-        array $orderBy = null,
-        $limit = null,
-        $offset = null,
-        Translation $translation = null,
-        SecurityContext $securityContext = null
+    protected function applyTranslationByTag(
+        array &$criteria,
+        &$finalQuery,
+        &$translation=null
     ) {
+        if (null !== $translation) {
+           $finalQuery->setParameter('translation', $translation);
+        }
+    }
 
-        $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'n, ns')
-           ->add('from', $this->getEntityName() . ' n');
-
+    /**
+     * Create filters according to any translation criteria OR argument.
+     *
+     * @param array        $criteria
+     * @param QueryBuilder $qb
+     * @param Translation  $translation
+     */
+    protected function filterByTranslation(&$criteria, &$qb, &$translation = null)
+    {
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id'])) {
@@ -309,13 +306,10 @@ class NodeRepository extends EntityRepository
                 );
             }
         }
+    }
 
-        /*
-         * Filtering by tag
-         */
-        $this->filterByTag($criteria, $qb);
-        $this->filterByCriteria($criteria, $qb);
-
+    protected function filterBySecurityContext(&$criteria, &$qb, &$securityContext = null)
+    {
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
             /*
@@ -323,6 +317,44 @@ class NodeRepository extends EntityRepository
              */
             $qb->andWhere($qb->expr()->eq('n.published', true));
         }
+    }
+
+    /**
+     * Create a securized query with node.published = true if user is
+     * not a Backend user and if securityContext is defined.
+     *
+     * This method allows to pre-filter Nodes with a given translation.
+     *
+     * @param array                                   $criteria
+     * @param array|null                              $orderBy
+     * @param integer|null                            $limit
+     * @param integer|null                            $offset
+     * @param RZ\Renzo\Core\Entities\Translation|null $securityContext
+     * @param SecurityContext|null                    $securityContext
+     *
+     * @return QueryBuilder
+     */
+    protected function getContextualQueryWithTranslation(
+        array $criteria,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null,
+        Translation $translation = null,
+        SecurityContext $securityContext = null
+    ) {
+
+        $qb = $this->_em->createQueryBuilder();
+        $qb->add('select', 'n, ns')
+           ->add('from', $this->getEntityName() . ' n');
+
+        $this->filterByTranslation($criteria, $qb, $translation);
+
+        /*
+         * Filtering by tag
+         */
+        $this->filterByTag($criteria, $qb);
+        $this->filterByCriteria($criteria, $qb);
+        $this->filterBySecurityContext($criteria, $qb, $securityContext);
 
 
         // Add ordering
@@ -363,33 +395,13 @@ class NodeRepository extends EntityRepository
         $qb->add('select', 'count(n.id)')
            ->add('from', $this->getEntityName() . ' n');
 
-        if (null !== $translation) {
-            /*
-             * With a given translation
-             */
-            $qb->innerJoin(
-                'n.nodeSources',
-                'ns',
-                'WITH',
-                'ns.translation = :translation'
-            );
-        } else {
-            /*
-             * With a null translation, just take the default one.
-             */
-            $qb->innerJoin('n.nodeSources', 'ns');
-            $qb->innerJoin(
-                'ns.translation',
-                't',
-                'WITH',
-                't.defaultTranslation = true'
-            );
-        }
+        $this->filterByTranslation($criteria, $qb, $translation);
         /*
          * Filtering by tag
          */
         $this->filterByTag($criteria, $qb);
         $this->filterByCriteria($criteria, $qb);
+        $this->filterBySecurityContext($criteria, $qb, $securityContext);
 
         return $qb;
     }
@@ -425,6 +437,7 @@ class NodeRepository extends EntityRepository
         $finalQuery = $query->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
+        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
 
         try {
             return $finalQuery->getResult();
@@ -462,6 +475,7 @@ class NodeRepository extends EntityRepository
 
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
+        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
 
         try {
             return $finalQuery->getSingleResult();
@@ -492,6 +506,7 @@ class NodeRepository extends EntityRepository
         $finalQuery = $query->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
+        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
 
         try {
             return $finalQuery->getSingleScalarResult();
