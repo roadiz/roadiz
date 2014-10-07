@@ -54,7 +54,10 @@ class TagTreeWidget extends AbstractWidget
 
         $this->tags = $this->getController()->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Tag')
-                ->findBy(array('parent'=>$this->parentTag), array('position'=>'ASC'));
+                ->findBy(
+                    array('parent'=>$this->parentTag, 'translation'=>$this->translation),
+                    array('position'=>'ASC')
+                );
     }
 
     /**

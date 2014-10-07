@@ -88,89 +88,99 @@ class TagsController extends RozierApp
 
         if (null !== $translation) {
 
-            $tag = $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Tag')
-                ->findWithTranslation((int) $tagId, $translation);
-
-            // $tag = $this->getService('em')
-            //             ->getRepository('RZ\Renzo\Core\Entities\Tag')
-            //             ->findOneBy(array(
-            //                 'id' => (int) $tagId,
-            //                 'translation' => $translation
-            //             ));
-
-            echo '<pre>';
-            \Doctrine\Common\Util\Debug::dump($translation,1);
-            echo '</pre>';
-            echo '<pre>';
-            \Doctrine\Common\Util\Debug::dump($tag->getTranslatedTags()->first(), 2);
-            echo '</pre>';exit();
-
             /*
-             * If translation does not exist, we created it.
+             * Here we need to directly select tagTranslation
+             * if not doctrine will grab a cache tag because of TagTreeWidget
+             * that is initialized before calling route method.
              */
-            if ($tag === null) {
-                $baseTag = $this->getService('em')
-                    ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
+            $gtag = $this->getService('em')
+                ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
-                $this->getService('em')->refresh($baseTag);
+            $tt = $this->getService('em')
+                ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
+                ->findOneBy(array('translation'=>$translation, 'tag'=>$gtag));
 
-                if ($baseTag !== null) {
 
-                    $baseTranslation = $baseTag->getTranslatedTags()->first();
+            if (null !== $tt) {
+                /*
+                 * Tag is already translated
+                 */
+                $tag = $tt->getTag();
 
-                    $translatedTag = new TagTranslation($baseTag, $translation);
+                $this->assignation['tag'] = $tag;
+                $this->assignation['translatedTag'] = $tt;
+                $this->assignation['translation'] = $translation;
+                $this->assignation['available_translations'] = $this->getService('em')
+                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->findAllAvailable();
+
+                $form = $this->buildEditForm($tag, $tt);
+
+                $form->handleRequest();
+
+                if ($form->isValid()) {
+
+                    $this->editTag($form->getData(), $tt);
+
+                    $msg = $this->getTranslator()->trans('tag.%name%.updated', array(
+                        '%name%'=>$tag->getTranslatedTags()->first()->getName()
+                    ));
+                    $request->getSession()->getFlashBag()->add('confirm', $msg);
+                    $this->getService('logger')->info($msg);
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'tagsEditTranslatedPage',
+                            array('tagId' => $tag->getId(), 'translationId' => $translation->getId())
+                        )
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
+                }
+
+                $this->assignation['form'] = $form->createView();
+
+            } else {
+                /*
+                 * If translation does not exist, we created it.
+                 */
+                $this->getService('em')->refresh($gtag);
+
+                if ($gtag !== null) {
+
+                    $baseTranslation = $gtag->getTranslatedTags()->first();
+
+                    $translatedTag = new TagTranslation($gtag, $translation);
 
                     if (false !== $baseTranslation) {
                         $translatedTag->setName($baseTranslation->getName());
                     } else {
-                        $translatedTag->setName('tag_'.$baseTag->getId());
+                        $translatedTag->setName('tag_'.$gtag->getId());
                     }
                     $this->getService('em')->persist($translatedTag);
                     $this->getService('em')->flush();
 
-                    $tag = $this->getService('em')
-                        ->getRepository('RZ\Renzo\Core\Entities\Tag')
-                        ->findWithTranslation((int) $tagId, $translation);
-                    $this->getService('em')->refresh($tag);
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'tagsEditTranslatedPage',
+                            array(
+                                'tagId' => $gtag->getId(),
+                                'translationId' => $translation->getId()
+                            )
+                        )
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
+
                 } else {
                     return $this->throw404();
                 }
             }
 
-            $this->assignation['tag'] = $tag;
-            $this->assignation['translation'] = $translation;
-            $this->assignation['available_translations'] = $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Translation')
-                ->findAllAvailable();
-
-            $form = $this->buildEditForm($tag);
-
-            $form->handleRequest();
-
-            if ($form->isValid()) {
-                $this->editTag($form->getData(), $tag);
-
-                $msg = $this->getTranslator()->trans('tag.%name%.updated', array(
-                    '%name%'=>$tag->getTranslatedTags()->first()->getName()
-                ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'tagsEditTranslatedPage',
-                        array('tagId' => $tag->getId(), 'translationId' => $translation->getId())
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
-            }
-
-            $this->assignation['form'] = $form->createView();
 
             return new Response(
                 $this->getTwig()->render('tags/edit.html.twig', $this->assignation),
@@ -518,22 +528,22 @@ class TagsController extends RozierApp
     }
 
     /**
-     * @param array                      $data
-     * @param RZ\Renzo\Core\Entities\Tag $tag
+     * @param array                                 $data
+     * @param RZ\Renzo\Core\Entities\TagTranslation $tag
      *
      * @throws EntityAlreadyExistsException
      */
-    private function editTag($data, Tag $tag)
+    private function editTag($data, TagTranslation $translatedTag)
     {
-        $translatedTag = $tag->getTranslatedTags()->first();
-
+        if ($translatedTag->getTranslation()->getId() !=
+            $data['translation']) {
+            throw new \RuntimeException("Translations don't match.", 1);
+        }
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
 
-            if ($key == 'name' || $key == 'description') {
+            if ($key != 'translation') {
                 $translatedTag->$setter( $value );
-            } else {
-                $tag->$setter($value);
             }
         }
 
@@ -760,17 +770,17 @@ class TagsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Tag $tag
+     * @param RZ\Renzo\Core\Entities\Tag            $tag
+     * @param RZ\Renzo\Core\Entities\TagTranslation $tt
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildEditForm(Tag $tag)
+    private function buildEditForm(Tag $tag, TagTranslation $tt)
     {
-        $translation = $tag->getTranslatedTags()->first();
-
         $defaults = array(
-            'name' => $translation->getName(),
-            'description' => $translation->getDescription(),
+            'name' => $tt->getName(),
+            'description' => $tt->getDescription(),
+            'translation' => $tt->getTranslation()->getId(),
         );
 
         $builder = $this->getService('formFactory')
@@ -784,6 +794,10 @@ class TagsController extends RozierApp
             ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array(
                 'label' => $this->getTranslator()->trans('description'),
                 'required' => false
+            ))
+            ->add('translation', 'hidden', array(
+                'label' => false,
+                'data' => $tt->getTranslation()->getId()
             ));
 
         return $builder->getForm();
