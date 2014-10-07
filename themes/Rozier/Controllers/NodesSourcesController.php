@@ -61,15 +61,19 @@ class NodesSourcesController extends RozierApp
 
         if ($translation !== null) {
 
+            /*
+             * Here we need to directly select nodeSource
+             * if not doctrine will grab a cache tag because of NodeTreeWidget
+             * that is initialized before calling route method.
+             */
             $gnode = $this->getService('em')
                 ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
             $source = $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
-                ->findOneBy(array('translation'=>$translation, 'node.id'=>(int) $nodeId));
+                ->findOneBy(array('translation'=>$translation, 'node'=>$gnode));
 
-            if (null !== $source &&
-                null !== $translation) {
+            if (null !== $source) {
 
                 $node = $source->getNode();
 

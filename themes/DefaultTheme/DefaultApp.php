@@ -64,8 +64,27 @@ class DefaultApp extends FrontendController
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function homeAction(Request $request, Node $node = null, Translation $translation = null)
-    {
+    public function homeAction(
+        Request $request,
+        Node $node = null,
+        Translation $translation = null,
+        $_locale = null
+    ) {
+
+        /*
+         * Get language from static route
+         */
+        if (null !== $_locale) {
+            $request->setLocale($_locale);
+            $translation = $this->getService('em')
+                        ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                        ->findOneBy(
+                            array(
+                                'locale'=>Translation::$availableLocalesShortcut[$_locale]
+                            )
+                        );
+        }
+
         if ($node === null) {
             $node = $this->getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Node')
@@ -81,16 +100,16 @@ class DefaultApp extends FrontendController
         /*
          * First choice, render Homepage as any other nodes
          */
-        return $this->handle($request);
+        //return $this->handle($request);
 
         /*
          * Second choice, render Homepage manually
          */
-        // return new Response(
-        //     $this->getTwig()->render('home.html.twig', $this->assignation),
-        //     Response::HTTP_OK,
-        //     array('content-type' => 'text/html')
-        // );
+        return new Response(
+            $this->getTwig()->render('home.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
     }
 
     /**

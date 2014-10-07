@@ -19,6 +19,401 @@ use RZ\Renzo\Core\Kernel;
 class TagRepository extends EntityRepository
 {
     /**
+     * Reimplementing findBy features… with extra things
+     *
+     * * key => array('<=', $value)
+     * * key => array('<', $value)
+     * * key => array('>=', $value)
+     * * key => array('>', $value)
+     * * key => array('BETWEEN', $value, $value)
+     * * key => array('LIKE', $value)
+     * * key => 'NOT NULL'
+     *
+     * You can filter with translations relation, examples:
+     *
+     * * `translation => $object`
+     * * `translation.locale => 'fr_FR'`
+     *
+     * @param array        $criteria
+     * @param QueryBuilder $qb
+     */
+    protected function filterByCriteria(&$criteria, &$qb)
+    {
+        /*
+         * Reimplementing findBy features…
+         */
+        foreach ($criteria as $key => $value) {
+
+            /*
+             * compute prefix for
+             * filtering node, and sources relation fields
+             */
+            $prefix = 'tg.';
+
+            // Dots are forbidden in field definitions
+            $baseKey = str_replace('.','_',$key);
+            /*
+             * Search in translation fields
+             */
+            if (false !== strpos($key, 'translation.')) {
+                $prefix = 't.';
+                $key = str_replace('translation.', '', $key);
+            }
+             /*
+             * Search in nodeSource fields
+             */
+            if ($key == 'translation') {
+                $prefix = 'tt.';
+            }
+
+            if (is_object($value) && $value instanceof PersistableInterface) {
+                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
+            } elseif (is_array($value)) {
+                /*
+                 * array
+                 *
+                 * ['<=', $value]
+                 * ['<', $value]
+                 * ['>=', $value]
+                 * ['>', $value]
+                 * ['BETWEEN', $value, $value]
+                 * ['LIKE', $value]
+                 * in [$value, $value]
+                 */
+                if (count($value) > 1) {
+                    switch ($value[0]) {
+                        case '<=':
+                            # lte
+                            $res = $qb->expr()->lte($prefix.$key, ':'.$baseKey);
+                            break;
+                        case '<':
+                            # lt
+                            $res = $qb->expr()->lt($prefix.$key, ':'.$baseKey);
+                            break;
+                        case '>=':
+                            # gte
+                            $res = $qb->expr()->gte($prefix.$key, ':'.$baseKey);
+                            break;
+                        case '>':
+                            # gt
+                            $res = $qb->expr()->gt($prefix.$key, ':'.$baseKey);
+                            break;
+                        case 'BETWEEN':
+                            $res = $qb->expr()->between(
+                                $prefix.$key,
+                                ':'.$baseKey.'_1',
+                                ':'.$baseKey.'_2'
+                            );
+                            break;
+                        case 'LIKE':
+                            $res = $qb->expr()->like($prefix.$key, $qb->expr()->literal($value[1]));
+                            break;
+                        default:
+                            $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
+                            break;
+                    }
+                } else {
+                    $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
+                }
+
+            } elseif (is_bool($value)) {
+               $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
+            }  elseif ('NOT NULL' == $value) {
+                $res = $qb->expr()->isNotNull($prefix.$key);
+            } elseif (isset($value)) {
+                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
+            } elseif (null === $value) {
+                $res = $qb->expr()->isNull($prefix.$key);
+            }
+
+            $qb->andWhere($res);
+        }
+    }
+    /**
+     * Bind parameters to generated query.
+     *
+     * @param array $criteria
+     * @param Query $finalQuery
+     */
+    protected function applyFilterByCriteria(&$criteria, &$finalQuery)
+    {
+        /*
+         * Reimplementing findBy features…
+         */
+        foreach ($criteria as $key => $value) {
+
+            // Dots are forbidden in field definitions
+            $key = str_replace('.','_',$key);
+
+            if (is_object($value) && $value instanceof PersistableInterface) {
+                $finalQuery->setParameter($key, $value->getId());
+            } elseif (is_array($value)) {
+
+                if (count($value) > 1) {
+                    switch ($value[0]) {
+                        case '<=':
+                        case '<':
+                        case '>=':
+                        case '>':
+                            $finalQuery->setParameter($key, $value[1]);
+                            break;
+                        case 'BETWEEN':
+                            $finalQuery->setParameter($key.'_1', $value[1]);
+                            $finalQuery->setParameter($key.'_2', $value[2]);
+                            break;
+                        case 'LIKE':
+                            // param is setted in filterBy
+                            break;
+                        default:
+                            $finalQuery->setParameter($key, $value);
+                            break;
+                    }
+                } else {
+                    $finalQuery->setParameter($key, $value);
+                }
+
+            } elseif (is_bool($value)) {
+                $finalQuery->setParameter($key, $value);
+            }  elseif ('NOT NULL' == $value) {
+                // param is not needed
+            } elseif (isset($value)) {
+                $finalQuery->setParameter($key, $value);
+            } elseif (null === $value) {
+                // param is not needed
+            }
+        }
+    }
+
+    /**
+     * Create filters according to any translation criteria OR argument.
+     *
+     * @param array        $criteria
+     * @param QueryBuilder $qb
+     * @param Translation  $translation
+     */
+    protected function filterByTranslation(&$criteria, &$qb, &$translation = null)
+    {
+        if (isset($criteria['translation']) ||
+            isset($criteria['translation.locale']) ||
+            isset($criteria['translation.id'])) {
+
+            $qb->innerJoin('tg.translatedTags', 'tt');
+            $qb->innerJoin('tt.translation', 't');
+
+        } else {
+
+            if (null !== $translation) {
+                /*
+                 * With a given translation
+                 */
+                $qb->innerJoin(
+                    'tg.translatedTags',
+                    'tt',
+                    'WITH',
+                    'tt.translation = :translation'
+                );
+            } else {
+                /*
+                 * With a null translation, just take the default one.
+                 */
+                $qb->innerJoin('tg.translatedTags', 'tt');
+                $qb->innerJoin(
+                    'tt.translation',
+                    't',
+                    'WITH',
+                    't.defaultTranslation = true'
+                );
+            }
+        }
+    }
+
+    /**
+     * Bind translation parameter to final query
+     *
+     * @param array $criteria
+     * @param Query $finalQuery
+     */
+    protected function applyTranslationByTag(
+        array &$criteria,
+        &$finalQuery,
+        &$translation=null
+    ) {
+        if (null !== $translation) {
+           $finalQuery->setParameter('translation', $translation);
+        }
+    }
+
+
+    /**
+     * This method allows to pre-filter Nodes with a given translation.
+     *
+     * @param array                                   $criteria
+     * @param array|null                              $orderBy
+     * @param integer|null                            $limit
+     * @param integer|null                            $offset
+     * @param RZ\Renzo\Core\Entities\Translation|null $securityContext
+     *
+     * @return QueryBuilder
+     */
+    protected function getContextualQueryWithTranslation(
+        array $criteria,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null,
+        Translation $translation = null
+    ) {
+
+        $qb = $this->_em->createQueryBuilder();
+        $qb->add('select', 'tg, tt')
+           ->add('from', $this->getEntityName() . ' tg');
+
+        $this->filterByTranslation($criteria, $qb, $translation);
+        $this->filterByCriteria($criteria, $qb);
+
+        // Add ordering
+        if (null !== $orderBy) {
+            foreach ($orderBy as $key => $value) {
+                $qb->addOrderBy('tg.'.$key, $value);
+            }
+        }
+
+        if (null !== $offset) {
+            $qb->setFirstResult($offset);
+        }
+        if (null !== $limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb;
+    }
+    /**
+     * This method allows to pre-filter Nodes with a given translation.
+     *
+     * @param array                                   $criteria
+     * @param RZ\Renzo\Core\Entities\Translation|null $securityContext
+     *
+     * @return QueryBuilder
+     */
+    protected function getCountContextualQueryWithTranslation(
+        array $criteria,
+        Translation $translation = null
+    ) {
+
+        $qb = $this->_em->createQueryBuilder();
+        $qb->add('select', 'count(tg.id)')
+           ->add('from', $this->getEntityName() . ' tg');
+
+        $this->filterByTranslation($criteria, $qb, $translation);
+
+        $this->filterByCriteria($criteria, $qb);
+
+        return $qb;
+    }
+
+    /**
+     * Just like the findBy method but with relational criteria.
+     *
+     * @param array                                   $criteria
+     * @param array|null                              $orderBy
+     * @param integer|null                            $limit
+     * @param integer|null                            $offset
+     * @param RZ\Renzo\Core\Entities\Translation|null $translation
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function findBy(
+        array $criteria,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null,
+        Translation $translation = null,
+        SecurityContext $securityContext = null
+    ) {
+        $query = $this->getContextualQueryWithTranslation(
+            $criteria,
+            $orderBy,
+            $limit,
+            $offset,
+            $translation
+        );
+
+        $finalQuery = $query->getQuery();
+        $this->applyFilterByCriteria($criteria, $finalQuery);
+        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
+
+        try {
+            return $finalQuery->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+    /**
+     * Just like the findOneBy method but with relational criteria.
+     *
+     * @param array                                   $criteria
+     * @param array|null                              $orderBy
+     * @param RZ\Renzo\Core\Entities\Translation|null $translation
+     * @param SecurityContext|null                    $securityContext
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function findOneBy(
+        array $criteria,
+        array $orderBy = null,
+        Translation $translation = null,
+        SecurityContext $securityContext = null
+    ) {
+
+        $query = $this->getContextualQueryWithTranslation(
+            $criteria,
+            $orderBy,
+            1,
+            0,
+            $translation
+        );
+
+        $finalQuery = $query->getQuery();
+
+        var_dump($finalQuery->getDQL());
+        $this->applyFilterByCriteria($criteria, $finalQuery);
+        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
+
+        try {
+            return $finalQuery->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+    /**
+     * Just like the countBy method but with relational criteria.
+     *
+     * @param array                                   $criteria
+     * @param RZ\Renzo\Core\Entities\Translation|null $translation
+     * @param SecurityContext|null                    $securityContext
+     *
+     * @return int
+     */
+    public function countBy(
+        $criteria,
+        Translation $translation = null
+    ) {
+        $query = $this->getCountContextualQueryWithTranslation(
+            $criteria,
+            $translation
+        );
+
+        $finalQuery = $query->getQuery();
+        $this->applyFilterByCriteria($criteria, $finalQuery);
+        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
+
+        try {
+            return $finalQuery->getSingleScalarResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
      * @param integer                            $tagId
      * @param RZ\Renzo\Core\Entities\Translation $translation
      *
@@ -49,8 +444,8 @@ class TagRepository extends EntityRepository
     public function findAllWithTranslation(Translation $translation)
     {
         $query = $this->_em->createQuery('
-            SELECT t, tt FROM RZ\Renzo\Core\Entities\Tag t
-            INNER JOIN t.translatedTags tt
+            SELECT tg, tt FROM RZ\Renzo\Core\Entities\Tag tg
+            INNER JOIN tg.translatedTags tt
             WHERE tt.translation = :translation')
                         ->setParameter('translation', $translation);
 
