@@ -1,28 +1,31 @@
 /*------------------------------------*\
-   ENTRIES PANEL
+   DROPDOWN
 \*------------------------------------*/
 
-
 /*
- * Override ui kit buttons styles & colors
+ * Override ui kit dropdown
  */
 
 /* -------- VARS -------- */
 @contextualdropdown-p-height: 30px;
+@contextualdropdown-bg: #F4F4F4;
+@contextualdropdown-border-color: #CCCCCC;
+@contextualdropdown-p-color: #666666;
+@contextualdropdown-p-color-hover: #333333;
+@contextualdropdown-p-bg-color: #EBEBEB;
+@contextualdropdown-p-bg-color-hover: #DADADA;
 
 
 /* -------- STYLES -------- */
 
 .uk-dropdown {
-    .box-sizing();
     width: 220px;
     margin-top: 5px;
     padding: 10px;
-    background: #fff;
-    color: #444;
     font-size: 13px;
+    .box-sizing();
     .rounded(0px);
-    //box-shadow: 0 2px 5px rgba(0,0,0,.1);
+    box-shadow: 1px 1px 2px rgba(0,0,0,.05);
 }
 
 .uk-dropdown-small {
@@ -40,8 +43,7 @@
 .nodetree-contextualmenu {
     .uk-dropdown, .uk-dropdown-small {
         padding: 0 0 0 26px;
-        background-color: #F4F4F4;
-        .opacity(0.95);
+        background-color: @contextualdropdown-bg;
 
         .uk-nav {
             margin: 0px;
@@ -62,12 +64,16 @@
                 height: 40px;
                 line-height: 40px;
                 background-color: white;
-                border-bottom: 1px dashed #CCC;
+                border-bottom: 1px dashed @contextualdropdown-border-color;
                 padding-left: 16px;
                 font-weight: bold;
+                .transition(~'background ease 0.2s, color ease 0.2s');
 
                 i {
                     line-height: 40px;
+                }
+                &:hover {
+                    background-color: @contextualdropdown-p-bg-color;
                 }
             }
             .uk-nav-header {
@@ -77,26 +83,26 @@
                 padding: 0 0 0 15px;
 
                 p {
-                    background-color: #ebebeb;
+                    background-color: @contextualdropdown-p-bg-color;
                     line-height: @contextualdropdown-p-height + 2;
-                    border-bottom: 1px solid #CCC;
+                    border-bottom: 1px solid @contextualdropdown-border-color;
                     padding: 0 13px;
-                    color: #666666;
+                    color: @contextualdropdown-p-color;
                     .transition(~'background ease 0.2s, color ease 0.2s');
 
                     &+p {
-                        border-top: 1px solid #FFF;
+                        border-top: 1px solid rgba(255, 255, 255, 0.8);
                     }
                     &:last-child {
                         border-bottom: none;
                     }
                     a {
-                        color: #666666;
+                        color: @contextualdropdown-p-color;
                     }
                     &:hover {
-                        background-color: #E0E0E0;
+                        background-color: @contextualdropdown-p-bg-color-hover;
                         a {
-                            color: #333333;
+                            color: @contextualdropdown-p-color-hover;
                         }
                     }
                 }
@@ -105,10 +111,10 @@
                     margin: 0px;
                     padding: 7px 0 3px;
                     text-transform: capitalize;
-                    color: #333;
+                    color: @contextualdropdown-p-color-hover;
                 }
                 &+.wrapper{
-                    border-top: 1px dashed #CCC;
+                    border-top: 1px dashed @contextualdropdown-border-color;
                 }
             }
          }
