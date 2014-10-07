@@ -19,6 +19,14 @@
                 <source>_password</source>
                 <target state="translated">Mot de passe</target>
             </trans-unit>
+            <trans-unit id="password">
+                <source>password</source>
+                <target>Mot de passe</target>
+            </trans-unit>
+            <trans-unit id="password.verify" approved="yes">
+                <source>password.verify</source>
+                <target state="translated">Vérifiez votre mot de passe</target>
+            </trans-unit>
 
             <trans-unit id="delete" approved="yes">
                 <source>delete</source>
@@ -252,6 +260,14 @@
                 <target state="translated">Passer "Base de données"</target>
             </trans-unit>
 
+            <trans-unit id="choose.language" approved="yes">
+                <source>choose.language</source>
+                <target state="translated">Choisir la langue</target>
+            </trans-unit>
+            <trans-unit id="choose.a.language" approved="yes">
+                <source>choose.a.language</source>
+                <target state="translated">Veuillez choisir la langue d’installation de votre CMS.</target>
+            </trans-unit>
 
         </body>
     </file>

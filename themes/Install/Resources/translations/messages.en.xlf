@@ -19,6 +19,14 @@
                 <source>_password</source>
                 <target state="translated">Password</target>
             </trans-unit>
+            <trans-unit id="password" approved="yes">
+                <source>password</source>
+                <target state="translated">Password</target>
+            </trans-unit>
+            <trans-unit id="password.verify" approved="yes">
+                <source>password.verify</source>
+                <target state="translated">Verify password</target>
+            </trans-unit>
 
             <trans-unit id="delete" approved="yes">
                 <source>delete</source>
@@ -42,7 +50,7 @@
             </trans-unit>
             <trans-unit id="welcome.message" approved="yes">
                 <source>welcome.message</source>
-                <target state="translated">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci reprehenderit fugiat nobis labore quae suscipit repellat aspernatur voluptas, corporis mollitia rerum culpa enim voluptatum fugit minima, porro consequatur! Harum, porro.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Welcome to Renzo CMS install assistant. Here is just a bit of configuration before letting you play.&lt;/p&gt;</target>
             </trans-unit>
 
 
@@ -252,6 +260,14 @@
                 <target state="translated">Skip "database"</target>
             </trans-unit>
 
+            <trans-unit id="choose.language" approved="yes">
+                <source>choose.language</source>
+                <target state="translated">Choose language</target>
+            </trans-unit>
+            <trans-unit id="choose.a.language" approved="yes">
+                <source>choose.a.language</source>
+                <target state="translated">Choose your website main language</target>
+            </trans-unit>
 
         </body>
     </file>

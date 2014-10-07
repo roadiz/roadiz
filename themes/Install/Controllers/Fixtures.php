@@ -88,7 +88,24 @@ class Fixtures
 
         if (null === $existing) {
             $translation = new Translation();
-            $translation->setLocale('en_US');
+
+            /*
+             * Create a translation according to
+             * current language
+             */
+            switch (Kernel::getInstance()->getRequest()->getLocale()) {
+                case 'en':
+                    $translation->setLocale('en_US');
+                    break;
+                case 'fr':
+                    $translation->setLocale('fr_FR');
+                    break;
+
+                default:
+                    $translation->setLocale('en_US');
+                    break;
+            }
+
             $translation->setDefaultTranslation(true);
             $translation->setName(Translation::$availableLocales[$translation->getLocale()]);
             $translation->setAvailable(true);
