@@ -1,9 +1,16 @@
 <?php
-
+/*
+ * Copyright REZO ZERO 2014
+ *
+ *
+ *
+ * @file EntityApiServiceProvider.php
+ * @copyright REZO ZERO 2014
+ * @author Ambroise Maupate
+ */
 namespace RZ\Renzo\Core\Services;
 
 use Pimple\Container;
-use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\CMS\Utils\NodeApi;
 use RZ\Renzo\CMS\Utils\NodeTypeApi;
 use RZ\Renzo\CMS\Utils\NodeSourceApi;
@@ -16,18 +23,15 @@ class EntityApiServiceProvider implements \Pimple\ServiceProviderInterface
     public function register(Container $container)
     {
         $container['nodeApi'] = function ($c) {
-            $nodeApi = new NodeApi();
-            return $nodeApi;
+            return new NodeApi($c);
         };
 
         $container['nodeTypeApi'] = function ($c) {
-            $nodeApi = new NodeTypeApi();
-            return $nodeApi;
+            return new NodeTypeApi($c);
         };
 
         $container['nodeSourceApi'] = function ($c) {
-            $nodeApi = new NodeSourceApi();
-            return $nodeApi;
+            return new NodeSourceApi($c);
         };
     }
 }

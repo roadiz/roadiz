@@ -8,17 +8,24 @@
  * @copyright REZO ZERO 2014
  * @author Maxime Constantinian
  */
-
 namespace RZ\Renzo\CMS\Utils;
 
-use RZ\Renzo\Core\Kernel;
-
+use Pimple\Container;
+/**
+ *
+ */
 abstract class AbstractApi {
 
-    protected $context;
+    /*
+     * DI container
+     */
+    protected $container;
 
-    function __construct() {
-        $this->context = Kernel::getService('securityContext');
+    /**
+     * @param Pimple\Container $container
+     */
+    function __construct(Container $container) {
+        $this->container = $container;
     }
 
     abstract public function getRepository();
@@ -26,5 +33,4 @@ abstract class AbstractApi {
     abstract public function getBy( array $criteria );
 
     abstract public function getOneBy( array $criteria );
-
 }
