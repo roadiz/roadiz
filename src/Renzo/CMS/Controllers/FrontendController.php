@@ -117,13 +117,45 @@ class FrontendController extends AppController
      * Default action for default URL (homepage).
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
+     * @param string|null                              $_locale
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function homeAction(Request $request, Node $node = null, Translation $translation = null)
+    public function homeAction(Request $request, $_locale = null)
     {
+        /*
+         * If you use a static route for Home page
+         * we need to grab manually language.
+         *
+         * Get language from static route
+         */
+        if (null !== $_locale) {
+            $request->setLocale($_locale);
+            $translation = $this->getService('em')
+                        ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                        ->findOneBy(
+                            array(
+                                /*
+                                 * Browser locale is just lang code, we need to convert it to
+                                 * a complete locale with region code (fr -> fr_FR)
+                                 */
+                                'locale'=>Translation::$availableLocalesShortcut[$_locale]
+                            )
+                        );
+        }
+
+        /*
+         * Grab home flagged node
+         */
+        $node = $this->getService('em')
+                ->getRepository('RZ\Renzo\Core\Entities\Node')
+                ->findOneBy(
+                    array('home'=>true),
+                    null,
+                    $translation,
+                    $this->getSecurityContext()
+                );
+
         $this->storeNodeAndTranslation($node, $translation);
 
         return new Response(

@@ -15,6 +15,7 @@ use RZ\Renzo\Core\Entities\NodesSourcesDocuments;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Kernel;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Handle operations with node-sources entities.
@@ -183,24 +184,43 @@ class NodesSourcesHandler
     /**
      * Get children nodes sources to lock with current translation.
      *
+     * @param array|null                                      $criteria Additionnal criteria
+     * @param array|null                                      $order Non default ordering
+     * @param Symfony\Component\Security\Core\SecurityContext $securityContext
+     *
      * @return ArrayCollection NodesSources collection
      */
-    public function getChildren()
-    {
-         $query = Kernel::getService('em')
-                        ->createQuery('
-            SELECT ns FROM RZ\Renzo\Core\Entities\NodesSources ns
-            INNER JOIN ns.node n
-            WHERE n.parent = :parent
-            AND ns.translation = :translation
-            ORDER BY n.position ASC')
-                        ->setParameter('parent', $this->nodeSource->getNode())
-                        ->setParameter('translation', $this->nodeSource->getTranslation());
+    public function getChildren(
+        array $criteria = null,
+        array $order = null,
+        SecurityContext $securityContext = null
+    ) {
 
-        try {
-            return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
-            return null;
+        $defaultCrit = array(
+            'node.parent' => $this->nodeSource->getNode(),
+            'translation' => $this->nodeSource->getTranslation()
+        );
+
+        if (null !== $order) {
+            $defaultOrder = $order;
+        } else {
+            $defaultOrder = array (
+                'node.position' => 'ASC'
+            );
         }
+
+        if (null !== $criteria) {
+            $defaultCrit = array_merge($defaultCrit, $criteria);
+        }
+
+        return Kernel::getService('em')
+                            ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+                            ->findBy(
+                                $defaultCrit,
+                                $defaultOrder,
+                                null,
+                                null,
+                                $securityContext
+                            );
     }
 }

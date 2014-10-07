@@ -56,22 +56,17 @@ class DefaultApp extends FrontendController
     );
 
     /**
-     * Default action for default URL (homepage).
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
-     *
-     * @return Symfony\Component\HttpFoundation\Response
+     * {@inheritdoc}
      */
     public function homeAction(
         Request $request,
-        Node $node = null,
-        Translation $translation = null,
         $_locale = null
     ) {
 
         /*
+         * If you use a static route for Home page
+         * we need to grab manually language.
+         *
          * Get language from static route
          */
         if (null !== $_locale) {
@@ -80,21 +75,29 @@ class DefaultApp extends FrontendController
                         ->getRepository('RZ\Renzo\Core\Entities\Translation')
                         ->findOneBy(
                             array(
+                                /*
+                                 * Browser locale is just lang code, we need to convert it to
+                                 * a complete locale with region code (fr -> fr_FR)
+                                 */
                                 'locale'=>Translation::$availableLocalesShortcut[$_locale]
                             )
                         );
+        } else {
+            $translation = $this->getService('em')
+                        ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                        ->findDefault();
+            $request->setLocale($translation->getShortLocale());
         }
 
-        if ($node === null) {
-            $node = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Node')
-                    ->findOneBy(
-                        array('home'=>true),
-                        null,
-                        $translation,
-                        $this->getSecurityContext()
-                    );
-        }
+        $node = $this->getService('em')
+                ->getRepository('RZ\Renzo\Core\Entities\Node')
+                ->findOneBy(
+                    array('home'=>true),
+                    null,
+                    $translation,
+                    $this->getSecurityContext()
+                );
+
         $this->prepareThemeAssignation($node, $translation);
 
         /*
