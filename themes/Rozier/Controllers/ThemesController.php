@@ -74,7 +74,9 @@ class ThemesController extends RozierApp
         $theme = new Theme();
 
         $form = $this->buildAddForm($theme);
+
         $form->handleRequest();
+
         if ($form->isValid()) {
             try {
                 $this->addTheme($form->getData(), $theme);
@@ -236,7 +238,14 @@ class ThemesController extends RozierApp
             ->add(
                 'className',
                 new \RZ\Renzo\CMS\Forms\ThemesType(),
-                array('label' => $this->getTranslator()->trans('themeClass'))
+                array(
+                    'label' => $this->getTranslator()->trans('themeClass'),
+                    'required' => true,
+                    'constraints' => array(
+                        new \Symfony\Component\Validator\Constraints\NotNull(),
+                        new \Symfony\Component\Validator\Constraints\Type('string'),
+                    )
+                )
             )
             ->add(
                 'available',
