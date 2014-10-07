@@ -374,7 +374,6 @@ class TagRepository extends EntityRepository
 
         $finalQuery = $query->getQuery();
 
-        var_dump($finalQuery->getDQL());
         $this->applyFilterByCriteria($criteria, $finalQuery);
         $this->applyTranslationByTag($criteria, $finalQuery, $translation);
 
