@@ -1,13 +1,21 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section id="manage-groups">
-    <h1 id="title">{% trans %}import.role{% endtrans %}</h1>
+<section class="content-global">
 
-    {% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <button type="submit" class="uk-button uk-button-primary"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</button>
-    </form>
+    <header class="content-header header-role header-role-add">
+        <h1 class="content-title">{% trans %}import.role{% endtrans %}</h1>
+    </header>
+
+    <article class="content content-delete content-no-action-menu">
+        {% form_theme form 'forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <button type="submit" class="uk-button uk-button-primary"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</button>
+        </form>
+    </article>
+
+    {% include 'roles/actionsMenu.html.twig' %}
+
 </section>
 {% endblock %}
