@@ -19,6 +19,54 @@ use RZ\Renzo\Core\Kernel;
 class TagRepository extends EntityRepository
 {
     /**
+     * Add a node filtering to queryBuilder.
+     *
+     * @param array        $criteria
+     * @param QueryBuilder $qb
+     */
+    protected function filterByNodes(&$criteria, &$qb)
+    {
+        if (in_array('nodes', array_keys($criteria))) {
+
+            if (is_array($criteria['nodes'])) {
+                $qb->innerJoin(
+                    'tg.nodes',
+                    'n',
+                    'WITH',
+                    'n.id IN (:nodes)'
+                );
+            } else {
+                $qb->innerJoin(
+                    'tg.nodes',
+                    'n',
+                    'WITH',
+                    'n.id = :nodes'
+                );
+            }
+        }
+    }
+
+    /**
+     * Bind node parameter to final query
+     *
+     * @param array $criteria
+     * @param Query $finalQuery
+     */
+    protected function applyFilterByNodes(array &$criteria, &$finalQuery)
+    {
+        if (in_array('nodes', array_keys($criteria))) {
+            if (is_object($criteria['nodes'])) {
+                $finalQuery->setParameter('nodes', $criteria['nodes']->getId());
+            } elseif (is_array($criteria['nodes'])) {
+                $finalQuery->setParameter('nodes', $criteria['nodes']);
+            } elseif (is_integer($criteria['nodes'])) {
+                $finalQuery->setParameter('nodes', (int) $criteria['nodes']);
+            }
+            unset($criteria['nodes']);
+        }
+    }
+
+    /**
      * Reimplementing findBy features… with extra things
      *
      * * key => array('<=', $value)
@@ -43,6 +91,12 @@ class TagRepository extends EntityRepository
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
+            /*
+             * Search in node fields
+             */
+            if ($key == 'nodes') {
+                continue;
+            }
 
             /*
              * compute prefix for
@@ -59,8 +113,18 @@ class TagRepository extends EntityRepository
                 $prefix = 't.';
                 $key = str_replace('translation.', '', $key);
             }
+
+            /*
+             * Search in node fields
+             */
+            if (false !== strpos($key, 'nodes.')) {
+                $prefix = 'n.';
+                $key = str_replace('nodes.', '', $key);
+            }
+
+
              /*
-             * Search in nodeSource fields
+             * Search in translation fields
              */
             if ($key == 'translation') {
                 $prefix = 'tt.';
@@ -267,6 +331,7 @@ class TagRepository extends EntityRepository
         $qb->add('select', 'tg, tt')
            ->add('from', $this->getEntityName() . ' tg');
 
+        $this->filterByNodes($criteria, $qb);
         $this->filterByTranslation($criteria, $qb, $translation);
         $this->filterByCriteria($criteria, $qb);
 
@@ -303,8 +368,8 @@ class TagRepository extends EntityRepository
         $qb->add('select', 'count(tg.id)')
            ->add('from', $this->getEntityName() . ' tg');
 
+        $this->filterByNodes($criteria, $qb);
         $this->filterByTranslation($criteria, $qb, $translation);
-
         $this->filterByCriteria($criteria, $qb);
 
         return $qb;
@@ -338,6 +403,8 @@ class TagRepository extends EntityRepository
         );
 
         $finalQuery = $query->getQuery();
+
+        $this->applyFilterByNodes($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
         $this->applyTranslationByTag($criteria, $finalQuery, $translation);
 
@@ -374,6 +441,7 @@ class TagRepository extends EntityRepository
 
         $finalQuery = $query->getQuery();
 
+        $this->applyFilterByNodes($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
         $this->applyTranslationByTag($criteria, $finalQuery, $translation);
 
@@ -402,6 +470,8 @@ class TagRepository extends EntityRepository
         );
 
         $finalQuery = $query->getQuery();
+
+        $this->applyFilterByNodes($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
         $this->applyTranslationByTag($criteria, $finalQuery, $translation);
 

@@ -223,4 +223,12 @@ class NodesSourcesHandler
                                 $securityContext
                             );
     }
+
+
+    public function getTags()
+    {
+        $tags = Kernel::getService('tagApi')->getBy(array("nodes" => $this->nodeSource->getNode(), "translation" => $this->nodeSource->getTranslation()));
+        return $tags;
+    }
+
 }
