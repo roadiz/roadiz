@@ -22,12 +22,7 @@ class NodeSourceApi extends AbstractApi
         return $this->container['em']->getRepository("RZ\Renzo\Core\Entities\NodesSources");
     }
 
-    public function getBy(
-        array $criteria,
-        array $order = null,
-        $limit = null,
-        $offset = null
-    ) {
+    private function getRepositoryName($criteria) {
         $rep = null;
         if (isset($criteria['node.nodeType'])) {
             $rep = NodeType::getGeneratedEntitiesNamespace().
@@ -39,6 +34,17 @@ class NodeSourceApi extends AbstractApi
         else {
             $rep = "RZ\Renzo\Core\Entities\NodesSources";
         }
+        return $rep;
+    }
+
+    public function getBy(
+        array $criteria,
+        array $order = null,
+        $limit = null,
+        $offset = null
+    ) {
+
+        $rep = $this->getRepositoryName($criteria);
 
         return $this->container['em']
                        ->getRepository($rep)
@@ -52,8 +58,11 @@ class NodeSourceApi extends AbstractApi
     }
 
     public function getOneBy(array $criteria, array $order = null) {
+
+        $rep = $this->getRepositoryName($criteria);
+
         return $this->container['em']
-                       ->getRepository("RZ\Renzo\Core\Entities\NodesSources")
+                       ->getRepository($rep)
                        ->findOneBy(
                             $criteria,
                             $order,
