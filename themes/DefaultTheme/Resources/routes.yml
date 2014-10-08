@@ -4,9 +4,9 @@ homePage:
     defaults: { _controller: Themes\DefaultTheme\DefaultApp::homeAction }
 homePageLocale:
     path:     /{_locale}
-    defaults: { _controller: Themes\DefaultTheme\DefaultApp::homeAction, _locale: fr }
+    defaults: { _controller: Themes\DefaultTheme\DefaultApp::homeAction }
     requirements:
-        _locale: en|fr
+        _locale: "[a-z]{2}"
 feedRSS:
     path:     /feed
     defaults: { _controller: Themes\DefaultTheme\Controllers\FeedController::indexAction }

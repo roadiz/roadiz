@@ -295,8 +295,8 @@ class AppController implements ViewableInterface
     {
         $this->getService('stopwatch')->start('initTranslations');
         $lang = $this->kernel->getRequest()->getLocale();
+
         $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
-        var_dump($msgPath );
         /*
          * fallback to english, if message catalog absent
          */

@@ -62,7 +62,6 @@ class DefaultApp extends FrontendController
         Request $request,
         $_locale = null
     ) {
-
         /*
          * If you use a static route for Home page
          * we need to grab manually language.
