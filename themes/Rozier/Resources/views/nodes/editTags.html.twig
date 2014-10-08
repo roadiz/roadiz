@@ -21,7 +21,7 @@
 		<form id="edit-node-tags-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}
 		    <fieldset data-uk-margin>
-		    	<input class="uk-button uk-button-primary" type="submit" />
+		    	<button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.tag{% endtrans %}</button>
 	   		</fieldset>
 		</form>
 
@@ -44,7 +44,7 @@
 						<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
 						<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
 						<td>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesRemoveTagsPage', { nodeId: node.getId, tagId: tag.getId }) }}">{% trans %}unlink{% endtrans %}</a>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesRemoveTagsPage', { nodeId: node.getId, tagId: tag.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}unlink{% endtrans %}</a>
 						</td>
 					</tr>
 					{% endfor %}
