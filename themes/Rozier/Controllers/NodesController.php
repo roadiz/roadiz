@@ -772,8 +772,12 @@ class NodesController extends RozierApp
                     'RZ\Renzo\Core\Entities\Translation',
                     (int) $data['translationId']
                 );
+        $baseSource = $node->getNodeSources()->first();
 
-        $source = new $sourceClass($node, $newTranslation);
+        $source = clone $baseSource;
+
+        $source->setTranslation($newTranslation);
+        $source->setNode($node);
 
         $this->getService('em')->persist($source);
         $this->getService('em')->flush();
@@ -911,6 +915,9 @@ class NodesController extends RozierApp
                     ))
                     ->add('tagId', new \RZ\Renzo\CMS\Forms\TagsType($node->getTags()), array(
                         'label' => $this->getTranslator()->trans('choose.tag'),
+                        'constraints' => array(
+                            new NotBlank()
+                        )
                     ));
 
         return $builder->getForm();
