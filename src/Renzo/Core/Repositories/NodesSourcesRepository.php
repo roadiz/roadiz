@@ -94,7 +94,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param array        $criteria
      * @param QueryBuilder $qb
      */
-    protected function filterByCriteria(&$criteria, &$qb, $joinedNode = false)
+    protected function filterByCriteria(&$criteria, &$qb, &$joinedNode = false)
     {
         /*
          * Reimplementing findBy features…
