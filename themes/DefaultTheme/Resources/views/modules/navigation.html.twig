@@ -4,7 +4,7 @@
     {#
      #  Home with a node
      #}
-    {% if home %}
+   {#  {% if home %}
         {% if home.getNodeSources.first.getTitle %}
             {% set hometitle = home.getNodeSources.first.getTitle %}
         {% else %}
@@ -12,16 +12,17 @@
         {% endif %}
 
         <a href="{{ home.getHandler.getUrl }}" class="uk-navbar-brand">{{ hometitle }}</a>
-    {% endif %}
+    {% endif %} #}
 
     {#
-     #  Get home page with no node
+     # Get home page with no node
+     # STATIC MODE
      #}
-    {# {% if request.locale %}
+    {% if request.locale != _default_locale %}
     <a href="{{ path('homePageLocale', {"_locale":request.locale}) }}" class="uk-navbar-brand">{% trans %}home{% endtrans %}</a>
     {% else %}
     <a href="{{ path('homePage') }}" class="uk-navbar-brand">{% trans %}home{% endtrans %}</a>
-    {% endif %} #}
+    {% endif %}
 
     {#
      # Main navigation

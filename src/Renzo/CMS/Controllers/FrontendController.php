@@ -321,6 +321,26 @@ class FrontendController extends AppController
         return $this->translation;
     }
 
+    /*
+     * {@inheritdoc}
+     *
+     * Add a default translation locale for static routes.
+     *
+     * * **_default_locale**
+     */
+    public function prepareBaseAssignation()
+    {
+        parent::prepareBaseAssignation();
+
+        $translation = $this->getService('em')
+                            ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                            ->findDefault();
+
+        $this->assignation['_default_locale'] = $translation->getShortLocale();
+
+        return $this;
+    }
+
     /**
      * Append objects to global container.
      *

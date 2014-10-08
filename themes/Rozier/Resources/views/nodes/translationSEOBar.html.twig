@@ -1,4 +1,4 @@
-<nav id="node-translations-seo-navigation" class="node-translations-navigation uk-navbar">
+<nav class="node-translation-bar translation-bar uk-navbar">
     {% spaceless %}
 	<ul class="uk-navbar-nav">
 		{% for translation in available_translations %}
@@ -6,6 +6,6 @@
 		    	<a class="node-translation-navigation-link uk-navbar-link" href="{{ path('nodesEditSEOPage', { nodeId: node.getId, translationId:translation.getId }) }}">{{ translation.getShortLocale }}</a>
 		    </li>
 		{% endfor %}
-	</ul>        
+	</ul>
     {% endspaceless %}
 </nav>
