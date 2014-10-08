@@ -7,7 +7,7 @@
     {% if (securityContext.Granted('ROLE_ACCESS_TRANSLATIONS')) %}
     {% if translation.getId and not translation.isDefaultTranslation %}
     <a class="uk-button uk-button-danger" href="{{ path('translationsDeletePage', { translationId: translation.getId}) }}">
-        <i class="uk-icon-trash-o"></i><span class="label">{% trans %}delete.translation{% endtrans %}</span>
+        <i class="uk-icon-rz-trash-o"></i><span class="label">{% trans %}delete.translation{% endtrans %}</span>
     </a>
     {% endif %}
     {% endif %}

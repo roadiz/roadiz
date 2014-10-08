@@ -2,6 +2,6 @@
     <a class="uk-button" href="{{ path('settingsHomePage') }}"><i class="uk-icon-reply"></i><span class="label">{% trans %}back_to.settings{% endtrans %}</span></a>
 
     {% if setting.getId %}
-    <a class="uk-button uk-button-danger" href="{{ path('settingsDeletePage', { settingId: setting.getId}) }}"><i class="uk-icon-trash-o"></i><span class="label">{% trans %}delete.setting{% endtrans %}</span></a>
+    <a class="uk-button uk-button-danger" href="{{ path('settingsDeletePage', { settingId: setting.getId}) }}"><i class="uk-icon-rz-trash-o"></i><span class="label">{% trans %}delete.setting{% endtrans %}</span></a>
     {% endif %}
 </nav>
