@@ -296,7 +296,7 @@ class AppController implements ViewableInterface
         $this->getService('stopwatch')->start('initTranslations');
         $lang = $this->kernel->getRequest()->getLocale();
         $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
-
+        var_dump($msgPath );
         /*
          * fallback to english, if message catalog absent
          */
@@ -305,9 +305,10 @@ class AppController implements ViewableInterface
             $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
         }
 
+        $this->translator = new Translator($lang);
+
         if (file_exists($msgPath)) {
             // instancier un objet de la classe Translator
-            $this->translator = new Translator($lang);
             // charger, en quelque sorte, des traductions dans ce translator
             $this->translator->addLoader('xlf', new XliffFileLoader());
             $this->translator->addResource(
@@ -316,9 +317,8 @@ class AppController implements ViewableInterface
                 $lang
             );
             // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
-            $this->twig->addExtension(new TranslationExtension($this->translator));
         }
-
+        $this->twig->addExtension(new TranslationExtension($this->translator));
         $this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
         $this->getService('stopwatch')->stop('initTranslations');
 

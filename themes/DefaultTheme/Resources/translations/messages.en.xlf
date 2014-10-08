@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+ <file original="none" source-language="en-US" datatype="plaintext">
+  <body>
+   <trans-unit id="hello.world">
+    <source>hello.world</source>
+    <target>Hello world!</target>
+   </trans-unit>
+   <!-- This is node : %name% -->
+   <trans-unit id="nodeName">
+    <source>node.name.is.%name%</source>
+    <target>This is “%name%” node</target>
+   </trans-unit>
+   <trans-unit id="translationName">
+    <source>translation.is.%name%</source>
+    <target>This is “%name%” translation</target>
+   </trans-unit>
+  </body>
+ </file>
+</xliff>
