@@ -255,6 +255,28 @@ class NodesSourcesController extends RozierApp
                     'empty_value' => $translator->trans('choose.value'),
                     'required' => false
                 );
+            case NodeTypeField::DATETIME_T:
+                return array(
+                    'label' => $field->getLabel(),
+                    'years' => range(date('Y')-10, date('Y')+10),
+                    'required' => false
+                );
+            case NodeTypeField::INTEGER_T:
+                return array(
+                    'label' => $field->getLabel(),
+                    'required' => false,
+                    'constraints' => array(
+                        new Type('integer')
+                    )
+                );
+            case NodeTypeField::DECIMAL_T:
+                return array(
+                    'label' => $field->getLabel(),
+                    'required' => false,
+                    'constraints' => array(
+                        new Type('double')
+                    )
+                );
 
             default:
                 return array(

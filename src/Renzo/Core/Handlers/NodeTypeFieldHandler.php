@@ -75,13 +75,26 @@ class NodeTypeFieldHandler
 
             return '
     /**
-     * @Column(type="'.NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].'", nullable=true )
+     * @Column(type="'.
+        NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].
+        '", '.
+        $this->getDecimalPrecision().
+        'nullable=true )
      */
     '.$var.PHP_EOL.$this->generateSourceGetter().PHP_EOL.$this->generateSourceSetter().PHP_EOL;
 
         }
 
         return '';
+    }
+
+    protected function getDecimalPrecision()
+    {
+        if ($this->nodeTypeField->getType() == NodeTypeField::DECIMAL_T) {
+            return 'precision=10, scale=3, ';
+        } else {
+            return '';
+        }
     }
 
     /**
@@ -100,6 +113,9 @@ class NodeTypeFieldHandler
             }
             if ($this->nodeTypeField->getType() === NodeTypeField::INTEGER_T) {
                 $assignation = '(int) $'.$this->nodeTypeField->getName();
+            }
+            if ($this->nodeTypeField->getType() === NodeTypeField::DECIMAL_T) {
+                $assignation = '(double) $'.$this->nodeTypeField->getName();
             }
 
             return '
