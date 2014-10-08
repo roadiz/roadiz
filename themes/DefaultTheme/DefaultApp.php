@@ -62,32 +62,13 @@ class DefaultApp extends FrontendController
         Request $request,
         $_locale = null
     ) {
-
         /*
          * If you use a static route for Home page
          * we need to grab manually language.
          *
          * Get language from static route
          */
-        if (null !== $_locale) {
-            $request->setLocale($_locale);
-            $translation = $this->getService('em')
-                        ->getRepository('RZ\Renzo\Core\Entities\Translation')
-                        ->findOneBy(
-                            array(
-                                /*
-                                 * Browser locale is just lang code, we need to convert it to
-                                 * a complete locale with region code (fr -> fr_FR)
-                                 */
-                                'locale'=>Translation::$availableLocalesShortcut[$_locale]
-                            )
-                        );
-        } else {
-            $translation = $this->getService('em')
-                        ->getRepository('RZ\Renzo\Core\Entities\Translation')
-                        ->findDefault();
-            $request->setLocale($translation->getShortLocale());
-        }
+        $translation = $this->bindLocaleFromRoute($request, $_locale);
 
         $node = $this->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Node')

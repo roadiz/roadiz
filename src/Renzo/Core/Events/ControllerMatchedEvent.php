@@ -39,6 +39,15 @@ class ControllerMatchedEvent extends Event
         $matchedCtrl = $event->getController()[0];
 
         /*
+         * Set request locale if _locale param
+         * is present in Route.
+         */
+        $routeParams = $this->kernel->getRequest()->get('_route_params');
+        if (!empty($routeParams["_locale"])) {
+            $this->kernel->getRequest()->setLocale($routeParams["_locale"]);
+        }
+
+        /*
          * Inject current Kernel to the matched Controller
          */
         if ($matchedCtrl instanceof AppController) {
