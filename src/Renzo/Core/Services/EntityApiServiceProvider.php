@@ -14,6 +14,7 @@ use Pimple\Container;
 use RZ\Renzo\CMS\Utils\NodeApi;
 use RZ\Renzo\CMS\Utils\NodeTypeApi;
 use RZ\Renzo\CMS\Utils\NodeSourceApi;
+use RZ\Renzo\CMS\Utils\TagApi;
 
 /**
  * Register security services for dependency injection container.
@@ -32,6 +33,10 @@ class EntityApiServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['nodeSourceApi'] = function ($c) {
             return new NodeSourceApi($c);
+        };
+
+        $container['tagApi'] = function ($c) {
+            return new TagApi($c);
         };
     }
 }
