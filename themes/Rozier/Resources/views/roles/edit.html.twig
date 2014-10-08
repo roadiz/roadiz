@@ -2,21 +2,26 @@
 
 
 {% block content %}
-<section id="manage-role">
-	<h1 id="role-title">{{ "edit.role.%name%"|trans({'%name%': role.getName }) }}</h1>
+<section class="content-global">
 
-	{% form_theme form 'forms.html.twig' %}
-	<form id="edit-role-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-            <button data-action-save="#edit-role-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                <i class="uk-icon-save"></i>
-                <span class="label">{% trans %}save{% endtrans %}</span>
-            </button>
-            {% endspaceless %}
-   		</fieldset>
-	</form>
+    <header class="content-header header-role header-role-add">
+        <h1 class="content-title">{{ "edit.role.%name%"|trans({'%name%': role.getName }) }}</h1>
+    </header>
+
+    <article class="content">
+    	{% form_theme form 'forms.html.twig' %}
+    	<form id="edit-role-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    	    {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	{% spaceless %}
+                <button data-action-save="#edit-role-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <i class="uk-icon-save"></i>
+                    <span class="label">{% trans %}save{% endtrans %}</span>
+                </button>
+                {% endspaceless %}
+       		</fieldset>
+    	</form>
+    </article>
 
     {% include 'roles/actionsMenu.html.twig' %}
 </section>
