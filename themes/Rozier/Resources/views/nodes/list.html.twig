@@ -72,7 +72,7 @@
                         <td>{{ node.getUpdatedAt|localizeddate('short', 'none') }}</td>
                         <td>
                             <a class="uk-button uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-node-tree"></i> {% trans %}see.nodetree{% endtrans %}</a>
-                            <a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+                            <a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
                         </td>
                     </tr>
                     {% endfor %}

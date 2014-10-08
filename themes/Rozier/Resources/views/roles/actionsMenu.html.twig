@@ -3,7 +3,7 @@
     {# Delete current node #}
     {% if (securityContext.Granted('ROLE_ACCESS_ROLES')) %}
     {% if role.getId %}
-    <a class="uk-button uk-button-danger" href="{{ path('rolesDeletePage', { roleId: role.getId}) }}"><i class="uk-icon-trash-o"></i><span class="label">{% trans %}delete.role{% endtrans %}</span></a>
+    <a class="uk-button uk-button-danger" href="{{ path('rolesDeletePage', { roleId: role.getId}) }}"><i class="uk-icon-rz-trash-o"></i><span class="label">{% trans %}delete.role{% endtrans %}</span></a>
     {% endif %}
     {% endif %}
 </nav>

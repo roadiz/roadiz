@@ -7,14 +7,14 @@
         <h1 class="content-title">{{ "edit.nodeTypeFields.for.nodeType.%name%"|trans({'%name%': nodetype.getDisplayName}) }}</h1>
         <div class="content-header-nav-back uk-navbar-content">
         	<a class="uk-button" href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.nodeTypes{% endtrans %}</a>
-        </div>		
+        </div>
         <div class="content-header-action-menu">
 	        <nav>
 				<a class="uk-button" href="{{ path('nodeTypeFieldsAddPage', { nodeTypeId: nodeType.getId }) }}"><i class="uk-icon-plus"></i> {% trans %}add.nodeTypeField{% endtrans %}</a>
 			</nav>
 		</div>
     </header>
-    
+
     <article class="content content-no-action-menu">
         <div class="content-table-cont">
         	<table class="node-type-fields content-table uk-table">
@@ -33,7 +33,7 @@
 						<td>{{ field.getLabel }}</td>
 						<td>{{ field.getTypeName }}</td>
 						<td>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 						</td>
 					</tr>
 					{% endfor %}

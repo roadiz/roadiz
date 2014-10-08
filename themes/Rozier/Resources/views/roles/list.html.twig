@@ -25,7 +25,7 @@
 				</td>
 				<td>
 					{% if not role.required %}
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('rolesDeletePage', { roleId: role.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}delete{% endtrans %}</a>
+					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('rolesDeletePage', { roleId: role.getId }) }}"><span class="uk-icon-rz-trash-o"></span> {% trans %}delete{% endtrans %}</a>
 					<a class="uk-button uk-button-small uk-button-success" href="{{ path('rolesExportPage', { roleId: role.getId }) }}"><i class="uk-icon-download"></i> {% trans %}export{% endtrans %}</a>
 					{% else %}
 					<div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}role.required{% endtrans %}</div>

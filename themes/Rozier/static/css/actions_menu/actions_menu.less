@@ -1,5 +1,5 @@
-@open-action-menu-W:163px + 4;
-@action-menu-W:55px;
+@open-action-menu-W:163px + 2;
+@action-menu-W:52px;
 
 
 .action-menu-icon(){
@@ -9,12 +9,13 @@
     border: 1px solid #cecece;
     color: #808080;
     display: inline-block;
-    width: 33px;
-    height: 33px;
-    margin-right: 9px;
+    width: 32px;
+    height: 32px;
+    margin: 0 9px 0 0;
     text-align: center;
     z-index: 2;
     position: relative;
+    font-size: 16px;
 
     &:before {
         position: relative;
@@ -45,7 +46,7 @@
         width: 100%;
         white-space: nowrap;
         text-align: left;
-        padding: 9px 9px 9px 9px + 4;
+        padding: 8px 9px 9px 13px;
         border-top: 1px solid rgba(0,0,0,0.1);
         background-image: none;
         background-color: white;
@@ -104,7 +105,6 @@
                 i { border-color: transparent; }
             }
 
-
             .label {
                 color: white;
             }
@@ -119,10 +119,6 @@
     .node-statuses {
         position: relative;
         border-top: 1px solid rgba(0,0,0,0.1);
-
-        header {
-
-        }
 
         nav,
         ul {
