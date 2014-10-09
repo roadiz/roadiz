@@ -25,8 +25,8 @@
 	        <table class="history content-table uk-table">
 				<thead>
 			        <tr>
-			            <th>{% trans %}datetime{% endtrans %}</th>
-			            <th>{% trans %}level{% endtrans %}</th>
+			            <th colspan="2">{% trans %}datetime{% endtrans %}</th>
+			            {# <th>{% trans %}level{% endtrans %}</th> #}
 			            {% if not user %}
 			            <th>{% trans %}user{% endtrans %}</th>
 			            {% endif %}
@@ -35,15 +35,26 @@
 			    </thead>
 				<tbody>
 					{% for log in logs %}
+
+					{% if levels[log.getLevel] == 'error' %}
+					{% set tdClass = 'class="uk-alert-danger"' %}
+					{% set icon = 'uk-icon-warning' %}
+					{% else %}
+					{% set tdClass = 'class=""' %}
+					{% set icon = 'uk-icon-info-circle' %}
+					{% endif %}
+
+
+
 					<tr>
-						<td>{{ log.getDatetime|date }}</td>
-						<td>{{ levels[log.getLevel] }}</td>
+						<td {{ tdClass|raw }}>{{ log.getDatetime|date }}</td>
+						<td {{ tdClass|raw }}><i class="{{ icon }}"></i>{# {{ levels[log.getLevel] }} #}</td>
 						{% if not user %}
-						<td>{% if log.getUser %}
+						<td {{ tdClass|raw }}>{% if log.getUser %}
 							<a href="{{ path("usersEditPage", {"userId":log.getUser.getId }) }}">{{ log.getUser.getUsername }}</a>
 						{% endif %}</td>
 						{% endif %}
-						<td>{{ log.getMessage }}</td>
+						<td {{ tdClass|raw }}>{{ log.getMessage }}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
