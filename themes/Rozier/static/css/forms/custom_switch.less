@@ -3,44 +3,44 @@
 
 .bootstrap-switch {
 
-    width: 69px;
-    height: 29px;
-    min-width: 69px;
+    // width: 46px;
+    // height: 24px;
+    min-width: 52px;
     font-size: 10px;
     border: 0 none;
-    overflow: hidden;
-    .rounded(@switch-round);
-    .box-sizing();
+    // overflow: hidden;
+    // .rounded(@switch-round);
+    // .box-sizing();
 
     .bootstrap-switch-container {
-        width: 109px;
+       // width: 109px;
     }
 
     .bootstrap-switch-label {
-        background-color: @contrast-color-darker;
-        padding: 2px;
-        width: 29px;
-        line-height: 0px;
-        margin:0px;
-        .transition(border-radius linear 0.2s);
+        // background-color: @contrast-color-darker;
+        // padding: 2px;
+        // width: 23px;
+        line-height: 16px;
+        // margin:0px;
+        // .transition(border-radius linear 0.2s);
 
-        &:before {
-            content:'';
-            display: block;
-            height: 25px;
-            .rounded(@switch-round - 2);
-            background-color: white;
-        }
+        // &:before {
+        //     content:'';
+        //     display: block;
+        //     height: 25px;
+        //     .rounded(@switch-round - 2);
+        //     background-color: white;
+        // }
     }
 
     .bootstrap-switch-primary,
     .bootstrap-switch-default {
-        width: 40px;
-        line-height: 20px;
-        padding-top: 5px;
-        font-size: 10px;
-        font-weight: bold;
-        vertical-align: top;
+        // width: 40px;
+        // line-height: 20px;
+        // padding-top: 5px;
+        // font-size: 10px;
+        // font-weight: bold;
+        // vertical-align: top;
     }
 
     .bootstrap-switch-handle-on.bootstrap-switch-primary {
@@ -51,10 +51,10 @@
     }
 
     .bootstrap-switch-primary {
-        .border-radius(0, 0, @switch-round, @switch-round);
+        //.border-radius(0, 0, @switch-round, @switch-round);
     }
     .bootstrap-switch-default {
-        .border-radius(@switch-round, @switch-round, 0, 0);
+        //.border-radius(@switch-round, @switch-round, 0, 0);
     }
 
 
@@ -63,17 +63,17 @@
     &.bootstrap-switch-off {
         .bootstrap-switch-label {
             background-color: @switch-off-color;
-            .border-radius(0, 0, @switch-round, @switch-round);
+            //.border-radius(0, 0, @switch-round, @switch-round);
         }
 
         .bootstrap-switch-container {
-            margin-left: -40px;
+            //margin-left: -40px;
         }
     }
     &.bootstrap-switch-on {
         .bootstrap-switch-label {
             background-color: @contrast-color-darker;
-            .border-radius(@switch-round, @switch-round, 0, 0);
+            //.border-radius(@switch-round, @switch-round, 0, 0);
         }
     }
 

@@ -1,19 +1,32 @@
-@action-menu-W:52px;
-@separation-border-color: #DDDDDD;
-@block-border-left: #808080;
+/*------------------------------------*\
+   ACTIONS MENU
+\*------------------------------------*/
 
+
+/* -------- VARS -------- */
+
+@action-menu-H: 52px;
+@separation-border-color: #DDDDDD;
+@item-global-color: #808080;
+@item-global-label-color: #999999;
+@item-global-border-color: #cecece;
+@item-global-background: #f9f9f9;
+@subnav-W: 200px;
+
+
+/* -------- STYLES -------- */
 
 .action-menu-icon(){
     .rounded(100%);
     position: relative;
-    background: #f9f9f9;
-    vertical-align: middle;
-    border: 1px solid #cecece;
-    color: #808080;
     display: inline-block;
+    background: @item-global-background;
+    vertical-align: middle;
+    border: 1px solid @item-global-border-color;
+    color: @item-global-color;
     width: 32px;
     height: 32px;
-    margin: 0 4px 0 0;
+    margin: 0;
     text-align: center;
     z-index: 2;
     font-size: 16px;
@@ -39,7 +52,7 @@
         .rounded(0);
         .box-sizing();
         border: 0 none;
-        height: @action-menu-W;
+        height: @action-menu-H;
         width: 100%;
         white-space: nowrap;
         text-align: left;
@@ -54,12 +67,16 @@
         }
         i {
             .action-menu-icon();
+            .transition(border-color ease 0.3s);
         }
         &:hover {
             &.uk-button-danger,
             &.uk-button-primary {
                 border-color: @separation-border-color;
                 background: white;
+            }
+            i {
+                border-color: darken(@item-global-border-color, 10%);
             }
         }
         &:before {
@@ -69,7 +86,8 @@
             bottom: 0px;
             left: 0px;
             width: 4px;
-            background-color: @block-border-left;
+            background-color: @item-global-label-color;
+            z-index: 99999;
         }
         &.uk-button-primary:before {
             background-color: @contrast-color-darker;
@@ -85,12 +103,12 @@
             position: absolute;
             z-index: 9999;
             background-color: white;
-            width: 52px;
-            height: 52px;
+            width: 100%;
             top: 0;
-            left: 4px;
+            left: 0;
             text-align: center;
-            padding: 9px 0 0 2px;
+            padding: 9px 9px 9px 13px;
+            .box-sizing();
         }
         .label-text {
             background-color: @contrast-color-darker;
@@ -136,73 +154,74 @@
             padding: 0 20px;
             z-index: 999;
             left: 0;
-            .transition(~'color 0.3s ease, left 0.3s ease');
+            .transition(left 0.3s ease);
             -webkit-font-smoothing: antialiased;
         }
     }
-
+    
+    // for Subnav button
     .with-subnav {
-        header .label-text {
-            width: 174px;
-        }
-        &:nth-child(even) {
-            .label:before {
-                background-color: lighten(@block-border-left, 10%);
-            }
-        }
-    }
-
-    .node-actions,
-    .node-statuses {
         position: relative;
         border-top: 1px solid @separation-border-color;
 
-        nav,
-        ul {
+        header {
+            .label {
+                display: none;
+                width: @subnav-W;
+                left: -@subnav-W;
+                background-color: @item-global-label-color;
+            }
+        }
+        &:nth-child(even) {
+            header {
+                &:before, .label {
+                    background-color: lighten(@item-global-label-color, 10%);
+                }
+            }
+        }  
+        nav,ul {
             display: none;
             position: absolute;
             margin: 0px;
-            width: 210px;
-            right: 55px;
-            top: 0px;
+            padding: 0px;
+            width: @subnav-W;
+            right: 56px;
+            top: 52px;
             border-right: 1px dashed @separation-border-color;
+            border-left: 4px solid @item-global-label-color;
+            .box-sizing();
+            .drop-shadow(3px, 5px, 20px, 0.12);
 
             .uk-button, li {
                 border: 0 none;
-                height: 100%;
+                height: @action-menu-H;
                 white-space: nowrap;
                 text-align: left;
-                padding: 9px;
+                padding: 0 9px;
                 border-top: 1px solid @separation-border-color;
-                background-color: #f5f5f5;
-                //border-left: 4px solid @block-border-left;
+                background-color: @item-global-background;
+                .box-sizing();
+                line-height: @action-menu-H;
 
                 &:before {
-                    content: "";
-                    position: absolute;
-                    top: 0px;
-                    bottom: 0px;
-                    left: 0px;
-                    width: 4px;
-                    background-color: @block-border-left;
+                    display: none;
                 }
-
                 &:first-child {
                     border-top: 0 none;
                 }
-
                 i {
                     .action-menu-icon();
                 }
 
                 .label {
-                    font-size: 12px;
+                    position: relative;
+                    display: inline-block;
+                    vertical-align: middle;
+                    font-size: 11px;
                     font-weight: bold;
+                    padding-left: 9px;
                     &:before {
                         display: none;
-                    }
-                    .label-text {
-                        .opacity(1);
                     }
                 }
                 .bootstrap-switch {
@@ -212,19 +231,8 @@
             }
         }
         &:hover {
-            nav,
-            ul  {
+            nav,ul, header .label  {
                 display: block;
-            }
-        }
-    }
-
-
-    &:hover {
-        .transform(translate3D(0, 0, 0));
-        .uk-button {
-            .label {
-                display: inline-block;
             }
         }
     }
