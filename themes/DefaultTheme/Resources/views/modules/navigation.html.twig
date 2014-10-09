@@ -36,6 +36,15 @@
                 'securityContext':securityContext
             } only %}
 		{% endfor %}
+
+        {#
+         # Page contact
+         #}
+        {% if request.locale != _default_locale %}
+        <li><a href="{{ path('contactPageLocale', {"_locale":request.locale}) }}">{% trans %}contact{% endtrans %}</a></li>
+        {% else %}
+        <li><a href="{{ path('contactPage') }}">{% trans %}contact{% endtrans %}</a></li>
+        {% endif %}
 	</ul>
 </nav>
 {% endif %}
