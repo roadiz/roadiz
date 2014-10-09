@@ -1,5 +1,6 @@
-@open-action-menu-W: 56px;
 @action-menu-W:52px;
+@separation-border-color: #DDDDDD;
+@block-border-left: #808080;
 
 
 .action-menu-icon(){
@@ -12,7 +13,7 @@
     display: inline-block;
     width: 32px;
     height: 32px;
-    margin: 0 9px 0 0;
+    margin: 0 4px 0 0;
     text-align: center;
     z-index: 2;
     font-size: 16px;
@@ -25,19 +26,15 @@
 }
 
 .actions-menu {
-
     position: fixed;
     right: 0px;
     z-index: 9999;
-    width:@open-action-menu-W;
+    width:56px;
     .box-sizing();
     background:white;
     .drop-shadow(3px, 5px, 20px, 0.12);
-    .transform-transition(ease 0.5s);
-    //.transform(translate3D(@open-action-menu-W - @action-menu-W, 0, 0));
 
-    header,
-    .uk-button {
+    header, .uk-button {
         position: relative;
         .rounded(0);
         .box-sizing();
@@ -47,68 +44,110 @@
         white-space: nowrap;
         text-align: left;
         padding: 9px 9px 9px 13px;
-        border-top: 1px solid rgba(0,0,0,0.1);
+        border-top: 1px solid @separation-border-color;
         background-image: none;
         background-color: white;
+        z-index: 999;
 
-        &:first-child {
+        &:first-child, &:first-child .label {
             border-top: 0 none;
         }
-
         i {
             .action-menu-icon();
         }
-
-        &.uk-button-danger {
-            .box-sizing();
-            .label {
-                //height: 51px;
-            }
-            &:before {
-                background-color: #d32c46;
-            }
-        }
-        &.uk-button-primary {
-
-            &:before {
-                background-color: #32cd9b;
-            }
-        }
         &:hover {
-
             &.uk-button-danger,
             &.uk-button-primary {
-                i { border-color: #999; }
-                background: transparent;
-            }
-            &:before {
-                width: 100%;
+                border-color: @separation-border-color;
+                background: white;
             }
         }
-        .label {
+        &:before {
+            content: "";
             position: absolute;
-            display: block;
-            font-size: 12px;
-            line-height: 52px;
-            font-weight: bold;
-            z-index: 2;
-            color: #444;
-            text-shadow: none;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            width: 4px;
+            background-color: @block-border-left;
+        }
+        &.uk-button-primary:before {
+            background-color: @contrast-color-darker;
+        }
+        &.uk-button-danger:before {
+            background-color: @alert-color;
+        }
+    }
+
+    // for Save button
+    .uk-button-primary {
+        .save-icon {
+            position: absolute;
+            z-index: 9999;
+            background-color: white;
+            width: 52px;
             height: 52px;
             top: 0;
-            right: 52px;
-            .transition(color 0.3s linear);
+            left: 4px;
+            text-align: center;
+            padding: 9px 0 0 2px;
+        }
+        .label-text {
+            background-color: @contrast-color-darker;
+        }
+        &:hover {
+            .label-text {
+                left: -100%;
+            }
+        }
+    }
 
-            &:after {
-                content: "";
-                position: absolute;
-                top: 0px;
-                bottom: 0px;
-                right: 0px;
-                width: 4px;
-                background-color: #808080;
-                z-index: 0;
-                .transition(width 0.5s ease);
+    // for Classic button
+    .no-subnav {
+        position: relative;
+        &.trash .label-text {
+            background-color: @alert-color;
+        }
+        &:hover {
+            .label-text {
+                left: -100%;
+            }
+        }
+    }
+    .label {
+        position: absolute;
+        display: block;
+        font-size: 12px;
+        line-height: 52px;
+        font-weight: bold;
+        color: #444;
+        text-shadow: none;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border-top: 1px solid transparent;
+        .box-sizing();
+
+        .label-text {
+            position: relative;
+            display: block;
+            color: white;
+            height: 100%;
+            padding: 0 20px;
+            z-index: 999;
+            left: 0;
+            .transition(~'color 0.3s ease, left 0.3s ease');
+            -webkit-font-smoothing: antialiased;
+        }
+    }
+
+    .with-subnav {
+        header .label-text {
+            width: 174px;
+        }
+        &:nth-child(even) {
+            .label:before {
+                background-color: lighten(@block-border-left, 10%);
             }
         }
     }
@@ -116,28 +155,37 @@
     .node-actions,
     .node-statuses {
         position: relative;
-        border-top: 1px solid rgba(0,0,0,0.1);
+        border-top: 1px solid @separation-border-color;
 
         nav,
         ul {
             display: none;
             position: absolute;
             margin: 0px;
-            width: 215px;
-            right: @open-action-menu-W;
-            top: 0;
+            width: 210px;
+            right: 55px;
+            top: 0px;
+            border-right: 1px dashed @separation-border-color;
 
-            .uk-button,
-            li {
-                .box-sizing();
+            .uk-button, li {
                 border: 0 none;
-                height: @action-menu-W;
+                height: 100%;
                 white-space: nowrap;
                 text-align: left;
                 padding: 9px;
-                border-top: 1px solid rgba(0,0,0,0.1);
+                border-top: 1px solid @separation-border-color;
                 background-color: #f5f5f5;
-                border-left: 4px solid #808080;
+                //border-left: 4px solid @block-border-left;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    top: 0px;
+                    bottom: 0px;
+                    left: 0px;
+                    width: 4px;
+                    background-color: @block-border-left;
+                }
 
                 &:first-child {
                     border-top: 0 none;
@@ -149,6 +197,17 @@
 
                 .label {
                     font-size: 12px;
+                    font-weight: bold;
+                    &:before {
+                        display: none;
+                    }
+                    .label-text {
+                        .opacity(1);
+                    }
+                }
+                .bootstrap-switch {
+                    position: absolute;
+                    right: 13px;
                 }
             }
         }
