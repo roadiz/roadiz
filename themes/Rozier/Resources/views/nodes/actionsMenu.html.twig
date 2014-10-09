@@ -3,7 +3,7 @@
 
     {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE')) %}
 
-    <a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}"><i class="uk-icon-rz-trash-o"></i><span class="label">{% trans %}delete{% endtrans %}</span></a>
+    <a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}"><i class="uk-icon-rz-trash"></i><span class="label">{% trans %}delete{% endtrans %}</span></a>
 
     {% endif %}
 
@@ -12,6 +12,7 @@
      #}
     <div class="node-actions">
         <header><i class="uk-icon-rz-actions"></i><span class="label">{% trans %}actions{% endtrans %}</span></header>
+
         <nav>
             {% if source %}
             <a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-rz-visibility-on"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
