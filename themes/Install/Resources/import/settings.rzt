@@ -1,42 +1,80 @@
-{
-    "Emails": [
-        {
-            "name": "email_sender_name",
-            "value": "REZO ZERO",
-            "visible": true,
-            "type": 0
-        },
-        {
-            "name": "email_sender",
-            "value": "contact@rezo-zero.com",
-            "visible": true,
-            "type": 8
-        }
-    ],
-    "__default__": [
-        {
-            "name": "seo_description",
-            "value": "Maecenas sed jk eget risus varius blandit sit amet non magna. Maecenas faucibus mollis interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            "visible": true,
-            "type": 2
-        },
-        {
-            "name": "site_name",
-            "value": "Lorem Condimentum Ligula",
-            "visible": true,
-            "type": 0
-        },
-        {
-            "name": "display_debug_panel",
-            "value": true,
-            "visible": true,
-            "type": 5
-        },
-        {
-            "name": "meta_description",
-            "value": "My website is beautiful!",
-            "visible": true,
-            "type": 2
-        }
-    ]
-}
+[
+    {
+        "name": "Development",
+        "inMenu": true,
+        "settings": [
+            {
+                "name": "display_debug_panel",
+                "value": false,
+                "type": 5,
+                "visible": true
+            }
+        ]
+    },
+    {
+        "name": "Emailings",
+        "inMenu": true,
+        "settings": [
+            {
+                "name": "email_sender",
+                "value": "",
+                "type": 8,
+                "visible": true
+            },
+            {
+                "name": "email_sender_name",
+                "value": "",
+                "type": 0,
+                "visible": true
+            }
+        ]
+    },
+    {
+        "name": "APIs",
+        "inMenu": true,
+        "settings": [
+            {
+                "name": "soundcloud_client_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "google_client_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "twitter_client_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            }
+        ]
+    },
+    {
+        "name": "Site informations",
+        "inMenu": true,
+        "settings": [
+            {
+                "name": "seo_description",
+                "value": "",
+                "type": 2,
+                "visible": true
+            },
+            {
+                "name": "site_name",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "meta_description",
+                "value": "",
+                "type": 2,
+                "visible": true
+            }
+        ]
+    }
+]

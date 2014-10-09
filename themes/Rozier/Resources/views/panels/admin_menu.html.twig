@@ -167,6 +167,8 @@
 				{% for group in settingGroups %}
 				<li><a href="{{ path('settingGroupsSettingsPage', {'settingGroupId': group.getId}) }}"><i class="uk-icon-rz-settings"></i><span class="info">{{ group.getName }}</span></a></li>
 				{% endfor %}
+
+				<li><a href="{{ path('settingGroupsHomePage') }}"><i class="uk-icon-gears"></i><span class="info">{% trans %}setting.groups{% endtrans %}</span></a></li>
 			</ul>
 		</li>
 
