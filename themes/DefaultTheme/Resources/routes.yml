@@ -8,6 +8,17 @@ homePageLocale:
     requirements:
         # Use every 2 letter codes (quick and dirty)
         _locale: "[a-z]{2}"
+
+contactPage:
+    path:     /contact
+    defaults: { _controller: Themes\DefaultTheme\Controllers\ContactController::indexAction }
+contactPageLocale:
+    path:     /{_locale}/contact
+    defaults: { _controller: Themes\DefaultTheme\Controllers\ContactController::indexAction }
+    requirements:
+        # Use every 2 letter codes (quick and dirty)
+        _locale: "[a-z]{2}"
+
 feedRSS:
     path:     /feed
     defaults: { _controller: Themes\DefaultTheme\Controllers\FeedController::indexAction }

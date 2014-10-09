@@ -155,7 +155,8 @@ class Logger implements LoggerInterface
 
         if (null !== $this->getSecurityContext() &&
             null !== $this->getSecurityContext()->getToken() &&
-            null !== $this->getSecurityContext()->getToken()->getUser()) {
+            null !== $this->getSecurityContext()->getToken()->getUser() &&
+            is_object($this->getSecurityContext()->getToken()->getUser())) {
 
             $log->setUser($this->getSecurityContext()->getToken()->getUser());
         }

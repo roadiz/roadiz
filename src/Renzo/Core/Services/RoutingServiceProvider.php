@@ -74,7 +74,16 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                 /*
                  * Add Assets controller routes
                  */
-                $rCollection->addCollection(\RZ\Renzo\CMS\Controllers\AssetsController::getRoutes());
+                $rCollection->addCollection(
+                  \RZ\Renzo\CMS\Controllers\AssetsController::getRoutes()
+                );
+
+                /*
+                 * Add Entry points controller routes
+                 */
+                $rCollection->addCollection(
+                  \RZ\Renzo\CMS\Controllers\EntryPointsController::getRoutes()
+                );
 
                 /*
                  * Add Backend routes

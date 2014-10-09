@@ -79,7 +79,7 @@ class DefaultApp extends FrontendController
                     $this->getSecurityContext()
                 );
 
-        $this->prepareThemeAssignation($node, $translation);
+        $this->prepareThemeAssignation(null, $translation);
 
         /*
          * First choice, render Homepage as any other nodes

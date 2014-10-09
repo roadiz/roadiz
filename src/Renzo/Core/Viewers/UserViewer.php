@@ -25,6 +25,8 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
+use \InlineStyle\InlineStyle;
+
 /**
  * UserViewer
  */
@@ -39,8 +41,7 @@ class UserViewer implements ViewableInterface
      */
     public function __construct(User $user)
     {
-        $this->initializeTwig()
-             ->initializeTranslator();
+        $this->initializeTranslator();
         $this->user = $user;
     }
 
@@ -53,44 +54,11 @@ class UserViewer implements ViewableInterface
     }
 
     /**
-     * Get twig cache folder for current Viewer
-     *
-     * @return string
-     */
-    public function getCacheDirectory()
-    {
-        return RENZO_ROOT.'/cache/Core/UserViewer/twig_cache';
-    }
-
-    /**
-     * Create a Twig Environment instance
-     *
-     * @return  \Twig_Environment
-     */
-    public function initializeTwig()
-    {
-        $loader = new \Twig_Loader_Filesystem(array(
-            RENZO_ROOT . '/src/Renzo/Core/Resources/views',
-        ));
-        $this->twig = new \Twig_Environment($loader, array(
-            'cache' => $this->getCacheDirectory(),
-            'debug' => Kernel::getInstance()->isDebug()
-        ));
-
-        // RoutingExtension
-        $this->twig->addExtension(
-            new RoutingExtension(Kernel::getService('urlGenerator'))
-        );
-
-        return $this;
-    }
-
-    /**
      * @return \Twig_Environment
      */
     public function getTwig()
     {
-        return $this->twig;
+        return Kernel::getService('twig.environment');
     }
 
     /**
@@ -123,7 +91,7 @@ class UserViewer implements ViewableInterface
             $lang
         );
         // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
-        $this->twig->addExtension(new TranslationExtension($this->translator));
+        Kernel::getService('twig.environment')->addExtension(new TranslationExtension($this->translator));
 
         return $this;
     }
@@ -137,24 +105,32 @@ class UserViewer implements ViewableInterface
     {
         $assignation = array(
             'user' => $this->user,
-            'site' => SettingsBag::get('site_name')
+            'site' => SettingsBag::get('site_name'),
+            'mailContact' => SettingsBag::get('email_sender'),
         );
         $emailBody = $this->getTwig()->render('users/newUser_email.html.twig', $assignation);
 
+        /*
+         * inline CSS
+         */
+        $htmldoc = new InlineStyle($emailBody);
+        $htmldoc->applyStylesheet(file_get_contents(
+            RENZO_ROOT."/src/Renzo/Core/Resources/css/transactionalStyles.css"
+        ));
 
         // Create the message
         $message = \Swift_Message::newInstance()
             // Give the message a subject
             ->setSubject($this->getTranslator()->trans(
                 'welcome.user.email.%site%',
-                array('%site%'=>SettingsBag::get('email_sender_name'))
+                array('%site%'=>SettingsBag::get('site_name'))
             ))
             // Set the From address with an associative array
-            ->setFrom(array(SettingsBag::get('email_sender') => SettingsBag::get('email_sender_name')))
+            ->setFrom(array(SettingsBag::get('email_sender') => SettingsBag::get('site_name')))
             // Set the To addresses with an associative array
             ->setTo(array($this->user->getEmail()))
             // Give it a body
-            ->setBody($emailBody, 'text/html');
+            ->setBody($htmldoc->getHTML(), 'text/html');
 
         // Create the Transport
         $transport = \Swift_MailTransport::newInstance();

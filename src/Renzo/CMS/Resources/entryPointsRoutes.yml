@@ -1,0 +1,9 @@
+#
+# Contact form handling
+#
+contactFormLocaleAction:
+    path:     /{_locale}/submit-form/contact
+    defaults: { _controller: \RZ\Renzo\CMS\Controllers\EntryPointsController::contactFormAction }
+    requirements:
+        # Use every 2 letter codes (quick and dirty)
+        _locale: "[a-z]{2}"
