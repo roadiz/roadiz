@@ -40,7 +40,8 @@ class SettingGroupType extends AbstractType
         }
 
         $resolver->setDefaults(array(
-            'choices' => $choices
+            'choices' => $choices,
+            'empty_value' => '---------'
         ));
     }
     /**

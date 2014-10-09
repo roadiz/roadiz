@@ -3,7 +3,13 @@
 
 {% block content %}
 <section class="content-global">
-	<header class="content-header header-setting header-setting-add">
+
+    {% if settingGroup %}
+    <header class="content-header header-setting header-setting-add">
+	   <h1 class="content-title setting-list-title">{{ "%group%.settings"|trans({'%group%':settingGroup.getName}) }}</h1>
+    </header>
+    {% else %}
+    <header class="content-header header-setting header-setting-add">
 	   <h1 class="content-title setting-list-title">{% trans %}settings{% endtrans %}</h1>
 	   <div class="content-header-action-menu">
 	        <nav>
@@ -13,6 +19,7 @@
 	        </nav>
 	   </div>
     </header>
+    {% endif %}
 
 	{% include 'widgets/filtersBar.html.twig' %}
 
@@ -38,7 +45,7 @@
 							</form>
 						</td>
 						<td>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('settingsDeletePage', { settingId: setting.setting.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}Delete{% endtrans %}</a>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('settingsDeletePage', { settingId: setting.setting.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 						</td>
 					</tr>
 					{% endfor %}
