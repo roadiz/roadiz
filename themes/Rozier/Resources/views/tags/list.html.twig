@@ -1,17 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section class="content-global">
+<section class="content-global content-nav-and-filters">
 
     <header class="content-header header-tags header-nodes-list">
         <h1 class="content-title tags-list-title">{% trans %}tags{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <nav><a class="uk-button" href="{{ path('tagsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.tag{% endtrans %}</a></nav>
         </div>
-    </header>   
+    </header>
 
     {% include 'widgets/filtersBar.html.twig' %}
-    
+
     <article class="content content-no-action-menu content-tags-list">
         <div class="content-table-cont">
             <table class="tags content-table uk-table">

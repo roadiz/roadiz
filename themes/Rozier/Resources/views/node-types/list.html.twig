@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section class="content-global">
+<section class="content-global content-nav-and-filters">
 
     <header class="content-header header-node-types header-node-types-list">
         <h1 class="content-title nodes-node-types-title">{% trans %}nodeTypes{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <nav>
             	<a class="uk-button" href="{{ path('nodeTypesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.nodeType{% endtrans %}</a>

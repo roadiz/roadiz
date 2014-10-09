@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section class="content-global manage-node-type-fields">
+<section class="content-global content-nav-and-filters">
 
     <header class="content-header header-node-type-fields header-node-type-fields-list">
         <h1 class="content-title">{{ "edit.nodeTypeFields.for.nodeType.%name%"|trans({'%name%': nodetype.getDisplayName}) }}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-nav-back uk-navbar-content">
         	<a class="uk-button" href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.nodeTypes{% endtrans %}</a>
         </div>

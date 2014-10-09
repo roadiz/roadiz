@@ -2,9 +2,10 @@
 
 
 {% block content %}
-<section class="content-global">
+<section class="content-global content-nav-and-filters">
 	<header class="content-header header-settingGroup header-settingGroup-add">
 	   <h1 class="content-title settingGroup-list-title">{% trans %}settingGroups{% endtrans %}</h1>
+	   {% include 'widgets/countFiltersBar.html.twig' %}
 	   <div class="content-header-action-menu">
 	        <nav>
 	        	<a class="uk-button" href="{{ path('settingGroupsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.settingGroup{% endtrans %}</a>

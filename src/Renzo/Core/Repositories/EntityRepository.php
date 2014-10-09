@@ -10,6 +10,7 @@
 namespace RZ\Renzo\Core\Repositories;
 
 use Doctrine\Common\Collections\Criteria;
+use RZ\Renzo\Core\AbstractEntities\PersistableInterface;
 
 /**
  * EntityRepository that implements a simple countBy method.
@@ -83,7 +84,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         foreach ($cols as $col) {
             $field = $this->_em->getClassMetadata($this->getEntityName())->getFieldName($col);
             $type = $this->_em->getClassMetadata($this->getEntityName())->getTypeOfField($field);
-
             if (in_array($type, $types)) {
                 $criteriaFields[$this->_em->getClassMetadata($this->getEntityName())->getFieldName($col)] =
                     '%'.strip_tags($pattern).'%';
@@ -95,8 +95,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         }
 
         foreach ($criteria as $key => $value) {
-
-            if (is_array($value)) {
+            if (is_object($value) && $value instanceof PersistableInterface) {
+                $res = $qb->expr()->eq($alias . '.' .$key, $value->getId());
+            } elseif (is_array($value)) {
                 $res = $qb->expr()->in($alias . '.' .$key, $value);
             } elseif (is_bool($value)) {
                 $res = $qb->expr()->eq($alias . '.' .$key, (int) $value);

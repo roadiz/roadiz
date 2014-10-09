@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section class="content-global manage-font">
+<section class="content-global content-nav-and-filters">
 
 	<header class="content-header header-font header-font-list">
         <h1 class="content-title font-list-title">{% trans %}fonts{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <a class="uk-button" href="{{ path('fontsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.font{% endtrans %}</a>
         </div>

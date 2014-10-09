@@ -2,11 +2,12 @@
 
 
 {% block content %}
-<section class="content-global">
+<section class="content-global content-nav-and-filters">
 
     {% if settingGroup %}
     <header class="content-header header-setting header-setting-add">
 	   <h1 class="content-title setting-list-title">{{ "%group%.settings"|trans({'%group%':settingGroup.getName}) }}</h1>
+	   {% include 'widgets/countFiltersBar.html.twig' %}
     </header>
     {% else %}
     <header class="content-header header-setting header-setting-add">
@@ -18,6 +19,7 @@
 	        	<a class="uk-button" href="{{ path('settingsExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}export{% endtrans %}</a>
 	        </nav>
 	   </div>
+	   {% include 'widgets/countFiltersBar.html.twig' %}
     </header>
     {% endif %}
 

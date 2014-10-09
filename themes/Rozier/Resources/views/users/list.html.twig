@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<section class="content-global edit-user">
+<section class="content-global content-nav-and-filters">
 
 	<header class="content-header header-user header-user-list">
         <h1 class="content-title user-add-title">{% trans %}users{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
 	    	<a class="uk-button" href="{{ path('usersAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.user{% endtrans %}</a>
 	    </div>

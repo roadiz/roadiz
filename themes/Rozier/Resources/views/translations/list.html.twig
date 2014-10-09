@@ -2,10 +2,11 @@
 
 
 {% block content %}
-<section class="content-global edit-translation">
+<section class="content-global edit-translation content-nav-and-filters">
 
 	<header class="content-header header-translation header-translation-list">
         <h1 class="content-title translation-add-title">{% trans %}translations{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
 			<a class="uk-button" href="{{ path('translationsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.translation{% endtrans %}</a>
 		</div>
