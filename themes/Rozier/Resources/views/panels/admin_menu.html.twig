@@ -158,7 +158,17 @@
 
 		{% if (securityContext.Granted('ROLE_ACCESS_SETTINGS')) %}
 
-		<li><a href="{{ path('settingsHomePage') }}"><i class="uk-icon-rz-settings"></i><span class="info">{% trans %}site.settings{% endtrans %}</span></a></li>
+		<li class="uk-parent">
+			<p><i class="uk-icon-rz-settings"></i><span class="info">{% trans %}settings{% endtrans %}</span></p>
+			<ul class="uk-nav-sub">
+
+				<li><a href="{{ path('settingsHomePage') }}"><i class="uk-icon-rz-settings"></i><span class="info">{% trans %}all.settings{% endtrans %}</span></a></li>
+
+				{% for group in settingGroups %}
+				<li><a href="{{ path('settingGroupsSettingsPage', {'settingGroupId': group.getId}) }}"><i class="uk-icon-rz-settings"></i><span class="info">{{ group.getName }}</span></a></li>
+				{% endfor %}
+			</ul>
+		</li>
 
 		{% endif %}
 	</ul>

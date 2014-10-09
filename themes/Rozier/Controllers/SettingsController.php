@@ -98,6 +98,84 @@ class SettingsController extends RozierApp
     }
 
     /**
+     * [byGroupAction description]
+     *
+     * @param  Request $request        [description]
+     * @param  [type]  $settingGroupId [description]
+     *
+     * @return [type]                  [description]
+     */
+    public function byGroupAction(Request $request, $settingGroupId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+
+        $settingGroup = $this->getService('em')
+            ->find('RZ\Renzo\Core\Entities\SettingGroup', (int) $settingGroupId);
+
+        if ($settingGroup !== null) {
+            $this->assignation['settingGroup'] = $settingGroup;
+
+            /*
+             * Manage get request to filter list
+             */
+            $listManager = new EntityListManager(
+                $request,
+                $this->getService('em'),
+                'RZ\Renzo\Core\Entities\Setting',
+                array('settingGroup'=>$settingGroup),
+                array('name'=>'ASC')
+            );
+            $listManager->handle();
+
+            $this->assignation['filters'] = $listManager->getAssignation();
+            $settings = $listManager->getEntities();
+            $this->assignation['settings'] = array();
+
+            foreach ($settings as $setting) {
+                $form = $this->buildShortEditForm($setting);
+                $form->handleRequest();
+                if ($form->isValid() &&
+                    $form->getData()['id'] == $setting->getId()) {
+                    try {
+                        $this->editSetting($form->getData(), $setting);
+                        $msg = $this->getTranslator()->trans('setting.%name%.updated', array('%name%'=>$setting->getName()));
+                        $request->getSession()->getFlashBag()->add('confirm', $msg);
+                        $this->getService('logger')->info($msg);
+                    } catch (EntityAlreadyExistsException $e) {
+                        $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+                        $this->getService('logger')->warning($e->getMessage());
+                    }
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'settingGroupsSettingsPage',
+                            array('settingGroupId' => $settingGroupId)
+                        )
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
+                }
+                $this->assignation['settings'][] = array(
+                    'setting' => $setting,
+                    'form' => $form->createView()
+                );
+            }
+
+            return new Response(
+                $this->getTwig()->render('settings/list.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+
+        } else {
+            return $this->throw404();
+        }
+    }
+
+    /**
      * Return an edition form for requested setting.
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param int                                      $settingId

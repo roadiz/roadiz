@@ -42,11 +42,16 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
 
         foreach ($settingGroups as $group) {
             $tmpGroup = array();
-            foreach ($group->getSettings() as $setting) {
 
-                $tmpGroup[] = SettingJsonSerializer::toArray($setting);
+            $tmpGroup['name'] = $group->getName();
+            $tmpGroup['inMenu'] = $group->isInMenu();
+            $tmpGroup['settings'] = array();
+
+            foreach ($group->getSettings() as $setting) {
+                 $tmpGroup['settings'][] = SettingJsonSerializer::toArray($setting);
             }
-            $data[$group->getName()] = $tmpGroup;
+
+            $data[] = $tmpGroup;
         }
 
         return $data;
@@ -66,11 +71,13 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
         }
         $collection = new ArrayCollection();
         $groups = json_decode($jsonString, true);
-        foreach ($groups as $name => $group) {
-            $newGroup = new SettingGroup();
+        foreach ($groups as $group) {
 
-            $newGroup->setName($name);
-            foreach ($group as $setting) {
+            $newGroup = new SettingGroup();
+            $newGroup->setName($group['name']);
+            $newGroup->setInMenu($group['inMenu']);
+
+            foreach ($group['settings'] as $setting) {
                 $newSetting = new Setting();
                 $newSetting->setName($setting['name']);
                 $newSetting->setType($setting['type']);

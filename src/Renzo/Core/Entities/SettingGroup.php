@@ -45,6 +45,26 @@ class SettingGroup extends AbstractEntity
         return $this;
     }
 
+    /**
+     * @Column(type="boolean", name="inMenu", nullable=false)
+     */
+    protected $inMenu = false;
+
+    /**
+     * @return boolean
+     */
+    public function isInMenu() {
+        return $this->inMenu;
+    }
+    /**
+     * @param boolean $newinMenu
+     */
+    public function setInMenu($newinMenu) {
+        $this->inMenu = $newinMenu;
+
+        return $this;
+    }
+
 
     /**
      * @OneToMany(targetEntity="Setting", mappedBy="settingGroup")

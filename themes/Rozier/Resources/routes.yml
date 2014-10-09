@@ -167,6 +167,26 @@ settingsImportPage:
     path:     /rz-admin/settings/import
     defaults: { _controller: Themes\Rozier\Controllers\SettingsUtilsController::importJsonFileAction }
 
+# SETTINGS GROUPS
+settingGroupsHomePage:
+    path:     /rz-admin/setting-groups
+    defaults: { _controller: Themes\Rozier\Controllers\SettingGroupsController::indexAction }
+settingGroupsSettingsPage:
+    path:     /rz-admin/setting-groups/settings/{settingGroupId}
+    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::byGroupAction }
+    requirements: { settingId : "[0-9]+" }
+settingGroupsEditPage:
+    path:     /rz-admin/setting-groups/edit/{settingGroupId}
+    defaults: { _controller: Themes\Rozier\Controllers\SettingGroupsController::editAction }
+    requirements: { settingId : "[0-9]+" }
+settingGroupsAddPage:
+    path:     /rz-admin/setting-groups/add
+    defaults: { _controller: Themes\Rozier\Controllers\SettingGroupsController::addAction }
+settingGroupsDeletePage:
+    path:     /rz-admin/setting-groups/delete/{settingGroupId}
+    defaults: { _controller: Themes\Rozier\Controllers\SettingGroupsController::deleteAction }
+    requirements: { settingId : "[0-9]+" }
+
 # TAGS
 tagsHomePage:
     path:     /rz-admin/tags

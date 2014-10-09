@@ -51,6 +51,9 @@ class RozierApp extends BackendController
         $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' back-office';
         $this->assignation['nodeTree'] = new NodeTreeWidget($this->getKernel()->getRequest(), $this);
         $this->assignation['tagTree'] = new TagTreeWidget($this->getKernel()->getRequest(), $this);
+        $this->assignation['settingGroups'] = $this->getService('em')
+                                                   ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
+                                                   ->findBy(array('inMenu' => true), array('name'=>'ASC'));
         //$this->assignation['grunt'] = include(dirname(__FILE__).'static/public/config/assets.config.php');
 
         return $this;

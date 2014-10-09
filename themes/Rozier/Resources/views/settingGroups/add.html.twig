@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+<section class="content-global">
+
+<header class="content-header header-settingGroup header-settingGroup-add">
+       <h1 class="content-title settingGroup-list-title">{% trans %}add.settingGroup{% endtrans %}</h1>
+    </header>
+
+    <article class="content content-settingGroup-add">
+    	{% form_theme form 'forms.html.twig' %}
+        <form id="add-settingGroup-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	<button data-action-save="#add-settingGroup-form" class="uk-button uk-button-primary rz-action-save" type="submit"><i class="uk-icon-plus"></i><span class="label">{% trans %}add.settingGroup{% endtrans %}</span></button>
+       		</fieldset>
+    	</form>
+    </article>
+
+    {% include 'settingGroups/actionsMenu.html.twig' %}
+</section>
+{% endblock %}
