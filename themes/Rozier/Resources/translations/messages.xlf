@@ -4378,6 +4378,16 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <target></target>
       </trans-unit>
 
+
+      <trans-unit xml:space="preserve" id="%field%.already_exists">
+        <source>%field%.already_exists</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%field%.is.reserved.word">
+        <source>%field%.is.reserved.word</source>
+        <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-10-06 14:38+0000
+PO-Revision-Date: 2014-10-09 13:28+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1412606295.915857
+X-POOTLE-MTIME: 1412861304.546880
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -4373,14 +4373,24 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="447" approved="yes">
         <source>filename</source>
         <target state="translated">File name</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="448" approved="yes">
         <source>document.platform</source>
         <target state="translated">Media platform</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="449" approved="yes">
         <source>document.embedId</source>
         <target state="translated">Platform media identifier</target>
+      <note/></trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="%field%.already_exists" approved="yes">
+        <source>%field%.already_exists</source>
+        <target state="translated">Field “%field%” already exists.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%field%.is.reserved.word" approved="yes">
+        <source>%field%.is.reserved.word</source>
+        <target state="translated">“%field%” name is a reserved word, please choose another one.</target>
       </trans-unit>
 
     </body>

@@ -204,6 +204,19 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
         NodeTypeField::MARKDOWN_T,
     );
 
+    /**
+     * List of forbidden field names.
+     *
+     * These are SQL reserved words.
+     *
+     * @var array
+     */
+    public static $forbiddenNames = array(
+        'title', 'order', 'integer', 'int', 'float', 'join',
+        'inner', 'select', 'from', 'where', 'by', 'varchar',
+        'text', 'enum', 'left', 'outer', 'blob'
+    );
+
 
     /**
      * @Id

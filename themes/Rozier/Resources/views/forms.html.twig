@@ -48,6 +48,10 @@
     <input class="rz-boolean-checkbox" type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
 {%- endblock checkbox_widget %}
 
+{% block number_widget -%}
+    <input type="number" step="any" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value|replace({',': '.'}) }}"{% endif %} />
+{%- endblock number_widget %}
+
 {% block separator_widget %}
     {% spaceless %}
         {# just let the textarea widget render the select tag #}

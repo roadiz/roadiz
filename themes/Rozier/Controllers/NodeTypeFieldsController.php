@@ -16,6 +16,7 @@ use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Renzo\Core\Exceptions\ReservedSQLWordException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -147,29 +148,49 @@ class NodeTypeFieldsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-                $this->addNodeTypeField($form->getData(), $field, $nodeType);
 
-                $msg = $this->getTranslator()->trans('nodeTypeField.%name%.created', array('%name%'=>$field->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                try{
+                    $this->addNodeTypeField($form->getData(), $field, $nodeType);
+
+                    $msg = $this->getTranslator()->trans(
+                        'nodeTypeField.%name%.created',
+                        array('%name%'=>$field->getName())
+                    );
+                    $request->getSession()->getFlashBag()->add('confirm', $msg);
+                    $this->getService('logger')->info($msg);
 
 
-                /*
-                 * Redirect to update schema page
-                 */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodeTypesFieldSchemaUpdate',
-                        array(
-                            'nodeTypeId' => $nodeTypeId,
-                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(
-                                static::SCHEMA_TOKEN_INTENTION
+                    /*
+                     * Redirect to update schema page
+                     */
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'nodeTypesFieldSchemaUpdate',
+                            array(
+                                'nodeTypeId' => $nodeTypeId,
+                                '_token' => $this->getService('csrfProvider')->generateCsrfToken(
+                                    static::SCHEMA_TOKEN_INTENTION
+                                )
                             )
                         )
-                    )
-                );
-                $response->prepare($request);
+                    );
 
+                } catch (\Exception $e){
+                    $msg = $e->getMessage();
+                    $request->getSession()->getFlashBag()->add('error', $msg);
+                    $this->getService('logger')->error($msg);
+                    /*
+                     * Redirect to add page
+                     */
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'nodeTypeFieldsAddPage',
+                            array('nodeTypeId' => $nodeTypeId)
+                        )
+                    );
+                }
+
+                $response->prepare($request);
                 return $response->send();
             }
 
@@ -284,6 +305,33 @@ class NodeTypeFieldsController extends RozierApp
         NodeTypeField $field,
         NodeType $nodeType
     ) {
+
+        /*
+         * Check reserved words
+         */
+        if (in_array(strtolower($data['name']), NodeTypeField::$forbiddenNames)) {
+            throw new ReservedSQLWordException($this->getTranslator()->trans(
+                "%field%.is.reserved.word",
+                array('%field%' => $data['name'])
+            ), 1);
+        }
+
+        /*
+         * Check existing
+         */
+        $existing = $this->getService('em')
+                         ->getRepository('RZ\Renzo\Core\Entities\NodeTypeField')
+                         ->findOneBy(array(
+                            'name' => $data['name'],
+                            'nodeType' => $nodeType
+                        ));
+        if (null !== $existing) {
+            throw new EntityAlreadyExistsException($this->getTranslator()->trans(
+                "%field%.already_exists",
+                array('%field%' => $data['name'])
+            ), 1);
+        }
+
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
             $field->$setter($value);
