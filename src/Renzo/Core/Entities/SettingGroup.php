@@ -17,7 +17,7 @@ use RZ\Renzo\Core\Entities\Setting;
 /**
  * Settings entity are a simple key-value configuration system.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\SettingGroupRepository")
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
  * @Table(name="settings_groups")
  *
  */
@@ -46,7 +46,7 @@ class SettingGroup extends AbstractEntity
     }
 
     /**
-     * @Column(type="boolean", name="inMenu", nullable=false)
+     * @Column(type="boolean", name="in_menu", nullable=false)
      */
     protected $inMenu = false;
 
