@@ -1,9 +1,10 @@
-@open-action-menu-W:163px + 2;
+@open-action-menu-W: 56px;
 @action-menu-W:52px;
 
 
 .action-menu-icon(){
     .rounded(100%);
+    position: relative;
     background: #f9f9f9;
     vertical-align: middle;
     border: 1px solid #cecece;
@@ -14,7 +15,6 @@
     margin: 0 9px 0 0;
     text-align: center;
     z-index: 2;
-    position: relative;
     font-size: 16px;
 
     &:before {
@@ -32,9 +32,9 @@
     width:@open-action-menu-W;
     .box-sizing();
     background:white;
-
+    .drop-shadow(3px, 5px, 20px, 0.12);
     .transform-transition(ease 0.5s);
-    .transform(translate3D(@open-action-menu-W - @action-menu-W, 0, 0));
+    //.transform(translate3D(@open-action-menu-W - @action-menu-W, 0, 0));
 
     header,
     .uk-button {
@@ -46,7 +46,7 @@
         width: 100%;
         white-space: nowrap;
         text-align: left;
-        padding: 8px 9px 9px 13px;
+        padding: 9px 9px 9px 13px;
         border-top: 1px solid rgba(0,0,0,0.1);
         background-image: none;
         background-color: white;
@@ -59,58 +59,56 @@
             .action-menu-icon();
         }
 
-        .label {
-            display: none; display: inline-block;
-            font-size: 12px;
-            position: relative;
-            z-index: 2;
-            color: #444;
-
-            .transition(color 0.3s linear);
-            text-shadow: none;
-        }
-
-        &:before {
-            content: "";
-            position: absolute;
-            top: 0px;
-            bottom: 0px;
-            left: 0px;
-            width: 4px;
-            background-color: #808080;
-            z-index: 0;
-
-            .transition(width 0.5s ease);
-        }
-
-
         &.uk-button-danger {
-
+            .box-sizing();
+            .label {
+                //height: 51px;
+            }
             &:before {
                 background-color: #d32c46;
             }
         }
-
         &.uk-button-primary {
 
             &:before {
                 background-color: #32cd9b;
             }
         }
-
         &:hover {
 
             &.uk-button-danger,
             &.uk-button-primary {
-                i { border-color: transparent; }
+                i { border-color: #999; }
+                background: transparent;
             }
-
-            .label {
-                color: white;
-            }
-
             &:before {
                 width: 100%;
+            }
+        }
+        .label {
+            position: absolute;
+            display: block;
+            font-size: 12px;
+            line-height: 52px;
+            font-weight: bold;
+            z-index: 2;
+            color: #444;
+            text-shadow: none;
+            height: 52px;
+            top: 0;
+            right: 52px;
+            .transition(color 0.3s linear);
+
+            &:after {
+                content: "";
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                right: 0px;
+                width: 4px;
+                background-color: #808080;
+                z-index: 0;
+                .transition(width 0.5s ease);
             }
         }
     }
@@ -125,7 +123,6 @@
             display: none;
             position: absolute;
             margin: 0px;
-
             width: 215px;
             right: @open-action-menu-W;
             top: 0;
