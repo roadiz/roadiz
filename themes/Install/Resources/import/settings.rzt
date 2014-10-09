@@ -50,6 +50,18 @@
                 "value": "",
                 "type": 0,
                 "visible": true
+            },
+            {
+                "name": "facebook_client_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "universal_analytics_id",
+                "value": "",
+                "type": 0,
+                "visible": true
             }
         ]
     },
@@ -70,9 +82,45 @@
                 "visible": true
             },
             {
-                "name": "meta_description",
+                "name": "maintenance_mode",
+                "value": false,
+                "type": 5,
+                "visible": true
+            },
+            {
+                "name": "site_copyright",
                 "value": "",
-                "type": 2,
+                "type": 0,
+                "visible": true
+            }
+        ]
+    },
+    {
+        "name": "Social networks",
+        "inMenu": true,
+        "settings": [
+            {
+                "name": "facebook_url",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "instagram_url",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "twitter_url",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "twitter_account",
+                "value": "",
+                "type": 0,
                 "visible": true
             }
         ]

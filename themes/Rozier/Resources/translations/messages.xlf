@@ -4388,6 +4388,150 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <target></target>
       </trans-unit>
 
+      <!-- Setting groups -->
+
+      <trans-unit xml:space="preserve" id="settingGroup">
+        <source>settingGroup</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%group%.settings">
+        <source>%group%.settings</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroup.%name%.updated">
+        <source>settingGroup.%name%.updated</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroup.%name%.created">
+        <source>settingGroup.%name%.created</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroup.%name%.deleted">
+        <source>settingGroup.%name%.deleted</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="settingGroup.%name%.no_update.already_exists">
+        <source>settingGroup.%name%.no_update.already_exists</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroup.%name%.no_creation.already_exists">
+        <source>settingGroup.%name%.no_creation.already_exists</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroup.in.menu">
+        <source>settingGroup.in.menu</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="see.settings">
+        <source>see.settings</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.settingGroup">
+        <source>add.settingGroup</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.settingGroup.%name%">
+        <source>edit.settingGroup.%name%</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="save.settingGroup">
+        <source>save.settingGroup</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.settingGroup">
+        <source>are_you_sure.delete.settingGroup</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.settingGroup.%name%">
+        <source>delete.settingGroup.%name%</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.settingGroup">
+        <source>delete.settingGroup</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.settingGroups">
+        <source>back_to.settingGroups</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="all.settings">
+        <source>all.settings</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="setting.groups">
+        <source>setting.groups</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- Default settings names -->
+      <trans-unit xml:space="preserve" id="display_debug_panel">
+        <source>display_debug_panel</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="email_sender">
+        <source>email_sender</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="email_sender_name">
+        <source>email_sender_name</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="soundcloud_client_id">
+        <source>soundcloud_client_id</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="google_client_id">
+        <source>google_client_id</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="twitter_client_id">
+        <source>twitter_client_id</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="facebook_client_id">
+        <source>facebook_client_id</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="seo_description">
+        <source>seo_description</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="site_name">
+        <source>site_name</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="site_copyright">
+        <source>site_copyright</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="maintenance_mode">
+        <source>maintenance_mode</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="universal_analytics_id">
+        <source>universal_analytics_id</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="facebook_url">
+        <source>facebook_url</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="instagram_url">
+        <source>instagram_url</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="twitter_url">
+        <source>twitter_url</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="twitter_account">
+        <source>twitter_account</source>
+        <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

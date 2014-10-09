@@ -36,7 +36,7 @@
 				<tbody>
 					{% for setting in settings %}
 					<tr>
-						<td><a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">{{ setting.setting.getName }}</a></td>
+						<td><a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">{{ setting.setting.getName|trans() }}</a></td>
 						<td>
 							{% form_theme setting.form 'horizontalForms.html.twig' %}
 							<form class="uk-form uk-form-horizontal" action="#" method="post" {{ form_enctype(setting.form) }}>
