@@ -404,9 +404,12 @@ class SettingsController extends RozierApp
             'name' =>    $setting->getName(),
             'value' =>   $setting->getValue(),
             'visible' => $setting->isVisible(),
-            'type' =>    $setting->getType(),
-            'group' =>   $setting->getSettingGroup()->getId(),
+            'type' =>    $setting->getType()
         );
+        if (null !== $setting->getSettingGroup()) {
+            $defaults['group'] = $setting->getSettingGroup()->getId();
+        }
+
         if ($setting->getSettingGroup() == null) {
             $default['group'] = null;
         } else {
