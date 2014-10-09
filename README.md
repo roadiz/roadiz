@@ -95,7 +95,10 @@ Then when you are sure to perform migration, just do:
 
 ```
 bin/renzo schema --update --execute
+bin/renzo schema --refresh;
 ```
+
+The refresh command force Doctrine to purge its metadata cache.
 
 ### Managing your own database entities
 
@@ -115,8 +118,28 @@ to the global configuration file.
 Verify if everything is OK by checking migrations:
 
 ```
-bin/renzo schema --update
+bin/renzo schema --update;
 ```
 
 If you see your entities being created and no system database erased, just `--execute` your migration.
+If Doctrine send some error, you probably need to clear metadata cache:
+
+```
+bin/renzo schema --refresh;
+```
+
+### Problem with entities and Doctrine cache?
+
+After each RZCMS upgrade you should upgrade your node-sources entity classes and upgrade database schema.
+
+```
+bin/renzo core:node:types --regenerateAllEntities;
+bin/renzo schema --update;
+bin/renzo schema --update --execute;
+bin/renzo schema --refresh;
+
+```
+
+If you are using a *OPCode var cache* like *APC*, *XCache*, you should empty it as RZCMS store doctrine
+configuration there for better performances.
 
