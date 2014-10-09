@@ -2,16 +2,20 @@
     {# Delete current node #}
 
     {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE')) %}
-
-    <a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}"><i class="uk-icon-rz-trash"></i><span class="label">{% trans %}delete{% endtrans %}</span></a>
+    <div class="no-subnav trash">
+        <span class="label"><span class="label-text">{% trans %}delete{% endtrans %}</span></span>
+        <a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}">
+            <i class="uk-icon-rz-trash"></i>
+        </a>
+    </div>
 
     {% endif %}
 
     {#
      # Node actions
      #}
-    <div class="node-actions">
-        <header><i class="uk-icon-rz-actions"></i><span class="label">{% trans %}actions{% endtrans %}</span></header>
+    <div class="node-actions with-subnav">
+        <header><i class="uk-icon-rz-actions"></i><span class="label"><span class="label-text">{% trans %}actions{% endtrans %}</span></span></header>
 
         <nav>
             {% if source %}
@@ -27,8 +31,8 @@
      # Node statuses
      #}
     {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS')) %}
-    <div class="node-statuses">
-        <header><i class="uk-icon-rz-check"></i><span class="label">{% trans %}statuses{% endtrans %}</span></header>
+    <div class="node-statuses with-subnav">
+        <header><i class="uk-icon-rz-check"></i><span class="label"><span class="label-text">{% trans %}statuses{% endtrans %}</span></span></header>
         <ul>
             <li class="node-visibility">
                 <i class="uk-icon-rz-visibility-on"></i>
