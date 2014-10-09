@@ -521,14 +521,15 @@ class User extends AbstractHuman implements AdvancedUserInterface
     public function prePersist()
     {
         parent::prePersist();
+
         /*
-         * If a plain password is present, we must encode it before persisting entity
+         * If no plain password is present, we must generate one
          */
-        if ($this->getPlainPassword() != '') {
-            $this->getHandler()->encodePassword();
-        } else {
-            throw new Exception("No password has been filled for user.", 1);
+        if ($this->getPlainPassword() == '') {
+            $this->setPlainPassword(UserHandler::generatePassword());
         }
+
+        $this->getHandler()->encodePassword();
     }
 
     /**

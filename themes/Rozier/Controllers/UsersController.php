@@ -369,11 +369,6 @@ class UsersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
-
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
-
         $user = new User();
 
         if ($user !== null) {
@@ -699,16 +694,14 @@ class UsersController extends RozierApp
                         ))
                         ->add('plainPassword', 'repeated', array(
                             'type' => 'password',
-                            'invalid_message' => 'Passwords must match',
+                            'invalid_message' => $this->getTranslator()->trans('password.must.match'),
                             'first_options'  => array(
                                 'label'=>$this->getTranslator()->trans('password'),
                             ),
                             'second_options' => array(
                                 'label'=>$this->getTranslator()->trans('passwordVerify'),
                             ),
-                            'constraints' => array(
-                                new NotBlank()
-                            )
+                            'required' => false
                         ))
                         ->add('firstName', 'text', array(
                             'label'=>$this->getTranslator()->trans('firstName'),
@@ -728,7 +721,8 @@ class UsersController extends RozierApp
                         ))
                         ->add('birthday', 'date', array(
                             'label'=>$this->getTranslator()->trans('birthday'),
-                            'required' => false
+                            'required' => false,
+                            'years'=> range(1920, date('Y')-6)
                         ))
                         ->add('facebookName', 'text', array(
                             'label'=>$this->getTranslator()->trans('facebookName'),

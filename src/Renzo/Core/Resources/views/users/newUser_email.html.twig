@@ -3,26 +3,45 @@
 {% block title %}<title>{% trans %}welcome.user.email{% endtrans %}</title>{% endblock %}
 
 {% block content_table %}
-<table cellpadding="0" cellspacing="0" border="0" align="center">
+<table width="100%" cellpadding="0" cellspacing="0">
 	<tr>
-		<td colspan="2" width=""><h2>{% trans %}welcome.user.email.%site%{% endtrans %}</h2></td>
+		<td class="content-block">
+			<h1>{% trans %}your.user.account{% endtrans %}</h1>
+		</td>
 	</tr>
 	<tr>
-		<td colspan="2" width=""><a href="{{ path('homePage') }}">{{ path('homePage') }}</a></td>
+		<td class="content-block">
+			<h2>{% trans %}welcome.user.email.%site%{% endtrans %}</h2>
+		</td>
 	</tr>
 	<tr>
-		<td width="">{% trans %}Username{% endtrans %}</td>
-		<td width="">{{ user.getUsername }}</td>
+		<td class="content-block">
+			<table class="invoice">
+				<tr>
+					<td><a href="{{ path('homePage') }}">{{ path('homePage') }}</a></td>
+				</tr>
+				<tr>
+					<td>
+						<table class="invoice-items" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>{% trans %}username{% endtrans %}</td>
+								<td class="alignright">{{ user.getUsername }}</td>
+							</tr>
+							<tr>
+								<td>{% trans %}email{% endtrans %}</td>
+								<td class="alignright">{{ user.getEmail }}</td>
+							</tr>
+							{% if user.getPlainPassword %}
+							<tr>
+								<td>{% trans %}password{% endtrans %}</td>
+								<td class="alignright"><code>{{ user.getPlainPassword }}</code></td>
+							</tr>
+							{% endif %}
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
 	</tr>
-	<tr>
-		<td width="">{% trans %}Email{% endtrans %}</td>
-		<td width="">{{ user.getEmail }}</td>
-	</tr>
-	{% if user.getPlainPassword %}
-	<tr>
-		<td width="">{% trans %}Password{% endtrans %}</td>
-		<td width=""><code>{{ user.getPlainPassword }}</code></td>
-	</tr>
-	{% endif %}
 </table>
 {% endblock %}

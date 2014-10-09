@@ -7,6 +7,58 @@
                 <source>welcome.user.email.%site%</source>
                 <target/>
             </trans-unit>
+            <trans-unit id="your.user.account">
+                <source>your.user.account</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="username">
+                <source>username</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="email">
+                <source>email</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="password">
+                <source>password</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="for.questions.email">
+                <source>for.questions.email</source>
+                <target/>
+            </trans-unit>
+
+            <!-- Contact forms -->
+            <trans-unit id="contact.form">
+                <source>contact.form</source>
+                <target/>
+            </trans-unit>
+
+            <trans-unit id="new.contact.form.%site%">
+                <source>new.contact.form.%site%</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="form.successfully.sent">
+                <source>form.successfully.sent</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="%field%.is.mandatory">
+                <source>%field%.is.mandatory</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="email.not.valid">
+                <source>email.not.valid</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="date">
+                <source>date</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="ip.address">
+                <source>ip.address</source>
+                <target/>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>
