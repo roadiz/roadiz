@@ -9981,6 +9981,7 @@ Rozier.onDocumentReady = function( event ) {
 	// Switch checkboxes
 	$(".rz-boolean-checkbox").bootstrapSwitch();
 
+
 	Rozier.centerVerticalObjects();
 };
 

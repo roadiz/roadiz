@@ -16,7 +16,6 @@
     width: 60px;
     min-width: 60px;
     height: 28px;
-    font-size: 10px;
     border: 0 none;
     .box-sizing();
     //.rounded(10px);
@@ -33,18 +32,22 @@
 
     .bootstrap-switch-primary,
     .bootstrap-switch-default {
-        font-size: 10px;
+        font-size: 14px;
         font-weight: bold;
+        padding-top: 5px;
     }
 
     .bootstrap-switch-handle-on.bootstrap-switch-primary {
         background-color: @contrast-color-darker;
-        //.border-radius(0, 0, @switch-round, @switch-round);
+        .border-radius(0, 0, @switch-round, @switch-round);
+        //text-shadow: rgba(0, 0, 0, 0.3) -1px -1px 0px;
+        color: rgba(255, 255, 255, 0.9);
     }
     .bootstrap-switch-handle-off.bootstrap-switch-default {
         background-color: @switch-off-color;
-        //.border-radius(@switch-round, @switch-round, 0, 0);
-        color: white;
+        .border-radius(@switch-round, @switch-round, 0, 0);
+        //text-shadow: rgba(0, 0, 0, 0.3) -1px -1px 0px;
+        color: rgba(255, 255, 255, 0.9);
     }
 
     &.bootstrap-switch-off {
@@ -60,7 +63,7 @@
 
     &.bootstrap-switch-focused,
     &:focus {
-        //outline: none;
+        outline: none;
         .box-shadow(none);
         border-color: @contrast-color-darker;
     }

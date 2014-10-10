@@ -1,3 +1,4 @@
+{% spaceless %}
 <nav data-action-menu class="actions-menu uk-navbar rz-vertical-align">
     {# Delete current node #}
 
@@ -37,34 +38,35 @@
             <li class="node-visibility">
                 <i class="uk-icon-rz-visibility-on"></i>
                 <span class="label">{% trans %}visibility{% endtrans %}</span>
-                <input data-node-id="{{ node.getId }}" class="rz-boolean-checkbox" type="checkbox" name="visible" value="1" {% if node.isVisible %}checked{% endif %} />
+                <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="visible" value="1" {% if node.isVisible %}checked{% endif %} />
             </li>
             <li class="node-published">
                 <i class="uk-icon-rz-published"></i>
                 <span class="label">{% trans %}published{% endtrans %}</span>
-                <input data-node-id="{{ node.getId }}" class="rz-boolean-checkbox" type="checkbox" name="published" value="1" {% if node.isPublished %}checked{% endif %} />
+                <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="published" value="1" {% if node.isPublished %}checked{% endif %} />
             </li>
             <li class="node-hiding-children">
                 <i class="uk-icon-rz-stack"></i>
                 <span class="label">{% trans %}hiding-children{% endtrans %}</span>
-                <input data-node-id="{{ node.getId }}" class="rz-boolean-checkbox" type="checkbox" name="hideChildren" value="1" {% if node.isHidingChildren %}checked{% endif %} />
+                <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="hideChildren" value="1" {% if node.isHidingChildren %}checked{% endif %} />
             </li>
             <li class="node-lock">
                 <i class="uk-icon-rz-lock"></i>
                 <span class="label">{% trans %}lock-status{% endtrans %}</span>
-                <input data-node-id="{{ node.getId }}" class="rz-boolean-checkbox" type="checkbox" name="locked" value="1" {% if node.isLocked %}checked{% endif %} />
+                <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="locked" value="1" {% if node.isLocked %}checked{% endif %} />
             </li>
             <li class="node-sterile">
                 <i class="uk-icon-rz-sterile"></i>
                 <span class="label">{% trans %}sterile-status{% endtrans %}</span>
-                <input data-node-id="{{ node.getId }}" class="rz-boolean-checkbox" type="checkbox" name="sterile" value="1" {% if node.isSterile %}checked{% endif %} />
+                <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="sterile" value="1" {% if node.isSterile %}checked{% endif %} />
             </li>
             <li class="node-archive">
                 <i class="uk-icon-rz-archive"></i>
                 <span class="label">{% trans %}archive-status{% endtrans %}</span>
-                <input data-node-id="{{ node.getId }}" class="rz-boolean-checkbox" type="checkbox" name="archived" value="1" {% if node.isArchived %}checked{% endif %} />
+                <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="archived" value="1" {% if node.isArchived %}checked{% endif %} />
             </li>
         </ul>
     </div>
     {% endif %}
 </nav>
+{% endspaceless %}

@@ -45,7 +45,7 @@
 {% endblock documents_widget %}
 
 {% block checkbox_widget -%}
-    <input class="rz-boolean-checkbox" type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <input class="rz-boolean-checkbox" type="checkbox" data-on-text="I" data-off-text="O" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
 {%- endblock checkbox_widget %}
 
 {% block number_widget -%}

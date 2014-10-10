@@ -22,8 +22,10 @@
             <fieldset data-uk-margin>
                 {% spaceless %}
                 <button data-action-save="#edit-node-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                    <i class="uk-icon-rz-save-mini"></i>
-                    <span class="label">{% trans %}save{% endtrans %}</span>
+                    <div class="save-icon">
+                        <i class="uk-icon-rz-save-mini"></i>
+                    </div>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
                 {% endspaceless %}
             </fieldset>
