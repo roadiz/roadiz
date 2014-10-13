@@ -173,10 +173,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
             date_default_timezone_set("Europe/Paris");
         }
 
-        if ($this->isInstallMode()) {
-            $this->prepareSetup();
-        }
-
         $application = new Application('Renzo Console Application', '0.1');
         $application->add(new \RZ\Renzo\Console\TranslationsCommand);
         $application->add(new \RZ\Renzo\Console\NodeTypesCommand);
