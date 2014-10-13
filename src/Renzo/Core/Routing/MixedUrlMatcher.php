@@ -237,15 +237,8 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             /*
              * First token is for language
              */
-            if (in_array($firstToken, Translation::getAvailableLocales()) ||
-                in_array($firstToken, Translation::getAvailableLocalesShortcuts())) {
-                $locale = null;
-
-                if (in_array($firstToken, Translation::getAvailableLocalesShortcuts())) {
-                    $locale = Translation::getLocaleFromShortcut(strip_tags($firstToken));
-                } else {
-                    $locale = strip_tags($firstToken);
-                }
+            if (in_array($firstToken, Translation::getAvailableLocales())) {
+                $locale = strip_tags($firstToken);
 
                 if ($locale !== null && $locale != '') {
                     return Kernel::getService('em')

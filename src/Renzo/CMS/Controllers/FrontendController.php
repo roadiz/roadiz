@@ -176,11 +176,7 @@ class FrontendController extends AppController
                         ->getRepository('RZ\Renzo\Core\Entities\Translation')
                         ->findOneBy(
                             array(
-                                /*
-                                 * Browser locale is just lang code, we need to convert it to
-                                 * a complete locale with region code (fr -> fr_FR)
-                                 */
-                                'locale'=>Translation::$availableLocalesShortcut[$_locale]
+                                'locale'=>$_locale
                             )
                         );
         }
@@ -336,7 +332,7 @@ class FrontendController extends AppController
                             ->getRepository('RZ\Renzo\Core\Entities\Translation')
                             ->findDefault();
 
-        $this->assignation['_default_locale'] = $translation->getShortLocale();
+        $this->assignation['_default_locale'] = $translation->getLocale();
 
         return $this;
     }
