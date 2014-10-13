@@ -1,0 +1,17 @@
+{
+    "name": "Default theme",
+    "author": "Ambroise Maupate",
+    "copyright": "REZO ZERO",
+    "themeDir": "DefaultTheme",
+
+    "supportedLanguage": ["en", "fr"],
+
+    "versionRequire": "1.0.1",
+
+    "importFiles": {
+            "roles": ["Ressources/import/roles.rzt"],
+            "groups": ["Ressources/import/groups.rzt"],
+            "settings": ["Ressources/import/settings.rzt"],
+            "nodetypes": ["Ressources/import/nodetype/page.rzt"]
+        }
+}

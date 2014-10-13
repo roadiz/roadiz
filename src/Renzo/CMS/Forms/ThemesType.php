@@ -40,28 +40,32 @@ class ThemesType extends AbstractType
         // Extracting the PHP files from every Theme folder
         $iterator = $finder
             ->files()
-            ->name('*App.php')
+            ->name('config.json')
             ->depth(1)
             ->in(RENZO_ROOT.'/themes');
 
         // And storing it into an array, used in the form
         foreach ($iterator as $file) {
-            ob_start();
+            $data = json_decode(file_get_contents($file->getPathname()), true);
+            //var_dump($data);
+            //var_dump($file->getRelativePathname());
+            //exit;
+            // ob_start();
             $classPath = RENZO_ROOT.'/themes/'.$file->getRelativePathname();
-            include_once $classPath;
-            $namespace = str_replace('/', '\\', $file->getRelativePathname());
-            $classname = '\Themes\\'.str_replace('.php', '', $namespace);
-            ob_end_clean();
+            // include_once $classPath;
+            // $namespace = str_replace('/', '\\', $file->getRelativePathname());
+            $classname = '\Themes\\'.$data['themeDir']."\\".$data['themeDir']."App";//str_replace('.php', '', $namespace);
+            // ob_end_clean();
 
             /*
              * Parsed file is not or does not contain any PHP Class
              * Bad Theme !
              */
-            if (class_exists($classname)) {
-                $choices[$classname] = $file->getFileName().": ".$classname::getThemeName();
-            } else {
-                throw new ThemeClassNotValidException($classPath . " file does not contain any valid PHP Class.", 1);
-            }
+            //if (class_exists($classname)) {
+                $choices[$classname] = $data['themeDir']."App".": ".$data['name'];
+            //} else {
+            //    throw new ThemeClassNotValidException($classPath . " file does not contain any valid PHP Class.", 1);
+            //}
         }
         foreach ($themes as $theme) {
             if (array_key_exists($theme->getClassName(), $choices)) {
