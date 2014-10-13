@@ -15,7 +15,7 @@ use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Utils\StringHandler;
 
-use Themes\DefaultTheme\DefaultApp;
+use Themes\DefaultTheme\DefaultThemeApp;
 
 use RZ\Renzo\CMS\Controllers\EntryPointsController;
 
@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 /**
  * Contact form page.
  */
-class ContactController extends DefaultApp
+class ContactController extends DefaultThemeApp
 {
 
     public function indexAction(

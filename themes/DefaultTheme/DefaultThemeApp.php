@@ -4,7 +4,7 @@
  *
  * Description
  *
- * @file DefaultApp.php
+ * @file DefaultThemeApp.php
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
@@ -22,9 +22,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
-* DefaultApp class
+* DefaultThemeApp class
 */
-class DefaultApp extends FrontendController
+class DefaultThemeApp extends FrontendController
 {
     /**
      * {@inheritdoc}

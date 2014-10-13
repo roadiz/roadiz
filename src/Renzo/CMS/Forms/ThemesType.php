@@ -62,7 +62,7 @@ class ThemesType extends AbstractType
              * Bad Theme !
              */
             //if (class_exists($classname)) {
-                $choices[$classname] = $data['themeDir']."App".": ".$data['name'];
+            $choices[$classname] = $data['themeDir']."App".": ".$data['name'];
             //} else {
             //    throw new ThemeClassNotValidException($classPath . " file does not contain any valid PHP Class.", 1);
             //}

@@ -9,7 +9,7 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
-use Themes\DefaultTheme\DefaultApp;
+use Themes\DefaultTheme\DefaultThemeApp;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Utils\StringHandler;
@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Frontend controller to handle Page node-type request.
  */
-class PageController extends DefaultApp
+class PageController extends DefaultThemeApp
 {
 
     /**

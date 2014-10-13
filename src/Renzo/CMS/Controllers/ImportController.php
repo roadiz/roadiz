@@ -50,7 +50,7 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importSettingsAction(Request $request, $themeId = null)
+    public static function importSettingsAction(Request $request, $filename,  $themeId = null)
     {
         $pathFile = '/Resources/import/settings.rzt';
         $classImporter = "RZ\Renzo\CMS\Importers\SettingsImporter";
@@ -64,7 +64,7 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importRolesAction(Request $request, $themeId = null)
+    public static function importRolesAction(Request $request, $filename, $themeId = null)
     {
         $pathFile = '/Resources/import/roles.rzt';
         $classImporter = "RZ\Renzo\CMS\Importers\RolesImporter";
@@ -78,7 +78,7 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importGroupsAction(Request $request, $themeId = null)
+    public static function importGroupsAction(Request $request, $filename, $themeId = null)
     {
         $pathFile = '/Resources/import/groups.rzt';
         $classImporter = "RZ\Renzo\CMS\Importers\GroupsImporter";

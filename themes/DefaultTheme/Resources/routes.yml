@@ -1,10 +1,10 @@
 # This route is required!
 homePage:
     path:     /
-    defaults: { _controller: Themes\DefaultTheme\DefaultApp::homeAction }
+    defaults: { _controller: Themes\DefaultTheme\DefaultThemeApp::homeAction }
 homePageLocale:
     path:     /{_locale}
-    defaults: { _controller: Themes\DefaultTheme\DefaultApp::homeAction }
+    defaults: { _controller: Themes\DefaultTheme\DefaultThemeApp::homeAction }
     requirements:
         # Use every 2 letter codes (quick and dirty)
         _locale: "[a-z]{2}"
@@ -27,7 +27,7 @@ sitemap:
     defaults: { _controller: Themes\DefaultTheme\Controllers\SitemapController::indexAction }
 defaultRemoveTrailingSlash:
     path: /{url}
-    defaults: { _controller: Themes\DefaultTheme\DefaultApp::removeTrailingSlashAction }
+    defaults: { _controller: Themes\DefaultTheme\DefaultThemeApp::removeTrailingSlashAction }
     requirements:
         url: .*/$
     methods: [GET]
