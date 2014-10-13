@@ -60,22 +60,27 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
 
 		_this.$toggleExplorerButtons.addClass('uk-active');
 
+		var ajaxData = {
+			'_action':'toggleExplorer',
+			'_token': Rozier.ajaxToken
+		};
+
 		$.ajax({
 			url: Rozier.routes.documentsAjaxExplorer,
-			type: 'GET',
+			type: 'get',
 			dataType: 'json',
-			data: {
-				_action:'toggleExplorer',
-				_token: Rozier.ajaxToken
-			},
+			data: ajaxData
 		})
-		.done(function(data ) {
+		.success(function(data) {
 			console.log(data);
 			console.log("success");
-			_this.createExplorer(data);
+
+			if (typeof data.documents != "undefined") {
+				_this.createExplorer(data);
+			};
 		})
-		.fail(function(data ) {
-			console.log(data);
+		.fail(function(data) {
+			console.log(data.responseText);
 			console.log("error");
 		});
 	}
