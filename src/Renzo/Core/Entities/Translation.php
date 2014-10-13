@@ -31,17 +31,14 @@ class Translation extends AbstractDateTimed
      * @var array
      */
     public static $availableLocales = array(
-        "fr_FR"         => "French", // France
-        "en_US"         => "English",
-        "it_IT"         => "Italian",
-        "es_ES"         => "Spanish",
-        "nl_NL"         => "Dutch",
-        "de_DE"         => "German",
-        "zh_HK"         => "Chinese (Honk Kong)",
-        "zh_CN"         => "Chinese (China)",
-        "zh_SG"         => "Chinese (Singapore)",
-        "zh_TW"         => "Chinese (Taïwan)",
-        "ja_JP"         => "Japanese"
+        "fr"         => "French", // France
+        "en"         => "English",
+        "it"         => "Italian",
+        "es"         => "Spanish",
+        "nl"         => "Dutch",
+        "de"         => "German",
+        "zh"         => "Chinese (China)",
+        "ja"         => "Japanese"
     );
     /**
      * Associates locales to *famfamfam* flag files names.
@@ -49,17 +46,14 @@ class Translation extends AbstractDateTimed
      * @var array
      */
     public static $availableLocalesFlags = array(
-        "fr_FR"         => "fr.png", // France
-        "en_US"         => "us.png",
-        "it_IT"         => "it.png",
-        "es_ES"         => "es.png",
-        "nl_NL"         => "nl.png",
-        "de_DE"         => "de.png",
-        "zh_HK"         => "hk.png",
-        "zh_CN"         => "cn.png",
-        "zh_SG"         => "sg.png",
-        "zh_TW"         => "tw.png",
-        "ja_JP"         => "jp.png"
+        "fr"         => "fr.png", // France
+        "en"         => "us.png",
+        "it"         => "it.png",
+        "es"         => "es.png",
+        "nl"         => "nl.png",
+        "de"         => "de.png",
+        "zh"         => "cn.png",
+        "ja"         => "jp.png"
     );
 
     /**
@@ -111,14 +105,13 @@ class Translation extends AbstractDateTimed
 
         return $this;
     }
+
     /**
      * @return string
      */
-    public function getShortLocale()
+    public function getLongLocale()
     {
-        $shorts = array_flip(static::$availableLocalesShortcut);
-
-        return $shorts[$this->getLocale()];
+        return static::$availableLocalesShortcut[$this->getLocale()];
     }
 
     /**
@@ -226,23 +219,6 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * Return complete locale name from short locale.
-     * Ex : en => en_GB or us => en_US
-     *
-     * @param string $shortcut
-     *
-     * @return string
-     */
-    public static function getLocaleFromShortcut($shortcut)
-    {
-        if (isset(static::$availableLocalesShortcut[$shortcut])) {
-            return static::$availableLocalesShortcut[$shortcut];
-        } else {
-            return "";
-        }
-    }
-
-    /**
      * @OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @var ArrayCollection
      */
@@ -265,23 +241,6 @@ class Translation extends AbstractDateTimed
     public function getTagTranslations()
     {
         return $this->tagTranslations;
-    }
-
-    /**
-     * Return short locale name from complete locale.
-     * Ex : en_GB => en or en_US => us
-     *
-     * @param string $locale
-     *
-     * @return string
-     */
-    public static function getShortcutFromLocale($locale)
-    {
-        if (in_array($locale, static::$availableLocalesShortcut)) {
-            return array_search($locale, static::$availableLocalesShortcut);
-        } else {
-            return false;
-        }
     }
     /**
      * @return TranslationHandler

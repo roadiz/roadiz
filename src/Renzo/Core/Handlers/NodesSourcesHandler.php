@@ -105,7 +105,7 @@ class NodesSourcesHandler
                 return Kernel::getInstance()->getRequest()->getBaseUrl();
             } else {
                 return Kernel::getInstance()->getRequest()->getBaseUrl() .
-                        '/' . $this->nodeSource->getTranslation()->getShortLocale();
+                        '/' . $this->nodeSource->getTranslation()->getLocale();
             }
         }
 
@@ -129,7 +129,7 @@ class NodesSourcesHandler
          */
         if ($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
             !$this->nodeSource->getTranslation()->isDefaultTranslation()) {
-            $urlTokens[] = $this->nodeSource->getTranslation()->getShortLocale();
+            $urlTokens[] = $this->nodeSource->getTranslation()->getLocale();
         }
 
         $urlTokens[] = Kernel::getInstance()->getRequest()->getBaseUrl();

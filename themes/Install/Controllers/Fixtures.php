@@ -94,15 +94,11 @@ class Fixtures
              * current language
              */
             switch (Kernel::getInstance()->getRequest()->getLocale()) {
-                case 'en':
-                    $translation->setLocale('en_US');
-                    break;
                 case 'fr':
-                    $translation->setLocale('fr_FR');
+                    $translation->setLocale('fr');
                     break;
-
                 default:
-                    $translation->setLocale('en_US');
+                    $translation->setLocale('en');
                     break;
             }
 
