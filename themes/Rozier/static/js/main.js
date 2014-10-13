@@ -32,6 +32,11 @@ Rozier.onDocumentReady = function( event ) {
 	// Switch checkboxes
 	$(".rz-boolean-checkbox").bootstrapSwitch();
 
+	// Init markdown-preview
+	$(".uk-htmleditor-preview").css("height", 250);
+	$(".CodeMirror").css("height", 250);
+	$(".uk-htmleditor-content").after($(".uk-htmleditor-navbar"));
+
 
 	Rozier.centerVerticalObjects();
 };

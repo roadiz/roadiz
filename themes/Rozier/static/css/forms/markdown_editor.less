@@ -1,10 +1,76 @@
+/*------------------------------------*\
+   MARKDOWN
+\*------------------------------------*/
+
+/* -------- VARS -------- */
+
+@navbar-liHW: 30px;
+@markdown-contentH: 200px;
+
+/* -------- STYLES -------- */
+
 .uk-htmleditor {
+    &-navbar {
+        background: none;
+        margin-top: 8px;
+        margin-bottom: 20px;
 
+        &-nav>li {
+            background-color: #F2F2F2;
+            height: @navbar-liHW;
+            width: @navbar-liHW;
+            border: 1px solid @grey-form-border;
+            border-left: 0 none;
+            .box-sizing();
+
+            &:first-child {
+                border-left: 1px solid @grey-form-border;
+            }
+
+            &>a {
+                display: block;
+                text-decoration: none;
+                height: @navbar-liHW;
+                padding: 0 0 0 8px;
+                font-size: 11px;
+                line-height: @navbar-liHW;
+                color: #444;
+                .box-sizing();
+            }
+        }
+    }
     &-toolbar {
-
         i {
             font-size: 14px;
-            line-height: 40px;
+            line-height: @navbar-liHW;
+        }
+    }
+    &-content {
+        border: 1px solid @grey-form-border;
+        background: #fff;
+        .transition(~'0.35s ease border-color, 0.5s ease background');
+        cursor: text;
+
+        &:hover {
+            background-color: white;
+            border-color: @grey-form-submit-border-hover;
+            color: #333;
+        }
+        &:focus, &:active {
+            background-color: @grey-verylight;
+            border-color: @grey-form-submit-border-hover;
+            color: #333;
+        }
+    }
+    &-preview {
+        padding: 10px 20px;
+
+    }
+    &-code {
+        .CodeMirror {
+            font-family: 'RezoZero Mono', monospace;
+            font-size: 12px;
+            line-height: 17px;
         }
     }
 }
