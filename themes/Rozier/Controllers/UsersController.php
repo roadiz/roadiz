@@ -568,6 +568,9 @@ class UsersController extends RozierApp
                 );
 
             }
+        } else {
+            $url = "http://www.gravatar.com/avatar/" . md5( strtolower( trim( $user->getEmail() ) ) ) . "?d=mm&s=200";
+            $user->setPictureUrl($url);
         }
     }
 
