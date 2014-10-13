@@ -1,9 +1,9 @@
 # ignore these
-./*
-.DS_Store
+/*
+/.DS_Store
 
 # except
-!.gitignore
-!DefaultTheme
-!Install
-!Rozier
+!/.gitignore
+!/DefaultTheme
+!/Install
+!/Rozier
