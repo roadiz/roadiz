@@ -105,13 +105,6 @@ class Translation extends AbstractDateTimed
 
         return $this;
     }
-    /**
-     * @return string
-     */
-    public function getShortLocale()
-    {
-        return $this->locale;
-    }
 
     /**
      * @return string

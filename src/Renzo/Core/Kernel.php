@@ -298,7 +298,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
                             ->findDefault();
 
         if ($translation !== null) {
-            $shortLocale = $translation->getShortLocale();
+            $shortLocale = $translation->getLocale();
             $this->request->setLocale($shortLocale);
             \Locale::setDefault($shortLocale);
         }

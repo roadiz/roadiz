@@ -74,7 +74,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
         if ($node !== null) {
 
             $translation = $node->getNodeSources()->first()->getTranslation();
-            Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
+            Kernel::getInstance()->getRequest()->setLocale($translation->getLocale());
 
             return array(
                 '_controller' => $this->getThemeController().'::indexAction',
@@ -89,7 +89,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             $translation = $this->parseTranslation($tokens);
 
             if (null !== $translation) {
-                Kernel::getInstance()->getRequest()->setLocale($translation->getShortLocale());
+                Kernel::getInstance()->getRequest()->setLocale($translation->getLocale());
             }
 
             $node = $this->parseNode($tokens, $translation);
