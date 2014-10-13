@@ -324,6 +324,35 @@ class DocumentsController extends RozierApp
     }
 
     /**
+     * Return a node list using this document.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $documentId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function usageAction(Request $request, $documentId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        $document = $this->getService('em')
+            ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
+
+        if ($document !== null) {
+            $this->assignation['document'] = $document;
+            $this->assignation['usages'] = $document->getNodesSourcesByFields();
+
+            return new Response(
+                $this->getTwig()->render('documents/usage.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        } else {
+            return $this->throw404();
+        }
+    }
+
+    /**
      * @param RZ\Renzo\Core\Entities\Document $doc
      *
      * @return \Symfony\Component\Form\Form

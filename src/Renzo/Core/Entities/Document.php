@@ -384,6 +384,14 @@ class Document extends AbstractDateTimed
     protected $nodesSourcesByFields = null;
 
     /**
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getNodesSourcesByFields()
+    {
+        return $this->nodesSourcesByFields;
+    }
+
+    /**
      * Create a new Document.
      */
     public function __construct()

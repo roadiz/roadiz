@@ -4532,6 +4532,32 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <source>twitter_account</source>
         <target></target>
       </trans-unit>
+
+      <!-- document usage -->
+      <trans-unit xml:space="preserve" id="document.%name%.usage">
+        <source>document.%name%.usage</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="usage.fieldName">
+        <source>usage.fieldName</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.name">
+        <source>nodeType.name</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.usage">
+        <source>document.usage</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.edit">
+        <source>document.edit</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.preview">
+        <source>document.preview</source>
+        <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -45,6 +45,14 @@ class NodesSourcesDocuments extends AbstractPositioned implements PersistableInt
      */
     private $nodeSource;
 
+    /**
+     * @return RZ\Renzo\Core\Entities\NodesSources
+     */
+    public function getNodeSource()
+    {
+        return $this->nodeSource;
+    }
+
 
     /**
      * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\Document")
@@ -54,11 +62,27 @@ class NodesSourcesDocuments extends AbstractPositioned implements PersistableInt
     private $document;
 
     /**
+     * @return RZ\Renzo\Core\Entities\Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /**
      * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\NodeTypeField")
      * @JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Renzo\Core\Entities\NodeTypeField
      */
     private $field;
+
+    /**
+     * @return RZ\Renzo\Core\Entities\NodeTypeField
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
 
     /**
      * Create a new relation between NodeSource, a Document and a NodeTypeField.
