@@ -1,6 +1,9 @@
 # RZCMS v3
 ## REZO ZERO CMS
 
+RZ-CMS is a polymorphic CMS based on a node system which can handle many type of services.
+It’s based on Symfony components and Doctrine ORM for maximum performances and security.
+
 ### Installation
 
 * Clone current repository to your web root

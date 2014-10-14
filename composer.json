@@ -1,6 +1,45 @@
 {
     "name": "rezozero/renzo",
-    "version": "0.0.1",
+    "description":"RZ-CMS is a polymorphic CMS based on a node system which can handle many type of services. It’s based on Symfony component and Doctrine ORM for maximum performances and security.",
+    "license":"MIT",
+    "type": "project",
+    "keywords": [
+        "cms",
+        "backoffice",
+        "rezo zero"
+    ],
+    "authors": [
+        {
+            "name": "Ambroise Maupate",
+            "email": "ambroise@rezo-zero.com",
+            "homepage": "http://www.rezo-zero.com",
+            "role": "Lead developer"
+        },
+        {
+            "name": "Julien Blanchet",
+            "email": "julien@rezo-zero.com",
+            "homepage": "http://www.rezo-zero.com",
+            "role": "AD, integrator"
+        },
+        {
+            "name": "Maxime Bérard",
+            "email": "maxime@rezo-zero.com",
+            "homepage": "http://www.rezo-zero.com",
+            "role": "Frontend developer, Integrator"
+        },
+        {
+            "name": "Maxime Constantinian",
+            "email": "azokal@rezo-zero.com",
+            "homepage": "http://www.rezo-zero.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Thomas Aufresne",
+            "email": "thomas@rezo-zero.com",
+            "homepage": "http://www.rezo-zero.com",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "rezozero/slir": "2.1.*",
         "doctrine/orm": "@stable",
