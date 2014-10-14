@@ -132,8 +132,17 @@
 <script type="text/javascript">
     (function() {
         Install.importNodeTypeRoutes = [];
+        {% for role in roles %}
+        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportRoles', {'filename': role, 'themeId': themeId}) }}",'id':'{{ role|replace({'/': '_', '.': '_'}) }}'});
+        {% endfor %}
+        {% for group in groups %}
+        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportGroups', {'filename': group, 'themeId': themeId}) }}",'id':'{{ group|replace({'/': '_', '.': '_'}) }}'});
+        {% endfor %}
+        {% for setting in settings %}
+        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportSettings', {'filename': setting, 'themeId': themeId}) }}",'id':'{{ setting|replace({'/': '_', '.': '_'}) }}'});
+        {% endfor %}
         {% for nodetype in nodetypes %}
-        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodeTypes', {'filename': nodetype, 'id': themeId}) }}",'id':'{{ nodetype|replace({'/': '_', '.': '_'}) }}'});
+        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodeTypes', {'filename': nodetype, 'themeId': themeId}) }}",'id':'{{ nodetype|replace({'/': '_', '.': '_'}) }}'});
         {% endfor %}
         Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodes') }}",'id':"Nodes"});
     })();

@@ -9,9 +9,9 @@
     "versionRequire": "1.0.1",
 
     "importFiles": {
-            "roles": ["Ressources/import/roles.rzt"],
-            "groups": ["Ressources/import/groups.rzt"],
-            "settings": ["Ressources/import/settings.rzt"],
-            "nodetypes": ["Ressources/import/nodetype/page.rzt"]
+            "roles": ["Resources/import/roles.rzt"],
+            "groups": ["Resources/import/groups.rzt"],
+            "settings": ["Resources/import/settings.rzt"],
+            "nodetypes": ["Resources/import/nodetype/page.rzt"]
         }
 }

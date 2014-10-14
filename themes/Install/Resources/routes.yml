@@ -18,23 +18,23 @@ installDatabaseSchemaPage:
 #     path:     /install/import
 #     defaults: { _controller: Themes\Install\InstallApp::importAction }
 installImportSettings:
-    path:     /install/import/settings/{filename}/{id}
+    path:     /install/import/settings/{filename}/{themeId}
     defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importSettingsAction }
     requirements:
         filename: "^[a-zA-Z_/.]+$"
-        id: "[0-9]+"
+        themeId: "[0-9]+"
 installImportGroups:
-    path:     /install/import/groups/{filename}/{id}
+    path:     /install/import/groups/{filename}/{themeId}
     defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importGroupsAction }
     requirements:
         filename: "^[a-zA-Z_/.]+$"
-        id: "[0-9]+"
+        themeId: "[0-9]+"
 installImportRoles:
-    path:     /install/import/roles/{filename}/{id}
+    path:     /install/import/roles/{filename}/{themeId}
     defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importRolesAction }
     requirements:
         filename: "^[a-zA-Z_/.]+$"
-        id: "[0-9]+"
+        themeId: "[0-9]+"
 installImportNodes:
     path:     /install/import/nodes/
     defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importNodesAction }
@@ -42,11 +42,11 @@ installImportNodes:
     #     filename: "^[a-zA-Z_/.]+$"
     #     id: "[0-9]+"
 installImportNodeTypes:
-    path:     /install/import/nodetypes/{filename}/{id}
+    path:     /install/import/nodetypes/{filename}/{themeId}
     defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importNodeTypesAction }
     requirements:
         filename: "^[a-zA-Z_/.]+$"
-        id: "[0-9]+"
+        themeId: "[0-9]+"
 installImportNodeTypesPage:
     path:     /install/import/nodetypes/{id}
     defaults: { _controller: Themes\Install\InstallApp::nodeTypesAction }

@@ -131,6 +131,9 @@ class Fixtures
             $user->setPlainPassword($data['password']);
             $user->setEmail($data['email']);
 
+            $url = "http://www.gravatar.com/avatar/" . md5( strtolower( trim( $user->getEmail() ) ) ) . "?d=identicon&s=200";
+            $user->setPictureUrl($url);
+
             $existingGroup = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Group')
                 ->findOneByName('Admin');

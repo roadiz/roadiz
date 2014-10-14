@@ -81,6 +81,7 @@ class SettingsImporter implements ImporterInterface
                  * to don't take the existing setting's group
                  */
                 $newSettings[] = array($setting, $settingGroup);
+                $settingGroup->getSettings()->clear();
             }
         }
 
@@ -92,7 +93,7 @@ class SettingsImporter implements ImporterInterface
              * Persist or not group
              */
             if (null !== $settingGroup) {
-                if (!in_array($settingGroup->getName(), $groupsNames) && $settingGroup->getName() != "__default__") {
+                if (!in_array($settingGroup->getName(), $groupsNames)) {
                     Kernel::getService('em')->persist($settingGroup);
                 } else {
                     $settingGroup = Kernel::getService('em')
