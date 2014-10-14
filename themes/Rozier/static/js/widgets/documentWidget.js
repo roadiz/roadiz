@@ -77,7 +77,7 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
 
 			if (typeof data.documents != "undefined") {
 				_this.createExplorer(data);
-			};
+			}
 		})
 		.fail(function(data) {
 			console.log(data.responseText);
