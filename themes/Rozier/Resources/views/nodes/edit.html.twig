@@ -4,7 +4,7 @@
 {% set currentTitle = node.getNodeName %}
 {% endif %}
 
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global manage-node">

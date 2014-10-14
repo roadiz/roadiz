@@ -17,9 +17,7 @@ Rozier.onDocumentReady = function( event ) {
 		Rozier[index] = temp[index];
 	}
 
-	new DocumentWidget();
-	new ChildrenNodesField();
-	new SaveButtons();
+	Rozier.lazyload = new Lazyload();
 
 	Rozier.nodeStatuses = new NodeStatuses();
 
@@ -29,16 +27,7 @@ Rozier.onDocumentReady = function( event ) {
 	// Minify trees panel toggle button
 	$('#minify-tree-panel-button').on('click', Rozier.toggleTreesPanel);
 
-	// Switch checkboxes
-	$(".rz-boolean-checkbox").bootstrapSwitch();
-
-	// Init markdown-preview
-	$(".uk-htmleditor-preview").css("height", 250);
-	$(".CodeMirror").css("height", 250);
-	$(".uk-htmleditor-content").after($(".uk-htmleditor-navbar"));
-
-
-	Rozier.centerVerticalObjects();
+	Rozier.lazyload.bindNewContent();
 };
 
 Rozier.bindMainTrees = function () {

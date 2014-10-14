@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global">
@@ -6,7 +6,7 @@
     <header class="content-header header-tags header-tags-add">
 	   <h1 class="content-title nodes-list-title">{% trans %}add.tag{% endtrans %}</h1>
     </header>
-    
+
     <article class="content content-tags-add">
     	{% form_theme form 'forms.html.twig' %}
         <form id="add-tag-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>

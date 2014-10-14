@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global manage-themes">
@@ -9,7 +9,7 @@
             <nav><a class="uk-button uk-button-small" href="{{ path('themesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.themes{% endtrans %}</a></nav>
         </div>
     </header>
-    
+
     <article class="content content-no-action-menu content-themes-add">
         {% form_theme form 'forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
