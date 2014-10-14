@@ -20,8 +20,6 @@ DocumentWidget.prototype.init = function() {
 	var _this = this;
 
 	var changeProxy = $.proxy(_this.onNestableDocumentWidgetChange, _this);
-
-	_this.$nestables.off('nestable-change', changeProxy);
 	_this.$nestables.on('nestable-change', changeProxy);
 
 	_this.$toggleExplorerButtons.on('click', $.proxy(_this.onExplorerToggle, _this));
@@ -76,8 +74,10 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
 			console.log("success");
 
 			if (typeof data.documents != "undefined") {
-				_this.createExplorer(data);
-			};
+
+				var $currentNestable = $($(event.currentTarget).parents('.documents-widget')[0]).find('.documents-widget-nestable');
+				_this.createExplorer(data, $currentNestable);
+			}
 		})
 		.fail(function(data) {
 			console.log(data.responseText);
@@ -113,16 +113,37 @@ DocumentWidget.prototype.onUnlinkDocument = function( event ) {
  * @param  {[type]} data [description]
  * @return {[type]}      [description]
  */
-DocumentWidget.prototype.createExplorer = function( data ) {
+DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
 	var _this = this;
+	console.log($originWidget);
+	var changeProxy = $.proxy(_this.onNestableDocumentWidgetChange, _this);
 
-	$("body").append('<div class="document-widget-explorer"><ul class="uk-nestable" data-uk-nestable="{group:\'documents-widget\',maxDepth:1}"></ul></div>');
+	$("body").append('<div class="document-widget-explorer"><ul class="uk-nestable"></ul></div>');
 	_this.$explorer = $('.document-widget-explorer');
+	var $nestable = _this.$explorer.find('.uk-nestable');
 
 	for (var i = 0; i < data.documents.length; i++) {
 		var doc = data.documents[i];
-		_this.$explorer.find('ul').append(doc.html);
+		$nestable.append(doc.html);
 	}
+
+	$nestable.find('li').each (function (index, element) {
+		var $link = $(element).find('.link-button');
+		if($link.length){
+			$link.on('click', function (event) {
+
+				var $object = $(event.currentTarget).parent();
+				$object.appendTo($originWidget);
+
+				var inputName = 'source['+$originWidget.data('input-name')+']';
+				$originWidget.find('li').each(function (index, element) {
+					$(element).find('input').attr('name', inputName+'['+index+']');
+				});
+
+				return false;
+			});
+		}
+	});
 
 	window.setTimeout(function () {
 		_this.$explorer.addClass('visible');

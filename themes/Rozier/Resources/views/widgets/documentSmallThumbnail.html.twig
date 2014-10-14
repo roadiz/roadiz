@@ -1,3 +1,4 @@
+{% spaceless %}
 <li class="uk-nestable-item" data-document-id="{{ document.getId }}">
 	<div class="uk-nestable-handle"></div>&nbsp;
 	{% if document.isImage %}
@@ -5,6 +6,17 @@
 	{% endif %}
 	<span class="document-name">{{ document.getFilename }}</span>
 	<input type="hidden" name="{{ full_name }}" value="{{ document.getId }}" />
-	<a href="{{ path('documentsEditPage', { documentId: document.getId}) }}" class="uk-button uk-button-mini"><i class="uk-icon-rz-pencil"></i> {% trans %}edit.document{% endtrans %}</a>
-	<a data-document-widget-unlink-document href="#" class="uk-button uk-button-mini uk-button-danger"><i class="uk-icon-rz-trash-o"></i> {% trans %}unlink.document{% endtrans %}</a>
+	<a href="{{ path('documentsEditPage', { documentId: document.getId}) }}" class="uk-button uk-button-mini">
+    <i class="uk-icon-rz-pencil"></i>
+    <span class="label">{% trans %}edit.document{% endtrans %}</span>
+    </a>
+	<a data-document-widget-unlink-document href="#" class="uk-button uk-button-mini uk-button-danger">
+    <i class="uk-icon-trash-o"></i>
+    <span class="label">{% trans %}unlink.document{% endtrans %}</span>
+    </a>
+    <a data-document-widget-link-document href="#" class="uk-button uk-button-mini link-button">
+    <i class="uk-icon-plus"></i>
+    <span class="label">{% trans %}link.document{% endtrans %}</span>
+    </a>
 </li>
+{% endspaceless %}
