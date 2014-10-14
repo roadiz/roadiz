@@ -5,7 +5,7 @@
     <article id="content-done" class="content">
 
         <div class="content-title-cont">
-            <h1 class="content-title">{% trans %}success.title{% endtrans %}</h1>   
+            <h1 class="content-title">{% trans %}success.title{% endtrans %}</h1>
         </div>
 
         <div class="content-progress">
@@ -20,10 +20,10 @@
         </div>
 
         <div class="content-text-cont">
-            
+
             <div class="content-intro content-intro-big">
                 {% trans %}success.message{% endtrans %}
-            </div> 
+            </div>
 
             {% if error %}
             <div class="uk-alert uk-alert-danger">
@@ -49,7 +49,7 @@
                 {% spaceless %}
                 <div class="content-buttons">
 
-                    <a class="content-button uk-button uk-button-success" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.informations{% endtrans %}</a>
+                    <a class="content-button uk-button uk-button-success" href="{{ path('installUserPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.user{% endtrans %}</a>
                     <button class="content-button uk-button uk-button-primary"><i class="uk-icon-check"></i> {% trans %}success.quit_install{% endtrans %}</button>
 
                 </div>
@@ -58,7 +58,7 @@
             </form>
 
         </div>
-        
+
     </article>
 
 {% endblock %}

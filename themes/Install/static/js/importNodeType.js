@@ -12,7 +12,7 @@ ImportNodeType.prototype.score = 0;
 ImportNodeType.prototype.always = function( index, data ) {
     var _this = this;
 
-    if (typeof data.request != "undefined") {
+    if (typeof data != "undefined" && typeof data.request != "undefined") {
         $.ajax({
             url:data.request,
             type: 'GET',
@@ -53,15 +53,14 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
             _this.always(index, data);
         })
         .fail(function(data) {
-            console.log("error");
-            console.log(data.responseJSON);
 
             $icon.removeClass('uk-icon-spinner');
             $icon.addClass('uk-icon-warning');
             $row.addClass('uk-badge-danger');
 
-            $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>");
-
+            if (typeof data.responseJSON != "undefined" && typeof data.responseJSON.error != "undefined") {
+                $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>");
+            }
             _this.always(index, data.responseJSON);
         })
         .always(function(data) {

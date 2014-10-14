@@ -202,19 +202,29 @@ class InstallApp extends AppController
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function nodeTypesAction(Request $request)
+    public function nodeTypesAction(Request $request, $id)
     {
-        $finder = new Finder();
+        // $finder = new Finder();
 
         // Extracting the PHP files from every Theme folder
-        $iterator = $finder
-            ->files()
-            ->name('*.rzt')
-            ->depth(0)
-            ->in(RENZO_ROOT.'/themes/Install/Resources/import/nodetype');
-        foreach ($iterator as $file) {
-            $this->assignation['names'][] = str_replace(".rzt", '', $file->getFileName());
-        }
+        // $iterator = $finder
+        //     ->files()
+        //     ->name('*.rzt')
+        //     ->depth(0)
+        //     ->in(RENZO_ROOT.'/themes/Install/Resources/import/nodetype');
+        // foreach ($iterator as $file) {
+        //     $this->assignation['names'][] = str_replace(".rzt", '', $file->getFileName());
+        // }
+
+        $result = $this->getService('em')->find('RZ\Renzo\Core\Entities\Theme', $id);
+
+        $str = substr($result->getClassName(), 0, strrpos($result->getClassName(), '\\'));
+
+        $data = json_decode(file_get_contents(RENZO_ROOT . str_replace('\\', '/', $str) . "/config.json"), true);
+
+        $this->assignation = array_merge($this->assignation, $data["importFiles"]);
+        $this->assignation["themeId"] = $id;
+
         return new Response(
             $this->getTwig()->render('steps/importNodeType.html.twig', $this->assignation),
             Response::HTTP_OK,
@@ -454,13 +464,15 @@ class InstallApp extends AppController
                     $fixtures = new Fixtures();
                     $fixtures->saveInformations($infosForm->getData());
 
-                    if ($infosForm->getData()['install_frontend'] === true) {
+                    if ($infosForm->getData()['className'] != "") {
                         /*
                          * Force redirect to avoid resending form when refreshing page
                          */
+                        $result = $this->getService('em')->getRepository('RZ\Renzo\Core\Entities\Theme')
+                                       ->findOneByClassName($infosForm->getData()['className']);
                         $response = new RedirectResponse(
                             $this->getService('urlGenerator')->generate(
-                                'installImportNodeTypesPage'
+                                'installImportNodeTypesPage', array('id' => $result->getId())
                             )
                         );
                         $response->prepare($request);
@@ -757,9 +769,21 @@ class InstallApp extends AppController
             ->add('separator_1', new SeparatorType(), array(
                 'label' => $this->getTranslator()->trans('themes.frontend.description')
             ))
-            ->add('install_frontend', 'checkbox', array(
-                'required' => false
-            ));
+            // ->add('install_frontend', 'checkbox', array(
+            //     'required' => false
+            // ))
+            ->add(
+                'className',
+                new \RZ\Renzo\CMS\Forms\ThemesType(),
+                array(
+                    'label' => $this->getTranslator()->trans('themeToInstall'),
+                    'required' => true,
+                    'constraints' => array(
+                        new \Symfony\Component\Validator\Constraints\NotNull(),
+                        new \Symfony\Component\Validator\Constraints\Type('string'),
+                    )
+                )
+            );
 
         return $builder->getForm();
     }

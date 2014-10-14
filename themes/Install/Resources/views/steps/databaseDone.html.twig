@@ -26,18 +26,18 @@
         </div>
 
         <div class="content-text-cont">
-            
+
             <div class="content-text">
-                
-                {% if error %}  
-                    <div class="content-intro content-intro-only">          
+
+                {% if error %}
+                    <div class="content-intro content-intro-only">
                         {% trans %}database_fail.message{% endtrans %}
                         <div class="uk-alert uk-alert-danger">
                             <a href="#" class="uk-alert-close uk-close"></a>
                             <p>{% trans %}database.cannot_connect{% endtrans %}</p>
                             <p>{{ errorMessage }}</p>
                         </div>
-                    </div>  
+                    </div>
                 {% else %}
                     <div class="content-intro content-intro-big">
                         {% trans %}database_done.message{% endtrans %}
@@ -47,17 +47,17 @@
             </div>
 
             {% spaceless %}
-            <div class="content-buttons">  
+            <div class="content-buttons">
 
                 {% if error %}
                     <a class="content-button uk-button" href="{{ path('installDatabasePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a>
                 {% else %}
                     <a class="content-button uk-button" href="{{ path('installDatabasePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a>
-                    <a class="content-button uk-button uk-button-primary" href="{{ path('installImportPage') }}"><i class="uk-icon-arrow-circle-right"></i> {% trans %}goto.import{% endtrans %}</a>
+                    <a class="content-button uk-button uk-button-primary" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-right"></i> {% trans %}goto.theme{% endtrans %}</a>
                 {% endif %}
 
-            </div>                    
-            {% endspaceless %} 
+            </div>
+            {% endspaceless %}
 
         </div>
 

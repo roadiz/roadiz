@@ -127,6 +127,9 @@ class Fixtures
             $user->setPlainPassword($data['password']);
             $user->setEmail($data['email']);
 
+            $url = "http://www.gravatar.com/avatar/" . md5( strtolower( trim( $user->getEmail() ) ) ) . "?d=identicon&s=200";
+            $user->setPictureUrl($url);
+
             $existingGroup = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Group')
                 ->findOneByName('Admin');
@@ -228,24 +231,21 @@ class Fixtures
         /*
          * Install default theme
          */
-        $this->installFrontendTheme();
+        $this->installFrontendTheme($data['className']);
     }
 
     /**
      * @return void
      */
-    protected function installFrontendTheme()
+    protected function installFrontendTheme($classname)
     {
         $existing = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Theme')
-            ->findOneBy(array(
-                'backendTheme'=>false,
-                'available'=>true
-            ));
+            ->findOneByClassName($classname);
 
         if (null === $existing) {
             $feTheme = new Theme();
-            $feTheme->setClassName('\Themes\DefaultTheme\DefaultApp');
+            $feTheme->setClassName($classname);
             $feTheme->setAvailable(true);
             $feTheme->setBackendTheme(false);
 
