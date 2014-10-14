@@ -1,5 +1,4 @@
-/*! UIkit 2.8.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
-
+/*! UIkit 2.11.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -15,6 +14,8 @@
     }
 
 })(function($, UI){
+
+    var active;
 
     UI.component('autocomplete', {
 
@@ -96,10 +97,7 @@
                     }
 
                 },
-                "keyup": trigger,
-                "blur": function(e) {
-                    setTimeout(function() { $this.hide(); }, 200);
-                }
+                "keyup": trigger
             });
 
             this.dropdown.on("click", ".uk-autocomplete-results > *", function(){
@@ -177,7 +175,7 @@
 
             var data = this.selected.data();
 
-            this.trigger("autocomplete-select", [data, this]);
+            this.trigger("uk.autocomplete.select", [data, this]);
 
             if (data.value) {
                 this.input.val(data.value);
@@ -190,6 +188,8 @@
             if (this.visible) return;
             this.visible = true;
             this.element.addClass("uk-open");
+
+            active = this;
             return this;
         },
 
@@ -197,6 +197,11 @@
             if (!this.visible) return;
             this.visible = false;
             this.element.removeClass("uk-open");
+
+            if (active === this) {
+                active = false;
+            }
+
             return this;
         },
 
@@ -252,10 +257,9 @@
                             url: this.options.source,
                             data: params,
                             type: this.options.method,
-                            dataType: 'json',
-                            complete: function(xhr) {
-                                release(xhr.responseJSON || []);
-                            }
+                            dataType: 'json'
+                        }).done(function(json) {
+                            release(json || []);
                         });
 
                         break;
@@ -286,7 +290,7 @@
                 this.dropdown.append(this.template({"items":data}));
                 this.show();
 
-                this.trigger('autocomplete-show');
+                this.trigger('uk.autocomplete.show');
             }
 
             return this;
@@ -294,12 +298,17 @@
     });
 
     // init code
-    $(document).on("focus.autocomplete.uikit", "[data-uk-autocomplete]", function(e) {
+    UI.$html.on("focus.autocomplete.uikit", "[data-uk-autocomplete]", function(e) {
 
         var ele = $(this);
         if (!ele.data("autocomplete")) {
             var obj = UI.autocomplete(ele, UI.Utils.options(ele.attr("data-uk-autocomplete")));
         }
+    });
+
+    // register outer click for autocompletes
+    UI.$html.on("click.autocomplete.uikit", function(e){
+        if (active && e.target!=active.input[0]) active.hide();
     });
 
     return UI.autocomplete;
