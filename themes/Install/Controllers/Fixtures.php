@@ -227,7 +227,10 @@ class Fixtures
             $conf->setConfiguration($config);
             $conf->writeConfiguration();
         }
+    }
 
+    public function installTheme($data)
+    {
         /*
          * Install default theme
          */

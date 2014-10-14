@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+    <article id="content-requirements" class="content">
+
+        <div class="content-title-cont">
+            <h1 class="content-title">{% trans %}theme.summary.title{% endtrans %}</h1>
+        </div>
+
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item last"></div>
+        </div>
+
+        <div class="content-text-cont">
+
+            <div class="content-text">
+
+                <p class="import-nodetypes-part">{% trans %}check.version{% endtrans %}</p>
+                <table class="install-table import-nodetypes-part1-table uk-table">
+                    <tr>
+                        <th></th>
+                        <th>{% trans %}theme.name{% endtrans %}</th>
+                        <th>{% trans %}theme.version{% endtrans %}</th>
+                        <th>{% trans %}cms.version{% endtrans %}</th>
+                        <th>{% trans %}status{% endtrans %}</th>
+                    </tr>
+                        <tr>
+                            <td></td>
+                            <td>{{theme.name}}</td>
+                            <td>{{theme.version}}</td>
+                            <td>{{cms.version}}</td>
+                            <td>
+                                {% if status.version == true %}
+                                    <div class="uk-badge uk-badge-success" id="theme"><i class="uk-icon-check"></i></div>
+                                {% else %}
+                                    <div class="uk-badge uk-badge-danger" id="theme"><i class="uk-icon-warning"></i></div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                </table>
+
+            </div>
+
+            {% spaceless %}
+            <div class="content-buttons">
+                <a class="content-button uk-button" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.theme {% endtrans %}</a>
+                <a class="content-button uk-button uk-button-primary" href="{{ path('installImportNodeTypesPage', {"id": id}) }}">{% trans %}goto.import{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+            </div>
+            {% endspaceless %}
+
+        </div>
+
+    </article>
+
+{% endblock %}

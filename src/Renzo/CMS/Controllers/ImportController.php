@@ -196,11 +196,14 @@ class ImportController extends InstallApp
             } else {
                 $theme = Kernel::getService('em')
                          ->find('RZ\Renzo\Core\Entities\Theme', $themeId);
-                $dir = substr($theme->getClassName(), 0, strrpos($theme->getClassName(), '\\'));
+
                 if ($theme === null) {
                     throw new \Exception('Theme don\'t exist in database.');
                 }
-                $path = RENZO_ROOT . str_replace('\\', '/', $dir) . '/' . $pathFile;
+
+                $dir = explode('\\', $result->getClassName());
+
+                $path = RENZO_ROOT . "/themes/" . $dir[1] . '/' . $pathFile;
 
             }
             if (file_exists($path)) {

@@ -61,6 +61,9 @@ installUserSummaryPage:
 installThemesPage:
     path:     /install/themes
     defaults: { _controller: Themes\Install\InstallApp::themesAction }
+installThemeSummaryPage:
+    path:     /install/themes/summary
+    defaults: { _controller: Themes\Install\InstallApp::themeSummaryAction }
 installDonePage:
     path:     /install/done
     defaults: { _controller: Themes\Install\InstallApp::doneAction }
@@ -71,7 +74,7 @@ installUpdateSchema:
     path:     /install/update
     defaults: { _controller: Themes\Install\InstallApp::updateSchemaAction }
 removeTrailingSlash:
-    path: /{url}
+    path:     /{url}
     defaults: { _controller:  Themes\Install\InstallApp::removeTrailingSlashAction }
     requirements:
         url: .*/$
