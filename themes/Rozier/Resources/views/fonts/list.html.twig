@@ -40,7 +40,7 @@
 						</td>
 						<td><code>{{ font.getHash }}</code></td>
 						<td>
-							<a class="uk-button uk-button-small" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}"><span class="uk-icon-download"></span> {% trans %}download{% endtrans %}</a>
+							<a class="uk-button uk-button-small rz-no-ajax-link" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}"><span class="uk-icon-download"></span> {% trans %}download{% endtrans %}</a>
 							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('fontsDeletePage', { fontId: font.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}delete{% endtrans %}</a>
 						</td>
 					</tr>

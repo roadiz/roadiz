@@ -18,10 +18,8 @@ Rozier.onDocumentReady = function( event ) {
 	}
 
 	Rozier.lazyload = new Lazyload();
-
 	Rozier.nodeStatuses = new NodeStatuses();
 
-	Rozier.bindMainTrees();
 	// Search node
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
 	// Minify trees panel toggle button
@@ -30,10 +28,19 @@ Rozier.onDocumentReady = function( event ) {
 	Rozier.lazyload.bindNewContent();
 };
 
+/**
+ * init nestable for ajax
+ * @return {[type]} [description]
+ */
+Rozier.initNestables = function  () {
+	$('.uk-nestable').each(function (index, element) {
+        $.UIkit.nestable(element);
+    });
+};
 Rozier.bindMainTrees = function () {
 	// TREES
-	$('.nodetree-widget .root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );
-	$('.tagtree-widget .root-tree').on('nestable-change', Rozier.onNestableTagTreeChange );
+	$('.nodetree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableNodeTreeChange );
+	$('.tagtree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableTagTreeChange );
 };
 
 /**
@@ -68,6 +75,7 @@ Rozier.refreshMainNodeTree = function () {
 					$currentNodeTree.replaceWith(data.nodeTree);
 					$currentNodeTree = $('#tree-container').find('.nodetree-widget');
 					$currentNodeTree.fadeIn();
+					Rozier.initNestables();
 					Rozier.bindMainTrees();
 				});
 			}
@@ -177,7 +185,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 	console.log("Node: "+element.data('node-id')+ " status : "+status);
 
 	/*
-	 * If node removed, do not do anything, the other nodeTree will be triggered
+	 * If node removed, do not do anything, the otheuk.nestable.changer nodeTree will be triggered
 	 */
 	if (status == 'removed') {
 		return false;

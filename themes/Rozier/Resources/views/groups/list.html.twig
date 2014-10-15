@@ -9,7 +9,7 @@
         <div class="content-header-action-menu">
             <a class="uk-button" href="{{ path('groupsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.group{% endtrans %}</a>
             <a class="uk-button" href="{{ path('groupsImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}import.group{% endtrans %}</a>
-            <a class="uk-button" href="{{ path('groupsExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}export.all.groups{% endtrans %}</a>
+            <a class="uk-button rz-no-ajax-link" href="{{ path('groupsExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}export.all.groups{% endtrans %}</a>
         </div>
     </header>
 
@@ -41,7 +41,7 @@
                         <td>
                             {% if not group.required %}
                             <a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsDeletePage', { groupId: group.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
-                            <a class="uk-button uk-button-small uk-button-success" href="{{ path('groupsExportPage', { groupId: group.getId }) }}"><i class="uk-icon-download"></i> {% trans %}export{% endtrans %}</a>
+                            <a class="uk-button uk-button-small uk-button-success rz-no-ajax-link" href="{{ path('groupsExportPage', { groupId: group.getId }) }}"><i class="uk-icon-download"></i> {% trans %}export{% endtrans %}</a>
                             {% else %}
                             <div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}group.required{% endtrans %}</div>
                             {% endif %}

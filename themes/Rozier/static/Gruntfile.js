@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 					"js/vendor/uikit.min.js",
 					"js/vendor/mousetrap.min.js",
 					"js/addons/sortable.min.js",
-					"js/addons/nestable.min.js",
+					"js/addons/nestable.js",
 					"js/addons/pagination.min.js",
 					"js/addons/notify.min.js",
 					"js/vendor/codemirror.js",
