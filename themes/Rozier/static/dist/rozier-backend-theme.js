@@ -9933,6 +9933,9 @@ ChildrenNodesField.prototype.refreshNodeTree = function( $link, rootNodeId ) {
                     $nodeTree.replaceWith(data.nodeTree);
                     $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
 
+
+                    Rozier.initNestables();
+                    Rozier.bindMainTrees();
                     $nodeTree.fadeIn();
                 });
             }
@@ -9965,7 +9968,6 @@ Lazyload.prototype.$linksSelector = null;
 Lazyload.prototype.onClick = function(event) {
     var _this = this;
     var $link = $(event.currentTarget);
-    console.log($link.attr('href'));
 
     var href = $link.attr('href');
     if(typeof href != "undefined" &&
@@ -10056,10 +10058,15 @@ Lazyload.prototype.bindNewContent = function() {
     // Switch checkboxes
     $(".rz-boolean-checkbox").bootstrapSwitch();
 
+    $.UIkit.htmleditor($('textarea[data-uk-htmleditor]'), {markdown:true, mode:'tab'});
+
     // Init markdown-preview
     $(".uk-htmleditor-preview").css("height", 250);
     $(".CodeMirror").css("height", 250);
     $(".uk-htmleditor-content").after($(".uk-htmleditor-navbar"));
+
+    Rozier.initNestables();
+    Rozier.bindMainTrees();
 
     Rozier.centerVerticalObjects();
 };;// Avoid `console` errors in browsers that lack a console.
@@ -10106,10 +10113,8 @@ Rozier.onDocumentReady = function( event ) {
 	}
 
 	Rozier.lazyload = new Lazyload();
-
 	Rozier.nodeStatuses = new NodeStatuses();
 
-	Rozier.bindMainTrees();
 	// Search node
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
 	// Minify trees panel toggle button
@@ -10118,10 +10123,19 @@ Rozier.onDocumentReady = function( event ) {
 	Rozier.lazyload.bindNewContent();
 };
 
+/**
+ * init nestable for ajax
+ * @return {[type]} [description]
+ */
+Rozier.initNestables = function  () {
+	$('.uk-nestable').each(function (index, element) {
+        $.UIkit.nestable(element);
+    });
+};
 Rozier.bindMainTrees = function () {
 	// TREES
-	$('.nodetree-widget .root-tree').on('nestable-change', Rozier.onNestableNodeTreeChange );
-	$('.tagtree-widget .root-tree').on('nestable-change', Rozier.onNestableTagTreeChange );
+	$('.nodetree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableNodeTreeChange );
+	$('.tagtree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableTagTreeChange );
 };
 
 /**
@@ -10156,6 +10170,7 @@ Rozier.refreshMainNodeTree = function () {
 					$currentNodeTree.replaceWith(data.nodeTree);
 					$currentNodeTree = $('#tree-container').find('.nodetree-widget');
 					$currentNodeTree.fadeIn();
+					Rozier.initNestables();
 					Rozier.bindMainTrees();
 				});
 			}
@@ -10265,7 +10280,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 	console.log("Node: "+element.data('node-id')+ " status : "+status);
 
 	/*
-	 * If node removed, do not do anything, the other nodeTree will be triggered
+	 * If node removed, do not do anything, the otheuk.nestable.changer nodeTree will be triggered
 	 */
 	if (status == 'removed') {
 		return false;

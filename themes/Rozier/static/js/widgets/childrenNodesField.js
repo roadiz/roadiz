@@ -105,6 +105,9 @@ ChildrenNodesField.prototype.refreshNodeTree = function( $link, rootNodeId ) {
                     $nodeTree.replaceWith(data.nodeTree);
                     $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
 
+
+                    Rozier.initNestables();
+                    Rozier.bindMainTrees();
                     $nodeTree.fadeIn();
                 });
             }
