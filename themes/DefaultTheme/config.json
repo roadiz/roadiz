@@ -4,7 +4,7 @@
     "copyright": "REZO ZERO",
     "themeDir": "DefaultTheme",
 
-    "supportedLanguage": ["en", "fr"],
+    "supportedLocale": ["en", "fr"],
 
     "versionRequire": "1.0.1",
 

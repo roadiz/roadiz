@@ -47,9 +47,9 @@ installImportNodeTypes:
     requirements:
         filename: "^[a-zA-Z_/.]+$"
         themeId: "[0-9]+"
-installImportNodeTypesPage:
-    path:     /install/import/nodetypes/{id}
-    defaults: { _controller: Themes\Install\InstallApp::nodeTypesAction }
+installImportThemePage:
+    path:     /install/import/theme/{id}
+    defaults: { _controller: Themes\Install\InstallApp::importThemeAction }
     requirements: { id : "[0-9]+" }
 installUserPage:
     path:     /install/user
@@ -61,6 +61,12 @@ installUserSummaryPage:
 installThemesPage:
     path:     /install/themes
     defaults: { _controller: Themes\Install\InstallApp::themesAction }
+installThemeBasePage:
+    path:     /install/themes/base
+    defaults: { _controller: Themes\Install\InstallApp::themeInstallAction }
+installThemeSummaryPage:
+    path:     /install/themes/summary
+    defaults: { _controller: Themes\Install\InstallApp::themeSummaryAction }
 installDonePage:
     path:     /install/done
     defaults: { _controller: Themes\Install\InstallApp::doneAction }
@@ -71,7 +77,7 @@ installUpdateSchema:
     path:     /install/update
     defaults: { _controller: Themes\Install\InstallApp::updateSchemaAction }
 removeTrailingSlash:
-    path: /{url}
+    path:     /{url}
     defaults: { _controller:  Themes\Install\InstallApp::removeTrailingSlashAction }
     requirements:
         url: .*/$

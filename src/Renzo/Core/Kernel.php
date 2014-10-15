@@ -51,6 +51,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
     const INSTALL_CLASSNAME =   '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild =   null;
+    public static $cmsVersion = "1.0.1";
     private static $instance =  null;
 
     public $container =         null;
