@@ -26,9 +26,8 @@ use RZ\Renzo\Core\Handlers\NodeHandler;
  * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\NodeRepository")
  * @Table(name="nodes", indexes={
  *     @index(name="visible_node_idx",   columns={"visible"}),
- *     @index(name="published_node_idx", columns={"published"}),
+ *     @index(name="status_node_idx", columns={"status"}),
  *     @index(name="locked_node_idx",    columns={"locked"}),
- *     @index(name="archived_node_idx",  columns={"archived"}),
  *     @index(name="position_node_idx", columns={"position"}),
  *     @index(name="hide_children_node_idx", columns={"hide_children"}),
  *     @index(name="home_node_idx", columns={"home"})
@@ -37,6 +36,12 @@ use RZ\Renzo\Core\Handlers\NodeHandler;
  */
 class Node extends AbstractDateTimedPositioned
 {
+    const DRAFT =       10;
+    const PENDING =     20;
+    const PUBLISHED =   30;
+    const ARCHIVED =    40;
+    const DELETED =     50;
+
     /**
      * @Column(type="string", name="node_name", unique=true)
      */
@@ -104,17 +109,34 @@ class Node extends AbstractDateTimedPositioned
 
         return $this;
     }
+
     /**
-     * @Column(type="boolean")
+     * @Column(type="integer")
      */
-    private $published = false;
+    private $status = Node::DRAFT;
+
+    /**
+     * @return int
+     */
+    public function getStatus() {
+        return $this->status;
+    }
+
+    /**
+     * @param int $newstatus
+     */
+    public function setStatus($status) {
+        $this->status = (int) $status;
+
+        return $this;
+    }
 
     /**
      * @return boolean
      */
     public function isPublished()
     {
-        return $this->published;
+        return ($this->status === Node::PUBLISHED);
     }
 
     /**
@@ -124,7 +146,18 @@ class Node extends AbstractDateTimedPositioned
      */
     public function setPublished($published)
     {
-        $this->published = $published;
+        $this->status = ($published) ? Node::PUBLISHED : Node::PENDING;
+
+        return $this;
+    }
+    /**
+     * @param boolean $pending
+     *
+     * @return $this
+     */
+    public function setPending($pending)
+    {
+        $this->status = ($pending) ? Node::PENDING : Node::DRAFT;
 
         return $this;
     }
@@ -204,15 +237,11 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @Column(type="boolean")
-     */
-    private $archived = false;
-    /**
      * @return boolean
      */
     public function isArchived()
     {
-        return $this->archived;
+        return ($this->status === Node::ARCHIVED);
     }
     /**
      * @param boolean $archived
@@ -221,7 +250,7 @@ class Node extends AbstractDateTimedPositioned
      */
     public function setArchived($archived)
     {
-        $this->archived = $archived;
+        $this->archived = ($archived) ? Node::ARCHIVED : Node::PUBLISHED;
 
         return $this;
     }

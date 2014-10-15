@@ -91,25 +91,23 @@ Lazyload.prototype.applyContent = function(data) {
     $old.fadeOut(300, function () {
         $old.remove();
 
-        _this.bindNewContent();
+        _this.generalBind();
 
         $tempData.fadeIn(300, function () {
-            $tempData.removeClass('new-content-global');
 
+            Rozier.centerVerticalObjects();
+            $tempData.removeClass('new-content-global');
         });
     });
 };
 
 
-Lazyload.prototype.bindNewContent = function() {
+Lazyload.prototype.generalBind = function() {
     var _this = this;
 
     new DocumentWidget();
     new ChildrenNodesField();
     new SaveButtons();
-
-    // Switch checkboxes
-    $(".rz-boolean-checkbox").bootstrapSwitch();
 
 
     // Init markdown-preview
@@ -122,6 +120,8 @@ Lazyload.prototype.bindNewContent = function() {
 
     Rozier.initNestables();
     Rozier.bindMainTrees();
+    Rozier.nodeStatuses = new NodeStatuses();
 
-    Rozier.centerVerticalObjects();
+    // Switch checkboxes
+    $(".rz-boolean-checkbox").bootstrapSwitch();
 };

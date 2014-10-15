@@ -315,7 +315,7 @@ class NodeRepository extends EntityRepository
             /*
              * Forbid unpublished node for anonymous and not backend users.
              */
-            $qb->andWhere($qb->expr()->eq('n.published', true));
+            $qb->andWhere($qb->expr()->eq('n.status', Node::PUBLISHED));
         }
     }
 
@@ -595,7 +595,7 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.published = true';
+            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
@@ -629,7 +629,7 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.published = true';
+            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
@@ -662,7 +662,7 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.published = true';
+            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
@@ -696,7 +696,7 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.published = true';
+            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
@@ -732,7 +732,7 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.published = true';
+            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
@@ -763,7 +763,7 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.published = true';
+            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
         }
 
         $query = $this->_em->createQuery($txtQuery);
@@ -794,7 +794,7 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.published = true';
+            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
@@ -836,7 +836,7 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.published = true';
+            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
         }
 
         $txtQuery .= ' ORDER BY n.position ASC';
@@ -883,7 +883,7 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.published = true';
+            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
         }
 
         $txtQuery .= ' ORDER BY n.position ASC';
@@ -918,7 +918,7 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.published = true';
+            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
