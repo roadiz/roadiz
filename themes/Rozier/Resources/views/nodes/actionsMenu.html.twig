@@ -20,30 +20,25 @@
 
         <nav>
             {% if source %}
-            <a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-rz-visibility-on"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
+            <a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
             {% endif %}
             <a class="uk-button" href="#"><i class="uk-icon-rz-duplicate"></i><span class="label">{% trans %}duplicate{% endtrans %}</span></a>
             <a class="uk-button" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-plus"></i><span class="label">{% trans %}add.child{% endtrans %}</span></a>
-            <a class="uk-button" href="{{ path('nodesExportPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-download"></i><span class="label">{% trans %}export{% endtrans %}</span></a>
+            <a class="uk-button" href="{{ path('nodesExportPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-export"></i><span class="label">{% trans %}export{% endtrans %}</span></a>
         </nav>
     </div>
 
     {#
-     # Node statuses
+     # Node parameters
      #}
     {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS')) %}
     <div class="node-statuses with-subnav">
         <header><i class="uk-icon-rz-check"></i><span class="label"><span class="label-text">{% trans %}statuses{% endtrans %}</span></span></header>
         <ul>
             <li class="node-visibility">
-                <i class="uk-icon-rz-visibility-on"></i>
+                <i class="uk-icon-rz-visibility"></i>
                 <span class="label">{% trans %}visibility{% endtrans %}</span>
                 <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="visible" value="1" {% if node.isVisible %}checked{% endif %} />
-            </li>
-            <li class="node-published">
-                <i class="uk-icon-rz-published"></i>
-                <span class="label">{% trans %}published{% endtrans %}</span>
-                <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="published" value="1" {% if node.isPublished %}checked{% endif %} />
             </li>
             <li class="node-hiding-children">
                 <i class="uk-icon-rz-stack"></i>
@@ -60,10 +55,27 @@
                 <span class="label">{% trans %}sterile-status{% endtrans %}</span>
                 <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="sterile" value="1" {% if node.isSterile %}checked{% endif %} />
             </li>
+        </ul>
+    </div>
+    {% endif %}
+
+
+    {#
+     # Node statuses
+     #}
+    {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS')) %}
+    <div class="node-parameters with-subnav uk-form">
+        <header><i class="uk-icon-rz-check"></i><span class="label"><span class="label-text">{% trans %}statuses{% endtrans %}</span></span></header>
+        <ul>
+            <li class="node-published">
+                <i class="uk-icon-rz-published"></i>
+                <span class="label">{% trans %}published{% endtrans %}</span>
+                <input type="radio" name="radio" />
+            </li>
             <li class="node-archive">
-                <i class="uk-icon-rz-archive"></i>
+                <i class="uk-icon-rz-archive-mini"></i>
                 <span class="label">{% trans %}archive-status{% endtrans %}</span>
-                <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="archived" value="1" {% if node.isArchived %}checked{% endif %} />
+                <input type="radio" name="radio" />
             </li>
         </ul>
     </div>

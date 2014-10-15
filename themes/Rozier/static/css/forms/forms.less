@@ -60,6 +60,12 @@
             color: #333;
         }
     }
+    input[type=radio] {
+         background-color: @grey-form-submit;
+         &:checked:before {
+            background: darken(@contrast-color, 10%);
+         }
+     }
 
     .uk-form-icon > [class*=uk-icon-]{
         line-height:15px;
