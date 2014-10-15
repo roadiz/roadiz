@@ -9,7 +9,7 @@ Rozier.searchNodesSourcesDelay = null;
 Rozier.nodeTrees = [];
 Rozier.treeTrees = [];
 
-Rozier.onDocumentReady = function( event ) {
+Rozier.onDocumentReady = function(event) {
 	/*
 	 * Store Rozier configuration
 	 */
@@ -18,14 +18,15 @@ Rozier.onDocumentReady = function( event ) {
 	}
 
 	Rozier.lazyload = new Lazyload();
-	Rozier.nodeStatuses = new NodeStatuses();
+
+	Rozier.centerVerticalObjects(); // this must be done before generalBind!
 
 	// Search node
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
 	// Minify trees panel toggle button
 	$('#minify-tree-panel-button').on('click', Rozier.toggleTreesPanel);
 
-	Rozier.lazyload.bindNewContent();
+	Rozier.lazyload.generalBind();
 };
 
 /**

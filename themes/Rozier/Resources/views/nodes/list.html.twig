@@ -65,7 +65,9 @@
                         {% endif %}
                         <td>{{ node.getNodeType.getDisplayName }}</td>
                         <td>
-                            {% if node.isPublished == false %}<div class="uk-badge uk-badge-warning">{% trans %}node.not.published{% endtrans %}</div>{% endif %}
+                            {% if node.isDraft == true %}<div class="uk-badge uk-badge-warning">{% trans %}node.draft{% endtrans %}</div>{% endif %}
+                            {% if node.isPending == true %}<div class="uk-badge uk-badge-warning">{% trans %}node.pending.validation{% endtrans %}</div>{% endif %}
+                            {% if node.isDeleted == true %}<div class="uk-badge uk-badge-danger">{% trans %}node.deleted{% endtrans %}</div>{% endif %}
                             {% if node.isVisible == false %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-eye-slash"></span></div>{% endif %}
                             {% if node.isLocked %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-lock"></span></div>{% endif %}
                             {% if node.isArchived %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-archive"></span></div>{% endif %}
@@ -73,7 +75,11 @@
                         <td>{{ node.getUpdatedAt|localizeddate('short', 'none') }}</td>
                         <td>
                             <a class="uk-button uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-node-tree"></i> {% trans %}see.nodetree{% endtrans %}</a>
+                            {% if not node.isDeleted %}
                             <a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+                            {% else %}
+                            <a class="uk-button uk-button-small" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}undelete{% endtrans %}</a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

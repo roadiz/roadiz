@@ -32,9 +32,12 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
      */
     public function handle(Request $request, AccessDeniedException $accessDeniedException)
     {
+        Kernel::getService('logger')->error('User tried to access: '.$request->getUri());
+
         $response = new RedirectResponse(
             Kernel::getService('urlGenerator')->generate('homePage')
         );
+        $response->setStatusCode(Response::HTTP_FORBIDDEN);
         $response->prepare($request);
 
         return $response->send();

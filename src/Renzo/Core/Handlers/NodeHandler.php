@@ -115,6 +115,78 @@ class NodeHandler
     }
 
     /**
+     * Soft delete node and its children.
+     *
+     * **This method does not flush!**
+     *
+     * @return $this
+     */
+    public function softRemoveWithChildren()
+    {
+        $this->node->setStatus(Node::DELETED);
+
+        foreach ($this->node->getChildren() as $node) {
+            $node->getHandler()->softRemoveWithChildren();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Un-delete node and its children.
+     *
+     * **This method does not flush!**
+     *
+     * @return $this
+     */
+    public function softUnremoveWithChildren()
+    {
+        $this->node->setStatus(Node::PENDING);
+
+        foreach ($this->node->getChildren() as $node) {
+            $node->getHandler()->softUnremoveWithChildren();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Publish node and its children.
+     *
+     * **This method does not flush!**
+     *
+     * @return $this
+     */
+    public function publishWithChildren()
+    {
+        $this->node->setStatus(Node::PUBLISHED);
+
+        foreach ($this->node->getChildren() as $node) {
+            $node->getHandler()->publishWithChildren();
+        }
+        return $this;
+    }
+
+    /**
+     * Archive node and its children.
+     *
+     * **This method does not flush!**
+     *
+     * @return $this
+     */
+    public function archiveWithChildren()
+    {
+        $this->node->setStatus(Node::ARCHIVED);
+
+        foreach ($this->node->getChildren() as $node) {
+            $node->getHandler()->archiveWithChildren();
+        }
+
+        return $this;
+    }
+
+
+    /**
      * @return ArrayCollection
      */
     public function getAvailableTranslations()

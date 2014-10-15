@@ -10348,7 +10348,7 @@ SaveButtons.prototype.bindKeyboard = function() {
 
 
     _this.$containers = $(".node-statuses");
-    _this.$inputs = _this.$containers.find('input[type="checkbox"]');
+    _this.$inputs = _this.$containers.find('input[type="checkbox"], input[type="radio"]');
 
     _this.init();
 };
@@ -10361,7 +10361,6 @@ NodeStatuses.prototype.init = function() {
 
     _this.$inputs.off('change', $.proxy(_this.onChange, _this));
     _this.$inputs.on('change', $.proxy(_this.onChange, _this));
-
 
     _this.$containers.find(".rz-boolean-checkbox").bootstrapSwitch({
         "onSwitchChange": $.proxy(_this.onChange, _this)
@@ -10376,7 +10375,12 @@ NodeStatuses.prototype.onChange = function(event) {
     if ($input.length) {
 
         var statusName = $input.attr('name');
-        var statusValue = $input.is(':checked');
+        var statusValue = null;
+        if($input.is('input[type="checkbox"]')){
+            statusValue = $input.is(':checked');
+        } else if($input.is('input[type="radio"]')){
+            statusValue = $input.val();
+        }
 
         var postData = {
             "_token": Rozier.ajaxToken,
@@ -10606,11 +10610,16 @@ Lazyload.prototype.loadContent = function(state, location) {
         dataType: 'html'
     })
     .done(function(data) {
-
         _this.applyContent(data);
     })
     .fail(function() {
         console.log("error");
+        $.UIkit.notify({
+            message : Rozier.messages.forbiddenPage,
+            status  : 'danger',
+            timeout : 3000,
+            pos     : 'top-center'
+        });
     })
     .always(function() {
         console.log("complete");
@@ -10632,25 +10641,23 @@ Lazyload.prototype.applyContent = function(data) {
     $old.fadeOut(300, function () {
         $old.remove();
 
-        _this.bindNewContent();
+        _this.generalBind();
 
         $tempData.fadeIn(300, function () {
-            $tempData.removeClass('new-content-global');
 
+            Rozier.centerVerticalObjects();
+            $tempData.removeClass('new-content-global');
         });
     });
 };
 
 
-Lazyload.prototype.bindNewContent = function() {
+Lazyload.prototype.generalBind = function() {
     var _this = this;
 
     new DocumentWidget();
     new ChildrenNodesField();
     new SaveButtons();
-
-    // Switch checkboxes
-    $(".rz-boolean-checkbox").bootstrapSwitch();
 
 
     // Init markdown-preview
@@ -10663,8 +10670,10 @@ Lazyload.prototype.bindNewContent = function() {
 
     Rozier.initNestables();
     Rozier.bindMainTrees();
+    Rozier.nodeStatuses = new NodeStatuses();
 
-    Rozier.centerVerticalObjects();
+    // Switch checkboxes
+    $(".rz-boolean-checkbox").bootstrapSwitch();
 };;// Avoid `console` errors in browsers that lack a console.
 (function() {
     var method;
@@ -10700,7 +10709,7 @@ Rozier.searchNodesSourcesDelay = null;
 Rozier.nodeTrees = [];
 Rozier.treeTrees = [];
 
-Rozier.onDocumentReady = function( event ) {
+Rozier.onDocumentReady = function(event) {
 	/*
 	 * Store Rozier configuration
 	 */
@@ -10709,14 +10718,15 @@ Rozier.onDocumentReady = function( event ) {
 	}
 
 	Rozier.lazyload = new Lazyload();
-	Rozier.nodeStatuses = new NodeStatuses();
+
+	Rozier.centerVerticalObjects(); // this must be done before generalBind!
 
 	// Search node
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
 	// Minify trees panel toggle button
 	$('#minify-tree-panel-button').on('click', Rozier.toggleTreesPanel);
 
-	Rozier.lazyload.bindNewContent();
+	Rozier.lazyload.generalBind();
 };
 
 /**

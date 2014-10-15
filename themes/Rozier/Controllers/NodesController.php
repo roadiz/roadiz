@@ -552,7 +552,8 @@ class NodesController extends RozierApp
             if ($form->isValid() &&
                 $form->getData()['nodeId'] == $node->getId()) {
 
-                $node->getHandler()->removeWithChildrenAndAssociations();
+                $node->getHandler()->softRemoveWithChildren();
+                $this->getService('em')->flush();
 
                 $msg = $this->getTranslator()->trans('node.%name%.deleted', array('%name%'=>$node->getNodeName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);

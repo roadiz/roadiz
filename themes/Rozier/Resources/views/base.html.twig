@@ -94,6 +94,9 @@
                 'baseUrl':      '{{ head.baseUrl }}',
                 'resourcesUrl': '{{ head.resourcesUrl }}',
                 'ajaxToken':    '{{ head.ajaxToken }}',
+                'messages': {
+                    'forbiddenPage':'{{ 'forbidden.page'|trans() }}'
+                },
                 'routes': {
                     'nodeAjaxEdit' :          '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',
                     'tagAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',

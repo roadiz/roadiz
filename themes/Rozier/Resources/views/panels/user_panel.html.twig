@@ -23,7 +23,7 @@
             {% if (securityContext.Granted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE')) %}
             <a title="{% trans %}delete.caches{% endtrans %}" data-uk-tooltip class="uk-icon-button uk-icon-rz-flashimage" href="{{ path('deleteDoctrineCache') }}"></a>
             {% endif %}
-            <a title="{% trans %}logout{% endtrans %}" data-uk-tooltip class="uk-icon-button uk-icon-rz-turn-off" href="{{ path('logoutPage') }}"></a>
+            <a title="{% trans %}logout{% endtrans %}" data-uk-tooltip class="uk-icon-button uk-icon-rz-turn-off rz-no-ajax-link" href="{{ path('logoutPage') }}"></a>
             {% if head.devMode %}
             <p class="dev-mode"><i class="uk-icon-rz-devmode"></i> {% trans %}dev_mode.activated{% endtrans %}</p>
             {% endif %}

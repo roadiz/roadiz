@@ -78,7 +78,16 @@ class NodeTreeWidget extends AbstractWidget
         if ($parent !== null) {
             return $this->nodes = $this->getController()->getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Node')
-                    ->findByParentWithTranslation($this->translation, $parent);
+                    ->findBy(
+                        array(
+                            'parent' => $parent,
+                            'status' => array('<=', Node::PUBLISHED),
+                        ),
+                        array('position'=>'ASC'),
+                        null,
+                        null,
+                        $this->translation
+                    );
         }
 
         return null;

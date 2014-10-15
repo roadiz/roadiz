@@ -11,6 +11,7 @@ namespace Themes\Rozier;
 
 use RZ\Renzo\CMS\Controllers\BackendController;
 use RZ\Renzo\Core\Entities\Role;
+use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Bags\SettingsBag;
 
@@ -54,6 +55,14 @@ class RozierApp extends BackendController
         $this->assignation['settingGroups'] = $this->getService('em')
                                                    ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
                                                    ->findBy(array('inMenu' => true), array('name'=>'ASC'));
+
+        $this->assignation['nodeStatuses'] = array(
+            'draft' => Node::DRAFT,
+            'pending' => Node::PENDING,
+            'published' => Node::PUBLISHED,
+            'archived' => Node::ARCHIVED,
+            'deleted' => Node::DELETED
+        );
         //$this->assignation['grunt'] = include(dirname(__FILE__).'static/public/config/assets.config.php');
 
         return $this;

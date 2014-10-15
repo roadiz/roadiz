@@ -11,6 +11,7 @@ namespace RZ\Renzo\Core\Handlers;
 
 use RZ\Renzo\Core\Entities\NodesSources;
 use RZ\Renzo\Core\Entities\Document;
+use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodesSourcesDocuments;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Kernel;
@@ -198,6 +199,7 @@ class NodesSourcesHandler
 
         $defaultCrit = array(
             'node.parent' => $this->nodeSource->getNode(),
+            'node.status' => array('<=', Node::PUBLISHED),
             'translation' => $this->nodeSource->getTranslation()
         );
 
@@ -224,10 +226,17 @@ class NodesSourcesHandler
                             );
     }
 
-
+    /**
+     * Get node tags with current source translation.
+     *
+     * @return ArrayCollection
+     */
     public function getTags()
     {
-        $tags = Kernel::getService('tagApi')->getBy(array("nodes" => $this->nodeSource->getNode(), "translation" => $this->nodeSource->getTranslation()));
+        $tags = Kernel::getService('tagApi')->getBy(array(
+            "nodes" => $this->nodeSource->getNode(),
+            "translation" => $this->nodeSource->getTranslation()
+        ));
         return $tags;
     }
 
