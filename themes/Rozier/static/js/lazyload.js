@@ -23,6 +23,7 @@ Lazyload.prototype.onClick = function(event) {
 
     var href = $link.attr('href');
     if(typeof href != "undefined" &&
+        !$link.hasClass('rz-no-ajax-link') &&
         href != "#" &&
         href.indexOf(Rozier.baseUrl) >= 0){
 
@@ -110,12 +111,14 @@ Lazyload.prototype.bindNewContent = function() {
     // Switch checkboxes
     $(".rz-boolean-checkbox").bootstrapSwitch();
 
-    $.UIkit.htmleditor($('textarea[data-uk-htmleditor]'), {markdown:true, mode:'tab'});
 
     // Init markdown-preview
-    $(".uk-htmleditor-preview").css("height", 250);
-    $(".CodeMirror").css("height", 250);
-    $(".uk-htmleditor-content").after($(".uk-htmleditor-navbar"));
+    if($('textarea[data-uk-htmleditor]').length){
+        $.UIkit.htmleditor($('textarea[data-uk-htmleditor]'), {markdown:true, mode:'tab'});
+        $(".uk-htmleditor-preview").css("height", 250);
+        $(".CodeMirror").css("height", 250);
+        $(".uk-htmleditor-content").after($(".uk-htmleditor-navbar"));
+    }
 
     Rozier.initNestables();
     Rozier.bindMainTrees();
