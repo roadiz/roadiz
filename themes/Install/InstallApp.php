@@ -317,6 +317,12 @@ class InstallApp extends AppController
 
                 $fixtures->installFixtures();
 
+                /*
+                 * files to import
+                 */
+                $installData = json_decode(file_get_contents(RENZO_ROOT . "/themes/Install/config.json"), true);
+                $this->assignation['imports'] = $installData['importFiles'];
+
             } catch (\PDOException $e) {
                 $message = "";
                 if (strstr($e->getMessage(), 'SQLSTATE[')) {
@@ -453,9 +459,9 @@ class InstallApp extends AppController
     /**
      * Theme summary screen
      *
+     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     *
-     *
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function themeSummaryAction(Request $request) {
         $array = explode('\\', $request->get("classname"));
@@ -466,7 +472,8 @@ class InstallApp extends AppController
             "version" => $data["versionRequire"],
             "supportedLocale" => $data["supportedLocale"],
             "imports" => $data["importFiles"]
-            );
+        );
+
 
         $this->assignation["cms"] = array("version" => Kernel::$cmsVersion);
         $this->assignation["status"] = array();

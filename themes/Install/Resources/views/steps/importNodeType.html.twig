@@ -5,7 +5,7 @@
     <article id="content-import-node-type" class="content">
 
         <div class="content-title-cont">
-            <h1 class="content-title">{% trans %}import_node_type.title{% endtrans %}</h1>
+            <h1 class="content-title">{% trans %}import.theme.content.title{% endtrans %}</h1>
         </div>
 
         <div class="content-progress">
@@ -23,7 +23,8 @@
 
             <div class="content-text">
 
-                <p class="import-nodetypes-part">{% trans %}import_roles{% endtrans %}</p>
+                {% if roles|length > 0 %}
+                <h4 class="import-nodetypes-part">{% trans %}import_roles{% endtrans %}</h4>
                 <table class="install-table import-nodetypes-part1-table uk-table">
                     <tr>
                         <th></th>
@@ -40,8 +41,9 @@
                         </tr>
                     {% endfor %}
                 </table>
-
-                <p class="import-nodetypes-part">{% trans %}import_groups{% endtrans %}</p>
+                {% endif %}
+                {% if groups|length > 0 %}
+                <h4 class="import-nodetypes-part">{% trans %}import_groups{% endtrans %}</h4>
                 <table class="install-table import-nodetypes-part1-table uk-table">
                     <tr>
                         <th></th>
@@ -58,8 +60,9 @@
                         </tr>
                     {% endfor %}
                 </table>
-
-                <p class="import-nodetypes-part">{% trans %}import_settings{% endtrans %}</p>
+                {% endif %}
+                {% if settings|length > 0 %}
+                <h4 class="import-nodetypes-part">{% trans %}import_settings{% endtrans %}</h4>
                 <table class="install-table import-nodetypes-part1-table uk-table">
                     <tr>
                         <th></th>
@@ -76,8 +79,9 @@
                         </tr>
                     {% endfor %}
                 </table>
-
-                <p class="import-nodetypes-part">{% trans %}import_node_type.node_type{% endtrans %}</p>
+                {% endif %}
+                {% if nodetypes|length > 0 %}
+                <h4 class="import-nodetypes-part">{% trans %}import_node_type.node_type{% endtrans %}</h4>
                 <table class="install-table import-nodetypes-part1-table uk-table">
                     <tr>
                         <th></th>
@@ -94,8 +98,9 @@
                         </tr>
                     {% endfor %}
                 </table>
-
-                <p class="import-nodetypes-part">{% trans %}import_node_type.node{% endtrans %}</p>
+                {% endif %}
+                {% if nodes|length > 0 %}
+                <h4 class="import-nodetypes-part">{% trans %}import_node_type.node{% endtrans %}</h4>
                 <table class="install-table uk-table">
                     <tr>
                         <th></th>
@@ -110,7 +115,7 @@
                             </td>
                         </tr>
                 </table>
-
+                {% endif %}
             </div>
 
             {% spaceless %}

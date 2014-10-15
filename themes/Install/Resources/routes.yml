@@ -19,21 +19,21 @@ installDatabaseSchemaPage:
 #     defaults: { _controller: Themes\Install\InstallApp::importAction }
 installImportSettings:
     path:     /install/import/settings/{filename}/{themeId}
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importSettingsAction }
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importSettingsAction, themeId: null }
     requirements:
-        filename: "^[a-zA-Z_/.]+$"
+        filename: "^[a-zA-Z_/\.]+$"
         themeId: "[0-9]+"
 installImportGroups:
     path:     /install/import/groups/{filename}/{themeId}
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importGroupsAction }
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importGroupsAction, themeId: null }
     requirements:
-        filename: "^[a-zA-Z_/.]+$"
+        filename: "^[a-zA-Z_/\.]+$"
         themeId: "[0-9]+"
 installImportRoles:
     path:     /install/import/roles/{filename}/{themeId}
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importRolesAction }
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importRolesAction, themeId: null }
     requirements:
-        filename: "^[a-zA-Z_/.]+$"
+        filename: "^[a-zA-Z_/\.]+$"
         themeId: "[0-9]+"
 installImportNodes:
     path:     /install/import/nodes/
@@ -61,12 +61,12 @@ installUserSummaryPage:
 installThemesPage:
     path:     /install/themes
     defaults: { _controller: Themes\Install\InstallApp::themesAction }
-installThemeBasePage:
-    path:     /install/themes/base
-    defaults: { _controller: Themes\Install\InstallApp::themeInstallAction }
 installThemeSummaryPage:
     path:     /install/themes/summary
     defaults: { _controller: Themes\Install\InstallApp::themeSummaryAction }
+installThemeBasePage:
+    path:     /install/themes/base
+    defaults: { _controller: Themes\Install\InstallApp::themeInstallAction }
 installDonePage:
     path:     /install/done
     defaults: { _controller: Themes\Install\InstallApp::doneAction }

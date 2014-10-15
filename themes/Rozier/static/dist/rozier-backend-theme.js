@@ -10569,6 +10569,7 @@ Lazyload.prototype.onClick = function(event) {
     var href = $link.attr('href');
     if(typeof href != "undefined" &&
         !$link.hasClass('rz-no-ajax-link') &&
+        href !== "" &&
         href != "#" &&
         href.indexOf(Rozier.baseUrl) >= 0){
 
