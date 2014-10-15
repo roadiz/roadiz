@@ -11,6 +11,7 @@ namespace RZ\Renzo\Core\Repositories;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Role;
+use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -281,7 +282,7 @@ class NodesSourcesRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $qb->innerJoin('ns.node', 'n', 'WITH', 'n.published = true');
+            $qb->innerJoin('ns.node', 'n', 'WITH', 'n.status = \''.Node::PUBLISHED.'\'');
 
             $joinedNode = true;
         }

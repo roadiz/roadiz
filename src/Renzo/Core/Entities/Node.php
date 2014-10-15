@@ -105,7 +105,7 @@ class Node extends AbstractDateTimedPositioned
      */
     public function setVisible($visible)
     {
-        $this->visible = $visible;
+        $this->visible = (boolean) $visible;
 
         return $this;
     }
@@ -137,6 +137,27 @@ class Node extends AbstractDateTimedPositioned
     public function isPublished()
     {
         return ($this->status === Node::PUBLISHED);
+    }
+    /**
+     * @return boolean
+     */
+    public function isPending()
+    {
+        return ($this->status === Node::PENDING);
+    }
+    /**
+     * @return boolean
+     */
+    public function isDraft()
+    {
+        return ($this->status === Node::DRAFT);
+    }
+     /**
+     * @return boolean
+     */
+    public function isDeleted()
+    {
+        return ($this->status === Node::DELETED);
     }
 
     /**
@@ -181,7 +202,7 @@ class Node extends AbstractDateTimedPositioned
      */
     public function setLocked($locked)
     {
-        $this->locked = $locked;
+        $this->locked = (boolean) $locked;
 
         return $this;
     }
@@ -231,7 +252,7 @@ class Node extends AbstractDateTimedPositioned
      */
     public function setHidingChildren($hideChildren)
     {
-        $this->hideChildren = $hideChildren;
+        $this->hideChildren = (boolean) $hideChildren;
 
         return $this;
     }
@@ -273,7 +294,7 @@ class Node extends AbstractDateTimedPositioned
      */
     public function setSterile($sterile)
     {
-        $this->sterile = $sterile;
+        $this->sterile = (boolean) $sterile;
 
         return $this;
     }

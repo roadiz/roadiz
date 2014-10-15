@@ -10348,7 +10348,7 @@ SaveButtons.prototype.bindKeyboard = function() {
 
 
     _this.$containers = $(".node-statuses");
-    _this.$inputs = _this.$containers.find('input[type="checkbox"]');
+    _this.$inputs = _this.$containers.find('input[type="checkbox"], input[type="radio"]');
 
     _this.init();
 };
@@ -10375,7 +10375,12 @@ NodeStatuses.prototype.onChange = function(event) {
     if ($input.length) {
 
         var statusName = $input.attr('name');
-        var statusValue = $input.is(':checked');
+        var statusValue = null;
+        if($input.is('input[type="checkbox"]')){
+            statusValue = $input.is(':checked');
+        } else if($input.is('input[type="radio"]')){
+            statusValue = $input.val();
+        }
 
         var postData = {
             "_token": Rozier.ajaxToken,

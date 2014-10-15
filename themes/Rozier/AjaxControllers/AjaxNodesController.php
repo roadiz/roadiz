@@ -180,52 +180,74 @@ class AjaxNodesController extends AbstractAjaxController
 
         $availableStatuses = array(
             'visible' => 'setVisible',
-            'published' => 'setPublished',
+            'status' => 'setStatus',
             'locked' => 'setLocked',
             'hideChildren' => 'setHidingChildren',
-            'archived' => 'setArchived',
             'sterile' => 'setSterile'
         );
 
         if ("nodeChangeStatus" == $request->get('_action') &&
             "" != $request->get('statusName')) {
 
-            if ($request->get('nodeId') > 0) {
+            // just verify role when updating status
+            if ($request->get('statusName') == 'status' &&
+                $request->get('statusValue') > Node::PENDING &&
+                !$this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_STATUS')) {
 
-                $node = $this->getService('em')
-                             ->find('RZ\Renzo\Core\Entities\Node', (int) $request->get('nodeId'));
+                $responseArray = array(
+                    'statusCode' => Response::HTTP_FORBIDDEN,
+                    'status'    => 'danger',
+                    'responseText' => $this->getTranslator()->trans('role.cannot.update.status')
+                );
 
-                if (null !== $node) {
+            } else {
 
-                    /*
-                     * Check if status name is a valid boolean node field.
-                     */
-                    if (in_array($request->get('statusName'), array_keys($availableStatuses))) {
+                if ($request->get('nodeId') > 0) {
 
-                        $setter = $availableStatuses[$request->get('statusName')];
-                        $value = filter_var($request->get('statusValue'), FILTER_VALIDATE_BOOLEAN);
-                        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_STATUS')
-                                || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN'))) {
+                    $node = $this->getService('em')
+                                 ->find('RZ\Renzo\Core\Entities\Node', (int) $request->get('nodeId'));
+
+                    if (null !== $node) {
+
+                        /*
+                         * Check if status name is a valid boolean node field.
+                         */
+                        if (in_array($request->get('statusName'), array_keys($availableStatuses))) {
+
+                            $setter = $availableStatuses[$request->get('statusName')];
+                            $value = $request->get('statusValue');
+                            if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_STATUS')
+                                    || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN'))) {
+                            } else {
+                                $node->$setter($value);
+                                $this->em()->flush();
+                            }
+
+                            $responseArray = array(
+                                'statusCode' => Response::HTTP_OK,
+                                'status'    => 'success',
+                                'responseText' => $this->getTranslator()->trans('node.%name%.%field%.updated', array(
+                                    '%name%' => $node->getNodeName(),
+                                    '%field%' => $request->get('statusName')
+                                ))
+                            );
+
                         } else {
-                            $node->$setter($value);
-                            $this->em()->flush();
+                            $responseArray = array(
+                                'statusCode' => Response::HTTP_FORBIDDEN,
+                                'status'    => 'danger',
+                                'responseText' => $this->getTranslator()->trans('node.has_no.field.%field%', array(
+                                    '%field%' => $request->get('statusName')
+                                ))
+                            );
                         }
-
-                        $responseArray = array(
-                            'statusCode' => Response::HTTP_OK,
-                            'status'    => 'success',
-                            'responseText' => $this->getTranslator()->trans('node.%name%.status.%field%.updated', array(
-                                '%name%' => $node->getNodeName(),
-                                '%field%' => $request->get('statusName')
-                            ))
-                        );
 
                     } else {
                         $responseArray = array(
                             'statusCode' => Response::HTTP_FORBIDDEN,
                             'status'    => 'danger',
-                            'responseText' => $this->getTranslator()->trans('node.has_no.field.%field%', array(
-                                '%field%' => $request->get('statusName')
+                            'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', array(
+                                '%nodeId%' => $request->get('nodeId')
                             ))
                         );
                     }
@@ -234,19 +256,11 @@ class AjaxNodesController extends AbstractAjaxController
                     $responseArray = array(
                         'statusCode' => Response::HTTP_FORBIDDEN,
                         'status'    => 'danger',
-                        'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', array(
-                            '%nodeId%' => $request->get('nodeId')
-                        ))
+                        'responseText' => $this->getTranslator()->trans('node.id.not_specified')
                     );
                 }
-
-            } else {
-                $responseArray = array(
-                    'statusCode' => Response::HTTP_FORBIDDEN,
-                    'status'    => 'danger',
-                    'responseText' => $this->getTranslator()->trans('node.id.not_specified')
-                );
             }
+
 
         } else {
             $responseArray = array(
