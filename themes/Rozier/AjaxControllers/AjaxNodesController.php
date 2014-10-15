@@ -216,21 +216,28 @@ class AjaxNodesController extends AbstractAjaxController
 
                             $setter = $availableStatuses[$request->get('statusName')];
                             $value = $request->get('statusValue');
-                            if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_STATUS')
-                                    || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN'))) {
-                            } else {
+                            if ($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_STATUS') ||
+                                $request->get('statusName') == 'status') {
+
                                 $node->$setter($value);
                                 $this->em()->flush();
+
+                                $responseArray = array(
+                                    'statusCode' => Response::HTTP_OK,
+                                    'status'    => 'success',
+                                    'responseText' => $this->getTranslator()->trans('node.%name%.%field%.updated', array(
+                                        '%name%' => $node->getNodeName(),
+                                        '%field%' => $request->get('statusName')
+                                    ))
+                                );
+                            } else {
+                                $responseArray = array(
+                                    'statusCode' => Response::HTTP_FORBIDDEN,
+                                    'status'    => 'danger',
+                                    'responseText' => $this->getTranslator()->trans('role.cannot.update.status')
+                                );
                             }
 
-                            $responseArray = array(
-                                'statusCode' => Response::HTTP_OK,
-                                'status'    => 'success',
-                                'responseText' => $this->getTranslator()->trans('node.%name%.%field%.updated', array(
-                                    '%name%' => $node->getNodeName(),
-                                    '%field%' => $request->get('statusName')
-                                ))
-                            );
 
                         } else {
                             $responseArray = array(

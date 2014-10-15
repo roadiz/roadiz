@@ -387,6 +387,7 @@ class UsersController extends RozierApp
                     $msg = $this->getTranslator()->trans('user.%name%.created', array('%name%'=>$user->getUsername()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
+
                 } catch (FacebookUsernameNotFoundException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getService('logger')->warning($e->getMessage());

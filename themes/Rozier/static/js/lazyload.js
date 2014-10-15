@@ -65,11 +65,16 @@ Lazyload.prototype.loadContent = function(state, location) {
         dataType: 'html'
     })
     .done(function(data) {
-
         _this.applyContent(data);
     })
     .fail(function() {
         console.log("error");
+        $.UIkit.notify({
+            message : Rozier.messages.forbiddenPage,
+            status  : 'danger',
+            timeout : 3000,
+            pos     : 'top-center'
+        });
     })
     .always(function() {
         console.log("complete");

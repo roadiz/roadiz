@@ -76,12 +76,14 @@
                     <span class="label">{% trans %}pending{% endtrans %}</span>
                     <input data-node-id="{{ node.getId }}" type="radio" name="status" value="{{ nodeStatuses.pending }}" {% if node.isPending %}checked{% endif %} />
                 </li>
-                {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS')) %}
+                {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS') or node.status == nodeStatuses.published) %}
                 <li class="node-published">
                     <i class="uk-icon-rz-published"></i>
                     <span class="label">{% trans %}published{% endtrans %}</span>
                     <input data-node-id="{{ node.getId }}" type="radio" name="status" value="{{ nodeStatuses.published }}" {% if node.isPublished %}checked{% endif %} />
                 </li>
+                {% endif %}
+                {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS') or node.status == nodeStatuses.archived) %}
                 <li class="node-archived">
                     <i class="uk-icon-rz-archived"></i>
                     <span class="label">{% trans %}archived{% endtrans %}</span>
