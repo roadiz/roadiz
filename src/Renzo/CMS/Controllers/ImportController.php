@@ -201,9 +201,8 @@ class ImportController extends InstallApp
                     throw new \Exception('Theme don\'t exist in database.');
                 }
 
-                $dir = explode('\\', $result->getClassName());
-
-                $path = RENZO_ROOT . "/themes/" . $dir[1] . '/' . $pathFile;
+                $dir = explode('\\', $theme->getClassName());
+                $path = RENZO_ROOT . "/themes/" . $dir[2] . '/' . $pathFile;
 
             }
             if (file_exists($path)) {

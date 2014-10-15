@@ -196,25 +196,15 @@ class InstallApp extends AppController
     }
 
     /**
-     * Import nodetype screen.
+     * Import theme screen.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $id
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function nodeTypesAction(Request $request, $id)
+    public function importThemeAction(Request $request, $id)
     {
-        // $finder = new Finder();
-
-        // Extracting the PHP files from every Theme folder
-        // $iterator = $finder
-        //     ->files()
-        //     ->name('*.rzt')
-        //     ->depth(0)
-        //     ->in(RENZO_ROOT.'/themes/Install/Resources/import/nodetype');
-        // foreach ($iterator as $file) {
-        //     $this->assignation['names'][] = str_replace(".rzt", '', $file->getFileName());
-        // }
 
         $result = $this->getService('em')->find('RZ\Renzo\Core\Entities\Theme', $id);
 
@@ -440,6 +430,26 @@ class InstallApp extends AppController
         );
     }
 
+
+    public function themeInstallAction(Request $request)
+    {
+        $array = explode('\\', $request->get("classname"));
+        $fix = new Fixtures();
+        $data = array("className" => $request->get("classname"));
+        $fix->installTheme($data);
+        $theme = $this->getService("em")->getRepository("RZ\Renzo\Core\Entities\Theme")
+                      ->findOneByClassName($request->get("classname"));
+
+        $response = new RedirectResponse(
+            $this->getService('urlGenerator')->generate(
+                'installImportThemePage', array("id"=>$theme->getId())
+            )
+        );
+        $response->prepare($request);
+
+        return $response->send();
+    }
+
     /**
      * Theme summary screen
      *
@@ -447,26 +457,35 @@ class InstallApp extends AppController
      *
      *
      */
-
     public function themeSummaryAction(Request $request) {
         $array = explode('\\', $request->get("classname"));
         $data = json_decode(file_get_contents(RENZO_ROOT . "/themes/". $array[2] . "/config.json"), true);
 
         $this->assignation["theme"] = array(
             "name" => $data["name"],
-            "version" => $data["versionRequire"]
+            "version" => $data["versionRequire"],
+            "supportedLocale" => $data["supportedLocale"],
+            "imports" => $data["importFiles"]
             );
 
         $this->assignation["cms"] = array("version" => Kernel::$cmsVersion);
         $this->assignation["status"] = array();
-        $this->assignation["status"]["version"] = (version_compare($data["versionRequire"], Kernel::$cmsVersion) == 0) ? true : false;
-        $fix = new Fixtures();
 
-        $data["className"] = $request->get("classname");
-        $fix->installTheme($data);
-        $theme = $this->getService("em")->getRepository("RZ\Renzo\Core\Entities\Theme")
-                      ->findOneByClassName($request->get("classname"));
-        $this->assignation['id'] = $theme->getId();
+        $this->assignation["status"]["version"] = (version_compare($data["versionRequire"], Kernel::$cmsVersion) == 0) ? true : false;
+
+        $this->assignation["cms"]["locale"] = $request->getLocale();
+        $this->assignation["status"]["locale"] = in_array($request->getLocale(), $data["supportedLocale"]);
+
+        $this->assignation["status"]["import"] = array();
+
+        foreach ($data["importFiles"] as $name => $filenames) {
+            foreach ($filenames as $filename) {
+                $this->assignation["status"]["import"][$filename] = file_exists(RENZO_ROOT . "/themes/". $array[2] . "/" . $filename);
+            }
+        }
+
+        $this->assignation['classname'] = $request->get("classname");
+
         return new Response(
             $this->getTwig()->render('steps/themeSummary.html.twig', $this->assignation),
             Response::HTTP_OK,
@@ -807,7 +826,7 @@ class InstallApp extends AppController
                 'className',
                 new \RZ\Renzo\CMS\Forms\ThemesType(),
                 array(
-                    'label' => $this->getTranslator()->trans('themeToInstall'),
+                    'label' => $this->getTranslator()->trans('theme.selector'),
                     'required' => true,
                     'constraints' => array(
                         new \Symfony\Component\Validator\Constraints\NotNull(),
