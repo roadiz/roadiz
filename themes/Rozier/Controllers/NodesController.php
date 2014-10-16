@@ -616,6 +616,62 @@ class NodesController extends RozierApp
             return $this->throw404();
         }
     }
+    /**
+     * Return an deletion form for requested node.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $nodeId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function undeleteAction(Request $request, $nodeId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES_DELETE');
+
+        $node = $this->getService('em')
+            ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+
+        if (null !== $node &&
+            $node->isDeleted()) {
+
+            $this->assignation['node'] = $node;
+
+            $form = $this->buildDeleteForm($node);
+            $form->handleRequest();
+
+            if ($form->isValid() &&
+                $form->getData()['nodeId'] == $node->getId()) {
+
+                $node->getHandler()->softUnremoveWithChildren();
+                $this->getService('em')->flush();
+
+                $msg = $this->getTranslator()->trans('node.%name%.undeleted', array('%name%'=>$node->getNodeName()));
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                $this->getService('logger')->info($msg);
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate('nodesEditPage', array(
+                        'nodeId' => $node->getId()
+                    ))
+                );
+                $response->prepare($request);
+
+                return $response->send();
+            }
+
+            $this->assignation['form'] = $form->createView();
+
+            return new Response(
+                $this->getTwig()->render('nodes/undelete.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        } else {
+            return $this->throw404();
+        }
+    }
 
     /**
      * @param array                              $data

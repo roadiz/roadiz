@@ -78,7 +78,7 @@
                             {% if not node.isDeleted %}
                             <a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
                             {% else %}
-                            <a class="uk-button uk-button-small" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}undelete{% endtrans %}</a>
+                            <a class="uk-button uk-button-small" href="{{ path('nodesUndeletePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}undelete{% endtrans %}</a>
                             {% endif %}
                         </td>
                     </tr>
