@@ -23,7 +23,7 @@
         {% include 'includes/messages.html.twig' %}
         <div id="main-container">
             <!-- Add your site or application content here -->
-            <div id="main_content">
+            <div id="main_content" {% if splash %}style="background-image:url('{{ splash.url }}'); background-size:cover;"{% endif %}>
             {% block content %}
                 <h1>{% trans %}welcome{% endtrans %}</h1>
             {% endblock %}

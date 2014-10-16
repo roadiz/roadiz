@@ -13,6 +13,7 @@ namespace RZ\Renzo\Core\Utils;
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Renzo\Core\Exceptions\APINeedsAuthentificationException;
+use Symfony\Component\HttpFoundation\Response;
 use Pimple\Container;
 
 /**
@@ -226,46 +227,16 @@ abstract class AbstractEmbedFinder
      */
     public function downloadFeedFromAPI($url)
     {
-        $data = '';
-        /* --------------------
-         * Get files from github
-         * -------------------- */
-        if (!function_exists('curl_init')) {
-            return false;
-        }
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->get($url);
 
-        // initialisation de la session
-        $ch = curl_init();
-
-
-        /* Check if cURL is available */
-        if ($ch !== FALSE)
-        {
-            // configuration des options
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,false);
-            //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-            curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36 FirePHP/4Chrome");
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-
-            // exécution de la session
-            $data = curl_exec($ch);
-
-            if ($data !== null && $data != '') {
-
-                // fermeture des ressources
-                curl_close($ch);
-
-                return $data;
+            if (Response::HTTP_OK == $response->getStatusCode()) {
+                return $response->getBody();
             } else {
-                // fermeture des ressources
-                curl_close($ch);
-
                 return false;
             }
-        } else {
+        } catch (ClientErrorResponseException $e) {
             return false;
         }
     }

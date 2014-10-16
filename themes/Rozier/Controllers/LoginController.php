@@ -14,6 +14,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Entities\Translation;
+use RZ\Renzo\Core\Utils\SplashbasePictureFinder;
 
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,6 +43,9 @@ class LoginController extends RozierApp
         $form = $this->buildLoginForm();
 
         $this->assignation['form'] = $form->createView();
+
+        $splash = new SplashbasePictureFinder();
+        $this->assignation['splash'] = $splash->getRandom();
 
         $session = $this->getService('session');
         // get the login error if there is one

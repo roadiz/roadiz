@@ -56,7 +56,7 @@
         "symfony/twig-bridge": "@stable",
         "symfony/security": "@stable",
         "twig/twig":"@stable",
-        "guzzle/http":"@stable",
+        "guzzlehttp/guzzle":"@stable",
         "swiftmailer/swiftmailer": "@stable",
         "symfony/finder": "@stable",
         "twig/extensions": "@stable",

@@ -9,8 +9,8 @@
  */
 namespace RZ\Renzo\Core\Utils;
 
-use Guzzle\Http\Client;
-use Guzzle\Http\Exception\ClientErrorResponseException;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientErrorResponseException;
 
 /**
  * Util to grab a facebook profile picture from userAlias.
@@ -35,9 +35,8 @@ class FacebookPictureFinder
     {
         try {
             $client = new Client();
-            $req = $client->get('http://graph.facebook.com/'.$this->facebookUserAlias.'/picture?redirect=false&width=200&height=200');
-            $this->response = $req->send();
-            $json = json_decode($this->response->getBody(), true);
+            $this->response = $client->get('http://graph.facebook.com/'.$this->facebookUserAlias.'/picture?redirect=false&width=200&height=200');
+            $json = $this->response->json();
 
             return $json['data']['url'];
         } catch (ClientErrorResponseException $e) {
