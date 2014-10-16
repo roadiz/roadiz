@@ -13,10 +13,30 @@
 
 /* -------- STYLES -------- */
 
+#splash-container {
+    background-size: cover;
+    position: fixed;
+    z-index: 0;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+
+    .transform(~'scale3D(1.05,1.105,1.05)');
+    .opacity(0);
+    .transform-transition(~'6s ease, opacity 1s linear');
+
+    &.visible {
+        .opacity(1);
+        .transform(~'scale3D(1,1,1)');
+    }
+}
+
 #main_content {
     position: absolute;
     top: 0px; bottom: 0px; left: 0px; right: 0px;
-    background-color: @global-background;
+    background: none transparent;
+    z-index: 100;
 }
 
 #login {
