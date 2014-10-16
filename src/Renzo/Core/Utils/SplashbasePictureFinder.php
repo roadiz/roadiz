@@ -86,10 +86,9 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
     public function getThumbnailURL(){
 
         if (false !== $feed = $this->getRandom()) {
-
             return $feed['url'];
         } else {
-            return '';
+            return false;
         }
     }
 
@@ -110,6 +109,7 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
             $document = new Document();
 
             if (false !== $url) {
+
                 /*
                  * Move file from documents file root to its folder.
                  */

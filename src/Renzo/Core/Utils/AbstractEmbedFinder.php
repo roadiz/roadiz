@@ -187,7 +187,9 @@ abstract class AbstractEmbedFinder
              */
             $document->setFilename($url);
             $document->setMimeType('image/jpeg');
-            mkdir(Document::getFilesFolder().'/'.$document->getFolder());
+            if (!file_exists(Document::getFilesFolder().'/'.$document->getFolder())) {
+                mkdir(Document::getFilesFolder().'/'.$document->getFolder());
+            }
             rename(Document::getFilesFolder().'/'.$url, $document->getAbsolutePath());
         }
 
@@ -249,7 +251,8 @@ abstract class AbstractEmbedFinder
      */
     public function downloadThumbnail()
     {
-        if ($this->getThumbnailURL() != '') {
+        if (false !== $this->getThumbnailURL() &&
+            $this->getThumbnailURL() != '') {
 
             $pathinfo = basename($this->getThumbnailURL());
             $thumbnailName = $this->embedId.'_'.$pathinfo;
