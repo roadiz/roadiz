@@ -88,13 +88,13 @@
 		{% endif %}
 		{% if (securityContext.Granted('ROLE_ACCESS_NODES')) %}
 		<li class="uk-parent">
-			<p><i class="uk-icon-rz-nodes"></i><span class="info">{% trans %}nodes{% endtrans %}</span></p>
+			<p><i class="uk-icon-rz-global-nodes"></i><span class="info">{% trans %}nodes{% endtrans %}</span></p>
 			<ul class="uk-nav-sub">
-				<li><a href="{{ path('nodesHomePage') }}"><i class="uk-icon-rz-nodes"></i><span class="info">{% trans %}all.nodes{% endtrans %}</span></a></li>
-				<li><a href="{{ path('nodesHomeDraftPage') }}"><i class="uk-icon-rz-nodes"></i><span class="info">{% trans %}draft.nodes{% endtrans %}</span></a></li>
-				<li><a href="{{ path('nodesHomePendingPage') }}"><i class="uk-icon-rz-nodes"></i><span class="info">{% trans %}pending.nodes{% endtrans %}</span></a></li>
-				<li><a href="{{ path('nodesHomeArchivedPage') }}"><i class="uk-icon-rz-archive"></i><span class="info">{% trans %}archived.nodes{% endtrans %}</span></a></li>
-				<li><a href="{{ path('nodesHomeDeletedPage') }}"><i class="uk-icon-rz-trash-o"></i><span class="info">{% trans %}deleted.nodes{% endtrans %}</span></a></li>
+				<li><a href="{{ path('nodesHomePage') }}"><i class="uk-icon-rz-all-nodes"></i><span class="info">{% trans %}all.nodes{% endtrans %}</span></a></li>
+				<li><a href="{{ path('nodesHomeDraftPage') }}"><i class="uk-icon-rz-draft-nodes"></i><span class="info">{% trans %}draft.nodes{% endtrans %}</span></a></li>
+				<li><a href="{{ path('nodesHomePendingPage') }}"><i class="uk-icon-rz-pending-nodes"></i><span class="info">{% trans %}pending.nodes{% endtrans %}</span></a></li>
+				<li><a href="{{ path('nodesHomeArchivedPage') }}"><i class="uk-icon-rz-archives-nodes"></i><span class="info">{% trans %}archived.nodes{% endtrans %}</span></a></li>
+				<li><a href="{{ path('nodesHomeDeletedPage') }}"><i class="uk-icon-rz-deleted-nodes"></i><span class="info">{% trans %}deleted.nodes{% endtrans %}</span></a></li>
 			</ul>
 		</li>
 		{% endif %}
