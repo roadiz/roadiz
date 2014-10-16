@@ -108,7 +108,7 @@ class BackendController extends AppController
                         'use_referer'                    => true,
                     )),
                     new DefaultAuthenticationFailureHandler($c['httpKernel'], $c['httpUtils'], array(
-                        'failure_path'           => '/login_failed',
+                        'failure_path'           => '/login',
                         'failure_forward'        => false,
                         'login_path'             => '/login',
                         'failure_path_parameter' => '_failure_path'
