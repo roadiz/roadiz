@@ -21,9 +21,9 @@
             </ul>
             <div class="uk-navbar-content uk-navbar-flip">
                 <div class="uk-button-group">
-                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-explorer><i class="uk-icon-document-explorer"></i> {% trans %}documents.toggle-explorer{% endtrans %}</a>
-                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-cloud-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
-                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-embedder><i class="uk-icon-embed"></i> {% trans %}documents.toggle-embedder{% endtrans %}</a>
+                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}documents.toggle-explorer{% endtrans %}</a>
+                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-rz-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
+                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-embedder><i class="uk-icon-rz-embed"></i> {% trans %}documents.toggle-embedder{% endtrans %}</a>
                 </div>
             </div>
         </nav>
@@ -83,7 +83,7 @@
                 <div class="children-nodes-quick-creation uk-button-group">
                     {% for linkedType in linkedTypes %}
                     <a class="uk-button uk-button-small" href="#" data-children-node-type="{{ linkedType.getId }}" data-children-parent-node="{{ nodeTree.getRootNode.getId }}">
-                        <i class="uk-icon-plus"></i> {{ "add.a.%nodeType%"|trans({'%nodeType%': linkedType.getDisplayName}) }}
+                        <i class="uk-icon-rz-plus"></i> {{ "add.a.%nodeType%"|trans({'%nodeType%': linkedType.getDisplayName}) }}
                     </a>
                     {% endfor %}
                 </div>
