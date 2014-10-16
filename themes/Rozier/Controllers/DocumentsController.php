@@ -45,7 +45,6 @@ class DocumentsController extends RozierApp
             $this->getService('em'),
             'RZ\Renzo\Core\Entities\Document'
         );
-
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

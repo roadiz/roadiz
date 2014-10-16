@@ -23,9 +23,28 @@
 				<thead>
 			        <tr>
 			            <th class="uk-text-center">{% trans %}document.thumbnail{% endtrans %}</th>
-			            <th>{% trans %}document.filename{% endtrans %}</th>
+			            <th>{% trans %}document.filename{% endtrans %}
+			            	{% if request.query.get("field") == 'filename' and request.query.get("ordering") == "DESC" %}
+                            <a href="?field=filename&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
+                        	{% else %}
+                            <a href="?field=filename&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
+                        	{% endif %}
+			            </th>
+			            <th>{% trans %}document.mimeType{% endtrans %}
+			            	{% if request.query.get("field") == 'mimeType' and request.query.get("ordering") == "DESC" %}
+                            <a href="?field=mimeType&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
+                        	{% else %}
+                            <a href="?field=mimeType&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
+                        	{% endif %}
+			            </th>
 			            <th>{# {% trans %}document.platform{% endtrans %} #}</th>
-			            <th>{% trans %}document.createdAt{% endtrans %}</th>
+			            <th>{% trans %}document.createdAt{% endtrans %}
+			            	{% if request.query.get("field") == 'createdAt' and request.query.get("ordering") == "DESC" %}
+                            <a href="?field=createdAt&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
+                        	{% else %}
+                            <a href="?field=createdAt&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
+                        	{% endif %}
+			            </th>
 			            <th>{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -45,14 +64,12 @@
 						</td>
 						{% endif %}
 						{% if document.isEmbed %}
-						<td>
-							<p>{{ document.getFilename }}</p>
-						</td>
+						<td>{{ document.getFilename }}</td>
+						<td>{{ document.getMimeType }}</td>
 						<td class="platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></td>
 						{% else %}
-						<td colspan="2">
-							<p>{{ document.getFilename }}</p>
-						</td>
+						<td>{{ document.getFilename }}</td>
+						<td colspan="2">{{ document.getMimeType }}</td>
 						{% endif %}
 						<td>{{ document.getCreatedAt|localizeddate('short', 'none') }}</td>
 						<td>
