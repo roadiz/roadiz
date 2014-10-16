@@ -4,7 +4,10 @@
 <section class="content-global content-nav-and-filters">
 
     <header class="content-header header-node header-nodes-list">
-        <h1 class="content-title">{{ mainFilter ~ '.nodes'|trans }}</h1>
+        <h1 class="content-title">
+            {% set mainTitle = mainFilter ~ '.nodes' %}
+            {{ mainTitle|trans() }}
+        </h1>
         {% include 'widgets/countFiltersBar.html.twig' %}
         {# Add node control #}
         {% if nodeTypes|length %}

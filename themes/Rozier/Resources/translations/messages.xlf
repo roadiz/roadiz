@@ -4465,6 +4465,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <source>setting.groups</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroups">
+        <source>settingGroups</source>
+        <target></target>
+      </trans-unit>
 
       <!-- Default settings names -->
       <trans-unit xml:space="preserve" id="display_debug_panel">
@@ -4558,6 +4562,93 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <source>document.preview</source>
         <target></target>
       </trans-unit>
+
+      <!-- node statuses -->
+      <trans-unit xml:space="preserve" id="all.nodes">
+        <source>all.nodes</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="draft.nodes">
+        <source>draft.nodes</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="pending.nodes">
+        <source>pending.nodes</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="archived.nodes">
+        <source>archived.nodes</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="deleted.nodes">
+        <source>deleted.nodes</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.draft">
+        <source>node.draft</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.pending.validation">
+        <source>node.pending.validation</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.archived">
+        <source>node.archived</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.deleted">
+        <source>node.deleted</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="draft">
+        <source>draft</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="pending">
+        <source>pending</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="archived">
+        <source>archived</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="deleted">
+        <source>deleted</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="undelete">
+        <source>undelete</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- are_you_sure.undelete.node.and.data -->
+      <trans-unit xml:space="preserve" id="are_you_sure.undelete.node.and.data">
+        <source>are_you_sure.undelete.node.and.data</source>
+        <target></target>
+      </trans-unit>
+      <!-- undelete.node.%name% -->
+      <trans-unit xml:space="preserve" id="undelete.node.%name%">
+        <source>undelete.node.%name%</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="parameters">
+        <source>parameters</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- embed documents -->
+      <trans-unit xml:space="preserve" id="embed.document">
+        <source>embed.document</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="embed">
+        <source>embed</source>
+        <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

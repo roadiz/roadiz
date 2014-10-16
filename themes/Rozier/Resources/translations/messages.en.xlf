@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-10-13 14:50+0000
+PO-Revision-Date: 2014-10-16 09:16+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1413211807.402658
+X-POOTLE-MTIME: 1413450965.902222
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -4470,6 +4470,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
         <source>setting.groups</source>
         <target state="translated">Setting groups</target>
       <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroups" approved="yes">
+        <source>settingGroups</source>
+        <target state="translated">Setting groups</target>
+      </trans-unit>
 
       <!-- Default settings names -->
       <trans-unit xml:space="preserve" id="display_debug_panel" approved="yes">
@@ -4542,27 +4546,114 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="document.%name%.usage" approved="yes">
         <source>document.%name%.usage</source>
         <target state="translated">Document "%name%" usage</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="usage.fieldName" approved="yes">
         <source>usage.fieldName</source>
         <target state="translated">Usage field name</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="nodeType.name" approved="yes">
         <source>nodeType.name</source>
         <target state="translated">Node-type</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="document.usage" approved="yes">
         <source>document.usage</source>
         <target state="translated">Usage</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="document.edit" approved="yes">
         <source>document.edit</source>
         <target state="translated">Edit document</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="document.preview" approved="yes">
         <source>document.preview</source>
         <target state="translated">Preview</target>
+      <note/></trans-unit>
+
+      <!-- node statuses -->
+      <trans-unit xml:space="preserve" id="all.nodes" approved="yes">
+        <source>all.nodes</source>
+        <target state="translated">All nodes</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="draft.nodes" approved="yes">
+        <source>draft.nodes</source>
+        <target state="translated">Draft nodes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="pending.nodes" approved="yes">
+        <source>pending.nodes</source>
+        <target state="translated">Pending nodes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="archived.nodes" approved="yes">
+        <source>archived.nodes</source>
+        <target state="translated">Archived nodes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="deleted.nodes" approved="yes">
+        <source>deleted.nodes</source>
+        <target state="translated">Deleted nodes</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.draft" approved="yes">
+        <source>node.draft</source>
+        <target state="translated">Draft</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.pending.validation" approved="yes">
+        <source>node.pending.validation</source>
+        <target state="translated">Pending validation</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.archived" approved="yes">
+        <source>node.archived</source>
+        <target state="translated">Archived</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.deleted" approved="yes">
+        <source>node.deleted</source>
+        <target state="translated">Deleted</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="draft" approved="yes">
+        <source>draft</source>
+        <target state="translated">Draft</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="pending" approved="yes">
+        <source>pending</source>
+        <target state="translated">Pending</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="archived" approved="yes">
+        <source>archived</source>
+        <target state="translated">Archived</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="deleted" approved="yes">
+        <source>deleted</source>
+        <target state="translated">Deleted</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="undelete" approved="yes">
+        <source>undelete</source>
+        <target state="translated">Undelete</target>
+      </trans-unit>
+
+      <!-- are_you_sure.undelete.node.and.data -->
+      <trans-unit xml:space="preserve" id="are_you_sure.undelete.node.and.data" approved="yes">
+        <source>are_you_sure.undelete.node.and.data</source>
+        <target state="translated">Are you sure you want to undelete node and its data?</target>
+      </trans-unit>
+      <!-- undelete.node.%name% -->
+      <trans-unit xml:space="preserve" id="undelete.node.%name%" approved="yes">
+        <source>undelete.node.%name%</source>
+        <target state="translated">Undelete node %name%</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="parameters" approved="yes">
+        <source>parameters</source>
+        <target state="translated">Parameters</target>
+      </trans-unit>
+
+      <!-- embed documents -->
+      <trans-unit xml:space="preserve" id="embed.document" approved="yes">
+        <source>embed.document</source>
+        <target state="translated">Embed document</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="embed" approved="yes">
+        <source>embed</source>
+        <target state="translated">Embed</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
