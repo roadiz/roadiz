@@ -10809,9 +10809,7 @@ Rozier.toggleTreesPanel = function (event) {
 	var _this = this;
 
 	$('#main-trees').toggleClass('minified');
-
-	$('#minify-tree-panel-button').toggleClass('uk-icon-minus-light');
-	$('#minify-tree-panel-button').toggleClass('uk-icon-plus-light');
+	$('#minify-tree-panel-button i').toggleClass('uk-icon-rz-panel-tree-open');
 	$('#minify-tree-panel-area').toggleClass('tree-panel-hidden');
 	return false;
 };

@@ -7,7 +7,7 @@
         <h1 class="content-title font-list-title">{% trans %}fonts{% endtrans %}</h1>
         {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
-            <a class="uk-button" href="{{ path('fontsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.font{% endtrans %}</a>
+            <a class="uk-button" href="{{ path('fontsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.font{% endtrans %}</a>
         </div>
     </header>
 
@@ -40,8 +40,8 @@
 						</td>
 						<td><code>{{ font.getHash }}</code></td>
 						<td>
-							<a class="uk-button uk-button-small rz-no-ajax-link" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}"><span class="uk-icon-download"></span> {% trans %}download{% endtrans %}</a>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('fontsDeletePage', { fontId: font.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}delete{% endtrans %}</a>
+							<a class="uk-button uk-button-small rz-no-ajax-link" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}"><span class="uk-icon-rz-download"></span> {% trans %}download{% endtrans %}</a>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('fontsDeletePage', { fontId: font.getId }) }}"><span class="uk-icon-rz-trash-mini-o"></span> {% trans %}delete{% endtrans %}</a>
 						</td>
 					</tr>
 					{% endfor %}
