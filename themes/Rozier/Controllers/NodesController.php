@@ -49,7 +49,7 @@ class NodesController extends RozierApp
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $filter = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
@@ -57,13 +57,47 @@ class NodesController extends RozierApp
             ->getRepository('RZ\Renzo\Core\Entities\Translation')
             ->findDefault();
 
+
+        switch ($filter) {
+            case 'draft':
+                $this->assignation['mainFilter'] = $filter;
+                $arrayFilter = array(
+                    'status' => Node::DRAFT
+                );
+                break;
+            case 'pending':
+                $this->assignation['mainFilter'] = $filter;
+                $arrayFilter = array(
+                    'status' => Node::PENDING
+                );
+                break;
+            case 'archived':
+                $this->assignation['mainFilter'] = $filter;
+                $arrayFilter = array(
+                    'status' => Node::ARCHIVED
+                );
+                break;
+            case 'deleted':
+                $this->assignation['mainFilter'] = $filter;
+                $arrayFilter = array(
+                    'status' => Node::DELETED
+                );
+                break;
+
+            default:
+
+                $this->assignation['mainFilter'] = 'all';
+                $arrayFilter = array();
+                break;
+        }
         /*
          * Manage get request to filter list
          */
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\Node'
+            'RZ\Renzo\Core\Entities\Node',
+            $arrayFilter
         );
         $listManager->handle();
 
@@ -543,7 +577,9 @@ class NodesController extends RozierApp
         $node = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
-        if (null !== $node) {
+        if (null !== $node &&
+            !$node->isDeleted()) {
+
             $this->assignation['node'] = $node;
 
             $form = $this->buildDeleteForm($node);
@@ -573,6 +609,62 @@ class NodesController extends RozierApp
 
             return new Response(
                 $this->getTwig()->render('nodes/delete.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        } else {
+            return $this->throw404();
+        }
+    }
+    /**
+     * Return an deletion form for requested node.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $nodeId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function undeleteAction(Request $request, $nodeId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES_DELETE');
+
+        $node = $this->getService('em')
+            ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+
+        if (null !== $node &&
+            $node->isDeleted()) {
+
+            $this->assignation['node'] = $node;
+
+            $form = $this->buildDeleteForm($node);
+            $form->handleRequest();
+
+            if ($form->isValid() &&
+                $form->getData()['nodeId'] == $node->getId()) {
+
+                $node->getHandler()->softUnremoveWithChildren();
+                $this->getService('em')->flush();
+
+                $msg = $this->getTranslator()->trans('node.%name%.undeleted', array('%name%'=>$node->getNodeName()));
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                $this->getService('logger')->info($msg);
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate('nodesEditPage', array(
+                        'nodeId' => $node->getId()
+                    ))
+                );
+                $response->prepare($request);
+
+                return $response->send();
+            }
+
+            $this->assignation['form'] = $form->createView();
+
+            return new Response(
+                $this->getTwig()->render('nodes/undelete.html.twig', $this->assignation),
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );
@@ -709,8 +801,13 @@ class NodesController extends RozierApp
             throw new EntityAlreadyExistsException($msg, 1);
         }
         foreach ($data as $key => $value) {
-            $setter = 'set'.ucwords($key);
-            $node->$setter( $value );
+
+            if ($key == 'home' && $value == true) {
+                $node->getHandler()->makeHome();
+            } else {
+                $setter = 'set'.ucwords($key);
+                $node->$setter( $value );
+            }
         }
 
         $this->getService('em')->flush();

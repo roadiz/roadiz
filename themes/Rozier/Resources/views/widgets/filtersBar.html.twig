@@ -1,4 +1,4 @@
-<nav class="uk-navbar" id="uk-navbar-filter">    
+<nav class="uk-navbar" id="uk-navbar-filter">
     <div class="uk-navbar-content-cont">
 
         {% if filters.description %}<a class="uk-navbar-brand">{{ filters.description }}</a>{% endif %}
@@ -8,7 +8,7 @@
                 <div class="uk-form-icon">
                     <i class="uk-icon-search"></i>
                     <input id="uk-form-filter-input-search" type="text" name="search" placeholder="{% trans %}search{% endtrans %}" value="{{ filters.search }}">
-                </div>                
+                </div>
                 <!-- <button class="uk-button uk-button-primary"><i class="uk-icon-search"></i> {% trans %}search{% endtrans %}</button> -->
             </form>
         </div>
@@ -19,18 +19,18 @@
 
                 {% if filters.search %}<input type="hidden" name="search" value="{{ filters.search }}" />{% endif %}
 
-                {% if filters.previousPageQuery %}<a class="uk-button uk-button-filter" href="?{{ filters.previousPageQuery }}"><i class="uk-icon-chevron-left"></i></a>{% endif %}
+                {% if filters.previousPageQuery %}<a class="uk-button uk-button-filter" href="{{ path(request.get('_route')) }}?{{ filters.previousPageQuery }}"><i class="uk-icon-chevron-left"></i></a>{% endif %}
 
                 <span class="filter-form-text pageTitle">{% trans %}page{% endtrans %}</span>
                 <input class="uk-form-width-mini" id="uk-form-filter-input-page" type="text" name="page"  value="{{ filters.currentPage }}" />
                 <span class="filter-form-text pageCount">/ {{ filters.pageCount }}</span>
 
                 <!-- <button class="uk-button uk-button-primary" id="uk-form-filter-page-submit">{% trans %}goto.page{% endtrans %}</button> -->
-                {% if filters.nextPageQuery %}<a class="uk-button uk-button-filter" href="?{{ filters.nextPageQuery }}"><i class="uk-icon-chevron-right"></i></a>{% endif %}
-               
+                {% if filters.nextPageQuery %}<a class="uk-button uk-button-filter" href="{{ path(request.get('_route')) }}?{{ filters.nextPageQuery }}"><i class="uk-icon-chevron-right"></i></a>{% endif %}
+
             </form>
         </div>
         {% endif %}
 
-    </div>	
+    </div>
 </nav>

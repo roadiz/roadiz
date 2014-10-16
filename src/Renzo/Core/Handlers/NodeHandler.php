@@ -362,7 +362,7 @@ class NodeHandler
         foreach ($defaults as $default) {
             $default->setHome(false);
         }
-        $this->translation->setHome(true);
+        $this->node->setHome(true);
         Kernel::getService('em')->flush();
 
         return $this;

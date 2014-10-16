@@ -37,6 +37,18 @@ deleteDoctrineCache:
 nodesHomePage:
     path:     /rz-admin/nodes
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction }
+nodesHomeDraftPage:
+    path:     /rz-admin/nodes/drafts
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction, filter:'draft' }
+nodesHomePendingPage:
+    path:     /rz-admin/nodes/pending
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction, filter:'pending' }
+nodesHomeArchivedPage:
+    path:     /rz-admin/nodes/archived
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction, filter:'archived' }
+nodesHomeDeletedPage:
+    path:     /rz-admin/nodes/deleted
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction, filter:'deleted' }
 nodesEditPage:
     path:     /rz-admin/nodes/edit/{nodeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::editAction }
@@ -72,6 +84,10 @@ nodesAddChildPage:
 nodesDeletePage:
     path:     /rz-admin/nodes/delete/{nodeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::deleteAction }
+    requirements: { nodeId : "[0-9]+" }
+nodesUndeletePage:
+    path:     /rz-admin/nodes/undelete/{nodeId}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::undeleteAction }
     requirements: { nodeId : "[0-9]+" }
 nodesExportPage:
     path:     /rz-admin/nodes/export/{nodeId}
