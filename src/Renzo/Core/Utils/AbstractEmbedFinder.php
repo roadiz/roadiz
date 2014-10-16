@@ -236,7 +236,7 @@ abstract class AbstractEmbedFinder
             } else {
                 return false;
             }
-        } catch (ClientErrorResponseException $e) {
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
             return false;
         }
     }
@@ -254,48 +254,20 @@ abstract class AbstractEmbedFinder
             $pathinfo = basename($this->getThumbnailURL());
             $thumbnailName = $this->embedId.'_'.$pathinfo;
 
-            // initialisation de la session
-            $ch = curl_init();
+            try {
+                $original = \GuzzleHttp\Stream\Stream::factory(fopen($this->getThumbnailURL(), 'r'));
+                $local = \GuzzleHttp\Stream\Stream::factory(fopen(Document::getFilesFolder().'/'.$thumbnailName, 'w'));
+                $local->write($original->getContents());
 
-            /* Check if cURL is available */
-            if ($ch !== FALSE) {
+                if (file_exists(Document::getFilesFolder().'/'.$thumbnailName) &&
+                    filesize(Document::getFilesFolder().'/'.$thumbnailName) > 0) {
 
-                $fh = fopen(Document::getFilesFolder().'/'.$thumbnailName, 'w');
-
-                if($fh !== FALSE)
-                {
-                    // configuration des options
-                    curl_setopt($ch, CURLOPT_URL, $this->getThumbnailURL());
-                    curl_setopt($ch, CURLOPT_FILE, $fh);
-                    //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-                    curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36 FirePHP/4Chrome");
-                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-
-                    // exécution de la session
-                    if(curl_exec($ch) === true) {
-
-                        // fermeture des ressources
-                        curl_close($ch);
-
-                        if (file_exists(Document::getFilesFolder().'/'.$thumbnailName) &&
-                            filesize(Document::getFilesFolder().'/'.$thumbnailName) > 0) {
-
-                            return $thumbnailName;
-                        } else {
-                            return false;
-                        }
-                    }
-                    else {
-                        // fermeture des ressources
-                        curl_close($ch);
-                        return false;
-                    }
-                }
-                else {
+                    return $thumbnailName;
+                } else {
                     return false;
                 }
-            }
-            else {
+
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
                 return false;
             }
         }

@@ -336,6 +336,9 @@ documentsUsagePage:
 documentsUploadPage:
     path:     /rz-admin/documents/upload
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::uploadAction }
+documentsRandomPage:
+    path:     /rz-admin/documents/random
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::randomAction }
 documentsEmbedPage:
     path:     /rz-admin/documents/embed
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::embedAction }

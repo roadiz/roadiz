@@ -13,6 +13,7 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Document;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Renzo\Core\Utils\SplashbasePictureFinder;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -263,6 +264,41 @@ class DocumentsController extends RozierApp
     }
 
     /**
+     * Get random external document page.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function randomAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        try {
+            $document = $this->randomDocument();
+
+            $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
+                '%name%'=>$document->getFilename()
+            ));
+            $request->getSession()->getFlashBag()->add('confirm', $msg);
+            $this->getService('logger')->info($msg);
+
+        } catch(\Exception $e) {
+            $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->getService('logger')->error($e->getMessage());
+        }
+        /*
+         * Force redirect to avoid resending form when refreshing page
+         */
+        $response = new RedirectResponse(
+            $this->getService('urlGenerator')->generate('documentsHomePage')
+        );
+        $response->prepare($request);
+
+        return $response->send();
+    }
+
+    /**
      * @param Symfony\Component\HttpFoundation\Request $request
      *
      * @return Symfony\Component\HttpFoundation\Response
@@ -472,6 +508,16 @@ class DocumentsController extends RozierApp
         } else {
             throw new \RuntimeException("bad.request", 1);
         }
+    }
+    /**
+     * Download a random document.
+     *
+     * @return RZ\Renzo\Core\Entities\Document
+     */
+    public function randomDocument()
+    {
+        $finder = new SplashbasePictureFinder();
+        return $finder->createDocumentFromFeed($this->getService());
     }
 
     /**
