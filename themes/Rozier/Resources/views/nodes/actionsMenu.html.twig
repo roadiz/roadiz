@@ -20,7 +20,7 @@
             <header><i class="uk-icon-rz-actions"></i><span class="label"><span class="label-text">{% trans %}actions{% endtrans %}</span></span></header>
             <nav>
                 {% if source %}
-                <a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-rz-visibility-on"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
+                <a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
                 {% endif %}
                 <a class="uk-button" href="#"><i class="uk-icon-rz-duplicate"></i><span class="label">{% trans %}duplicate{% endtrans %}</span></a>
                 <a class="uk-button" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-plus"></i><span class="label">{% trans %}add.child{% endtrans %}</span></a>
@@ -33,10 +33,10 @@
          #}
         {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS')) %}
         <div class="node-statuses with-subnav">
-            <header><i class="uk-icon-rz-check"></i><span class="label"><span class="label-text">{% trans %}parameters{% endtrans %}</span></span></header>
+            <header><i class="uk-icon-rz-statuses"></i><span class="label"><span class="label-text">{% trans %}parameters{% endtrans %}</span></span></header>
             <ul>
                 <li class="node-visibility">
-                    <i class="uk-icon-rz-visibility-on"></i>
+                    <i class="uk-icon-rz-visibility"></i>
                     <span class="label">{% trans %}visibility{% endtrans %}</span>
                     <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="visible" value="1" {% if node.isVisible %}checked{% endif %} />
                 </li>
@@ -51,7 +51,7 @@
                     <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="locked" value="1" {% if node.isLocked %}checked{% endif %} />
                 </li>
                 <li class="node-sterile">
-                    <i class="uk-icon-rz-sterile"></i>
+                    <i class="uk-icon-rz-steril"></i>
                     <span class="label">{% trans %}sterile-status{% endtrans %}</span>
                     <input data-node-id="{{ node.getId }}" data-on-text="I" data-off-text="O" class="rz-boolean-checkbox" type="checkbox" name="sterile" value="1" {% if node.isSterile %}checked{% endif %} />
                 </li>
@@ -63,15 +63,15 @@
          # Node statuses
          #}
         <div class="node-statuses with-subnav">
-            <header><i class="uk-icon-rz-check"></i><span class="label"><span class="label-text">{% trans %}statuses{% endtrans %}</span></span></header>
+            <header><i class="uk-icon-rz-statuses"></i><span class="label"><span class="label-text">{% trans %}statuses{% endtrans %}</span></span></header>
             <ul>
                 <li class="node-draft">
-                    <i class="uk-icon-rz-draft"></i>
+                    <i class="uk-icon-rz-draft-nodes"></i>
                     <span class="label">{% trans %}draft{% endtrans %}</span>
                     <input data-node-id="{{ node.getId }}" type="radio" name="status" value="{{ nodeStatuses.draft }}" {% if node.isDraft %}checked{% endif %} />
                 </li>
                 <li class="node-pending">
-                    <i class="uk-icon-rz-pending"></i>
+                    <i class="uk-icon-rz-pending-nodes"></i>
                     <span class="label">{% trans %}pending{% endtrans %}</span>
                     <input data-node-id="{{ node.getId }}" type="radio" name="status" value="{{ nodeStatuses.pending }}" {% if node.isPending %}checked{% endif %} />
                 </li>

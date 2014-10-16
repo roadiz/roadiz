@@ -12,7 +12,8 @@
 		<div id="minify-tree-panel-area">
 			<a id="minify-tree-panel-button"
 				title="{% trans %}minify.tree.panel{% endtrans %}"
-				class="uk-icon-button uk-icon-minus-light">
+				class="uk-icon-button">
+				<i class="uk-icon-rz-panel-tree-close"></i>
 			</a>
 		</div>
 		{% endif %}
@@ -41,7 +42,7 @@
 			{% if (securityContext.Granted('ROLE_ACCESS_NEWSLETTERS')) %}
 
 				<li><a href="#">
-					<i class="uk-icon-rz-newsletter"></i>
+					<i class="uk-icon-rz-newsletters"></i>
 					<span class="info">{% trans %}manage.newsletters{% endtrans %}</span>
 					</a>
 				</li>
@@ -102,7 +103,7 @@
 			{% endif %}
 			{% if (securityContext.Granted('ROLE_ACCESS_NODETYPES')) %}
 
-				<li><a href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-rz-node-type"></i><span class="info">{% trans %}manage.nodeTypes{% endtrans %}</span></a></li>
+				<li><a href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-rz-manage-nodes"></i><span class="info">{% trans %}manage.nodeTypes{% endtrans %}</span></a></li>
 
 			{% endif %}
 
@@ -119,7 +120,7 @@
 
 			{% if (securityContext.Granted('ROLE_ACCESS_FONTS')) %}
 
-				<li><a href="{{ path('fontsHomePage') }}"><i class="uk-icon-rz-font"></i><span class="info">{% trans %}manage.fonts{% endtrans %}</span></a></li>
+				<li><a href="{{ path('fontsHomePage') }}"><i class="uk-icon-rz-fontes"></i><span class="info">{% trans %}manage.fonts{% endtrans %}</span></a></li>
 			{% endif %}
 			</ul>
 		</li>
@@ -130,7 +131,7 @@
 		{% if (securityContext.Granted('ROLE_ACCESS_USERS') or securityContext.Granted('ROLE_ACCESS_ROLES') or securityContext.Granted('ROLE_ACCESS_GROUPS')) %}
 
 		<li class="uk-parent">
-			<p><i class="uk-icon-rz-user-fill"></i><span class="info">{% trans %}user.system{% endtrans %}</span></p>
+			<p><i class="uk-icon-rz-users"></i><span class="info">{% trans %}user.system{% endtrans %}</span></p>
 			<ul class="uk-nav-sub">
 
 				{% if (securityContext.Granted('ROLE_ACCESS_USERS')) %}
@@ -166,7 +167,7 @@
 				<li><a href="{{ path('settingGroupsSettingsPage', {'settingGroupId': group.getId}) }}"><i class="uk-icon-rz-settings-group"></i><span class="info">{{ group.getName }}</span></a></li>
 				{% endfor %}
 
-				<li><a href="{{ path('settingGroupsHomePage') }}"><i class="uk-icon-rz-settings-group"></i><span class="info">{% trans %}setting.groups{% endtrans %}</span></a></li>
+				<li><a href="{{ path('settingGroupsHomePage') }}"><i class="uk-icon-rz-settings-groups"></i><span class="info">{% trans %}setting.groups{% endtrans %}</span></a></li>
 			</ul>
 		</li>
 

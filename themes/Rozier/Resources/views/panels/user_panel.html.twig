@@ -21,7 +21,7 @@
             <a title="{% trans %}delete.caches{% endtrans %}" data-uk-tooltip   class="uk-icon-button uk-icon-rz-flash" href="{{ path('deleteDoctrineCache') }}"></a>
             {% endif %}
             {% if (securityContext.Granted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE')) %}
-            <a title="{% trans %}delete.caches{% endtrans %}" data-uk-tooltip class="uk-icon-button uk-icon-rz-flashimage" href="{{ path('deleteDoctrineCache') }}"></a>
+            <a title="{% trans %}delete.caches{% endtrans %}" data-uk-tooltip class="uk-icon-button uk-icon-rz-flash-images" href="{{ path('deleteDoctrineCache') }}"></a>
             {% endif %}
             <a title="{% trans %}logout{% endtrans %}" data-uk-tooltip class="uk-icon-button uk-icon-rz-turn-off rz-no-ajax-link" href="{{ path('logoutPage') }}"></a>
             {% if head.devMode %}
@@ -31,7 +31,7 @@
 
     </div>
     <footer id="cms-version">
-        <a target="_blank" title="{% trans %}help{% endtrans %}" data-uk-tooltip class="uk-icon-button uk-icon-rz-question-mark" href="http://doc.rezo-zero.com"></a>
+        <a target="_blank" title="{% trans %}help{% endtrans %}" data-uk-tooltip class="uk-icon-button uk-icon-rz-help" href="http://doc.rezo-zero.com"></a>
         <p class="cms-version"><i class="uk-icon-rz-rezozero"></i></p>
         <p>{{ head.cmsVersion }} - build {{ head.cmsBuild }}</p>
     </footer>
