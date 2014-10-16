@@ -46,7 +46,7 @@ class Log extends AbstractEntity
 
     /**
      * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\User")
-     * @JoinColumn(name="user_id", referencedColumnName="id", unique=false)
+     * @JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
      */
     protected $user = null;
 

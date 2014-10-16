@@ -303,16 +303,16 @@ class FontsController extends RozierApp
                 'label' => $this->getTranslator()->trans('font.eotFile'),
                 'required' => false
             ))
-            ->add('woffFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.woffFile'),
+            ->add('svgFile', 'file', array(
+                'label' => $this->getTranslator()->trans('font.svgFile'),
                 'required' => false
             ))
             ->add('otfFile', 'file', array(
                 'label' => $this->getTranslator()->trans('font.otfFile'),
                 'required' => false
             ))
-            ->add('svgFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.svgFile'),
+            ->add('woffFile', 'file', array(
+                'label' => $this->getTranslator()->trans('font.woffFile'),
                 'required' => false
             ));
 
@@ -367,16 +367,16 @@ class FontsController extends RozierApp
                 'label' => $this->getTranslator()->trans('font.eotFile'),
                 'required' => false
             ))
-            ->add('woffFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.woffFile'),
+            ->add('svgFile', 'file', array(
+                'label' => $this->getTranslator()->trans('font.svgFile'),
                 'required' => false
             ))
             ->add('otfFile', 'file', array(
                 'label' => $this->getTranslator()->trans('font.otfFile'),
                 'required' => false
             ))
-            ->add('svgFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.svgFile'),
+            ->add('woffFile', 'file', array(
+                'label' => $this->getTranslator()->trans('font.woffFile'),
                 'required' => false
             ));
 
