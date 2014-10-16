@@ -49,7 +49,7 @@ class NodesController extends RozierApp
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $filter = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
@@ -57,13 +57,47 @@ class NodesController extends RozierApp
             ->getRepository('RZ\Renzo\Core\Entities\Translation')
             ->findDefault();
 
+
+        switch ($filter) {
+            case 'draft':
+                $this->assignation['mainFilter'] = $filter;
+                $arrayFilter = array(
+                    'status' => Node::DRAFT
+                );
+                break;
+            case 'pending':
+                $this->assignation['mainFilter'] = $filter;
+                $arrayFilter = array(
+                    'status' => Node::PENDING
+                );
+                break;
+            case 'archived':
+                $this->assignation['mainFilter'] = $filter;
+                $arrayFilter = array(
+                    'status' => Node::ARCHIVED
+                );
+                break;
+            case 'deleted':
+                $this->assignation['mainFilter'] = $filter;
+                $arrayFilter = array(
+                    'status' => Node::DELETED
+                );
+                break;
+
+            default:
+
+                $this->assignation['mainFilter'] = 'all';
+                $arrayFilter = array();
+                break;
+        }
         /*
          * Manage get request to filter list
          */
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\Node'
+            'RZ\Renzo\Core\Entities\Node',
+            $arrayFilter
         );
         $listManager->handle();
 

@@ -37,6 +37,18 @@ deleteDoctrineCache:
 nodesHomePage:
     path:     /rz-admin/nodes
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction }
+nodesHomeDraftPage:
+    path:     /rz-admin/nodes/drafts
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction, filter:'draft' }
+nodesHomePendingPage:
+    path:     /rz-admin/nodes/pending
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction, filter:'pending' }
+nodesHomeArchivedPage:
+    path:     /rz-admin/nodes/archived
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction, filter:'archived' }
+nodesHomeDeletedPage:
+    path:     /rz-admin/nodes/deleted
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::indexAction, filter:'deleted' }
 nodesEditPage:
     path:     /rz-admin/nodes/edit/{nodeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::editAction }
