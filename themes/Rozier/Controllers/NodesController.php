@@ -577,7 +577,9 @@ class NodesController extends RozierApp
         $node = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
-        if (null !== $node) {
+        if (null !== $node &&
+            !$node->isDeleted()) {
+
             $this->assignation['node'] = $node;
 
             $form = $this->buildDeleteForm($node);
@@ -743,8 +745,13 @@ class NodesController extends RozierApp
             throw new EntityAlreadyExistsException($msg, 1);
         }
         foreach ($data as $key => $value) {
-            $setter = 'set'.ucwords($key);
-            $node->$setter( $value );
+
+            if ($key == 'home' && $value == true) {
+                $node->getHandler()->makeHome();
+            } else {
+                $setter = 'set'.ucwords($key);
+                $node->$setter( $value );
+            }
         }
 
         $this->getService('em')->flush();

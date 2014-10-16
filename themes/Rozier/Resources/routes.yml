@@ -85,6 +85,10 @@ nodesDeletePage:
     path:     /rz-admin/nodes/delete/{nodeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::deleteAction }
     requirements: { nodeId : "[0-9]+" }
+nodesUndeletePage:
+    path:     /rz-admin/nodes/undelete/{nodeId}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::undeleteAction }
+    requirements: { nodeId : "[0-9]+" }
 nodesExportPage:
     path:     /rz-admin/nodes/export/{nodeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesUtilsController::exportAction }
