@@ -5,7 +5,7 @@
     {% if (securityContext.Granted('ROLE_ACCESS_DOCUMENTS_DELETE')) %}
         {% if document.getId %}
         <a class="uk-button uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId}) }}">
-            <i class="uk-icon-trash-o"></i><span class="label">{% trans %}delete.document{% endtrans %}</span>
+            <i class="uk-icon-rz-trash-mini-o"></i><span class="label">{% trans %}delete.document{% endtrans %}</span>
         </a>
         {% endif %}
     {% endif %}

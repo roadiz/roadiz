@@ -233,6 +233,17 @@
         text-align: center;
         padding: 7px 0;
 
+        &:after {
+            display: block;
+            width: 20px; height: 20px;
+            content: "";
+            .matrix-icon();
+            background-position: @icon-size*-1 0;
+            position: absolute;
+            right: -15px; top: 117px;
+            .transform-transition(ease 1s);
+        }
+
         &.tree-panel-hidden {
             &:after {
                 .transform(translate(100%));
@@ -242,11 +253,14 @@
     &-button {
         width: 20px;
         height: 20px;
-        font-size: 10px;
-        line-height: 25px;
+        line-height: 20px;
         background: darken(@global-header-color, 10%);
         border: 0 none;
         .transition(background ease 0.35s);
+
+        i {
+            color: #666;
+        }
 
         &:hover {
             background: darken(@global-header-color, 15%);

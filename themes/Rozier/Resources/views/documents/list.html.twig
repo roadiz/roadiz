@@ -7,8 +7,8 @@
         <h1 class="content-title">{% trans %}documents{% endtrans %}</h1>
         {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
-            <a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-plus"></i> {% trans %}upload.document{% endtrans %}</a>
-           	<a class="uk-button" href="{{ path('documentsEmbedPage') }}"><i class="uk-icon-plus"></i> {% trans %}embed.document{% endtrans %}</a>
+            <a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-rz-upload"></i> {% trans %}upload.document{% endtrans %}</a>
+           	<a class="uk-button" href="{{ path('documentsEmbedPage') }}"><i class="uk-icon-rz-embed"></i> {% trans %}embed.document{% endtrans %}</a>
         </div>
     </header>
 
@@ -53,7 +53,7 @@
 						{% endif %}
 						<td>{{ document.getCreatedAt|localizeddate('short', 'none') }}</td>
 						<td>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}delete{% endtrans %}</a>
 						</td>
 					</tr>
 					{% endfor %}
