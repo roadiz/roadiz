@@ -74,15 +74,14 @@ class NodeTypeFieldHandler
             }
 
             return '
-    /**
-     * @Column(type="'.
-        NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].
-        '", '.
-        $this->getDecimalPrecision().
-        'nullable=true )
-     */
-    '.$var.PHP_EOL.$this->generateSourceGetter().PHP_EOL.$this->generateSourceSetter().PHP_EOL;
-
+                /**
+                 * @Column(type="'.
+                    NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].
+                    '", '.
+                    $this->getDecimalPrecision().
+                    'nullable=true )
+                 */
+                '.$var.PHP_EOL.$this->generateSourceGetter().PHP_EOL.$this->generateSourceSetter().PHP_EOL;
         }
 
         return '';

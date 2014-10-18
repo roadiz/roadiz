@@ -448,7 +448,8 @@ class InstallApp extends AppController
 
         $response = new RedirectResponse(
             $this->getService('urlGenerator')->generate(
-                'installImportThemePage', array("id"=>$theme->getId())
+                'installImportThemePage',
+                array("id" => $theme->getId())
             )
         );
         $response->prepare($request);
@@ -463,7 +464,8 @@ class InstallApp extends AppController
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function themeSummaryAction(Request $request) {
+    public function themeSummaryAction(Request $request)
+    {
         $array = explode('\\', $request->get("classname"));
         $data = json_decode(file_get_contents(RENZO_ROOT . "/themes/". $array[2] . "/config.json"), true);
 
@@ -523,7 +525,7 @@ class InstallApp extends AppController
                     $fixtures = new Fixtures();
                     $fixtures->saveInformations($infosForm->getData());
 
-                    if ($infosForm->getData()["install_theme"] ) {
+                    if ($infosForm->getData()["install_theme"]) {
                         /*
                          * Force redirect to avoid resending form when refreshing page
                          */

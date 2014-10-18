@@ -28,10 +28,10 @@ class EmbedDocumentsServiceProvider implements \Pimple\ServiceProviderInterface
     {
         $container['document.platforms'] = function ($c) {
             return array(
-                'youtube' => '\RZ\Renzo\Core\Utils\YoutubeEmbedFinder',
-                'vimeo' => '\RZ\Renzo\Core\Utils\VimeoEmbedFinder',
+                'youtube' =>     '\RZ\Renzo\Core\Utils\YoutubeEmbedFinder',
+                'vimeo' =>       '\RZ\Renzo\Core\Utils\VimeoEmbedFinder',
                 'dailymotion' => '\RZ\Renzo\Core\Utils\DailymotionEmbedFinder',
-                'soundcloud' => '\RZ\Renzo\Core\Utils\SoundcloudEmbedFinder'
+                'soundcloud' =>  '\RZ\Renzo\Core\Utils\SoundcloudEmbedFinder'
             );
         };
     }

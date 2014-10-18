@@ -35,8 +35,7 @@ abstract class AbstractEmbedFinder
     {
         if ($this->getFeed() !== false) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -66,7 +65,7 @@ abstract class AbstractEmbedFinder
      *
      * @return string
      */
-    public abstract function getSource($args = array());
+    abstract public function getSource($args = array());
 
     /**
      * Crawl an embed API to get a Json feed.
@@ -75,7 +74,7 @@ abstract class AbstractEmbedFinder
      *
      * @return string
      */
-    public abstract function getMediaFeed($search = null);
+    abstract public function getMediaFeed($search = null);
 
     /**
      * Crawl an embed API to get a Json feed against a search query.
@@ -86,7 +85,7 @@ abstract class AbstractEmbedFinder
      *
      * @return string
      */
-    public abstract function getSearchFeed($searchTerm, $author, $maxResults=15);
+    abstract public function getSearchFeed($searchTerm, $author, $maxResults = 15);
 
     /**
      * Compose an HTML iframe for viewing embed media.
@@ -100,7 +99,7 @@ abstract class AbstractEmbedFinder
      *
      * @return string
      */
-    public function getIFrame(&$args=null)
+    public function getIFrame(&$args = null)
     {
         $attributes = array();
 
@@ -142,8 +141,7 @@ abstract class AbstractEmbedFinder
         foreach ($attributes as $key => $value) {
             if ($value == '') {
                 $htmlTag .= ' '.$key;
-            }
-            else {
+            } else {
                 $htmlTag .= ' '.$key.'="'.addslashes($value).'"';
             }
         }
@@ -204,21 +202,21 @@ abstract class AbstractEmbedFinder
      *
      * @return string
      */
-    public abstract function getMediaTitle();
+    abstract public function getMediaTitle();
 
     /**
      * Get media description from feed.
      *
      * @return string
      */
-    public abstract function getMediaDescription();
+    abstract public function getMediaDescription();
 
     /**
      * Get media thumbnail external URL from its feed.
      *
      * @return string
      */
-    public abstract function getThumbnailURL();
+    abstract public function getThumbnailURL();
 
     /**
      * Send a CURL request and get its string output.
@@ -273,8 +271,7 @@ abstract class AbstractEmbedFinder
             } catch (\GuzzleHttp\Exception\RequestException $e) {
                 return false;
             }
-        }
-        else {
+        } else {
             return false;
         }
     }

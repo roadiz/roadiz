@@ -50,7 +50,7 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importSettingsAction(Request $request, $filename,  $themeId = null)
+    public static function importSettingsAction(Request $request, $filename, $themeId = null)
     {
         #$pathFile = '/Resources/import/settings.rzt';
         $classImporter = "RZ\Renzo\CMS\Importers\SettingsImporter";

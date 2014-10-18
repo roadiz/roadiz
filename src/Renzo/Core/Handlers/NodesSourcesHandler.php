@@ -237,7 +237,7 @@ class NodesSourcesHandler
             "nodes" => $this->nodeSource->getNode(),
             "translation" => $this->nodeSource->getTranslation()
         ));
+
         return $tags;
     }
-
 }

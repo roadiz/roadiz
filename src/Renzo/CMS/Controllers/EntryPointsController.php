@@ -33,7 +33,7 @@ class EntryPointsController extends AppController
 {
     const CONTACT_FORM_TOKEN_INTENTION = 'contact_form';
 
-    static $mandatoryContactFields = array(
+    private static $mandatoryContactFields = array(
         'email',
         'message'
     );

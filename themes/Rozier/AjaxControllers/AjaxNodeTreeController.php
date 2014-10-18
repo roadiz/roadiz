@@ -57,8 +57,8 @@ class AjaxNodeTreeController extends AbstractAjaxController
 
                     $node = $this->getService('em')
                                  ->find(
-                                    '\RZ\Renzo\Core\Entities\Node',
-                                    (int) $request->get('parentNodeId')
+                                     '\RZ\Renzo\Core\Entities\Node',
+                                     (int) $request->get('parentNodeId')
                                  );
 
                     $this->assignation['nodeTree'] = new NodeTreeWidget(

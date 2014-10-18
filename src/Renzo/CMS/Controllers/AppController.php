@@ -368,7 +368,8 @@ class AppController implements ViewableInterface
     /**
      * {@inheritdoc}
      */
-    public function initializeTwig(){
+    public function initializeTwig()
+    {
         $this->twig = $this->getService('twig.environment');
 
         return $this;

@@ -171,8 +171,10 @@ class DocumentViewer implements ViewableInterface
 
             $handlers = Kernel::getService('document.platforms');
 
-            if (in_array($this->getDocument()->getEmbedPlatform(),
-                array_keys($handlers))) {
+            if (in_array(
+                $this->getDocument()->getEmbedPlatform(),
+                array_keys($handlers)
+            )) {
 
                 $class = $handlers[$this->getDocument()->getEmbedPlatform()];
                 $this->embedFinder = new $class($this->getDocument()->getEmbedId());
@@ -267,7 +269,8 @@ class DocumentViewer implements ViewableInterface
         if ($args === null ||
             !$this->getDocument()->isImage()) {
 
-            return Kernel::getInstance()->getRequest()->getBaseUrl().'/files/'.$this->getDocument()->getRelativeUrl();
+            return Kernel::getInstance()->getRequest()
+                                        ->getBaseUrl().'/files/'.$this->getDocument()->getRelativeUrl();
         } else {
             $slirArgs = array();
 

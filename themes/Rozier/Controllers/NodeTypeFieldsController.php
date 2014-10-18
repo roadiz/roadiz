@@ -149,7 +149,7 @@ class NodeTypeFieldsController extends RozierApp
 
             if ($form->isValid()) {
 
-                try{
+                try {
                     $this->addNodeTypeField($form->getData(), $field, $nodeType);
 
                     $msg = $this->getTranslator()->trans(
@@ -175,7 +175,7 @@ class NodeTypeFieldsController extends RozierApp
                         )
                     );
 
-                } catch (\Exception $e){
+                } catch (\Exception $e) {
                     $msg = $e->getMessage();
                     $request->getSession()->getFlashBag()->add('error', $msg);
                     $this->getService('logger')->error($msg);

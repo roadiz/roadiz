@@ -23,7 +23,8 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
 {
     private $client;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->client = new Client();
     }
 
@@ -48,42 +49,48 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
-    public function getSource($args = array()){
+    public function getSource($args = array())
+    {
 
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMediaFeed($search = null){
+    public function getMediaFeed($search = null)
+    {
 
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSearchFeed($searchTerm, $author, $maxResults=15){
+    public function getSearchFeed($searchTerm, $author, $maxResults = 15)
+    {
 
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMediaTitle(){
+    public function getMediaTitle()
+    {
 
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMediaDescription(){
+    public function getMediaDescription()
+    {
 
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getThumbnailURL(){
+    public function getThumbnailURL()
+    {
 
         if (false !== $feed = $this->getRandom()) {
             return $feed['url'];

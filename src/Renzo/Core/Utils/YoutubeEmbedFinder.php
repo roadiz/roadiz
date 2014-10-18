@@ -55,7 +55,7 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
-    public function getSearchFeed( $searchTerm, $author, $maxResults=15 )
+    public function getSearchFeed($searchTerm, $author, $maxResults = 15)
     {
         $url = "http://gdata.youtube.com/feeds/api/videos/?q=".$searchTerm."&v=2&alt=json&max-results=".$maxResults;
         if (!empty($author)) {

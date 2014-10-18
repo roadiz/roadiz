@@ -237,7 +237,7 @@ class DocumentsController extends RozierApp
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                 $this->getService('logger')->error($e->getMessage());
             }
@@ -282,7 +282,7 @@ class DocumentsController extends RozierApp
             $request->getSession()->getFlashBag()->add('confirm', $msg);
             $this->getService('logger')->info($msg);
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
             $this->getService('logger')->error($e->getMessage());
         }

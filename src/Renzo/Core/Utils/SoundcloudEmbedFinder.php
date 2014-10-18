@@ -58,7 +58,7 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
-    public function getSearchFeed( $searchTerm, $author, $maxResults=15 )
+    public function getSearchFeed($searchTerm, $author, $maxResults = 15)
     {
         return null;
     }

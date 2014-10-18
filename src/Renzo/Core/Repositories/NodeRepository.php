@@ -92,7 +92,7 @@ class NodeRepository extends EntityRepository
             $prefix = 'n.';
 
             // Dots are forbidden in field definitions
-            $baseKey = str_replace('.','_',$key);
+            $baseKey = str_replace('.', '_', $key);
             /*
              * Search in translation fields
              */
@@ -158,8 +158,8 @@ class NodeRepository extends EntityRepository
                 }
 
             } elseif (is_bool($value)) {
-               $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
-            }  elseif ('NOT NULL' == $value) {
+                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
+            } elseif ('NOT NULL' == $value) {
                 $res = $qb->expr()->isNotNull($prefix.$key);
             } elseif (isset($value)) {
                 $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
@@ -188,7 +188,7 @@ class NodeRepository extends EntityRepository
             }
 
             // Dots are forbidden in field definitions
-            $key = str_replace('.','_',$key);
+            $key = str_replace('.', '_', $key);
 
             if (is_object($value) && $value instanceof PersistableInterface) {
                 $finalQuery->setParameter($key, $value->getId());
@@ -219,7 +219,7 @@ class NodeRepository extends EntityRepository
 
             } elseif (is_bool($value)) {
                 $finalQuery->setParameter($key, $value);
-            }  elseif ('NOT NULL' == $value) {
+            } elseif ('NOT NULL' == $value) {
                 // param is not needed
             } elseif (isset($value)) {
                 $finalQuery->setParameter($key, $value);
@@ -258,10 +258,10 @@ class NodeRepository extends EntityRepository
     protected function applyTranslationByTag(
         array &$criteria,
         &$finalQuery,
-        &$translation=null
+        &$translation = null
     ) {
         if (null !== $translation) {
-           $finalQuery->setParameter('translation', $translation);
+            $finalQuery->setParameter('translation', $translation);
         }
     }
 

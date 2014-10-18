@@ -18,11 +18,13 @@ use RZ\Renzo\CMS\Utils\AbstractApi;
  */
 class NodeSourceApi extends AbstractApi
 {
-    public function getRepository() {
+    public function getRepository()
+    {
         return $this->container['em']->getRepository("RZ\Renzo\Core\Entities\NodesSources");
     }
 
-    private function getRepositoryName($criteria) {
+    private function getRepositoryName($criteria)
+    {
         $rep = null;
         if (isset($criteria['node.nodeType'])) {
             $rep = NodeType::getGeneratedEntitiesNamespace().
@@ -30,8 +32,7 @@ class NodeSourceApi extends AbstractApi
                    $criteria['node.nodeType']->getSourceEntityClassName();
 
             unset($criteria['node.nodeType']);
-        }
-        else {
+        } else {
             $rep = "RZ\Renzo\Core\Entities\NodesSources";
         }
         return $rep;
@@ -47,26 +48,26 @@ class NodeSourceApi extends AbstractApi
         $rep = $this->getRepositoryName($criteria);
 
         return $this->container['em']
-                       ->getRepository($rep)
-                       ->findBy(
-                            $criteria,
-                            $order,
-                            $limit,
-                            $offset,
-                            $this->container['securityContext']
-                        );
+                    ->getRepository($rep)
+                    ->findBy(
+                        $criteria,
+                        $order,
+                        $limit,
+                        $offset,
+                        $this->container['securityContext']
+                    );
     }
 
-    public function getOneBy(array $criteria, array $order = null) {
-
+    public function getOneBy(array $criteria, array $order = null)
+    {
         $rep = $this->getRepositoryName($criteria);
 
         return $this->container['em']
-                       ->getRepository($rep)
-                       ->findOneBy(
-                            $criteria,
-                            $order,
-                            $this->container['securityContext']
-                        );
+                    ->getRepository($rep)
+                    ->findOneBy(
+                        $criteria,
+                        $order,
+                        $this->container['securityContext']
+                    );
     }
 }

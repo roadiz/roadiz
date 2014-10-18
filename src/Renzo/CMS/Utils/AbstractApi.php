@@ -11,10 +11,12 @@
 namespace RZ\Renzo\CMS\Utils;
 
 use Pimple\Container;
+
 /**
  *
  */
-abstract class AbstractApi {
+abstract class AbstractApi
+{
 
     /*
      * DI container
@@ -24,13 +26,14 @@ abstract class AbstractApi {
     /**
      * @param Pimple\Container $container
      */
-    function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         $this->container = $container;
     }
 
     abstract public function getRepository();
 
-    abstract public function getBy( array $criteria );
+    abstract public function getBy(array $criteria);
 
-    abstract public function getOneBy( array $criteria );
+    abstract public function getOneBy(array $criteria);
 }

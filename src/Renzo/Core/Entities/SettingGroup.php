@@ -53,13 +53,15 @@ class SettingGroup extends AbstractEntity
     /**
      * @return boolean
      */
-    public function isInMenu() {
+    public function isInMenu()
+    {
         return $this->inMenu;
     }
     /**
      * @param boolean $newinMenu
      */
-    public function setInMenu($newinMenu) {
+    public function setInMenu($newinMenu)
+    {
         $this->inMenu = $newinMenu;
 
         return $this;

@@ -113,7 +113,7 @@ class NodesSourcesRepository extends EntityRepository
             $prefix = 'ns.';
 
             // Dots are forbidden in field definitions
-            $baseKey = str_replace('.','_',$key);
+            $baseKey = str_replace('.', '_', $key);
 
             if (false !== strpos($key, 'node.')) {
                 if (!$joinedNode) {
@@ -183,8 +183,8 @@ class NodesSourcesRepository extends EntityRepository
                 }
 
             } elseif (is_bool($value)) {
-               $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
-            }  elseif ($value == 'NOT NULL') {
+                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
+            } elseif ($value == 'NOT NULL') {
                 $res = $qb->expr()->isNotNull($prefix.$key);
             } elseif (isset($value)) {
                 $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
@@ -214,7 +214,7 @@ class NodesSourcesRepository extends EntityRepository
             }
 
             // Dots are forbidden in field definitions
-            $key = str_replace('.','_',$key);
+            $key = str_replace('.', '_', $key);
 
             if (is_object($value) && $value instanceof PersistableInterface) {
                 $finalQuery->setParameter($key, $value->getId());
@@ -244,8 +244,8 @@ class NodesSourcesRepository extends EntityRepository
                 }
 
             } elseif (is_bool($value)) {
-               $finalQuery->setParameter($key, $value);
-            }  elseif ($value == 'NOT NULL') {
+                $finalQuery->setParameter($key, $value);
+            } elseif ($value == 'NOT NULL') {
                 // no need to bind a parameter here
             } elseif (isset($value)) {
                 $finalQuery->setParameter($key, $value);

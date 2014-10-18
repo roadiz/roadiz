@@ -284,13 +284,15 @@ class Document extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getEmbedId() {
+    public function getEmbedId()
+    {
         return $this->embedId;
     }
     /**
      * @param string $embedId
      */
-    public function setEmbedId($embedId) {
+    public function setEmbedId($embedId)
+    {
         $this->embedId = $embedId;
 
         return $this;
@@ -303,13 +305,15 @@ class Document extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getEmbedPlatform() {
+    public function getEmbedPlatform()
+    {
         return $this->embedPlatform;
     }
     /**
      * @param string $embedPlatform
      */
-    public function setEmbedPlatform($embedPlatform) {
+    public function setEmbedPlatform($embedPlatform)
+    {
         $this->embedPlatform = $embedPlatform;
 
         return $this;

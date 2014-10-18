@@ -55,7 +55,7 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
-    public function getSearchFeed( $searchTerm, $author, $maxResults=15 )
+    public function getSearchFeed($searchTerm, $author, $maxResults = 15)
     {
         $url = "http://gdata.youtube.com/feeds/api/videos/?q=".$searchTerm."&v=2&alt=json&max-results=".$maxResults;
         if (!empty($author)) {
@@ -84,10 +84,18 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     {
         $uri = '//player.vimeo.com/video/'.$this->embedId.'?api=1';
 
-        if(isset($args['displayTitle'])) $uri .= '&title='.$args['displayTitle'];
-        if(isset($args['byline'])) $uri .= '&byline='.$args['byline'];
-        if(isset($args['portrait'])) $uri .= '&portrait='.$args['portrait'];
-        if(isset($args['color'])) $uri .= '&color='.$args['color'];
+        if (isset($args['displayTitle'])) {
+            $uri .= '&title='.$args['displayTitle'];
+        }
+        if (isset($args['byline'])) {
+            $uri .= '&byline='.$args['byline'];
+        }
+        if (isset($args['portrait'])) {
+            $uri .= '&portrait='.$args['portrait'];
+        }
+        if (isset($args['color'])) {
+            $uri .= '&color='.$args['color'];
+        }
 
         return $uri;
     }

@@ -118,14 +118,16 @@ class Node extends AbstractDateTimedPositioned
     /**
      * @return int
      */
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
     /**
      * @param int $newstatus
      */
-    public function setStatus($status) {
+    public function setStatus($status)
+    {
         $this->status = (int) $status;
 
         return $this;

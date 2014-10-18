@@ -80,7 +80,7 @@ class BackendController extends AppController
             $logoutListener = new LogoutListener(
                 $c['securityContext'],
                 $c['httpUtils'],
-                new DefaultLogoutSuccessHandler($c['httpUtils'],'/login'),
+                new DefaultLogoutSuccessHandler($c['httpUtils'], '/login'),
                 array(
                     'logout_path'    => '/rz-admin/logout',
                 )
