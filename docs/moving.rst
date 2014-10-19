@@ -22,4 +22,5 @@ Now you can perform a schema update without losing your nodes data::
 
     bin/renzo schema --update;
     bin/renzo schema --update --execute;
-    bin/renzo schema --refresh;
+
+    bin/renzo cache --clear-all

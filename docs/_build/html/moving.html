@@ -118,7 +118,8 @@
 <p>Now you can perform a schema update without losing your nodes data:</p>
 <div class="highlight-python"><div class="highlight"><pre>bin/renzo schema --update;
 bin/renzo schema --update --execute;
-bin/renzo schema --refresh;
+
+bin/renzo cache --clear-all
 </pre></div>
 </div>
 </div>

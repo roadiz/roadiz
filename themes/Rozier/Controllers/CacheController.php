@@ -45,7 +45,10 @@ class CacheController extends RozierApp
 
         if ($form->isValid()) {
 
-            SchemaCommand::refreshMetadata();
+            CacheCommand::clearDoctrine();
+            CacheCommand::clearRouteCollections();
+            CacheCommand::clearTemplates();
+
             $msg = $this->getTranslator()->trans('cache.deleted');
             $request->getSession()->getFlashBag()->add('confirm', $msg);
             $this->getService('logger')->info($msg);

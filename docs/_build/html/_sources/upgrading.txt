@@ -22,7 +22,8 @@ Then run database schema update::
 If migration summary is OK, perform the changes::
 
     bin/renzo schema --update --execute;
-    bin/renzo schema --refresh;
+
+    bin/renzo cache --clear-all
 
 Upgrading Node-types source entities
 ------------------------------------
@@ -36,4 +37,5 @@ you must *regenerate all entities* source files::
 Verify here that no data field will be removed and apply changes::
 
     bin/renzo schema --update --execute;
-    bin/renzo schema --refresh;
+
+    bin/renzo cache --clear-all

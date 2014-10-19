@@ -313,7 +313,7 @@ class InstallApp extends AppController
                 $fixtures = new Fixtures();
 
                 \RZ\Renzo\Console\SchemaCommand::createSchema();
-                \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
+                \RZ\Renzo\Console\CacheCommand::clearDoctrine();
 
                 $fixtures->installFixtures();
 
@@ -592,7 +592,7 @@ class InstallApp extends AppController
 
                     $config->writeConfiguration();
 
-                    \RZ\Renzo\Console\SchemaCommand::refreshMetadata();
+                    \RZ\Renzo\Console\CacheCommand::clearDoctrine();
 
                     /*
                      * Force redirect to avoid resending form when refreshing page

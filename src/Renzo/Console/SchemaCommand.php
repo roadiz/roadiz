@@ -40,12 +40,6 @@ class SchemaCommand extends Command
         $this->setName('schema')
             ->setDescription('Manage database schema')
             ->addOption(
-                'refresh',
-                null,
-                InputOption::VALUE_NONE,
-                'Refresh doctrine metadata cache'
-            )
-            ->addOption(
                 'update',
                 null,
                 InputOption::VALUE_NONE,
@@ -63,11 +57,6 @@ class SchemaCommand extends Command
     {
         $this->dialog = $this->getHelperSet()->get('dialog');
         $text="";
-
-        if ($input->getOption('refresh')) {
-            $text .= static::refreshMetadata();
-            $text .= '<info>Your database metadata cache has been purged…</info>'.PHP_EOL;
-        }
 
         if ($input->getOption('update')) {
 
@@ -107,78 +96,13 @@ class SchemaCommand extends Command
     }
 
     /**
-     * Refresh doctrine caches and proxies
-     * @return void
-     */
-    public static function refreshMetadata()
-    {
-        $text = '';
-        // Empty result cache
-        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
-        if ($cacheDriver !== null) {
-            $text .= 'Result cache: '.$cacheDriver->getNamespace().' — ';
-            $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
-            $text .= PHP_EOL;
-        }
-
-        // Empty hydratation cache
-        $cacheDriver = Kernel::getService('em')->getConfiguration()->getHydrationCacheImpl();
-        if ($cacheDriver !== null) {
-            $text .= 'Hydratation cache: '.$cacheDriver->getNamespace().' — ';
-            $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
-            $text .= PHP_EOL;
-        }
-
-        // Empty query cache
-        $cacheDriver = Kernel::getService('em')->getConfiguration()->getQueryCacheImpl();
-        if ($cacheDriver !== null) {
-            $text .= 'Query cache: '.$cacheDriver->getNamespace().' — ';
-            $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
-            $text .= PHP_EOL;
-        }
-
-        // Empty metadata cache
-        $cacheDriver = Kernel::getService('em')->getConfiguration()->getMetadataCacheImpl();
-        if ($cacheDriver !== null) {
-            $text .= 'Metadata cache: '.$cacheDriver->getNamespace().' — ';
-            $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
-            $text .= PHP_EOL;
-        }
-
-        /*
-         * Recreate proxies files
-         */
-        $fs = new Filesystem();
-        $finder = new Finder();
-        $finder->files()->in(RENZO_ROOT . '/sources/Proxies');
-        $fs->remove($finder);
-
-        $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
-        $proxyFactory = Kernel::getService('em')->getProxyFactory();
-        $proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/sources/Proxies');
-        $text .= '<info>Doctrine proxy classes has been purged…</info>'.PHP_EOL;
-
-        /*
-         * Recreate proxies files
-         */
-        $fs = new Filesystem();
-        $finder = new Finder();
-        $finder->files()->in(RENZO_ROOT . '/sources/Compiled');
-        $fs->remove($finder);
-
-        $text .= '<info>Compiled route collections have been purged…</info>'.PHP_EOL;
-
-        return $text;
-    }
-
-    /**
      * Update database schema.
      *
      * @return boolean
      */
     public static function updateSchema()
     {
-        static::refreshMetadata();
+        CacheCommand::clearDoctrine();
 
         $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
@@ -212,7 +136,7 @@ class SchemaCommand extends Command
      */
     public static function getUpdateSchema()
     {
-        static::refreshMetadata();
+        CacheCommand::clearDoctrine();
 
         $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();

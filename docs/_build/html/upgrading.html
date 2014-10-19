@@ -120,7 +120,8 @@ git pull origin master;
 </div>
 <p>If migration summary is OK, perform the changes:</p>
 <div class="highlight-python"><div class="highlight"><pre>bin/renzo schema --update --execute;
-bin/renzo schema --refresh;
+
+bin/renzo cache --clear-all
 </pre></div>
 </div>
 <div class="section" id="upgrading-node-types-source-entities">
@@ -133,7 +134,8 @@ bin/renzo schema --update;
 </div>
 <p>Verify here that no data field will be removed and apply changes:</p>
 <div class="highlight-python"><div class="highlight"><pre>bin/renzo schema --update --execute;
-bin/renzo schema --refresh;
+
+bin/renzo cache --clear-all
 </pre></div>
 </div>
 </div>

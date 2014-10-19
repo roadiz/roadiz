@@ -184,6 +184,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $application->add(new \RZ\Renzo\Console\UsersCommand);
         $application->add(new \RZ\Renzo\Console\RequirementsCommand);
         $application->add(new \RZ\Renzo\Console\SolrCommand);
+        $application->add(new \RZ\Renzo\Console\CacheCommand);
 
         $application->run();
 
