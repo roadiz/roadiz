@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
@@ -8,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; Renzo 0.1 documentation</title>
+  <title>Moving a website to another server &mdash; Renzo 0.1 documentation</title>
   
 
   
@@ -29,7 +28,8 @@
   
 
   
-    <link rel="top" title="Renzo 0.1 documentation" href="index.html"/> 
+    <link rel="top" title="Renzo 0.1 documentation" href="index.html"/>
+        <link rel="prev" title="Upgrading" href="upgrading.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -56,7 +56,7 @@
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
         
         
-            <ul>
+            <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#prepare-your-files">Prepare your files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#prepare-your-server">Prepare your server</a></li>
@@ -66,7 +66,7 @@
 <li class="toctree-l2"><a class="reference internal" href="upgrading.html#upgrading-node-types-source-entities">Upgrading Node-types source entities</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="moving.html">Moving a website to another server</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Moving a website to another server</a></li>
 </ul>
 
         
@@ -90,8 +90,10 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li></li>
+    <li>Moving a website to another server</li>
       <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/moving.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
@@ -99,16 +101,38 @@
 </div>
           <div role="main">
             
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <div class="section" id="moving-a-website-to-another-server">
+<span id="moving"></span><h1>Moving a website to another server<a class="headerlink" href="#moving-a-website-to-another-server" title="Permalink to this headline">¶</a></h1>
+<p>Before moving your website, make sure you have backed up your data:</p>
+<ul class="simple">
+<li>Dump your database, using <cite>mysql_dump</cite> or <cite>pg_dump</cite> tools.</li>
+<li>Archive your <cite>/files</cite> folder, it will contain all your documents and font files</li>
+</ul>
+<p>From this point you can install your new webserver, as described in <a class="reference internal" href="getting_started.html#getting-started"><em>Install section</em></a>.</p>
+<p>Then import your dump and files into your new server.</p>
+<p>Once you’ve imported your database, you must edit manually your <cite>conf/config.json</cite>, you can reuse the former server’s one and adapt its database credentials. <strong>Do not perform any schema update now</strong>, it will erase your NodesSources data as their entities files haven’t been generated yet.</p>
+<p>When you’ve edited your <cite>conf/config.json</cite> file, regenerate your entities source files:</p>
+<div class="highlight-python"><div class="highlight"><pre>bin/renzo core:node:types --regenerateAllEntities;
+</pre></div>
+</div>
+<p>Now you can perform a schema update without losing your nodes data:</p>
+<div class="highlight-python"><div class="highlight"><pre>bin/renzo schema --update;
+bin/renzo schema --update --execute;
+bin/renzo schema --refresh;
+</pre></div>
+</div>
 </div>
 
 
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="upgrading.html" class="btn btn-neutral" title="Upgrading"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

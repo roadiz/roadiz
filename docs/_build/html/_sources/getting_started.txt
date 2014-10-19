@@ -1,3 +1,5 @@
+.. _getting-started:
+
 ===============
 Getting started
 ===============
@@ -10,7 +12,7 @@ First of all, download RZCMS latest version using Git::
     cd your/webroot/folder;
     git clone xxxxxxxxxxxx ./;
 
-Use *Composer* to download dependancies::
+Use `Composer <https://getcomposer.org/doc/00-intro.md#globally>`_ to download dependancies::
 
     composer install;
 

@@ -1,3 +1,5 @@
+.. _upgrading:
+
 =========
 Upgrading
 =========
@@ -23,7 +25,7 @@ If migration summary is OK, perform the changes::
     bin/renzo schema --refresh;
 
 Upgrading Node-types source entities
-++++++++++++++++++++++++++++++++++++
+------------------------------------
 
 If some Doctrine errors occur about some fields missing in your *NodesSources*,
 you must *regenerate all entities* source files::
