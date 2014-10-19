@@ -158,6 +158,16 @@ class SchemaCommand extends Command
         $proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/sources/Proxies');
         $text .= '<info>Doctrine proxy classes has been purged…</info>'.PHP_EOL;
 
+        /*
+         * Recreate proxies files
+         */
+        $fs = new Filesystem();
+        $finder = new Finder();
+        $finder->files()->in(RENZO_ROOT . '/sources/Compiled');
+        $fs->remove($finder);
+
+        $text .= '<info>Compiled route collections have been purged…</info>'.PHP_EOL;
+
         return $text;
     }
 
