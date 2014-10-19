@@ -119,32 +119,30 @@ class SchemaCommand extends Command
             $text .= 'Result cache: '.$cacheDriver->getNamespace().' — ';
             $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
             $text .= PHP_EOL;
-        } else {
-            // Empty hydratation cache
-            $cacheDriver = Kernel::getService('em')->getConfiguration()->getHydrationCacheImpl();
-            if ($cacheDriver !== null) {
-                $text .= 'Hydratation cache: '.$cacheDriver->getNamespace().' — ';
-                $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
-                $text .= PHP_EOL;
-            } else {
+        }
 
-                // Empty query cache
-                $cacheDriver = Kernel::getService('em')->getConfiguration()->getQueryCacheImpl();
-                if ($cacheDriver !== null) {
-                    $text .= 'Query cache: '.$cacheDriver->getNamespace().' — ';
-                    $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
-                    $text .= PHP_EOL;
-                } else {
+        // Empty hydratation cache
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getHydrationCacheImpl();
+        if ($cacheDriver !== null) {
+            $text .= 'Hydratation cache: '.$cacheDriver->getNamespace().' — ';
+            $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
+            $text .= PHP_EOL;
+        }
 
-                    // Empty metadata cache
-                    $cacheDriver = Kernel::getService('em')->getConfiguration()->getMetadataCacheImpl();
-                    if ($cacheDriver !== null) {
-                        $text .= 'Metadata cache: '.$cacheDriver->getNamespace().' — ';
-                        $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
-                        $text .= PHP_EOL;
-                    }
-                }
-            }
+        // Empty query cache
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getQueryCacheImpl();
+        if ($cacheDriver !== null) {
+            $text .= 'Query cache: '.$cacheDriver->getNamespace().' — ';
+            $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
+            $text .= PHP_EOL;
+        }
+
+        // Empty metadata cache
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getMetadataCacheImpl();
+        if ($cacheDriver !== null) {
+            $text .= 'Metadata cache: '.$cacheDriver->getNamespace().' — ';
+            $text .= $cacheDriver->deleteAll() ? 'OK' : 'FAIL';
+            $text .= PHP_EOL;
         }
 
         /*
@@ -158,7 +156,9 @@ class SchemaCommand extends Command
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
         $proxyFactory = Kernel::getService('em')->getProxyFactory();
         $proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/sources/Proxies');
-        $text .= '<info>Doctrine proxiy classes has been purged…</info>'.PHP_EOL;
+        $text .= '<info>Doctrine proxy classes has been purged…</info>'.PHP_EOL;
+
+        return $text;
     }
 
     /**
