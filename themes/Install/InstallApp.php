@@ -386,7 +386,7 @@ class InstallApp extends AppController
                     return $response->send();
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+                    $this->assignation['errorMessage'] = $e->getMessage();
                 }
 
             }
