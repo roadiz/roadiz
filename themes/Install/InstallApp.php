@@ -440,11 +440,35 @@ class InstallApp extends AppController
     public function themeInstallAction(Request $request)
     {
         $array = explode('\\', $request->get("classname"));
+        $data = json_decode(file_get_contents(RENZO_ROOT . "/themes/". $array[2] . "/config.json"), true);
         $fix = new Fixtures();
-        $data = array("className" => $request->get("classname"));
+        $data["className"] = $request->get("classname");
         $fix->installTheme($data);
         $theme = $this->getService("em")->getRepository("RZ\Renzo\Core\Entities\Theme")
                       ->findOneByClassName($request->get("classname"));
+
+        $installedLanguage = $this->getService("em")->getRepository("RZ\Renzo\Core\Entities\Translation")
+                                  ->findAll();
+
+        foreach ($installedLanguage as $key => $locale) {
+            $installedLanguage[$key] = $locale->getLocale();
+        }
+
+        $exist = false;
+        foreach ($data["supportedLocale"] as $locale) {
+            if (in_array($locale, $installedLanguage)) {
+                $exist = true;
+            }
+        }
+
+        if ($exist == false) {
+            $newTranslation = new Translation();
+            $newTranslation->setLocale($data["supportedLocale"][0]);
+            $newTranslation->setName(Translation::$availableLocales[$data["supportedLocale"][0]]);
+            $this->getService('em')->persist($newTranslation);
+            $this->getService('em')->flush();
+        }
+
 
         $response = new RedirectResponse(
             $this->getService('urlGenerator')->generate(
