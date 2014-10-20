@@ -4,7 +4,7 @@
     "copyright": "REZO ZERO",
     "themeDir": "DefaultTheme",
 
-    "supportedLocale": ["en", "fr"],
+    "supportedLocale": ["en"],
 
     "versionRequire": "1.0.1",
 
@@ -12,6 +12,7 @@
         "roles": [],
         "groups": [],
         "settings": [],
-        "nodetypes": ["Resources/import/nodetype/page.rzt"]
+        "nodetypes": ["Resources/import/nodetype/page.rzt"],
+        "nodes": ["Resources/import/node/node-home.rzn"]
     }
 }

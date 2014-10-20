@@ -215,7 +215,7 @@ class InstallApp extends AppController
         $this->assignation["themeId"] = $id;
 
         return new Response(
-            $this->getTwig()->render('steps/importNodeType.html.twig', $this->assignation),
+            $this->getTwig()->render('steps/importTheme.html.twig', $this->assignation),
             Response::HTTP_OK,
             array('content-type' => 'text/html')
         );

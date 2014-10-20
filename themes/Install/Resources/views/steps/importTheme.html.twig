@@ -107,13 +107,15 @@
                         <th>{% trans %}step.name{% endtrans %}</th>
                         <th>{% trans %}status{% endtrans %}</th>
                     </tr>
+                    {% for node in nodes %}
                         <tr>
                             <td></td>
-                            <td>Nodes</td>
+                            <td>{{ node|trans }}</td>
                             <td>
-                                <div class="uk-badge uk-badge-notification" id="Nodes"><i class="uk-icon-circle-o"></i></div>
+                                <div class="uk-badge uk-badge-notification" id="{{ node|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
                             </td>
                         </tr>
+                    {% endfor %}
                 </table>
                 {% endif %}
             </div>
@@ -149,7 +151,9 @@
         {% for nodetype in nodetypes %}
         Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodeTypes', {'filename': nodetype, 'themeId': themeId}) }}",'id':'{{ nodetype|replace({'/': '_', '.': '_'}) }}'});
         {% endfor %}
-        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodes') }}",'id':"Nodes"});
+        {% for node in nodes %}
+        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodes', {'filename': node, 'themeId': themeId}) }}",'id':'{{ node|replace({'/': '_', '.': '_'}) }}'});
+        {% endfor %}
     })();
 </script>
 {% endblock %}

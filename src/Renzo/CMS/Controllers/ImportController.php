@@ -128,53 +128,55 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importNodesAction(Request $request)
+    public static function importNodesAction(Request $request, $filename, $themeId = null)
     {
-        $data = array();
-        $data['status'] = false;
+        // $data = array();
+        // $data['status'] = false;
 
-        $allNode = Kernel::getService('em')
-                         ->getRepository('RZ\Renzo\Core\Entities\Node')
-                         ->findAll();
-        try {
-            if (empty($allNode)) {
-                $home = array(
-                    'title' => 'Home',
-                    'content' => 'sample content'
-                );
-                $about = array(
-                    'title' => 'About',
-                    'content' => 'sample about'
-                );
-                $contact = array(
-                    'title' => 'Contact',
-                    'content' => 'Contact RZ team for more awesome stuff'
-                );
+        // $allNode = Kernel::getService('em')
+        //                  ->getRepository('RZ\Renzo\Core\Entities\Node')
+        //                  ->findAll();
+        // try {
+        //     if (empty($allNode)) {
+        //         $home = array(
+        //             'title' => 'Home',
+        //             'content' => 'sample content'
+        //         );
+        //         $about = array(
+        //             'title' => 'About',
+        //             'content' => 'sample about'
+        //         );
+        //         $contact = array(
+        //             'title' => 'Contact',
+        //             'content' => 'Contact RZ team for more awesome stuff'
+        //         );
 
-                $homeNode = static::createNode($home);
-                $aboutNode = static::createNode($about);
-                $contactNode = static::createNode($contact);
+        //         $homeNode = static::createNode($home);
+        //         $aboutNode = static::createNode($about);
+        //         $contactNode = static::createNode($contact);
 
-                $homeNode->setHome(true);
-                $aboutNode->setParent($homeNode);
-                $contactNode->setParent($homeNode);
+        //         $homeNode->setHome(true);
+        //         $aboutNode->setParent($homeNode);
+        //         $contactNode->setParent($homeNode);
 
-                Kernel::getService('em')->flush();
-            }
-        } catch (\Exception $e) {
-            $data['error'] = $e->getMessage();
-            return new Response(
-                json_encode($data),
-                Response::HTTP_NOT_FOUND,
-                array('content-type' => 'application/javascript')
-            );
-        }
-        $data['status'] = true;
-        return new Response(
-            json_encode($data),
-            Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
-        );
+        //         Kernel::getService('em')->flush();
+        //     }
+        // } catch (\Exception $e) {
+        //     $data['error'] = $e->getMessage();
+        //     return new Response(
+        //         json_encode($data),
+        //         Response::HTTP_NOT_FOUND,
+        //         array('content-type' => 'application/javascript')
+        //     );
+        // }
+        // $data['status'] = true;
+        // return new Response(
+        //     json_encode($data),
+        //     Response::HTTP_OK,
+        //     array('content-type' => 'application/javascript')
+        // );
+        $classImporter = "RZ\Renzo\CMS\Importers\NodesImporter";
+        return self::importContent($filename, $classImporter, $themeId);
     }
 
     /**

@@ -12,6 +12,9 @@
 namespace RZ\Renzo\Core\Serializers;
 
 use RZ\Renzo\Core\Entities\Node;
+use RZ\Renzo\Core\Entities\NodeType;
+use RZ\Renzo\Core\Entities\NodesSources;
+use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Serializers\EntitySerializer;
 use RZ\Renzo\Core\Kernel;
 
@@ -40,7 +43,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         $data['node_type'] =                $node->getNodeType()->getName();
         $data['home'] =                     $node->isHome();
         $data['visible'] =                  $node->isVisible();
-        $data['published'] =                $node->isPublished();
+        $data['status'] =                   $node->getStatus();
         $data['locked'] =                   $node->isLocked();
         $data['priority'] =                 $node->getPriority();
         $data['hiding_children'] =          $node->isHidingChildren();
@@ -66,6 +69,62 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         return $data;
     }
 
+    private static function makeNodeRec($data) {
+        $nodetype = Kernel::getInstance()->getService('em')
+                    ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+                    ->findOneByName($data["node_type"]);
+
+        $node = new Node($nodetype);
+        $node->setNodeName($data['node_name']);
+        $node->setHome($data['home']);
+        $node->setVisible($data['visible']);
+        $node->setStatus($data['status']);
+        $node->setLocked($data['locked']);
+        $node->setPriority($data['priority']);
+        $node->setHidingChildren($data['hiding_children']);
+        $node->setArchived($data['archived']);
+        $node->setSterile($data['sterile']);
+        $node->setChildrenOrder($data['children_order']);
+        $node->setChildrenOrderDirection($data['children_order_direction']);
+
+        foreach ($data["nodes_sources"] as $source) {
+            $trans = new Translation();
+            $trans->setLocale($source['translation']);
+            $trans->setName(Translation::$availableLocales[$source['translation']]);
+
+            $namespace = NodeType::getGeneratedEntitiesNamespace();
+            $classname = $nodetype->getSourceEntityClassName();
+            $class = $namespace."\\".$classname;
+
+            $nodeSource = new $class($node, $trans);
+            $nodeSource->setTitle($source["title"]);
+            $nodeSource->setMetaTitle($source["meta_title"]);
+            $nodeSource->setMetaKeywords($source["meta_keywords"]);
+            $nodeSource->setMetaDescription($source["meta_description"]);
+
+            $fields = $nodetype->getFields();
+
+            foreach ($fields as $field) {
+                if (!$field->isVirtual()) {
+                    $setter = $field->getSetterName();
+                    $nodeSource->$setter($source[$field->getName()]);
+                }
+            }
+
+            foreach ($source['url_aliases'] as $url) {
+                $alias = new UrlAlias();
+                $alias->setAlias($url['alias']);
+                $nodeSource->addUrlAlias($alias);
+            }
+            $node->getNodeSources()->add($nodeSource);
+        }
+        foreach ($data['children'] as $child) {
+            $tmp = static::makeNodeRec($child);
+            $node->addChild($tmp);
+        }
+        return $node;
+    }
+
     /**
      * Deserializes a Json into readable datas.
      *
@@ -75,25 +134,8 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      */
     public static function deserialize($string)
     {
-        $encoder = new JsonEncoder();
-        $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes(array(
-            'node_name',
-            'home',
-            'visible',
-            'published',
-            'locked',
-            'priority',
-            'hiding_children',
-            'archived',
-            'sterile',
-            'children_order',
-            'children_order_direction'
-        ));
+        $data = json_decode($string, true);
 
-        $serializer = new Serializer(array($normalizer), array($encoder));
-        $node = $serializer->deserialize($string, 'RZ\Renzo\Core\Entities\Node', 'json');
-
-        return $node;
+        return static::makeNodeRec($data);
     }
 }
