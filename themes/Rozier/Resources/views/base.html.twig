@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/addons/uikit.addons.min.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/bootstrap3/bootstrap-switch.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/codemirror.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/style.min.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.css[0] }}" />
         <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
@@ -62,6 +62,7 @@
         <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.1.1.min.js"><\/script>')</script>
 
         {% if head.devMode %}
+        <script src="{{ head.resourcesUrl }}js/vendor/TweenMax.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/mousetrap.min.js"></script>
@@ -75,18 +76,18 @@
         <script src="{{ head.resourcesUrl }}js/vendor/mode/xml/xml.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/mode/gfm/gfm.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/marked.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/htmleditor.min.js"></script>
-
+        <script src="{{ head.resourcesUrl }}js/addons/htmleditor.js"></script><!-- Switch to .min.js on prod -->
         <script src="{{ head.resourcesUrl }}js/vendor/dropzone.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/documentWidget.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/saveButtons.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/nodeStatuses.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/childrenNodesField.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/markdownEditor.js"></script>
         <script src="{{ head.resourcesUrl }}js/lazyload.js"></script>
         <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
         <script src="{{ head.resourcesUrl }}js/main.js"></script>
         {% else %}
-        <script src="{{ head.resourcesUrl }}dist/rozier-backend-theme.min.js"></script>
+        <script src="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.js[0] }}"></script>
         {% endif %}
 
         <script type="text/javascript">

@@ -306,7 +306,7 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 	 * When dropping to route
 	 * set parentTagId to NULL
 	 */
-	if(isNaN(parent_tag_id)){
+	if(isNaN(parent_tag_id)){ 
 		parent_tag_id = null;
 	}
 	postData.newParent = parent_tag_id;

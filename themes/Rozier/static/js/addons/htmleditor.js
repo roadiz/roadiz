@@ -1,4 +1,3 @@
-/*! UIkit 2.11.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -28,7 +27,7 @@
             maxsplitsize : 1000,
             markedOptions: { gfm: true, tables: true, breaks: true, pedantic: true, sanitize: false, smartLists: true, smartypants: false, langPrefix: 'lang-'},
             codemirror   : { mode: 'htmlmixed', lineWrapping: true, dragDrop: false, autoCloseTags: true, matchTags: true, autoCloseBrackets: true, matchBrackets: true, indentUnit: 4, indentWithTabs: false, tabSize: 4, hintOptions: {completionSingle:false} },
-            toolbar      : [ 'bold', 'italic', 'strike', 'link', 'image', 'blockquote', 'listUl', 'listOl' ],
+            toolbar      : [ 'h2', 'h3', 'h4', 'h5', 'h6', 'bold', 'italic', 'listUl', 'listOl', 'back', 'nbsp', 'hr', 'blockquote', 'link' ], // 'image', 'strike',
             lblPreview   : 'Preview',
             lblCodeview  : 'HTML',
             lblMarkedview: 'Markdown'
@@ -217,7 +216,7 @@
 
                 var title = $this.buttons[button].title ? $this.buttons[button].title : button;
 
-                bar.push('<li><a data-htmleditor-button="'+button+'" title="'+title+'" data-uk-tooltip>'+$this.buttons[button].label+'</a></li>');
+                bar.push('<li class="uk-htmleditor-button-cont-'+button+'"><a class="uk-htmleditor-button-'+button+'" data-htmleditor-button="'+button+'" title="'+title+'" data-uk-tooltip>'+$this.buttons[button].label+'</a></li>');
             });
 
             this.toolbar.html(bar.join('\n'));
@@ -355,9 +354,9 @@
                 '<ul class="uk-htmleditor-navbar-nav uk-htmleditor-toolbar"></ul>',
                 '<div class="uk-htmleditor-navbar-flip">',
                     '<ul class="uk-htmleditor-navbar-nav">',
-                        '<li class="uk-htmleditor-button-code"><a>{:lblCodeview}</a></li>',
-                        '<li class="uk-htmleditor-button-preview"><a>{:lblPreview}</a></li>',
-                        '<li><a data-htmleditor-button="fullscreen"><i class="uk-icon-expand"></i></a></li>',
+                        '<li class="uk-htmleditor-button-code"><a class="uk-htmleditor-button-link-code-preview uk-htmleditor-button-link-code" title="Markdown" data-uk-tooltip>{:lblCodeview}</a></li>',
+                        '<li class="uk-htmleditor-button-preview"><a class="uk-htmleditor-button-link-code-preview uk-htmleditor-button-link-preview" title="Preview" data-uk-tooltip><i class="uk-icon-rz-visibility"></i></a></li>', // {:lblPreview}
+                        '<li class="uk-htmleditor-button-fullscreen"><a class="uk-htmleditor-button-link-fullscreen" data-htmleditor-button="fullscreen"><i class="uk-icon-expand"></i></a></li>',
                     '</ul>',
                 '</div>',
             '</div>',
@@ -375,44 +374,91 @@
 
             editor.addButtons({
 
+                h2: {
+                    title  : 'H2',
+                    label  : '<i class="uk-icon-rz-h2"></i>'
+                },
+                h3: {
+                    title  : 'H3',
+                    label  : '<i class="uk-icon-rz-h3"></i>'
+                },
+                h4: {
+                    title  : 'H4',
+                    label  : '<i class="uk-icon-rz-h4"></i>'
+                },
+                h4: {
+                    title  : 'H4',
+                    label  : '<i class="uk-icon-rz-h4"></i>'
+                },
+                h5: {
+                    title  : 'H5',
+                    label  : '<i class="uk-icon-rz-h5"></i>'
+                },
+                h6: {
+                    title  : 'H6',
+                    label  : '<i class="uk-icon-rz-h6"></i>'
+                },
                 fullscreen: {
                     title  : 'Fullscreen',
-                    label  : '<i class="uk-icon-expand"></i>'
+                    label  : '<i class="uk-icon-rz-expand"></i>'
                 },
                 bold : {
                     title  : 'Bold',
-                    label  : '<i class="uk-icon-bold"></i>'
+                    label  : '<i class="uk-icon-rz-bold"></i>'
                 },
                 italic : {
                     title  : 'Italic',
-                    label  : '<i class="uk-icon-italic"></i>'
+                    label  : '<i class="uk-icon-rz-italic"></i>'
                 },
                 strike : {
                     title  : 'Strikethrough',
-                    label  : '<i class="uk-icon-strikethrough"></i>'
+                    label  : '<i class="uk-icon-rz-strikethrough"></i>'
                 },
                 blockquote : {
                     title  : 'Blockquote',
-                    label  : '<i class="uk-icon-quote-right"></i>'
+                    label  : '<i class="uk-icon-rz-quote"></i>'
                 },
                 link : {
                     title  : 'Link',
-                    label  : '<i class="uk-icon-link"></i>'
+                    label  : '<i class="uk-icon-rz-link"></i>'
                 },
                 image : {
                     title  : 'Image',
-                    label  : '<i class="uk-icon-picture-o"></i>'
+                    label  : '<i class="uk-icon-rz-documents"></i>'
                 },
                 listUl : {
                     title  : 'Unordered List',
-                    label  : '<i class="uk-icon-list-ul"></i>'
+                    label  : '<i class="uk-icon-rz-unordered-list"></i>'
                 },
                 listOl : {
                     title  : 'Ordered List',
-                    label  : '<i class="uk-icon-list-ol"></i>'
+                    label  : '<i class="uk-icon-rz-ordered-list"></i>'
+                },
+                back : {
+                    title  : 'Back',
+                    label  : '<i class="uk-icon-rz-back"></i>'
+                },
+                hr : {
+                    title  : 'Separator',
+                    label  : '<i class="uk-icon-rz-hr"></i>'
+                },
+                nbsp : {
+                    title  : 'Non-breaking space',
+                    label  : '<i class="uk-icon-rz-space-forced"></i>'
                 }
 
             });
+
+            addAction('h2', '<h2>$1</h2>');
+            addAction('h3', '<h3>$1</h3>');
+            addAction('h4', '<h4>$1</h4>');
+            addAction('h5', '<h5>$1</h5>');
+            addAction('h6', '<h6>$1</h6>');
+
+            addAction('back', '$1<br/>');
+            addAction('paragraph', '$1<br/>');
+            addAction('hr', '$1 <hr />');
+            addAction('nbsp', '$1&nbsp;');
 
             addAction('bold', '<strong>$1</strong>');
             addAction('italic', '<em>$1</em>');
@@ -471,7 +517,6 @@
                 }, 50);
             });
 
-            editor.addShortcut(['Ctrl-S', 'Cmd-S'], function() { editor.element.trigger('htmleditor-save', [editor]); });
             editor.addShortcutAction('bold', ['Ctrl-B', 'Cmd-B']);
 
             function addAction(name, replace, mode) {
@@ -497,6 +542,16 @@
             if (editor.options.markdown) {
                 enableMarkdown()
             }
+
+            addAction('h2', '##$1');
+            addAction('h3', '###$1');
+            addAction('h4', '####$1');
+            addAction('h5', '#####$1');
+            addAction('h6', '######$1');
+
+            addAction('back', '$1   \n');
+            addAction('hr', '$1 \n\n---\n\n');
+            addAction('nbsp', '$1 ');
 
             addAction('bold', '**$1**');
             addAction('italic', '*$1*');
@@ -586,7 +641,7 @@
 
             function enableMarkdown() {
                 editor.editor.setOption('mode', 'gfm');
-                editor.htmleditor.find('.uk-htmleditor-button-code a').html(editor.options.lblMarkedview);
+                editor.htmleditor.find('.uk-htmleditor-button-code a').html('<i class="uk-icon-rz-visibility"></i>');
             }
 
             function addAction(name, replace, mode) {

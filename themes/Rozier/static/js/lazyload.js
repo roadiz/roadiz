@@ -114,6 +114,7 @@ Lazyload.prototype.generalBind = function() {
     new DocumentWidget();
     new ChildrenNodesField();
     new SaveButtons();
+    new MarkdownEditor();
 
 
     // Init markdown-preview
