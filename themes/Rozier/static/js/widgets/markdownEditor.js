@@ -58,10 +58,9 @@ MarkdownEditor.prototype.buttonPreviewClick = function(e){
     _this.$buttonCode[index].style.display = 'block';
     TweenLite.to(_this.$buttonCode[index], 0.5, {opacity:1, ease:Expo.easeOut});
 
-    TweenLite.to(_this.$buttonPreview[index], 0.5, {opacity:0, ease:Expo.easeOut});
-    setTimeout(function(){
+    TweenLite.to(_this.$buttonPreview[index], 0.5, {opacity:0, ease:Expo.easeOut, onComplete:function(){
         _this.$buttonPreview[index].style.display = 'none';
-    }, 500);
+    }});
 
 };
 
@@ -78,10 +77,9 @@ MarkdownEditor.prototype.buttonCodeClick = function(e){
     _this.$buttonPreview[index].style.display = 'block';
     TweenLite.to(_this.$buttonPreview[index], 0.5, {opacity:1, ease:Expo.easeOut});
 
-    TweenLite.to(_this.$buttonCode[index], 0.5, {opacity:0, ease:Expo.easeOut});
-    setTimeout(function(){
+    TweenLite.to(_this.$buttonCode[index], 0.5, {opacity:0, ease:Expo.easeOut, onComplete:function(){
         _this.$buttonCode[index].style.display = 'none';
-    }, 500);
+    }});
 
 };
 
