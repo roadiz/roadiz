@@ -6,16 +6,16 @@
 
         {% if node.isDeleted %}
         <div class="no-subnav trash">
-            <span class="label"><span class="label-text">{% trans %}undelete{% endtrans %}</span></span>
             <a class="uk-button uk-button-primary uk-button-danger" href="{{ path('nodesUndeletePage', { nodeId: node.getId}) }}">
-                <i class="uk-icon-rz-untrash"></i>
+                <span class="icon-container"><i class="uk-icon-rz-untrash"></i></span>
+                <span class="label"><span class="label-text">{% trans %}undelete{% endtrans %}</span></span>
             </a>
         </div>
         {% else %}
         <div class="no-subnav trash">
-            <span class="label"><span class="label-text">{% trans %}delete{% endtrans %}</span></span>
             <a class="uk-button uk-button-primary uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}">
-                <i class="uk-icon-rz-trash"></i>
+                <span class="icon-container"><i class="uk-icon-rz-trash"></i></span>
+                <span class="label"><span class="label-text">{% trans %}delete{% endtrans %}</span></span>
             </a>
         </div>
         {% endif %}

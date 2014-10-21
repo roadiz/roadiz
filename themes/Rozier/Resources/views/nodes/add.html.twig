@@ -14,7 +14,11 @@
     	{% form_theme form 'forms.html.twig' %}
     	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
     	    {{ form_widget(form) }}
-    	    <input class="uk-button uk-button-primary" type="submit" />
+            {% spaceless %}
+            <button class="uk-button uk-button-primary" type="submit">
+                <i class="uk-icon-plus"></i> {% trans %}add.node{% endtrans %}
+            </button>
+            {% endspaceless %}
     	</form>
     </article>
 

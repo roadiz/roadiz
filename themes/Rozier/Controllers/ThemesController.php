@@ -154,6 +154,7 @@ class ThemesController extends RozierApp
             }
 
             $this->assignation['form'] = $form->createView();
+            $this->assignation['theme'] = $theme;
 
             return new Response(
                 $this->getTwig()->render('themes/edit.html.twig', $this->assignation),
@@ -213,6 +214,7 @@ class ThemesController extends RozierApp
             }
 
             $this->assignation['form'] = $form->createView();
+            $this->assignation['theme'] = $theme;
 
             return new Response(
                 $this->getTwig()->render('themes/delete.html.twig', $this->assignation),
