@@ -442,7 +442,7 @@ class NodeRepository extends EntityRepository
         try {
             return $finalQuery->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
-            return null;
+            return new ArrayCollection();
         }
     }
     /**

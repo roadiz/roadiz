@@ -86,7 +86,7 @@ class ImportController extends InstallApp
     }
 
     /**
-     * Import NodeType's Groups file.
+     * Import NodeTypes file.
      *
      * @param int $themeId
      *
@@ -99,27 +99,18 @@ class ImportController extends InstallApp
         return self::importContent($filename, $classImporter, $themeId);
     }
 
-    public static function createNode($array)
+    /**
+     * Import Tags file.
+     *
+     * @param int $themeId
+     *
+     * @return string
+     */
+    public static function importTagsAction(Request $request, $filename, $themeId = null)
     {
-        $nodeType = Kernel::getService('em')
-                              ->getRepository('RZ\Renzo\Core\Entities\NodeType')
-                              ->findOneByName('Page');
-        $node = new Node($nodeType);
-        $node->setNodeName($array['title']);
-        $node->setPublished(true);
-
-        Kernel::getService('em')->persist($node);
-
-        $tran = Kernel::getService('em')
-                          ->getRepository('RZ\Renzo\Core\Entities\Translation')
-                          ->findDefault();
-        $src = new NSPage($node, $tran);
-        $src->setTitle($array['title']);
-        $src->setContent($array['content']);
-
-        Kernel::getService('em')->persist($src);
-
-        return $node;
+        #$pathFile = '/Resources/import/nodetype/' . basename($filename) . '.rzt';
+        $classImporter = "RZ\Renzo\CMS\Importers\TagsImporter";
+        return self::importContent($filename, $classImporter, $themeId);
     }
 
     /**
@@ -130,51 +121,6 @@ class ImportController extends InstallApp
      */
     public static function importNodesAction(Request $request, $filename, $themeId = null)
     {
-        // $data = array();
-        // $data['status'] = false;
-
-        // $allNode = Kernel::getService('em')
-        //                  ->getRepository('RZ\Renzo\Core\Entities\Node')
-        //                  ->findAll();
-        // try {
-        //     if (empty($allNode)) {
-        //         $home = array(
-        //             'title' => 'Home',
-        //             'content' => 'sample content'
-        //         );
-        //         $about = array(
-        //             'title' => 'About',
-        //             'content' => 'sample about'
-        //         );
-        //         $contact = array(
-        //             'title' => 'Contact',
-        //             'content' => 'Contact RZ team for more awesome stuff'
-        //         );
-
-        //         $homeNode = static::createNode($home);
-        //         $aboutNode = static::createNode($about);
-        //         $contactNode = static::createNode($contact);
-
-        //         $homeNode->setHome(true);
-        //         $aboutNode->setParent($homeNode);
-        //         $contactNode->setParent($homeNode);
-
-        //         Kernel::getService('em')->flush();
-        //     }
-        // } catch (\Exception $e) {
-        //     $data['error'] = $e->getMessage();
-        //     return new Response(
-        //         json_encode($data),
-        //         Response::HTTP_NOT_FOUND,
-        //         array('content-type' => 'application/javascript')
-        //     );
-        // }
-        // $data['status'] = true;
-        // return new Response(
-        //     json_encode($data),
-        //     Response::HTTP_OK,
-        //     array('content-type' => 'application/javascript')
-        // );
         $classImporter = "RZ\Renzo\CMS\Importers\NodesImporter";
         return self::importContent($filename, $classImporter, $themeId);
     }

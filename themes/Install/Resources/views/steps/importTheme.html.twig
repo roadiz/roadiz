@@ -99,6 +99,25 @@
                     {% endfor %}
                 </table>
                 {% endif %}
+                {% if nodetypes|length > 0 %}
+                <h4 class="import-nodetypes-part">{% trans %}import_node_type.tag{% endtrans %}</h4>
+                <table class="install-table import-nodetypes-part1-table uk-table">
+                    <tr>
+                        <th></th>
+                        <th>{% trans %}step.name{% endtrans %}</th>
+                        <th>{% trans %}status{% endtrans %}</th>
+                    </tr>
+                    {% for tag in tags %}
+                        <tr>
+                            <td></td>
+                            <td>{{ tag|trans }}</td>
+                            <td>
+                                <div class="uk-badge uk-badge-notification" id="{{ tag|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
                 {% if nodes|length > 0 %}
                 <h4 class="import-nodetypes-part">{% trans %}import_node_type.node{% endtrans %}</h4>
                 <table class="install-table uk-table">
@@ -150,6 +169,9 @@
         {% endfor %}
         {% for nodetype in nodetypes %}
         Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodeTypes', {'filename': nodetype, 'themeId': themeId}) }}",'id':'{{ nodetype|replace({'/': '_', '.': '_'}) }}'});
+        {% endfor %}
+        {% for tag in tags %}
+        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportTags', {'filename': tag, 'themeId': themeId}) }}",'id':'{{ tag|replace({'/': '_', '.': '_'}) }}'});
         {% endfor %}
         {% for node in nodes %}
         Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodes', {'filename': node, 'themeId': themeId}) }}",'id':'{{ node|replace({'/': '_', '.': '_'}) }}'});

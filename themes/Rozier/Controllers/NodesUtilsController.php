@@ -50,7 +50,7 @@ class NodesUtilsController extends RozierApp
         $existingNode = $this->getService('em')
                               ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
         $this->getService('em')->refresh($existingNode);
-        $node = NodeJsonSerializer::serialize($existingNode);
+        $node = NodeJsonSerializer::serialize(array($existingNode));
 
         $response =  new Response(
             $node,
@@ -63,6 +63,46 @@ class NodesUtilsController extends RozierApp
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
                 'node-' . $existingNode->getNodeName() . '-' . date("YmdHis")  . '.rzn'
+            )
+        ); // Rezo-Zero Type
+
+        $response->prepare($request);
+
+        return $response;
+    }
+
+    /**
+     * Export all Node in a Json file (.rzn).
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function exportAllAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
+        $existingNodes = $this->getService('em')
+                              ->getRepository('RZ\Renzo\Core\Entities\Node')
+                              ->findBy(array("parent"=>null));
+
+        foreach ($existingNodes as $existingNode) {
+            $this->getService('em')->refresh($existingNode);
+        }
+
+        $node = NodeJsonSerializer::serialize($existingNodes);
+
+        $response =  new Response(
+            $node,
+            Response::HTTP_OK,
+            array()
+        );
+
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'node-all-' . date("YmdHis")  . '.rzn'
             )
         ); // Rezo-Zero Type
 
