@@ -38,12 +38,22 @@ class NodeRepository extends EntityRepository
         if (in_array('tags', array_keys($criteria))) {
 
             if (is_array($criteria['tags'])) {
-                $qb->innerJoin(
-                    'n.tags',
-                    'tg',
-                    'WITH',
-                    'tg.id IN (:tags)'
-                );
+                if (!in_array("tag_exclusive", array_keys($criteria))) {
+                    $qb->innerJoin(
+                        'n.tags',
+                        'tg',
+                        'WITH',
+                        'tg.id IN (:tags)'
+                    );
+                } else {
+                    $qb->innerJoin(
+                        'n.tags',
+                        'tg'
+                    );
+                    foreach ($criteria['tags'] as $key => $tag) {
+                        $ql->addWhere($qb->expr()->eq("tg.id", ':tag'.$key));
+                    }
+                }
             } else {
                 $qb->innerJoin(
                     'n.tags',
@@ -239,13 +249,20 @@ class NodeRepository extends EntityRepository
     {
         if (in_array('tags', array_keys($criteria))) {
             if (is_object($criteria['tags'])) {
-                $finalQuery->setParameter('tags', $criteria['tags']->getId());
+                if (!in_array("tag_exclusive", array_keys($criteria))) {
+                    $finalQuery->setParameter('tags', $criteria['tags']->getId());
+                } else {
+                    foreach ($criteria['tags'] as $key => $tag) {
+                        $finalQuery->setParameter(':tag'.$key, $tag->getId());
+                    }
+                    unset($criteria["tag_exclusive"]);
+                }
             } elseif (is_array($criteria['tags'])) {
                 $finalQuery->setParameter('tags', $criteria['tags']);
             } elseif (is_integer($criteria['tags'])) {
                 $finalQuery->setParameter('tags', (int) $criteria['tags']);
             }
-            unset($criteria['tags']);
+            unset($criteria["tags"]);
         }
     }
 
