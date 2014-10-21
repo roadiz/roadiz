@@ -5,20 +5,20 @@
 
     <header class="content-header header-themes header-themes-edit">
         <h1 class="content-title tag-themes-title">{% trans %}edit.theme{% endtrans %} {{ theme.getClassName }}</h1>
-        <div class="content-header-nav-back">
-            <nav><a class="uk-button uk-button-small" href="{{ path('themesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back_to.themes{% endtrans %}</a></nav>
-        </div>
     </header>
 
     <article class="content content-themes-edit">
         {% form_theme form 'forms.html.twig' %}
-        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        <form id="edit-theme-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
-                <input class="uk-button uk-button-primary" type="submit" />
+                <button data-action-save="#edit-theme-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class='uk-icon-rz-save-mini'></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
             </fieldset>
         </form>
     </article>
-
+    {% include 'themes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

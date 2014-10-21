@@ -12,8 +12,10 @@
     	<form id="edit-settingGroup-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
     	    {{ form_widget(form) }}
     	    <fieldset data-uk-margin>
-    	    	<button data-action-save="#edit-settingGroup-form" class="uk-button uk-button-primary rz-action-save" type="submit"><i class="uk-icon-save"></i>
-                    <span class="label">{% trans %}save.settingGroup{% endtrans %}</span></button>
+    	    	<button data-action-save="#edit-settingGroup-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save.settingGroup{% endtrans %}</span></span>
+                </button>
        		</fieldset>
     	</form>
     </article>

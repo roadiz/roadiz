@@ -31,7 +31,7 @@
                             <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
                             <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
                             <td>
-                                <a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">{% trans %}delete{% endtrans %}</a>
+                                <a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
                             </td>
                         </tr>
                         {% else %}
@@ -39,7 +39,7 @@
                             <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">{{ tag.getId }}</a></td>
                             <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">tag_{{ tag.getId }} <span class="uk-badge uk-badge-warning">{% trans %}notranslation_available.tag{% endtrans %}</span></a></td>
                             <td>
-                                <a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">{% trans %}delete{% endtrans %}</a>
+                                <a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
                             </td>
                         </tr>
                         {% endif %}

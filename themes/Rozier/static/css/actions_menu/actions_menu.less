@@ -98,9 +98,9 @@
         }
     }
 
-    // for Save button
-    .uk-button-primary {
-        .save-icon {
+    // for Save button  and other too !
+    .uk-button {
+        .icon-container {
             position: absolute;
             z-index: 9999;
             background-color: white;
@@ -110,13 +110,31 @@
             text-align: center;
             padding: 9px 9px 9px 13px;
             .box-sizing();
+            display: block;
+
+            z-index: 2;
+        }
+        .label {
+            z-index: 0;
         }
         .label-text {
-            background-color: @contrast-color-darker;
+            background-color: #999999;
         }
         &:hover {
             .label-text {
                 left: -100%;
+            }
+        }
+
+
+        &.uk-button-primary {
+            .label-text {
+                background-color: @contrast-color-darker;
+            }
+        }
+        &.uk-button-danger {
+            .label-text {
+                background-color: @alert-color;
             }
         }
     }
