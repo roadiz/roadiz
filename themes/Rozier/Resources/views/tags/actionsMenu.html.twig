@@ -3,6 +3,10 @@
         <span class="icon-container"><i class="uk-icon-reply"></i></span>
         <span class="label"><span class="label-text">{% trans %}back_to.tags{% endtrans %}</span></span>
     </a>
+    {% if tag.getId %}
+    <a class="uk-button rz-no-ajax-link" href="{{ path('tagsExportPage', { tagId:tag.getId }) }}"> <span class="icon-container"><i class="uk-icon-rz-download"></i></span>
+                <span class="label"><span class="label-text">{% trans %}export{% endtrans %}</span></span>
+    {% endif %}
     {# Delete current node #}
     {% if (securityContext.Granted('ROLE_ACCESS_TAGS_DELETE')) %}
     {% if tag.getId %}
