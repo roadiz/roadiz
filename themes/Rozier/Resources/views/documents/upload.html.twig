@@ -40,7 +40,9 @@
 		// Dropzone class:
 		paramName: "form[attachment]",
 		uploadMultiple: false,
-		maxFilesize:{{ maxUploadSize }}
+		maxFilesize:{{ maxUploadSize }},
 	};
+
+	Dropzone.autoDiscover = false;
 </script>
 {% endblock %}
