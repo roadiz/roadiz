@@ -1,5 +1,8 @@
 module.exports = function(grunt) {
-
+	require('jit-grunt')(grunt,
+	{
+		versioning: 'grunt-static-versioning'
+	});
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		concat: {
@@ -31,7 +34,7 @@ module.exports = function(grunt) {
 					"js/plugins.js",
 					"js/main.js"
 				],
-				dest: 'dist/<%= pkg.name %>.js',
+				dest: 'js/<%= pkg.name %>.js',
 			},
 		},
 		uglify: {
@@ -39,8 +42,8 @@ module.exports = function(grunt) {
 			banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %> */\n'
 		  },
 		  build: {
-			src: 'dist/<%= pkg.name %>.js',
-			dest: 'dist/<%= pkg.name %>.min.js'
+			src: 'js/<%= pkg.name %>.js',
+			dest: 'js/<%= pkg.name %>.min.js'
 		  }
 		},
 		less: {
@@ -57,8 +60,9 @@ module.exports = function(grunt) {
 		watch: {
 			scripts: {
 				files: [
-					'js/*.js',
-					'js/*/*.js',
+					'js/**/*.js',
+					'!js/<%= pkg.name %>.js',
+					'!js/<%= pkg.name %>.min.js',
 					'css/**/*.less',
 					'src-img/*.{png,jpg,gif}'
 				],
@@ -70,11 +74,14 @@ module.exports = function(grunt) {
 		},
 		jshint: {
 			all: [
-				'Gruntfile.js',
-				'js/*.js',
-				'js/*/*.js',
-				'!js/vendor/*.js',
-				'!js/addons/*.js'
+		    	'Gruntfile.js',
+		    	'js/**/*.js',
+		    	'!js/*.min.js',
+		    	'!js/plugins.js',
+		    	'!js/vendor/**/*.js',
+				'!js/addons/**/*.js',
+				'!js/<%= pkg.name %>.js',
+				'!js/<%= pkg.name %>.min.js'
 			]
 		},
 		imagemin: {
@@ -90,12 +97,41 @@ module.exports = function(grunt) {
 				}]
 			}
 		},
-		phplint: {
-			core: [
-				"../*.php",
-				"../*/*.php"
-			]
-		}
+		// phplint: {
+		// 	core: [
+		// 		"../*.php",
+		// 		"../*/*.php"
+		// 	]
+		// }
+		versioning: {
+			options: {
+				cwd: 'public',
+				outputConfigDir: 'public/config',
+				output: 'php'
+			},
+			dist: {
+				files: [{
+					assets: [{
+			            src: [ 'js/<%= pkg.name %>.min.js' ],
+			            dest: 'js/<%= pkg.name %>.min.js'
+			        }],
+					key: 'global',
+					dest: '',
+					type: 'js',
+					ext: '.min.js'
+				}, {
+					assets: [{
+			            src: [ 'css/style.min.css' ],
+			            dest: 'css/style.min.css'
+			        }],
+					key: 'global',
+					dest: '',
+					type: 'css',
+					ext: '.css'
+				}]
+			}
+		},
+		clean: ["public"]
 	});
 
 	/*
@@ -103,25 +139,25 @@ module.exports = function(grunt) {
 	 */
 	grunt.event.on('watch', function(action, filepath) {
 		if (filepath.indexOf('.js') > -1 ) {
-			grunt.config('watch.scripts.tasks', ['jshint', 'concat','uglify']);
+			grunt.config('watch.scripts.tasks', ['clean','jshint', 'concat', 'uglify', 'versioning']);
 		}
 		else if(filepath.indexOf('.less') > -1 ){
-			grunt.config('watch.scripts.tasks', ['less']);
+			grunt.config('watch.scripts.tasks', ['clean','less', 'versioning']);
 		}
 		else if( filepath.indexOf('.png') > -1  ||
-            filepath.indexOf('.jpg') > -1  ||
-            filepath.indexOf('.gif') > -1 ){
-            grunt.config('watch.scripts.tasks', ['imagemin']);
-        }
+			filepath.indexOf('.jpg') > -1  ||
+			filepath.indexOf('.gif') > -1 ){
+			grunt.config('watch.scripts.tasks', ['imagemin']);
+		}
 	});
 
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-imagemin');
+	// grunt.loadNpmTasks('grunt-contrib-jshint');
+	// grunt.loadNpmTasks('grunt-contrib-watch');
+	// grunt.loadNpmTasks('grunt-contrib-less');
+	// grunt.loadNpmTasks('grunt-contrib-concat');
+	// grunt.loadNpmTasks('grunt-contrib-uglify');
+	// grunt.loadNpmTasks('grunt-contrib-imagemin');
 
 	// Default task(s).
-	grunt.registerTask('default', ['concat','uglify','less']);
+	grunt.registerTask('default', ['clean','jshint','concat','uglify','less','imagemin','versioning']);
 };

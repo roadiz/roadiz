@@ -82,12 +82,12 @@ module.exports = function(grunt) {
 				}]
 			}
 		},
-		phplint: {
-			core: [
-				"../*.php",
-				"../*/*.php"
-			]
-		},
+		// phplint: {
+		// 	core: [
+		// 		"../*.php",
+		// 		"../*/*.php"
+		// 	]
+		// },
 		versioning: {
 			options: {
 				cwd: 'public',
@@ -146,5 +146,5 @@ module.exports = function(grunt) {
 	// grunt.loadNpmTasks("grunt-phplint");
 
 	// Default task(s).
-	grunt.registerTask('default', ['clean','jshint','concat','uglify','less','imagemin','phplint', 'versioning']);
+	grunt.registerTask('default', ['clean','jshint','concat','uglify','less','imagemin','versioning']);
 };

@@ -55,6 +55,7 @@ class RozierApp extends BackendController
         $this->assignation['settingGroups'] = $this->getService('em')
                                                    ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
                                                    ->findBy(array('inMenu' => true), array('name'=>'ASC'));
+        $this->assignation['head']['grunt'] = include(dirname(__FILE__).'/static/public/config/assets.config.php');
 
         $this->assignation['nodeStatuses'] = array(
             'draft' => Node::DRAFT,
