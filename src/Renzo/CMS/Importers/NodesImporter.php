@@ -12,6 +12,7 @@ namespace RZ\Renzo\CMS\Importers;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Node;
+use RZ\Renzo\Core\Entities\Translation;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Renzo\Core\Serializers\NodeJsonSerializer;
 

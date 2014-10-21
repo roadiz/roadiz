@@ -33,7 +33,16 @@
                     "meta_title": "",
                     "meta_keywords": "",
                     "meta_description": "",
-                    "content": "sample about",
+                    "content": "This is a about example page.",
+                    "url_aliases": []
+                },
+                {
+                    "translation": "fr",
+                    "title": "A propo",
+                    "meta_title": "",
+                    "meta_keywords": "",
+                    "meta_description": "",
+                    "content": "Ceci est une page d'exemple (\"A propo\").",
                     "url_aliases": []
                 }
             ]
@@ -59,7 +68,16 @@
                     "meta_title": "",
                     "meta_keywords": "",
                     "meta_description": "",
-                    "content": "Contact RZ team for more awesome stuff",
+                    "content": "This is a contact example page.",
+                    "url_aliases": []
+                },
+                {
+                    "translation": "fr",
+                    "title": "Contact",
+                    "meta_title": "",
+                    "meta_keywords": "",
+                    "meta_description": "",
+                    "content": "Ceci est une page contact d'exemple.",
                     "url_aliases": []
                 }
             ]
@@ -72,7 +90,16 @@
             "meta_title": "",
             "meta_keywords": "",
             "meta_description": "",
-            "content": "sample content",
+            "content": "This is my home!",
+            "url_aliases": []
+        },
+        {
+            "translation": "fr",
+            "title": "Acceuil",
+            "meta_title": "",
+            "meta_keywords": "",
+            "meta_description": "",
+            "content": "Ceci est ma maison!",
             "url_aliases": []
         }
     ]
