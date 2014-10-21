@@ -10663,12 +10663,21 @@ Lazyload.prototype.generalBind = function() {
 
     // Init markdown-preview
     if($('textarea[data-uk-htmleditor]').length){
-        $.UIkit.htmleditor($('textarea[data-uk-htmleditor]'), {markdown:true, mode:'tab'});
-        $(".uk-htmleditor-preview").css("height", 250);
-        $(".CodeMirror").css("height", 250);
-        $(".uk-htmleditor-content").after($(".uk-htmleditor-navbar"));
+
+        setTimeout(function(){
+            $.UIkit.htmleditor($('textarea[data-uk-htmleditor]'), {markdown:true, mode:'tab'});
+            $(".uk-htmleditor-preview").css("height", 250);
+            $(".CodeMirror").css("height", 250);
+            $(".uk-htmleditor-content").after($(".uk-htmleditor-navbar"));
+        }, 0);
     }
 
+    // Init document uploader
+    if($('#upload-dropzone-document').length){
+
+        var dropZone = new Dropzone("#upload-dropzone-document", Dropzone.options.uploadDropzoneDocument);
+        
+    }
     Rozier.initNestables();
     Rozier.bindMainTrees();
     Rozier.nodeStatuses = new NodeStatuses();
