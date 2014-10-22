@@ -13,6 +13,7 @@ namespace RZ\Renzo\Core\Serializers;
 
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodeType;
+use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\NodesSources;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Serializers\EntitySerializer;
@@ -114,8 +115,15 @@ class NodeJsonSerializer extends AbstractJsonSerializer
 
             foreach ($fields as $field) {
                 if (!$field->isVirtual()) {
-                    $setter = $field->getSetterName();
-                    $nodeSource->$setter($source[$field->getName()]);
+                    if ($field->getType() == NodeTypeField::DATETIME_T) {
+                        $date = new \DateTime($source[$field->getName()]['date'],
+                                              new \DateTimeZone($source[$field->getName()]['timezone']));
+                        $setter = $field->getSetterName();
+                        $nodeSource->$setter($date);
+                    } else {
+                        $setter = $field->getSetterName();
+                        $nodeSource->$setter($source[$field->getName()]);
+                    }
                 }
             }
 
