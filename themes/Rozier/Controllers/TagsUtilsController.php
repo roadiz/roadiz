@@ -47,7 +47,7 @@ class TagsUtilsController extends RozierApp
         $existingTag = $this->getService('em')
                               ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
         $this->getService('em')->refresh($existingTag);
-        $tag = TagJsonSerializer::serialize($existingTag);
+        $tag = TagJsonSerializer::serialize(array($existingTag));
 
         $response =  new Response(
             $tag,
@@ -60,6 +60,45 @@ class TagsUtilsController extends RozierApp
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
                 'tag-' . $existingTag->getTagName() . '-' . date("YmdHis")  . '.rzg'
+            )
+        ); // Rezo-Zero Type
+
+        $response->prepare($request);
+
+        return $response;
+    }
+
+    /**
+     * Export a Tag in a Json file (.rzn).
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $tagId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function exportAllAction(Request $request, $tagId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        $existingTags = $this->getService('em')
+                              ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                              ->findBy(array("parent" => null));
+        foreach ($existingTags as $existingTag) {
+            $this->getService('em')->refresh($existingTag);
+        }
+        $tag = TagJsonSerializer::serialize($existingTags);
+
+        $response =  new Response(
+            $tag,
+            Response::HTTP_OK,
+            array()
+        );
+
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'tag-all-' . date("YmdHis")  . '.rzg'
             )
         ); // Rezo-Zero Type
 

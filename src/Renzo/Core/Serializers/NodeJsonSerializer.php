@@ -13,6 +13,7 @@ namespace RZ\Renzo\Core\Serializers;
 
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodeType;
+use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\NodesSources;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Serializers\EntitySerializer;
@@ -35,38 +36,46 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($node)
+    public static function toArray($nodes)
     {
-        $data = array();
+        $array = array();
 
-        $data['node_name'] =                $node->getNodeName();
-        $data['node_type'] =                $node->getNodeType()->getName();
-        $data['home'] =                     $node->isHome();
-        $data['visible'] =                  $node->isVisible();
-        $data['status'] =                   $node->getStatus();
-        $data['locked'] =                   $node->isLocked();
-        $data['priority'] =                 $node->getPriority();
-        $data['hiding_children'] =          $node->isHidingChildren();
-        $data['archived'] =                 $node->isArchived();
-        $data['sterile'] =                  $node->isSterile();
-        $data['children_order'] =           $node->getChildrenOrder();
-        $data['children_order_direction'] = $node->getChildrenOrderDirection();
+        foreach ($nodes as $node) {
+            $data = array();
 
-        $data['children'] =  array();
-        $data['nodes_sources'] = array();
+            $data['node_name'] =                $node->getNodeName();
+            $data['node_type'] =                $node->getNodeType()->getName();
+            $data['home'] =                     $node->isHome();
+            $data['visible'] =                  $node->isVisible();
+            $data['status'] =                   $node->getStatus();
+            $data['locked'] =                   $node->isLocked();
+            $data['priority'] =                 $node->getPriority();
+            $data['hiding_children'] =          $node->isHidingChildren();
+            $data['archived'] =                 $node->isArchived();
+            $data['sterile'] =                  $node->isSterile();
+            $data['children_order'] =           $node->getChildrenOrder();
+            $data['children_order_direction'] = $node->getChildrenOrderDirection();
 
-        foreach ($node->getNodeSources() as $source) {
-            $data['nodes_sources'][] = NodeSourceJsonSerializer::toArray($source);
+            $data['children'] =  array();
+            $data['nodes_sources'] = array();
+            $data['tags'] = array();
+
+            foreach ($node->getNodeSources() as $source) {
+                $data['nodes_sources'][] = NodeSourceJsonSerializer::toArray($source);
+            }
+
+            foreach ($node->getTags() as $tag) {
+                $data['tags'][] = $tag->getTagName();
+            }
+            /*
+             * Recursivity !! Be careful
+             */
+            foreach ($node->getChildren() as $child) {
+                $data['children'][] = static::toArray(array($child))[0];
+            }
+            $array[] = $data;
         }
-
-        /*
-         * Recursivity !! Be careful
-         */
-        foreach ($node->getChildren() as $child) {
-            $data['children'][] = static::toArray($child);
-        }
-
-        return $data;
+        return $array;
     }
 
     private static function makeNodeRec($data) {
@@ -106,8 +115,15 @@ class NodeJsonSerializer extends AbstractJsonSerializer
 
             foreach ($fields as $field) {
                 if (!$field->isVirtual()) {
-                    $setter = $field->getSetterName();
-                    $nodeSource->$setter($source[$field->getName()]);
+                    if ($field->getType() == NodeTypeField::DATETIME_T) {
+                        $date = new \DateTime($source[$field->getName()]['date'],
+                                              new \DateTimeZone($source[$field->getName()]['timezone']));
+                        $setter = $field->getSetterName();
+                        $nodeSource->$setter($date);
+                    } else {
+                        $setter = $field->getSetterName();
+                        $nodeSource->$setter($source[$field->getName()]);
+                    }
                 }
             }
 
@@ -117,6 +133,12 @@ class NodeJsonSerializer extends AbstractJsonSerializer
                 $nodeSource->addUrlAlias($alias);
             }
             $node->getNodeSources()->add($nodeSource);
+        }
+        foreach ($data["tags"] as $tag) {
+            $tmp = Kernel::getInstance()->getService('em')
+                                        ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                                        ->findOneBy(array("tagName" => $tag));
+            $node->getTags()->add($tmp);
         }
         foreach ($data['children'] as $child) {
             $tmp = static::makeNodeRec($child);
@@ -134,8 +156,13 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      */
     public static function deserialize($string)
     {
-        $data = json_decode($string, true);
+        $datas = json_decode($string, true);
+        $array = array();
 
-        return static::makeNodeRec($data);
+        foreach ($datas as $data) {
+            $array[] = static::makeNodeRec($data);
+        }
+
+        return $array;
     }
 }

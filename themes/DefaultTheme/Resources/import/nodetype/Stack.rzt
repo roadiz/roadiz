@@ -1,0 +1,20 @@
+{
+    "name": "Stack",
+    "displayName": "Stack",
+    "description": "Stack Node-type.",
+    "visible": true,
+    "newsletterType": false,
+    "hidingNodes": false,
+    "fields": [
+        {
+            "name": "child",
+            "label": "Child",
+            "description": "Children nodes type",
+            "visible": true,
+            "type": 16,
+            "indexed": false,
+            "virtual": true,
+            "default_values": null
+        }
+    ]
+}

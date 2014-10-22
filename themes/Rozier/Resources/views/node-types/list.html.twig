@@ -41,7 +41,7 @@
 									<i class="uk-icon-node-type-fields"></i> {% trans %}manage.nodeTypeFields{% endtrans %}
 								</a>
 								<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypesDeletePage', { nodeTypeId: type.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
-								<a class="uk-button uk-button-small" href="{{ path('nodesTypesExportPage', { nodeTypeId: type.getId }) }}"><i class="uk-icon-rz-download"></i> {% trans %}export{% endtrans %}</a>
+								<a class="uk-button uk-button-small rz-no-ajax-link" href="{{ path('nodesTypesExportPage', { nodeTypeId: type.getId }) }}"><i class="uk-icon-rz-download"></i> {% trans %}export{% endtrans %}</a>
 							</td>
 						</tr>
 					{% endfor %}

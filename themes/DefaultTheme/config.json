@@ -12,7 +12,10 @@
         "roles": [],
         "groups": [],
         "settings": [],
-        "nodetypes": ["Resources/import/nodetype/page.rzt"],
+        "nodetypes": ["Resources/import/nodetype/Page.rzt",
+                      "Resources/import/nodetype/Neutral.rzt",
+                      "Resources/import/nodetype/Stack.rzt"],
+        "tags": [],
         "nodes": ["Resources/import/node/node-home.rzn"]
     }
 }

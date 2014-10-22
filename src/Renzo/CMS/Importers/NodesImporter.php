@@ -36,7 +36,9 @@ class NodesImporter implements ImporterInterface {
                       ->getRepository('RZ\Renzo\Core\Entities\Node')
                       ->findAll();
         if (empty($exist)) {
-            static::browseTree($nodes);
+            foreach ($nodes as $node) {
+                static::browseTree($node);
+            }
         }
         return true;
     }

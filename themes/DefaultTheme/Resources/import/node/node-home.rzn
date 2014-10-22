@@ -1,3 +1,4 @@
+[
 {
     "node_name": "home",
     "node_type": "Page",
@@ -45,42 +46,8 @@
                     "content": "Ceci est une page d'exemple (\"A propo\").",
                     "url_aliases": []
                 }
-            ]
-        },
-        {
-            "node_name": "contact",
-            "node_type": "Page",
-            "home": false,
-            "visible": true,
-            "status": 30,
-            "locked": false,
-            "priority": 0.8,
-            "hiding_children": false,
-            "archived": false,
-            "sterile": false,
-            "children_order": "order",
-            "children_order_direction": "ASC",
-            "children": [],
-            "nodes_sources": [
-                {
-                    "translation": "en",
-                    "title": "Contact",
-                    "meta_title": "",
-                    "meta_keywords": "",
-                    "meta_description": "",
-                    "content": "This is a contact example page.",
-                    "url_aliases": []
-                },
-                {
-                    "translation": "fr",
-                    "title": "Contact",
-                    "meta_title": "",
-                    "meta_keywords": "",
-                    "meta_description": "",
-                    "content": "Ceci est une page contact d'exemple.",
-                    "url_aliases": []
-                }
-            ]
+            ],
+            "tags": []
         }
     ],
     "nodes_sources": [
@@ -99,8 +66,10 @@
             "meta_title": "",
             "meta_keywords": "",
             "meta_description": "",
-            "content": "Ceci est ma maison!",
+            "content": "Ceci est mon acceuil!",
             "url_aliases": []
         }
-    ]
+    ],
+    "tags": []
 }
+]

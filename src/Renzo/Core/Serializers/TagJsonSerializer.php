@@ -35,39 +35,41 @@ class TagJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($tag)
+    public static function toArray($tags)
     {
-        $data = array();
+        $array = array();
 
-        $data['tag_name'] = $tag->getTagName();
-        $data['visible'] =  $tag->isVisible();
-        $data['locked'] =   $tag->isLocked();
+        foreach ($tags as $tag) {
+            $data = array();
 
-        $data['children'] =  array();
-        $data['tag_translation'] = array();
+            $data['tag_name'] = $tag->getTagName();
+            $data['visible'] =  $tag->isVisible();
+            $data['locked'] =   $tag->isLocked();
 
-        foreach ($tag->getTranslatedTags() as $source) {
-            $data['tag_translation'][] = TagTranslationJsonSerializer::toArray($source);
+            $data['children'] =  array();
+            $data['tag_translation'] = array();
+
+            foreach ($tag->getTranslatedTags() as $source) {
+                $data['tag_translation'][] = TagTranslationJsonSerializer::toArray($source);
+            }
+            /*
+             * Recursivity !! Be careful
+             */
+            foreach ($tag->getChildren() as $child) {
+                $data['children'][] = static::toArray(array($child))[0];
+            }
+            $array[] = $data;
         }
-        /*
-         * Recursivity !! Be careful
-         */
-        foreach ($tag->getChildren() as $child) {
-            $data['children'][] = static::toArray($child);
-        }
-
-        return $data;
+        return $array;
     }
 
     private static function makeTagRec($data) {
-
         $tag = new Tag();
         $tag->setTagName($data['tag_name']);
         $tag->setVisible($data['visible']);
-        $tag->setStatus($data['status']);
         $tag->setLocked($data['locked']);
 
-        foreach ($data["tag_translated"] as $source) {
+        foreach ($data["tag_translation"] as $source) {
             $trans = new Translation();
             $trans->setLocale($source['translation']);
             $trans->setName(Translation::$availableLocales[$source['translation']]);
@@ -79,7 +81,7 @@ class TagJsonSerializer extends AbstractJsonSerializer
             $tag->getTranslatedTags()->add($tagSource);
         }
         foreach ($data['children'] as $child) {
-            $tmp = static::makeNodeRec($child);
+            $tmp = static::makeTagRec($child);
             $tag->addChild($tmp);
         }
         return $tag;
@@ -94,8 +96,11 @@ class TagJsonSerializer extends AbstractJsonSerializer
      */
     public static function deserialize($string)
     {
-        $data = json_decode($string, true);
-
-        return static::makeTagRec($data);
+        $datas = json_decode($string, true);
+        $array = array();
+        foreach ($datas as $data) {
+            $array[] = static::makeTagRec($data);
+        }
+        return $array;
     }
 }

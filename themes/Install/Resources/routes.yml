@@ -47,6 +47,12 @@ installImportNodeTypes:
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         themeId: "[0-9]+"
+installImportTags:
+    path:     /install/import/tags/{filename}/{themeId}
+    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importTagsAction }
+    requirements:
+        filename: "^[a-zA-Z_/.-]+$"
+        themeId: "[0-9]+"
 installImportThemePage:
     path:     /install/import/theme/{id}
     defaults: { _controller: Themes\Install\InstallApp::importThemeAction }
