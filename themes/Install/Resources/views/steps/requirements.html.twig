@@ -46,11 +46,10 @@
                                     <div class="uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.found }}</div>
                                 {% endif %}
                                 {% if require.folder %}
-                                    <div class="uk-badge-folder uk-badge uk-badge-notification">
-                                        <i class="uk-icon-info"></i>
+                                    <div class="uk-badge-folder uk-badge uk-badge-notification uk-badge-notification-infos">
+                                        <i class="uk-icon-rz-infos"></i>
                                          <div class="uk-badge-folder-content uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.folder }}</div>
-                                    </div>
-                                   
+                                    </div>                                   
                                 {% endif %}
                             </td>
                             <td class="status">

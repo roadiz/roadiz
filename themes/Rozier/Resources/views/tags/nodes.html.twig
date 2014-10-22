@@ -5,8 +5,8 @@
 
     <header class="content-header header-tags header-tags-nodes">
         <h1 class="content-title tags-nodes-title">{% trans %}tagged.nodes{% endtrans %}</h1>
-
-		{% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'nodes'} %}
+        {% include 'tags/navBack.html.twig' with {} only %}
+		{% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'nodes'} only %}
 	</header>
 
 	{% include 'widgets/filtersBar.html.twig' %}

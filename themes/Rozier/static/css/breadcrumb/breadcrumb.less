@@ -10,7 +10,7 @@
 
 /* -------- VARS -------- */
 
-@breadcrumb-link-hover : #d3d3d3;
+@breadcrumb-link-hover : #808080;
 
 
 /* -------- STYLES -------- */
@@ -18,7 +18,7 @@
 
 .content-breadcrumb{
     position: absolute;
-    top:50px; right:0; left:0;
+    top:47px; right:0; left:0;
     height:12px;
 
     > li{
@@ -40,9 +40,20 @@
     color:@grey-medium;
     .transition(0.4s color ease);
 
+    .uk-icon-rz-breadcrumb-home{
+        margin-top:-3px;
+        font-size:16px;
+        color: @icon-simple;
+        .transition(0.4s color ease);
+        -webkit-font-smoothing: none;
+    }
+
     &:hover{
-        color: @breadcrumb-link-hover;
+        color: darken(@grey-medium,20%);
         text-decoration: none;
 
+        .uk-icon-rz-breadcrumb-home{
+            color: @icon-simple-hover;
+        }
     }
 }

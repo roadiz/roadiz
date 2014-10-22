@@ -8,11 +8,19 @@
 <ul class="uk-breadcrumb content-breadcrumb node-breadcrumb">
     {% for parent in node.getHandler.getParents %}
         {% if parent.getNodeSources.first.getTitle %}
-        {% set title = parent.getNodeSources.first.getTitle %}
+            {% set title = parent.getNodeSources.first.getTitle %}
         {% else %}
-        {% set title = parent.getNodeName %}
+            {% set title = parent.getNodeName %}
         {% endif %}
-        <li class="node-breadcrumb-item"><a class="node-breadcrumb-link" href="{{ path('nodesEditPage', { nodeId: parent.getId }) }}">{{ title }}</a></li>
+        <li class="node-breadcrumb-item"><a class="node-breadcrumb-link" href="{{ path('nodesEditPage', { nodeId: parent.getId }) }}">
+            {% if parent.isHome %}
+                <i class="uk-icon-rz-breadcrumb-home"></i>
+            {% else %}
+                {{ title }}
+            {% endif %}
+        </a>
+        </li>
+
     {% endfor %}
     <li class="node-breadcrumb-item uk-active"><span>{{ currentTitle }}</span></li>
 </ul>
