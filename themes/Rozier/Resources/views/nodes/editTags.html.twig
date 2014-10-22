@@ -11,7 +11,14 @@
 
 	<header class="content-header header-node header-node-edit-tags">
 		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-		<h1 class="content-title node-edit-tags-title">{{ "edit.node.%name%.tags"|trans({'%name%': currentTitle}) }}</h1>
+		<h1 class="content-title node-edit-tags-title">
+			{{ "edit.node.%name%.tags"|trans({'%name%': currentTitle}) }}
+			<div class="node-edit-node-type-cont">
+                <div class="node-edit-node-type-circle" title="{{ node.nodeType.displayName }}" data-uk-tooltip="{animation:true}">
+                    <i class="uk-icon-rz-infos"></i>
+                </div>
+            </div>
+		</h1>
 		{% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
 	</header>
 

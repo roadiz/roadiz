@@ -15,7 +15,7 @@
 /* -------- STYLES -------- */
 
 .tagtree-widget,
-.nodetree-widget {
+.nodetree-widget, .uk-nestable-moving {
 
     -webkit-user-select: none;
     padding: 0;
@@ -270,10 +270,10 @@
         }
         &.unpublished-node {
            & > .uk-nestable-handle:after {
-                 width: 9px;
+                width: 9px;
                 height: 9px;
-               .rounded(2px);
-               .rotation(45deg);
+                .rounded(2px);
+                .rotation(45deg);
            }
         }
     }
@@ -289,4 +289,46 @@
         -webkit-font-smoothing: antialiased;
         text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9)
     }
+
+}
+
+
+// Tag tree
+
+
+#tagtree-widget{
+    
+    .uk-nestable-item {
+        // padding:0;
+    }
+
+    .uk-nestable-list{
+        padding-left:10px;
+    }
+
+    .uk-nestable-handle{
+        vertical-align: middle;   
+    }
+
+}
+
+#tagtree-add-tag{
+    width: auto;
+    margin:0 0 0 13px;
+    background: none;
+}
+
+
+// Moving
+.uk-nestable-moving{
+
+    .uk-nestable-list-dragged{
+        background: rgba(230, 230, 230, 0.95);
+    }
+
+}
+
+.uk-nestable-placeholder{
+    background: #aaa;
+    border-color:#fbfbfb;
 }

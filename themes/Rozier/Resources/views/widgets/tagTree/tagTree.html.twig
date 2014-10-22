@@ -1,7 +1,10 @@
 {% if tagTree %}
-<nav class="tagtree-widget">
+<nav id="tagtree-widget" class="tagtree-widget">
+    {% if mainTagTree %}
+    <h4>{% trans %}tagTree{% endtrans %}</h4>
+    {% endif %}
     {% if tagTree.getRootTag == null %}
-	<a href="{{ path('tagsAddPage') }}" class="uk-button uk-button-mini"><i class="uk-icon-plus"></i> {% trans %}add.tag{% endtrans %}</a>
+	<a href="{{ path('tagsAddPage') }}" class="uk-button uk-button-mini" id="tagtree-add-tag"><i class="uk-icon-plus"></i>{% trans %}add.tag{% endtrans %}</a>
     {% else %}
     <a href="{{ path('tagsAddChildPage', { tagId : tagTree.getRootTag.getId }) }}" class="uk-button uk-button-mini"><i class="uk-icon-plus"></i> {% trans %}add.child.tag{% endtrans %}</a>
     {% endif %}

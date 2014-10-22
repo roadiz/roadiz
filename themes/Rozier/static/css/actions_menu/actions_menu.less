@@ -61,14 +61,16 @@
         background-image: none;
         background-color: white;
         z-index: 999;
-
-        &:first-child, &:first-child .label {
+        
+        &.uk-button:first-child, &.uk-button:first-child .label {
             border-top: 0 none;
         }
+
         i {
             .action-menu-icon();
             .transition(~'border-color ease 0.3s, color ease 0.3s');
         }
+
         &:hover {
             &.uk-button-danger,
             &.uk-button-primary {
@@ -80,6 +82,7 @@
                 color: darken(@item-global-color, 20%)
             }
         }
+
         &:before {
             content: "";
             position: absolute;
@@ -104,9 +107,8 @@
             position: absolute;
             z-index: 9999;
             background-color: white;
-            width: 100%;
-            top: 0;
-            left: 0;
+            // width: 100%;
+            top: 0; right:0; bottom:0; left: 0;
             text-align: center;
             padding: 9px 9px 9px 13px;
             .box-sizing();
@@ -121,6 +123,9 @@
             background-color: #999999;
         }
         &:hover {
+            border-color:transparent;
+            border-color:#ddd;
+
             .label-text {
                 left: -100%;
             }
@@ -162,7 +167,8 @@
         height: 100%;
         top: 0;
         left: 0;
-        border-top: 1px solid transparent;
+        border:none;
+        // border-top: 1px solid transparent;
         .box-sizing();
 
         .label-text {
@@ -181,7 +187,10 @@
     // for Subnav button
     .with-subnav {
         position: relative;
-        border-top: 1px solid @separation-border-color;
+        height:52px;
+        border-top:none;
+        // border-top: 1px solid @separation-border-color;
+        .box-sizing();
 
         header {
             .label {

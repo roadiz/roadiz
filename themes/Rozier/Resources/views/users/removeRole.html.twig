@@ -13,7 +13,7 @@
             {{ form_widget(form) }}
     	    <fieldset data-uk-margin>
     	    	<legend>{% trans %}are_you_sure.remove.user.role{% endtrans %}</legend>
-    	    	<a href="{{ path('usersEditRolesPage', { userId: user.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
+    	    	<a href="{{ path('usersEditRolesPage', { userId: user.getId }) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
     	    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}remove{% endtrans %}</button>
        		</fieldset>
     	</form>

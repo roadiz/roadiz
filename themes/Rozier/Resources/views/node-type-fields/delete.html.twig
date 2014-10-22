@@ -13,7 +13,7 @@
 	    {{ form_widget(form) }}
 	    <fieldset data-uk-margin>
 	    	<legend>{% trans %}arz_you_sure.delete.nodeTypeField{% endtrans %}</legend>
-	    	<a href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: field.getNodeType.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}cancel{% endtrans %}</a>
+	    	<a href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: field.getNodeType.getId }) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
 	    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
    		</fieldset>
 	</form>
