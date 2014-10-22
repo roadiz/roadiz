@@ -38,21 +38,19 @@ class NodeRepository extends EntityRepository
         if (in_array('tags', array_keys($criteria))) {
 
             if (is_array($criteria['tags'])) {
-                if (!in_array("tag_exclusive", array_keys($criteria))) {
+                if (in_array("tagExclusive", array_keys($criteria))
+                    && $criteria["tagExclusive"] == true) {
+                    $node = static::getNodeIdsByTagExcl($criteria['tags']);
+                    $criteria["id"] = $node;
+                    unset($criteria["tagExclusive"]);
+                    unset($criteria['tags']);
+                } else {
                     $qb->innerJoin(
                         'n.tags',
                         'tg',
                         'WITH',
                         'tg.id IN (:tags)'
                     );
-                } else {
-                    $qb->innerJoin(
-                        'n.tags',
-                        'tg'
-                    );
-                    foreach ($criteria['tags'] as $key => $tag) {
-                        $ql->addWhere($qb->expr()->eq("tg.id", ':tag'.$key));
-                    }
                 }
             } else {
                 $qb->innerJoin(
@@ -63,6 +61,40 @@ class NodeRepository extends EntityRepository
                 );
             }
         }
+    }
+
+    /**
+     * Seach NodeId exclusively
+     *
+     * @param  array     $tags
+     * @return array
+     */
+
+    public static function getNodeIdsByTagExcl($tags)
+    {
+        $qb = Kernel::getInstance()->getService('em')->createQueryBuilder();
+
+        $qb->select("nj.id")
+           ->addSelect("COUNT(t.id) as num")
+           ->from("RZ\Renzo\Core\Entities\Tag", "t")
+           ->leftJoin("t.nodes", "nj");
+        foreach ($tags as $key => $tag) {
+            $qb->orWhere($qb->expr()->eq('t.id', ':tag'.$key));
+        }
+        $qb->groupBy("nj.id");
+        $query = $qb->getQuery();
+        foreach ($tags as $key => $tag) {
+            $query->setParameter("tag".$key, $tag);
+        }
+        $results = $query->getResult();
+        $count = count($tags);
+        $nodes = array();
+        foreach ($results as $key => $result) {
+            if ($count === (int) $result["num"]) {
+                $nodes[] = $result["id"];
+            }
+        }
+        return $nodes;
     }
 
     /**
@@ -91,7 +123,7 @@ class NodeRepository extends EntityRepository
          */
         foreach ($criteria as $key => $value) {
 
-            if ($key == "tags") {
+            if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
 
@@ -193,7 +225,7 @@ class NodeRepository extends EntityRepository
          */
         foreach ($criteria as $key => $value) {
 
-            if ($key == "tags") {
+            if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
 
@@ -249,14 +281,7 @@ class NodeRepository extends EntityRepository
     {
         if (in_array('tags', array_keys($criteria))) {
             if (is_object($criteria['tags'])) {
-                if (!in_array("tag_exclusive", array_keys($criteria))) {
-                    $finalQuery->setParameter('tags', $criteria['tags']->getId());
-                } else {
-                    foreach ($criteria['tags'] as $key => $tag) {
-                        $finalQuery->setParameter(':tag'.$key, $tag->getId());
-                    }
-                    unset($criteria["tag_exclusive"]);
-                }
+                $finalQuery->setParameter('tags', $criteria['tags']->getId());
             } elseif (is_array($criteria['tags'])) {
                 $finalQuery->setParameter('tags', $criteria['tags']);
             } elseif (is_integer($criteria['tags'])) {
@@ -352,7 +377,7 @@ class NodeRepository extends EntityRepository
      * @return QueryBuilder
      */
     protected function getContextualQueryWithTranslation(
-        array $criteria,
+        array &$criteria,
         array $orderBy = null,
         $limit = null,
         $offset = null,
@@ -403,7 +428,7 @@ class NodeRepository extends EntityRepository
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
-        array $criteria,
+        array &$criteria,
         Translation $translation = null,
         SecurityContext $securityContext = null
     ) {
