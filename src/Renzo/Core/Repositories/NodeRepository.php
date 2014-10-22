@@ -36,7 +36,6 @@ class NodeRepository extends EntityRepository
     protected function filterByTag(&$criteria, &$qb)
     {
         if (in_array('tags', array_keys($criteria))) {
-
             if (is_array($criteria['tags'])) {
                 if (in_array("tagExclusive", array_keys($criteria))
                     && $criteria["tagExclusive"] == true) {

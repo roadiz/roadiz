@@ -13,6 +13,7 @@ use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Role;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Translation;
+use RZ\Renzo\Core\Repositories\NodeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -29,22 +30,32 @@ class NodesSourcesRepository extends EntityRepository
      * @param array        $criteria
      * @param QueryBuilder $qb
      */
-    protected function filterByTag(&$criteria, &$qb)
+    protected function filterByTag(&$criteria, &$qb, &$joinedNode)
     {
         if (in_array('tags', array_keys($criteria))) {
-
-            $qb->innerJoin(
-                'ns.node',
-                'n'
-            );
+            if (!$joinedNode) {
+                $qb->innerJoin(
+                    'ns.node',
+                    'n'
+                );
+                $joinedNode = true;
+            }
 
             if (is_array($criteria['tags'])) {
-                $qb->innerJoin(
-                    'n.tags',
-                    'tg',
-                    'WITH',
-                    'tg.id IN (:tags)'
-                );
+                if (in_array("tagExclusive", array_keys($criteria))
+                    && $criteria["tagExclusive"] == true) {
+                    $node = NodeRepository::getNodeIdsByTagExcl($criteria['tags']);
+                    $criteria["node.id"] = $node;
+                    unset($criteria["tagExclusive"]);
+                    unset($criteria['tags']);
+                } else {
+                    $qb->innerJoin(
+                        'n.tags',
+                        'tg',
+                        'WITH',
+                        'tg.id IN (:tags)'
+                    );
+                }
             } else {
                 $qb->innerJoin(
                     'n.tags',
@@ -102,7 +113,7 @@ class NodesSourcesRepository extends EntityRepository
          */
         foreach ($criteria as $key => $value) {
 
-            if ($key == "tags") {
+            if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
 
@@ -209,7 +220,7 @@ class NodesSourcesRepository extends EntityRepository
          */
         foreach ($criteria as $key => $value) {
 
-            if ($key == "tags") {
+            if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
 
@@ -268,7 +279,7 @@ class NodesSourcesRepository extends EntityRepository
      * @return QueryBuilder
      */
     protected function getContextualQuery(
-        array $criteria,
+        array &$criteria,
         array $orderBy = null,
         $limit = null,
         $offset = null,
@@ -287,12 +298,12 @@ class NodesSourcesRepository extends EntityRepository
             $joinedNode = true;
         }
 
-        $this->filterByCriteria($criteria, $qb, $joinedNode);
-
         /*
          * Filtering by tag
          */
-        $this->filterByTag($criteria, $qb);
+        $this->filterByTag($criteria, $qb, $joinedNode);
+
+        $this->filterByCriteria($criteria, $qb, $joinedNode);
 
         // Add ordering
         if (null !== $orderBy) {
@@ -353,8 +364,6 @@ class NodesSourcesRepository extends EntityRepository
         $finalQuery = $qb->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
-
-        //var_dump($finalQuery->getDQL());exit();
         try {
             return $finalQuery->getResult();
         } catch (\Doctrine\ORM\Query\QueryException $e) {
