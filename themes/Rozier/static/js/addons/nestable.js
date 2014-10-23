@@ -316,6 +316,7 @@
             var mouse    = this.mouse,
                 target   = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName),
+                dragItemList = target.closest(this.options.listNodeName),
                 offset   = dragItem.offset();
 
             this.placeEl.css('height', dragItem.height());
@@ -328,12 +329,13 @@
 
             this.dragRootEl = this.element;
 
-            this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
+            this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(dragItemList[0].className + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
 
             draggingElement = this.dragEl;
 
             this.tmpDragOnSiblings = [dragItem[0].previousSibling, dragItem[0].nextSibling];
+
 
             // fix for zepto.js
             //dragItem.after(this.placeEl).detach().appendTo(this.dragEl);
@@ -347,6 +349,8 @@
                 left : offset.left,
                 top  : offset.top
             });
+
+            // console.log(this.dragEl[0].innerHTML);
 
             // total depth of dragging item
             var i, depth,

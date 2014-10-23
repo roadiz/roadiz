@@ -7,6 +7,7 @@
         {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
         <h1 class="content-title node-edit-title">{{ "edit.node.%name%.tree"|trans({'%name%': source.getTitle}) }}</h1>
         <nav class="content-header-nav-back"><a class="uk-button uk-button-small" href="{{ path('nodesHomePage') }}"><span class="uk-icon-reply"></span>{% trans %}back_to.nodes{% endtrans %}</a></nav>
+        {% include 'nodes/navBack.html.twig' %}
         {% include 'nodes/navBar.html.twig' with {"current": 'tree'} %}
     </header>
 

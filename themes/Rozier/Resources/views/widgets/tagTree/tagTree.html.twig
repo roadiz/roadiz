@@ -4,11 +4,11 @@
     <h4>{% trans %}tagTree{% endtrans %}</h4>
     {% endif %}
     {% if tagTree.getRootTag == null %}
-	<a href="{{ path('tagsAddPage') }}" class="uk-button uk-button-mini" id="tagtree-add-tag"><i class="uk-icon-plus"></i>{% trans %}add.tag{% endtrans %}</a>
+	<a href="{{ path('tagsAddPage') }}" class="tree-btn-add" id="tagtree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.tag{% endtrans %}</a>
     {% else %}
-    <a href="{{ path('tagsAddChildPage', { tagId : tagTree.getRootTag.getId }) }}" class="uk-button uk-button-mini"><i class="uk-icon-plus"></i> {% trans %}add.child.tag{% endtrans %}</a>
+    <a href="{{ path('tagsAddChildPage', { tagId : tagTree.getRootTag.getId }) }}" class="tree-btn-add" id="tagtree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.child.tag{% endtrans %}</a>
     {% endif %}
-	<ul class="root-tree uk-nestable" data-uk-nestable="{'group':'tagTree'}" data-parent-tag-id="{{ tag.getId }}">
+	<ul class="root-tree uk-nestable uk-nestable-tag" data-uk-nestable="{'group':'tagTree'}" data-parent-tag-id="{{ tag.getId }}">
 		{% for ctag in tagTree.getTags %}
 			{% include 'widgets/tagTree/singleTag.html.twig' with { "tag":ctag, "tagTree":tagTree } only %}
 		{% endfor %}
