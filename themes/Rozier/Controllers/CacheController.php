@@ -10,6 +10,7 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Console\SchemaCommand;
+use RZ\Renzo\Console\CacheCommand;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Tag;
 use RZ\Renzo\Core\Entities\TagTranslation;

@@ -32,9 +32,9 @@ NodeStatuses.prototype.onChange = function(event) {
         var statusName = $input.attr('name');
         var statusValue = null;
         if($input.is('input[type="checkbox"]')){
-            statusValue = $input.is(':checked');
+            statusValue = Number($input.is(':checked'));
         } else if($input.is('input[type="radio"]')){
-            statusValue = $input.val();
+            statusValue = Number($input.val());
         }
 
         var postData = {
@@ -53,7 +53,7 @@ NodeStatuses.prototype.onChange = function(event) {
             data: postData
         })
         .done(function(data) {
-            //console.log(data.responseText);
+            console.log(data);
             Rozier.refreshMainNodeTree();
             $.UIkit.notify({
                 message : data.responseText,

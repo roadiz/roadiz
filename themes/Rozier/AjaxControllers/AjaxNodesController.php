@@ -216,8 +216,9 @@ class AjaxNodesController extends AbstractAjaxController
 
                             $setter = $availableStatuses[$request->get('statusName')];
                             $value = $request->get('statusValue');
+
                             if ($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_STATUS') ||
-                                $request->get('statusName') == 'status') {
+                                $request->get('statusName') != 'status') {
 
                                 $node->$setter($value);
                                 $this->em()->flush();
@@ -228,7 +229,9 @@ class AjaxNodesController extends AbstractAjaxController
                                     'responseText' => $this->getTranslator()->trans('node.%name%.%field%.updated', array(
                                         '%name%' => $node->getNodeName(),
                                         '%field%' => $request->get('statusName')
-                                    ))
+                                    )),
+                                    'name' => $request->get('statusName'),
+                                    'value' => $value
                                 );
                             } else {
                                 $responseArray = array(
