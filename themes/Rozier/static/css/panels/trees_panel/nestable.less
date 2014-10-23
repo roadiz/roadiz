@@ -14,6 +14,38 @@
 
 /* -------- STYLES -------- */
 
+.tree-btn-add{
+    position: relative;
+    display: block;
+    width: 100%; height:40px;
+    font-size:12px; line-height:40px;
+    color:#666666;
+    border-bottom:1px dashed #b5b5b5 ;
+    margin:0 0 20px;
+    text-align: center;
+    background: none;
+    .box-sizing();
+
+    &:after{
+        position: absolute;
+        content:'';
+        left:0; right:0; bottom:-3px;
+        height:1px; 
+        border-top:1px dashed lighten(#b5b5b5, 15%);
+    }
+
+    .uk-icon-rz-plus-simple{
+        font-size:16px;
+        margin:-3px 5px 0 0;
+    }
+
+    &:hover{
+        color:@item-color-name-color-hover;
+        text-decoration: none;
+    }
+}
+
+
 .tagtree-widget,
 .nodetree-widget, .uk-nestable-moving {
 
@@ -22,7 +54,7 @@
 
     h4 {
         text-align: center;
-        margin: 1.7em 0 0.8em;
+        margin: 1.7em 0 0 0; // b0.8em;
         padding: 0 0 1em;
         font-size: 21px;
         font-weight: bold;
@@ -53,7 +85,7 @@
             }
             & > li:first-child {
                 padding-top: 7px;
-                margin-top: -6px;
+                margin-top: -5px;
                 position: relative;
 
                 &:before {
@@ -111,8 +143,11 @@
         }
     }
 
-    .nodetree-element-inner {
-        padding-left: @node-icon-offset;
+    .nodetree-element-inner, .tagtree-element-inner{
+
+        &.nodetree-element-inner{
+            padding-left: @node-icon-offset;
+        }
 
         &:hover {
             .uk-nestable-handle:after {
@@ -120,20 +155,24 @@
                 border-color: @nestable-handle-border-color-hover;
                 background: @nestable-handle-bgcolor-hover;
             }
-            .nodetree-element-name a {
+            .nodetree-element-name a, .tagtree-element-name a {
+                color: @item-color-name-color-hover;
+            }
+
+            >.uk-nestable-handle i{
                 color: @item-color-name-color-hover;
             }
         }
     }
 
-    .nodetree-element-name {
+    .nodetree-element-name, .tagtree-element-name {
 
         max-width: 60%;
         white-space: nowrap;
         .transition(color ease 0.35s);
 
         & > i {
-            color: red;
+            // color: red;
             font-size: 12px;
             .opacity(0.5);
         }
@@ -141,6 +180,12 @@
         & > a {
             padding: 0px 0.4em;
             color: #666666;
+        }
+
+        &.tagtree-element-name{
+            & > a {
+                padding: 0px 0.2em;
+            }    
         }
     }
 
@@ -188,7 +233,7 @@
                 display: none;
             }
             &:hover {
-                .nodetree-element-name a {
+                .nodetree-element-name a{
                     color: @item-color-name-color-hover;
                 }
                 .uk-icon-rz-home {
@@ -284,38 +329,24 @@
     [data-nestable-action="toggle"] {
         position: absolute;
         right: 3px;
-        font-size: 19px;
-        line-height: 22px;
+        // font-size: 19px;
+        // line-height: 22px;
         -webkit-font-smoothing: antialiased;
-        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9)
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
 }
 
 
-// Tag tree
-
-
-#tagtree-widget{
-    
-    .uk-nestable-item {
-        // padding:0;
-    }
-
-    .uk-nestable-list{
-        padding-left:10px;
-    }
-
-    .uk-nestable-handle{
-        vertical-align: middle;   
-    }
-
+// Minus - Plus
+[data-nestable-action=toggle]:after{
+    font-size:16px; line-height:16px;
+    font-family: 'rz-icons';
+    content:"\e63f";
 }
 
-#tagtree-add-tag{
-    width: auto;
-    margin:0 0 0 13px;
-    background: none;
+.uk-collapsed > .uk-nestable-item [data-nestable-action=toggle]:after{
+    content:"\e640";
 }
 
 
@@ -323,12 +354,14 @@
 .uk-nestable-moving{
 
     .uk-nestable-list-dragged{
-        background: rgba(230, 230, 230, 0.95);
+        background: #ddd;
+        border: 1px dashed #b5b5b5;
+        // box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     }
 
 }
 
 .uk-nestable-placeholder{
     background: #aaa;
-    border-color:#fbfbfb;
+    border-color:@grey-verylight;
 }

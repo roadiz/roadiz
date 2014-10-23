@@ -499,13 +499,16 @@ class NodesController extends RozierApp
 
         if (null !== $translationId) {
             $translation = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
+                                ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
         }
-        $parentNode = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
-        if (null !== $translation &&
-            null !== $parentNode) {
+        if ($nodeId > 0) {
+            $parentNode = $this->getService('em')
+                               ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+        }
+        else $parentNode = null;
+
+        if (null !== $translation) {
 
             $form = $this->buildAddChildForm($parentNode, $translation);
             $form->handleRequest();
@@ -717,7 +720,7 @@ class NodesController extends RozierApp
      *
      * @return RZ\Renzo\Core\Entities\Node
      */
-    private function createChildNode($data, Node $parentNode, Translation $translation)
+    private function createChildNode($data, Node $parentNode = null, Translation $translation = null)
     {
         if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans('node.%name%.no_creation.url_alias.already_exists', array('%name%'=>$data['nodeName']));
@@ -736,7 +739,7 @@ class NodesController extends RozierApp
         if (null === $type) {
             throw new \Exception("Cannot create a node without a valid node-type", 1);
         }
-        if ($data['parentId'] != $parentNode->getId()) {
+        if (null !== $parentNode && $data['parentId'] != $parentNode->getId()) {
             throw new \Exception("Requested parent node does not match form values", 1);
         }
 
@@ -922,7 +925,7 @@ class NodesController extends RozierApp
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildAddChildForm(Node $parentNode)
+    private function buildAddChildForm(Node $parentNode = null)
     {
         $defaults = array(
 
@@ -935,15 +938,18 @@ class NodesController extends RozierApp
                     new NotBlank()
                 )
             ))
-            ->add('parentId', 'hidden', array(
+            ->add('nodeTypeId', new \RZ\Renzo\CMS\Forms\NodeTypesType(), array(
+                'label' => $this->getTranslator()->trans('nodeType'),
+            ));
+
+        if (null !== $parentNode) {
+            $builder->add('parentId', 'hidden', array(
                 'data'=>(int) $parentNode->getId(),
                 'constraints' => array(
                     new NotBlank()
                 )
-            ))
-            ->add('nodeTypeId', new \RZ\Renzo\CMS\Forms\NodeTypesType(), array(
-                'label' => $this->getTranslator()->trans('nodeType'),
             ));
+        }
 
         return $builder->getForm();
     }

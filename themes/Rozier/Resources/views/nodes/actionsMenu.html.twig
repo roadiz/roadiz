@@ -69,7 +69,18 @@
          # Node statuses
          #}
         <div class="node-statuses with-subnav uk-form">
-            <header><i class="uk-icon-rz-statuses"></i><span class="label"><span class="label-text">{% trans %}statuses{% endtrans %}</span></span></header>
+
+            {% if node.isPublished %}
+            {% set iconClass = 'uk-icon-rz-published' %}
+            {% elseif node.isDraft %}
+            {% set iconClass = 'uk-icon-rz-draft-nodes' %}
+            {% elseif node.isPending %}
+            {% set iconClass = 'uk-icon-rz-pending-nodes' %} 
+            {% elseif node.isArchived %}
+            {% set iconClass = 'uk-icon-rz-archive-mini' %}
+            {% endif %}
+
+            <header><i class="{{ iconClass }}"></i><span class="label"><span class="label-text">{% trans %}statuses{% endtrans %}</span></span></header>
             <ul>
                 {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS') or node.status == nodeStatuses.published) %}
                 <li class="node-published">

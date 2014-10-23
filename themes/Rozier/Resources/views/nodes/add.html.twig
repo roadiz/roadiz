@@ -7,7 +7,7 @@
     	<h1 class="content-title">{% trans %}add.node{% endtrans %}</h1>
     	{% if type %}<h2><em>{{ type.getDisplayName }}</em></h2>{% endif %}
     	{% if parentNode %}<h2><em>{% trans %}In{% endtrans %}</em> {{ parentNode.getNodeName }}</h2>{% endif %}
-    	<nav class="content-header-nav-back"><a class="uk-button uk-button-small" href="{{ path('nodesHomePage') }}"><span class="uk-icon-reply"></span>{% trans %}back_to.nodes{% endtrans %}</a></nav>
+        {% include 'nodes/navBack.html.twig' %}
     </header>
 
     <article class="content content-no-action-menu">

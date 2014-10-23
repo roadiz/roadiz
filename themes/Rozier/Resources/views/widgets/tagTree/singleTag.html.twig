@@ -8,10 +8,10 @@
 {% endif %}
 
 <li data-tag-id="{{ tag.getId }}"
-	class="tagtree-element">
+	class="uk-nestable-list-item uk-nestable-list-item-tag tagtree-element{% if tag.getChildren.count > 0 %} has-children{% endif %}">
 
-	<div class="tagtree-element-inner uk-nestable-item">
-		<div class="uk-nestable-handle"></div>
+	<div class="tagtree-element-inner uk-nestable-item uk-nestable-item-tag">
+		<div class="uk-nestable-handle uk-nestable-handle-tag"><i class="{% if tag.getChildren.count > 0 %}uk-icon-rz-tags{% else %}uk-icon-rz-tag-tree{% endif %}"></i></div>
 		<div data-nestable-action="toggle"></div>
 		<div class="tagtree-element-name">
 			<!-- <i class="uk-icon-single-tag-outline"></i> -->
@@ -26,8 +26,8 @@
 
 		<div class="tagtree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
 		    <button class="uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></button>
-		    <nav class="uk-dropdown uk-dropdown-small">
-		        <div class="uk-nav uk-nav-dropdown">
+		    <nav class="uk-dropdown uk-dropdown-small uk-dropdown-flip">
+		        <div class="uk-nav uk-nav-dropdown uk-dropdown-flip">
 		            <p>
 		            	<a title="{{ "edit.tag.%name%"|trans({'%name%': tag.getTagName}) }}" href="{{ editUrl }}">
 		            		<i class="uk-icon-pencil"></i> {% trans %}edit.tag{% endtrans %}
@@ -47,7 +47,7 @@
 		    </nav>
 		</div>
 	</div>
-	<ul class="uk-nestable-list" data-parent-tag-id="{{ tag.getId }}">
+	<ul class="uk-nestable-list uk-nestable-list-tag" data-parent-tag-id="{{ tag.getId }}">
 	{#
 	 # For drag&drop ease, we don't create nested lists
 	 # We will have to check after OR inside drag status
