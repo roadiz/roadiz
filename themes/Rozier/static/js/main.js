@@ -93,15 +93,19 @@ Rozier.refreshMainNodeTree = function () {
  * Center vetically every DOM objects that have
  * the data-vertical-center attribute
  */
-Rozier.centerVerticalObjects = function() {
+Rozier.centerVerticalObjects = function(context) {
+
+	// console.log('center vertical objects');
+	// console.log(context);
 	var $objects = $(".rz-vertical-align");
 
-	$objects.each(function (index, element) {
-		$($objects[index]).css({
-			'top': '50%',
-			'margin-top': (element.offsetHeight/-2)+'px'
-		});
-	});
+	for(var i = 0; i < $objects.length; i++) {
+		$objects[i].style.top = '50%';
+		$objects[i].style.marginTop = $($objects[i]).actual('outerHeight')/-2 +'px';
+		if($objects[i].className.indexOf('actions-menu') >= 0 && context == 'ajax'){
+			$objects[i].style.right = - $($objects[i]).actual('outerWidth')+'px';
+		}
+	}
 };
 
 Rozier.toggleTreesPanel = function (event) {

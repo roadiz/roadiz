@@ -1,18 +1,23 @@
 var NodeStatuses = function () {
     var _this = this;
 
-
     _this.$containers = $(".node-statuses");
+    _this.$icon = _this.$containers.find('header i');
     _this.$inputs = _this.$containers.find('input[type="checkbox"], input[type="radio"]');
+    _this.$item = _this.$containers.find('.node-statuses-item');
 
     _this.init();
 };
 
 NodeStatuses.prototype.$containers = null;
+NodeStatuses.prototype.$icon = null;
 NodeStatuses.prototype.$inputs = null;
+NodeStatuses.prototype.$item = null;
 
 NodeStatuses.prototype.init = function() {
     var _this = this;
+
+    _this.$item.on('click', $.proxy(_this.itemClick, _this));
 
     _this.$inputs.off('change', $.proxy(_this.onChange, _this));
     _this.$inputs.on('change', $.proxy(_this.onChange, _this));
@@ -20,6 +25,15 @@ NodeStatuses.prototype.init = function() {
     _this.$containers.find(".rz-boolean-checkbox").bootstrapSwitch({
         "onSwitchChange": $.proxy(_this.onChange, _this)
     });
+};
+
+NodeStatuses.prototype.itemClick = function(event) {
+    var _this = this;
+
+    $(event.currentTarget).find('input[type="checkbox"], input[type="radio"]').prop('checked', true);
+    _this.$icon[0].className = $(event.currentTarget).find('i')[0].className;
+
+    return false;
 };
 
 NodeStatuses.prototype.onChange = function(event) {

@@ -162,6 +162,34 @@ class NodeType extends AbstractEntity
 
         return $this;
     }
+    /**
+     * @Column(type="string", name="color", unique=false, nullable=true)
+     */
+    protected $color = '#000000';
+      
+    /**
+     * Gets the value of color.
+     *
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }  
+
+    /**
+     * Sets the value of color.
+     * 
+     * @param string $color
+     *
+     * @return $this
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
+        
+        return $this;
+    }  
 
     /**
      * @OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"ALL"})

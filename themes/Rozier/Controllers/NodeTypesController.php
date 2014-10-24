@@ -316,6 +316,7 @@ class NodeTypesController extends RozierApp
             'visible' =>        $nodeType->isVisible(),
             'newsletterType' => $nodeType->isNewsletterType(),
             'hidingNodes' =>    $nodeType->isHidingNodes(),
+            'color' =>          $nodeType->getColor(),
         );
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
@@ -344,6 +345,11 @@ class NodeTypesController extends RozierApp
             ->add('hidingNodes', 'checkbox', array(
                 'label' => $this->getTranslator()->trans('nodeType.hidingNodes'),
                 'required' => false
+            ))
+            ->add('color', 'text', array(
+                'label' => $this->getTranslator()->trans('nodeType.color'),
+                'required' => false,
+                'attr' => array('class'=>'colorpicker-input')
             ));
 
         return $builder->getForm();
@@ -362,6 +368,7 @@ class NodeTypesController extends RozierApp
             'visible' =>        $nodeType->isVisible(),
             'newsletterType' => $nodeType->isNewsletterType(),
             'hidingNodes' =>    $nodeType->isHidingNodes(),
+            'color' =>          $nodeType->getColor(),
         );
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
@@ -385,6 +392,11 @@ class NodeTypesController extends RozierApp
             ->add('hidingNodes', 'checkbox', array(
                 'label' => $this->getTranslator()->trans('nodeType.hidingNodes'),
                 'required' => false
+            ))
+            ->add('color', 'text', array(
+                'label' => $this->getTranslator()->trans('nodeType.color'),
+                'required' => false,
+                'attr' => array('class'=>'colorpicker-input')
             ));
 
         return $builder->getForm();

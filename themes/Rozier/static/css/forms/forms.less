@@ -49,6 +49,11 @@
         .box-sizing();
         .transition(~'0.35s ease border-color, 0.5s ease background');
 
+        &.colorpicker-input{
+            width:105px;
+            padding:0px 10px 0 35px;
+        }
+
         &:hover {
             background-color: white;
             border-color: @grey-form-submit-border-hover;
@@ -174,4 +179,10 @@
     &.uk-form-stacked .uk-form-label {
         margin-bottom: 7px;
     }
+
+    // Colorpicker
+    .minicolors-theme-default .minicolors-swatch{
+        top:8px; left:8px;
+    }
+
 }

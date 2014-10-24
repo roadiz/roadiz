@@ -19,6 +19,7 @@ module.exports = function(grunt) {
 					"js/addons/pagination.min.js",
 					"js/addons/notify.min.js",
 					"js/vendor/codemirror.js",
+					"js/vendor/jquery.minicolors.min.js",
 					"js/vendor/mode/markdown/markdown.js",
 					"js/vendor/mode/overlay.js",
 					"js/vendor/mode/xml/xml.js",

@@ -38,8 +38,8 @@
          # Node parameters
          #}
         {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS')) %}
-        <div class="node-statuses with-subnav">
-            <header><i class="uk-icon-rz-statuses"></i><span class="label"><span class="label-text">{% trans %}parameters{% endtrans %}</span></span></header>
+        <div class="node-parameters with-subnav">
+            <header><i class="uk-icon-rz-settings-general"></i><span class="label"><span class="label-text">{% trans %}parameters{% endtrans %}</span></span></header>
             <ul>
                 <li class="node-visibility">
                     <i class="uk-icon-rz-visibility"></i>
@@ -81,26 +81,26 @@
             {% endif %}
 
             <header><i class="{{ iconClass }}"></i><span class="label"><span class="label-text">{% trans %}statuses{% endtrans %}</span></span></header>
-            <ul>
+            <ul class="node-statuses-list">
                 {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS') or node.status == nodeStatuses.published) %}
-                <li class="node-published">
+                <li class="node-statuses-item node-published">
                     <i class="uk-icon-rz-published"></i>
                     <span class="label">{% trans %}published{% endtrans %}</span>
                     <input data-node-id="{{ node.getId }}" type="radio" name="status" value="{{ nodeStatuses.published }}" {% if node.isPublished %}checked{% endif %} />
                 </li>
                 {% endif %}
-                <li class="node-draft">
+                <li class="node-statuses-item node-draft">
                     <i class="uk-icon-rz-draft-nodes"></i>
                     <span class="label">{% trans %}draft{% endtrans %}</span>
                     <input data-node-id="{{ node.getId }}" type="radio" name="status" value="{{ nodeStatuses.draft }}" {% if node.isDraft %}checked{% endif %} />
                 </li>
-                <li class="node-pending">
+                <li class="node-statuses-item node-pending">
                     <i class="uk-icon-rz-pending-nodes"></i>
                     <span class="label">{% trans %}pending{% endtrans %}</span>
                     <input data-node-id="{{ node.getId }}" type="radio" name="status" value="{{ nodeStatuses.pending }}" {% if node.isPending %}checked{% endif %} />
                 </li>
                 {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS') or node.status == nodeStatuses.archived) %}
-                <li class="node-archived">
+                <li class="node-statuses-item node-archived">
                     <i class="uk-icon-rz-archive-mini"></i>
                     <span class="label">{% trans %}archived{% endtrans %}</span>
                     <input data-node-id="{{ node.getId }}" type="radio" name="status" value="{{ nodeStatuses.archived }}" {% if node.isArchived %}checked{% endif %} />

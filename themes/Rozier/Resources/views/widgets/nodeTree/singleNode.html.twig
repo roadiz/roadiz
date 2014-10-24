@@ -5,7 +5,11 @@
 {% endif %}
 {% set type = node.getNodeType.getName() %}
 <li data-node-id="{{ node.getId }}"
-	class="nodetree-element">
+	class="nodetree-element uk-nestable-list-item">
+
+	{% if not mainNodeTree %}
+		<span class="nodetree-list-item-color" style="background-color:{{ node.nodeType.color }};"></span>
+	{% endif %}
 
 	<div class="nodetree-element-inner uk-nestable-item
 		{% if node.isHome %}home-node {% endif %}
@@ -36,7 +40,6 @@
 			{% else %}
 				<a href="{{ path('nodesEditSourcePage', { nodeId:node.getId, translationId:nodeTree.getTranslation.getId}) }}">{{ name }}</a>
 			{% endif %}
-
 		</div>
 
 		<div class="nodetree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
@@ -89,7 +92,7 @@
 	 #}
 	{% if not node.isHidingChildren %}
 		{% for subNode in nodeTree.getChildrenNodes(node) %}
-			{% include 'widgets/nodeTree/singleNode.html.twig' with {"node":subNode, "parent":node, "nodeTree":nodeTree} only %}
+			{% include 'widgets/nodeTree/singleNode.html.twig' with {"node":subNode, "parent":node, "nodeTree":nodeTree, "mainNodeTree":mainNodeTree} only %}
 		{% endfor %}
 	{% endif %}
 	</ul>

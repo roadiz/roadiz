@@ -243,6 +243,10 @@
         }
         &.stack-node {
 
+            & > .uk-nestable-handle{
+                width:36px;
+            }
+
             & > .uk-nestable-handle:after, .uk-icon-folder:before {
                 display: none;
             }
@@ -258,16 +262,19 @@
                 width: 10px;
                 display: inline-block;
                 height: 10px;
-                top: 2px;
-                left: -4px;
-                position: relative;
+                top: 6px;
+                left: 7px;
+                position: absolute;
+                // position: relative;
             }
             .icon-stack-folder {
-                left: -13px;
+                left: 11px;
                 &-final {
-                left: -22px;
+                    left: 15px;
+
                     &:after {
-                        position: relative;
+                        // position: relative;
+                        position: absolute;
                         display: block;
                         content: "";
                         font-family: FontAwesome;

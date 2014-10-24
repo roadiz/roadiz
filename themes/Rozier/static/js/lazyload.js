@@ -98,10 +98,10 @@ Lazyload.prototype.applyContent = function(data) {
         $old.remove();
 
         _this.generalBind();
+        Rozier.centerVerticalObjects('ajax');
 
         $tempData.fadeIn(300, function () {
 
-            Rozier.centerVerticalObjects();
             $tempData.removeClass('new-content-global');
         });
     });
@@ -134,6 +134,17 @@ Lazyload.prototype.generalBind = function() {
         var dropZone = new Dropzone("#upload-dropzone-document", Dropzone.options.uploadDropzoneDocument);
         
     }
+
+    // Init colorpicker
+    if($('.colorpicker-input').length){
+        $('.colorpicker-input').minicolors();
+    }
+
+    // Animate actions menu
+    if($('.actions-menu').length){
+        TweenLite.to('.actions-menu', 0.5, {right:0, delay:0.4, ease:Expo.easeOut});
+    }
+
     Rozier.initNestables();
     Rozier.bindMainTrees();
     Rozier.nodeStatuses = new NodeStatuses();
