@@ -13,11 +13,7 @@
 		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
 		<h1 class="content-title node-edit-seo-title">
 			{{ "edit.node.%name%.seo"|trans({'%name%': currentTitle}) }}
-			<div class="node-edit-node-type-cont">
-                <div class="node-edit-node-type-circle" title="{{ node.nodeType.displayName }}" data-uk-tooltip="{animation:true}">
-                    <i class="uk-icon-rz-infos"></i>
-                </div>
-            </div>
+           {% include 'nodes/nodeTypeCircle.html.twig' %}
 		</h1>
 		{% include 'nodes/navBack.html.twig' %}
 		{% include 'nodes/navBar.html.twig' with {"current": 'seo'} %}

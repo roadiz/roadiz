@@ -14,24 +14,22 @@
 
 /* -------- STYLES -------- */
 
-.node-edit-node-type-cont{
+.node-edit-node-type-circle{
     display:inline-block;
     position: relative;
-    width:20px; height:20px;
-    line-height:20px;
-    top:-2px;
-    cursor: pointer;
-}
-
-.node-edit-node-type-circle{
     .box-sizing();
-    width:20px; height:20px;
-    padding:2px;
-    .rounded(10px);
+    width:24px; height:24px;
+    padding:3px 0 0 1px;
+    .rounded(20px);
     line-height:20px;
-    background:#ececec; 
+    background-color:#E0E0E0;
+    .transition(background-color ease 0.35s);
+    cursor: pointer;
 
     .uk-icon-rz-infos{
         -webkit-font-smoothing: none;
+    }
+    &:hover {
+        background-color: darken(#E0E0E0, 10%);
     }
 }
