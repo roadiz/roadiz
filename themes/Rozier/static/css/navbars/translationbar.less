@@ -24,7 +24,11 @@
             height:30px;
             background: none transparent;
 
-            &:after{     
+            &:after{   
+                position: absolute;
+                content:'';
+                top:100%; left:0;
+                width:100%;
                 background: @translation-nav-color;    
                 height:@active-border-size;
                 .transition(0.3s background-color ease);
@@ -35,16 +39,17 @@
                 top:0px;
                 height:100%;
                 padding:0 6px;
+                font-family: @main-font;
                 color:@translation-nav-color;
                 text-transform: capitalize;
                 font-size:10px; line-height:30px;
+                box-shadow: none;
                 .transition(0.3s color ease);
             }
 
             &:hover{
 
                a{
-                    box-shadow: none;
                     color:@translation-nav-hover-color;
                 }
 
@@ -56,14 +61,15 @@
             
             &.uk-active{
                 cursor: default;
-                
-                a{
+
+                & > a {
                     color:@translation-nav-active-color;
                     cursor: default;
                 }
 
-                &:after{  
-                    background: @translation-nav-active-color;    
+                &:after{
+                    height:@active-border-size;
+                    background: @translation-nav-active-color; 
                 }
 
             }

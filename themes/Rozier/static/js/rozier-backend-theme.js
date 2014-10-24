@@ -10715,7 +10715,7 @@ Lazyload.prototype.generalBind = function() {
 
     // Animate actions menu
     if($('.actions-menu').length){
-        TweenLite.to('.actions-menu', 0.5, {right:0, delay:0.3, ease:Expo.easeOut});
+        TweenLite.to('.actions-menu', 0.5, {right:0, delay:0.4, ease:Expo.easeOut});
     }
 
     Rozier.initNestables();

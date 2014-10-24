@@ -375,27 +375,23 @@
             editor.addButtons({
 
                 h2: {
-                    title  : 'H2',
+                    title  : 'Headline 2',
                     label  : '<i class="uk-icon-rz-h2"></i>'
                 },
                 h3: {
-                    title  : 'H3',
+                    title  : 'Headline 3',
                     label  : '<i class="uk-icon-rz-h3"></i>'
                 },
                 h4: {
-                    title  : 'H4',
-                    label  : '<i class="uk-icon-rz-h4"></i>'
-                },
-                h4: {
-                    title  : 'H4',
+                    title  : 'Headline 4',
                     label  : '<i class="uk-icon-rz-h4"></i>'
                 },
                 h5: {
-                    title  : 'H5',
+                    title  : 'Headline 5',
                     label  : '<i class="uk-icon-rz-h5"></i>'
                 },
                 h6: {
-                    title  : 'H6',
+                    title  : 'Headline 6',
                     label  : '<i class="uk-icon-rz-h6"></i>'
                 },
                 fullscreen: {
