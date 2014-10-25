@@ -242,6 +242,9 @@ class Kernel implements \Pimple\ServiceProviderInterface
              * ----------------------------
              */
             $this->response = $this->container['httpKernel']->handle($this->request);
+
+            $this->response->setCharset('UTF-8');
+            $this->response->prepare($this->request);
             $this->response->send();
             $this->container['httpKernel']->terminate($this->request, $this->response);
 
