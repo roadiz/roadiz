@@ -122,6 +122,14 @@ class TagRepository extends EntityRepository
                 $key = str_replace('nodes.', '', $key);
             }
 
+            /*
+             * Search in translatedTags fields
+             */
+            if (false !== strpos($key, 'translatedTag.')) {
+                $prefix = 'tt.';
+                $key = str_replace('translatedTag.', '', $key);
+            }
+
 
              /*
              * Search in translation fields

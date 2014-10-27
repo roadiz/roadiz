@@ -19,10 +19,6 @@
     .rounded(0px);
     .box-sizing();
     -webkit-font-smoothing: antialiased;
-    background: @contrast-color-darker;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    color: white;
-    border-color: darken(@contrast-color-darker, 5%);
     border-top: none;
     list-style: none;
 }
@@ -31,9 +27,13 @@
     color: @alert-color;
     border-color: rgba(@alert-color-red, @alert-color-blue, @alert-color-green, 0.5);
     background: #FFEEEE;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 }
 .uk-alert-success {
-
+    background: @contrast-color-darker;
+    border-color: darken(@contrast-color-darker, 5%);
+    color: white;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 }
 .uk-alert-warning {
 
@@ -48,7 +48,7 @@ td.uk-alert {
 
 .install .uk-alert {
     position: static;
-    width:100%; 
+    width:100%;
     left:0;
     margin:0;
     border-top: 1px solid rgba(216,80,48,.3);

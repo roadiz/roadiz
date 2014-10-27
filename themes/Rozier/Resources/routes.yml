@@ -253,6 +253,9 @@ tagAjaxEdit:
     path:     /rz-admin/ajax/tag/edit/{tagId}
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::editAction }
     requirements: { tagId : "[0-9]+" }
+tagAjaxSearch:
+    path:     /rz-admin/ajax/tag/search
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::searchAction }
 
 # USERS
 usersHomePage:

@@ -209,6 +209,25 @@ class TagHandler
     }
 
     /**
+     * Get tag full path using tag names.
+     *
+     * @return string
+     */
+    public function getFullPath()
+    {
+        $parents = $this->getParents();
+        $path = array();
+
+        foreach ($parents as $parent) {
+            $path[] = $parent->getTagName();
+        }
+
+        $path[] = $this->tag->getTagName();
+
+        return implode('/', $path);
+    }
+
+    /**
      * Clean position for current tag siblings.
      *
      * @return int Return the next position after the **last** tag

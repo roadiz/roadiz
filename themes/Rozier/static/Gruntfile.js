@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				'src': [
+					'js/vendor/jquery-ui.js',
 					'js/vendor/TweenMax.min.js',
 					'js/vendor/bootstrap-switch.js',
 					'js/vendor/uikit.min.js',
@@ -33,6 +34,7 @@ module.exports = function(grunt) {
 					'js/widgets/nodeStatuses.js',
 					'js/widgets/childrenNodesField.js',
 					'js/widgets/markdownEditor.js',
+					'js/widgets/tagAutocomplete.js',
 					'js/lazyload.js',
 					'js/plugins.js',
 					'js/main.js'

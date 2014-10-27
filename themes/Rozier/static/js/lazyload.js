@@ -115,6 +115,7 @@ Lazyload.prototype.generalBind = function() {
     new ChildrenNodesField();
     new SaveButtons();
     new MarkdownEditor();
+    new TagAutocomplete();
 
 
     // Init markdown-preview
@@ -132,7 +133,7 @@ Lazyload.prototype.generalBind = function() {
     if($('#upload-dropzone-document').length){
 
         var dropZone = new Dropzone("#upload-dropzone-document", Dropzone.options.uploadDropzoneDocument);
-        
+
     }
 
     // Init colorpicker
