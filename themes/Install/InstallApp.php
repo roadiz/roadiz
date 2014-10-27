@@ -500,7 +500,6 @@ class InstallApp extends AppController
             "imports" => $data["importFiles"]
         );
 
-
         $this->assignation["cms"] = array("version" => Kernel::$cmsVersion);
         $this->assignation["status"] = array();
 

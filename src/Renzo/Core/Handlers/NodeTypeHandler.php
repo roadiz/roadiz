@@ -140,6 +140,13 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
         return $this;
     }
 
+    public function regenerateEntityClass() {
+        $this->removeSourceEntityClass();
+        $this->generateSourceEntityClass();
+
+        return $this;
+    }
+
     /**
      * Delete node-type class from database.
      *
