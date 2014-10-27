@@ -848,25 +848,30 @@ class InstallApp extends AppController
             ->add('timezone', 'choice', array(
                 'choices' => $timeZoneList,
                 'required' => true
-            ))
-            ->add('separator_1', new SeparatorType(), array(
-                'label' => $this->getTranslator()->trans('themes.frontend.description')
-            ))
-            ->add('install_theme', 'checkbox', array(
-                'required' => false
-            ))
-            ->add(
-                'className',
-                new \RZ\Renzo\CMS\Forms\ThemesType(),
-                array(
-                    'label' => $this->getTranslator()->trans('theme.selector'),
-                    'required' => true,
-                    'constraints' => array(
-                        new \Symfony\Component\Validator\Constraints\NotNull(),
-                        new \Symfony\Component\Validator\Constraints\Type('string'),
+            ));
+
+            $themesType = new \RZ\Renzo\CMS\Forms\ThemesType();
+
+            if ($themesType->getSize() > 0) {
+                $builder->add('separator_1', new SeparatorType(), array(
+                    'label' => $this->getTranslator()->trans('themes.frontend.description')
+                ))
+                ->add('install_theme', 'checkbox', array(
+                    'required' => false
+                ))
+                ->add(
+                    'className',
+                    $themesType,
+                    array(
+                        'label' => $this->getTranslator()->trans('theme.selector'),
+                        'required' => true,
+                        'constraints' => array(
+                            new \Symfony\Component\Validator\Constraints\NotNull(),
+                            new \Symfony\Component\Validator\Constraints\Type('string'),
+                        )
                     )
-                )
-            );
+                );
+            }
 
         return $builder->getForm();
     }
