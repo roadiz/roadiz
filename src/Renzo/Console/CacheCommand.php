@@ -193,12 +193,16 @@ class CacheCommand extends Command
 
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->in(RENZO_ROOT . '/cache/request')
-               ->in(RENZO_ROOT . '/cache/rendered');
-        $fs->remove($finder);
 
+        if (file_exists(RENZO_ROOT . '/cache/request') &&
+            file_exists(RENZO_ROOT . '/cache/rendered')) {
 
-        $text .= '<info>Assets cache has been purged…</info>'.PHP_EOL;
+            $finder->in(RENZO_ROOT . '/cache/request')
+                   ->in(RENZO_ROOT . '/cache/rendered');
+            $fs->remove($finder);
+
+            $text .= '<info>Assets cache has been purged…</info>'.PHP_EOL;
+        }
 
         return $text;
     }

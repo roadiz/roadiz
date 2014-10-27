@@ -472,6 +472,19 @@ class Node extends AbstractDateTimedPositioned
 
         return $this;
     }
+    /**
+     * @param Tag $tag
+     *
+     * @return $this
+     */
+    public function addTag(Tag $tag)
+    {
+        if (!$this->getTags()->contains($tag)) {
+            $this->getTags()->add($tag);
+        }
+
+        return $this;
+    }
 
     /**
      * @OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")

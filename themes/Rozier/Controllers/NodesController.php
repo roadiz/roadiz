@@ -878,6 +878,10 @@ class NodesController extends RozierApp
 
                 if (null === $tag) {
 
+                    /*
+                     * Creation of a new tag
+                     * before linking it to the node
+                     */
                     $trans = $this->getService('em')
                                 ->getRepository('RZ\Renzo\Core\Entities\Translation')
                                 ->findDefault();
@@ -897,7 +901,7 @@ class NodesController extends RozierApp
                     $this->getService('em')->flush();
                 }
 
-                $node->getTags()->add($tag);
+                $node->addTag($tag);
             }
         }
 
