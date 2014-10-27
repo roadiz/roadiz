@@ -174,7 +174,7 @@
         Install.importNodeTypeRoutes.push({'url': "{{ path('installImportTags', {'filename': tag, 'themeId': themeId}) }}",'id':'{{ tag|replace({'/': '_', '.': '_'}) }}'});
         {% endfor %}
         {% for node in nodes %}
-        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodes', {'filename': node, 'themeId': themeId}) }}",'id':'{{ node|replace({'/': '_', '.': '_'}) }}'});
+        Install.importNodeTypeRoutes.push({'update': "{{ path('installUpdateSchema') }}", 'url': "{{ path('installImportNodes', {'filename': node, 'themeId': themeId}) }}",'id':'{{ node|replace({'/': '_', '.': '_'}) }}'});
         {% endfor %}
     })();
 </script>

@@ -168,9 +168,6 @@ class ImportController extends InstallApp
             );
         }
         $data['status'] = true;
-        if ($classImporter == "RZ\Renzo\CMS\Importers\NodeTypesImporter") {
-            $data['request'] = Kernel::getService('urlGenerator')->generate('installUpdateSchema');
-        }
         return new Response(
             json_encode($data),
             Response::HTTP_OK,
