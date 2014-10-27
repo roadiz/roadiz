@@ -23,12 +23,9 @@ use Symfony\Component\Finder\Finder;
 class ThemesType extends AbstractType
 {
     protected $themes;
+    private $choices;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
+    public function __construct() {
         $themes = Kernel::getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Theme')
             ->findAll();
@@ -75,10 +72,23 @@ class ThemesType extends AbstractType
                 unset($choices[Kernel::INSTALL_CLASSNAME]);
             }
         }
+        $this->choices = $choices;
+    }
+
+    public function getSize() {
+        return (count($this->choices));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setDefaults(array(
-            'choices' => $choices
+            'choices' => $this->choices
         ));
     }
+
     /**
      * {@inheritdoc}
      */
