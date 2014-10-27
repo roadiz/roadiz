@@ -4654,6 +4654,19 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="node.%node%.linked.tags">
+        <source>node.%node%.linked.tags</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="list.tags.to_link">
+        <source>list.tags.to_link</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="use.new_or_existing.tags_with_hierarchy">
+        <source>use.new_or_existing.tags_with_hierarchy</source>
+        <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
