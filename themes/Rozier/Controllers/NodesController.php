@@ -622,6 +622,49 @@ class NodesController extends RozierApp
             return $this->throw404();
         }
     }
+
+
+    public function emptyTrashAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES_DELETE');
+
+        $form = $this->buildEmptyTrashForm();
+        $form->handleRequest();
+
+        if ($form->isValid()){
+            $nodes = $this->getService('em')
+                          ->getRepository('RZ\Renzo\Core\Entities\Node')
+                          ->findBy(array(
+                             'status' => Node::DELETED
+                          ));
+
+            foreach ($nodes as $node) {
+                $node->getHandler()->removeWithChildrenAndAssociations();
+            }
+
+            $msg = $this->getTranslator()->trans('node.trash.emptied');
+            $request->getSession()->getFlashBag()->add('confirm', $msg);
+            $this->getService('logger')->info($msg);
+
+            /*
+             * Force redirect to avoid resending form when refreshing page
+             */
+            $response = new RedirectResponse(
+                $this->getService('urlGenerator')->generate('nodesHomeDeletedPage')
+            );
+            $response->prepare($request);
+
+            return $response->send();
+        }
+
+        $this->assignation['form'] = $form->createView();
+
+        return new Response(
+            $this->getTwig()->render('nodes/emptyTrash.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
     /**
      * Return an deletion form for requested node.
      *
@@ -1118,6 +1161,17 @@ class NodesController extends RozierApp
                     new NotBlank()
                 )
             ));
+
+        return $builder->getForm();
+    }
+
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildEmptyTrashForm()
+    {
+        $builder = $this->getService('formFactory')
+            ->createBuilder('form');
 
         return $builder->getForm();
     }

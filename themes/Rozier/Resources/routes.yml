@@ -96,6 +96,9 @@ nodesExportPage:
 nodesExportAllPage:
     path:     /rz-admin/nodes/export
     defaults: { _controller: Themes\Rozier\Controllers\NodesUtilsController::exportAllAction }
+nodesEmptyTrashPage:
+    path:     /rz-admin/nodes/empty-trash
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::emptyTrashAction }
 
 ## Ajax
 nodeAjaxEdit:

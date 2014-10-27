@@ -91,7 +91,7 @@
 	 # For drag&drop ease, we don't create nested lists
 	 # We will have to check after OR inside drag status
 	 #}
-	{% if not node.isHidingChildren %}
+	{% if not node.isHidingChildren and not node.nodeType.isHidingNodes %}
 		{% for subNode in nodeTree.getChildrenNodes(node) %}
 			{% include 'widgets/nodeTree/singleNode.html.twig' with {"node":subNode, "parent":node, "nodeTree":nodeTree, "mainNodeTree":mainNodeTree} only %}
 		{% endfor %}
