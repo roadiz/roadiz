@@ -38,7 +38,7 @@
          # Node parameters
          #}
         {% if (securityContext.Granted('ROLE_ACCESS_NODES_STATUS')) %}
-        <div class="node-parameters with-subnav">
+        <div class="node-statuses node-parameters with-subnav">
             <header><i class="uk-icon-rz-settings-general"></i><span class="label"><span class="label-text">{% trans %}parameters{% endtrans %}</span></span></header>
             <ul>
                 <li class="node-visibility">
@@ -68,7 +68,7 @@
         {#
          # Node statuses
          #}
-        <div class="node-statuses with-subnav uk-form">
+        <div class="node-statuses node-status with-subnav uk-form">
             
             {% if node.isDraft %}
             {% set iconClass = 'uk-icon-rz-draft-nodes' %}

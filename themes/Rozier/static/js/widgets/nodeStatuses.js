@@ -2,7 +2,7 @@ var NodeStatuses = function () {
     var _this = this;
 
     _this.$containers = $(".node-statuses");
-    _this.$icon = _this.$containers.find('header i');
+    _this.$icon = $('.node-status header i');
     _this.$inputs = _this.$containers.find('input[type="checkbox"], input[type="radio"]');
     _this.$item = _this.$containers.find('.node-statuses-item');
 
@@ -30,10 +30,14 @@ NodeStatuses.prototype.init = function() {
 NodeStatuses.prototype.itemClick = function(event) {
     var _this = this;
 
-    $(event.currentTarget).find('input[type="checkbox"], input[type="radio"]').prop('checked', true);
-    _this.$icon[0].className = $(event.currentTarget).find('i')[0].className;
+    console.log('item click');
+    $input = $(event.currentTarget).find('input[type="radio"]');
 
-    return false;
+    if($input.length){
+        $input.prop('checked', true);
+        $input.trigger('change');
+    }
+
 };
 
 NodeStatuses.prototype.onChange = function(event) {
@@ -48,6 +52,7 @@ NodeStatuses.prototype.onChange = function(event) {
         if($input.is('input[type="checkbox"]')){
             statusValue = Number($input.is(':checked'));
         } else if($input.is('input[type="radio"]')){
+            _this.$icon[0].className = $input.parent().find('i')[0].className;
             statusValue = Number($input.val());
         }
 
