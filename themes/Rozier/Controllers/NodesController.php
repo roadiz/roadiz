@@ -12,6 +12,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\Tag;
+use RZ\Renzo\Core\Entities\TagTranslation;
 use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\UrlAlias;
@@ -19,6 +20,9 @@ use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Handlers\NodeHandler;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
+
+
+use RZ\Renzo\CMS\Forms\SeparatorType;
 
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\RozierApp;
@@ -300,11 +304,10 @@ class NodesController extends RozierApp
                 $form->handleRequest();
 
                 if ($form->isValid()) {
-                    $tag = $this->addNodeTag($form->getData(), $node);
+                    $this->addNodeTag($form->getData(), $node);
 
-                    $msg = $this->getTranslator()->trans('node.%node%.linked.tag.%tag%', array(
-                        '%node%'=>$node->getNodeName(),
-                        '%tag%'=>$tag->getTranslatedTags()->first()->getName()
+                    $msg = $this->getTranslator()->trans('node.%node%.linked.tags', array(
+                        '%node%'=>$node->getNodeName()
                     ));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
@@ -826,11 +829,78 @@ class NodesController extends RozierApp
      */
     private function addNodeTag($data, Node $node)
     {
-        $tag = $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Tag')
-                ->findWithDefaultTranslation($data['tagId']);
+        if (!empty($data['tagPaths'])) {
+            $paths = explode(',', $data['tagPaths']);
+            $paths = array_filter($paths);
 
-        $node->getTags()->add($tag);
+            foreach ($paths as $path) {
+                $path = trim($path);
+
+                $tags = explode('/', $path);
+                $tags = array_filter($tags);
+
+                $tagName = $tags[count($tags) - 1];
+                $parentName = null;
+                $parentTag = null;
+
+                if (count($tags) > 1) {
+                    $parentName = $tags[count($tags) - 2];
+
+                    $parentTag = $this->getService('em')
+                                ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                                ->findOneByTagName($parentName);
+
+                    if (null === $parentTag) {
+                        $ttagParent = $this->getService('em')
+                                    ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
+                                    ->findOneByName($parentName);
+                        if (null !== $ttagParent) {
+                            $parentTag = $ttagParent->getTag();
+                        }
+                    }
+                }
+
+
+
+                $tag = $this->getService('em')
+                            ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                            ->findOneByTagName($tagName);
+
+
+                if (null === $tag) {
+                    $ttag = $this->getService('em')
+                                ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
+                                ->findOneByName($tagName);
+                    if (null !== $ttag) {
+                        $tag = $ttag->getTag();
+                    }
+                }
+
+                if (null === $tag) {
+
+                    $trans = $this->getService('em')
+                                ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                                ->findDefault();
+
+                    $tag = new Tag();
+                    $tag->setTagName($tagName);
+                    $translatedTag = new TagTranslation($tag, $trans);
+                    $translatedTag->setName($tagName);
+                    $tag->getTranslatedTags()->add($translatedTag);
+
+                    if (null !== $parentTag) {
+                        $tag->setParent($parentTag);
+                    }
+
+                    $this->getService('em')->persist($translatedTag);
+                    $this->getService('em')->persist($tag);
+                    $this->getService('em')->flush();
+                }
+
+                $node->getTags()->add($tag);
+            }
+        }
+
         $this->getService('em')->flush();
 
         return $tag;
@@ -1018,15 +1088,13 @@ class NodesController extends RozierApp
                         )
                     ))
                     ->add('tagPaths', 'text', array(
-                        'label' => $this->getTranslator()->trans('choose.tag'),
+                        'label' => $this->getTranslator()->trans('list.tags.to_link'),
                         'attr' => array('class' => 'rz-tag-autocomplete')
                     ))
-                    /*->add('tagId', new \RZ\Renzo\CMS\Forms\TagsType($node->getTags()), array(
-                        'label' => $this->getTranslator()->trans('choose.tag'),
-                        'constraints' => array(
-                            new NotBlank()
-                        )
-                    ))*/;
+                    ->add('separator_1', new SeparatorType(), array(
+                        'label' => $this->getTranslator()->trans('use.new_or_existing.tags_with_hierarchy'),
+                        'attr' => array('class' => 'uk-alert uk-alert-large')
+                    ));
 
         return $builder->getForm();
     }

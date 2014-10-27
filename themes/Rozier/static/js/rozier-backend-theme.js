@@ -13971,10 +13971,10 @@ var TagAutocomplete = function () {
     $(".rz-tag-autocomplete")
         // don't navigate away from the field on tab when selecting an item
         .bind( "keydown", function( event ) {
-          if ( event.keyCode === $.ui.keyCode.TAB &&
-              $( this ).autocomplete( "instance" ).menu.active ) {
-            event.preventDefault();
-          }
+            if ( event.keyCode === $.ui.keyCode.TAB &&
+                $( this ).autocomplete( "instance" ).menu.active ) {
+                event.preventDefault();
+            }
         })
         .autocomplete({
             source: function( request, response ) {
@@ -13984,15 +13984,6 @@ var TagAutocomplete = function () {
                     '_token': Rozier.ajaxToken,
                     'search': extractLast( request.term )
                 }, response);
-            },
-            response: function( event, ui ) {
-                console.log(ui.content);
-                if (typeof ui.content !== "undefined" &&
-                    typeof ui.content.tags !== "undefined") {
-                    ui.content = ui.content.tags;
-                } else {
-                    ui.content = [];
-                }
             },
             search: function() {
 

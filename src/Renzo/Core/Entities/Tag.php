@@ -19,6 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * to qualify Nodes, Documents, Subscribers.
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\TagRepository")
+ * @HasLifecycleCallbacks
  * @Table(name="tags", indexes={
  *     @index(name="visible_tag_idx", columns={"visible"}),
  *     @index(name="locked_tag_idx", columns={"locked"}),
@@ -224,11 +225,11 @@ class Tag extends AbstractDateTimedPositioned
     {
         //$this->setTagName('Tag '.uniqid());
 
-        $this->nodes = new ArrayCollection();
-        $this->subscribers = new ArrayCollection();
-        $this->documents = new ArrayCollection();
+        $this->nodes =          new ArrayCollection();
+        $this->subscribers =    new ArrayCollection();
+        $this->documents =      new ArrayCollection();
         $this->translatedTags = new ArrayCollection();
-        $this->children = new ArrayCollection();
+        $this->children =       new ArrayCollection();
     }
 
     /**
@@ -247,5 +248,20 @@ class Tag extends AbstractDateTimedPositioned
     public function getHandler()
     {
         return new TagHandler($this);
+    }
+
+    /**
+     * @PrePersist
+     */
+    public function prePersist()
+    {
+        parent::prePersist();
+
+        /*
+         * If no plain password is present, we must generate one
+         */
+        if ($this->getTranslatedTags()->count() === 0) {
+            throw new \Exception("Cannot create a tag without a tag-translation", 1);
+        }
     }
 }

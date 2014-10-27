@@ -121,11 +121,7 @@ class AjaxTagsController extends AbstractAjaxController
 
         if (!empty($request->get('search'))) {
 
-            $responseArray = array(
-                'statusCode' => Response::HTTP_OK,
-                'status'    => 'success',
-                'tags' => array()
-            );
+            $responseArray = array();
 
             $pattern = strip_tags($request->get('search'));
             $tags = $this->getService('em')
@@ -137,7 +133,7 @@ class AjaxTagsController extends AbstractAjaxController
                         );
 
             foreach ($tags as $tag) {
-                $responseArray['tags'][] = $tag->getHandler()->getFullPath();
+                $responseArray[] = $tag->getHandler()->getFullPath();
             }
         }
 

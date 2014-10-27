@@ -3,10 +3,10 @@ return array(
     'staticAssets' => array(
         'global' => array(
             'css' => array(
-                '/style.db37484c.css',
+                '/style.b19066bb.css',
             ),
             'js' => array(
-                '/rozier-backend-theme.a07500eb.min.js',
+                '/rozier-backend-theme.61616091.min.js',
             ),
         ),
     )
