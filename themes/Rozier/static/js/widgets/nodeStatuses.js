@@ -29,8 +29,7 @@ NodeStatuses.prototype.init = function() {
 
 NodeStatuses.prototype.itemClick = function(event) {
     var _this = this;
-
-    console.log('item click');
+    
     $input = $(event.currentTarget).find('input[type="radio"]');
 
     if($input.length){
