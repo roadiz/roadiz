@@ -63,6 +63,7 @@
         <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.1.1.min.js"><\/script>')</script>
 
         {% if head.devMode %}
+        <script src="{{ head.resourcesUrl }}js/vendor/jquery-ui.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/TweenMax.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
@@ -85,6 +86,7 @@
         <script src="{{ head.resourcesUrl }}js/widgets/nodeStatuses.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/childrenNodesField.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/markdownEditor.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/tagAutocomplete.js"></script>
         <script src="{{ head.resourcesUrl }}js/lazyload.js"></script>
         <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
         <script src="{{ head.resourcesUrl }}js/main.js"></script>
@@ -104,10 +106,11 @@
                     'nodeAjaxEdit' :          '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',
                     'tagAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
                     'documentsAjaxExplorer' : '{{ path('documentsAjaxExplorerPage') }}',
-                    'searchNodesSourcesAjax' : '{{ path('searchNodesSourcesAjax') }}',
-                    'nodesStatusesAjax' : '{{ path('nodesStatusesAjax') }}',
-                    'nodesTreeAjax' : '{{ path('nodesTreeAjax') }}',
-                    'nodesQuickAddAjax' : '{{ path('nodesQuickAddAjax')}}'
+                    'searchNodesSourcesAjax': '{{ path('searchNodesSourcesAjax') }}',
+                    'nodesStatusesAjax' :     '{{ path('nodesStatusesAjax') }}',
+                    'nodesTreeAjax' :         '{{ path('nodesTreeAjax') }}',
+                    'nodesQuickAddAjax' :     '{{ path('nodesQuickAddAjax')}}',
+                    'tagAjaxSearch':          '{{ path('tagAjaxSearch') }}'
                 }
             };
         </script>

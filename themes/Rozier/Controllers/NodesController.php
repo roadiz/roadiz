@@ -1017,12 +1017,16 @@ class NodesController extends RozierApp
                             new NotBlank()
                         )
                     ))
-                    ->add('tagId', new \RZ\Renzo\CMS\Forms\TagsType($node->getTags()), array(
+                    ->add('tagPaths', 'text', array(
+                        'label' => $this->getTranslator()->trans('choose.tag'),
+                        'attr' => array('class' => 'rz-tag-autocomplete')
+                    ))
+                    /*->add('tagId', new \RZ\Renzo\CMS\Forms\TagsType($node->getTags()), array(
                         'label' => $this->getTranslator()->trans('choose.tag'),
                         'constraints' => array(
                             new NotBlank()
                         )
-                    ));
+                    ))*/;
 
         return $builder->getForm();
     }

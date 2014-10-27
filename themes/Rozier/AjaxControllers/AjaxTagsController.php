@@ -98,6 +98,56 @@ class AjaxTagsController extends AbstractAjaxController
         );
     }
 
+    public function searchAction(Request $request)
+    {
+        /*
+         * Validate
+         */
+        if (true !== $notValid = $this->validateRequest($request, 'GET')) {
+            return new Response(
+                json_encode($notValid),
+                Response::HTTP_OK,
+                array('content-type' => 'application/javascript')
+            );
+        }
+
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        $responseArray = array(
+            'statusCode' => Response::HTTP_NOT_FOUND,
+            'status'    => 'danger',
+            'responseText' => 'No tags found'
+        );
+
+        if (!empty($request->get('search'))) {
+
+            $responseArray = array(
+                'statusCode' => Response::HTTP_OK,
+                'status'    => 'success',
+                'tags' => array()
+            );
+
+            $pattern = strip_tags($request->get('search'));
+            $tags = $this->getService('em')
+                        ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                        ->findBy(
+                            array('translatedTag.name' => array('LIKE', '%'.$pattern.'%')),
+                            null,
+                            10
+                        );
+
+            foreach ($tags as $tag) {
+                $responseArray['tags'][] = $tag->getHandler()->getFullPath();
+            }
+        }
+
+        return new Response(
+            json_encode($responseArray),
+            Response::HTTP_OK,
+            array('content-type' => 'application/javascript')
+        );
+    }
+
     /**
      * @param array $parameters
      * @param Tag   $tag
