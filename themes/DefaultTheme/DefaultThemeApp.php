@@ -137,13 +137,10 @@ class DefaultThemeApp extends FrontendController
                        ->findHomeWithTranslation($this->translation);
 
         if ($parent !== null) {
-            return $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Node')
-                ->findByParentWithTranslation(
-                    $this->translation,
-                    $parent,
-                    $this->getSecurityContext()
-                );
+            return $this->getService('nodeApi')
+                        ->getBy(
+                            array('parent' => $parent)
+                        );
         }
 
         return null;

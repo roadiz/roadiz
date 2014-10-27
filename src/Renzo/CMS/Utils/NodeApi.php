@@ -11,6 +11,7 @@
 namespace RZ\Renzo\CMS\Utils;
 
 use RZ\Renzo\CMS\Utils\AbstractApi;
+use RZ\Renzo\Core\Entities\Node;
 
 /**
  *
@@ -24,6 +25,10 @@ class NodeApi extends AbstractApi
 
     public function getBy(array $criteria, array $order = null, $limit = null, $offset = null)
     {
+        if (empty($criteria['status'])) {
+            $criteria['status'] = array('<=', Node::PUBLISHED);
+        }
+
         return $this->container['em']
                     ->getRepository("RZ\Renzo\Core\Entities\Node")
                     ->findBy(
@@ -38,6 +43,10 @@ class NodeApi extends AbstractApi
 
     public function getOneBy(array $criteria, array $order = null)
     {
+        if (empty($criteria['status'])) {
+            $criteria['status'] = array('<=', Node::PUBLISHED);
+        }
+
         return $this->container['em']
                     ->getRepository("RZ\Renzo\Core\Entities\Node")
                     ->findOneBy(
