@@ -115,20 +115,31 @@ class SolariumNodeSource
         $assoc['document_type_s'] = static::DOCUMENT_TYPE;
         // Need a nodeSourceId field
         $assoc[static::IDENTIFIER_KEY] = $this->nodeSource->getId();
+
+        $assoc['node_type_s'] = $this->nodeSource->getNode()->getNodeType()->getName();
+
         // Need a locale field
         $assoc['locale_s'] = $this->nodeSource->getTranslation()->getLocale();
+        $out = array_map(
+                    function($x) {
+                        return $x->getTranslatedTags()->first()->getName();
+                    },
+                    $this->nodeSource->getHandler()->getTags());
+        $assoc['tags_en'] = $out;
+
+        $assoc['title'] = $this->nodeSource->getTitle();
 
         $searchableFields = $this->nodeSource->getNode()->getNodeType()->getSearchableFields();
+
+
         /*
-         * Only one title and content fields to search in.
+         * Only one content fields to search in.
          */
         foreach ($searchableFields as $field) {
             $name = $field->getName();
             $getter = $field->getGetterName();
 
-            if ('title' == $name) {
-                $assoc['title'] = $this->nodeSource->$getter();
-            } elseif ('content' == $name) {
+            if ('content' == $name) {
                 $assoc['content'] = $this->nodeSource->$getter();
             } else {
                 $name .= '_s';
