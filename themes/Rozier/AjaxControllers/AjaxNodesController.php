@@ -340,6 +340,11 @@ class AjaxNodesController extends AbstractAjaxController
                     $node->setNodeName($name);
                     $this->getService('em')->persist($node);
 
+                    if (!empty($request->get('pushTop')) &&
+                        $request->get('pushTop') == 1) {
+                        $node->setPosition(0.5);
+                    }
+
                     $sourceClass = "GeneratedNodeSources\\".$nodeType->getSourceEntityClassName();
                     $source = new $sourceClass($node, $translation);
                     $source->setTitle($name);

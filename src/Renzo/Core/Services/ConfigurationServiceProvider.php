@@ -39,7 +39,7 @@ class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
                 return array(
                     "src/Renzo/Core/Entities",
                     "src/Renzo/Core/AbstractEntities",
-                    "sources/GeneratedNodeSources"
+                    "gen-src/GeneratedNodeSources"
                 );
             }
         };

@@ -1,13 +1,24 @@
 {% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section class="content-global">
+<section class="content-global stack-tree">
 
     <header class="content-header header-node header-nodes-tree">
         {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
         <h1 class="content-title node-edit-title">{{ "edit.node.%name%.tree"|trans({'%name%': source.getTitle}) }}</h1>
         {% include 'nodes/navBack.html.twig' %}
         {% include 'nodes/navBar.html.twig' with {"current": 'tree'} %}
+
+        {% if node.stackTypes|length %}
+        <div class="content-header-action-menu stack-tree-quick-creation">
+            {% for stackType in node.stackTypes %}
+            <a data-children-node-type="{{ stackType.id }}"
+               data-children-parent-node="{{ node.id }}"
+               class="uk-button rz-no-ajax-link rz-add-child-node"
+               href="#"><i class="uk-icon-rz-plus-simple"></i> {{ "add.a.%nodeType%"|trans({'%nodeType%': stackType.getDisplayName}) }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
     </header>
 
     {% include 'widgets/filtersBar.html.twig' %}

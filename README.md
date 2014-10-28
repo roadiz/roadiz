@@ -68,7 +68,7 @@ Add this to your `config.json` to link your RZCMS install to your Solr server:
 * *PHPUnit tests*: `phpunit --bootstrap bootstrap.php ./tests`
 * *Code quality*, use PHP_CodeSniffer with *PSR2 standard*:
 ```
-phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/sources/*,*/Tests/* -p ./
+phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/Tests/* -p ./
 ```
 
 ### Migrating with an existing database
@@ -79,7 +79,7 @@ When you import your existing database, you must regenerate all node-types sourc
 bin/renzo core:node:types --regenerateAllEntities
 ```
 
-This will parse every node-types from your database and recreate PHP classes in your `sources/GeneratedNodeSources` folder.
+This will parse every node-types from your database and recreate PHP classes in your `gen-src/GeneratedNodeSources` folder.
 
 ### Upgrading database schema
 
@@ -112,7 +112,7 @@ to the global configuration file.
 "entities": [
     "src/Renzo/Core/Entities",
     "src/Renzo/Core/AbstractEntities",
-    "sources/GeneratedNodeSources",
+    "gen-src/GeneratedNodeSources",
     "add/here/your/entities/folder",
     …
 ]

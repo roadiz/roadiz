@@ -16,6 +16,6 @@
     "entities": [
         "src/Renzo/Core/Entities",
         "src/Renzo/Core/AbstractEntities",
-        "sources/GeneratedNodeSources"
+        "gen-src/GeneratedNodeSources"
     ]
 }

@@ -38,7 +38,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                         (boolean) $c['config']['devMode']
                     );
 
-                    $configDB->setProxyDir(RENZO_ROOT . '/sources/Proxies');
+                    $configDB->setProxyDir(RENZO_ROOT . '/gen-src/Proxies');
                     $configDB->setProxyNamespace('Proxies');
 
                     $em = EntityManager::create($dbParams, $configDB);
