@@ -426,7 +426,7 @@ class NodesSourcesRepository extends EntityRepository
 
             $queryObj = $service->createSelect();
 
-            $queryObj->setQuery($query);
+            $queryObj->setQuery('collection_txt:'.$query);
             $queryObj->addSort('score', $queryObj::SORT_DESC);
 
             // this executes the query and returns the result
@@ -468,7 +468,7 @@ class NodesSourcesRepository extends EntityRepository
 
             $queryObj = $service->createSelect();
 
-            $queryObj->setQuery($query);
+            $queryObj->setQuery('collection_txt:'.$query);
             // create a filterquery
             $queryObj->createFilterQuery('translation')->setQuery('locale_s:'.$translation->getLocale());
             $queryObj->addSort('score', $queryObj::SORT_DESC);

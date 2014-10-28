@@ -110,6 +110,7 @@ class SolariumNodeSource
     public function getFieldsAssoc()
     {
         $assoc = array();
+        $collection = array();
 
         // Need a documentType field
         $assoc['document_type_s'] = static::DOCUMENT_TYPE;
@@ -124,10 +125,12 @@ class SolariumNodeSource
                     function($x) {
                         return $x->getTranslatedTags()->first()->getName();
                     },
-                    $this->nodeSource->getHandler()->getTags());
+                    $this->nodeSource->getHandler()->getTags()
+                );
         $assoc['tags_en'] = $out;
 
         $assoc['title'] = $this->nodeSource->getTitle();
+        $collection[] = $this->nodeSource->getTitle();
 
         $searchableFields = $this->nodeSource->getNode()->getNodeType()->getSearchableFields();
 
@@ -142,11 +145,18 @@ class SolariumNodeSource
             if ('content' == $name) {
                 $assoc['content'] = $this->nodeSource->$getter();
             } else {
-                $name .= '_s';
+                $name .= '_t';
+                $assoc[$name] = $this->nodeSource->$getter();
             }
 
-            $assoc[$name] = $this->nodeSource->$getter();
+            $collection[] = $this->nodeSource->$getter();
         }
+
+        /*
+         * Collect data in a single field
+         * for global search
+         */
+        $assoc['collection_txt'] = $collection;
 
         return $assoc;
     }
