@@ -80,6 +80,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
                         'nodeId' => $source->getNode()->getId(),
                         'translationId' => $source->getTranslation()->getId(),
                         'typeName' => $source->getNode()->getNodeType()->getDisplayName(),
+                        'typeColor' => $source->getNode()->getNodeType()->getColor(),
                         'url' => $this->getService('urlGenerator')->generate(
                             'nodesEditSourcePage',
                             array(

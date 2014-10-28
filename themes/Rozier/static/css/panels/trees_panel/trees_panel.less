@@ -11,6 +11,9 @@
     height: @global-header-height;
     background-color: @maintree-search-bg;
     text-align: center;
+    .transition(height ease 0.4s);
+    //.transform-transition();
+
 
     form {
         padding-top: 36px;
@@ -30,7 +33,6 @@
                 border: 0 none;
                 color: @maintree-search-placeholder;
                 font-size: 12px;
-                // height: 17px;
                 width: 100%;
                 padding: 19px 18px 18px;
                 .rounded(20px);
@@ -54,6 +56,41 @@
                 &:focus {
                     background: darken(@maintree-search-input-bg, 8%);
                 }
+            }
+        }
+    }
+    &.focus-on {
+        height: 370px;
+    }
+
+    #nodes-sources-search-results {
+        padding: 0px;
+        list-style-type: none;
+        position: relative;
+
+        li {
+            a {
+                display: block;
+                background-color: @maintree-search-input-bg;
+                padding: 6px 13px;
+                .box-sizing();
+                font-size: 12px;
+                font-weight: bold;
+                color: #444;
+                text-align: left;
+                margin: 0px 20px 0px 20px;
+                text-decoration: none;
+                border-left: 2px solid black;
+                border-bottom: 1px solid darken(@maintree-search-input-bg, 4%);
+                .transition(~'background ease 0.35s, color ease 0.35s');
+
+                &:hover {
+                    background: darken(@maintree-search-input-bg, 4%);
+                    color: #333;
+                }
+            }
+            &:first-child a {
+                border-top: 1px solid darken(@maintree-search-input-bg, 4%);
             }
         }
     }
