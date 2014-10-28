@@ -1,18 +1,16 @@
-/**
- *
- */
-var ChildrenNodesField = function () {
+var StackNodeTree = function () {
     var _this = this;
 
-    _this.$fields = $('[data-children-nodes-widget]');
-    _this.$quickAddNodeButtons = _this.$fields.find('.children-nodes-quick-creation a');
+    _this.$page = $('.stack-tree');
+    _this.$quickAddNodeButtons = _this.$page.find('.stack-tree-quick-creation a');
 
     _this.init();
 };
-ChildrenNodesField.prototype.$fields = null;
-ChildrenNodesField.prototype.$quickAddNodeButtons = null;
 
-ChildrenNodesField.prototype.init = function() {
+StackNodeTree.prototype.$page = null;
+StackNodeTree.prototype.$quickAddNodeButtons = null;
+
+StackNodeTree.prototype.init = function() {
     var _this = this;
 
     if (_this.$quickAddNodeButtons.length) {
@@ -24,7 +22,7 @@ ChildrenNodesField.prototype.init = function() {
     }
 };
 
-ChildrenNodesField.prototype.onQuickAddClick = function(event) {
+StackNodeTree.prototype.onQuickAddClick = function(event) {
     var _this = this;
     var $link = $(event.currentTarget);
 
@@ -38,7 +36,8 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
             "_token": Rozier.ajaxToken,
             "_action":'quickAddNode',
             "nodeTypeId":nodeTypeId,
-            "parentNodeId":parentNodeId
+            "parentNodeId":parentNodeId,
+            "pushTop":1
         };
 
         $.ajax({
@@ -82,9 +81,9 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
     return false;
 };
 
-ChildrenNodesField.prototype.refreshNodeTree = function( $link, rootNodeId ) {
+StackNodeTree.prototype.refreshNodeTree = function( $link, rootNodeId ) {
     var _this = this;
-    var $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
+    var $nodeTree = _this.$page.find('.nodetree-widget');
 
     if($nodeTree.length){
         var postData = {
@@ -106,7 +105,7 @@ ChildrenNodesField.prototype.refreshNodeTree = function( $link, rootNodeId ) {
 
                 $nodeTree.fadeOut('slow', function() {
                     $nodeTree.replaceWith(data.nodeTree);
-                    $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
+                    $nodeTree = _this.$page.find('.nodetree-widget');
 
 
                     Rozier.initNestables();

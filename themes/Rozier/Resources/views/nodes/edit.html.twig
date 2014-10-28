@@ -33,7 +33,51 @@
             </fieldset>
         </form>
 
+        <div class="content-table-cont">
+            <table class="uk-table content-table">
+                <tr>
+                    <td>{% trans %}created.at{% endtrans %}</td>
+                    <td>{{ node.createdAt|date("Y-m-d H:i") }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans %}updated.at{% endtrans %}</td>
+                    <td>{{ node.updatedAt|date("Y-m-d H:i") }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans %}position{% endtrans %}</td>
+                    <td>{{ node.position }}</td>
+                </tr>
+            </table>
+        </div>
+
+        {% if node.isHidingChildren %}
+        <hr />
+        <h2 id="add-node-translation">{% trans %}stack.types{% endtrans %}</h2>
+
+        {% form_theme stackTypesForm 'forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(stackTypesForm) }}>
+            {{ form_widget(stackTypesForm) }}
+            <fieldset data-uk-margin>
+                <button class="uk-button uk-button-primary" type="submit">
+                    <i class="uk-icon-plus"></i> {% trans %}add.stack.type{% endtrans %}
+                </button>
+            </fieldset>
+        </form>
+
+        <div class="content-table-cont">
+            <table class="uk-table content-table">
+                {% for type in node.stackTypes %}
+                <tr>
+                    <td>{{ type.displayName }}</td>
+                    <td><a class="uk-button"><i class="uk-icon-trash-o"></i> {% trans %}remove{% endtrans %}</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endif %}
+
         {% if translationForm %}
+        <hr />
         <h2 id="add-node-translation">{% trans %}translate.node{% endtrans %}</h2>
         {% form_theme translationForm 'forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(translationForm) }}>

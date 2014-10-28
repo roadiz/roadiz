@@ -447,7 +447,7 @@ class Node extends AbstractDateTimedPositioned
 
 
     /**
-     * @ManyToMany(targetEntity="Tag", inversedBy="nodes", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ManyToMany(targetEntity="Tag", inversedBy="nodes", fetch="EXTRA_LAZY")
      * @JoinTable(name="nodes_tags")
      * @var ArrayCollection
      */
@@ -486,6 +486,47 @@ class Node extends AbstractDateTimedPositioned
         return $this;
     }
 
+
+    /**
+     * @ManyToMany(targetEntity="NodeType", fetch="EXTRA_LAZY")
+     * @JoinTable(name="stack_types")
+     * @var ArrayCollection
+     */
+    private $stackTypes = null;
+    /**
+     * @return ArrayCollection
+     */
+    public function getStackTypes()
+    {
+        return $this->stackTypes;
+    }
+    /**
+     * @param NodeType $stackType
+     *
+     * @return $this
+     */
+    public function removeStackType(NodeType $stackType)
+    {
+        if ($this->getStackTypes()->contains($stackType)) {
+            $this->getStackTypes()->removeElement($stackType);
+        }
+
+        return $this;
+    }
+    /**
+     * @param NodeType $stackType
+     *
+     * @return $this
+     */
+    public function addStackType(NodeType $stackType)
+    {
+        if (!$this->getStackTypes()->contains($stackType)) {
+            $this->getStackTypes()->add($stackType);
+        }
+
+        return $this;
+    }
+
     /**
      * @OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")
      */
@@ -509,6 +550,7 @@ class Node extends AbstractDateTimedPositioned
         $this->tags = new ArrayCollection();
         $this->children = new ArrayCollection();
         $this->nodeSources = new ArrayCollection();
+        $this->stackTypes = new ArrayCollection();
         $this->setNodeType($nodeType);
     }
     /**

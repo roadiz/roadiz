@@ -113,6 +113,7 @@ Lazyload.prototype.generalBind = function() {
 
     new DocumentWidget();
     new ChildrenNodesField();
+    new StackNodeTree();
     new SaveButtons();
     new MarkdownEditor();
     new TagAutocomplete();

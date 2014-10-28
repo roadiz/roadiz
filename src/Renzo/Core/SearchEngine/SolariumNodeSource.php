@@ -186,19 +186,22 @@ class SolariumNodeSource
     {
         $update = $this->client->createUpdate();
 
-        $this->remove($update);
+        if (false === $this->remove($update)) {
+            return $this->indexAndCommit();
+        } else {
 
-        $this->setDocument($update->createDocument());
+            $this->setDocument($update->createDocument());
 
-        if (true === $this->index()) {
-            // add the documents and a commit command to the update query
-            $update->addDocument($this->getDocument());
-            $update->addCommit();
+            if (true === $this->index()) {
+                // add the documents and a commit command to the update query
+                $update->addDocument($this->getDocument());
+                $update->addCommit();
 
-            return $this->client->update($update);
+                return $this->client->update($update);
+            }
+
+            return false;
         }
-
-        return false;
     }
 
     /**
@@ -235,7 +238,7 @@ class SolariumNodeSource
 
             return true;
         } else {
-            throw new \RuntimeException("No Solr document available for current NodeSource", 1);
+            return false;
         }
     }
 

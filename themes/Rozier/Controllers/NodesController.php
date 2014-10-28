@@ -223,6 +223,43 @@ class NodesController extends RozierApp
             }
 
             /*
+             * Handle StackTypes form
+             */
+            $stackTypesForm = $this->buildStackTypesForm($node);
+            if (null !== $stackTypesForm) {
+                $stackTypesForm->handleRequest();
+
+                if ($stackTypesForm->isValid())
+                {
+                    try {
+                        $type = $this->addStackType($stackTypesForm->getData(), $node);
+                        $msg = $this->getTranslator()->trans('stack_node.%name%.has_new_type.%type%', array(
+                            '%name%'=>$node->getNodeName(),
+                            '%type%'=>$type->getDisplayName()
+                        ));
+                        $request->getSession()->getFlashBag()->add('confirm', $msg);
+                        $this->getService('logger')->info($msg);
+                    } catch (EntityAlreadyExistsException $e) {
+                        $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+                        $this->getService('logger')->warning($e->getMessage());
+                    }
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'nodesEditPage',
+                            array('nodeId' => $node->getId())
+                        )
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
+                }
+                $this->assignation['stackTypesForm'] = $stackTypesForm->createView();
+            }
+
+            /*
              * Handle main form
              */
             $form = $this->buildEditForm($node);
@@ -863,6 +900,30 @@ class NodesController extends RozierApp
     }
 
     /**
+     * @param array $data
+     * @param Node  $node
+     */
+    public function addStackType($data, Node $node)
+    {
+        if ($data['nodeId'] == $node->getId() &&
+            !empty($data['nodeTypeId'])) {
+
+            $nodeType = $this->getService('em')
+                 ->find('RZ\Renzo\Core\Entities\NodeType', (int) $data['nodeTypeId']);
+
+            if (null !== $nodeType) {
+
+                $node->addStackType($nodeType);
+                $this->getService('em')->flush();
+
+                return $nodeType;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Link a node with a tag.
      *
      * @param array                       $data
@@ -1036,6 +1097,31 @@ class NodesController extends RozierApp
             return null;
         }
     }
+    /**
+     * @param RZ\Renzo\Core\Entities\Node $node
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    public function buildStackTypesForm(Node $node)
+    {
+        if ($node->isHidingChildren()) {
+            $defaults = array();
+
+            $builder = $this->getService('formFactory')
+                ->createBuilder('form', $defaults)
+                ->add('nodeId', 'hidden', array(
+                    'data'=>(int) $node->getId()
+                ))
+                ->add('nodeTypeId', new \RZ\Renzo\CMS\Forms\NodeTypesType(), array(
+                    'label' => $this->getTranslator()->trans('nodeType'),
+                ));
+
+            return $builder->getForm();
+        } else {
+            return null;
+        }
+    }
+
 
     /**
      * @param RZ\Renzo\Core\Entities\Node $parentNode
@@ -1044,9 +1130,8 @@ class NodesController extends RozierApp
      */
     private function buildAddChildForm(Node $parentNode = null)
     {
-        $defaults = array(
+        $defaults = array();
 
-        );
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('nodeName', 'text', array(
