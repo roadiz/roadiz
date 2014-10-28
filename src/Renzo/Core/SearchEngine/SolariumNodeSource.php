@@ -118,6 +118,12 @@ class SolariumNodeSource
 
         $assoc['node_type_s'] = $this->nodeSource->getNode()->getNodeType()->getName();
 
+        $assoc['node_name_s'] = $this->nodeSource->getNode()->getNodeName();
+
+        $assoc['node_status_i'] = $this->nodeSource->getNode()->getStatus();
+
+        $assoc['node_visible_b'] = $this->nodeSource->getNode()->isVisible();
+
         // Need a locale field
         $assoc['locale_s'] = $this->nodeSource->getTranslation()->getLocale();
         $out = array_map(
