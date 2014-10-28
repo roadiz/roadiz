@@ -240,7 +240,7 @@ class NodeTypeFieldsController extends RozierApp
                 $nodeType = $this->getService('em')
                     ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
 
-                $nodeType->getHandler()->updateSchema();
+                $nodeType->getHandler()->regenerateEntityClass();
 
                 $msg = $this->getTranslator()->trans(
                     'nodeTypeField.%name%.deleted',
@@ -338,11 +338,12 @@ class NodeTypeFieldsController extends RozierApp
         }
 
         $field->setNodeType($nodeType);
-
         $this->getService('em')->persist($field);
+
+        $nodeType->addField($field);
         $this->getService('em')->flush();
 
-        $nodeType->getHandler()->updateSchema();
+        $nodeType->getHandler()->regenerateEntityClass();
     }
 
     /**

@@ -25,7 +25,7 @@ class NodeTreeWidget extends AbstractWidget
     protected $parentNode =  null;
     protected $nodes =       null;
     protected $translation = null;
-
+    protected $stackTree =   false;
 
     /**
      * @param Request                            $request           Current kernel request
@@ -45,6 +45,23 @@ class NodeTreeWidget extends AbstractWidget
         $this->translation = $translation;
 
         $this->getNodeTreeAssignationForParent();
+    }
+
+
+    /**
+     * @return boolean
+     */
+    public function isStackTree() {
+        return $this->stackTree;
+    }
+
+    /**
+     * @param boolean $newstackTree
+     */
+    public function setStackTree($newstackTree) {
+        $this->stackTree = (boolean) $newstackTree;
+
+        return $this;
     }
 
     /**
