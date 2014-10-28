@@ -5,7 +5,7 @@ namespace RZ\Renzo\Core\Services;
 use Pimple\Container;
 
 use RZ\Renzo\Core\Kernel;
-
+use RZ\Renzo\Core\SearchEngine\FullTextSearchHandler;
 /**
  * Register Solr services for dependency injection container.
  */
@@ -22,6 +22,10 @@ class SolrServiceProvider implements \Pimple\ServiceProviderInterface
                 $solrService = new \Solarium\Client($c['config']['solr']);
                 $solrService->setDefaultEndpoint('localhost');
                 return $solrService;
+            };
+            $container['solr.search.nodeSource'] = function ($c) {
+                $searchNodesource = new FullTextSearchHandler($c['solr']);
+                return $searchNodesource;
             };
         }
     }
