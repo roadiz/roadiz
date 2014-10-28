@@ -25,7 +25,7 @@ abstract class AbstractDateTimedPositioned extends AbstractDateTimed
      */
     private $position = 0;
     /**
-     * @return integer
+     * @return float
      */
     public function getPosition()
     {

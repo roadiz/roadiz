@@ -117,6 +117,7 @@ Lazyload.prototype.generalBind = function() {
     new SaveButtons();
     new MarkdownEditor();
     new TagAutocomplete();
+    new NodeTypeFieldsPosition();
 
 
     // Init markdown-preview

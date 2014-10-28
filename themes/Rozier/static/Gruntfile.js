@@ -36,6 +36,7 @@ module.exports = function(grunt) {
 					'js/widgets/markdownEditor.js',
 					'js/widgets/tagAutocomplete.js',
 					'js/widgets/stackNodeTree.js',
+					'js/widgets/nodeTypeFieldsPosition.js',
 					'js/lazyload.js',
 					'js/plugins.js',
 					'js/main.js'

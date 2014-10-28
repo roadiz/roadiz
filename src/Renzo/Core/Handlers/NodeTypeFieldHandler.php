@@ -169,4 +169,16 @@ class NodeTypeFieldHandler
     {
         $this->nodeTypeField = $field;
     }
+
+    /**
+     * Clean position for current node siblings.
+     *
+     * @return int Return the next position after the **last** node
+     */
+    public function cleanPositions()
+    {
+        if ($this->nodeTypeField->getNodeType() !== null) {
+            return $this->nodeTypeField->getNodeType()->getHandler()->cleanFieldsPositions();
+        }
+    }
 }
