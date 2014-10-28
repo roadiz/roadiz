@@ -4667,6 +4667,60 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <target></target>
       </trans-unit>
 
+
+      <!-- stacks -->
+
+      <trans-unit xml:space="preserve" id="add.stack.type">
+        <source>add.stack.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="stack.types">
+        <source>stack.types</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="remove">
+        <source>remove</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="stack_node.%name%.has_new_type.%type%">
+        <source>stack_node.%name%.has_new_type.%type%</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="field.%name%.updated">
+        <source>field.%name%.updated</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="field.%nodeTypeFieldId%.not_exists">
+        <source>field.%nodeTypeFieldId%.not_exists</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="created.at">
+        <source>created.at</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="updated.at">
+        <source>updated.at</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="position">
+        <source>position</source>
+        <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="empty.node.trash">
+        <source>empty.node.trash</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="empty.trash">
+        <source>empty.trash</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.empty.node.and.data.trash">
+        <source>are_you_sure.empty.node.and.data.trash</source>
+        <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
