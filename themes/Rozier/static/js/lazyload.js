@@ -15,7 +15,13 @@ var Lazyload = function() {
         _this.onPopState(event);
     });
 };
+
 Lazyload.prototype.$linksSelector = null;
+Lazyload.prototype.$textAreaHTMLeditor = null;
+Lazyload.prototype.$HTMLeditor = null;
+Lazyload.prototype.$HTMLeditorContent = null;
+Lazyload.prototype.$HTMLeditorNav = null;
+Lazyload.prototype.HTMLeditorNavToRemove = null;
 
 Lazyload.prototype.onClick = function(event) {
     var _this = this;
@@ -114,26 +120,42 @@ Lazyload.prototype.generalBind = function() {
     new DocumentWidget();
     new ChildrenNodesField();
     new SaveButtons();
-    new MarkdownEditor();
     new TagAutocomplete();
 
 
     // Init markdown-preview
-    if($('textarea[data-uk-htmleditor]').length){
+    _this.$textAreaHTMLeditor = $('textarea[data-uk-htmleditor]');
+
+    if(_this.$textAreaHTMLeditor.length){
 
         setTimeout(function(){
-            $.UIkit.htmleditor($('textarea[data-uk-htmleditor]'), {markdown:true, mode:'tab'});
+            for(var i = 0; i < _this.$textAreaHTMLeditor.length; i++) {
+
+                $.UIkit.htmleditor($(_this.$textAreaHTMLeditor[i]), {markdown:true, mode:'tab'});
+                _this.$HTMLeditor = $('.uk-htmleditor');
+                _this.$HTMLeditorNav = $('.uk-htmleditor-navbar');
+                _this.HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+_this.$HTMLeditorNav[0].innerHTML+'</div>';
+
+                $(_this.$HTMLeditor[i]).append(_this.HTMLeditorNavInner);   
+                         
+            }
+
             $(".uk-htmleditor-preview").css("height", 250);
             $(".CodeMirror").css("height", 250);
-            $(".uk-htmleditor-content").after($(".uk-htmleditor-navbar"));
+
+            setTimeout(function(){
+                _this.$HTMLeditorNavToRemove = $('.uk-htmleditor-navbar:not(.bottom)');
+                _this.$HTMLeditorNavToRemove.remove();
+                new MarkdownEditor();
+            }, 0);
+
         }, 0);
+  
     }
 
     // Init document uploader
     if($('#upload-dropzone-document').length){
-
         var dropZone = new Dropzone("#upload-dropzone-document", Dropzone.options.uploadDropzoneDocument);
-
     }
 
     // Init colorpicker

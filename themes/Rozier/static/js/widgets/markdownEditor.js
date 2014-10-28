@@ -29,8 +29,8 @@ MarkdownEditor.prototype.init = function(){
     if(_this.$cont.length){ 
 
         for(var i = 0; i < _this.$cont.length; i++) {
-            $(_this.$cont[i]).find('.uk-htmleditor-button-code').attr('data-index',0);
-            $(_this.$cont[i]).find('.uk-htmleditor-button-preview').attr('data-index',0);
+            $(_this.$cont[i]).find('.uk-htmleditor-button-code').attr('data-index',i);
+            $(_this.$cont[i]).find('.uk-htmleditor-button-preview').attr('data-index',i);
         }
         
         _this.$buttonCode = _this.$cont.find('.uk-htmleditor-button-code');
@@ -52,8 +52,6 @@ MarkdownEditor.prototype.buttonPreviewClick = function(e){
     var _this = this;
 
     var index = parseInt(e.currentTarget.getAttribute('data-index'));
-
-    // console.log(index);
 
     _this.$buttonCode[index].style.display = 'block';
     TweenLite.to(_this.$buttonCode[index], 0.5, {opacity:1, ease:Expo.easeOut});
