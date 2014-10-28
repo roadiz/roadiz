@@ -465,3 +465,6 @@ historyUserPage:
     requirements: { userId : "[0-9]+" }
     defaults: { _controller: Themes\Rozier\Controllers\HistoryController::userAction }
 
+# searchPage:
+#     path:     /rz-admin/search/{q}
+#     defaults: { _controller: RZ\Renzo\Core\SearchEngine\FullTextSearchHandler::searchAction }
