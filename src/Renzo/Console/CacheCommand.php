@@ -152,12 +152,12 @@ class CacheCommand extends Command
          */
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->files()->in(RENZO_ROOT . '/sources/Proxies');
+        $finder->files()->in(RENZO_ROOT . '/gen-src/Proxies');
         $fs->remove($finder);
 
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
         $proxyFactory = Kernel::getService('em')->getProxyFactory();
-        $proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/sources/Proxies');
+        $proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/gen-src/Proxies');
         $text .= '<info>Doctrine proxy classes has been purged…</info>'.PHP_EOL;
 
         return $text;
@@ -174,7 +174,7 @@ class CacheCommand extends Command
 
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->files()->in(RENZO_ROOT . '/sources/Compiled');
+        $finder->files()->in(RENZO_ROOT . '/gen-src/Compiled');
         $fs->remove($finder);
 
         $text .= '<info>Compiled route collections have been purged…</info>'.PHP_EOL;

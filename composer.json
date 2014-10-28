@@ -71,12 +71,12 @@
         "psr-4": {
         	"RZ\\": "src/",
             "Themes\\": "themes/",
-        	"GeneratedNodeSources\\": "sources/GeneratedNodeSources",
-            "Proxies\\": "sources/Proxies"
+        	"GeneratedNodeSources\\": "gen-src/GeneratedNodeSources",
+            "Proxies\\": "gen-src/Proxies"
         },
         "psr-0": {
-            "GlobalUrlMatcher": "sources/Compiled/",
-            "GlobalUrlGenerator": "sources/Compiled/"
+            "GlobalUrlMatcher": "gen-src/Compiled/",
+            "GlobalUrlGenerator": "gen-src/Compiled/"
         }
     }
 }
