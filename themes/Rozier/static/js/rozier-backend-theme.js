@@ -13896,8 +13896,8 @@ MarkdownEditor.prototype.init = function(){
     if(_this.$cont.length){ 
 
         for(var i = 0; i < _this.$cont.length; i++) {
-            $(_this.$cont[i]).find('.uk-htmleditor-button-code').attr('data-index',0);
-            $(_this.$cont[i]).find('.uk-htmleditor-button-preview').attr('data-index',0);
+            $(_this.$cont[i]).find('.uk-htmleditor-button-code').attr('data-index',i);
+            $(_this.$cont[i]).find('.uk-htmleditor-button-preview').attr('data-index',i);
         }
         
         _this.$buttonCode = _this.$cont.find('.uk-htmleditor-button-code');
@@ -13919,8 +13919,6 @@ MarkdownEditor.prototype.buttonPreviewClick = function(e){
     var _this = this;
 
     var index = parseInt(e.currentTarget.getAttribute('data-index'));
-
-    // console.log(index);
 
     _this.$buttonCode[index].style.display = 'block';
     TweenLite.to(_this.$buttonCode[index], 0.5, {opacity:1, ease:Expo.easeOut});
@@ -14219,7 +14217,13 @@ var Lazyload = function() {
         _this.onPopState(event);
     });
 };
+
 Lazyload.prototype.$linksSelector = null;
+Lazyload.prototype.$textAreaHTMLeditor = null;
+Lazyload.prototype.$HTMLeditor = null;
+Lazyload.prototype.$HTMLeditorContent = null;
+Lazyload.prototype.$HTMLeditorNav = null;
+Lazyload.prototype.HTMLeditorNavToRemove = null;
 
 Lazyload.prototype.onClick = function(event) {
     var _this = this;
@@ -14319,27 +14323,43 @@ Lazyload.prototype.generalBind = function() {
     new ChildrenNodesField();
     new StackNodeTree();
     new SaveButtons();
-    new MarkdownEditor();
     new TagAutocomplete();
     new NodeTypeFieldsPosition();
 
 
     // Init markdown-preview
-    if($('textarea[data-uk-htmleditor]').length){
+    _this.$textAreaHTMLeditor = $('textarea[data-uk-htmleditor]');
+
+    if(_this.$textAreaHTMLeditor.length){
 
         setTimeout(function(){
-            $.UIkit.htmleditor($('textarea[data-uk-htmleditor]'), {markdown:true, mode:'tab'});
+            for(var i = 0; i < _this.$textAreaHTMLeditor.length; i++) {
+
+                $.UIkit.htmleditor($(_this.$textAreaHTMLeditor[i]), {markdown:true, mode:'tab'});
+                _this.$HTMLeditor = $('.uk-htmleditor');
+                _this.$HTMLeditorNav = $('.uk-htmleditor-navbar');
+                _this.HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+_this.$HTMLeditorNav[0].innerHTML+'</div>';
+
+                $(_this.$HTMLeditor[i]).append(_this.HTMLeditorNavInner);   
+                         
+            }
+
             $(".uk-htmleditor-preview").css("height", 250);
             $(".CodeMirror").css("height", 250);
-            $(".uk-htmleditor-content").after($(".uk-htmleditor-navbar"));
+
+            setTimeout(function(){
+                _this.$HTMLeditorNavToRemove = $('.uk-htmleditor-navbar:not(.bottom)');
+                _this.$HTMLeditorNavToRemove.remove();
+                new MarkdownEditor();
+            }, 0);
+
         }, 0);
+  
     }
 
     // Init document uploader
     if($('#upload-dropzone-document').length){
-
         var dropZone = new Dropzone("#upload-dropzone-document", Dropzone.options.uploadDropzoneDocument);
-
     }
 
     // Init colorpicker

@@ -86,7 +86,7 @@
 		{% if not node.isHidingChildren %}<div class="minus" data-nestable-action="toggle"></div>{% endif %}
 	</div>
 	{% spaceless %}
-	<ul class="uk-nestable-list" data-parent-node-id="{{ node.getId }}">
+	<ul class="uk-nestable-list{% if not mainNodeTree %} children-node-widget-list{% endif %}" data-parent-node-id="{{ node.getId }}">
 	{#
 	 # For drag&drop ease, we don't create nested lists
 	 # We will have to check after OR inside drag status

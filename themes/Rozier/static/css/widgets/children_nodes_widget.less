@@ -54,146 +54,198 @@
 .children-nodes-tree{
 
    .uk-nestable{
-
-        // .uk-nestable-list-item{
-        // }
         
         .uk-nestable-list{
             position: relative;
         }
-        
-        &> .uk-nestable-list-item{
-            position: relative;
-            border-bottom: 1px solid @children-nodes-btn-bg;
 
-            &:last-child{
-                border-bottom:none;
-            }
-
-            .nodetree-list-item-color{
-                position: absolute;
-                top:0; bottom:0; left:-13px;
-                // width:4px;
-                // display: none;
-            }
-
-            .uk-nestable-item{
-                height:55px;
-                line-height:55px;
-                .box-sizing();
-
-                .nodetree-element-name a{
-                    padding:0 2em;
-                }
-
-                &> .uk-nestable-handle:after{
-                    width:40px; height:40px;
-                }
-
-                &.unpublished-node > .uk-nestable-handle:after{
-                    top:11px; left:6px;
-                    width:28px; height:28px;
-                }
-
-                &.stack-node{
-                    
-                    & > .uk-nestable-handle{
-                        position: relative;
-                        width:55px;
-                        top:-19px; left:-7px;
-                    }
-
-                    & > .uk-nestable-handle:after, .uk-icon-folder:before {
-                        display: none;
-                    }
-
-                    .icon-stack-folder, .uk-icon-folder {
-                        content: "";
-                        font-family: FontAwesome;
-                        color: @item-color;
-                        font-size: 12px;
-                        .rounded(100%);
-                        background-color: white;
-                        border: 1px solid @item-color;
-                        width: 25px;
-                        display: inline-block;
-                        height: 25px;
-                        top: 6px;
-                        left: 7px;
-                        position: absolute;
-                        // position: relative;
-                    }
-                    .icon-stack-folder {
-                        left: 14px;
-                        &-final {
-                            left: 21px;
-
-                            &:after {
-                                // position: relative;
-                                position: absolute;
-                                display: block;
-                                content: "";
-                                font-family: FontAwesome;
-                                color: @item-color;
-                                font-size: 12px;
-                                .rounded(100%);
-                                background-color: @item-color;
-                                width: 8px;
-                                height: 8px;
-                                top: 9px;
-                                left: 9px;
-                            }
-                        }
-                    }
-                    .nodetree-element-name {
-                        left: -24px;
-                    }
-                    &:hover {
-                        .icon-stack-folder,
-                        .uk-icon-folder,
-                        .uk-icon-folder:before {
-                            color: @nestable-handle-border-color-hover;
-                            border-color: @nestable-handle-border-color-hover;
-                            background: @nestable-handle-bgcolor-hover;
-                        }
-                        .icon-stack-folder:after {
-                            background: @nestable-handle-border-color-hover;
-                        }
-                    }
-
-                }
-            }
-
-            &> .uk-nestable-list{
-                padding-left:32px;
-
-                .uk-nestable-list-item{
-
-                    &:first-child:before{
-                        top:20px;
-                    }
-
-                    &:last-child:before{
-                        top:0; height:29px;
-                    }
-
-                    &:before{
-                        top:30px;
-                        width:30px;
-                    }
-
-                    .nodetree-list-item-color{
-                        left:57px;
-                    }
-                        
-                    .uk-nestable-item{
-                        padding-left:30px;
-                    }   
-                }
-            }
-
+        .uk-nestable-handle{
+            width:32px;
         }
 
     }
+
+}
+
+.nodetree-widget .children-node-widget{
+    margin:0;
+}
+
+.children-nodes-tree .uk-nestable, .uk-nestable-moving body > .children-node-widget, .uk-nestable-moving body .children-node-widget-list{
+        
+    &> .uk-nestable-list-item{
+        position: relative;
+        border-bottom: 1px solid @children-nodes-btn-bg;
+        background:#fff;
+
+        &:nth-child(2n){
+            background:@grey-verylight;
+        }
+
+        &> .uk-nestable-list{
+
+            &> .uk-nestable-list-item{
+
+                &:first-child{
+                    margin-top:-8px;   
+
+                    .stack-node{
+
+                        & > .uk-nestable-handle{
+                            top:-22px;
+                        }   
+                    }
+                }
+            }
+        }
+
+        &:last-child{
+            border-bottom:none;
+        }
+
+        .nodetree-list-item-color{
+            position: absolute;
+            top:0; bottom:0; left:0;
+            // width:4px;
+            // display: none;
+        }
+
+        .uk-nestable-item{
+            height:55px;
+            line-height:55px;
+            .box-sizing();
+
+            .nodetree-element-name{
+                vertical-align: top;
+
+                a{
+                    padding:0 2em;
+                }
+            }
+
+            &> .uk-nestable-handle:after{
+                width:40px; height:40px;
+            }
+
+            &.unpublished-node > .uk-nestable-handle:after{
+                top:8px; left:5px;
+                width:30px; height:30px;
+            }
+
+            &.stack-node{
+                
+                & > .uk-nestable-handle{
+                    position: relative;
+                    width:32px;
+                    top:-19px; left:-7px;
+                }
+
+                & > .uk-nestable-handle:after, .uk-icon-folder:before {
+                    display: none;
+                }
+
+                .icon-stack-folder, .uk-icon-folder {
+                    content: "";
+                    font-family: FontAwesome;
+                    color: @item-color;
+                    font-size: 12px;
+                    .rounded(100%);
+                    background-color: white;
+                    border: 1px solid @item-color;
+                    width: 25px;
+                    display: inline-block;
+                    height: 25px;
+                    top: 6px;
+                    left: 7px;
+                    position: absolute;
+                    // position: relative;
+                }
+                .icon-stack-folder {
+                    left: 14px;
+                    &-final {
+                        left: 21px;
+
+                        &:after {
+                            // position: relative;
+                            position: absolute;
+                            display: block;
+                            content: "";
+                            font-family: FontAwesome;
+                            color: @item-color;
+                            font-size: 12px;
+                            .rounded(100%);
+                            background-color: @item-color;
+                            width: 8px;
+                            height: 8px;
+                            top: 9px;
+                            left: 9px;
+                        }
+                    }
+                }
+                .nodetree-element-name {
+                    left: 0;
+                }
+                &:hover {
+                    .icon-stack-folder,
+                    .uk-icon-folder,
+                    .uk-icon-folder:before {
+                        color: @nestable-handle-border-color-hover;
+                        border-color: @nestable-handle-border-color-hover;
+                        background: @nestable-handle-bgcolor-hover;
+                    }
+                    .icon-stack-folder:after {
+                        background: @nestable-handle-border-color-hover;
+                    }
+                }
+
+            }
+        }
+
+        &> .uk-nestable-list{
+            padding-left:15px;
+            margin-left:17px;
+
+            .uk-nestable-list-item{
+                border-bottom:none;
+                background:@grey-verylight;
+
+                &:first-child:before{
+                    top:14px;
+                }
+
+                &:last-child:before{
+                    top:0; height:27px;
+                }
+
+                &:before{
+                    top:30px;
+                    width:30px;
+                }
+
+                .nodetree-list-item-color{
+                    left:10px;
+                }
+                    
+                .uk-nestable-item{
+                    padding-left:30px;
+                }   
+            }
+        }
+
+    }
+
+}
+
+
+
+.uk-nestable-moving body{
+
+    &> .children-node-widget, &> .children-node-widget-list{
+
+        &> .uk-nestable-list-item{
+            border-bottom: none;
+        }
+    }
+
 }
 
