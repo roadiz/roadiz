@@ -244,4 +244,23 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
             throw new \RuntimeException("New node-type is null", 1);
         }
     }
+
+    /**
+     * Reset current node-type fields positions.
+     *
+     * @return int Return the next position after the **last** field
+     */
+    public function cleanFieldsPositions()
+    {
+        $fields = $this->nodeType->getFields();
+        $i = 1;
+        foreach ($fields as $field) {
+            $field->setPosition($i);
+            $i++;
+        }
+
+        Kernel::getService('em')->flush();
+
+        return $i;
+    }
 }

@@ -25,12 +25,12 @@
 			            <th>{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
-				<tbody>
+				<tbody class="uk-sortable" data-uk-sortable="{animation:0, dragCustomClass:'rz-node-type-field-dragged'}">
 					{% for field in fields %}
-					<tr>
+					<tr data-position="{{ field.position }}" data-field-id="{{ field.getId }}">
 						<td><a href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}">{{ field.getName }}</a></td>
 						<td>{{ field.getLabel }}</td>
-						<td>{{ field.getTypeName }}</td>
+						<td>{{ field.getTypeName|trans }}</td>
 						<td>
 							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 						</td>

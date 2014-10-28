@@ -25,6 +25,7 @@ use RZ\Renzo\Core\Serializers\NodeTypeFieldSerializer;
  *     @index(name="indexed_nodetypefield_idx", columns={"indexed"})
  * },
  * uniqueConstraints={@UniqueConstraint(columns={"name", "node_type_id"})})
+ * @HasLifecycleCallbacks
  */
 class NodeTypeField extends AbstractPositioned implements PersistableInterface
 {
@@ -477,6 +478,17 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
     public function isSearchable()
     {
         return (boolean) in_array($this->getType(), static::$searchableTypes);
+    }
+
+    /**
+     * @PrePersist
+     */
+    public function prePersist()
+    {
+        /*
+         * Get the last index after last node in parent
+         */
+        $this->setPosition($this->getHandler()->cleanPositions());
     }
 
     /**

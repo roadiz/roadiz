@@ -52,7 +52,7 @@
 
         {% if node.isHidingChildren %}
         <hr />
-        <h2 id="add-node-translation">{% trans %}stack.types{% endtrans %}</h2>
+        <h2 id="add-node-translation">{% trans %}add.stack.type{% endtrans %}</h2>
 
         {% form_theme stackTypesForm 'forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(stackTypesForm) }}>
@@ -63,9 +63,13 @@
                 </button>
             </fieldset>
         </form>
-
+        <h2 id="add-node-translation">{% trans %}stack.types{% endtrans %}</h2>
         <div class="content-table-cont">
             <table class="uk-table content-table">
+                <tr>
+                    <th>{% trans %}nodeType{% endtrans %}</th>
+                    <th>{% trans %}actions{% endtrans %}</th>
+                </tr>
                 {% for type in node.stackTypes %}
                 <tr>
                     <td>{{ type.displayName }}</td>

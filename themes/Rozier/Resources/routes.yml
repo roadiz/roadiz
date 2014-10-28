@@ -167,6 +167,11 @@ nodeTypesFieldSchemaUpdate:
     defaults: { _controller: Themes\Rozier\Controllers\SchemaController::updateNodeTypeFieldsSchemaAction }
     requirements: { nodeTypeId : "[0-9]+", _token: "[A-z0-9\-\_\$]+" }
 
+nodeTypesFieldAjaxEdit:
+    path:     /rz-admin/ajax/node-types/fields/edit/{nodeTypeFieldId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypeFieldsController::editAction }
+    requirements: { nodeTypeFieldId : "[0-9]+" }
+
 # SETTINGS
 settingsHomePage:
     path:     /rz-admin/settings

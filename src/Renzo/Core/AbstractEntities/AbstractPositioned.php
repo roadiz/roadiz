@@ -17,12 +17,12 @@ namespace RZ\Renzo\Core\AbstractEntities;
 abstract class AbstractPositioned
 {
     /**
-     * @Column(type="integer")
+     * @Column(type="float")
      */
-    private $position = 0;
+    private $position = 0.0;
 
     /**
-     * @return integer
+     * @return float
      */
     public function getPosition()
     {
@@ -30,14 +30,14 @@ abstract class AbstractPositioned
     }
 
     /**
-     * @param int $newPosition
+     * @param float $newPosition
      *
      * @return $this
      */
     public function setPosition($newPosition)
     {
         if ($newPosition > -1) {
-            $this->position = (int) $newPosition;
+            $this->position = (float) $newPosition;
         }
 
         return $this;

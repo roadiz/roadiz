@@ -166,7 +166,7 @@ class NodeType extends AbstractEntity
      * @Column(type="string", name="color", unique=false, nullable=true)
      */
     protected $color = '#000000';
-      
+
     /**
      * Gets the value of color.
      *
@@ -175,11 +175,11 @@ class NodeType extends AbstractEntity
     public function getColor()
     {
         return $this->color;
-    }  
+    }
 
     /**
      * Sets the value of color.
-     * 
+     *
      * @param string $color
      *
      * @return $this
@@ -187,12 +187,13 @@ class NodeType extends AbstractEntity
     public function setColor($color)
     {
         $this->color = $color;
-        
+
         return $this;
-    }  
+    }
 
     /**
      * @OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"ALL"})
+     * @OrderBy({"position" = "ASC"})
      */
     private $fields;
 

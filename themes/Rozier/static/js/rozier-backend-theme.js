@@ -14051,7 +14051,7 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
             "_action":'quickAddNode',
             "nodeTypeId":nodeTypeId,
             "parentNodeId":parentNodeId,
-            "push_top":1
+            "pushTop":1
         };
 
         $.ajax({
@@ -14134,7 +14134,75 @@ StackNodeTree.prototype.refreshNodeTree = function( $link, rootNodeId ) {
     } else {
         console.error("No node-tree available.");
     }
-};;/**
+};;var NodeTypeFieldsPosition = function () {
+    var _this = this;
+
+    _this.$list = $(".node-type-fields > .uk-sortable");
+
+    _this.init();
+};
+NodeTypeFieldsPosition.prototype.$list = null;
+NodeTypeFieldsPosition.prototype.init = function() {
+    var _this = this;
+
+    if (_this.$list.length &&
+        _this.$list.children().length > 1) {
+        var onChange = $.proxy(_this.onSortableChange, _this);
+        _this.$list.off('uk.sortable.change', onChange);
+        _this.$list.on('uk.sortable.change', onChange);
+    }
+};
+
+NodeTypeFieldsPosition.prototype.onSortableChange = function(event, list, element) {
+    var _this = this;
+
+    var $element = $(element);
+    var nodeTypeFieldId = parseInt($element.data('field-id'));
+    var $sibling = $element.prev();
+    var newPosition = 0.0;
+
+    if ($sibling.length === 0) {
+        $sibling = $element.next();
+        newPosition = parseInt($sibling.data('position')) - 0.5;
+    } else {
+        newPosition = parseInt($sibling.data('position')) + 0.5;
+    }
+
+    console.log("nodeTypeFieldId="+nodeTypeFieldId+"; newPosition="+newPosition);
+
+
+    var postData = {
+        '_token':          Rozier.ajaxToken,
+        '_action':         'updatePosition',
+        'nodeTypeFieldId': nodeTypeFieldId,
+        'newPosition':     newPosition
+    };
+
+    $.ajax({
+        url: Rozier.routes.nodeTypesFieldAjaxEdit.replace("%nodeTypeFieldId%", nodeTypeFieldId),
+        type: 'POST',
+        dataType: 'json',
+        data: postData,
+    })
+    .done(function(data) {
+        console.log(data);
+        $element.attr('data-position', newPosition);
+        $.UIkit.notify({
+            message : data.responseText,
+            status  : data.status,
+            timeout : 3000,
+            pos     : 'top-center'
+        });
+    })
+    .fail(function(data) {
+        console.log(data);
+    })
+    .always(function() {
+        console.log("complete");
+    });
+
+};
+;/**
  * Lazyload
  */
 var Lazyload = function() {
@@ -14253,6 +14321,7 @@ Lazyload.prototype.generalBind = function() {
     new SaveButtons();
     new MarkdownEditor();
     new TagAutocomplete();
+    new NodeTypeFieldsPosition();
 
 
     // Init markdown-preview
