@@ -21,6 +21,7 @@
     border-bottom:1px dashed @children-nodes-border;
 
     .uk-navbar-brand{
+        color:#666;
         line-height:55px;
     }
 
@@ -71,8 +72,9 @@
     margin:0;
 }
 
-.children-nodes-tree .uk-nestable, .uk-nestable-moving body > .children-node-widget, .uk-nestable-moving body .children-node-widget-list{
-        
+.children-nodes-tree .uk-nestable, .uk-nestable-moving body > .children-node-widget, .uk-nestable-moving body > .children-node-widget-list{
+    
+    // 1st level    
     &> .uk-nestable-list-item{
         position: relative;
         border-bottom: 1px solid @children-nodes-btn-bg;
@@ -86,8 +88,20 @@
             padding-top:12px;
         }
 
-        &> .uk-nestable-list{
+        &:last-child{
+        
+            &.has-children{
 
+                .uk-nestable-list{
+                    margin-bottom:0;
+                }
+            }
+
+        }
+
+        &> .uk-nestable-list{
+            
+            // 2nd level
             &> .uk-nestable-list-item{
 
                 &:first-child{
@@ -108,6 +122,14 @@
                         }   
                     }
                 }
+
+                &:last-child{
+
+                    &:before{
+                        left:-1px;
+                    }
+
+                }
             }
         }
 
@@ -125,6 +147,14 @@
             height:55px;
             line-height:55px;
             .box-sizing();
+
+            .nodetree-element-image{
+                overflow: hidden;
+            }
+
+            &.stack-node{
+                
+            }
 
             .nodetree-element-name{
                 vertical-align: top;
@@ -211,7 +241,8 @@
 
             }
         }
-
+        
+        // 2nd level
         &> .uk-nestable-list{
             padding-left:15px;
             margin:15px 0 20px 17px;
@@ -225,6 +256,12 @@
                 border-bottom:none;
                 margin-right:40px;
                 // background:@grey-verylight;
+                // 
+                &.has-children{
+                    .nodetree-list-item-color{  
+                        height:54px;
+                    }   
+                }
                 
                 .nodetree-list-item-color{
                     left:30px;
@@ -267,16 +304,44 @@
                         height:1px;
                         background:#fff;
                     }
-                }   
+                }  
+                
+                // 3rd level
+                .uk-nestable-list{
+                    padding-left:60px;
+
+                    .uk-nestable-list-item{
+                        margin-right:0;
+
+                        &:first-child{
+                            margin-top:10px; padding-top:0;
+
+                            .nodetree-list-item-color{
+                                top:0;
+                            }
+                        }
+
+                        &:last-child{
+                            padding-bottom:10px;
+
+                            .nodetree-list-item-color{
+                                top:1px;
+                            }
+
+                            &:before{
+                                top:-11px; 
+                                height:37px;
+                            }
+                        }
+                    }
+                } 
             }
         }
-
     }
-
 }
 
 
-
+// Dragging
 .uk-nestable-moving body{
 
     &> .children-node-widget, &> .children-node-widget-list{
@@ -287,4 +352,3 @@
     }
 
 }
-

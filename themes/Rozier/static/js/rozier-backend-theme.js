@@ -14473,7 +14473,6 @@ Rozier.getMessages = function () {
 
 		if (typeof data.messages !== "undefined") {
 
-
 			if (typeof data.messages.confirm !== "undefined" &&
 						data.messages.confirm.length > 0) {
 

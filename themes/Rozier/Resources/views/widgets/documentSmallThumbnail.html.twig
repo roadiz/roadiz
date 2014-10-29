@@ -1,22 +1,32 @@
 {% spaceless %}
-<li class="uk-nestable-item" data-document-id="{{ document.getId }}">
-	<div class="uk-nestable-handle"></div>&nbsp;
+<li class="uk-sortable-list-item documents-widget-sortable-list-item" data-document-id="{{ document.getId }}">
+
+	<div class="uk-sortable-handle"></div>
+
+    <div class="document-border"></div>  <!-- style="background-color:;" -->
+
 	{% if document.isImage %}
-	<img src="{{ document.getViewer.getDocumentUrlByArray({"width":40, "crop":"1x1", "quality":50}) }}" />
+	   <img class="document-image" src="{{ document.getViewer.getDocumentUrlByArray({"width":80, "crop":"1x1", "quality":50}) }}" />
 	{% endif %}
+
 	<span class="document-name">{{ document.getFilename }}</span>
 	<input type="hidden" name="{{ full_name }}" value="{{ document.getId }}" />
-	<a href="{{ path('documentsEditPage', { documentId: document.getId}) }}" class="uk-button uk-button-mini">
-    <i class="uk-icon-rz-pencil"></i>
-    <span class="label">{% trans %}edit.document{% endtrans %}</span>
-    </a>
-	<a data-document-widget-unlink-document href="#" class="uk-button uk-button-mini uk-button-danger">
-    <i class="uk-icon-rz-trash-mini-o"></i>
-    <span class="label">{% trans %}unlink.document{% endtrans %}</span>
-    </a>
+    
+    <div class="document-links">
+         <a href="{{ path('documentsEditPage', { documentId: document.getId}) }}" class="uk-button document-link uk-button-mini">
+            <i class="uk-icon-rz-pencil"></i>
+            <span class="label">{% trans %}edit.document{% endtrans %}</span>
+        </a>
+        <a data-document-widget-unlink-document href="#" class="uk-button uk-button-mini document-link uk-button-danger">
+            <i class="uk-icon-rz-trash-mini-o"></i>
+            <span class="label">{% trans %}unlink.document{% endtrans %}</span>
+        </a>  
+    </div>
+
     <a data-document-widget-link-document href="#" class="uk-button uk-button-mini link-button">
-    <i class="uk-icon-plus"></i>
-    <span class="label">{% trans %}link.document{% endtrans %}</span>
-    </a>
+        <i class="uk-icon-rz-plus"></i>
+        <span class="label">{% trans %}link.document{% endtrans %}</span>
+    </a> 	
+
 </li>
 {% endspaceless %}

@@ -1,0 +1,155 @@
+/*------------------------------------*\
+    DOCUMENTS WIDGET
+\*------------------------------------*/
+
+
+/* -------- VARS -------- */
+@documents-widget-border :         #cbcbcb;
+@documents-widget-btn-bg :         #ededed;  
+@documents-widget-btn-border :     #bfbfbf; 
+@documents-widget-btn-color :      #2d2d2d; 
+
+
+/* -------- STYLES -------- */
+
+.documents-widget{
+    border:1px solid @documents-widget-border;
+}
+
+.documents-widget-nav{
+    height:55px;
+    border-bottom:1px dashed @documents-widget-border;
+
+    .uk-navbar-brand{
+        color:#666;
+        line-height:55px;
+    }
+
+    .uk-icon-rz-documents{
+        font-size:28px;
+    }
+
+    .documents-widget-quick-creation{
+        margin:11px 0;
+    }
+
+    .uk-button{
+        background: @documents-widget-btn-bg;
+        margin-right:8px;
+        border: 1px solid @documents-widget-btn-border;
+        color: @documents-widget-btn-color;
+
+        &:last-child{
+            margin-right:0;
+        }
+
+        &:hover{
+            border-color:darken(@documents-widget-btn-border, 15%);
+            background-color:darken(@documents-widget-btn-bg, 10%);
+            color: darken(@documents-widget-btn-color, 15%);
+        }
+    }
+
+}
+
+.documents-widget-sortable{
+    margin:20px 25px;
+    padding:0;
+
+    .uk-sortable-placeholder{
+        position: relative;
+        width:80px; height:80px;
+        margin-right:16px;
+    }
+}
+
+.documents-widget-sortable-list-item, .documents-widget-dragging{
+
+    position: relative;
+    display: inline-block;
+    width:80px; height:80px;
+    margin-right:16px;
+    overflow: hidden;
+    
+    &:hover{
+
+        .document-links{
+            bottom:0px;
+        }
+    }
+
+    .uk-sortable-handle{
+        position: absolute;
+        width:80px; height:80px;
+
+        &:after{
+            display: none;
+        }
+    }
+
+    .document-border{
+        position: absolute;
+        top:0; right:0; left:0;
+        height:4px;
+        background:@contrast-color;
+    }
+
+    .document-image{
+
+    }
+
+    .document-name{
+        display: none;
+    }
+
+    .document-links{
+        position:absolute;
+        width:80px; height:25px;
+        bottom:-25px;
+        overflow: hidden;
+        .transition(0.4s bottom @easeOutExpo);
+
+        .document-link{ // a
+            display: inline-block;
+            width:40px; height:25px;
+            .rounded(0);
+            color:#333;
+
+            &:hover{
+                color:darken(#333, 10%);
+            }
+
+            &:first-child{
+                background: #ccc;
+
+                &:hover{
+                    background: darken(#ccc, 10%);
+                }
+            }
+
+            &:first-child{
+                background: #aaa;
+
+                &:hover{
+                    background: darken(#aaa, 10%);
+                }
+            }
+
+            i{
+                margin:0;
+                line-height:25px;
+            }
+
+            .label{
+                display: none;
+            }
+        }
+    }
+
+    .link-button{
+        display: block;
+    }
+}
+
+
+// Dragging
