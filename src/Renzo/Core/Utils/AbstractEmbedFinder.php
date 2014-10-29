@@ -253,26 +253,29 @@ abstract class AbstractEmbedFinder
             $this->getThumbnailURL() != '') {
 
             $pathinfo = basename($this->getThumbnailURL());
-            $thumbnailName = $this->embedId.'_'.$pathinfo;
 
-            try {
-                $original = \GuzzleHttp\Stream\Stream::factory(fopen($this->getThumbnailURL(), 'r'));
-                $local = \GuzzleHttp\Stream\Stream::factory(fopen(Document::getFilesFolder().'/'.$thumbnailName, 'w'));
-                $local->write($original->getContents());
+            if ($pathinfo != "") {
+                $thumbnailName = $this->embedId.'_'.$pathinfo;
 
-                if (file_exists(Document::getFilesFolder().'/'.$thumbnailName) &&
-                    filesize(Document::getFilesFolder().'/'.$thumbnailName) > 0) {
+                try {
+                    $original = \GuzzleHttp\Stream\Stream::factory(fopen($this->getThumbnailURL(), 'r'));
+                    $local = \GuzzleHttp\Stream\Stream::factory(fopen(Document::getFilesFolder().'/'.$thumbnailName, 'w'));
+                    $local->write($original->getContents());
 
-                    return $thumbnailName;
-                } else {
+                    if (file_exists(Document::getFilesFolder().'/'.$thumbnailName) &&
+                        filesize(Document::getFilesFolder().'/'.$thumbnailName) > 0) {
+
+                        return $thumbnailName;
+                    } else {
+                        return false;
+                    }
+
+                } catch (\GuzzleHttp\Exception\RequestException $e) {
                     return false;
                 }
-
-            } catch (\GuzzleHttp\Exception\RequestException $e) {
-                return false;
             }
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

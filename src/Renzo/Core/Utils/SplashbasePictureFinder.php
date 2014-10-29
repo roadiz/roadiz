@@ -31,16 +31,21 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
     public function getRandom()
     {
         try {
-            $this->response = $this->client->get('http://www.splashbase.co/api/v1/images/random');
-            $json = $this->response->json();
+            $response = $this->client->get('http://www.splashbase.co/api/v1/images/random');
+            $this->feed = $response->json();
 
-            if (false !== strpos($json['url'], '.jpg')) {
-                return $json;
+            if (false !== strpos($this->feed['url'], '.jpg')) {
+
+                $this->embedId = $this->feed['id'];
+
+                return $this->feed;
             } else {
+                $this->feed = false;
                 return false;
             }
 
         } catch (ClientErrorResponseException $e) {
+            $this->feed = false;
             return false;
         }
     }
@@ -91,9 +96,10 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
      */
     public function getThumbnailURL()
     {
+        $this->getRandom();
 
-        if (false !== $feed = $this->getRandom()) {
-            return $feed['url'];
+        if (false !== $this->feed) {
+            return $this->feed['url'];
         } else {
             return false;
         }
@@ -106,7 +112,9 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
     {
         $url = $this->downloadThumbnail();
 
-        if (false !== $url) {
+        if (false !== $url &&
+            false !== $this->feed) {
+
             $existingDocument = $container['em']->getRepository('RZ\Renzo\Core\Entities\Document')
                                                 ->findOneBy(array('filename'=>$url));
             if (null !== $existingDocument) {
@@ -122,6 +130,8 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
                  */
                 $document->setFilename($url);
                 $document->setMimeType('image/jpeg');
+                $document->setCopyright($this->feed['copyright'].' — '.$this->feed['site']);
+
                 if (!file_exists(Document::getFilesFolder().'/'.$document->getFolder())) {
                     mkdir(Document::getFilesFolder().'/'.$document->getFolder());
                 }

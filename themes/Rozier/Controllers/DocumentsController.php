@@ -43,7 +43,9 @@ class DocumentsController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\Document'
+            'RZ\Renzo\Core\Entities\Document',
+            array(),
+            array('createdAt'=> 'DESC')
         );
         $listManager->handle();
 
