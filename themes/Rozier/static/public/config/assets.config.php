@@ -6,7 +6,7 @@ return array(
                 '/style.a5ac356f.css',
             ),
             'js' => array(
-                '/rozier-backend-theme.669da8bc.min.js',
+                '/rozier-backend-theme.ed4b3648.min.js',
             ),
         ),
     )

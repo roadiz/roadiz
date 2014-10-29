@@ -49,7 +49,10 @@ Rozier.initNestables = function  () {
 };
 Rozier.bindMainTrees = function () {
 	// TREES
+	$('.nodetree-widget .root-tree').off('uk.nestable.change');
 	$('.nodetree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableNodeTreeChange );
+
+	$('.tagtree-widget .root-tree').off('uk.nestable.change');
 	$('.tagtree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableTagTreeChange );
 };
 
@@ -65,8 +68,6 @@ Rozier.getMessages = function () {
 		},
 	})
 	.done(function(data) {
-		console.log(data);
-
 		if (typeof data.messages !== "undefined") {
 
 			if (typeof data.messages.confirm !== "undefined" &&
@@ -99,7 +100,7 @@ Rozier.getMessages = function () {
 		}
 	})
 	.fail(function() {
-		console.log("error");
+		console.log("[Rozier.getMessages] error");
 	});
 };
 
@@ -228,9 +229,6 @@ Rozier.onSearchNodesSources = function (event) {
 			})
 			.fail(function( data ) {
 				console.log(data);
-			})
-			.always(function() {
-				console.log("complete");
 			});
 		}, 300);
 	}
@@ -312,9 +310,6 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 	})
 	.fail(function( data ) {
 		console.log(data);
-	})
-	.always(function() {
-		console.log("complete");
 	});
 };
 
@@ -394,9 +389,6 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 	})
 	.fail(function( data ) {
 		console.log(data);
-	})
-	.always(function() {
-		console.log("complete");
 	});
 };
 

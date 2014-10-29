@@ -47,6 +47,7 @@ class DocumentsController extends RozierApp
             array(),
             array('createdAt'=> 'DESC')
         );
+        $listManager->setItemPerPage(28);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
