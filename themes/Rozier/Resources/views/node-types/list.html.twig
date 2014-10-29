@@ -32,7 +32,9 @@
 				<tbody>
 					{% for type in node_types %}
 						<tr>
-							<td><a href="{{ path('nodeTypesEditPage', { nodeTypeId: type.getId }) }}">{{ type.getName }}</a></td>
+							<td class="name"><a href="{{ path('nodeTypesEditPage', { nodeTypeId: type.getId }) }}">
+                                <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getName }}
+                            </a></td>
 							<td>{{ type.getDisplayName }}</td>
 							<td>{{ type.getSourceEntityClassName }}</td>
 							<td><div class="uk-badge">{% transchoice type.getFields|length %}{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields{% endtranschoice %}</div></td>
