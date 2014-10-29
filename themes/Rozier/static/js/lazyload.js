@@ -87,9 +87,6 @@ Lazyload.prototype.loadContent = function(state, location) {
             timeout : 3000,
             pos     : 'top-center'
         });
-    })
-    .always(function() {
-        console.log("complete");
     });
 };
 
