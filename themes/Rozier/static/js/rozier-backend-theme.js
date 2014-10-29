@@ -14302,13 +14302,12 @@ Lazyload.prototype.applyContent = function(data) {
     $container.append($tempData);
     $tempData = $container.find('.new-content-global');
 
-    $old.fadeOut(300, function () {
+    $old.fadeOut(100, function () {
         $old.remove();
 
         _this.generalBind();
         Rozier.centerVerticalObjects('ajax');
-
-        $tempData.fadeIn(300, function () {
+        $tempData.fadeIn(200, function () {
 
             $tempData.removeClass('new-content-global');
         });
@@ -14340,8 +14339,8 @@ Lazyload.prototype.generalBind = function() {
                 _this.$HTMLeditorNav = $('.uk-htmleditor-navbar');
                 _this.HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+_this.$HTMLeditorNav[0].innerHTML+'</div>';
 
-                $(_this.$HTMLeditor[i]).append(_this.HTMLeditorNavInner);   
-                         
+                $(_this.$HTMLeditor[i]).append(_this.HTMLeditorNavInner);
+
             }
 
             $(".uk-htmleditor-preview").css("height", 250);
@@ -14354,7 +14353,7 @@ Lazyload.prototype.generalBind = function() {
             }, 0);
 
         }, 0);
-  
+
     }
 
     // Init document uploader

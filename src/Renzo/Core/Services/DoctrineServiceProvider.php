@@ -32,7 +32,6 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
             $container['em'] = function ($c) {
                 try {
                     // the connection configuration
-                    $dbParams = $c['config']["doctrine"];
                     $configDB = Setup::createAnnotationMetadataConfiguration(
                         $c['entitiesPaths'],
                         (boolean) $c['config']['devMode']
@@ -41,15 +40,14 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                     $configDB->setProxyDir(RENZO_ROOT . '/gen-src/Proxies');
                     $configDB->setProxyNamespace('Proxies');
 
-                    $em = EntityManager::create($dbParams, $configDB);
+                    $em = EntityManager::create($c['config']["doctrine"], $configDB);
 
                     $evm = $em->getEventManager();
 
                     /*
                      * Create dynamic dicriminator map for our Node system
                      */
-                    $inheritableEntityEvent = new DataInheritanceEvent();
-                    $evm->addEventListener(Events::loadClassMetadata, $inheritableEntityEvent);
+                    $evm->addEventListener(Events::loadClassMetadata, new DataInheritanceEvent());
 
                     if ($em->getConfiguration()->getResultCacheImpl() !== null) {
                         $em->getConfiguration()
