@@ -18,68 +18,34 @@
     {% include 'widgets/filtersBar.html.twig' %}
 
     <article class="content content-no-action-menu">
-        <div class="content-table-cont">
-			<table class="documents content-table uk-table">
-				<thead>
-			        <tr>
-			            <th class="uk-text-center">{% trans %}document.thumbnail{% endtrans %}</th>
-			            <th>{% trans %}document.filename{% endtrans %}
-			            	{% if request.query.get("field") == 'filename' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=filename&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
-                        	{% else %}
-                            <a href="?field=filename&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
-                        	{% endif %}
-			            </th>
-			            <th>{% trans %}document.mimeType{% endtrans %}
-			            	{% if request.query.get("field") == 'mimeType' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=mimeType&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
-                        	{% else %}
-                            <a href="?field=mimeType&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
-                        	{% endif %}
-			            </th>
-			            <th>{# {% trans %}document.platform{% endtrans %} #}</th>
-			            <th>{% trans %}document.createdAt{% endtrans %}
-			            	{% if request.query.get("field") == 'createdAt' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=createdAt&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
-                        	{% else %}
-                            <a href="?field=createdAt&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
-                        	{% endif %}
-			            </th>
-			            <th>{% trans %}actions{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					{% for document in documents %}
-					<tr>
-						{% if document.isImage %}
-						<td class="uk-text-center">
-							<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}">
-								{# <img width="100" alt="" src="{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}" /> #}
-								{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
-							</a>
-						</td>
-						{% else %}
-						<td class="uk-text-center">
-							<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}"><i class='uk-icon-large uk-icon-file-{{ document.getShortType }}-o'></i></a>
-						</td>
-						{% endif %}
-						{% if document.isEmbed %}
-						<td>{{ document.getFilename }}</td>
-						<td>{{ document.getMimeType }}</td>
-						<td class="platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></td>
-						{% else %}
-						<td>{{ document.getFilename }}</td>
-						<td colspan="2">{{ document.getMimeType }}</td>
-						{% endif %}
-						<td>{{ document.getCreatedAt|localizeddate('short', 'none') }}</td>
-						<td>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}delete{% endtrans %}</a>
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
+
+            <!-- <th class="uk-text-center">{% trans %}document.thumbnail{% endtrans %}</th>
+            <th>{% trans %}document.filename{% endtrans %}</th>
+            <th>{% trans %}document.createdAt{% endtrans %}</th>
+            <th>{% trans %}actions{% endtrans %}</th> -->
+            
+            {% spaceless %}
+            <ul class="documents-list">
+            {% for document in documents %}
+    
+                <li class="document-item">
+                    <div class="document-border"></div>
+                    <figure class="document-image">
+                        {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
+                    </figure>
+                    <div class="document-links">
+                        <a class="uk-button uk-button-small document-link" href="{{ path('documentsEditPage', { documentId: document.getId }) }}"><i class="uk-icon-rz-pencil"></i></a>
+                        <a class="uk-button uk-button-small uk-button-danger document-link" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}"><i class="uk-icon-rz-trash-mini-o"></i></a>
+                    </div>
+                    <div class="document-mime-type">{{ document.getMimeType }}</div>
+                    <div class="document-name">{{ document.getFilename }}</div>
+                    <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
+                </li>
+
+            {% endfor %}
+            </ul>
+            {% endspaceless %}
+            
 	</article>
 </section>
 {% endblock %}

@@ -53,9 +53,9 @@ class DocumentsController extends RozierApp
         $this->assignation['documents'] = $listManager->getEntities();
 
         $this->assignation['thumbnailFormat'] = array(
-            'width' => 100,
+            'width' => 128,
             'quality' => 50,
-            'crop' => '3x2'
+            'crop' => '1x1'
         );
 
         return new Response(

@@ -14,6 +14,10 @@
 
 .children-nodes-widget{
     border:1px solid @children-nodes-border;
+
+    &> .children-nodes-tree{
+        background: #fff;
+    }
 }
 
 .children-nodes-nav{
@@ -21,6 +25,7 @@
     border-bottom:1px dashed @children-nodes-border;
 
     .uk-navbar-brand{
+        padding:0 28px;
         color:#666;
         line-height:55px;
     }
@@ -62,6 +67,15 @@
 
         .uk-nestable-handle{
             width:32px;
+            border-color:@children-nodes-border;
+        }
+
+    }
+
+    .nodetree-contextualmenu{
+    
+        .uk-button-mini{
+            background: #ddd;
         }
 
     }
@@ -146,14 +160,21 @@
         .uk-nestable-item{
             height:55px;
             line-height:55px;
+            padding-left:21px;
             .box-sizing();
 
             .nodetree-element-img{
                 position: absolute;
+                top:6px; left:22px;
                 width:40px; height:40px;
                 .rounded(100px);
                 overflow: hidden;
                 z-index:5;
+
+                img{
+                    position: relative;
+                    vertical-align: top;
+                }
             }
 
             &.stack-node{
@@ -164,13 +185,13 @@
 
             &.unpublished-node{
                 .nodetree-element-img{
-                    top:8px; left:5px;
+                    top:11px; left:27px;
                     width:30px; height:30px;
                     .rounded(0);
-                    .rotation(45deg);
+                    .transform(rotate(45deg));
 
                     img{
-                        .rotation(-90deg);
+                        .transform(rotate(-45deg) scale(1.4));
                     }
                 }
             }
@@ -198,6 +219,7 @@
                     position: relative;
                     width:32px;
                     top:-19px; left:-7px;
+                    border-color:#a0a0a0;  
                 }
 
                 & > .uk-nestable-handle:after, .uk-icon-folder:before {
@@ -211,7 +233,7 @@
                     font-size: 12px;
                     .rounded(100%);
                     background-color: white;
-                    border: 1px solid @item-color;
+                    border: 1px solid #a0a0a0;
                     width: 25px;
                     display: inline-block;
                     height: 25px;
@@ -234,7 +256,7 @@
                             color: @item-color;
                             font-size: 12px;
                             .rounded(100%);
-                            background-color: @item-color;
+                            background-color: #a0a0a0;
                             width: 8px;
                             height: 8px;
                             top: 9px;
@@ -263,7 +285,7 @@
         
         // 2nd level
         &> .uk-nestable-list{
-            padding-left:15px;
+            padding-left:24px;
             margin:15px 0 20px 17px;
 
             &.empty{
@@ -327,7 +349,7 @@
                 
                 // 3rd level
                 .uk-nestable-list{
-                    padding-left:60px;
+                    padding-left:68px;
 
                     .uk-nestable-list-item{
                         margin-right:0;
