@@ -14413,7 +14413,7 @@ var i=a.extend(f,l);var e=this.eq(0);var h,j;if(i.clone===true){h=function(){var
 };j=function(){e.remove();};}else{var g=[];var d="";var c;h=function(){c=e.parents().addBack().filter(":hidden");d+="visibility: hidden !important; display: block !important; ";
 if(i.absolute===true){d+="position: absolute !important; ";}c.each(function(){var m=a(this);var n=m.attr("style");g.push(n);m.attr("style",n?n+";"+d:d);
 });};j=function(){c.each(function(m){var o=a(this);var n=g[m];if(n===undefined){o.removeAttr("style");}else{o.attr("style",n);}});};}h();var k=/(outer)/.test(b)?e[b](i.includeMargin):e[b]();
-j();return k;}});})(jQuery);;/*
+j();return k;}});})(jQuery);;	/*
  * ============================================================================
  * Rozier entry point
  * ============================================================================
@@ -14437,6 +14437,15 @@ Rozier.onDocumentReady = function(event) {
 	Rozier.centerVerticalObjects(); // this must be done before generalBind!
 
 	// Search node
+	$("#nodes-sources-search-input").on('focus', function(){
+		$('#nodes-sources-search').addClass("focus-on");
+		$('#nodes-sources-search-results').fadeIn();
+	});
+	$("#nodes-sources-search-input").on('focusout', function(){
+		$('#nodes-sources-search-results').fadeOut();
+		$('#nodes-sources-search').removeClass("focus-on");
+		$(this).val("");
+	});
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
 	// Minify trees panel toggle button
 	$('#minify-tree-panel-button').on('click', Rozier.toggleTreesPanel);
@@ -14625,10 +14634,11 @@ Rozier.onSearchNodesSources = function (event) {
 
 					for(var i in data.data) {
 						$results.append('<li><a href="'+data.data[i].url+
-								'"><span class="title">'+data.data[i].title+
+								'" style="border-left-color:'+data.data[i].typeColor+'"><span class="title">'+data.data[i].title+
 						    	'</span> <span class="type">'+data.data[i].typeName+
 						    	'</span></a></li>');
 					}
+					$results.append('<a id="see-all" href="#">seel all</a>');
 				}
 			})
 			.fail(function( data ) {

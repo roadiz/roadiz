@@ -8,7 +8,7 @@
   ---------------------------------------------------*/
 
 /*
- * Emulate display none but keep in render to enable transitions 
+ * Emulate display none but keep in render to enable transitions
  */
 
 .fake-display-none(){
@@ -21,6 +21,12 @@
   display: block;
   pointer-events: auto;
   .opacity(1);
+}
+
+.text-ellipsis(){
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF) {
@@ -76,6 +82,7 @@
   -webkit-border-radius: @radius;
   -moz-border-radius:    @radius;
   border-radius:         @radius;
+  behavior: url(/PIE.htc);
 }
 
 .border-radius(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
@@ -111,7 +118,7 @@
   -webkit-opacity: @opacity;
   opacity:         @opacity;
   -ms-filter:      none;
-  filter:          none;  
+  filter:          none;
 }
 
 .transform(...) {
@@ -134,9 +141,9 @@
   .transform(scale(@ratio));
 }
 
-.transform-style(@style:preserve-3d){ 
+.transform-style(@style:preserve-3d){
   -webkit-transform-style: @style;
-  -moz-transform-style: @style; 
+  -moz-transform-style: @style;
   transform-style: @style;
 }
 
@@ -145,7 +152,7 @@
   -moz-backface-visibility:@value;
   backface-visibility:@value;
 }
- 
+
 
 /*
  * Transitions
@@ -157,7 +164,7 @@
   transition:         @arguments;
 }
 
-/* BAD to transition over ALL propeties ! 
+/* BAD to transition over ALL propeties !
 .transition(@duration:0.2s, @ease:ease-in-out) {
   -webkit-transition: all @duration @ease;
   -moz-transition: all @duration @ease;
@@ -271,7 +278,7 @@
 .background-size(@type:cover){
   -moz-background-size: @type;
   -webkit-background-size: @type;
-  background-size: @type; 
+  background-size: @type;
   -ms-behavior: url(/backgroundsize.min.htc);
 }
 
@@ -284,12 +291,12 @@
 }
 
 .keep-image-aspect(){
-  image-rendering:       optimizeSpeed;             /* Legal fallback                 */
-  image-rendering:       pixellated;                /* Firefox                        */
-  image-rendering:       -o-crisp-edges;            /* Opera                          */
+  image-rendering:       optimizeSpeed;             /* Legal fallback                 */
+  image-rendering:       pixellated;                /* Firefox                        */
+  image-rendering:       -o-crisp-edges;            /* Opera                          */
   image-rendering:       -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
-  image-rendering:       optimize-contrast;         /* CSS3 Proposed                  */
-  -ms-interpolation-mode:nearest-neighbor;          /* IE8+ */   
+  image-rendering:       optimize-contrast;         /* CSS3 Proposed                  */
+  -ms-interpolation-mode:nearest-neighbor;          /* IE8+ */
 }
 
 .color-placeholder(@color) {
@@ -304,14 +311,14 @@
   }
   &:-ms-input-placeholder { /* Internet Explorer 10+ */
       color: @color;
-  } 
+  }
 }
 
 .touch-scroll(){
   -webkit-overflow-scrolling: touch;
 }
 
-.clearfloat() { 
+.clearfloat() {
   &:after {
     display:    block;
     content:    '.';

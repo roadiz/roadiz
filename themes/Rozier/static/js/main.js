@@ -1,4 +1,4 @@
-/*
+	/*
  * ============================================================================
  * Rozier entry point
  * ============================================================================
@@ -22,6 +22,15 @@ Rozier.onDocumentReady = function(event) {
 	Rozier.centerVerticalObjects(); // this must be done before generalBind!
 
 	// Search node
+	$("#nodes-sources-search-input").on('focus', function(){
+		$('#nodes-sources-search').addClass("focus-on");
+		$('#nodes-sources-search-results').fadeIn();
+	});
+	$("#nodes-sources-search-input").on('focusout', function(){
+		$('#nodes-sources-search-results').fadeOut();
+		$('#nodes-sources-search').removeClass("focus-on");
+		$(this).val("");
+	});
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
 	// Minify trees panel toggle button
 	$('#minify-tree-panel-button').on('click', Rozier.toggleTreesPanel);
@@ -210,10 +219,11 @@ Rozier.onSearchNodesSources = function (event) {
 
 					for(var i in data.data) {
 						$results.append('<li><a href="'+data.data[i].url+
-								'"><span class="title">'+data.data[i].title+
+								'" style="border-left-color:'+data.data[i].typeColor+'"><span class="title">'+data.data[i].title+
 						    	'</span> <span class="type">'+data.data[i].typeName+
 						    	'</span></a></li>');
 					}
+					$results.append('<a id="see-all" href="#">seel all</a>');
 				}
 			})
 			.fail(function( data ) {
