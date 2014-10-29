@@ -1,7 +1,7 @@
 {% if nodeTree %}
-<nav class="nodetree-widget" {% if head.ajax %}style="display:none;"{% endif %}>
+<nav class="nodetree-widget">
     {% if mainNodeTree %}
-        <h4>{% trans %}nodeTree{% endtrans %}</h4>    
+        <h4>{% trans %}nodeTree{% endtrans %}</h4>
         {% if nodeTree.getRootNode == null %}
             <a href="{{ path('nodesAddChildPage', {nodeId : 0}) }}" class="tree-btn-add" id="nodetree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.node{% endtrans %}</a>
         {% else %}

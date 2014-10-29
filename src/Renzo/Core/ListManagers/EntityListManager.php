@@ -85,9 +85,11 @@ class EntityListManager
     /**
      * Handle request to find filter to apply to entity listing.
      *
+     * @param boolean $disabled Disable pagination and filtering over GET params
+     *
      * @return void
      */
-    public function handle()
+    public function handle($disabled = false)
     {
         $this->paginator = new \RZ\Renzo\Core\Utils\Paginator(
             $this->_em,
@@ -96,22 +98,26 @@ class EntityListManager
             $this->filteringArray
         );
 
-        if ($this->request->query->get('field') &&
-            $this->request->query->get('ordering')) {
+        if (false === $disabled) {
+            if ($this->request->query->get('field') &&
+                $this->request->query->get('ordering')) {
 
-            $this->orderingArray[$this->request->query->get('field')] = $this->request->query->get('ordering');
-            $this->queryArray['field'] = $this->request->query->get('field');
-            $this->queryArray['ordering'] = $this->request->query->get('ordering');
-        }
+                $this->orderingArray[$this->request->query->get('field')] = $this->request->query->get('ordering');
+                $this->queryArray['field'] = $this->request->query->get('field');
+                $this->queryArray['ordering'] = $this->request->query->get('ordering');
+            }
 
-        if ($this->request->query->get('search') != "") {
-            $this->searchPattern = $this->request->query->get('search');
-            $this->queryArray['search'] = $this->request->query->get('search');
-            $this->paginator->setSearchPattern($this->request->query->get('search'));
-        }
+            if ($this->request->query->get('search') != "") {
+                $this->searchPattern = $this->request->query->get('search');
+                $this->queryArray['search'] = $this->request->query->get('search');
+                $this->paginator->setSearchPattern($this->request->query->get('search'));
+            }
 
-        $this->currentPage = $this->request->query->get('page');
-        if (!($this->currentPage > 1)) {
+            $this->currentPage = $this->request->query->get('page');
+            if (!($this->currentPage > 1)) {
+                $this->currentPage = 1;
+            }
+        } else {
             $this->currentPage = 1;
         }
     }

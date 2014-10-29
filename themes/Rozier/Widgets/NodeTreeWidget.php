@@ -15,6 +15,8 @@ use RZ\Renzo\Core\Kernel;
 use Themes\Rozier\Widgets\AbstractWidget;
 use Symfony\Component\HttpFoundation\Request;
 
+use RZ\Renzo\Core\ListManagers\EntityListManager;
+
 /**
  * Prepare a Node tree according to Node hierarchy and given options.
  *
@@ -26,6 +28,7 @@ class NodeTreeWidget extends AbstractWidget
     protected $nodes =       null;
     protected $translation = null;
     protected $stackTree =   false;
+    protected $filters =     null;
 
     /**
      * @param Request                            $request           Current kernel request
@@ -43,8 +46,6 @@ class NodeTreeWidget extends AbstractWidget
 
         $this->parentNode = $parent;
         $this->translation = $translation;
-
-        $this->getNodeTreeAssignationForParent();
     }
 
 
@@ -67,7 +68,12 @@ class NodeTreeWidget extends AbstractWidget
     /**
      * Fill twig assignation array with NodeTree entities.
      */
-    protected function getNodeTreeAssignationForParent()
+    protected function getRootListManager()
+    {
+        return $this->getListManager($this->parentNode);
+    }
+
+    protected function getListManager(Node $parent = null)
     {
         if ($this->translation === null) {
             $this->translation = $this->getController()->getService('em')
@@ -75,39 +81,38 @@ class NodeTreeWidget extends AbstractWidget
                     ->findOneBy(array('defaultTranslation'=>true));
         }
 
-        $this->nodes = $this->getController()->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Node')
-                ->findByParentWithTranslation($this->translation, $this->parentNode);
-    }
+        /*
+         * Manage get request to filter list
+         */
+        $listManager = new EntityListManager(
+            $this->request,
+            $this->controller->getService('em'),
+            'RZ\Renzo\Core\Entities\Node',
+            array(
+                'parent' => $parent,
+                'status' => array('<=', Node::PUBLISHED),
+            ),
+            array('position'=>'ASC')
+        );
 
+        if (true === $this->stackTree) {
+            $listManager->setItemPerPage(20);
+            $listManager->handle();
+        } else {
+            $listManager->setItemPerPage(100);
+            $listManager->handle(true);
+        }
+
+        return $listManager;
+    }
     /**
      * @param RZ\Renzo\Core\Entities\Node $parent
      *
      * @return ArrayCollection
      */
-    public function getChildrenNodes(Node $parent)
+    public function getChildrenNodes(Node $parent = null)
     {
-        if ($this->translation === null) {
-            $this->translation = $this->getController()->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
-                    ->findOneBy(array('defaultTranslation'=>true));
-        }
-        if ($parent !== null) {
-            return $this->nodes = $this->getController()->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Node')
-                    ->findBy(
-                        array(
-                            'parent' => $parent,
-                            'status' => array('<=', Node::PUBLISHED),
-                        ),
-                        array('position'=>'ASC'),
-                        null,
-                        null,
-                        $this->translation
-                    );
-        }
-
-        return null;
+        return $this->getListManager($parent)->getEntities();
     }
     /**
      * @return RZ\Renzo\Core\Entities\Node
@@ -115,6 +120,11 @@ class NodeTreeWidget extends AbstractWidget
     public function getRootNode()
     {
         return $this->parentNode;
+    }
+
+    public function getFilters()
+    {
+        return $this->filters;
     }
     /**
      * @return RZ\Renzo\Core\Entities\Translation
@@ -128,6 +138,12 @@ class NodeTreeWidget extends AbstractWidget
      */
     public function getNodes()
     {
+        if (null === $this->nodes) {
+            $manager = $this->getRootListManager();
+            $this->nodes = $manager->getEntities();
+            $this->filters = $manager->getAssignation();
+        }
+
         return $this->nodes;
     }
 }

@@ -476,6 +476,7 @@ class NodeRepository extends EntityRepository
         );
 
         $finalQuery = $query->getQuery();
+
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
         $this->applyTranslationByTag($criteria, $finalQuery, $translation);
@@ -999,9 +1000,11 @@ class NodeRepository extends EntityRepository
             $field = $this->_em->getClassMetadata($this->getEntityName())->getFieldName($col);
             $type = $this->_em->getClassMetadata($this->getEntityName())->getTypeOfField($field);
 
-            if (in_array($type, $types)) {
-                $criteriaFields[$this->_em->getClassMetadata($this->getEntityName())->getFieldName($col)] =
-                    '%'.strip_tags($pattern).'%';
+
+            if (in_array($type, $types) &&
+                $field != 'childrenOrder' &&
+                $field != 'childrenOrderDirection') {
+                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
             }
         }
 
@@ -1025,8 +1028,57 @@ class NodeRepository extends EntityRepository
         }
 
         foreach ($criteria as $key => $value) {
+            if (is_object($value) && $value instanceof PersistableInterface) {
+                $res = $qb->expr()->eq($alias . '.' .$key, $value->getId());
+            } elseif (is_array($value)) {
+                /*
+                 * array
+                 *
+                 * ['<=', $value]
+                 * ['<', $value]
+                 * ['>=', $value]
+                 * ['>', $value]
+                 * ['BETWEEN', $value, $value]
+                 * ['LIKE', $value]
+                 * in [$value, $value]
+                 */
+                if (count($value) > 1) {
+                    switch ($value[0]) {
+                        case '<=':
+                            # lte
+                            $res = $qb->expr()->lte($alias . '.' .$key, $value[1]);
+                            break;
+                        case '<':
+                            # lt
+                            $res = $qb->expr()->lt($alias . '.' .$key, $value[1]);
+                            break;
+                        case '>=':
+                            # gte
+                            $res = $qb->expr()->gte($alias . '.' .$key, $value[1]);
+                            break;
+                        case '>':
+                            # gt
+                            $res = $qb->expr()->gt($alias . '.' .$key, $value[1]);
+                            break;
+                        case 'BETWEEN':
+                            $res = $qb->expr()->between(
+                                $alias . '.' .$key,
+                                ':'.$baseKey.'_1',
+                                ':'.$baseKey.'_2'
+                            );
+                            break;
+                        case 'LIKE':
+                            $res = $qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value[1]));
+                            break;
+                        default:
+                            $res = $qb->expr()->in($alias . '.' .$key, $value);
+                            break;
+                    }
+                } else {
+                    $res = $qb->expr()->in($alias . '.' .$key, $value);
+                }
 
-            if (is_array($value)) {
+            } elseif (is_array($value)) {
                 $res = $qb->expr()->in($alias . '.' .$key, $value);
             } elseif (is_bool($value)) {
                 $res = $qb->expr()->eq($alias . '.' .$key, (boolean) $value);

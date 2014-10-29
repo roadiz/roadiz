@@ -148,6 +148,7 @@ class NodesController extends RozierApp
         if (null !== $node) {
             $widget = new NodeTreeWidget($request, $this, $node, $translation);
             $widget->setStackTree(true);
+            $widget->getNodes(); //pre-fetch nodes for enable filters
             $this->assignation['node'] = $node;
             $this->assignation['source'] = $node->getNodeSources()->first();
             $this->assignation['translation'] = $translation;
