@@ -1,5 +1,7 @@
-{% if node.getNodeSources.first.getTitle %}
-{% set name = node.getNodeSources.first.getTitle %}
+{% set source = node.getNodeSources.first %}
+
+{% if source.getTitle %}
+{% set name = source.getTitle %}
 {% else %}
 {% set name = node.getNodeName %}
 {% endif %}
@@ -7,8 +9,7 @@
 <li data-node-id="{{ node.getId }}"
 	class="nodetree-element uk-nestable-list-item{% if not node.isHidingChildren and not node.nodeType.isHidingNodes and node.getChildren.count > 0 %} has-children{% endif %}">
 
-	{% if not mainNodeTree %}
-		<!-- {% if node.getChildren.count > 0 %}OK{% endif %} -->
+	{% if not mainNodeTree and not nodeTree.isStackTree %}
 		<span class="nodetree-list-item-color" style="background-color:{{ node.nodeType.color }};"></span>
 	{% endif %}
 
@@ -20,12 +21,23 @@
 		{% if not node.isArchived %}archived-node {% endif %}
 		{% if not node.isLocked %}locked-node {% endif %}">
 		<div class="uk-nestable-handle">
+		
+			{% if not mainNodeTree and not nodeTree.isStackTree %}
+				{% set image = source.getDocumentsByFields.first.getDocument %}
+				{% if image %} 
+				<figure class="nodetree-element-img">
+					<img src="{{ image.getViewer.getDocumentUrlByArray({"width":40, "crop":"1x1", "quality":50}) }}" alt="">
+				</figure>
+				{% endif %}
+			{% endif %}
+
 			{% if node.isHidingChildren %}
 				<i class="uk-icon-folder"></i>
 				<span class="icon-stack-folder"></span>
 				<span class="icon-stack-folder icon-stack-folder-final"></span>
 			{% endif %}
 		</div>
+
 		{#
 		 # Node statuses
 		 #}
@@ -95,7 +107,7 @@
 	</div>
 	{% spaceless %}
 	<ul class="uk-nestable-list
-		{% if not mainNodeTree %} children-node-widget-list{% endif %}
+		{% if not mainNodeTree and not nodeTree.isStackTree %} children-node-widget-list{% endif %}
 		{% if node.isHidingChildren or node.nodeType.isHidingNodes or node.getChildren.count == 0 %} empty{% endif %}" 
 		data-parent-node-id="{{ node.getId }}">
 	{#
