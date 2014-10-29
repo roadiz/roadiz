@@ -175,4 +175,6 @@ Lazyload.prototype.generalBind = function() {
 
     // Switch checkboxes
     $(".rz-boolean-checkbox").bootstrapSwitch();
+
+    Rozier.getMessages();
 };

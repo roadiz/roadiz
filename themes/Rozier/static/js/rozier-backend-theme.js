@@ -14377,7 +14377,10 @@ Lazyload.prototype.generalBind = function() {
 
     // Switch checkboxes
     $(".rz-boolean-checkbox").bootstrapSwitch();
-};;// Avoid `console` errors in browsers that lack a console.
+
+    Rozier.getMessages();
+};
+;// Avoid `console` errors in browsers that lack a console.
 (function() {
     var method;
     var noop = function () {};
@@ -14452,6 +14455,57 @@ Rozier.bindMainTrees = function () {
 	// TREES
 	$('.nodetree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableNodeTreeChange );
 	$('.tagtree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableTagTreeChange );
+};
+
+Rozier.getMessages = function () {
+
+	$.ajax({
+		url: Rozier.routes.ajaxSessionMessages,
+		type: 'GET',
+		dataType: 'json',
+		data: {
+			"_action": 'messages',
+			"_token": Rozier.ajaxToken
+		},
+	})
+	.done(function(data) {
+		console.log(data);
+
+		if (typeof data.messages !== "undefined") {
+
+
+			if (typeof data.messages.confirm !== "undefined" &&
+						data.messages.confirm.length > 0) {
+
+				for (var i = data.messages.confirm.length - 1; i >= 0; i--) {
+
+					$.UIkit.notify({
+						message : data.messages.confirm[i],
+						status  : 'success',
+						timeout : 2000,
+						pos     : 'top-center'
+					});
+				}
+			}
+
+			if (typeof data.messages.error !== "undefined" &&
+						data.messages.error.length > 0) {
+
+				for (var j = data.messages.error.length - 1; j >= 0; j--) {
+
+					$.UIkit.notify({
+						message : data.messages.error[j],
+						status  : 'error',
+						timeout : 2000,
+						pos     : 'top-center'
+					});
+				}
+			}
+		}
+	})
+	.fail(function() {
+		console.log("error");
+	});
 };
 
 /**
@@ -14720,7 +14774,7 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 	 * When dropping to route
 	 * set parentTagId to NULL
 	 */
-	if(isNaN(parent_tag_id)){ 
+	if(isNaN(parent_tag_id)){
 		parent_tag_id = null;
 	}
 	postData.newParent = parent_tag_id;

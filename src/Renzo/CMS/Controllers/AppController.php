@@ -486,7 +486,6 @@ class AppController implements ViewableInterface
                                     ->generateCsrfToken(static::FONT_TOKEN_INTENTION)
             ),
             'session' => array(
-                'messages' => $this->kernel->getRequest()->getSession()->getFlashBag()->all(),
                 'id' => $this->kernel->getRequest()->getSession()->getId()
             )
         );

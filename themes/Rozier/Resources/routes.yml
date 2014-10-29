@@ -28,6 +28,10 @@ loginFailedPage:
 loginCheckPage:
     path:     /rz-admin/login_check
 
+ajaxSessionMessages:
+    path:     /rz-admin/session/messages
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxSessionMessages::getMessagesAction }
+
 # CACHES
 deleteDoctrineCache:
     path:     /rz-admin/cache/delete-doctrine-cache
