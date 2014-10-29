@@ -46,7 +46,7 @@
 		{% if nodeTree.isStackTree and node.tags|length %}
 		<div class="nodetree-tags">
 		{% for tag in node.tags %}
-			<span class="uk-badge">{{ tag.tagName }}</span>
+			<a href="{{ path('tagsEditNodesPage', {tagId:tag.id}) }}" class="uk-badge">{{ tag.tagName }}</a>
 		{% endfor %}
 		</div>
 		{% endif %}
@@ -96,7 +96,7 @@
 	{% spaceless %}
 	<ul class="uk-nestable-list
 		{% if not mainNodeTree %} children-node-widget-list{% endif %}
-		{% if node.isHidingChildren or node.nodeType.isHidingNodes or node.getChildren.count == 0 %} empty{% endif %}" 
+		{% if node.isHidingChildren or node.nodeType.isHidingNodes or node.getChildren.count == 0 %} empty{% endif %}"
 		data-parent-node-id="{{ node.getId }}">
 	{#
 	 # For drag&drop ease, we don't create nested lists

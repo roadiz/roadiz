@@ -82,14 +82,21 @@ td.uk-alert {
 
 .uk-notify-message {
 
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 18px;
 
     &-success {
-
+        background: @contrast-color-darker;
+        border-color: darken(@contrast-color-darker, 5%);
+        color: white;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
     }
 
     &-error {
-        background-color: rgba(255,0,0,0.8);
+        color: @alert-color;
+        border-color: rgba(@alert-color-red, @alert-color-blue, @alert-color-green, 0.5);
+        background: #FFEEEE;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
     }
 }
