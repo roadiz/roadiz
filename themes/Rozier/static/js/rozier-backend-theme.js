@@ -13131,8 +13131,8 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {
                 '<div class="uk-htmleditor-navbar-flip">',
                     '<ul class="uk-htmleditor-navbar-nav">',
                         '<li class="uk-htmleditor-button-code"><a class="uk-htmleditor-button-link-code-preview uk-htmleditor-button-link-code" title="Markdown" data-uk-tooltip="{animation:true}">{:lblCodeview}</a></li>',
-                        '<li class="uk-htmleditor-button-preview"><a class="uk-htmleditor-button-link-code-preview uk-htmleditor-button-link-preview" title="Preview" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility"></i></a></li>', // {:lblPreview}
-                        '<li class="uk-htmleditor-button-fullscreen"><a class="uk-htmleditor-button-link-fullscreen" data-htmleditor-button="fullscreen" title="Fullscreen"  data-uk-tooltip="{animation:true}"><i class="uk-icon-expand"></i></a></li>',
+                        '<li class="uk-htmleditor-button-preview"><a class="uk-htmleditor-button-link-code-preview uk-htmleditor-button-link-preview" title="Preview" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility-mini"></i></a></li>', // {:lblPreview}
+                        '<li class="uk-htmleditor-button-fullscreen"><a class="uk-htmleditor-button-link-fullscreen" data-htmleditor-button="fullscreen" title="Fullscreen"  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-fullscreen"></i></a></li>',
                     '</ul>',
                 '</div>',
             '</div>',
@@ -13172,7 +13172,7 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {
                 },
                 fullscreen: {
                     title  : 'Fullscreen',
-                    label  : '<i class="uk-icon-rz-expand"></i>'
+                    label  : '<i class="uk-icon-rz-fullscreen"></i>'
                 },
                 bold : {
                     title  : 'Bold',
@@ -13413,7 +13413,7 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {
 
             function enableMarkdown() {
                 editor.editor.setOption('mode', 'gfm');
-                editor.htmleditor.find('.uk-htmleditor-button-code a').html('<i class="uk-icon-rz-visibility"></i>');
+                editor.htmleditor.find('.uk-htmleditor-button-code a').html('<i class="uk-icon-rz-visibility-mini"></i>');
             }
 
             function addAction(name, replace, mode) {
