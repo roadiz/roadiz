@@ -148,12 +148,31 @@
             line-height:55px;
             .box-sizing();
 
-            .nodetree-element-image{
+            .nodetree-element-img{
+                position: absolute;
+                width:40px; height:40px;
+                .rounded(100px);
                 overflow: hidden;
+                z-index:5;
             }
 
             &.stack-node{
-                
+                .nodetree-element-img{
+                    display: none;
+                }
+            }
+
+            &.unpublished-node{
+                .nodetree-element-img{
+                    top:8px; left:5px;
+                    width:30px; height:30px;
+                    .rounded(0);
+                    .rotation(45deg);
+
+                    img{
+                        .rotation(-90deg);
+                    }
+                }
             }
 
             .nodetree-element-name{

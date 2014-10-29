@@ -5,22 +5,24 @@ var DocumentWidget = function () {
 	var _this = this;
 
 	_this.$widgets = $('[data-document-widget]');
-	_this.$nestables = $('.documents-widget-nestable');
+	_this.$sortables = $('.documents-widget-sortable');
 	_this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
 	_this.$unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
 
 	_this.init();
 };
+
 DocumentWidget.prototype.$explorer = null;
 DocumentWidget.prototype.$widgets = null;
 DocumentWidget.prototype.$toggleExplorerButtons = null;
 DocumentWidget.prototype.$unlinkDocumentButtons = null;
-DocumentWidget.prototype.$nestables = null;
+DocumentWidget.prototype.$sortables = null;
+
 DocumentWidget.prototype.init = function() {
 	var _this = this;
 
-	var changeProxy = $.proxy(_this.onNestableDocumentWidgetChange, _this);
-	_this.$nestables.on('nestable-change', changeProxy);
+	var changeProxy = $.proxy(_this.onsortableDocumentWidgetChange, _this);
+	_this.$sortables.on('sortable-change', changeProxy);
 
 	_this.$toggleExplorerButtons.on('click', $.proxy(_this.onExplorerToggle, _this));
 	_this.$unlinkDocumentButtons.on('click', $.proxy(_this.onUnlinkDocument, _this));
@@ -33,14 +35,14 @@ DocumentWidget.prototype.init = function() {
  * @param  {[type]} element [description]
  * @return {void}
  */
-DocumentWidget.prototype.onNestableDocumentWidgetChange = function(event, element) {
+DocumentWidget.prototype.onsortableDocumentWidgetChange = function(event, element) {
 	var _this = this;
 
 	console.log("Document: "+element.data('document-id'));
 
-	var nestable = element.parent();
-	var inputName = 'source['+nestable.data('input-name')+']';
-	nestable.find('li').each(function (index) {
+	var sortable = element.parent();
+	var inputName = 'source['+sortable.data('input-name')+']';
+	sortable.find('li').each(function (index) {
 		$(this).find('input').attr('name', inputName+'['+index+']');
 	});
 };
@@ -75,8 +77,8 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
 
 			if (typeof data.documents != "undefined") {
 
-				var $currentNestable = $($(event.currentTarget).parents('.documents-widget')[0]).find('.documents-widget-nestable');
-				_this.createExplorer(data, $currentNestable);
+				var $currentsortable = $($(event.currentTarget).parents('.documents-widget')[0]).find('.documents-widget-sortable');
+				_this.createExplorer(data, $currentsortable);
 			}
 		})
 		.fail(function(data) {
@@ -103,7 +105,7 @@ DocumentWidget.prototype.onUnlinkDocument = function( event ) {
 	var $element = $(event.currentTarget);
 
 	$element.parent('li').remove();
-	$element.parents().find('.documents-widget-nestable').first().trigger('nestable-change');
+	$element.parents().find('.documents-widget-sortable').first().trigger('sortable-change');
 
 	return false;
 };
@@ -116,18 +118,18 @@ DocumentWidget.prototype.onUnlinkDocument = function( event ) {
 DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
 	var _this = this;
 	console.log($originWidget);
-	var changeProxy = $.proxy(_this.onNestableDocumentWidgetChange, _this);
+	var changeProxy = $.proxy(_this.onsortableDocumentWidgetChange, _this);
 
-	$("body").append('<div class="document-widget-explorer"><ul class="uk-nestable"></ul></div>');
+	$("body").append('<div class="document-widget-explorer"><ul class="uk-sortable"></ul></div>');
 	_this.$explorer = $('.document-widget-explorer');
-	var $nestable = _this.$explorer.find('.uk-nestable');
+	var $sortable = _this.$explorer.find('.uk-sortable');
 
 	for (var i = 0; i < data.documents.length; i++) {
 		var doc = data.documents[i];
-		$nestable.append(doc.html);
+		$sortable.append(doc.html);
 	}
 
-	$nestable.find('li').each (function (index, element) {
+	$sortable.find('li').each (function (index, element) {
 		var $link = $(element).find('.link-button');
 		if($link.length){
 			$link.on('click', function (event) {
