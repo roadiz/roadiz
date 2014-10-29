@@ -27,7 +27,7 @@
                 </div>
             </div>
         </nav>
-        <ul class="uk-sortable documents-widget-sortable" data-uk-sortable="{group:'documents-widget', maxDepth:1, dragCustomClass:'documents-widget-dragging'}" data-input-name="{{ name }}">
+        <ul class="uk-sortable documents-widget-sortable" data-uk-sortable="{group:'documents-widget', dragCustomClass:'documents-widget-dragging'}" data-input-name="{{ name }}">
             {% for doc in data %}
             {% include 'widgets/documentSmallThumbnail.html.twig' with {
                 'document':doc,

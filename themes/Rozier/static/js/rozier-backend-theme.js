@@ -13461,8 +13461,9 @@ DocumentWidget.prototype.$sortables = null;
 DocumentWidget.prototype.init = function() {
 	var _this = this;
 
-	var changeProxy = $.proxy(_this.onsortableDocumentWidgetChange, _this);
-	_this.$sortables.on('sortable-change', changeProxy);
+	var changeProxy = $.proxy(_this.onSortableDocumentWidgetChange, _this);
+	_this.$sortables.on('uk.sortable.change', changeProxy);
+	_this.$sortables.on('uk.sortable.change', changeProxy);
 
 	_this.$toggleExplorerButtons.on('click', $.proxy(_this.onExplorerToggle, _this));
 	_this.$unlinkDocumentButtons.on('click', $.proxy(_this.onUnlinkDocument, _this));
@@ -13475,7 +13476,7 @@ DocumentWidget.prototype.init = function() {
  * @param  {[type]} element [description]
  * @return {void}
  */
-DocumentWidget.prototype.onsortableDocumentWidgetChange = function(event, element) {
+DocumentWidget.prototype.onSortableDocumentWidgetChange = function(event, list, element) {
 	var _this = this;
 
 	console.log("Document: "+element.data('document-id'));
@@ -13542,6 +13543,7 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
 DocumentWidget.prototype.onUnlinkDocument = function( event ) {
 	var _this = this;
 
+	// console.log('unlink doc');
 	var $element = $(event.currentTarget);
 
 	$element.parent('li').remove();
@@ -13558,7 +13560,7 @@ DocumentWidget.prototype.onUnlinkDocument = function( event ) {
 DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
 	var _this = this;
 	console.log($originWidget);
-	var changeProxy = $.proxy(_this.onsortableDocumentWidgetChange, _this);
+	var changeProxy = $.proxy(_this.onSortableDocumentWidgetChange, _this);
 
 	$("body").append('<div class="document-widget-explorer"><ul class="uk-sortable"></ul></div>');
 	_this.$explorer = $('.document-widget-explorer');
