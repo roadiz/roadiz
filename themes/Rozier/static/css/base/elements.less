@@ -8,7 +8,7 @@
   ---------------------------------------------------*/
 
 /*
- * Emulate display none but keep in render to enable transitions 
+ * Emulate display none but keep in render to enable transitions
  */
 .fake-display-none(){
   display: block;
@@ -19,6 +19,12 @@
   display: block;
   pointer-events: auto;
   .opacity(1);
+}
+
+.text-ellipsis(){
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF) {
@@ -104,7 +110,7 @@
   -webkit-opacity: @opacity;
   opacity:         @opacity;
   -ms-filter:      none;
-  filter:          none;  
+  filter:          none;
 }
 
 .transform(...) {
@@ -129,7 +135,7 @@
   -o-transition:      @arguments;
   transition:         @arguments;
 }
-/* BAD to transition over ALL propeties ! 
+/* BAD to transition over ALL propeties !
 .transition(@duration:0.2s, @ease:ease-in-out) {
   -webkit-transition: all @duration @ease;
   -moz-transition: all @duration @ease;
@@ -164,10 +170,10 @@
   transition :         transform @arguments;
 }
 .easeInOutCubic() {
-  -webkit-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000); 
-  -moz-transition-timing-function:    cubic-bezier(0.645, 0.045, 0.355, 1.000); 
-  -ms-transition-timing-function:     cubic-bezier(0.645, 0.045, 0.355, 1.000); 
-  -o-transition-timing-function:      cubic-bezier(0.645, 0.045, 0.355, 1.000); 
+  -webkit-transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+  -moz-transition-timing-function:    cubic-bezier(0.645, 0.045, 0.355, 1.000);
+  -ms-transition-timing-function:     cubic-bezier(0.645, 0.045, 0.355, 1.000);
+  -o-transition-timing-function:      cubic-bezier(0.645, 0.045, 0.355, 1.000);
   transition-timing-function:         cubic-bezier(0.645, 0.045, 0.355, 1.000);
 }
 .transform-origin( @x, @y ) {
@@ -257,14 +263,14 @@
   }
   &:-ms-input-placeholder { /* Internet Explorer 10+ */
       color: @color;
-  } 
+  }
 }
 
 .touch-scroll(){
   -webkit-overflow-scrolling: touch;
 }
 
-.clearfloat() { 
+.clearfloat() {
   &:after {
     display:    block;
     content:    '.';
