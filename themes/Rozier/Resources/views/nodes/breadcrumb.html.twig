@@ -12,13 +12,20 @@
         {% else %}
             {% set title = parent.getNodeName %}
         {% endif %}
-        <li class="node-breadcrumb-item"><a class="node-breadcrumb-link" href="{{ path('nodesEditPage', { nodeId: parent.getId }) }}">
-            {% if parent.isHome %}
-                <i class="uk-icon-rz-breadcrumb-home"></i>
-            {% else %}
-                {{ title }}
-            {% endif %}
-        </a>
+
+        {% if parent.isHidingChildren %}
+            {% set url = path('nodesTreePage', { nodeId: parent.getId }) %}
+        {% else %}
+            {% set url = path('nodesEditPage', { nodeId: parent.getId }) %}
+        {% endif %}
+        <li class="node-breadcrumb-item">
+            <a class="node-breadcrumb-link" href="{{ url }}">
+                {% if parent.isHome %}
+                    <i class="uk-icon-rz-breadcrumb-home"></i>
+                {% else %}
+                    {{ title }}
+                {% endif %}
+            </a>
         </li>
 
     {% endfor %}
