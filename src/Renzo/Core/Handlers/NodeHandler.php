@@ -14,6 +14,7 @@ use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Handle operations with nodes entities.
@@ -366,5 +367,60 @@ class NodeHandler
         Kernel::getService('em')->flush();
 
         return $this;
+    }
+
+    private function duplicateRec($node, $level) {
+        $childrenArray = array();
+        $sourceArray = array();
+        $childs = new ArrayCollection($node->getChildren()->toArray());
+        $node->getChildren()->clear();
+        foreach ($childs as $child) {
+            $childrenArray[] = $this->duplicateRec($child, $level + 1);
+        }
+
+        $nodeSources = new ArrayCollection($node->getNodeSources()->toArray());
+        $node->getNodeSources()->clear();
+        foreach ($nodeSources as $nodeSource) {
+
+            $nodeSource->setNode(null);
+
+            $tran = Kernel::getService('em')->merge($nodeSource->getTranslation());
+
+            $nodeSource->setTranslation($tran);
+
+            Kernel::getService('em')->persist($nodeSource);
+            Kernel::getService('em')->flush();
+
+            $sourceArray[] = $nodeSource;
+        }
+        $nodetype = Kernel::getService('em')->merge($node->getNodeType());
+
+        $node->setNodeType($nodetype);
+
+        $node->setParent(null);
+
+        $node->setNodeName($node->getNodeName()."-".uniqid());
+
+        Kernel::getService('em')->persist($node);
+        foreach ($childrenArray as $child) {
+            $child->setParent($node);
+        }
+        foreach ($sourceArray as $source) {
+            $source->setNode($node);
+        }
+        Kernel::getService('em')->flush();
+        return $node;
+    }
+
+    public function duplicate() {
+        Kernel::getService('em')->refresh($this->node);
+        $node = clone $this->node;
+        Kernel::getService('em')->clear();
+        $newNode = $this->duplicateRec($node, 0);
+        if ($this->node->getParent() !== null) {
+           $newNode->setParent($this->node->getParent());
+        }
+        Kernel::getService('em')->flush();
+        return $newNode;
     }
 }

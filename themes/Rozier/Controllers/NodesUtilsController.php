@@ -110,4 +110,23 @@ class NodesUtilsController extends RozierApp
 
         return $response;
     }
+
+    /**
+     * Duplicate node by ID
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $nodeId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function duplicateAction(Request $request, $nodeId)
+    {
+
+        $existingNode = $this->getService('em')
+                              ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+        $newNode = $existingNode->getHandler()->duplicate();
+        $response = new RedirectResponse($this->getService('urlGenerator')->generate('nodesEditPage', array("nodeId" => $newNode->getId())));
+        $response->prepare($request);
+        return $response->send();
+    }
 }

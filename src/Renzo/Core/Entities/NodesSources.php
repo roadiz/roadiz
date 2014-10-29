@@ -218,4 +218,12 @@ class NodesSources extends AbstractEntity
         $this->urlAliases = new ArrayCollection();
         $this->documentsByFields = new ArrayCollection();
     }
+
+    public function __clone()
+    {
+        $this->setId(null);
+        if ($this->urlAliases !== null) {
+            $this->urlAliases->clear();
+        }
+    }
 }

@@ -100,6 +100,10 @@ nodesExportPage:
 nodesExportAllPage:
     path:     /rz-admin/nodes/export
     defaults: { _controller: Themes\Rozier\Controllers\NodesUtilsController::exportAllAction }
+nodesDuplicatePage:
+    path:     /rz-admin/nodes/duplicate/{nodeId}
+    defaults: { _controller: Themes\Rozier\Controllers\NodesUtilsController::duplicateAction }
+    requirements: { nodeId : "[0-9]+" }
 nodesEmptyTrashPage:
     path:     /rz-admin/nodes/empty-trash
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::emptyTrashAction }

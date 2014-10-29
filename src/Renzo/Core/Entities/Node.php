@@ -18,6 +18,8 @@ use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Entities\NodesSources;
 use RZ\Renzo\Core\Handlers\NodeHandler;
 
+use RZ\Renzo\Core\Kernel;
+
 /**
  * Node entities are the central feature of RZ-CMS,
  * it describes a document-like object which can be inherited
@@ -597,5 +599,30 @@ class Node extends AbstractDateTimedPositioned
     public function getHandler()
     {
         return new NodeHandler($this);
+    }
+
+    public function __clone()
+    {
+        $this->setId(null);
+        $this->nodeName .= "-".uniqid();
+        $this->home = false;
+        $children = $this->getChildren();
+        if ($children !== null) {
+            $this->children = new ArrayCollection();
+            foreach ($children as $child) {
+                $cloneChild = clone $child;
+                $this->children->add($cloneChild);
+                $cloneChild->setParent($this);
+            }
+        }
+        $nodeSources = $this->getNodeSources();
+        if ($nodeSources !== null) {
+            $this->nodeSources = new ArrayCollection();
+            foreach ($nodeSources as $nodeSource) {
+                $cloneNodeSource = clone $nodeSource;
+                $this->nodeSources->add($cloneNodeSource);
+                $cloneNodeSource->setNode($this);
+            }
+        }
     }
 }
