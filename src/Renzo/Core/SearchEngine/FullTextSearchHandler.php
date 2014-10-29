@@ -24,10 +24,10 @@ class FullTextSearchHandler
 {
     protected $client = null;
 
-    public function __construct($client = null)
+    public function __construct($client/* = null*/)
     {
         $this->client = $client;
-        $this->client = Kernel::getService("solr");
+        // $this->client = Kernel::getService("solr");
     }
 
     private function solrSearch($q, $args = [])
@@ -59,11 +59,11 @@ class FullTextSearchHandler
                         return Kernel::getInstance()->getService('em')->find('RZ\Renzo\Core\Entities\NodesSources', $n["node_source_id_i"]);
                     },
                     $reponse['response']['docs']);
-        var_dump($this->client->createRequest($query)->getUri());
-        echo '<pre>';
-        \Doctrine\Common\Util\Debug::dump($doc, 10, false);
-        echo '</pre>';
-        return $doc;
+        // var_dump($this->client->createRequest($query)->getUri());
+        // echo '<pre>';
+        // \Doctrine\Common\Util\Debug::dump($doc, 10, false);
+        // echo '</pre>';
+        // return $doc;
     }
 
     private function argFqProcess(&$args)
@@ -144,10 +144,10 @@ class FullTextSearchHandler
         return $this->solrSearch($q, $args);
     }
 
-    public function searchAction(Request $request, $q)
-    {
-        $args["visible"] = true;
-        $args["status"] = array(">=", 30);
-        $this->search($q, $args);
-    }
+    // public function searchAction(Request $request, $q)
+    // {
+    //     $args["visible"] = true;
+    //     $args["status"] = array(">=", 30);
+    //     $this->search($q, $args);
+    // }
 }
