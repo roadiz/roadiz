@@ -55,7 +55,7 @@ class NodesSourcesDocuments extends AbstractPositioned implements PersistableInt
 
 
     /**
-     * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\Document")
+     * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\Document", inversedBy="nodesSourcesByFields")
      * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Renzo\Core\Entities\Document
      */

@@ -51,7 +51,7 @@ class NodesSources extends AbstractEntity
 
 
     /**
-     * @ManyToOne(targetEntity="Translation")
+     * @ManyToOne(targetEntity="Translation", inversedBy="nodeSources")
      * @JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $translation;

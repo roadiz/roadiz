@@ -93,7 +93,7 @@ class TagTranslation extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="Translation", fetch="EXTRA_LAZY")
+     * @ManyToOne(targetEntity="Translation", inversedBy="tagTranslations", fetch="EXTRA_LAZY")
      * @JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Translation
      */
