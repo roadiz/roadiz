@@ -85,8 +85,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             $field = $this->_em->getClassMetadata($this->getEntityName())->getFieldName($col);
             $type = $this->_em->getClassMetadata($this->getEntityName())->getTypeOfField($field);
             if (in_array($type, $types)) {
-                $criteriaFields[$this->_em->getClassMetadata($this->getEntityName())->getFieldName($col)] =
-                    '%'.strip_tags($pattern).'%';
+                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
             }
         }
 
@@ -145,8 +144,10 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             $qb->setMaxResults($limit);
         }
 
+        $finalQuery = $qb->getQuery();
+
         try {
-            return $qb->getQuery()->getResult();
+            return $finalQuery->getResult();
         } catch (\Doctrine\ORM\Query\QueryException $e) {
             return null;
         } catch (\Doctrine\ORM\NoResultException $e) {

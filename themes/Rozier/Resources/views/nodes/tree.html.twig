@@ -6,6 +6,8 @@
     <header class="content-header header-node header-nodes-tree">
         {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
         <h1 class="content-title node-edit-title">{{ "edit.node.%name%.tree"|trans({'%name%': source.getTitle}) }}</h1>
+
+        {% include 'widgets/countFiltersBar.html.twig' with {filters: specificNodeTree.filters} only %}
         {% include 'nodes/navBack.html.twig' %}
         {% include 'nodes/navBar.html.twig' with {"current": 'tree'} %}
 
@@ -21,8 +23,7 @@
         {% endif %}
     </header>
 
-    {% include 'widgets/filtersBar.html.twig' %}
-
+    {% include 'widgets/filtersBar.html.twig' with {filters: specificNodeTree.filters} only %}
     <article class="content content-no-action-menu">
         {% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
     </article>
