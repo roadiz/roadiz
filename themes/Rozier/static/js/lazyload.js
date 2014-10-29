@@ -28,11 +28,13 @@ Lazyload.prototype.onClick = function(event) {
     var $link = $(event.currentTarget);
 
     var href = $link.attr('href');
-    if(typeof href != "undefined" &&
+    if(typeof href !== "undefined" &&
         !$link.hasClass('rz-no-ajax-link') &&
         href !== "" &&
         href != "#" &&
         href.indexOf(Rozier.baseUrl) >= 0){
+
+        console.log(href);
 
         history.pushState({}, null, $link.attr('href'));
         _this.onPopState(null);
@@ -56,10 +58,13 @@ Lazyload.prototype.onPopState = function(event) {
         state = window.history.state;
     }
 
-    console.log(state);
-    console.log(document.location);
+    //console.log(state);
+    //console.log(document.location);
 
-    _this.loadContent(state, window.location);
+    if (null !== state) {
+        _this.loadContent(state, window.location);
+    }
+
 };
 
 

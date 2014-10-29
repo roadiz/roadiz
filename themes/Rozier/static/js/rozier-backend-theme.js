@@ -13465,8 +13465,13 @@ DocumentWidget.prototype.init = function() {
 	_this.$sortables.on('uk.sortable.change', changeProxy);
 	_this.$sortables.on('uk.sortable.change', changeProxy);
 
-	_this.$toggleExplorerButtons.on('click', $.proxy(_this.onExplorerToggle, _this));
-	_this.$unlinkDocumentButtons.on('click', $.proxy(_this.onUnlinkDocument, _this));
+	var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
+	_this.$toggleExplorerButtons.off('click', onExplorerToggleP);
+	_this.$toggleExplorerButtons.on('click', onExplorerToggleP);
+
+	var onUnlinkDocumentP = $.proxy(_this.onUnlinkDocument, _this);
+	_this.$unlinkDocumentButtons.off('click', onUnlinkDocumentP);
+	_this.$unlinkDocumentButtons.on('click', onUnlinkDocumentP);
 };
 
 /**
@@ -13479,13 +13484,15 @@ DocumentWidget.prototype.init = function() {
 DocumentWidget.prototype.onSortableDocumentWidgetChange = function(event, list, element) {
 	var _this = this;
 
-	console.log("Document: "+element.data('document-id'));
-
-	var sortable = element.parent();
-	var inputName = 'source['+sortable.data('input-name')+']';
-	sortable.find('li').each(function (index) {
+	//console.log("Document: "+element.data('document-id'));
+	console.log(element);
+	$sortable = $(element).parent();
+	var inputName = 'source['+$sortable.data('input-name')+']';
+	$sortable.find('li').each(function (index) {
 		$(this).find('input').attr('name', inputName+'['+index+']');
 	});
+
+	return false;
 };
 
 /**
@@ -13543,11 +13550,13 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
 DocumentWidget.prototype.onUnlinkDocument = function( event ) {
 	var _this = this;
 
-	// console.log('unlink doc');
 	var $element = $(event.currentTarget);
 
-	$element.parent('li').remove();
-	$element.parents().find('.documents-widget-sortable').first().trigger('sortable-change');
+	var $doc = $element.parents('li');
+	var $widget = $element.parents('.documents-widget-sortable').first();
+
+	$doc.remove();
+	$widget.trigger('uk.sortable.change', [$widget, $doc]);
 
 	return false;
 };
@@ -14234,11 +14243,13 @@ Lazyload.prototype.onClick = function(event) {
     var $link = $(event.currentTarget);
 
     var href = $link.attr('href');
-    if(typeof href != "undefined" &&
+    if(typeof href !== "undefined" &&
         !$link.hasClass('rz-no-ajax-link') &&
         href !== "" &&
         href != "#" &&
         href.indexOf(Rozier.baseUrl) >= 0){
+
+        console.log(href);
 
         history.pushState({}, null, $link.attr('href'));
         _this.onPopState(null);
@@ -14262,10 +14273,13 @@ Lazyload.prototype.onPopState = function(event) {
         state = window.history.state;
     }
 
-    console.log(state);
-    console.log(document.location);
+    //console.log(state);
+    //console.log(document.location);
 
-    _this.loadContent(state, window.location);
+    if (null !== state) {
+        _this.loadContent(state, window.location);
+    }
+
 };
 
 
