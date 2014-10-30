@@ -46,6 +46,13 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
+    public function getMediaCopyright()
+    {
+        return "";
+    }
+    /**
+     * {@inheritdoc}
+     */
     public function getThumbnailURL()
     {
         return $this->getFeed()[0]['thumbnail_large'];

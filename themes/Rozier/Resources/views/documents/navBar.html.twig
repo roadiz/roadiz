@@ -3,6 +3,9 @@
 		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
 			<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}">{% trans %}document.edit{% endtrans %}</a>
 		</li>
+		<li class="{% if current == 'metas' %}uk-active{% endif %}" >
+			<a href="{{ path('documentsMetaPage', { documentId: document.getId }) }}">{% trans %}document.metas{% endtrans %}</a>
+		</li>
 		<li class="{% if current == 'preview' %}uk-active{% endif %}">
 			<a href="{{ path('documentsPreviewPage', { documentId: document.getId }) }}">{% trans %}document.preview{% endtrans %}</a>
 		</li>

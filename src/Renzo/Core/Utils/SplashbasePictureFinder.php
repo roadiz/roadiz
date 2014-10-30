@@ -22,6 +22,7 @@ use Pimple\Container;
 class SplashbasePictureFinder extends AbstractEmbedFinder
 {
     private $client;
+    protected static $platform = 'splashbase';
 
     public function __construct()
     {
@@ -80,7 +81,7 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
      */
     public function getMediaTitle()
     {
-
+        return "";
     }
 
     /**
@@ -88,7 +89,15 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
      */
     public function getMediaDescription()
     {
+        return "";
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getMediaCopyright()
+    {
+        return $this->feed['copyright'].' — '.$this->feed['site'];
     }
 
     /**
@@ -108,7 +117,7 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
-    public function createDocumentFromFeed(Container $container)
+    /*public function createDocumentFromFeed(Container $container)
     {
         $url = $this->downloadThumbnail();
 
@@ -125,9 +134,6 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
 
             if (false !== $url) {
 
-                /*
-                 * Move file from documents file root to its folder.
-                 */
                 $document->setFilename($url);
                 $document->setMimeType('image/jpeg');
                 $document->setCopyright($this->feed['copyright'].' — '.$this->feed['site']);
@@ -145,5 +151,5 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
         } else {
             throw new \Exception('no.random.document.found');
         }
-    }
+    }*/
 }

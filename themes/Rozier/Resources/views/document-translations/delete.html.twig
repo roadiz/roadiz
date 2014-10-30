@@ -1,0 +1,22 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+
+{% block content %}
+<section class="content-global delete-document">
+	<header class="content-header header-document header-document-preview">
+        <h1 class="content-title document-delete-title">{{ "delete.document.%name%"|trans({'%name%': document.getFilename}) }}</h1>
+    </header>
+
+    <article class="content content-delete content-no-action-menu">
+		{% form_theme form 'forms.html.twig' %}
+		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<legend>{% trans %}are_you_sure.delete.document{% endtrans %}</legend>
+		    	<a href="{{ path('documentsHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}delete{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+	</article>
+</section>
+{% endblock %}

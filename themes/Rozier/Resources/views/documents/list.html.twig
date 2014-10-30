@@ -19,15 +19,10 @@
 
     <article class="content content-no-action-menu">
 
-            <!-- <th class="uk-text-center">{% trans %}document.thumbnail{% endtrans %}</th>
-            <th>{% trans %}document.filename{% endtrans %}</th>
-            <th>{% trans %}document.createdAt{% endtrans %}</th>
-            <th>{% trans %}actions{% endtrans %}</th> -->
-            
             {% spaceless %}
             <ul class="documents-list">
             {% for document in documents %}
-    
+
                 <li class="document-item">
                     <div class="document-border"></div>
                     <figure class="document-image">
@@ -45,7 +40,7 @@
             {% endfor %}
             </ul>
             {% endspaceless %}
-            
+
 	</article>
 </section>
 {% endblock %}

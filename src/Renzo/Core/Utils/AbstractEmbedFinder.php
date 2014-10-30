@@ -11,6 +11,7 @@
 namespace RZ\Renzo\Core\Utils;
 
 use RZ\Renzo\Core\Entities\Document;
+use RZ\Renzo\Core\Entities\DocumentTranslation;
 use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Renzo\Core\Exceptions\APINeedsAuthentificationException;
 use Symfony\Component\HttpFoundation\Response;
@@ -165,17 +166,21 @@ abstract class AbstractEmbedFinder
                                                 ->findOneBy(array('filename'=>$url));
         } else {
             $existingDocument = $container['em']->getRepository('RZ\Renzo\Core\Entities\Document')
-                                                ->findOneBy(array('embedId'=>$this->embedId));
+                                                ->findOneBy(array(
+                                                    'embedId'=>$this->embedId,
+                                                    'embedPlatform'=>static::$platform,
+                                                ));
         }
 
         if (null !== $existingDocument) {
             throw new EntityAlreadyExistsException('embed.document.already_exists');
         }
 
-        $document = new Document();
-        $document->setName($this->getMediaTitle());
-        $document->setDescription($this->getMediaDescription());
+        if (null === $this->feed) {
+            throw new \Exception('no.embed.document.found');
+        }
 
+        $document = new Document();
         $document->setEmbedId($this->embedId);
         $document->setEmbedPlatform(static::$platform);
 
@@ -190,8 +195,28 @@ abstract class AbstractEmbedFinder
             }
             rename(Document::getFilesFolder().'/'.$url, $document->getAbsolutePath());
         }
-
         $container['em']->persist($document);
+
+        /*
+         * Create document metas
+         * for each translation
+         */
+        $translations = $container['em']
+                            ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                            ->findAll();
+
+        foreach ($translations as $translation) {
+            $documentTr = new DocumentTranslation();
+            $documentTr->setDocument($document);
+            $documentTr->setTranslation($translation);
+            $documentTr->setName($this->getMediaTitle());
+            $documentTr->setDescription($this->getMediaDescription());
+            $documentTr->setCopyright($this->getMediaCopyright());
+
+            $container['em']->persist($documentTr);
+        }
+
+
         $container['em']->flush();
 
         return $document;
@@ -210,6 +235,13 @@ abstract class AbstractEmbedFinder
      * @return string
      */
     abstract public function getMediaDescription();
+
+    /**
+     * Get media copyright from feed.
+     *
+     * @return string
+     */
+    abstract public function getMediaCopyright();
 
     /**
      * Get media thumbnail external URL from its feed.

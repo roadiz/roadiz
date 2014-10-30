@@ -49,6 +49,13 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
+    public function getMediaCopyright()
+    {
+        return "";
+    }
+    /**
+     * {@inheritdoc}
+     */
     public function getThumbnailURL()
     {
         return $this->getFeed()['artwork_url'];

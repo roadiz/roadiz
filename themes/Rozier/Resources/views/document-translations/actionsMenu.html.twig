@@ -1,0 +1,19 @@
+{% spaceless %}
+<nav data-action-menu class="actions-menu uk-navbar rz-vertical-align">
+    <div class="no-subnav">
+        <a class="uk-button" href="{{ path('documentsHomePage') }}">
+            <span class="icon-container"><i class="uk-icon-rz-back-parent"></i></span>
+            <span class="label"><span class="label-text">{% trans %}back_to.documents{% endtrans %}</span></span>
+        </a>
+    </div>
+    {# Delete current node #}
+    {% if (securityContext.Granted('ROLE_ACCESS_DOCUMENTS_DELETE')) %}
+        {% if document.getId %}
+        <a class="uk-button uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId}) }}">
+            <span class="icon-container"><i class="uk-icon-rz-trash-mini-o"></i></span>
+            <span class="label"><span class="label-text">{% trans %}delete.document{% endtrans %}</span></span>
+        </a>
+        {% endif %}
+    {% endif %}
+</nav>
+{% endspaceless %}

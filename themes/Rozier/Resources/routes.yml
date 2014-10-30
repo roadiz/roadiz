@@ -354,6 +354,10 @@ documentsEditPage:
     path:     /rz-admin/documents/edit/{documentId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::editAction }
     requirements: { documentId : "[0-9]+" }
+documentsMetaPage:
+    path:     /rz-admin/documents/meta/{documentId}/{translationId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentTranslationsController::editAction, translationId : null }
+    requirements: { documentId : "[0-9]+", translationId : "[0-9]+" }
 documentsPreviewPage:
     path:     /rz-admin/documents/preview/{documentId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::previewAction }
