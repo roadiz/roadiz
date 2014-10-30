@@ -11,22 +11,28 @@
 
 	<span class="document-name">{{ document.getFilename }}</span>
 	<input type="hidden" name="{{ full_name }}" value="{{ document.getId }}" />
-    
+
     <div class="document-links">
          <a href="{{ path('documentsEditPage', { documentId: document.getId}) }}" class="uk-button document-link uk-button-mini">
             <i class="uk-icon-rz-pencil"></i>
             <span class="label">{% trans %}edit.document{% endtrans %}</span>
         </a>
         <a data-document-widget-unlink-document href="#" class="uk-button uk-button-mini document-link uk-button-danger rz-no-ajax-link">
-            <i class="uk-icon-rz-trash-mini-o"></i>
+            <i class="uk-icon-rz-minus"></i>
             <span class="label">{% trans %}unlink.document{% endtrans %}</span>
-        </a>  
+        </a>
     </div>
+    {% if document.isEmbed %}
+        <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
+        <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
+    {% else %}
+        <div class="document-mime-type">{{ document.getShortMimeType }}</div>
+    {% endif %}
 
     <a data-document-widget-link-document href="#" class="uk-button uk-button-mini link-button">
         <i class="uk-icon-rz-plus"></i>
         <span class="label">{% trans %}link.document{% endtrans %}</span>
-    </a> 	
+    </a>
 
 </li>
 {% endspaceless %}

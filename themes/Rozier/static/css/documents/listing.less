@@ -10,13 +10,13 @@ table.documents {
 
 .documents-list{
     list-style-type:none;
-    
+
     .document-item{
         position: relative;
         display: inline-block;
         width:128px; height:128px;
-        margin:0 16px 30px 0;
-        overflow: hidden;
+        margin:0 16px 39px 0;
+        //overflow: hidden;
 
         &:hover{
             .document-links{
@@ -26,7 +26,17 @@ table.documents {
             .document-mime-type{
                 top:4px;
             }
+            .document-platform-icon {
+                .opacity(0);
+            }
         }
+    }
+
+    .document-overflow{
+        position: absolute;
+        top: 0; left: 0;
+        width:128px; height:128px;
+        overflow: hidden;
     }
 
     .document-border{
@@ -40,18 +50,29 @@ table.documents {
         width:128px; height:128px;
     }
 
+    .document-name{
+        color: #909090;
+        font-size: 10px;
+        .text-ellipsis();
+        margin-top: 2px;
+        font-weight: bold;
+    }
+
     .document-mime-type{
         position: absolute;
         top:-15px;
         height:15px;
         color:#333;
-        font-size:10px; line-height:15px;
+        font-size:9px; line-height:14px;
+        font-weight: bold;
+        -webkit-font-smoothing: antialiased;
+        font-family: arial, helvetica, sans-serif;
         text-transform: uppercase;
         padding:0 5px;
         background:@contrast-color;
         .transition(0.4s top @easeOutExpo);
     }
-    
+
     .document-links{
         position:absolute;
         width:128px; height:30px;
@@ -73,19 +94,11 @@ table.documents {
                 color:darken(#333, 10%);
             }
 
-            &:first-child{
-                background: #ccc;
+            &:last-child{
+                background: #BBB;
 
                 &:hover{
-                    background: darken(#ccc, 10%);
-                }
-            }
-
-            &:first-child{
-                background: #aaa;
-
-                &:hover{
-                    background: darken(#aaa, 10%);
+                    background: darken(#BBB, 10%);
                 }
             }
 
@@ -98,6 +111,26 @@ table.documents {
             .label{
                 display: none;
             }
+        }
+    }
+
+    .document-platform-icon{
+        width: 35px; height: 35px;
+        background-color: #EEE;
+        margin: -20px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        .rounded(4px);
+        text-align: center;
+        line-height: 37px;
+        .box-shadow(0px 0px 3px rgba(0, 0, 0, 0.1));
+        .opacity(0.95);
+        .transition(0.9s opacity @easeOutExpo);
+
+        i{
+            font-size: 28px;
+            color: #3C3C3C;
         }
     }
 
