@@ -145,6 +145,17 @@ class Document extends AbstractDateTimed
     }
 
     /**
+    * Get short Mime type.
+    *
+    * @return string
+    */
+    public function getShortMimeType()
+    {
+        $mime = explode('/', $this->getMimeType());
+        return $mime[count($mime) - 1];
+    }
+
+    /**
      * Is current document an image.
      *
      * @return boolean

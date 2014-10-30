@@ -5,9 +5,9 @@
 
 /* -------- VARS -------- */
 @documents-widget-border :         #cbcbcb;
-@documents-widget-btn-bg :         #ededed;  
-@documents-widget-btn-border :     #bfbfbf; 
-@documents-widget-btn-color :      #2d2d2d; 
+@documents-widget-btn-bg :         #ededed;
+@documents-widget-btn-border :     #bfbfbf;
+@documents-widget-btn-color :      #2d2d2d;
 
 
 /* -------- STYLES -------- */
@@ -35,9 +35,13 @@
         margin:11px 0;
     }
 
+    .uk-navbar-content {
+        padding: 0 10px;
+    }
+
     .uk-button{
         background: @documents-widget-btn-bg;
-        margin-right:8px;
+        margin-right:6px;
         border: 1px solid @documents-widget-btn-border;
         color: @documents-widget-btn-color;
 
@@ -51,12 +55,11 @@
             color: darken(@documents-widget-btn-color, 15%);
         }
     }
-
 }
 
 .documents-widget-sortable{
     margin:0;
-    padding:20px 25px;
+    padding:13px 25px 20px;
     background:#fff;
 
     .uk-sortable-placeholder{
@@ -71,13 +74,18 @@
     position: relative;
     display: inline-block;
     width:80px; height:80px;
-    margin-right:16px;
+    margin-right:12px;
+    margin-top: 8px;
+    cursor: move;
     overflow: hidden;
-    
+
     &:hover{
 
         .document-links{
             bottom:0px;
+        }
+        .document-platform-icon {
+            .opacity(0);
         }
     }
 
@@ -107,29 +115,21 @@
 
     .document-links{
         position:absolute;
-        width:80px; height:25px;
-        bottom:-25px;
+        width:80px; height:30px;
+        bottom:-30px;
         overflow: hidden;
         .transition(0.4s bottom @easeOutExpo);
 
         .document-link{ // a
             display: inline-block;
-            width:40px; height:25px;
+            width:40px; height:30px;
             .rounded(0);
             color:#333;
+            .opacity(0.95);
 
             &:hover{
                 color:darken(#333, 10%);
             }
-
-            &:first-child{
-                background: #ccc;
-
-                &:hover{
-                    background: darken(#ccc, 10%);
-                }
-            }
-
             &:first-child{
                 background: #aaa;
 
@@ -140,7 +140,7 @@
 
             i{
                 margin:0;
-                line-height:25px;
+                line-height:30px;
             }
 
             .label{
@@ -152,7 +152,24 @@
     .link-button{
         display: block;
     }
+
+    .document-platform-icon{
+        width: 35px; height: 35px;
+        background-color: #EEE;
+        margin: -18px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        .rounded(4px);
+        text-align: center;
+        line-height: 37px;
+        .box-shadow(0px 0px 3px rgba(0, 0, 0, 0.1));
+        .opacity(0.95);
+        .transition(0.9s opacity @easeOutExpo);
+
+        i{
+            font-size: 28px;
+            color: #3C3C3C;
+        }
+    }
 }
-
-
-// Dragging

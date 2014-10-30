@@ -7,7 +7,7 @@
 
 .document-widget-explorer{
 
-    background-color: #EFEFEF;
+    background-color: #3D3D3D;
     position: fixed;
     left: 0px;
     top: 0px;
@@ -19,11 +19,11 @@
     overflow-y: auto;
 
     .documents-widget-sortable-list-item{
+        cursor: default;
 
         &:hover{
              .link-button{
-                .opacity(0.8);
-                .transform(scale(1));
+                bottom: 0px;
             }
         }
 
@@ -34,24 +34,24 @@
         .link-button {
             position: absolute;
             display: block;
-            width:80px; height:76px;
-            top:4px; left:0;
-            line-height:76px;
-            background:#333;
+            width:80px; height:30px;
+            bottom:-30px; left:0;
+            background:#BBBBBB;
             .rounded(0);
-            .opacity(0);
-            .transform(scale(1));
-            .transform-transition(~'0.5s, 0.3s opacity');
+            .transition(0.4s bottom @easeOutExpo);
             .transition-timing-function(@easeOutExpo);
+            .opacity(0.95);
 
             i{
-                color:@grey-verylight;
+                color:#333;
+                top: 6px;
+                position: absolute;
+                margin: 0;
+                left: 32px;
             }
-
             .label{
                 display: none;
             }
-
         }
 
         .uk-sortable-handle{

@@ -22,27 +22,33 @@
 
     <article class="content content-no-action-menu">
 
-            {% spaceless %}
-            <ul class="documents-list">
-            {% for document in documents %}
+        {% spaceless %}
+        <ul class="documents-list">
+        {% for document in documents %}
 
-                <li class="document-item">
-                    <div class="document-border"></div>
-                    <figure class="document-image">
-                        {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
-                    </figure>
+            <li class="document-item">
+                <div class="document-border"></div>
+                <figure class="document-image">
+                    {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
+                </figure>
+                <div class="document-name">{{ document.getFilename }}</div>
+                <div class="document-overflow">
                     <div class="document-links">
                         <a class="uk-button uk-button-small document-link" href="{{ path('documentsEditPage', { documentId: document.getId }) }}"><i class="uk-icon-rz-pencil"></i></a>
                         <a class="uk-button uk-button-small uk-button-danger document-link" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}"><i class="uk-icon-rz-trash-mini-o"></i></a>
                     </div>
-                    <div class="document-mime-type">{{ document.getMimeType }}</div>
-                    <div class="document-name">{{ document.getFilename }}</div>
-                    <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
-                </li>
+                    {% if document.isEmbed %}
+                        <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
+                        <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
+                    {% else %}
+                        <div class="document-mime-type">{{ document.getShortMimeType }}</div>
+                    {% endif %}
+                </div>
+            </li>
 
-            {% endfor %}
-            </ul>
-            {% endspaceless %}
+        {% endfor %}
+        </ul>
+        {% endspaceless %}
 
 	</article>
 </section>
