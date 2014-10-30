@@ -13447,6 +13447,7 @@ var DocumentWidget = function () {
 	_this.$widgets = $('[data-document-widget]');
 	_this.$sortables = $('.documents-widget-sortable');
 	_this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
+	_this.$toggleUploaderButtons = $('[data-document-widget-toggle-uploader]');
 	_this.$unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
 
 	_this.init();
@@ -13457,6 +13458,7 @@ DocumentWidget.prototype.$widgets = null;
 DocumentWidget.prototype.$toggleExplorerButtons = null;
 DocumentWidget.prototype.$unlinkDocumentButtons = null;
 DocumentWidget.prototype.$sortables = null;
+DocumentWidget.prototype.uploader = null;
 
 DocumentWidget.prototype.init = function() {
 	var _this = this;
@@ -13468,6 +13470,10 @@ DocumentWidget.prototype.init = function() {
 	var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
 	_this.$toggleExplorerButtons.off('click', onExplorerToggleP);
 	_this.$toggleExplorerButtons.on('click', onExplorerToggleP);
+
+	var onUploaderToggleP = $.proxy(_this.onUploaderToggle, _this);
+	_this.$toggleUploaderButtons.off('click', onUploaderToggleP);
+	_this.$toggleUploaderButtons.on('click', onUploaderToggleP);
 
 	var onUnlinkDocumentP = $.proxy(_this.onUnlinkDocument, _this);
 	_this.$unlinkDocumentButtons.off('click', onUnlinkDocumentP);
@@ -13491,6 +13497,49 @@ DocumentWidget.prototype.onSortableDocumentWidgetChange = function(event, list, 
 	$sortable.find('li').each(function (index) {
 		$(this).find('input').attr('name', inputName+'['+index+']');
 	});
+
+	return false;
+};
+
+DocumentWidget.prototype.onUploaderToggle = function(event) {
+	var _this = this;
+
+	//documents-widget
+	var $btn = $(event.currentTarget);
+	var $widget = $btn.parents('.documents-widget');
+
+	if (null !== _this.uploader) {
+		_this.uploader = null;
+		var $uploader = $widget.find('.documents-widget-uploader');
+		$uploader.slideUp(500, function () {
+			$uploader.remove();
+			$btn.removeClass('active');
+		});
+	} else {
+
+		$widget.append('<div class="documents-widget-uploader dropzone"></div>');
+		var $uploaderNew = $widget.find('.documents-widget-uploader');
+
+		_this.uploader = new DocumentUploader({
+			selector: '.documents-widget .documents-widget-uploader',
+			headers: { "_token": Rozier.ajaxToken },
+			onSuccess : function (data) {
+	            console.log(data);
+
+	            if(typeof data.thumbnail !== "undefined") {
+	            	var $sortable = $widget.find('.documents-widget-sortable');
+	            	$sortable.append(data.thumbnail.html);
+
+	            	var $element = $sortable.find('[data-document-id="'+data.thumbnail.id+'"]');
+
+	            	_this.onSortableDocumentWidgetChange(null, $sortable, $element);
+	            }
+	        }
+		});
+
+		$uploaderNew.slideDown(500);
+		$btn.addClass('active');
+	}
 
 	return false;
 };
@@ -13601,6 +13650,66 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
 	window.setTimeout(function () {
 		_this.$explorer.addClass('visible');
 	}, 0);
+};;var DocumentUploader = function (options) {
+    var _this = this;
+
+    _this.options = {
+        'onSuccess' : function (data) {
+            console.log("Success file");
+            console.log(data);
+        },
+        'onError' : function (data) {
+            console.log("Failed file");
+            console.log(data);
+        },
+        'onAdded' : function (file) {
+            console.log("Added file");
+        },
+        'selector':      "#upload-dropzone-document",
+        'paramName':     "form[attachment]",
+        'uploadMultiple':false,
+        'maxFilesize':   64,
+        'autoDiscover':  false,
+        'headers': {"_token": Rozier.ajaxToken}
+    };
+
+    if (typeof options !== "undefined") {
+        $.extend( _this.options, options );
+    }
+    if ($(_this.options.selector).length) {
+        _this.init();
+    }
+};
+DocumentUploader.prototype.options = null;
+DocumentUploader.prototype.init = function() {
+    var _this = this;
+
+    Dropzone.options.uploadDropzoneDocument = {
+        url: Rozier.routes.documentsUploadPage,
+        method:'post',
+        headers:_this.options.headers,
+        paramName: _this.options.paramName,
+        uploadMultiple: _this.options.uploadMultiple,
+        maxFilesize: _this.options.maxFilesize,
+        init: function() {
+            this.on("addedfile", function(file, data) {
+                _this.options.onAdded(file);
+            });
+            this.on("success", function(file, data) {
+                _this.options.onSuccess(JSON.parse(data));
+                Rozier.getMessages();
+            });
+            this.on("canceled", function(file, data) {
+                _this.options.onError(JSON.parse(data));
+                Rozier.getMessages();
+            });
+        }
+    };
+    Dropzone.autoDiscover = _this.options.autoDiscover;
+    var dropZone = new Dropzone(
+        _this.options.selector,
+        Dropzone.options.uploadDropzoneDocument
+    );
 };;/*
  * You can add automatically form button to actions-menus
  * Just add them to the .rz-action-save class and use the data-action-save
@@ -14334,6 +14443,7 @@ Lazyload.prototype.generalBind = function() {
     var _this = this;
 
     new DocumentWidget();
+    new DocumentUploader();
     new ChildrenNodesField();
     new StackNodeTree();
     new SaveButtons();
@@ -14369,11 +14479,6 @@ Lazyload.prototype.generalBind = function() {
 
         }, 0);
 
-    }
-
-    // Init document uploader
-    if($('#upload-dropzone-document').length){
-        var dropZone = new Dropzone("#upload-dropzone-document", Dropzone.options.uploadDropzoneDocument);
     }
 
     // Init colorpicker

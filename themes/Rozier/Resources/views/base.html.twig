@@ -82,6 +82,7 @@
         <script src="{{ head.resourcesUrl }}js/addons/htmleditor.js"></script><!-- Switch to .min.js on prod -->
         <script src="{{ head.resourcesUrl }}js/vendor/dropzone.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/documentWidget.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/documentUploader.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/saveButtons.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/nodeStatuses.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/childrenNodesField.js"></script>
@@ -109,6 +110,7 @@
                     'tagAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
                     'nodeTypesFieldAjaxEdit': '{{ head.baseUrl }}/rz-admin/ajax/node-types/fields/edit/%nodeTypeFieldId%',
                     'documentsAjaxExplorer' : '{{ path('documentsAjaxExplorerPage') }}',
+                    'documentsUploadPage' :   '{{ path('documentsUploadPage') }}',
                     'searchNodesSourcesAjax': '{{ path('searchNodesSourcesAjax') }}',
                     'nodesStatusesAjax' :     '{{ path('nodesStatusesAjax') }}',
                     'nodesTreeAjax' :         '{{ path('nodesTreeAjax') }}',

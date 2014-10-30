@@ -119,6 +119,7 @@ Lazyload.prototype.generalBind = function() {
     var _this = this;
 
     new DocumentWidget();
+    new DocumentUploader();
     new ChildrenNodesField();
     new StackNodeTree();
     new SaveButtons();
@@ -154,11 +155,6 @@ Lazyload.prototype.generalBind = function() {
 
         }, 0);
 
-    }
-
-    // Init document uploader
-    if($('#upload-dropzone-document').length){
-        var dropZone = new Dropzone("#upload-dropzone-document", Dropzone.options.uploadDropzoneDocument);
     }
 
     // Init colorpicker

@@ -7,6 +7,7 @@ var DocumentWidget = function () {
 	_this.$widgets = $('[data-document-widget]');
 	_this.$sortables = $('.documents-widget-sortable');
 	_this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
+	_this.$toggleUploaderButtons = $('[data-document-widget-toggle-uploader]');
 	_this.$unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
 
 	_this.init();
@@ -17,6 +18,7 @@ DocumentWidget.prototype.$widgets = null;
 DocumentWidget.prototype.$toggleExplorerButtons = null;
 DocumentWidget.prototype.$unlinkDocumentButtons = null;
 DocumentWidget.prototype.$sortables = null;
+DocumentWidget.prototype.uploader = null;
 
 DocumentWidget.prototype.init = function() {
 	var _this = this;
@@ -28,6 +30,10 @@ DocumentWidget.prototype.init = function() {
 	var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
 	_this.$toggleExplorerButtons.off('click', onExplorerToggleP);
 	_this.$toggleExplorerButtons.on('click', onExplorerToggleP);
+
+	var onUploaderToggleP = $.proxy(_this.onUploaderToggle, _this);
+	_this.$toggleUploaderButtons.off('click', onUploaderToggleP);
+	_this.$toggleUploaderButtons.on('click', onUploaderToggleP);
 
 	var onUnlinkDocumentP = $.proxy(_this.onUnlinkDocument, _this);
 	_this.$unlinkDocumentButtons.off('click', onUnlinkDocumentP);
@@ -51,6 +57,49 @@ DocumentWidget.prototype.onSortableDocumentWidgetChange = function(event, list, 
 	$sortable.find('li').each(function (index) {
 		$(this).find('input').attr('name', inputName+'['+index+']');
 	});
+
+	return false;
+};
+
+DocumentWidget.prototype.onUploaderToggle = function(event) {
+	var _this = this;
+
+	//documents-widget
+	var $btn = $(event.currentTarget);
+	var $widget = $btn.parents('.documents-widget');
+
+	if (null !== _this.uploader) {
+		_this.uploader = null;
+		var $uploader = $widget.find('.documents-widget-uploader');
+		$uploader.slideUp(500, function () {
+			$uploader.remove();
+			$btn.removeClass('active');
+		});
+	} else {
+
+		$widget.append('<div class="documents-widget-uploader dropzone"></div>');
+		var $uploaderNew = $widget.find('.documents-widget-uploader');
+
+		_this.uploader = new DocumentUploader({
+			selector: '.documents-widget .documents-widget-uploader',
+			headers: { "_token": Rozier.ajaxToken },
+			onSuccess : function (data) {
+	            console.log(data);
+
+	            if(typeof data.thumbnail !== "undefined") {
+	            	var $sortable = $widget.find('.documents-widget-sortable');
+	            	$sortable.append(data.thumbnail.html);
+
+	            	var $element = $sortable.find('[data-document-id="'+data.thumbnail.id+'"]');
+
+	            	_this.onSortableDocumentWidgetChange(null, $sortable, $element);
+	            }
+	        }
+		});
+
+		$uploaderNew.slideDown(500);
+		$btn.addClass('active');
+	}
 
 	return false;
 };
