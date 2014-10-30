@@ -105,51 +105,14 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
      */
     public function getThumbnailURL()
     {
-        $this->getRandom();
+        if (null === $this->feed) {
+            $this->getRandom();
 
-        if (false !== $this->feed) {
-            return $this->feed['url'];
-        } else {
-            return false;
+            if (false === $this->feed) {
+                return false;
+            }
         }
+
+        return $this->feed['url'];
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    /*public function createDocumentFromFeed(Container $container)
-    {
-        $url = $this->downloadThumbnail();
-
-        if (false !== $url &&
-            false !== $this->feed) {
-
-            $existingDocument = $container['em']->getRepository('RZ\Renzo\Core\Entities\Document')
-                                                ->findOneBy(array('filename'=>$url));
-            if (null !== $existingDocument) {
-                throw new EntityAlreadyExistsException('embed.document.already_exists');
-            }
-
-            $document = new Document();
-
-            if (false !== $url) {
-
-                $document->setFilename($url);
-                $document->setMimeType('image/jpeg');
-                $document->setCopyright($this->feed['copyright'].' — '.$this->feed['site']);
-
-                if (!file_exists(Document::getFilesFolder().'/'.$document->getFolder())) {
-                    mkdir(Document::getFilesFolder().'/'.$document->getFolder());
-                }
-                rename(Document::getFilesFolder().'/'.$url, $document->getAbsolutePath());
-            }
-
-            $container['em']->persist($document);
-            $container['em']->flush();
-
-            return $document;
-        } else {
-            throw new \Exception('no.random.document.found');
-        }
-    }*/
 }

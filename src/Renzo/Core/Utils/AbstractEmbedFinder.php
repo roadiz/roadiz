@@ -161,6 +161,10 @@ abstract class AbstractEmbedFinder
     {
         $url = $this->downloadThumbnail();
 
+        if (!$this->exists()) {
+            throw new \Exception('no.embed.document.found');
+        }
+
         if (false !== $url) {
             $existingDocument = $container['em']->getRepository('RZ\Renzo\Core\Entities\Document')
                                                 ->findOneBy(array('filename'=>$url));
@@ -176,9 +180,6 @@ abstract class AbstractEmbedFinder
             throw new EntityAlreadyExistsException('embed.document.already_exists');
         }
 
-        if (null === $this->feed) {
-            throw new \Exception('no.embed.document.found');
-        }
 
         $document = new Document();
         $document->setEmbedId($this->embedId);
@@ -281,16 +282,18 @@ abstract class AbstractEmbedFinder
      */
     public function downloadThumbnail()
     {
-        if (false !== $this->getThumbnailURL() &&
-            $this->getThumbnailURL() != '') {
+        $url = $this->getThumbnailURL();
 
-            $pathinfo = basename($this->getThumbnailURL());
+        if (false !== $url &&
+            '' !== $url) {
+
+            $pathinfo = basename($url);
 
             if ($pathinfo != "") {
                 $thumbnailName = $this->embedId.'_'.$pathinfo;
 
                 try {
-                    $original = \GuzzleHttp\Stream\Stream::factory(fopen($this->getThumbnailURL(), 'r'));
+                    $original = \GuzzleHttp\Stream\Stream::factory(fopen($url, 'r'));
                     $local = \GuzzleHttp\Stream\Stream::factory(fopen(Document::getFilesFolder().'/'.$thumbnailName, 'w'));
                     $local->write($original->getContents());
 

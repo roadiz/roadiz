@@ -148,7 +148,7 @@ class DocumentViewer implements ViewableInterface
 
         if (isset($args['embed']) &&
             true === $args['embed'] &&
-            $this->document->isEmbed()) {
+            $this->isEmbedPlatformSupported()) {
 
             return $this->getEmbedByArray($args);
 
@@ -167,25 +167,35 @@ class DocumentViewer implements ViewableInterface
         }
     }
 
+    public function isEmbedPlatformSupported()
+    {
+        $handlers = Kernel::getService('document.platforms');
+
+        if ($this->document->isEmbed() &&
+            in_array(
+                $this->document->getEmbedPlatform(),
+                array_keys($handlers)
+            )
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public function getEmbedFinder()
     {
         if (null === $this->embedFinder) {
 
-            $handlers = Kernel::getService('document.platforms');
-
-            if (in_array(
-                $this->document->getEmbedPlatform(),
-                array_keys($handlers)
-            )) {
-
+            if ($this->isEmbedPlatformSupported()) {
+                $handlers = Kernel::getService('document.platforms');
                 $class = $handlers[$this->document->getEmbedPlatform()];
                 $this->embedFinder = new $class($this->document->getEmbedId());
-
             } else {
-                throw new EmbedPlatformNotSupportedException(
+                $this->embedFinder = false;
+                /*throw new EmbedPlatformNotSupportedException(
                     "“".$this->document->getEmbedPlatform()."” is not a supported platform."
-                );
+                );*/
             }
         }
 
@@ -202,7 +212,11 @@ class DocumentViewer implements ViewableInterface
      */
     public function getEmbedByArray($args = null)
     {
-        return $this->getEmbedFinder()->getIFrame($args);
+        if ($this->isEmbedPlatformSupported()) {
+            return $this->getEmbedFinder()->getIFrame($args);
+        } else {
+            return false;
+        }
     }
 
     /**

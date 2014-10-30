@@ -27,36 +27,24 @@ class Folder extends AbstractDateTimed
     /**
      * @Column(type="string", unique=true, nullable=false)
      */
-    private $filename;
+    private $name;
     /**
      * @return string
      */
-    public function getFilename()
+    public function getName()
     {
-        return $this->filename;
+        return $this->name;
     }
     /**
-     * @param string $filename
+     * @param string $name
      *
      * @return $this
      */
-    public function setFilename($filename)
+    public function setName($name)
     {
-        $this->filename = $filename;
+        $this->name = $name;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAbsolutePath()
-    {
-        if (null !== $this->filename) {
-            return Document::getFilesFolder().'/'.$this->filename;
-        } else {
-            return null;
-        }
     }
 
     /**

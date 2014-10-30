@@ -34,9 +34,22 @@ class DocumentsController extends RozierApp
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $folderId = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        $prefilters = array();
+
+        if (null !== $folderId &&
+            $folderId > 0) {
+
+            $folder = $this->getService('em')
+                           ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+
+            $prefilters['folders'] = array($folder);
+            $this->assignation['folder'] = $folder;
+        }
+
         /*
          * Manage get request to filter list
          */
@@ -44,7 +57,7 @@ class DocumentsController extends RozierApp
             $request,
             $this->getService('em'),
             'RZ\Renzo\Core\Entities\Document',
-            array(),
+            $prefilters,
             array('createdAt'=> 'DESC')
         );
         $listManager->setItemPerPage(28);

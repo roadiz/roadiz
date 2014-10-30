@@ -1,0 +1,17 @@
+{% if folderTree %}
+<nav id="foldertree-widget" class="foldertree-widget">
+    {% if mainFolderTree %}
+    <h4>{% trans %}folderTree{% endtrans %}</h4>
+    {% endif %}
+    {% if folderTree.getRootFolder == null %}
+	<a href="{{ path('foldersAddPage') }}" class="tree-btn-add" id="foldertree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.folder{% endtrans %}</a>
+    {% else %}
+    <a href="{{ path('foldersAddChildPage', { folderId : folderTree.getRootFolder.getId }) }}" class="tree-btn-add" id="foldertree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.child.folder{% endtrans %}</a>
+    {% endif %}
+	<ul class="root-tree uk-nestable uk-nestable-folder" data-uk-nestable="{'group':'folderTree'}" data-parent-folder-id="{{ folder.getId }}">
+		{% for cfolder in folderTree.getFolders %}
+			{% include 'widgets/folderTree/singleFolder.html.twig' with { "folder":cfolder, "folderTree":folderTree } only %}
+		{% endfor %}
+	</ul>
+</nav>
+{% endif %}

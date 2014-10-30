@@ -42,7 +42,8 @@
                     {% include 'panels/tree_panel.html.twig' with {
                         'securityContext': securityContext,
                         'nodeTree': nodeTree,
-                        'tagTree': tagTree
+                        'tagTree': tagTree,
+                        'folderTree':folderTree
                     } only %}
                 </section>
                 {% endif %}

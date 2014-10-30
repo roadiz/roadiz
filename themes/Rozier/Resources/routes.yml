@@ -348,8 +348,9 @@ translationsDeletePage:
 
 # DOCUMENTS
 documentsHomePage:
-    path:     /rz-admin/documents
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::indexAction }
+    path:     /rz-admin/documents/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::indexAction, folderId:null }
+    requirements: { folderId : "[0-9]+" }
 documentsEditPage:
     path:     /rz-admin/documents/edit/{documentId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::editAction }
@@ -379,10 +380,29 @@ documentsDeletePage:
     path:     /rz-admin/documents/delete/{documentId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::deleteAction }
     requirements: { documentId : "[0-9]+" }
+
 # Ajax
 documentsAjaxExplorerPage:
     path:     /rz-admin/ajax/documents/explore
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::indexAction }
+
+# FOLDERS
+foldersAddPage:
+    path:     /rz-admin/folders/add/{parentFolderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FolderController::addAction, parentFolderId:null }
+    requirements: { parentFolderId : "[0-9]+" }
+foldersEditPage:
+    path:     /rz-admin/folders/edit/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FolderController::editAction }
+    requirements: { folderId : "[0-9]+" }
+foldersExportPage:
+    path:     /rz-admin/folders/export/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FolderController::exportAction }
+    requirements: { folderId : "[0-9]+" }
+foldersDeletePage:
+    path:     /rz-admin/folders/delete/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FolderController::deleteAction }
+    requirements: { folderId : "[0-9]+" }
 
 # THEMES
 themesHomePage:
