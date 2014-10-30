@@ -113,7 +113,7 @@ class DocumentViewer implements ViewableInterface
     public function getDocumentByArray($args = null)
     {
         $assignation = array(
-            'document' => $this->getDocument(),
+            'document' => $this->document,
             'url' => $this->getDocumentUrlByArray($args)
         );
 
@@ -137,25 +137,28 @@ class DocumentViewer implements ViewableInterface
         }
         if (!empty($args['alt'])) {
             $assignation['alt'] = $args['alt'];
-        } elseif ("" != $this->getDocument()->getName()) {
-            $assignation['alt'] = $this->getDocument()->getName();
+        } elseif (
+            $this->document->getDocumentTranslations()->count() &&
+            "" != $this->document->getDocumentTranslations()->first()->getName()
+        ) {
+            $assignation['alt'] = $this->document->getDocumentTranslations()->first()->getName();
         } else {
-            $assignation['alt'] = $this->getDocument()->getFileName();
+            $assignation['alt'] = $this->document->getFileName();
         }
 
         if (isset($args['embed']) &&
             true === $args['embed'] &&
-            $this->getDocument()->isEmbed()) {
+            $this->isEmbedPlatformSupported()) {
 
             return $this->getEmbedByArray($args);
 
-        } elseif ($this->getDocument()->isImage()) {
+        } elseif ($this->document->isImage()) {
             return $this->getTwig()->render('documents/image.html.twig', $assignation);
-        } elseif ($this->getDocument()->isVideo()) {
+        } elseif ($this->document->isVideo()) {
             $assignation['sources'] = $this->getSourcesFiles();
 
             return $this->getTwig()->render('documents/video.html.twig', $assignation);
-        } elseif ($this->getDocument()->isAudio()) {
+        } elseif ($this->document->isAudio()) {
             $assignation['sources'] = $this->getSourcesFiles();
 
             return $this->getTwig()->render('documents/audio.html.twig', $assignation);
@@ -164,25 +167,35 @@ class DocumentViewer implements ViewableInterface
         }
     }
 
+    public function isEmbedPlatformSupported()
+    {
+        $handlers = Kernel::getService('document.platforms');
+
+        if ($this->document->isEmbed() &&
+            in_array(
+                $this->document->getEmbedPlatform(),
+                array_keys($handlers)
+            )
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public function getEmbedFinder()
     {
         if (null === $this->embedFinder) {
 
-            $handlers = Kernel::getService('document.platforms');
-
-            if (in_array(
-                $this->getDocument()->getEmbedPlatform(),
-                array_keys($handlers)
-            )) {
-
-                $class = $handlers[$this->getDocument()->getEmbedPlatform()];
-                $this->embedFinder = new $class($this->getDocument()->getEmbedId());
-
+            if ($this->isEmbedPlatformSupported()) {
+                $handlers = Kernel::getService('document.platforms');
+                $class = $handlers[$this->document->getEmbedPlatform()];
+                $this->embedFinder = new $class($this->document->getEmbedId());
             } else {
-                throw new EmbedPlatformNotSupportedException(
-                    "“".$this->getDocument()->getEmbedPlatform()."” is not a supported platform."
-                );
+                $this->embedFinder = false;
+                /*throw new EmbedPlatformNotSupportedException(
+                    "“".$this->document->getEmbedPlatform()."” is not a supported platform."
+                );*/
             }
         }
 
@@ -199,7 +212,11 @@ class DocumentViewer implements ViewableInterface
      */
     public function getEmbedByArray($args = null)
     {
-        return $this->getEmbedFinder()->getIFrame($args);
+        if ($this->isEmbedPlatformSupported()) {
+            return $this->getEmbedFinder()->getIFrame($args);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -212,12 +229,12 @@ class DocumentViewer implements ViewableInterface
      */
     public function getSourcesFiles()
     {
-        $basename = pathinfo($this->getDocument()->getFileName());
+        $basename = pathinfo($this->document->getFileName());
         $basename = $basename['filename'];
 
         $sources = array();
 
-        if ($this->getDocument()->isVideo()) {
+        if ($this->document->isVideo()) {
             $sourcesDocsName = array(
                 $basename . '.ogg',
                 $basename . '.ogv',
@@ -225,7 +242,7 @@ class DocumentViewer implements ViewableInterface
                 $basename . '.mov',
                 $basename . '.webm'
             );
-        } elseif ($this->getDocument()->isAudio()) {
+        } elseif ($this->document->isAudio()) {
             $sourcesDocsName = array(
                 $basename . '.mp3',
                 $basename . '.ogg',
@@ -267,10 +284,10 @@ class DocumentViewer implements ViewableInterface
     public function getDocumentUrlByArray($args = null)
     {
         if ($args === null ||
-            !$this->getDocument()->isImage()) {
+            !$this->document->isImage()) {
 
             return Kernel::getInstance()->getRequest()
-                                        ->getBaseUrl().'/files/'.$this->getDocument()->getRelativeUrl();
+                                        ->getBaseUrl().'/files/'.$this->document->getRelativeUrl();
         } else {
             $slirArgs = array();
 
@@ -299,7 +316,7 @@ class DocumentViewer implements ViewableInterface
 
             return Kernel::getService('urlGenerator')->generate('SLIRProcess', array(
                 'queryString' => implode('-', $slirArgs),
-                'filename' => $this->getDocument()->getRelativeUrl()
+                'filename' => $this->document->getRelativeUrl()
             ));
         }
     }

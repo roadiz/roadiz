@@ -13,7 +13,7 @@
     	<figure class="uk-thumbnail">{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}</figure>
         <p><code>{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}</code></p>
 
-        {% if document.isEmbed %}
+        {% if document.isEmbed and document.getViewer.getEmbedFinder %}
         <hr />
         <h3>{% trans %}embed.preview{% endtrans %}</h3>
         <figure class="uk-thumbnail">{{ document.getViewer.getEmbedByArray(thumbnailFormat)|raw }}</figure>

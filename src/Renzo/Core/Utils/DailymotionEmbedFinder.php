@@ -46,6 +46,13 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
+    public function getMediaCopyright()
+    {
+        return "";
+    }
+    /**
+     * {@inheritdoc}
+     */
     public function getThumbnailURL()
     {
         return $this->getFeed()['thumbnail_url'];

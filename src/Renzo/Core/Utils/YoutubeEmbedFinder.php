@@ -46,6 +46,13 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
+    public function getMediaCopyright()
+    {
+        return "";
+    }
+    /**
+     * {@inheritdoc}
+     */
     public function getThumbnailURL()
     {
         return $this->getFeed()['entry']['media$group']['media$thumbnail'][2]['url'];

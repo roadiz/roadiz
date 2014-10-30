@@ -377,7 +377,7 @@ class NodeRepository extends EntityRepository
      */
     protected function getContextualQueryWithTranslation(
         array &$criteria,
-        array $orderBy = null,
+        array &$orderBy = null,
         $limit = null,
         $offset = null,
         Translation $translation = null,

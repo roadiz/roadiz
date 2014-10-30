@@ -2,9 +2,12 @@
 
 {% block content %}
 <section class="content-global content-nav-and-filters">
-
 	<header class="content-header header-document header-document-list">
+        {% if folder %}
+        <h1 class="content-title">{{ folder.name }}</h1>
+        {% else %}
         <h1 class="content-title">{% trans %}documents{% endtrans %}</h1>
+        {% endif %}
         {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
 
@@ -19,15 +22,10 @@
 
     <article class="content content-no-action-menu">
 
-            <!-- <th class="uk-text-center">{% trans %}document.thumbnail{% endtrans %}</th>
-            <th>{% trans %}document.filename{% endtrans %}</th>
-            <th>{% trans %}document.createdAt{% endtrans %}</th>
-            <th>{% trans %}actions{% endtrans %}</th> -->
-            
             {% spaceless %}
             <ul class="documents-list">
             {% for document in documents %}
-    
+
                 <li class="document-item">
                     <div class="document-border"></div>
                     <figure class="document-image">
@@ -45,7 +43,7 @@
             {% endfor %}
             </ul>
             {% endspaceless %}
-            
+
 	</article>
 </section>
 {% endblock %}

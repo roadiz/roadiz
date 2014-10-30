@@ -1,0 +1,11 @@
+<nav class="document-translation-bar translation-bar uk-navbar">
+    {% spaceless %}
+	<ul class="uk-navbar-nav">
+		{% for translation in available_translations %}
+		    <li class="document-translation-bar-item uk-navbar-item{% if current == translation.getId %} uk-active{% endif %}">
+		    	<a class="document-translation-bar-link uk-navbar-link" href="{{ path('documentsMetaPage', { documentId: document.getId, translationId:translation.getId }) }}">{{ translation.getLocale }}</a>
+		    </li>
+		{% endfor %}
+	</ul>
+    {% endspaceless %}
+</nav>

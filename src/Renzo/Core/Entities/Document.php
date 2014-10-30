@@ -173,29 +173,6 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true)
-     */
-    private $name;
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
      * @Column(type="string")
      */
     private $folder;
@@ -229,52 +206,6 @@ class Document extends AbstractDateTimed
         } else {
             return null;
         }
-    }
-
-    /**
-     * @Column(type="text", nullable=true)
-     */
-    private $description;
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-    /**
-     * @param string $description
-     *
-     * @return $this
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @Column(type="text", nullable=true)
-     */
-    private $copyright;
-    /**
-     * @return string
-     */
-    public function getCopyright()
-    {
-        return $this->copyright;
-    }
-    /**
-     * @param string $copyright
-     *
-     * @return $this
-     */
-    public function setCopyright($copyright)
-    {
-        $this->copyright = $copyright;
-
-        return $this;
     }
 
     /**
@@ -395,12 +326,74 @@ class Document extends AbstractDateTimed
         return $this->nodesSourcesByFields;
     }
 
+
+    /**
+     * @ManyToMany(targetEntity="RZ\Renzo\Core\Entities\Folder", mappedBy="documents", fetch="EXTRA_LAZY")
+     * @JoinTable(name="documents_folders")
+     */
+    protected $folders;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFolders()
+    {
+        return $this->folders;
+    }
+
+    /**
+     * @param Document $folder
+     */
+    public function addFolder(Folder $folder)
+    {
+        if (!$this->getFolders()->contains($folder)) {
+            $this->folders->add($folder);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true)
+     * @var ArrayCollection
+     */
+    protected $documentTranslations;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getDocumentTranslations()
+    {
+        return $this->documentTranslations;
+    }
+
+    /**
+     * @param DocumentTranslation $documentTranslation
+     */
+    public function addDocumentTranslation(DocumentTranslation $documentTranslation)
+    {
+        if (!$this->getDocumentTranslations()->contains($documentTranslation)) {
+            $this->documentTranslations->add($documentTranslation);
+        }
+
+        return $this;
+    }
+
+    public function hasTranslations()
+    {
+        return (boolean) $this->getDocumentTranslations()->count();
+    }
+
+
+
     /**
      * Create a new Document.
      */
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->folders = new ArrayCollection();
+        $this->documentTranslations = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
         $this->folder = substr(hash("crc32b", date('YmdHi')), 0, 12);
     }

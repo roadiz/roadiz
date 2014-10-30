@@ -29,13 +29,13 @@ class AssetsController extends AppController
 {
    /**
      * Initialize controller with NO twig environment.
-     *
-     * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
-    public function __init()
-    {
+    public function __init() { }
 
-    }
+    /**
+     * {@inheritdoc}
+     */
+    public function prepareBaseAssignation() { }
 
     /**
      * {@inheritdoc}

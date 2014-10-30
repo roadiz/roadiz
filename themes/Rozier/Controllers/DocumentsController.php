@@ -34,9 +34,22 @@ class DocumentsController extends RozierApp
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $folderId = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        $prefilters = array();
+
+        if (null !== $folderId &&
+            $folderId > 0) {
+
+            $folder = $this->getService('em')
+                           ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+
+            $prefilters['folders'] = array($folder);
+            $this->assignation['folder'] = $folder;
+        }
+
         /*
          * Manage get request to filter list
          */
@@ -44,7 +57,7 @@ class DocumentsController extends RozierApp
             $request,
             $this->getService('em'),
             'RZ\Renzo\Core\Entities\Document',
-            array(),
+            $prefilters,
             array('createdAt'=> 'DESC')
         );
         $listManager->setItemPerPage(28);
@@ -54,9 +67,9 @@ class DocumentsController extends RozierApp
         $this->assignation['documents'] = $listManager->getEntities();
 
         $this->assignation['thumbnailFormat'] = array(
-            'width' => 128,
+            'width' =>   128,
             'quality' => 50,
-            'crop' => '1x1'
+            'crop' =>    '1x1'
         );
 
         return new Response(
@@ -235,7 +248,7 @@ class DocumentsController extends RozierApp
                 $document = $this->embedDocument($form->getData());
 
                 $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
-                    '%name%'=>$document->getName()
+                    '%name%'=>$document->getDocumentTranslations()->first()->getName()
                 ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
@@ -420,28 +433,13 @@ class DocumentsController extends RozierApp
     {
         $defaults = array(
             'private' => $document->isPrivate(),
-            'name' => $document->getName(),
-            'description' => $document->getDescription(),
-            'copyright' => $document->getCopyright(),
             'filename' => $document->getFilename()
         );
 
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
-                    ->add('name', 'text', array(
-                        'label' => $this->getTranslator()->trans('name'),
-                        'required' => false
-                    ))
                     ->add('filename', 'text', array(
                         'label' => $this->getTranslator()->trans('filename'),
-                        'required' => false
-                    ))
-                    ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array(
-                        'label' => $this->getTranslator()->trans('description'),
-                        'required' => false
-                    ))
-                    ->add('copyright', 'text', array(
-                        'label' => $this->getTranslator()->trans('copyright'),
                         'required' => false
                     ))
                     ->add('private', 'checkbox', array(

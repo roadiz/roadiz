@@ -230,18 +230,33 @@ class Translation extends AbstractDateTimed
     {
         return $this->nodeSources;
     }
+
     /**
      * @OneToMany(targetEntity="TagTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @var ArrayCollection
      */
     private $tagTranslations = null;
     /**
-     * @return Translation
+     * @return ArrayCollection
      */
     public function getTagTranslations()
     {
         return $this->tagTranslations;
     }
+
+    /**
+     * @OneToMany(targetEntity="DocumentTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @var ArrayCollection
+     */
+    protected $documentTranslations;
+    /**
+     * @return ArrayCollection
+     */
+    public function getDocumentTranslations()
+    {
+        return $this->documentTranslations;
+    }
+
     /**
      * @return TranslationHandler
      */

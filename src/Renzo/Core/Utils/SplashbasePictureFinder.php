@@ -22,6 +22,7 @@ use Pimple\Container;
 class SplashbasePictureFinder extends AbstractEmbedFinder
 {
     private $client;
+    protected static $platform = 'splashbase';
 
     public function __construct()
     {
@@ -80,7 +81,7 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
      */
     public function getMediaTitle()
     {
-
+        return "";
     }
 
     /**
@@ -88,7 +89,15 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
      */
     public function getMediaDescription()
     {
+        return "";
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getMediaCopyright()
+    {
+        return $this->feed['copyright'].' — '.$this->feed['site'];
     }
 
     /**
@@ -96,54 +105,14 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
      */
     public function getThumbnailURL()
     {
-        $this->getRandom();
+        if (null === $this->feed) {
+            $this->getRandom();
 
-        if (false !== $this->feed) {
-            return $this->feed['url'];
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createDocumentFromFeed(Container $container)
-    {
-        $url = $this->downloadThumbnail();
-
-        if (false !== $url &&
-            false !== $this->feed) {
-
-            $existingDocument = $container['em']->getRepository('RZ\Renzo\Core\Entities\Document')
-                                                ->findOneBy(array('filename'=>$url));
-            if (null !== $existingDocument) {
-                throw new EntityAlreadyExistsException('embed.document.already_exists');
+            if (false === $this->feed) {
+                return false;
             }
-
-            $document = new Document();
-
-            if (false !== $url) {
-
-                /*
-                 * Move file from documents file root to its folder.
-                 */
-                $document->setFilename($url);
-                $document->setMimeType('image/jpeg');
-                $document->setCopyright($this->feed['copyright'].' — '.$this->feed['site']);
-
-                if (!file_exists(Document::getFilesFolder().'/'.$document->getFolder())) {
-                    mkdir(Document::getFilesFolder().'/'.$document->getFolder());
-                }
-                rename(Document::getFilesFolder().'/'.$url, $document->getAbsolutePath());
-            }
-
-            $container['em']->persist($document);
-            $container['em']->flush();
-
-            return $document;
-        } else {
-            throw new \Exception('no.random.document.found');
         }
+
+        return $this->feed['url'];
     }
 }
