@@ -16,6 +16,8 @@ use RZ\Renzo\Core\ListManagers\EntityListManager;
 use RZ\Renzo\Core\Utils\SplashbasePictureFinder;
 use Themes\Rozier\RozierApp;
 
+use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -330,7 +332,9 @@ class DocumentsController extends RozierApp
 
         if ($form->isValid()) {
 
-            if (false !== $document = $this->uploadDocument($form)) {
+            $document = $this->uploadDocument($form);
+
+            if (false !== $document) {
 
                 $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
                     '%name%'=>$document->getFilename()
@@ -338,30 +342,33 @@ class DocumentsController extends RozierApp
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
 
-                $response = new Response();
-                $response->setContent(json_encode(array(
-                    'success' => true,
-                )));
-                $response->headers->set('Content-Type', 'application/json');
-                $response->setStatusCode(200);
-                $response->prepare($request);
-
-                return $response->send();
+                return new Response(
+                    json_encode(array(
+                        'success' => true,
+                        'documentId' => $document->getId(),
+                        'thumbnail' => array(
+                            'id' => $document->getId(),
+                            'filename'=>$document->getFilename(),
+                            'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
+                            'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', array('document'=>$document)),
+                        )
+                    )),
+                    Response::HTTP_OK,
+                    array('content-type' => 'application/javascript')
+                );
 
             } else {
                 $msg = $this->getTranslator()->trans('document.cannot_persist');
                 $request->getSession()->getFlashBag()->add('error', $msg);
                 $this->getService('logger')->error($msg);
 
-                $response = new Response();
-                $response->setContent(json_encode(array(
-                    "error" => $this->getTranslator()->trans('document.cannot_persist')
-                )));
-                $response->headers->set('Content-Type', 'application/json');
-                $response->setStatusCode(400);
-                $response->prepare($request);
-
-                return $response->send();
+                return new Response(
+                    json_encode(array(
+                        "error" => $msg
+                    )),
+                    Response::HTTP_NOT_FOUND,
+                    array('content-type' => 'application/javascript')
+                );
             }
         }
         $this->assignation['form'] = $form->createView();
@@ -456,7 +463,12 @@ class DocumentsController extends RozierApp
     private function buildUploadForm()
     {
         $builder = $this->getService('formFactory')
-                    ->createBuilder('form')
+                    ->createBuilder('form', array(), array(
+                        'csrf_protection' => false,
+                        'csrf_field_name' => '_token',
+                        // a unique key to help generate the secret token
+                        'intention'       => static::AJAX_TOKEN_INTENTION,
+                    ))
                     ->add('attachment', 'file', array(
                         'label' => $this->getTranslator()->trans('choose.documents.to_upload')
                     ));

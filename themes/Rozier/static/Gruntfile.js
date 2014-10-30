@@ -30,6 +30,7 @@ module.exports = function(grunt) {
 					'js/addons/htmleditor.js',
 					'js/vendor/dropzone.min.js',
 					'js/widgets/documentWidget.js',
+					'js/widgets/documentUploader.js',
 					'js/widgets/saveButtons.js',
 					'js/widgets/nodeStatuses.js',
 					'js/widgets/childrenNodesField.js',

@@ -29,6 +29,7 @@ use Symfony\Component\Validator\Constraints\Type;
  */
 class AjaxDocumentsExplorerController extends AbstractAjaxController
 {
+    public static $thumbnailArray = null;
     /**
      * @param Request $request
      *
@@ -58,7 +59,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             $documentsArray[] = array(
                 'id' => $doc->getId(),
                 'filename'=>$doc->getFilename(),
-                'thumbnail' => $doc->getViewer()->getDocumentUrlByArray(array("width"=>40, "crop"=>"1x1", "quality"=>50)),
+                'thumbnail' => $doc->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
                 'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', array('document'=>$doc)),
             );
         }
@@ -77,3 +78,8 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         );
     }
 }
+AjaxDocumentsExplorerController::$thumbnailArray = array(
+    "width"=>40,
+    "crop"=>"1x1",
+    "quality"=>50
+);
