@@ -6,7 +6,7 @@
     </a>
     {% endif %}
     {# Delete current node #}
-    {% if (securityContext.Granted('ROLE_ACCESS_TAGS_DELETE')) %}
+    {% if (securityContext.Granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked) %}
     {% if tag.getId %}
     <a class="uk-button uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId}) }}">
         <span class="icon-container"><i class="uk-icon-rz-trash-o"></i></span>

@@ -623,7 +623,8 @@ class NodesController extends RozierApp
             ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
 
         if (null !== $node &&
-            !$node->isDeleted()) {
+            !$node->isDeleted() &&
+            !$node->isLocked()) {
 
             $this->assignation['node'] = $node;
 

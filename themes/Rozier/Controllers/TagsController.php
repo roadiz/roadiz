@@ -359,7 +359,8 @@ class TagsController extends RozierApp
         $tag = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
 
-        if ($tag !== null) {
+        if ($tag !== null &&
+            !$tag->isLocked()) {
             $this->assignation['tag'] = $tag;
 
             $form = $this->buildDeleteForm($tag);

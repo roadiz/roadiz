@@ -215,6 +215,10 @@ class NodesSourcesHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
+        if (null === $securityContext) {
+            $securityContext = Kernel::getService('securityContext');
+        }
+
         return Kernel::getService('em')
                             ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
                             ->findBy(
