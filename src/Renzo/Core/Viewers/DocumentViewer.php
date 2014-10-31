@@ -100,6 +100,7 @@ class DocumentViewer implements ViewableInterface
      * - quality (1-100)
      * - background (hexadecimal color without #)
      * - progressive (boolean)
+     * - noProcess (boolean) : Disable SLIR resample
      *
      * ## Audio / Video options
      *
@@ -276,6 +277,7 @@ class DocumentViewer implements ViewableInterface
      * - quality (1-100)
      * - background (hexadecimal color without #)
      * - progressive (boolean)
+     * - noProcess (boolean) : Disable SLIR resample
      *
      * @param array $args
      *
@@ -284,6 +286,7 @@ class DocumentViewer implements ViewableInterface
     public function getDocumentUrlByArray($args = null)
     {
         if ($args === null ||
+            (isset($args['noProcess']) && $args['noProcess'] == true) ||
             !$this->document->isImage()) {
 
             return Kernel::getInstance()->getRequest()
