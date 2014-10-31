@@ -32,7 +32,7 @@ class NodeTypeApi extends AbstractApi
 
     public function getOneBy(array $criteria, array $order = null)
     {
-        return  $this->container['em']
+        return $this->container['em']
                      ->getRepository("RZ\Renzo\Core\Entities\NodeType")
                      ->findOneBy($criteria, $order);
     }

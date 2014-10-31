@@ -105,6 +105,7 @@ class NodeRepository extends EntityRepository
      * * key => array('>', $value)
      * * key => array('BETWEEN', $value, $value)
      * * key => array('LIKE', $value)
+     * * key => array('NOT IN', $array)
      * * key => 'NOT NULL'
      *
      * You can filter with translations relation, examples:
@@ -160,6 +161,7 @@ class NodeRepository extends EntityRepository
                  * ['>', $value]
                  * ['BETWEEN', $value, $value]
                  * ['LIKE', $value]
+                 * ['NOT IN', $value]
                  * in [$value, $value]
                  */
                 if (count($value) > 1) {
@@ -189,6 +191,9 @@ class NodeRepository extends EntityRepository
                             break;
                         case 'LIKE':
                             $res = $qb->expr()->like($prefix.$key, $qb->expr()->literal($value[1]));
+                            break;
+                        case 'NOT IN':
+                            $res = $qb->expr()->notIn($prefix.$key, ':'.$baseKey);
                             break;
                         default:
                             $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
@@ -241,6 +246,7 @@ class NodeRepository extends EntityRepository
                         case '<':
                         case '>=':
                         case '>':
+                        case 'NOT IN':
                             $finalQuery->setParameter($key, $value[1]);
                             break;
                         case 'BETWEEN':

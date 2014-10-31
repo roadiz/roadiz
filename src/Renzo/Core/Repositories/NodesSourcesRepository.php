@@ -96,6 +96,7 @@ class NodesSourcesRepository extends EntityRepository
      * * key => array('>', $value)
      * * key => array('BETWEEN', $value, $value)
      * * key => array('LIKE', $value)
+     * * key => array('NOT IN', $array)
      * * key => 'NOT NULL'
      *
      * You even can filter with node fields, examples:
@@ -185,6 +186,9 @@ class NodesSourcesRepository extends EntityRepository
                                 $qb->expr()->literal($value[1])
                             );
                             break;
+                        case 'NOT IN':
+                            $res = $qb->expr()->notIn($prefix.$key, ':'.$baseKey);
+                            break;
                         default:
                             $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
                             break;
@@ -237,6 +241,7 @@ class NodesSourcesRepository extends EntityRepository
                         case '<':
                         case '>=':
                         case '>':
+                        case 'NOT IN':
                             $finalQuery->setParameter($key, $value[1]);
                             break;
                         case 'BETWEEN':

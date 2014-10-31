@@ -75,6 +75,7 @@ class TagRepository extends EntityRepository
      * * key => array('>', $value)
      * * key => array('BETWEEN', $value, $value)
      * * key => array('LIKE', $value)
+     * * key => array('NOT IN', $array)
      * * key => 'NOT NULL'
      *
      * You can filter with translations relation, examples:
@@ -180,6 +181,9 @@ class TagRepository extends EntityRepository
                         case 'LIKE':
                             $res = $qb->expr()->like($prefix.$key, $qb->expr()->literal($value[1]));
                             break;
+                        case 'NOT IN':
+                            $res = $qb->expr()->notIn($prefix.$key, ':'.$baseKey);
+                            break;
                         default:
                             $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
                             break;
@@ -227,6 +231,7 @@ class TagRepository extends EntityRepository
                         case '<':
                         case '>=':
                         case '>':
+                        case 'NOT IN':
                             $finalQuery->setParameter($key, $value[1]);
                             break;
                         case 'BETWEEN':
