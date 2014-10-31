@@ -76,17 +76,17 @@ class Kernel implements \Pimple\ServiceProviderInterface
          */
         $this->container->register($this);
 
-        $this->container['stopwatch']->start('global');
-        $this->container['stopwatch']->start('initKernel');
+        $this->container['stopwatch']->openSection();
 
         $this->request = Request::createFromGlobals();
         if ($this->isDebug() ||
             !file_exists(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php') ||
             !file_exists(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php')) {
-            $this->dumpUrlUtils();
-        }
 
-        $this->container['stopwatch']->stop('initKernel');
+            $this->container['stopwatch']->start('dumpUrlUtils');
+            $this->dumpUrlUtils();
+            $this->container['stopwatch']->stop('dumpUrlUtils');
+        }
     }
 
     /**
@@ -242,7 +242,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
              * ----------------------------
              */
             $this->response = $this->container['httpKernel']->handle($this->request);
-
             $this->response->setCharset('UTF-8');
             $this->response->prepare($this->request);
             $this->response->send();
@@ -252,6 +251,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
             echo $e->getMessage().PHP_EOL;
         }
 
+
         return $this;
     }
 
@@ -260,7 +260,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     protected function dumpUrlUtils()
     {
-        $this->container['stopwatch']->start('prepareRouting');
         if (!file_exists(RENZO_ROOT.'/gen-src/Compiled')) {
             mkdir(RENZO_ROOT.'/gen-src/Compiled', 0755, true);
         }
@@ -282,8 +281,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
             'class' => 'GlobalUrlGenerator'
         ));
         file_put_contents(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php', $class);
-
-        $this->container['stopwatch']->stop('prepareRouting');
     }
 
     /**
@@ -316,6 +313,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $this->prepareTranslation();
         $this->container['stopwatch']->stop('prepareTranslation');
 
+        $this->container['stopwatch']->start('initThemes');
         /*
          * Security
          */
@@ -328,6 +326,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
             $feClass = $theme->getClassName();
             $feClass::setupDependencyInjection($this->container);
         }
+        $this->container['stopwatch']->stop('initThemes');
 
         $this->container['stopwatch']->start('firewall');
         $firewall = new Firewall($this->container['firewallMap'], $this->container['dispatcher']);

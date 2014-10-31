@@ -69,6 +69,8 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
              * Get App routes
              */
             $container['routeCollection'] = function ($c) {
+
+                $c['stopwatch']->start('routeCollection');
                 $rCollection = new RouteCollection();
 
                 /*
@@ -117,7 +119,7 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                         $rCollection->addCollection($feCollection);
                     }
                 }
-
+                $c['stopwatch']->stop('routeCollection');
                 return $rCollection;
             };
         }

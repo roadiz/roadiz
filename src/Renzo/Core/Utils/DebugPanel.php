@@ -71,7 +71,7 @@ class DebugPanel implements EventSubscriberInterface
 
     private function getDebugView()
     {
-        Kernel::getService('stopwatch')->stop('global');
+        Kernel::getService('stopwatch')->stopSection('runtime');
 
         $assignation = array(
             'stopwatch'=>Kernel::getService('stopwatch')

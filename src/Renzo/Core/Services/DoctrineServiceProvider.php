@@ -31,6 +31,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
 
             $container['em'] = function ($c) {
                 try {
+                    $c['stopwatch']->start('initDoctrine');
                     // the connection configuration
                     $configDB = Setup::createAnnotationMetadataConfiguration(
                         $c['entitiesPaths'],
@@ -69,6 +70,8 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                                 ->getMetadataCacheImpl()
                                 ->setNamespace($c['config']["appNamespace"]);
                     }
+
+                    $c['stopwatch']->stop('initDoctrine');
 
                     return $em;
                 } catch (\PDOException $e) {
