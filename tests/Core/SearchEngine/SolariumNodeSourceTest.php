@@ -22,35 +22,38 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
                         ->getRepository('GeneratedNodeSources\NSPage')
                         ->findOneBy(array('title'=>$testTitle));
 
-        try {
+        if (null !== $nodeSource) {
+            try {
 
-            $solrDoc = new SolariumNodeSource(
-                $nodeSource,
-                Kernel::getService('solr')
-            );
+                $solrDoc = new SolariumNodeSource(
+                    $nodeSource,
+                    Kernel::getService('solr')
+                );
 
-            $result = $solrDoc->indexAndCommit();
-            static::$documentCollection[] = $solrDoc;
+                $result = $solrDoc->indexAndCommit();
+                static::$documentCollection[] = $solrDoc;
 
-            /*
-             * ==============================
-             *
-             * Now query the database
-             */
-            // get a select query instance
-            $query = Kernel::getService('solr')->createSelect();
-            $query->setQuery('title:"'.$testTitle.'"');
+                /*
+                 * ==============================
+                 *
+                 * Now query the database
+                 */
+                // get a select query instance
+                $query = Kernel::getService('solr')->createSelect();
+                $query->setQuery('title:"'.$testTitle.'"');
 
-            // this executes the query and returns the result
-            $resultset = Kernel::getService('solr')->select($query);
+                // this executes the query and returns the result
+                $resultset = Kernel::getService('solr')->select($query);
 
-            foreach ($resultset as $document) {
-                // Assert
-                $this->assertEquals($document->node_source_id_i, $nodeSource->getId());
+                foreach ($resultset as $document) {
+                    // Assert
+                    $this->assertEquals($document->node_source_id_i, $nodeSource->getId());
+                }
+            } catch (SolrServerNotAvailableException $e){
+
             }
-        } catch (SolrServerNotAvailableException $e){
-
         }
+
     }
 
     public function testGetDocumentFromIndex()
@@ -60,16 +63,19 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
         $nodeSource = Kernel::getService('em')
                         ->getRepository('GeneratedNodeSources\NSPage')
                         ->findOneBy(array('title'=>$testTitle));
-        try {
-            $solrDoc = new SolariumNodeSource(
-                $nodeSource,
-                Kernel::getService('solr')
-            );
 
-            $this->assertTrue($solrDoc->getDocumentFromIndex());
+        if (null !== $nodeSource) {
+            try {
+                $solrDoc = new SolariumNodeSource(
+                    $nodeSource,
+                    Kernel::getService('solr')
+                );
 
-        } catch (SolrServerNotAvailableException $e){
+                $this->assertTrue($solrDoc->getDocumentFromIndex());
 
+            } catch (SolrServerNotAvailableException $e){
+
+            }
         }
     }
 
@@ -81,18 +87,20 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
                         ->getRepository('GeneratedNodeSources\NSPage')
                         ->findOneBy(array('title'=>$testTitle));
 
-        try {
+        if (null !== $nodeSource) {
+            try {
 
-            $solrDoc = new SolariumNodeSource(
-                $nodeSource,
-                Kernel::getService('solr')
-            );
+                $solrDoc = new SolariumNodeSource(
+                    $nodeSource,
+                    Kernel::getService('solr')
+                );
 
-            $solrDoc->cleanAndCommit();
+                $solrDoc->cleanAndCommit();
 
-            $this->assertFalse($solrDoc->getDocumentFromIndex());
-        } catch (SolrServerNotAvailableException $e){
+                $this->assertFalse($solrDoc->getDocumentFromIndex());
+            } catch (SolrServerNotAvailableException $e){
 
+            }
         }
     }
 

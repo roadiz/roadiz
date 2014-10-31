@@ -12,8 +12,7 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
      */
     public function testSerializeToJson($sourceNodeType, $expectedFile)
     {
-        $serializer = new NodeTypeJsonSerializer($sourceNodeType);
-        $json = $serializer->serialize();
+        $json = NodeTypeJsonSerializer::serialize($sourceNodeType);
 
         // Assert
         $this->assertJsonStringEqualsJsonFile($expectedFile, $json);

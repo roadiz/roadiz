@@ -37,9 +37,8 @@ class NodesSourcesRepositoryTest extends PHPUnit_Framework_TestCase
     public static function findBySearchQueryProvider()
     {
         return array(
-            array('text:Propos', 'GeneratedNodeSources\NSPage'),
-            array('text:Lorem markdownum', 'GeneratedNodeSources\NSPage'),
-            array('text:septemflua et diversa veniat', 'GeneratedNodeSources\NSPage')
+            array('Propos', 'GeneratedNodeSources\NSPage'),
+            array('Lorem markdownum', 'GeneratedNodeSources\NSPage')
         );
     }
 
@@ -68,9 +67,8 @@ class NodesSourcesRepositoryTest extends PHPUnit_Framework_TestCase
         $english->setLocale('en_GB');
 
         return array(
-            array('text:Propos', 'GeneratedNodeSources\NSPage', $english),
-            array('text:Lorem markdownum', 'GeneratedNodeSources\NSPage', $english),
-            array('text:septemflua et diversa veniat', 'GeneratedNodeSources\NSPage', $english)
+            array('Propos', 'GeneratedNodeSources\NSPage', $english),
+            array('Lorem markdownum', 'GeneratedNodeSources\NSPage', $english)
         );
     }
 }
