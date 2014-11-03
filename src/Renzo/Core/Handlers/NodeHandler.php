@@ -399,7 +399,7 @@ class NodeHandler
 
         $node->setParent(null);
 
-        $node->setNodeName($node->getNodeName()."-".uniqid());
+        //$node->setNodeName($node->getNodeName()."-".uniqid());
 
         Kernel::getService('em')->persist($node);
         foreach ($childrenArray as $child) {
@@ -414,11 +414,13 @@ class NodeHandler
 
     public function duplicate() {
         Kernel::getService('em')->refresh($this->node);
+        $parent = $this->node->getParent();
         $node = clone $this->node;
         Kernel::getService('em')->clear();
         $newNode = $this->duplicateRec($node, 0);
-        if ($this->node->getParent() !== null) {
-           $newNode->setParent($this->node->getParent());
+        if ($parent !== null) {
+            $parent = Kernel::getService('em')->find("RZ\Renzo\Core\Entities\Node", $parent->getId());
+            $newNode->setParent($parent);
         }
         Kernel::getService('em')->flush();
         return $newNode;
