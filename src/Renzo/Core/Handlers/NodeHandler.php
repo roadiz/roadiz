@@ -435,6 +435,7 @@ class NodeHandler
             $newNode->setParent($parent);
         }
         Kernel::getService('em')->flush();
+        Kernel::getService('em')->refresh($newNode);
         return $newNode;
     }
 }
