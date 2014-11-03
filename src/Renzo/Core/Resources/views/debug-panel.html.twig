@@ -1,18 +1,24 @@
 <section id="rz-debug-panel">
 	<div>
 		<h4>Debug panel</h4>
-		<dl>
+		<ul>
 			{% for name, event in stopwatch.getSectionEvents('runtime') %}
 				{% if name == '__section__' %}
-				<dt><i class="uk-icon-truck"></i> Global memory</dt>
-				<dd>{{ (event.getMemory / 1000000)|round(2, 'floor') }}Mo</dd>
-				<dt><i class="uk-icon-clock-o"></i> Global time</dt>
-				<dd>{{ event.getDuration }}ms</dd>
+				<li>
+					<dt><i class="uk-icon-truck"></i> Global memory</dt>
+					<dd>{{ (event.getMemory / 1000000)|round(2, 'floor') }}Mo</dd>
+				</li>
+				<li>
+					<dt><i class="uk-icon-clock-o"></i> Global time</dt>
+					<dd>{{ event.getDuration }}ms</dd>
+				</li>
 				{% else %}
-				<dt><i class="uk-icon-clock-o"></i> {{ name }}</dt>
-				<dd>{{ event.getDuration }}ms</dd>
+				<li>
+					<dt><i class="uk-icon-clock-o"></i> {{ name }}</dt>
+					<dd>{{ event.getDuration }}ms</dd>
+				</li>
 				{% endif %}
 			{% endfor %}
-		</dl>
+		</ul>
 	</div>
 </div>

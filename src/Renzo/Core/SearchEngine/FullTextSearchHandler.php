@@ -24,46 +24,56 @@ class FullTextSearchHandler
 {
     protected $client = null;
 
-    public function __construct($client/* = null*/)
+    public function __construct($client)
     {
         $this->client = $client;
-        // $this->client = Kernel::getService("solr");
     }
 
     private function solrSearch($q, $args = [])
     {
-        $query = $this->client->createSelect();
-        $query->setQuery($q);
-        foreach ($args as $key => $value) {
-            if (is_array($value)){
-                foreach ($value as $k => $v) {
-                    $query->addFilterQuery(array("key" => "fq".$k, "query"=>$v));
+        if (!empty($q)) {
+            $query = $this->client->createSelect();
+            $query->setQuery('collection_txt:'.trim($q));
+
+            foreach ($args as $key => $value) {
+                if (is_array($value)){
+                    foreach ($value as $k => $v) {
+                        $query->addFilterQuery(array("key" => "fq".$k, "query"=>$v));
+                    }
+                } else {
+                    $query->addParam($key, $value);
                 }
-            } else {
-                $query->addParam($key, $value);
             }
+            $query->addSort('score', $query::SORT_DESC);
+
+            //var_dump($query); exit();
+
+            $resultset = $this->client->select($query);
+            $reponse = json_decode($resultset->getResponse()->getBody(), true);
+
+            $doc = array_map(
+                function($n) use ($reponse) {
+                    if (isset($reponse["highlighting"])) {
+                        return array(
+                                "nodeSource" => Kernel::getInstance()->getService('em')->find(
+                                    'RZ\Renzo\Core\Entities\NodesSources',
+                                    (int) $n["node_source_id_i"]
+                                ),
+                                "highlighting" => $reponse["highlighting"][$n['id']]
+                            );
+                    }
+                    return Kernel::getInstance()->getService('em')->find(
+                        'RZ\Renzo\Core\Entities\NodesSources',
+                        $n["node_source_id_i"]
+                    );
+                },
+                $reponse['response']['docs']
+            );
+
+            return $doc;
+        } else {
+            return null;
         }
-
-        $resultset = $this->client->select($query);
-
-        $reponse = json_decode($resultset->getResponse()->getBody(), true);
-
-        $doc = array_map(
-                    function($n) use ($reponse) {
-                        if (isset($reponse["highlighting"])) {
-                            return array(
-                                    "nodeSource" => Kernel::getInstance()->getService('em')->find('RZ\Renzo\Core\Entities\NodesSources', $n["node_source_id_i"]),
-                                    "highlighting" => $reponse["highlighting"][$n['id']]
-                                );
-                        }
-                        return Kernel::getInstance()->getService('em')->find('RZ\Renzo\Core\Entities\NodesSources', $n["node_source_id_i"]);
-                    },
-                    $reponse['response']['docs']);
-        // var_dump($this->client->createRequest($query)->getUri());
-        // echo '<pre>';
-        // \Doctrine\Common\Util\Debug::dump($doc, 10, false);
-        // echo '</pre>';
-        // return $doc;
     }
 
     private function argFqProcess(&$args)
@@ -143,11 +153,4 @@ class FullTextSearchHandler
         $args = array_merge($tmp, $args);
         return $this->solrSearch($q, $args);
     }
-
-    // public function searchAction(Request $request, $q)
-    // {
-    //     $args["visible"] = true;
-    //     $args["status"] = array(">=", 30);
-    //     $this->search($q, $args);
-    // }
 }
