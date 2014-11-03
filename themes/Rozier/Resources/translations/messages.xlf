@@ -4712,6 +4712,12 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <source>empty.node.trash</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="node.trash.emptied">
+        <source>node.trash.emptied</source>
+        <target></target>
+      </trans-unit>
+
+
       <trans-unit xml:space="preserve" id="empty.trash">
         <source>empty.trash</source>
         <target></target>

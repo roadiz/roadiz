@@ -63,6 +63,7 @@ class SolariumNodeSource
     {
         $query = $this->client->createSelect();
         $query->setQuery(static::IDENTIFIER_KEY.':'.$this->nodeSource->getId());
+        $query->createFilterQuery('type')->setQuery('document_type_s:'.static::DOCUMENT_TYPE);
 
         // this executes the query and returns the result
         $resultset = $this->client->select($query);
@@ -230,8 +231,9 @@ class SolariumNodeSource
     public function clean(Query $update)
     {
         $update->addDeleteQuery(
-            static::IDENTIFIER_KEY.':"'.$this->nodeSource->getId()
-            .'"&locale_s:"'.$this->nodeSource->getTranslation()->getLocale().'"'
+            static::IDENTIFIER_KEY.':"'.$this->nodeSource->getId().'"'.
+            '&document_type_s:"'.static::DOCUMENT_TYPE.'"'.
+            '&locale_s:"'.$this->nodeSource->getTranslation()->getLocale().'"'
         );
 
         return true;
