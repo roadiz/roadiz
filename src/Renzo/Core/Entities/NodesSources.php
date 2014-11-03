@@ -92,7 +92,7 @@ class NodesSources extends AbstractEntity
     private $documentsByFields = null;
 
     /**
-     * @return \RZ\Renzo\Core\Entities\NodesSourcesDocuments
+     * @return ArrayCollection
      */
     public function getDocumentsByFields()
     {
@@ -222,6 +222,15 @@ class NodesSources extends AbstractEntity
     public function __clone()
     {
         $this->setId(null);
+        $documentsByFields = $this->getDocumentsByFields();
+        if ($documentsByFields !== null) {
+            $this->documentsByFields = new ArrayCollection();
+            foreach ($documentsByFields as $documentsByField) {
+                $cloneDocumentsByField = clone $documentsByField;
+                $this->documentsByFields->add($cloneDocumentsByField);
+                $cloneDocumentsByField->setNodeSource($this);
+            }
+        }
         if ($this->urlAliases !== null) {
             $this->urlAliases->clear();
         }

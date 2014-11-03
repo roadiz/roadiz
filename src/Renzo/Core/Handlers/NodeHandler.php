@@ -389,10 +389,22 @@ class NodeHandler
             $nodeSource->setTranslation($tran);
 
             Kernel::getService('em')->persist($nodeSource);
-            Kernel::getService('em')->flush();
 
+            $nsdocs = $nodeSource->getDocumentsByFields();
+
+            foreach ($nsdocs as $nsdoc) {
+                $nsdoc->setNodeSource($nodeSource);
+                $doc = Kernel::getService('em')->merge($nsdoc->getDocument());
+                $nsdoc->setDocument($doc);
+                $f = Kernel::getService('em')->merge($nsdoc->getField());
+                $nsdoc->setField($f);
+                Kernel::getService('em')->persist($nsdoc);
+            }
+
+            Kernel::getService('em')->flush();
             $sourceArray[] = $nodeSource;
         }
+            //exit();
         $nodetype = Kernel::getService('em')->merge($node->getNodeType());
 
         $node->setNodeType($nodetype);
