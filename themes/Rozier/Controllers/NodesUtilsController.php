@@ -121,11 +121,13 @@ class NodesUtilsController extends RozierApp
      */
     public function duplicateAction(Request $request, $nodeId)
     {
-
+        $request->getSession()->getFlashBag()->add('confirm', "duplicate.node");
         $existingNode = $this->getService('em')
                               ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
         $newNode = $existingNode->getHandler()->duplicate();
-        $response = new RedirectResponse($this->getService('urlGenerator')->generate('nodesEditPage', array("nodeId" => $newNode->getId())));
+        $response = new RedirectResponse($this->getService('urlGenerator')
+                                              ->generate('nodesEditPage',
+                                                         array("nodeId" => $newNode->getId())));
         $response->prepare($request);
         return $response->send();
     }

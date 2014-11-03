@@ -19,6 +19,8 @@ class NodeHandlerTest extends PHPUnit_Framework_TestCase
     public function testDuplicate($node, $key)
     {
 
+        $nbNode = count(static::$runtimeCollection);
+
         $duplicatedNode = $node->getHandler()->duplicate();
         $node = Kernel::getService("em")->find("RZ\Renzo\Core\Entities\Node", $node->getId());
         $this->assertEquals($node->getNodeSources()->count(), $duplicatedNode->getNodeSources()->count());
@@ -29,6 +31,7 @@ class NodeHandlerTest extends PHPUnit_Framework_TestCase
 
         static::$runtimeCollection[] = $duplicatedNode;
 
+        $this->assertEquals($nbNode + 1, count(static::$runtimeCollection));
         // Assert
         //$this->assertEquals($expected, $value);
     }
