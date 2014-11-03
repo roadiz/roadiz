@@ -7,6 +7,7 @@ MarkdownEditor = function(){
 
     // Selectors
     _this.$cont = $('.uk-htmleditor');
+    _this.$textarea = _this.$cont.find('textarea');
 
     // Methods
     _this.init();
@@ -15,6 +16,7 @@ MarkdownEditor = function(){
 
 
 MarkdownEditor.prototype.$cont = null;
+MarkdownEditor.prototype.$textarea = null;
 MarkdownEditor.prototype.$buttonCode = null;
 MarkdownEditor.prototype.$buttonPreview = null;
 
@@ -31,6 +33,10 @@ MarkdownEditor.prototype.init = function(){
         for(var i = 0; i < _this.$cont.length; i++) {
             $(_this.$cont[i]).find('.uk-htmleditor-button-code').attr('data-index',i);
             $(_this.$cont[i]).find('.uk-htmleditor-button-preview').attr('data-index',i);
+
+            if(_this.$textarea[i].getAttribute('data-max-length') !== ''){
+                $(_this.$textarea[i]).on('keyup', $.proxy(_this.textareaChange, _this));
+            }
         }
         
         _this.$buttonCode = _this.$cont.find('.uk-htmleditor-button-code');
@@ -42,6 +48,24 @@ MarkdownEditor.prototype.init = function(){
     }
 
 };
+
+
+/**
+ * Textarea change
+ * @return {[type]} [description]
+ */
+MarkdownEditor.prototype.textareaChange = function(e){
+    var _this = this;
+
+    // console.log('change');
+    // console.log(e);
+    // console.log(e.target);
+    // console.log(e.currentTarget);
+    // console.log(e.target.value);
+
+};
+
+
 
 
 /**

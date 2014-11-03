@@ -198,6 +198,19 @@
     }
 }
 
+.uk-rz-coming-soon{
+    .opacity(0.5);
+    z-index:2;
+
+    .uk-nav-sub{
+        .opacity(1);
+
+        &> li > a{
+            cursor: default; 
+        }
+    }
+}
+
 #frontend-home {
     &-area {
         height: @global-header-height - @minify-tree-panel-area-width - 2px;

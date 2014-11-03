@@ -355,6 +355,57 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
 
         return $this;
     }
+
+    /**
+     * @Column(name="min_length", type="integer", nullable=true)
+     */
+    private $minLength = null;
+
+    /**
+     * @return int
+     */
+    public function getMinLength()
+    {
+        return $this->minLength;
+    }
+
+    /**
+     * @param int $minValue
+     *
+     * @return $this
+     */
+    public function setMinLength($minLength)
+    {
+        $this->minLength = $minLength;
+
+        return $this;
+    }
+
+    /**
+     * @Column(name="max_length", type="integer", nullable=true)
+     */
+    private $maxLength = null;
+
+    /**
+     * @return int
+     */
+    public function getMaxLength()
+    {
+        return $this->maxLength;
+    }
+
+    /**
+     * @param int $maxLength
+     *
+     * @return $this
+     */
+    public function setMaxLength($maxLength)
+    {
+        $this->maxLength = $maxLength;
+
+        return $this;
+    }
+
     /**
      * @Column(type="boolean")
      */

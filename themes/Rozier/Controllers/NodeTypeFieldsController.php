@@ -360,7 +360,9 @@ class NodeTypeFieldsController extends RozierApp
             'description' =>    $field->getDescription(),
             'visible' =>        $field->isVisible(),
             'indexed' =>        $field->isIndexed(),
-            'defaultValues' => $field->getDefaultValues(),
+            'defaultValues' =>  $field->getDefaultValues(),
+            'minLength' =>      $field->getMinLength(),
+            'maxLength' =>      $field->getMaxLength(),
         );
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
@@ -402,6 +404,22 @@ class NodeTypeFieldsController extends RozierApp
                             'attr' => array(
                                 'placeholder' => $this->getTranslator()->trans('enter_values_comma_separated')
                             )
+                        )
+                    )
+                    ->add(
+                        'minLength',
+                        'integer',
+                        array(
+                            'label' => $this->getTranslator()->trans('minLength'),
+                            'required' => false
+                        )
+                    )
+                    ->add(
+                        'maxLength',
+                        'integer',
+                        array(
+                            'label' => $this->getTranslator()->trans('maxLength'),
+                            'required' => false
                         )
                     );
 

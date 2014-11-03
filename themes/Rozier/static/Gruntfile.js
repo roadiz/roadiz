@@ -28,7 +28,7 @@ module.exports = function(grunt) {
 					'js/vendor/mode/gfm/gfm.js',
 					'js/vendor/marked.min.js',
 					'js/addons/htmleditor.js',
-					'js/vendor/dropzone.min.js',
+					'js/vendor/dropzone.js',
 					'js/widgets/documentWidget.js',
 					'js/widgets/documentUploader.js',
 					'js/widgets/saveButtons.js',

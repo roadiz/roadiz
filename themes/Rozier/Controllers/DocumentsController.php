@@ -250,7 +250,7 @@ class DocumentsController extends RozierApp
                 $document = $this->embedDocument($form->getData());
 
                 $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
-                    '%name%'=>$document->getDocumentTranslations()->first()->getName()
+                    '%name%'=>$document->getFilename()
                 ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
@@ -514,7 +514,7 @@ class DocumentsController extends RozierApp
                 return $finder->createDocumentFromFeed($this->getService());
 
             } else {
-                 throw new \RuntimeException("embedId.does_not_exist", 1);
+                throw new \RuntimeException("embedId.does_not_exist", 1);
             }
 
         } else {

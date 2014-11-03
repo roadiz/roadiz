@@ -29,7 +29,11 @@
             <li class="document-item">
                 <div class="document-border"></div>
                 <figure class="document-image">
-                    {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
+                    {% if document.isImage %}
+                        {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
+                    {% else %}
+                        <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div> 
+                    {% endif %}
                 </figure>
                 <div class="document-name">{{ document.getFilename }}</div>
                 <div class="document-overflow">

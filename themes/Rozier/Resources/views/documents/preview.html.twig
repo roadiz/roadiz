@@ -7,18 +7,23 @@
     <header class="content-header header-document header-document-edit">
         <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.getFilename}) }}</h1>
         {% include 'documents/navBar.html.twig' with {'document':document, current:'preview'} %}
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('documentsHomePage') }}" title="{% trans %}back_to.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-document-edit">
-    	<figure class="uk-thumbnail">{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}</figure>
-        <p><code>{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}</code></p>
 
-        {% if document.isEmbed and document.getViewer.getEmbedFinder %}
-        <hr />
-        <h3>{% trans %}embed.preview{% endtrans %}</h3>
-        <figure class="uk-thumbnail">{{ document.getViewer.getEmbedByArray(thumbnailFormat)|raw }}</figure>
-        <p><code>{{ document.getViewer.getEmbedFinder.getSource }}</code></p>
-        {% endif %}
+        <div class="content-inner">
+            <figure class="uk-thumbnail">{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}</figure>
+            <p><code>{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}</code></p>
+
+            {% if document.isEmbed and document.getViewer.getEmbedFinder %}
+            <hr />
+            <h3>{% trans %}embed.preview{% endtrans %}</h3>
+            <figure class="uk-thumbnail">{{ document.getViewer.getEmbedByArray(thumbnailFormat)|raw }}</figure>
+            <p><code>{{ document.getViewer.getEmbedFinder.getSource }}</code></p>
+            {% endif %}
+        </div>
+    	
     </article>
 
 	{% include 'documents/actionsMenu.html.twig' %}
