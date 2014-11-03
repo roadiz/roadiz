@@ -14,6 +14,7 @@ var DocumentWidget = function () {
 };
 
 DocumentWidget.prototype.$explorer = null;
+DocumentWidget.prototype.$explorerClose = null;
 DocumentWidget.prototype.$widgets = null;
 DocumentWidget.prototype.$toggleExplorerButtons = null;
 DocumentWidget.prototype.$unlinkDocumentButtons = null;
@@ -38,6 +39,9 @@ DocumentWidget.prototype.init = function() {
 	var onUnlinkDocumentP = $.proxy(_this.onUnlinkDocument, _this);
 	_this.$unlinkDocumentButtons.off('click', onUnlinkDocumentP);
 	_this.$unlinkDocumentButtons.on('click', onUnlinkDocumentP);
+
+	Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+
 };
 
 /**
@@ -143,15 +147,7 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
 			console.log("error");
 		});
 	}
-	else {
-		_this.$toggleExplorerButtons.removeClass('uk-active');
-		_this.$explorer.removeClass('visible');
-		_this.$explorer.one('transitionend webkitTransitionEnd mozTransitionEnd msTransitionEnd', function(event) {
-			/* Act on the event */
-			_this.$explorer.remove();
-			_this.$explorer = null;
-		});
-	}
+	else _this.closeExplorer();
 
 	return false;
 };
@@ -177,11 +173,15 @@ DocumentWidget.prototype.onUnlinkDocument = function( event ) {
  */
 DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
 	var _this = this;
-	console.log($originWidget);
+	// console.log($originWidget);
 	var changeProxy = $.proxy(_this.onSortableDocumentWidgetChange, _this);
 
-	$("body").append('<div class="document-widget-explorer"><ul class="uk-sortable"></ul></div>');
+	$("body").append('<div class="document-widget-explorer"><ul class="uk-sortable"></ul><div class="document-widget-explorer-close"><i class="uk-icon-rz-panel-tree-open"></i></div></div>');
 	_this.$explorer = $('.document-widget-explorer');
+	_this.$explorerClose = $('.document-widget-explorer-close');
+
+	_this.$explorerClose.on('click', $.proxy(_this.closeExplorer, _this));
+
 	var $sortable = _this.$explorer.find('.uk-sortable');
 
 	for (var i = 0; i < data.documents.length; i++) {
@@ -210,4 +210,33 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
 	window.setTimeout(function () {
 		_this.$explorer.addClass('visible');
 	}, 0);
+};
+
+/**
+ * Echap key to close explorer
+ * @return {[type]} [description]
+ */
+DocumentWidget.prototype.echapKey = function(e){
+    var _this = this;
+
+    if(e.keyCode == 27 && _this.$explorer !== null) _this.closeExplorer();
+
+    return false;
+};
+
+/**
+ * Close explorer
+ * @return {[type]} [description]
+ */
+DocumentWidget.prototype.closeExplorer = function(){
+	var _this = this;
+
+	_this.$toggleExplorerButtons.removeClass('uk-active');
+	_this.$explorer.removeClass('visible');
+	_this.$explorer.one('transitionend webkitTransitionEnd mozTransitionEnd msTransitionEnd', function(event) {
+		/* Act on the event */
+		_this.$explorer.remove();
+		_this.$explorer = null;
+	});
+
 };
