@@ -88,7 +88,19 @@ class NodeHandler
      */
     public function removeAssociations()
     {
+        $ping = Kernel::getInstance()->pingSolrServer();
+
         foreach ($this->node->getNodeSources() as $ns) {
+            // Update Solr Search engine if setup
+            if (true === $ping) {
+                $solrSource = new \RZ\Renzo\Core\SearchEngine\SolariumNodeSource(
+                    $ns,
+                    Kernel::getService('solr')
+                );
+                $solrSource->getDocumentFromIndex();
+                $solrSource->cleanAndCommit();
+            }
+
             Kernel::getService('em')->remove($ns);
         }
 

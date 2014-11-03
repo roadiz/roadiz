@@ -637,6 +637,19 @@ class NodesController extends RozierApp
                 $node->getHandler()->softRemoveWithChildren();
                 $this->getService('em')->flush();
 
+                // Update Solr Search engine if setup
+                if (true === $this->getKernel()->pingSolrServer()) {
+
+                    foreach ($node->getNodeSources() as $nodeSource) {
+                        $solrSource = new \RZ\Renzo\Core\SearchEngine\SolariumNodeSource(
+                            $nodeSource,
+                            $this->getService('solr')
+                        );
+                        $solrSource->getDocumentFromIndex();
+                        $solrSource->updateAndCommit();
+                    }
+                }
+
                 $msg = $this->getTranslator()->trans('node.%name%.deleted', array('%name%'=>$node->getNodeName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
                 $this->getService('logger')->info($msg);
@@ -733,6 +746,19 @@ class NodesController extends RozierApp
 
                 $node->getHandler()->softUnremoveWithChildren();
                 $this->getService('em')->flush();
+
+                // Update Solr Search engine if setup
+                if (true === $this->getKernel()->pingSolrServer()) {
+
+                    foreach ($node->getNodeSources() as $nodeSource) {
+                        $solrSource = new \RZ\Renzo\Core\SearchEngine\SolariumNodeSource(
+                            $nodeSource,
+                            $this->getService('solr')
+                        );
+                        $solrSource->getDocumentFromIndex();
+                        $solrSource->updateAndCommit();
+                    }
+                }
 
                 $msg = $this->getTranslator()->trans('node.%name%.undeleted', array('%name%'=>$node->getNodeName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);

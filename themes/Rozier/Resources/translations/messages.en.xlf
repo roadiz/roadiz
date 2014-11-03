@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-10-30 15:53+0000
+PO-Revision-Date: 2014-11-03 17:52+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1414684426.208877
+X-POOTLE-MTIME: 1415037143.329937
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -4717,6 +4717,12 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
         <source>empty.node.trash</source>
         <target state="translated">Empty node trash</target>
       <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="node.trash.emptied" approved="yes">
+        <source>node.trash.emptied</source>
+        <target state="translated">Node trash has been emptied.</target>
+      </trans-unit>
+
+
       <trans-unit xml:space="preserve" id="empty.trash" approved="yes">
         <source>empty.trash</source>
         <target state="translated">Empty trash</target>
@@ -4730,67 +4736,67 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="random.document" approved="yes">
         <source>random.document</source>
         <target state="translated">Random</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="document.format.unknown" approved="yes">
         <source>document.format.unknown</source>
         <target state="translated">Document format is unknown.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="no.embed.document.found" approved="yes">
         <source>no.embed.document.found</source>
         <target state="translated">No document to embed has been found.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="embed.document.already_exists" approved="yes">
         <source>embed.document.already_exists</source>
         <target state="translated">Document to embed already exists.</target>
-      </trans-unit>
+      <note/></trans-unit>
 
 
       <trans-unit xml:space="preserve" id="document.metas" approved="yes">
         <source>document.metas</source>
         <target state="translated">Metas</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="delete.document.translation.%name%" approved="yes">
         <source>delete.document.translation.%name%</source>
         <target state="translated">Delete document “%name%” translation</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.document.translation" approved="yes">
         <source>are_you_sure.delete.document.translation</source>
         <target state="translated">Are you sure to delete this document translation?</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="document.translation.%name%.updated" approved="yes">
         <source>document.translation.%name%.updated</source>
         <target state="translated">Document “%name%” translation has been updated.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="document.translation.%name%.deleted" approved="yes">
         <source>document.translation.%name%.deleted</source>
         <target state="translated">Document “%name%” translation has been deleted</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="document.translation.%name%.cannot_delete" approved="yes">
         <source>document.translation.%name%.cannot_delete</source>
         <target state="translated">Document “%name%” translation cannot be deleted.</target>
-      </trans-unit>
+      <note/></trans-unit>
 
 
       <trans-unit xml:space="preserve" id="folderTree" approved="yes">
         <source>folderTree</source>
         <target state="translated">Document folders</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="add.folder" approved="yes">
         <source>add.folder</source>
         <target state="translated">Add folder</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="add.child.folder" approved="yes">
         <source>add.child.folder</source>
         <target state="translated">Add sub-folder</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="edit.folder" approved="yes">
         <source>edit.folder</source>
         <target state="translated">Edit folder</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="delete.folder" approved="yes">
         <source>delete.folder</source>
         <target state="translated">Delete folder</target>
-      </trans-unit>
+      <note/></trans-unit>
 
 
     </body>
