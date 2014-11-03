@@ -22,7 +22,7 @@
         cursor: default;
 
         &:hover{
-             .link-button{
+            .link-button-inner{
                 bottom: 0px;
             }
         }
@@ -34,10 +34,17 @@
         .link-button {
             position: absolute;
             display: block;
+            top:0; left:0;
+            width:80px; height:80px;
+            background:none;
+            .rounded(0);
+        }
+
+        .link-button-inner{
+            position: absolute;
             width:80px; height:30px;
             bottom:-30px; left:0;
             background:#BBBBBB;
-            .rounded(0);
             .transition(0.4s bottom @easeOutExpo);
             .transition-timing-function(@easeOutExpo);
             .opacity(0.95);
@@ -61,5 +68,26 @@
 
     &.visible {
         .transform(~"translate3D(0,0,0)");
+    }
+}
+
+.document-widget-explorer-close{
+    position: absolute;
+    top:23px; right:13px;
+    width:30px; height:30px;
+    cursor: pointer;
+    .opacity(0.8);
+    .transition(0.4s opacity @easeOutExpo);
+
+    &:hover{
+        .opacity(1);
+    }
+
+    .uk-icon-rz-panel-tree-open{
+        font-size:24px;
+        line-height:30px;
+        text-align: center;
+        color:@grey-verylight;
+        .transform(rotate(45deg));
     }
 }

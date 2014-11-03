@@ -9,6 +9,9 @@ Rozier.searchNodesSourcesDelay = null;
 Rozier.nodeTrees = [];
 Rozier.treeTrees = [];
 
+Rozier.$window = null;
+Rozier.$body = null;
+
 Rozier.onDocumentReady = function(event) {
 	/*
 	 * Store Rozier configuration
@@ -18,6 +21,9 @@ Rozier.onDocumentReady = function(event) {
 	}
 
 	Rozier.lazyload = new Lazyload();
+
+	Rozier.$window = $(window);
+	Rozier.$body = $('body');
 
 	Rozier.centerVerticalObjects(); // this must be done before generalBind!
 
