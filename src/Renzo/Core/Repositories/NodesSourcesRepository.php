@@ -339,6 +339,71 @@ class NodesSourcesRepository extends EntityRepository
     }
 
     /**
+     * Create a securized count query with node.published = true if user is
+     * not a Backend user and if securityContext is defined.
+     *
+     * This method allows to pre-filter Nodes with a given translation.
+     *
+     * @param array                                   $criteria
+     * @param SecurityContext|null                    $securityContext
+     *
+     * @return QueryBuilder
+     */
+    protected function getCountContextualQueryWithTranslation(
+        array &$criteria,
+        SecurityContext $securityContext = null
+    ) {
+
+        $joinedNode = false;
+        $qb = $this->_em->createQueryBuilder();
+        $qb->add('select', 'count(ns.id)')
+           ->add('from', $this->getEntityName() . ' ns');
+
+        if (null !== $securityContext &&
+            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $qb->innerJoin('ns.node', 'n', 'WITH', 'n.status = \''.Node::PUBLISHED.'\'');
+
+            $joinedNode = true;
+        }
+
+        /*
+         * Filtering by tag
+         */
+        $this->filterByTag($criteria, $qb, $joinedNode);
+        $this->filterByCriteria($criteria, $qb, $joinedNode);
+
+        return $qb;
+    }
+
+    /**
+     * Just like the countBy method but with relational criteria.
+     *
+     * @param array                                   $criteria
+     * @param SecurityContext|null                    $securityContext
+     *
+     * @return int
+     */
+    public function countBy(
+        $criteria,
+        SecurityContext $securityContext = null
+    ) {
+        $query = $this->getCountContextualQueryWithTranslation(
+            $criteria,
+            $securityContext
+        );
+
+        $finalQuery = $query->getQuery();
+        $this->applyFilterByTag($criteria, $finalQuery);
+        $this->applyFilterByCriteria($criteria, $finalQuery);
+
+        try {
+            return $finalQuery->getSingleScalarResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
      * A secure findBy with which user must be a backend user
      * to see unpublished nodes.
      *

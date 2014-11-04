@@ -62,6 +62,23 @@ class NodeSourceApi extends AbstractApi
                     );
     }
 
+    public function countBy(
+        array $criteria
+    ) {
+        if (empty($criteria['node.status'])) {
+            $criteria['node.status'] = array('<=', Node::PUBLISHED);
+        }
+
+        $rep = $this->getRepositoryName($criteria);
+
+        return $this->container['em']
+                    ->getRepository($rep)
+                    ->countBy(
+                        $criteria,
+                        $this->container['securityContext']
+                    );
+    }
+
     public function getOneBy(array $criteria, array $order = null)
     {
         if (empty($criteria['node.status'])) {

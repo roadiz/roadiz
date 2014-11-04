@@ -22,14 +22,27 @@ class TagApi extends AbstractApi
         return $this->container['em']->getRepository("RZ\Renzo\Core\Entities\Tag");
     }
 
-    public function getBy(array $criteria, array $order = null, $limit = null, $offset = null)
-    {
+    public function getBy(
+        array $criteria,
+        array $order = null,
+        $limit = null,
+        $offset = null
+    ) {
         return $this->getRepository()
                     ->findBy(
                         $criteria,
                         $order,
                         $limit,
                         $offset,
+                        null
+                    );
+    }
+
+    public function countBy(array $criteria)
+    {
+        return $this->getRepository()
+                    ->countBy(
+                        $criteria,
                         null
                     );
     }

@@ -23,8 +23,12 @@ class NodeApi extends AbstractApi
         return $this->container['em']->getRepository("RZ\Renzo\Core\Entities\Node");
     }
 
-    public function getBy(array $criteria, array $order = null, $limit = null, $offset = null)
-    {
+    public function getBy(
+        array $criteria,
+        array $order = null,
+        $limit = null,
+        $offset = null
+    ) {
         if (empty($criteria['status'])) {
             $criteria['status'] = array('<=', Node::PUBLISHED);
         }
@@ -36,6 +40,21 @@ class NodeApi extends AbstractApi
                         $order,
                         $limit,
                         $offset,
+                        null,
+                        $this->container['securityContext']
+                    );
+    }
+
+    public function countBy(array $criteria)
+    {
+        if (empty($criteria['status'])) {
+            $criteria['status'] = array('<=', Node::PUBLISHED);
+        }
+
+        return $this->container['em']
+                    ->getRepository("RZ\Renzo\Core\Entities\Node")
+                    ->countBy(
+                        $criteria,
                         null,
                         $this->container['securityContext']
                     );
