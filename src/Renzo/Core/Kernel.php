@@ -429,7 +429,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
      *
      * @return string
      */
-    private function getResolvedBaseUrl()
+    public function getResolvedBaseUrl()
     {
         if (isset($_SERVER["SERVER_NAME"])) {
             $url = pathinfo($_SERVER['PHP_SELF']);

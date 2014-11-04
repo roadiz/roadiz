@@ -475,7 +475,7 @@ class AppController implements ViewableInterface
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => (boolean) $this->kernel->container['config']['devMode'],
-                'baseUrl' => $this->kernel->getRequest()->getBaseUrl(),
+                'baseUrl' => $this->kernel->getResolvedBaseUrl(),//$this->kernel->getRequest()->getBaseUrl(),
                 'filesUrl' => $this->kernel
                                    ->getRequest()
                                    ->getBaseUrl().'/'.Document::getFilesFolderName(),
