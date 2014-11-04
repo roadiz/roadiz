@@ -18,6 +18,7 @@ use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Handlers\UserProvider;
 use RZ\Renzo\Core\Handlers\UserHandler;
+use RZ\Renzo\Core\Bags\SettingsBag;
 use Pimple\Container;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -329,6 +330,11 @@ class FrontendController extends AppController
                             ->findDefault();
 
         $this->assignation['_default_locale'] = $translation->getLocale();
+        $this->assignation['meta'] = array(
+            'siteName' => SettingsBag::get('site_name'),
+            'siteCopyright' => SettingsBag::get('site_copyright'),
+            'siteDescription' => SettingsBag::get('seo_description')
+        );
 
         return $this;
     }

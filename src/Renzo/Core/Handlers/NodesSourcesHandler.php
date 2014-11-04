@@ -98,14 +98,19 @@ class NodesSourcesHandler
     /**
      * @return string Current node-source URL
      */
-    public function getUrl()
+    public function getUrl($forceHost = false)
     {
+        $host = Kernel::getInstance()->getRequest()->getBaseUrl();
+        if ($forceHost === true) {
+            $host = Kernel::getInstance()->getResolvedBaseUrl();
+        }
+
         if ($this->nodeSource->getNode()->isHome()) {
 
             if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
-                return Kernel::getInstance()->getRequest()->getBaseUrl();
+                return $host;
             } else {
-                return Kernel::getInstance()->getRequest()->getBaseUrl() .
+                return $host .
                         '/' . $this->nodeSource->getTranslation()->getLocale();
             }
         }
@@ -133,7 +138,7 @@ class NodesSourcesHandler
             $urlTokens[] = $this->nodeSource->getTranslation()->getLocale();
         }
 
-        $urlTokens[] = Kernel::getInstance()->getRequest()->getBaseUrl();
+        $urlTokens[] = $host;
         $urlTokens = array_reverse($urlTokens);
 
         return implode('/', $urlTokens);
