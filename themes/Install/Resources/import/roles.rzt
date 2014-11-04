@@ -3,12 +3,6 @@
         "name": "ROLE_SUPERADMIN"
     },
     {
-        "name": "ROLE_ACCESS_SURVEYS_READ"
-    },
-    {
-        "name": "ROLE_ACCESS_SURVEYS"
-    },
-    {
         "name": "ROLE_ACCESS_NEWSLETTERS"
     },
     {
@@ -85,5 +79,11 @@
     },
     {
         "name": "ROLE_ACCESS_DOCTRINE_CACHE_DELETE"
+    },
+    {
+        "name": "ROLE_ACCESS_CUSTOMFORMS"
+    },
+    {
+        "name": "ROLE_ACCESS_CUSTOMFORMS_DELETE"
     }
 ]

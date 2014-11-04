@@ -43,7 +43,7 @@ class CustomFormsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SURVEYS');
+        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
         /*
          * Manage get request to filter list
          */
@@ -73,7 +73,7 @@ class CustomFormsController extends RozierApp
      */
     public function editAction(Request $request, $customFormId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SURVEYS');
+        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         $customForm = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\CustomForm', (int) $customFormId);
@@ -132,7 +132,7 @@ class CustomFormsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SURVEYS');
+        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         $customForm = new CustomForm();
 
@@ -159,10 +159,7 @@ class CustomFormsController extends RozierApp
                      */
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
-                            'customFormsSchemaUpdate',
-                            array(
-                                '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
-                            )
+                            'customFormsHomePage'
                         )
                     );
 
@@ -201,7 +198,7 @@ class CustomFormsController extends RozierApp
      */
     public function deleteAction(Request $request, $customFormId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SURVEYS_DELETE');
+        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $customForm = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\CustomForm', (int) $customFormId);
@@ -216,10 +213,7 @@ class CustomFormsController extends RozierApp
             if ($form->isValid() &&
                 $form->getData()['customFormId'] == $customForm->getId() ) {
 
-                /*
-                 * Delete All node-type association and schema
-                 */
-                $customForm->getHandler()->deleteWithAssociations();
+                $this->getService("em")->remove($customForm);
 
                 $msg = $this->getTranslator()->trans('customForm.%name%.deleted', array('%name%'=>$customForm->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -229,10 +223,7 @@ class CustomFormsController extends RozierApp
                  */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
-                        'customFormsSchemaUpdate',
-                        array(
-                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
-                        )
+                        'customFormsHomePage'
                     )
                 );
                 $response->prepare($request);
@@ -251,28 +242,6 @@ class CustomFormsController extends RozierApp
             return $this->throw404();
         }
     }
-
-    // /**
-    //  * @param array                           $data
-    //  * @param RZ\Renzo\Core\Entities\CustomForm $customForm
-    //  *
-    //  * @return boolean
-    //  */
-    // private function editCustomForm($data, CustomForm $customForm)
-    // {
-    //     foreach ($data as $key => $value) {
-    //         if (isset($data['name'])) {
-    //             throw new EntityAlreadyExistsException($this->getTranslator()->trans('customForm.%name%.cannot_rename_already_exists', array('%name%'=>$customForm->getName())), 1);
-    //         }
-    //         $setter = 'set'.ucwords($key);
-    //         $customForm->$setter( $value );
-    //     }
-
-    //     $this->getService('em')->flush();
-    //     $customForm->getHandler()->updateSchema();
-
-    //     return true;
-    // }
 
     /**
      * @param array                           $data
@@ -366,14 +335,4 @@ class CustomFormsController extends RozierApp
 
         return $builder->getForm();
     }
-
-    // /**
-    //  * @return \Doctrine\Common\Collections\ArrayCollection
-    //  */
-    // public static function getNewsletterCustomForms()
-    // {
-    //     return $this->getService('em')
-    //         ->getRepository('RZ\Renzo\Core\Entities\CustomForm')
-    //         ->findBy(array('newsletterType' => true));
-    // }
 }

@@ -1,0 +1,45 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global content-nav-and-filters">
+
+    <header class="content-header header-node-type-fields header-node-type-fields-list">
+        <h1 class="content-title">{{ "edit.customFormFields.for.customForm.%name%"|trans({'%name%': customForm.getDisplayName}) }}</h1>
+
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormsHomePage') }}" title="{% trans %}back_to.customForms{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
+        <div class="content-header-action-menu">
+	        <nav>
+				<a class="uk-button" href="{{ path('customFormFieldsAddPage', { customFormId: customForm.getId }) }}"><i class="uk-icon-plus"></i> {% trans %}add.customFormField{% endtrans %}</a>
+			</nav>
+		</div>
+    </header>
+
+    <article class="content content-no-action-menu">
+        <div class="content-table-cont">
+        	<table class="node-type-fields content-table uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}name{% endtrans %}</th>
+			            <th>{% trans %}label{% endtrans %}</th>
+			            <th>{% trans %}type{% endtrans %}</th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody class="uk-sortable" data-uk-sortable="{animation:0, dragCustomClass:'rz-node-type-field-dragged'}">
+					{% for field in fields %}
+					<tr data-position="{{ field.position }}" data-field-id="{{ field.getId }}">
+						<td><a href="{{ path('customFormFieldsEditPage', { customFormFieldId: field.getId }) }}">{{ field.getName }}</a></td>
+						<td>{{ field.getLabel }}</td>
+						<td>{{ field.getTypeName|trans }}</td>
+						<td>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('customFormFieldsDeletePage', { customFormFieldId: field.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+        </div>
+    </article>
+
+</section>
+{% endblock %}
