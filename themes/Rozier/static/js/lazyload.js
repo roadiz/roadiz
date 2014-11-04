@@ -19,6 +19,7 @@ var Lazyload = function() {
 Lazyload.prototype.$linksSelector = null;
 Lazyload.prototype.$textAreaHTMLeditor = null;
 Lazyload.prototype.$HTMLeditor = null;
+Lazyload.prototype.htmlEditor = [];
 Lazyload.prototype.$HTMLeditorContent = null;
 Lazyload.prototype.$HTMLeditorNav = null;
 Lazyload.prototype.HTMLeditorNavToRemove = null;
@@ -135,7 +136,7 @@ Lazyload.prototype.generalBind = function() {
         setTimeout(function(){
             for(var i = 0; i < _this.$textAreaHTMLeditor.length; i++) {
 
-                $.UIkit.htmleditor($(_this.$textAreaHTMLeditor[i]), {markdown:true, mode:'tab'});
+                _this.htmlEditor[i] = $.UIkit.htmleditor($(_this.$textAreaHTMLeditor[i]), {markdown:true, mode:'tab'});
                 _this.$HTMLeditor = $('.uk-htmleditor');
                 _this.$HTMLeditorNav = $('.uk-htmleditor-navbar');
                 _this.HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+_this.$HTMLeditorNav[0].innerHTML+'</div>';

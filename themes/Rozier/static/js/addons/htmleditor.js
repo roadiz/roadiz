@@ -358,6 +358,9 @@
                         '<li class="uk-htmleditor-button-preview"><a class="uk-htmleditor-button-link-code-preview uk-htmleditor-button-link-preview" title="Preview" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility-mini"></i></a></li>', // {:lblPreview}
                         '<li class="uk-htmleditor-button-fullscreen"><a class="uk-htmleditor-button-link-fullscreen" data-htmleditor-button="fullscreen" title="Fullscreen"  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-fullscreen"></i></a></li>',
                     '</ul>',
+                    '<div class="uk-htmleditor-count">',
+                        '<span class="count-current"></span> / <span class="count-limit"></span>',
+                    '</div>',
                 '</div>',
             '</div>',
             '<div class="uk-htmleditor-content">',

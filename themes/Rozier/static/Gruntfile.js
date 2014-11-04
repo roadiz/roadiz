@@ -147,7 +147,7 @@ module.exports = function(grunt) {
 	 */
 	grunt.event.on('watch', function(action, filepath) {
 		if (filepath.indexOf('.js') > -1 ) {
-			grunt.config('watch.scripts.tasks', ['clean','jshint', 'concat', 'uglify', 'versioning']);
+			grunt.config('watch.scripts.tasks', ['clean','jshint', 'concat', 'versioning']); // 'uglify',
 		}
 		else if(filepath.indexOf('.less') > -1 ){
 			grunt.config('watch.scripts.tasks', ['clean','less', 'versioning']);

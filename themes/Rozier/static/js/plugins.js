@@ -21,6 +21,33 @@
     }
 }());
 
+
+// Strip tags
+var stripTags = function(stringToStrip){
+    return stringToStrip.replace(/(<([^>]+)>)/ig,"");
+};
+
+
+// Add class
+var addClass = function(el, classToAdd){
+
+    if (el.classList) el.classList.add(classToAdd);
+    else el.className += ' ' + classToAdd;
+};
+
+
+// Remove class
+var removeClass = function(el, classToRemove){
+
+    if(el.classList) el.classList.remove(classToRemove);
+    else{
+        el.className = el.className.replace(new RegExp('(^|\\b)' + classToRemove.split(' ').join('|') + '(\\b|$)', 'gi'), '');
+    
+        var posLastCar = el.className.length-1;
+        if(el.className[posLastCar] == ' ') el.className = el.className.substring(0, posLastCar);
+    }    
+};
+
 // Place any jQuery/helper plugins in here.
 // Actual
 (function(a){a.fn.addBack=a.fn.addBack||a.fn.andSelf;

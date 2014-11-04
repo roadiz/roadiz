@@ -10,6 +10,22 @@
 /* -------- STYLES -------- */
 
 .uk-htmleditor {
+
+    &.content-limit{
+
+        .uk-htmleditor-content{
+            border-color:@alert-color;
+
+            &:hover, &:focus, &:active{
+                border-color: @alert-color;
+            }
+        }
+
+        .uk-htmleditor-count{
+            color:@alert-color;
+        }        
+    }
+
     &-navbar {
         position: relative;
         background: none;
@@ -178,6 +194,18 @@
 // Separate buttons
 .uk-htmleditor-button-cont-bold, .uk-htmleditor-button-cont-back, .uk-htmleditor-button-cont-blockquote{
     margin-left:10px;
+}
+
+// Count
+.uk-htmleditor-count{
+    position: absolute;
+    right: 87px; bottom: -4px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    text-align: right;
+    display: none;
+    // .opacity(0);
 }
 
 
