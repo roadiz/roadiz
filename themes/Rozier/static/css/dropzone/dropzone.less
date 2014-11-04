@@ -72,16 +72,16 @@
     span{
         position: absolute;
         display: block;
-        left: 0;
-        bottom: 23px;
+        right: 0; bottom: 0; left: 0;
+        height:50px;
+        border-top:1px dashed #dbdbdb;
         text-align: center;
-        font-size: 12px;
-        z-index: 2;
-        right: 0;
-        text-shadow: 0 0 4px #FFF;
+        font-size: 12px; line-height:50px;
+        background:#fff;
         color: @grey-medium;
         letter-spacing: 0.05em;
-
+        text-shadow: 0 0 4px #fff;
+        z-index: 2;
     }
 }
 
@@ -117,6 +117,7 @@
     display: none;
 }
 
+// Progress
 .dropzone .dz-preview .dz-progress, 
 .dropzone-previews .dz-preview .dz-progress{
     top:0;
@@ -128,6 +129,7 @@
     background-color: @contrast-color;
 }
 
+// Success-error icon zone
 .dropzone .dz-preview .dz-success-mark, 
 .dropzone-previews .dz-preview .dz-success-mark, 
 .dropzone .dz-preview .dz-error-mark, 
@@ -141,10 +143,22 @@
     color:#333;
 }
 
+// Error icon
 .dropzone .dz-preview .dz-error-mark, 
 .dropzone-previews .dz-preview .dz-error-mark{
 
     .uk-icon-rz-plus-simple{
         .transform(rotate(45deg));
     }
+}
+
+// Leave message when an upload has been done
+.dropzone.dz-started .dz-message{
+    display: block;
+    .opacity(1);
+    
+    .circles-icons{
+        display: none;
+    }
+
 }

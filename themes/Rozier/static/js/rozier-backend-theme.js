@@ -13783,7 +13783,7 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
           }
         }
         if (!messageElement) {
-          messageElement = Dropzone.createElement("<div class=\"dz-message\"><span></span><div class=\"circle circle-1\"></div><div class=\"circle circle-2\"></div><div class=\"circle circle-3\"></div><div class=\"circle circle-4\"></div><div class=\"circle circle-5\"></div><i class=\"uk-icon-rz-duplicate\"></i></div>");
+          messageElement = Dropzone.createElement("<div class=\"dz-message\"><span></span><div class=\"circles-icons\"><div class=\"circle circle-1\"></div><div class=\"circle circle-2\"></div><div class=\"circle circle-3\"></div><div class=\"circle circle-4\"></div><div class=\"circle circle-5\"></div><i class=\"uk-icon-rz-duplicate\"></i></div></div>");
           this.element.appendChild(messageElement);
         }
         span = messageElement.getElementsByTagName("span")[0];
@@ -14131,7 +14131,7 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
         this.element.setAttribute("enctype", "multipart/form-data");
       }
       if (this.element.classList.contains("dropzone") && !this.element.querySelector(".dz-message")) {
-        this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span><div class=\"circle circle-1\"></div><div class=\"circle circle-2\"></div><div class=\"circle circle-3\"></div><div class=\"circle circle-4\"></div><div class=\"circle circle-5\"></div><i class=\"uk-icon-rz-duplicate\"></i></div>"));
+        this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span><div class=\"circles-icons\"><div class=\"circle circle-1\"></div><div class=\"circle circle-2\"></div><div class=\"circle circle-3\"></div><div class=\"circle circle-4\"></div><div class=\"circle circle-5\"></div><i class=\"uk-icon-rz-duplicate\"></i></div></div>"));
       }
       if (this.clickableElements.length) {
         setupHiddenFileInput = (function(_this) {
