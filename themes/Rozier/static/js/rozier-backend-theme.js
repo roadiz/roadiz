@@ -13134,6 +13134,9 @@ CodeMirror.defineMode("gfm", function(config, modeConfig) {
                         '<li class="uk-htmleditor-button-preview"><a class="uk-htmleditor-button-link-code-preview uk-htmleditor-button-link-preview" title="Preview" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility-mini"></i></a></li>', // {:lblPreview}
                         '<li class="uk-htmleditor-button-fullscreen"><a class="uk-htmleditor-button-link-fullscreen" data-htmleditor-button="fullscreen" title="Fullscreen"  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-fullscreen"></i></a></li>',
                     '</ul>',
+                    '<div class="uk-htmleditor-count">',
+                        '<span class="count-current"></span> / <span class="count-limit"></span>',
+                    '</div>',
                 '</div>',
             '</div>',
             '<div class="uk-htmleditor-content">',
@@ -13749,7 +13752,7 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
       autoQueue: true,
       addRemoveLinks: false,
       previewsContainer: null,
-      dictDefaultMessage: "Drop files here to upload <br />or click to open your explorer",
+      dictDefaultMessage: "Drop files here to upload or click to open your explorer",
       dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
       dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
       dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
@@ -15316,15 +15319,15 @@ if (typeof exports == "object") {
  *
  */
 var DocumentWidget = function () {
-	var _this = this;
+    var _this = this;
 
-	_this.$widgets = $('[data-document-widget]');
-	_this.$sortables = $('.documents-widget-sortable');
-	_this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
-	_this.$toggleUploaderButtons = $('[data-document-widget-toggle-uploader]');
-	_this.$unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
+    _this.$widgets = $('[data-document-widget]');
+    _this.$sortables = $('.documents-widget-sortable');
+    _this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
+    _this.$toggleUploaderButtons = $('[data-document-widget-toggle-uploader]');
+    _this.$unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
 
-	_this.init();
+    _this.init();
 };
 
 DocumentWidget.prototype.$explorer = null;
@@ -15336,25 +15339,27 @@ DocumentWidget.prototype.$sortables = null;
 DocumentWidget.prototype.uploader = null;
 
 DocumentWidget.prototype.init = function() {
-	var _this = this;
+    var _this = this;
 
-	var changeProxy = $.proxy(_this.onSortableDocumentWidgetChange, _this);
-	_this.$sortables.on('uk.sortable.change', changeProxy);
-	_this.$sortables.on('uk.sortable.change', changeProxy);
+    var changeProxy = $.proxy(_this.onSortableDocumentWidgetChange, _this);
+    _this.$sortables.on('uk.sortable.change', changeProxy);
+    _this.$sortables.on('uk.sortable.change', changeProxy);
 
-	var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
-	_this.$toggleExplorerButtons.off('click', onExplorerToggleP);
-	_this.$toggleExplorerButtons.on('click', onExplorerToggleP);
+    var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
+    _this.$toggleExplorerButtons.off('click', onExplorerToggleP);
+    _this.$toggleExplorerButtons.on('click', onExplorerToggleP);
 
-	var onUploaderToggleP = $.proxy(_this.onUploaderToggle, _this);
-	_this.$toggleUploaderButtons.off('click', onUploaderToggleP);
-	_this.$toggleUploaderButtons.on('click', onUploaderToggleP);
+    var onUploaderToggleP = $.proxy(_this.onUploaderToggle, _this);
+    _this.$toggleUploaderButtons.off('click', onUploaderToggleP);
+    _this.$toggleUploaderButtons.on('click', onUploaderToggleP);
 
-	var onUnlinkDocumentP = $.proxy(_this.onUnlinkDocument, _this);
-	_this.$unlinkDocumentButtons.off('click', onUnlinkDocumentP);
-	_this.$unlinkDocumentButtons.on('click', onUnlinkDocumentP);
+    var onUnlinkDocumentP = $.proxy(_this.onUnlinkDocument, _this);
+    _this.$unlinkDocumentButtons.off('click', onUnlinkDocumentP);
+    _this.$unlinkDocumentButtons.on('click', onUnlinkDocumentP);
 
-	Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+    Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+
+    // _this.$toggleExplorerButtons.trigger('click');
 
 };
 
@@ -15366,60 +15371,60 @@ DocumentWidget.prototype.init = function() {
  * @return {void}
  */
 DocumentWidget.prototype.onSortableDocumentWidgetChange = function(event, list, element) {
-	var _this = this;
+    var _this = this;
 
-	//console.log("Document: "+element.data('document-id'));
-	console.log(element);
-	$sortable = $(element).parent();
-	var inputName = 'source['+$sortable.data('input-name')+']';
-	$sortable.find('li').each(function (index) {
-		$(this).find('input').attr('name', inputName+'['+index+']');
-	});
+    //console.log("Document: "+element.data('document-id'));
+    console.log(element);
+    $sortable = $(element).parent();
+    var inputName = 'source['+$sortable.data('input-name')+']';
+    $sortable.find('li').each(function (index) {
+        $(this).find('input').attr('name', inputName+'['+index+']');
+    });
 
-	return false;
+    return false;
 };
 
 DocumentWidget.prototype.onUploaderToggle = function(event) {
-	var _this = this;
+    var _this = this;
 
-	//documents-widget
-	var $btn = $(event.currentTarget);
-	var $widget = $btn.parents('.documents-widget');
+    //documents-widget
+    var $btn = $(event.currentTarget);
+    var $widget = $btn.parents('.documents-widget');
 
-	if (null !== _this.uploader) {
-		_this.uploader = null;
-		var $uploader = $widget.find('.documents-widget-uploader');
-		$uploader.slideUp(500, function () {
-			$uploader.remove();
-			$btn.removeClass('active');
-		});
-	} else {
+    if (null !== _this.uploader) {
+        _this.uploader = null;
+        var $uploader = $widget.find('.documents-widget-uploader');
+        $uploader.slideUp(500, function () {
+            $uploader.remove();
+            $btn.removeClass('active');
+        });
+    } else {
 
-		$widget.append('<div class="documents-widget-uploader dropzone"></div>');
-		var $uploaderNew = $widget.find('.documents-widget-uploader');
+        $widget.append('<div class="documents-widget-uploader dropzone"></div>');
+        var $uploaderNew = $widget.find('.documents-widget-uploader');
 
-		_this.uploader = new DocumentUploader({
-			selector: '.documents-widget .documents-widget-uploader',
-			headers: { "_token": Rozier.ajaxToken },
-			onSuccess : function (data) {
-	            console.log(data);
+        _this.uploader = new DocumentUploader({
+            selector: '.documents-widget .documents-widget-uploader',
+            headers: { "_token": Rozier.ajaxToken },
+            onSuccess : function (data) {
+                console.log(data);
 
-	            if(typeof data.thumbnail !== "undefined") {
-	            	var $sortable = $widget.find('.documents-widget-sortable');
-	            	$sortable.append(data.thumbnail.html);
+                if(typeof data.thumbnail !== "undefined") {
+                    var $sortable = $widget.find('.documents-widget-sortable');
+                    $sortable.append(data.thumbnail.html);
 
-	            	var $element = $sortable.find('[data-document-id="'+data.thumbnail.id+'"]');
+                    var $element = $sortable.find('[data-document-id="'+data.thumbnail.id+'"]');
 
-	            	_this.onSortableDocumentWidgetChange(null, $sortable, $element);
-	            }
-	        }
-		});
+                    _this.onSortableDocumentWidgetChange(null, $sortable, $element);
+                }
+            }
+        });
 
-		$uploaderNew.slideDown(500);
-		$btn.addClass('active');
-	}
+        $uploaderNew.slideDown(500);
+        $btn.addClass('active');
+    }
 
-	return false;
+    return false;
 };
 
 /**
@@ -15429,55 +15434,55 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
  * @return false
  */
 DocumentWidget.prototype.onExplorerToggle = function(event) {
-	var _this = this;
+    var _this = this;
 
-	if (_this.$explorer === null) {
+    if (_this.$explorer === null) {
 
-		_this.$toggleExplorerButtons.addClass('uk-active');
+        _this.$toggleExplorerButtons.addClass('uk-active');
 
-		var ajaxData = {
-			'_action':'toggleExplorer',
-			'_token': Rozier.ajaxToken
-		};
+        var ajaxData = {
+            '_action':'toggleExplorer',
+            '_token': Rozier.ajaxToken
+        };
 
-		$.ajax({
-			url: Rozier.routes.documentsAjaxExplorer,
-			type: 'get',
-			dataType: 'json',
-			data: ajaxData
-		})
-		.success(function(data) {
-			console.log(data);
-			console.log("success");
+        $.ajax({
+            url: Rozier.routes.documentsAjaxExplorer,
+            type: 'get',
+            dataType: 'json',
+            data: ajaxData
+        })
+        .success(function(data) {
+            console.log(data);
+            console.log("success");
 
-			if (typeof data.documents != "undefined") {
+            if (typeof data.documents != "undefined") {
 
-				var $currentsortable = $($(event.currentTarget).parents('.documents-widget')[0]).find('.documents-widget-sortable');
-				_this.createExplorer(data, $currentsortable);
-			}
-		})
-		.fail(function(data) {
-			console.log(data.responseText);
-			console.log("error");
-		});
-	}
-	else _this.closeExplorer();
+                var $currentsortable = $($(event.currentTarget).parents('.documents-widget')[0]).find('.documents-widget-sortable');
+                _this.createExplorer(data, $currentsortable);
+            }
+        })
+        .fail(function(data) {
+            console.log(data.responseText);
+            console.log("error");
+        });
+    }
+    else _this.closeExplorer();
 
-	return false;
+    return false;
 };
 
 DocumentWidget.prototype.onUnlinkDocument = function( event ) {
-	var _this = this;
+    var _this = this;
 
-	var $element = $(event.currentTarget);
+    var $element = $(event.currentTarget);
 
-	var $doc = $element.parents('li');
-	var $widget = $element.parents('.documents-widget-sortable').first();
+    var $doc = $element.parents('li');
+    var $widget = $element.parents('.documents-widget-sortable').first();
 
-	$doc.remove();
-	$widget.trigger('uk.sortable.change', [$widget, $doc]);
+    $doc.remove();
+    $widget.trigger('uk.sortable.change', [$widget, $doc]);
 
-	return false;
+    return false;
 };
 
 /**
@@ -15486,44 +15491,63 @@ DocumentWidget.prototype.onUnlinkDocument = function( event ) {
  * @return {[type]}      [description]
  */
 DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
-	var _this = this;
-	// console.log($originWidget);
-	var changeProxy = $.proxy(_this.onSortableDocumentWidgetChange, _this);
+    var _this = this;
+    // console.log($originWidget);
+    var changeProxy = $.proxy(_this.onSortableDocumentWidgetChange, _this);
 
-	$("body").append('<div class="document-widget-explorer"><ul class="uk-sortable"></ul><div class="document-widget-explorer-close"><i class="uk-icon-rz-panel-tree-open"></i></div></div>');
-	_this.$explorer = $('.document-widget-explorer');
-	_this.$explorerClose = $('.document-widget-explorer-close');
+    var explorerDom = [
+        '<div class="document-widget-explorer">',
+            '<div class="document-widget-explorer-header">',
+                '<div class="document-widget-explorer-logo"><i class="uk-icon-rz-folder-tree"></i></div>',
+                '<div class="document-widget-explorer-search">',
+                    '<form action="#" method="POST" class="uk-form">',
+                        '<div class="uk-form-icon">',
+                            '<i class="uk-icon-search"></i>',
+                            '<input id="documents-search-input" type="search" name="searchTerms" value="" placeholder="Search documents"/>',
+                        '</div>',
+                    '</form>',
+                '</div>',
+                '<div class="document-widget-explorer-close"><i class="uk-icon-rz-close-explorer"></i></div>',
+            '</div>',
+            '<ul class="uk-sortable"></ul>',
+        '</div>'
+    ].join('');
 
-	_this.$explorerClose.on('click', $.proxy(_this.closeExplorer, _this));
 
-	var $sortable = _this.$explorer.find('.uk-sortable');
+    $("body").append(explorerDom);
+    _this.$explorer = $('.document-widget-explorer');
+    _this.$explorerClose = $('.document-widget-explorer-close');
 
-	for (var i = 0; i < data.documents.length; i++) {
-		var doc = data.documents[i];
-		$sortable.append(doc.html);
-	}
+    _this.$explorerClose.on('click', $.proxy(_this.closeExplorer, _this));
 
-	$sortable.find('li').each (function (index, element) {
-		var $link = $(element).find('.link-button');
-		if($link.length){
-			$link.on('click', function (event) {
+    var $sortable = _this.$explorer.find('.uk-sortable');
 
-				var $object = $(event.currentTarget).parent();
-				$object.appendTo($originWidget);
+    for (var i = 0; i < data.documents.length; i++) {
+        var doc = data.documents[i];
+        $sortable.append(doc.html);
+    }
 
-				var inputName = 'source['+$originWidget.data('input-name')+']';
-				$originWidget.find('li').each(function (index, element) {
-					$(element).find('input').attr('name', inputName+'['+index+']');
-				});
+    $sortable.find('li').each (function (index, element) {
+        var $link = $(element).find('.link-button');
+        if($link.length){
+            $link.on('click', function (event) {
 
-				return false;
-			});
-		}
-	});
+                var $object = $(event.currentTarget).parent();
+                $object.appendTo($originWidget);
 
-	window.setTimeout(function () {
-		_this.$explorer.addClass('visible');
-	}, 0);
+                var inputName = 'source['+$originWidget.data('input-name')+']';
+                $originWidget.find('li').each(function (index, element) {
+                    $(element).find('input').attr('name', inputName+'['+index+']');
+                });
+
+                return false;
+            });
+        }
+    });
+
+    window.setTimeout(function () {
+        _this.$explorer.addClass('visible');
+    }, 0);
 };
 
 /**
@@ -15543,15 +15567,15 @@ DocumentWidget.prototype.echapKey = function(e){
  * @return {[type]} [description]
  */
 DocumentWidget.prototype.closeExplorer = function(){
-	var _this = this;
+    var _this = this;
 
-	_this.$toggleExplorerButtons.removeClass('uk-active');
-	_this.$explorer.removeClass('visible');
-	_this.$explorer.one('transitionend webkitTransitionEnd mozTransitionEnd msTransitionEnd', function(event) {
-		/* Act on the event */
-		_this.$explorer.remove();
-		_this.$explorer = null;
-	});
+    _this.$toggleExplorerButtons.removeClass('uk-active');
+    _this.$explorer.removeClass('visible');
+    _this.$explorer.one('transitionend webkitTransitionEnd mozTransitionEnd msTransitionEnd', function(event) {
+        /* Act on the event */
+        _this.$explorer.remove();
+        _this.$explorer = null;
+    });
 
 };
 ;var DocumentUploader = function (options) {
@@ -15912,6 +15936,13 @@ MarkdownEditor.prototype.$cont = null;
 MarkdownEditor.prototype.$textarea = null;
 MarkdownEditor.prototype.$buttonCode = null;
 MarkdownEditor.prototype.$buttonPreview = null;
+MarkdownEditor.prototype.$buttonFullscreen = null;
+MarkdownEditor.prototype.$count = null;
+MarkdownEditor.prototype.$countCurrent = null;
+MarkdownEditor.prototype.countLimit = [];
+MarkdownEditor.prototype.$countLimitText = null;
+MarkdownEditor.prototype.countAlertActive = [];
+MarkdownEditor.prototype.fullscreenActive = [];
 
 
 /**
@@ -15924,19 +15955,51 @@ MarkdownEditor.prototype.init = function(){
     if(_this.$cont.length){ 
 
         for(var i = 0; i < _this.$cont.length; i++) {
+
+            // Store markdown index into datas
             $(_this.$cont[i]).find('.uk-htmleditor-button-code').attr('data-index',i);
             $(_this.$cont[i]).find('.uk-htmleditor-button-preview').attr('data-index',i);
+            $(_this.$cont[i]).find('.uk-htmleditor-button-fullscreen').attr('data-index',i);
+            $(_this.$cont[i]).find('textarea').attr('data-index',i);
 
+            // Check if a max length is defined
             if(_this.$textarea[i].getAttribute('data-max-length') !== ''){
+
                 $(_this.$textarea[i]).on('keyup', $.proxy(_this.textareaChange, _this));
+                
+                _this.countLimit[i] = parseInt(_this.$textarea[i].getAttribute('data-max-length'));
+
+                $(_this.$cont[i]).find('.count-current')[0].innerHTML = stripTags(Rozier.lazyload.htmlEditor[i].currentvalue).length;
+                $(_this.$cont[i]).find('.count-limit')[0].innerHTML = _this.$textarea[i].getAttribute('data-max-length');
+                $(_this.$cont[i]).find('.uk-htmleditor-count')[0].style.display = 'block';
+                
+                if(stripTags(Rozier.lazyload.htmlEditor[i].currentvalue).length > _this.countLimit[i]){
+                    _this.countAlertActive[i] = true;
+                    removeClass(_this.$cont[i], 'content-limit');
+                }
+                else _this.countAlertActive[i] = false;
             }
+            else{
+                _this.countLimit[i] = null;
+                _this.countAlertActive[i] = null;
+            }
+
+            _this.fullscreenActive[i] = false;
         }
         
+        // Selectors
+        _this.$content = _this.$cont.find('.uk-htmleditor-content');
         _this.$buttonCode = _this.$cont.find('.uk-htmleditor-button-code');
         _this.$buttonPreview = _this.$cont.find('.uk-htmleditor-button-preview');
+        _this.$buttonFullscreen = _this.$cont.find('.uk-htmleditor-button-fullscreen');
+        _this.$count = _this.$cont.find('.uk-htmleditor-count');
+        _this.$countCurrent = _this.$cont.find('.count-current');
+        _this.$countLimitText = _this.$cont.find('.count-limit');
 
+        // Events
         _this.$buttonPreview.on('click', $.proxy(_this.buttonPreviewClick, _this));
         _this.$buttonCode.on('click', $.proxy(_this.buttonCodeClick, _this));
+        _this.$buttonFullscreen.on('click', $.proxy(_this.buttonFullscreenClick, _this));
 
     }
 
@@ -15950,15 +16013,29 @@ MarkdownEditor.prototype.init = function(){
 MarkdownEditor.prototype.textareaChange = function(e){
     var _this = this;
 
-    // console.log('change');
-    // console.log(e);
-    // console.log(e.target);
-    // console.log(e.currentTarget);
-    // console.log(e.target.value);
+    setTimeout(function(){
+         var index = parseInt(e.currentTarget.getAttribute('data-index')),
+            textareaVal = Rozier.lazyload.htmlEditor[index].currentvalue,
+            textareaValStripped = stripTags(textareaVal),
+            textareaValLength = textareaValStripped.length;
+
+        _this.$countCurrent[index].innerHTML = textareaValLength;
+
+        if(textareaValLength > _this.countLimit[index]){
+            if(!_this.countAlertActive[index]){
+                addClass(_this.$cont[index], 'content-limit');
+                _this.countAlertActive[index] = true;
+            }
+        }
+        else{
+            if(_this.countAlertActive[index]){
+                removeClass(_this.$cont[index], 'content-limit');
+                _this.countAlertActive[index] = false;
+            }
+        }
+    }, 100);
 
 };
-
-
 
 
 /**
@@ -15995,6 +16072,28 @@ MarkdownEditor.prototype.buttonCodeClick = function(e){
     TweenLite.to(_this.$buttonCode[index], 0.5, {opacity:0, ease:Expo.easeOut, onComplete:function(){
         _this.$buttonCode[index].style.display = 'none';
     }});
+
+};
+
+
+/**
+ * Button fullscreen click
+ * @return {[type]} [description]
+ */
+MarkdownEditor.prototype.buttonFullscreenClick = function(e){
+    var _this = this;
+
+    var index = parseInt(e.currentTarget.getAttribute('data-index')),
+        $fullscreenIcon =  $(_this.$buttonFullscreen[index]).find('i');
+
+    if(!_this.fullscreenActive[index]){
+        $fullscreenIcon[0].className = 'uk-icon-rz-fullscreen-off';
+        _this.fullscreenActive[index] = true;
+    }
+    else{
+        $fullscreenIcon[0].className = 'uk-icon-rz-fullscreen';
+        _this.fullscreenActive[index] = false;
+    }
 
 };
 
@@ -16271,6 +16370,7 @@ var Lazyload = function() {
 Lazyload.prototype.$linksSelector = null;
 Lazyload.prototype.$textAreaHTMLeditor = null;
 Lazyload.prototype.$HTMLeditor = null;
+Lazyload.prototype.htmlEditor = [];
 Lazyload.prototype.$HTMLeditorContent = null;
 Lazyload.prototype.$HTMLeditorNav = null;
 Lazyload.prototype.HTMLeditorNavToRemove = null;
@@ -16387,7 +16487,7 @@ Lazyload.prototype.generalBind = function() {
         setTimeout(function(){
             for(var i = 0; i < _this.$textAreaHTMLeditor.length; i++) {
 
-                $.UIkit.htmleditor($(_this.$textAreaHTMLeditor[i]), {markdown:true, mode:'tab'});
+                _this.htmlEditor[i] = $.UIkit.htmleditor($(_this.$textAreaHTMLeditor[i]), {markdown:true, mode:'tab'});
                 _this.$HTMLeditor = $('.uk-htmleditor');
                 _this.$HTMLeditorNav = $('.uk-htmleditor-navbar');
                 _this.HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+_this.$HTMLeditorNav[0].innerHTML+'</div>';
@@ -16450,6 +16550,33 @@ Lazyload.prototype.generalBind = function() {
         }
     }
 }());
+
+
+// Strip tags
+var stripTags = function(stringToStrip){
+    return stringToStrip.replace(/(<([^>]+)>)/ig,"");
+};
+
+
+// Add class
+var addClass = function(el, classToAdd){
+
+    if (el.classList) el.classList.add(classToAdd);
+    else el.className += ' ' + classToAdd;
+};
+
+
+// Remove class
+var removeClass = function(el, classToRemove){
+
+    if(el.classList) el.classList.remove(classToRemove);
+    else{
+        el.className = el.className.replace(new RegExp('(^|\\b)' + classToRemove.split(' ').join('|') + '(\\b|$)', 'gi'), '');
+    
+        var posLastCar = el.className.length-1;
+        if(el.className[posLastCar] == ' ') el.className = el.className.substring(0, posLastCar);
+    }    
+};
 
 // Place any jQuery/helper plugins in here.
 // Actual

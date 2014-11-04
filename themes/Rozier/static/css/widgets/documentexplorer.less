@@ -18,6 +18,93 @@
     .transition-timing-function(@easeOutExpo);
     overflow-y: auto;
 
+    .document-widget-explorer-header{
+        height:60px;
+        margin-top:35px;
+        border-bottom:1px solid #494949;
+    }
+
+    .document-widget-explorer-logo{
+        display: inline-block;
+        width:37px; height:37px;
+        margin:0 20px;
+        background: #4f4f4f;
+        text-align: center;
+        .rounded(40px);
+        .box-sizing();
+
+        i{
+            line-height:37px;
+            color:#a0a0a0;
+        }
+    }
+
+    .document-widget-explorer-search{
+        display: inline-block;
+        width:60%; height:60px;
+        padding-left:20px;
+        border-left:1px solid #494949;
+
+        .uk-form-icon{
+            width:100%;
+
+            i{
+                color:#a8a8a8;
+                top: 17px;
+                left: 6px;
+            }
+        }
+
+        input{
+            width:100%; height:37px;
+            padding:18px;
+            background:#4f4f4f;
+            border-color:#4f4f4f;
+            color:#ccc; 
+            .rounded(19px);
+            .box-sizing();
+
+            &:hover{
+                background:darken(#4f4f4f, 5%);
+                border-color:darken(#4f4f4f, 5%);
+                color:lighten(#ccc, 10%);
+            }
+
+            &:active, &:focus{
+                background:darken(#4f4f4f, 10%);
+                border-color:darken(#4f4f4f, 10%);
+                color:#a0a0a0;
+            }
+        }
+    } 
+
+    .document-widget-explorer-close{
+        position: absolute;
+        top:45px; right:45px;
+        width:16px; height:16px;
+        cursor: pointer;
+        .opacity(0.8);
+        .transition(0.4s opacity @easeOutExpo);
+
+        &:after{
+            position: absolute;
+            content:'';
+            top:50px; left:-6px;
+            width:28px; height:1px;
+            background:#a0a0a0;
+        }
+
+        &:hover{
+            .opacity(1);
+        }
+
+        .uk-icon-rz-close-explorer{
+            font-size:16px;
+            line-height:16px;
+            color:#848484;
+        }
+    }
+
     .documents-widget-sortable-list-item{
         cursor: default;
 
@@ -68,26 +155,5 @@
 
     &.visible {
         .transform(~"translate3D(0,0,0)");
-    }
-}
-
-.document-widget-explorer-close{
-    position: absolute;
-    top:23px; right:13px;
-    width:30px; height:30px;
-    cursor: pointer;
-    .opacity(0.8);
-    .transition(0.4s opacity @easeOutExpo);
-
-    &:hover{
-        .opacity(1);
-    }
-
-    .uk-icon-rz-panel-tree-open{
-        font-size:24px;
-        line-height:30px;
-        text-align: center;
-        color:@grey-verylight;
-        .transform(rotate(45deg));
     }
 }
