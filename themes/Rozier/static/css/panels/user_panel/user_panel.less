@@ -58,6 +58,7 @@
         &:hover {
             .opacity(0.8);
         }
+
         &.uk-icon-rz-turn-off {
             margin-right: 0px;
             border-color: @contrast-color;
@@ -66,6 +67,10 @@
             &:hover {
                 .opacity(0.8);
             }
+        }
+
+        &.uk-icon-rz-help{
+            margin-right:0;
         }
     }
 
@@ -173,10 +178,9 @@
 
     #cms-version {
         position: absolute;
-        bottom: 0px;
+        right:0; bottom: 0; left:0;
         text-align: center;
         margin: 0 auto;
-        width: @user-panel-width;
         padding: 30px 0 20px;
 
         a {

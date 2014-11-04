@@ -30,17 +30,21 @@
 
 @import "dropzone/dropzone.less";
 
+
 /* -------- ICONS -------- */
 
 @import "icons/icons.less";
+
 
 /* -------- COMMON (styles for all pages : font face, etc.) -------- */
 
 @import "common.less";
 
+
 /* -------- GRID -------- */
 
 @import "grid/grid_layout.less";
+
 
 /* -------- PANELS -------- */
 
@@ -49,6 +53,7 @@
 @import "panels/trees_panel/trees_panel.less";
 @import "panels/trees_panel/nestable.less";
 @import "panels/main_content_panel/main_content.less";
+
 
 /* -------- MENU -------- */
 @import "navbars/common.less";
@@ -64,14 +69,17 @@
 @import "forms/markdown_editor.less";
 @import "forms/custom_switch.less";
 
+
 /* -------- BUTTONS -------- */
 
 @import "buttons/buttons.less";
 @import "dropdown/dropdown.less";
 
+
 /* -------- ALERTS -------- */
 
 @import "alerts/alerts.less";
+
 
 /* -------- BADGES -------- */
 
@@ -104,20 +112,31 @@
 
 @import "breadcrumb/breadcrumb.less";
 
+
 /* -------- NODES -------- */
 
 @import "nodes/global.less";
 @import "nodes/edit.less";
 
+
 /* -------- DOCUMENTS -------- */
+
 @import "documents/listing.less";
 
 
-/* -------- Node type fields -------- */
+/* -------- NODE TYPE FIELDS -------- */
+
 @import "node-type-fields/fields.less";
 
-/* -------- Node type  -------- */
+
+/* -------- NODE TYPE  -------- */
+
 @import "node-types/node-types.less";
 
 
+/* -------- RESPONSIVE  -------- */
 
+/* Width < 1024 */
+@media screen and (max-width: 1024px) {
+    @import "responsive/less-1024.less";
+}

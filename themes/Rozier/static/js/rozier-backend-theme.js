@@ -16586,11 +16586,12 @@ var i=a.extend(f,l);var e=this.eq(0);var h,j;if(i.clone===true){h=function(){var
 };j=function(){e.remove();};}else{var g=[];var d="";var c;h=function(){c=e.parents().addBack().filter(":hidden");d+="visibility: hidden !important; display: block !important; ";
 if(i.absolute===true){d+="position: absolute !important; ";}c.each(function(){var m=a(this);var n=m.attr("style");g.push(n);m.attr("style",n?n+";"+d:d);
 });};j=function(){c.each(function(m){var o=a(this);var n=g[m];if(n===undefined){o.removeAttr("style");}else{o.attr("style",n);}});};}h();var k=/(outer)/.test(b)?e[b](i.includeMargin):e[b]();
-j();return k;}});})(jQuery);;	/*
+j();return k;}});})(jQuery);;/*
  * ============================================================================
  * Rozier entry point
  * ============================================================================
  */
+
 var Rozier = {};
 
 Rozier.searchNodesSourcesDelay = null;
@@ -16600,7 +16601,16 @@ Rozier.treeTrees = [];
 Rozier.$window = null;
 Rozier.$body = null;
 
+Rozier.windowWidth = null;
+Rozier.windowHeight = null;
+Rozier.resizeFirst = true;
+
+Rozier.$minifyTreePanelButton = null;
+Rozier.$mainTrees = null;
+
+
 Rozier.onDocumentReady = function(event) {
+
 	/*
 	 * Store Rozier configuration
 	 */
@@ -16615,6 +16625,10 @@ Rozier.onDocumentReady = function(event) {
 
 	Rozier.centerVerticalObjects(); // this must be done before generalBind!
 
+	Rozier.$minifyTreePanelButton = $('#minify-tree-panel-button');
+	Rozier.$mainTrees = $('#main-trees');
+
+
 	// Search node
 	$("#nodes-sources-search-input").on('focus', function(){
 		$('#nodes-sources-search').addClass("focus-on");
@@ -16626,22 +16640,37 @@ Rozier.onDocumentReady = function(event) {
 		$(this).val("");
 	});
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
+
 	// Minify trees panel toggle button
-	$('#minify-tree-panel-button').on('click', Rozier.toggleTreesPanel);
+	Rozier.$minifyTreePanelButton.on('click', Rozier.toggleTreesPanel);
 
 	Rozier.lazyload.generalBind();
+
+	Rozier.$window.on('resize', $.proxy(Rozier.resize, Rozier));
+	Rozier.$window.trigger('resize');
 };
+
 
 /**
  * init nestable for ajax
  * @return {[type]} [description]
  */
 Rozier.initNestables = function  () {
+	var _this = this;
+
 	$('.uk-nestable').each(function (index, element) {
         $.UIkit.nestable(element);
     });
 };
+
+
+/**
+ * Bind main trees
+ * @return {[type]} [description]
+ */
 Rozier.bindMainTrees = function () {
+	var _this = this;
+
 	// TREES
 	$('.nodetree-widget .root-tree').off('uk.nestable.change');
 	$('.nodetree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableNodeTreeChange );
@@ -16650,7 +16679,13 @@ Rozier.bindMainTrees = function () {
 	$('.tagtree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableTagTreeChange );
 };
 
+
+/**
+ * Get messages
+ * @return {[type]} [description]
+ */
 Rozier.getMessages = function () {
+	var _this = this;
 
 	$.ajax({
 		url: Rozier.routes.ajaxSessionMessages,
@@ -16698,11 +16733,13 @@ Rozier.getMessages = function () {
 	});
 };
 
+
 /**
  * Refresh only main nodeTree.
  *
  */
 Rozier.refreshMainNodeTree = function () {
+	var _this = this;
 
 	var $currentNodeTree = $('#tree-container').find('.nodetree-widget');
 
@@ -16743,11 +16780,13 @@ Rozier.refreshMainNodeTree = function () {
 	}
 };
 
+
 /*
  * Center vetically every DOM objects that have
  * the data-vertical-center attribute
  */
 Rozier.centerVerticalObjects = function(context) {
+	var _this = this;
 
 	// console.log('center vertical objects');
 	// console.log(context);
@@ -16762,15 +16801,28 @@ Rozier.centerVerticalObjects = function(context) {
 	}
 };
 
+
+/**
+ * Toggle trees panel
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 Rozier.toggleTreesPanel = function (event) {
 	var _this = this;
 
 	$('#main-trees').toggleClass('minified');
 	$('#minify-tree-panel-button i').toggleClass('uk-icon-rz-panel-tree-open');
 	$('#minify-tree-panel-area').toggleClass('tree-panel-hidden');
+
 	return false;
 };
 
+
+/**
+ * Toggle user panel
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 Rozier.toggleUserPanel = function (event) {
 	var _this = this;
 
@@ -16779,12 +16831,14 @@ Rozier.toggleUserPanel = function (event) {
 	return false;
 };
 
+
 /**
  * Handle ajax search node source.
  *
  * @param event
  */
 Rozier.onSearchNodesSources = function (event) {
+	var _this = this;
 
 	var $input = $(event.currentTarget);
 
@@ -16828,6 +16882,7 @@ Rozier.onSearchNodesSources = function (event) {
 	}
 };
 
+
 /**
  *
  * @param  Event event
@@ -16836,6 +16891,7 @@ Rozier.onSearchNodesSources = function (event) {
  * @return boolean
  */
 Rozier.onNestableNodeTreeChange = function (event, element, status) {
+	var _this = this;
 
 	console.log("Node: "+element.data('node-id')+ " status : "+status);
 
@@ -16916,6 +16972,8 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
  * @return boolean
  */
 Rozier.onNestableTagTreeChange = function (event, element, status) {
+	var _this = this;
+
 	console.log("Tag: "+element.data('tag-id')+ " status : "+status);
 
 	/*
@@ -16985,6 +17043,28 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 		console.log(data);
 	});
 };
+
+/**
+ * Resize
+ * @return {[type]} [description]
+ */
+Rozier.resize = function(){
+	var _this = this;
+
+	_this.windowWidth = _this.$window.width();
+	_this.windowHeight = _this.$window.height();
+
+	if(this.windowWidth <= 1200 && _this.resizeFirst){
+		_this.$mainTrees[0].style.display = 'none';
+		_this.$minifyTreePanelButton.trigger('click');
+		setTimeout(function(){
+			_this.$mainTrees[0].style.display = 'table-cell';
+		}, 1000);
+	}
+
+	if(_this.resizeFirst) _this.resizeFirst = false;
+};
+
 
 
 /*
