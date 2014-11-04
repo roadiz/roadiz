@@ -508,6 +508,10 @@ customFormsEditPage:
 customFormsAddPage:
     path:     /rz-admin/custom-forms/add
     defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::addAction }
+customFormsEditPage:
+    path:     /rz-admin/custom-form/delete/{customFormId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::deleteAction }
+    requirements: { customFormId : "[0-9]+" }
 
 # searchPage:
 #     path:     /rz-admin/search/{q}
