@@ -382,6 +382,18 @@ class FrontendController extends AppController
             }
         }
 
+        if (null !== $fallbackNodeSource) {
+            return array(
+                'title' => !empty($fallbackNodeSource->getMetaTitle()) ?
+                                    $fallbackNodeSource->getMetaTitle() :
+                                    $fallbackNodeSource->getTitle().' – '.SettingsBag::get('site_name'),
+                'description' => !empty($fallbackNodeSource->getMetaDescription()) ?
+                                    $fallbackNodeSource->getMetaDescription() :
+                                    $fallbackNodeSource->getTitle().', '.SettingsBag::get('seo_description'),
+                'keywords' => $fallbackNodeSource->getMetaKeywords()
+            );
+        }
+
         return array();
     }
 
