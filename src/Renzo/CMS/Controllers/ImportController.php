@@ -53,6 +53,9 @@ class ImportController extends InstallApp
     public static function importSettingsAction(Request $request, $filename, $themeId = null)
     {
         #$pathFile = '/Resources/import/settings.rzt';
+        if (null === $themeId) {
+            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+        }
         $classImporter = "RZ\Renzo\CMS\Importers\SettingsImporter";
         return self::importContent($filename, $classImporter, $themeId);
     }
@@ -67,6 +70,9 @@ class ImportController extends InstallApp
     public static function importRolesAction(Request $request, $filename, $themeId = null)
     {
         #$pathFile = '/Resources/import/roles.rzt';
+        if (null === $themeId) {
+            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+        }
         $classImporter = "RZ\Renzo\CMS\Importers\RolesImporter";
         return self::importContent($filename, $classImporter, $themeId);
     }
@@ -81,6 +87,9 @@ class ImportController extends InstallApp
     public static function importGroupsAction(Request $request, $filename, $themeId = null)
     {
         #$pathFile = '/Resources/import/groups.rzt';
+        if (null === $themeId) {
+            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+        }
         $classImporter = "RZ\Renzo\CMS\Importers\GroupsImporter";
         return self::importContent($filename, $classImporter, $themeId);
     }
@@ -95,6 +104,9 @@ class ImportController extends InstallApp
     public static function importNodeTypesAction(Request $request, $filename, $themeId = null)
     {
         #$pathFile = '/Resources/import/nodetype/' . basename($filename) . '.rzt';
+        if (null === $themeId) {
+            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+        }
         $classImporter = "RZ\Renzo\CMS\Importers\NodeTypesImporter";
         return self::importContent($filename, $classImporter, $themeId);
     }
@@ -109,6 +121,9 @@ class ImportController extends InstallApp
     public static function importTagsAction(Request $request, $filename, $themeId = null)
     {
         #$pathFile = '/Resources/import/nodetype/' . basename($filename) . '.rzt';
+        if (null === $themeId) {
+            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+        }
         $classImporter = "RZ\Renzo\CMS\Importers\TagsImporter";
         return self::importContent($filename, $classImporter, $themeId);
     }
@@ -121,6 +136,9 @@ class ImportController extends InstallApp
      */
     public static function importNodesAction(Request $request, $filename, $themeId = null)
     {
+        if (null === $themeId) {
+            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+        }
         $classImporter = "RZ\Renzo\CMS\Importers\NodesImporter";
         return self::importContent($filename, $classImporter, $themeId);
     }
@@ -140,7 +158,7 @@ class ImportController extends InstallApp
         $data['status'] = false;
         try {
             if (null === $themeId) {
-                $path = /*RENZO_ROOT . '/themes/Install/' . */$pathFile;
+                $path = $pathFile;
             } else {
                 $theme = Kernel::getService('em')
                          ->find('RZ\Renzo\Core\Entities\Theme', $themeId);

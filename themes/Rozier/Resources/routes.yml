@@ -497,6 +497,18 @@ historyUserPage:
     requirements: { userId : "[0-9]+" }
     defaults: { _controller: Themes\Rozier\Controllers\HistoryController::userAction }
 
+# Node TYPES
+customFormsHomePage:
+    path:     /rz-admin/custom-forms
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::indexAction }
+customFormsEditPage:
+    path:     /rz-admin/custom-form/edit/{customFormId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::editAction }
+    requirements: { customFormId : "[0-9]+" }
+customFormsAddPage:
+    path:     /rz-admin/custom-forms/add
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::addAction }
+
 # searchPage:
 #     path:     /rz-admin/search/{q}
 #     defaults: { _controller: RZ\Renzo\Core\SearchEngine\FullTextSearchHandler::searchAction }

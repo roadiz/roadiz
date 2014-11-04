@@ -42,7 +42,8 @@ class NodeHandlerTest extends PHPUnit_Framework_TestCase
         static::$runtimeCollection = array();
 
         date_default_timezone_set('Europe/Paris');
-        ImportController::importContent(RENZO_ROOT . '/tests/Fixtures/Handlers/Page.json', "RZ\Renzo\CMS\Importers\NodeTypesImporter", null);
+        ImportController::importContent(RENZO_ROOT . '/tests/Fixtures/Handlers/Page.json',
+                                        "RZ\Renzo\CMS\Importers\NodeTypesImporter", null);
 
         $nodeType = Kernel::getService("em")
                         ->getRepository('RZ\Renzo\Core\Entities\NodeType')
