@@ -200,6 +200,18 @@ class FrontendController extends AppController
     }
 
     /**
+     * Store current node and translation into controller.
+     *
+     * It makes following fields available into template assignation:
+     *
+     * * node
+     * * nodeSource
+     * * translation
+     * * pageMeta
+     *     * title
+     *     * description
+     *     * keywords
+     *
      * @param RZ\Renzo\Core\Entities\Node        $node
      * @param RZ\Renzo\Core\Entities\Translation $translation
      */
@@ -214,6 +226,8 @@ class FrontendController extends AppController
             $this->assignation['node'] = $node;
             $this->assignation['nodeSource'] = $node->getNodeSources()->first();
         }
+
+        $this->assignation['pageMeta'] = $this->getNodeSEO();
     }
 
     /**
@@ -320,6 +334,10 @@ class FrontendController extends AppController
      * Add a default translation locale for static routes.
      *
      * * **_default_locale**
+     * * meta
+     *     * siteName
+     *     * siteCopyright
+     *     * siteDescription
      */
     public function prepareBaseAssignation()
     {
@@ -337,6 +355,34 @@ class FrontendController extends AppController
         );
 
         return $this;
+    }
+    /**
+     * Get SEO informations for current node.
+     *
+     * @param NodesSources $fallbackNode
+     *
+     * @return array
+     */
+    public function getNodeSEO($fallbackNodeSource = null)
+    {
+        if (null !== $this->node) {
+            $ns = $this->node->getNodeSources()->first();
+
+            if (null !== $ns) {
+
+                return array(
+                    'title' => !empty($ns->getMetaTitle()) ?
+                                        $ns->getMetaTitle() :
+                                        $ns->getTitle().' – '.SettingsBag::get('site_name'),
+                    'description' => !empty($ns->getMetaDescription()) ?
+                                        $ns->getMetaDescription() :
+                                        $ns->getTitle().', '.SettingsBag::get('seo_description'),
+                    'keywords' => $ns->getMetaKeywords()
+                );
+            }
+        }
+
+        return array();
     }
 
     /**
