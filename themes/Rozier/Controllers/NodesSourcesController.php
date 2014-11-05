@@ -220,6 +220,11 @@ class NodesSourcesController extends RozierApp
                                 ->getDocumentsFromFieldName($field->getName());
 
                 return new \RZ\Renzo\CMS\Forms\DocumentsType($documents);
+            case NodeTypeField::NODES_T:
+                $nodes = $nodeSource->getNode()->getHandler()
+                                ->getNodesFromFieldName($field->getName());
+
+                return new \RZ\Renzo\CMS\Forms\NodesType($nodes);
             case NodeTypeField::CHILDREN_T:
                 /*
                  * NodeTreeType is a virtual type which is only available
@@ -230,7 +235,6 @@ class NodesSourcesController extends RozierApp
                     $field,
                     $controller
                 );
-
             case NodeTypeField::MARKDOWN_T:
                 return new \RZ\Renzo\CMS\Forms\MarkdownType();
             case NodeTypeField::ENUM_T:
@@ -302,13 +306,26 @@ class NodesSourcesController extends RozierApp
     {
         switch ($field->getType()) {
             case NodeTypeField::DOCUMENTS_T:
-                $nodeSource->getHandler()->cleanDocumentsFromField($field);
+                $hdlr = $nodeSource->getHandler();
+                $hdlr->cleanDocumentsFromField($field);
 
                 foreach ($data[$field->getName()] as $documentId) {
                     $tempDoc = Kernel::getService('em')
-                        ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
+                                    ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
                     if ($tempDoc !== null) {
-                        $nodeSource->getHandler()->addDocumentForField($tempDoc, $field);
+                        $hdlr->addDocumentForField($tempDoc, $field);
+                    }
+                }
+                break;
+            case NodeTypeField::NODES_T:
+                $hdlr = $nodeSource->getNode()->getHandler();
+                $hdlr->cleanNodesFromField($field);
+
+                foreach ($data[$field->getName()] as $nodeId) {
+                    $tempNode = Kernel::getService('em')
+                                    ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+                    if ($tempNode !== null) {
+                        $hdlr->addNodeForField($tempNode, $field);
                     }
                 }
                 break;

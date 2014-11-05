@@ -12,6 +12,7 @@ namespace RZ\Renzo\Core\Handlers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodeType;
+use RZ\Renzo\Core\Entities\NodesToNodes;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -65,7 +66,7 @@ class NodeHandler
     {
         $nodesToNodes = Kernel::getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\NodesToNodes')
-                ->findBy(array('node'=>$this->node, 'field'=>$field));
+                ->findBy(array('nodeA'=>$this->node, 'field'=>$field));
 
         foreach ($nodesToNodes as $ntn) {
             Kernel::getService('em')->remove($ntn);

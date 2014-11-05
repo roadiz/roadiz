@@ -47,38 +47,11 @@ class NodesToNodes extends AbstractPositioned implements PersistableInterface
     private $nodeA;
 
     /**
-     * @return RZ\Renzo\Core\Entities\NodesSources
-     */
-    public function getNodeSource()
-    {
-        return $this->nodeSource;
-    }
-
-    public function setNodeSource($ns)
-    {
-        $this->nodeSource = $ns;
-    }
-
-    /**
      * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\Node", inversedBy="aNodes")
      * @JoinColumn(name="node_b_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Renzo\Core\Entities\Node
      */
     private $nodeB;
-
-    /**
-     * @return RZ\Renzo\Core\Entities\Document
-     */
-    public function getDocument()
-    {
-        return $this->document;
-    }
-
-    public function setDocument($doc)
-    {
-        $this->document = $doc;
-    }
-
 
     /**
      * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\NodeTypeField")
@@ -108,7 +81,7 @@ class NodesToNodes extends AbstractPositioned implements PersistableInterface
      * @param RZ\Renzo\Core\Entities\Node $nodeB
      * @param RZ\Renzo\Core\Entities\NodeTypeField $field NodeTypeField
      */
-    public function __construct($nodeSource, Node $nodeA, Node $nodeB)
+    public function __construct(Node $nodeA, Node $nodeB, NodeTypeField $field)
     {
         $this->nodeA = $nodeA;
         $this->nodeB = $nodeB;

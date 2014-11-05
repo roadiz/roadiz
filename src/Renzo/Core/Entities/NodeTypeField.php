@@ -95,7 +95,7 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
     /**
      * Nodes field helps linking NodesSources with other Nodes entities.
      */
-    const NODE_T =          13;
+    const NODES_T =          13;
     /**
      * Nodes field helps linking NodesSources with Users entities.
      */
@@ -152,6 +152,7 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
         NodeTypeField::ENUM_T =>     'single-choice.type',
         NodeTypeField::MULTIPLE_T => 'multiple-choice.type',
         NodeTypeField::DOCUMENTS_T =>'documents.type',
+        NodeTypeField::NODES_T =>     'nodes.type',
         NodeTypeField::CHILDREN_T => 'children-nodes.type',
     );
     /**
@@ -172,6 +173,7 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
         NodeTypeField::ENUM_T =>     'string',
         NodeTypeField::MULTIPLE_T => 'simple_array',
         NodeTypeField::DOCUMENTS_T => null,
+        NodeTypeField::NODES_T =>      null,
         NodeTypeField::CHILDREN_T =>  null,
     );
     /**
@@ -192,6 +194,7 @@ class NodeTypeField extends AbstractPositioned implements PersistableInterface
         NodeTypeField::ENUM_T =>     'enumeration',
         NodeTypeField::MULTIPLE_T => 'multiple_enumeration',
         NodeTypeField::DOCUMENTS_T =>'documents',
+        NodeTypeField::NODES_T =>     'referenced_nodes',
         NodeTypeField::CHILDREN_T => 'children_nodes',
     );
 

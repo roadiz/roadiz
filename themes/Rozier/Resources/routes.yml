@@ -125,6 +125,10 @@ nodesTreeAjax:
 nodesQuickAddAjax:
     path:     /rz-admin/ajax/nodes/add
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::quickAddAction }
+# Ajax
+nodesAjaxExplorerPage:
+    path:     /rz-admin/ajax/nodes/explore
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesExplorerController::indexAction }
 
 # Node TYPES
 nodeTypesHomePage:

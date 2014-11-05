@@ -395,7 +395,9 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function onKernelTerminate()
     {
-        $this->container['stopwatch']->stop('controllerHandling');
+        if ($this->container['stopwatch']->isStarted('controllerHandling')) {
+            $this->container['stopwatch']->stop('controllerHandling');
+        }
     }
 
     /**

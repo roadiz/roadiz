@@ -20,7 +20,7 @@ use RZ\Renzo\Core\Kernel;
 class NodesToNodesRepository extends EntityRepository
 {
     /**
-     * @param RZ\Renzo\Core\Entities\NodesToNodes  $node
+     * @param RZ\Renzo\Core\Entities\Node  $node
      * @param RZ\Renzo\Core\Entities\NodeTypeField $field
      *
      * @return integer
