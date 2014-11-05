@@ -17,26 +17,26 @@
 /* -------- STYLES -------- */
 
 .content-table {
-    font-size:13px;
+    font-size:12px;
 
     thead{
 
         th{
             vertical-align: top;
-            height:48px; 
+            height:43px;
             position: relative;
             color:@form-head-color;
-            padding:10px 15px 0;
+            padding:5px 15px 0;
             border-left:1px solid @form-head-border-color;
             .box-sizing();
 
-            &:before{
-                position: absolute;
-                content:'';
-                top:0; left:1px;
-                width:1px; height:100%;
-                background:white;
-            }
+            // &:before{
+            //     position: absolute;
+            //     content:'';
+            //     top:0; left:1px;
+            //     width:1px; height:100%;
+            //     background:white;
+            // }
 
             a{
                 margin-left:5px;
@@ -45,26 +45,25 @@
                     // line-height:22px;
                 }
             }
-
         }
     }
 
     tbody{
 
         tr{
-            height:54px; 
+            height:54px;
             background:white;
             border-top:1px solid white;
             border-bottom:1px solid @form-row-border-color;
 
             &:nth-child(2n){
-                background:@grey-verylight;
+                background:#F4F4F4;
             }
         }
 
         td{
             vertical-align: middle;
-            padding:0 15px;
+            padding:2px 15px 0;
             line-height:13px;
         }
 
