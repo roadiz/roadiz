@@ -37,16 +37,17 @@
 						{% endif %}
 						</td>
 						<td>
-						{% if t.translation.isDefaultTranslation == false %}
-							{% form_theme t.defaultForm 'forms.html.twig' %}
-							<form action="#" method="post" {{ form_enctype(t.defaultForm) }}>
-								{{ form_widget(t.defaultForm) }}
-								<button class="uk-button uk-button-small" type="submit"><i class="uk-icon-star"></i> {% trans %}set.default{% endtrans %}</button>
-							</form>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}">
-								<i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}
-							</a>
-						{% endif %}
+						{% spaceless %}
+							<a class="uk-button uk-button-content uk-button-small" title="{% trans %}edit{% endtrans %}" href="{{ path('translationsEditPage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+							{% if t.translation.isDefaultTranslation == false %}
+								{% form_theme t.defaultForm 'forms.html.twig' %}
+								<form class="uk-form-translation-default" action="#" method="post" {{ form_enctype(t.defaultForm) }}>
+									{{ form_widget(t.defaultForm) }}
+									<button class="uk-button uk-button-content uk-button-small" title="{% trans %}set.default{% endtrans %}" type="submit" data-uk-tooltip="{animation:true}"><i class="uk-icon-star"></i></button>
+								</form>
+								<a class="uk-button uk-button-content uk-button-small uk-button-danger" title="{% trans %}delete{% endtrans %}" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+							{% endif %}
+                        {% endspaceless %}
 						</td>
 					</tr>
 					{% endfor %}

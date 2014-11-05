@@ -32,7 +32,11 @@
 						<td>{{ field.getLabel }}</td>
 						<td>{{ field.getTypeName|trans }}</td>
 						<td>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+                            {% spaceless %}
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                            {% endspaceless %}
+							<!-- <a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}"><i class="uk-icon-rz-trash-o"></i> </a> -->
 						</td>
 					</tr>
 					{% endfor %}
