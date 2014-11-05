@@ -54,7 +54,7 @@ class EntryPointsController extends AppController
      */
     public static function getResourcesFolder()
     {
-        return RENZO_ROOT.'/src/Renzo/Core/Resources';
+        return RENZO_ROOT.'/src/Renzo/CMS/Resources';
     }
 
     /**
@@ -348,7 +348,7 @@ class EntryPointsController extends AppController
          */
         $htmldoc = new InlineStyle($emailBody);
         $htmldoc->applyStylesheet(file_get_contents(
-            RENZO_ROOT."/src/Renzo/Core/Resources/css/transactionalStyles.css"
+            RENZO_ROOT."/src/Renzo/CMS/Resources/css/transactionalStyles.css"
         ));
 
         // Create the message

@@ -64,7 +64,7 @@ class UserViewer implements ViewableInterface
     /**
      * Create a translator instance and load theme messages
      *
-     * src/Renzo/Core/Resources/translations/messages.{{lang}}.xlf
+     * src/Renzo/CMS/Resources/translations/messages.{{lang}}.xlf
      *
      * @todo  [Cache] Need to write XLF catalog to PHP using \Symfony\Component\Translation\Writer\TranslationWriter
      *
@@ -73,7 +73,7 @@ class UserViewer implements ViewableInterface
     public function initializeTranslator()
     {
         $lang = Kernel::getInstance()->getRequest()->getLocale();
-        $msgPath = RENZO_ROOT.'/src/Renzo/Core/Resources/translations/messages.'.$lang.'.xlf';
+        $msgPath = RENZO_ROOT.'/src/Renzo/CMS/Resources/translations/messages.'.$lang.'.xlf';
 
         /*
          * fallback to english, if message catalog absent
@@ -87,7 +87,7 @@ class UserViewer implements ViewableInterface
         $this->translator->addLoader('xlf', new XliffFileLoader());
         $this->translator->addResource(
             'xlf',
-            RENZO_ROOT.'/src/Renzo/Core/Resources/translations/messages.'.$lang.'.xlf',
+            RENZO_ROOT.'/src/Renzo/CMS/Resources/translations/messages.'.$lang.'.xlf',
             $lang
         );
         // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
@@ -115,7 +115,7 @@ class UserViewer implements ViewableInterface
          */
         $htmldoc = new InlineStyle($emailBody);
         $htmldoc->applyStylesheet(file_get_contents(
-            RENZO_ROOT."/src/Renzo/Core/Resources/css/transactionalStyles.css"
+            RENZO_ROOT."/src/Renzo/CMS/Resources/css/transactionalStyles.css"
         ));
 
         // Create the message

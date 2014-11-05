@@ -39,7 +39,6 @@ class FontViewer implements ViewableInterface
      */
     public function __construct(Font $font)
     {
-        $this->initializeTwig();
         $this->font = $font;
     }
 
@@ -58,7 +57,7 @@ class FontViewer implements ViewableInterface
      */
     public function getCacheDirectory()
     {
-        return RENZO_ROOT.'/cache/Core/FontViewer/twig_cache';
+        return RENZO_ROOT.'/cache/twig_cache';
     }
 
     /**
@@ -69,35 +68,13 @@ class FontViewer implements ViewableInterface
 
     }
 
-    /**
-     * Create a Twig Environment instance
-     *
-     * @return  \Twig_Environment
-     */
-    public function initializeTwig()
-    {
-        $loader = new \Twig_Loader_Filesystem(array(
-            RENZO_ROOT . '/src/Renzo/Core/Resources/views',
-        ));
-        $this->twig = new \Twig_Environment($loader, array(
-            'cache' => $this->getCacheDirectory(),
-            'debug' => Kernel::getInstance()->isDebug()
-        ));
-
-        // RoutingExtension
-        $this->twig->addExtension(
-            new RoutingExtension(Kernel::getService('urlGenerator'))
-        );
-
-        return $this;
-    }
 
     /**
      * @return \Twig_Environment
      */
     public function getTwig()
     {
-        return $this->twig;
+        return Kernel::getService('twig.environment');
     }
 
     /**

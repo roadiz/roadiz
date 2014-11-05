@@ -67,13 +67,7 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
-     * Create a translator instance and load theme messages.
-     *
-     * src/Renzo/Core/Resources/translations/messages.{{lang}}.xlf
-     *
-     * @todo  [Cache] Need to write XLF catalog to PHP using \Symfony\Component\Translation\Writer\TranslationWriter
-     *
-     * @return Symfony\Component\Translation\Translator
+     * {@inheritdoc}
      */
     public function initializeTranslator()
     {
