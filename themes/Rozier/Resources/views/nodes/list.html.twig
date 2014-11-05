@@ -72,24 +72,53 @@
                         <td><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeName }}</a></td>
                         {% endif %}
                         <td>{{ node.getNodeType.getDisplayName }}</td>
-                        <td>
-                            {% if node.isDraft == true %}<div class="uk-badge uk-badge-warning">{% trans %}node.draft{% endtrans %}</div>{% endif %}
-                            {% if node.isPending == true %}<div class="uk-badge uk-badge-warning">{% trans %}node.pending.validation{% endtrans %}</div>{% endif %}
-                            {% if node.isDeleted == true %}<div class="uk-badge uk-badge-danger">{% trans %}node.deleted{% endtrans %}</div>{% endif %}
-                            {% if node.isVisible == false %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-eye-slash"></span></div>{% endif %}
-                            {% if node.isLocked %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-lock"></span></div>{% endif %}
-                            {% if node.isArchived %}<div class="uk-badge uk-badge-notification"><span class="uk-icon-archive"></span></div>{% endif %}
+                        <td style="text-align:center;">
+                            {% spaceless %}
+                                {% if node.isDraft == true %} 
+                                <div class="uk-button-status" title="{% trans %}node.draft{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-draft-nodes"></i>
+                                </div><!-- uk-badge-warning --> 
+                                {% endif %} 
+                                {% if node.isPending == true %}
+                                <div class="uk-button-status" title="{% trans %}node.pending.validation{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-pending-nodes"></i>
+                                </div><!-- uk-badge-warning --> 
+                                {% endif %}
+                                {% if node.isDeleted == true %}
+                                <div class="uk-button-status" title="{% trans %}node.deleted{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-trash-mini-o"></i>
+                                </div><!-- uk-badge-danger -->
+                                {% endif %}
+                                {% if node.isVisible == false %}
+                                <div class="uk-button-status" title="{% trans %}node.hidden{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-hidden-o"></i>
+                                </div><!-- uk-badge-notification / uk-icon-rz-hidden-mini - uk-icon-rz-hidden-o - uk-icon-rz-hidden -->
+                                {% endif %}
+                                {% if node.isLocked %}
+                                <div class="uk-button-status" title="{% trans %}locked{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-lock"></i>
+                                </div><!-- uk-badge-notification -->
+                                {% endif %}
+                                {% if node.isArchived %}
+                                <div class="uk-button-status" title="{% trans %}node.archived{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-archive-mini"></i>
+                                </div><!-- uk-badge-notification -->
+                                {% endif %}                                
+                            {% endspaceless %}
                         </td>
                         <td>{{ node.getUpdatedAt|localizeddate('short', 'none') }}</td>
                         <td>
-                            <a class="uk-button uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-node-tree"></i> {% trans %}see.nodetree{% endtrans %}</a>
-                            {% if not node.locked %}
-                                {% if not node.isDeleted %}
-                                <a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
-                                {% else %}
-                                <a class="uk-button uk-button-small" href="{{ path('nodesUndeletePage', { nodeId: node.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}undelete{% endtrans %}</a>
-                                {% endif %}
-                            {% endif %}
+                            {% spaceless %}
+                                <a class="uk-button uk-button-table uk-button-small" href="{{ path('nodesEditPage', { nodeId: node.getId }) }}" title="{% trans %}edit.node{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                                <a class="uk-button uk-button-table uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}" title="{% trans %}see.nodetree{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-tree-mini"></i></a>
+                                {% if not node.locked %}
+                                    {% if not node.isDeleted %}
+                                    <a class="uk-button uk-button-table uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                    {% else %}
+                                    <a class="uk-button uk-button-table uk-button-small" href="{{ path('nodesUndeletePage', { nodeId: node.getId }) }}" data-uk-tooltip="{animation:true}" title="{% trans %}undelete{% endtrans %}"><i class="uk-icon-rz-untrash"></i></a>
+                                    {% endif %}
+                                {% endif %}                                
+                            {% endspaceless %}
                         </td>
                     </tr>
                     {% endfor %}

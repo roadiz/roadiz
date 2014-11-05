@@ -31,11 +31,14 @@
                             <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
                             <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
                             <td>
-                                {% if securityContext.Granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
-                                <a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">
-                                    <i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}
-                                </a>
-                                {% endif %}
+                                {% spaceless %}                                
+                                    <a class="uk-button uk-button-table uk-button-small" href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}" title="{% trans %}edit.tag{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>                            
+                                    {% if securityContext.Granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
+                                        <a class="uk-button uk-button-table uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}" title="{% trans %}delete.tag{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                            <i class="uk-icon-rz-trash-o"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endspaceless %}
                             </td>
                         </tr>
                         {% else %}
@@ -43,11 +46,15 @@
                             <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">{{ tag.getId }}</a></td>
                             <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">tag_{{ tag.getId }} <span class="uk-badge uk-badge-warning">{% trans %}notranslation_available.tag{% endtrans %}</span></a></td>
                             <td>
-                            {% if securityContext.Granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
-                                <a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">
-                                    <i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}
-                                </a>
-                            {% endif %}
+                            {% spaceless %}                                
+                                <a class="uk-button uk-button-table uk-button-small" href="{{ path('tagsEditPage', { tagId: tag.getId }) }}" title="{% trans %}edit.tag{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>                            
+
+                                {% if securityContext.Granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
+                                    <a class="uk-button uk-button-table uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}" title="{% trans %}delete.tag{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                        <i class="uk-icon-rz-trash-o"></i>
+                                    </a>
+                                {% endif %}
+                            {% endspaceless %}
                             </td>
                         </tr>
                         {% endif %}

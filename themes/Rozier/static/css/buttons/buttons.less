@@ -51,6 +51,36 @@
     color: darken(@maintree-global-bg, 30%);
 }
 
+.uk-button-status{
+    display: inline-block;
+    width:30px; height:30px;
+    margin:0 2px;
+    line-height:30px;
+    color: #666;
+    border: 1px solid @grey-form-border;
+    background-color: #F2F2F2;
+    text-align: center;
+    .rounded(20px);
+
+    [class*=uk-icon-rz-]{
+        margin:0;
+    }
+}
+
+.uk-button-table{
+    width:32px; height:32px;
+    padding:0;
+    margin-left:-1px;
+    line-height:32px;
+
+    &:first-child{
+        margin-left:0;
+    }
+
+    [class*=uk-icon-rz-]{
+        margin:0;
+    }
+}
 
 .uk-button-success {
     background: @grey-form-submit;

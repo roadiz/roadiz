@@ -39,11 +39,11 @@
 							<td>{{ type.getSourceEntityClassName }}</td>
 							<td><div class="uk-badge">{% transchoice type.getFields|length %}{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields{% endtranschoice %}</div></td>
 							<td>
-								<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: type.getId }) }}">
-									<i class="uk-icon-rz-node-type-field"></i> {% trans %}manage.nodeTypeFields{% endtrans %}
-								</a>
-								<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypesDeletePage', { nodeTypeId: type.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
-								<a class="uk-button uk-button-small rz-no-ajax-link" href="{{ path('nodesTypesExportPage', { nodeTypeId: type.getId }) }}"><i class="uk-icon-rz-download"></i> {% trans %}export{% endtrans %}</a>
+                            {% spaceless %}                                    
+                                <a class="uk-button uk-button-table uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: type.getId }) }}" title="{% trans %}manage.nodeTypeFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
+                                <a class="uk-button uk-button-table uk-button-small" href="{{ path('nodeTypesDeletePage', { nodeTypeId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                <a class="uk-button uk-button-table uk-button-small rz-no-ajax-link" href="{{ path('nodesTypesExportPage', { nodeTypeId: type.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
+                            {% endspaceless %}
 							</td>
 						</tr>
 					{% endfor %}

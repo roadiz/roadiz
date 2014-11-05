@@ -181,7 +181,7 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
     var explorerDom = [
         '<div class="document-widget-explorer">',
             '<div class="document-widget-explorer-header">',
-                '<div class="document-widget-explorer-logo"><i class="uk-icon-rz-folder-tree"></i></div>',
+                '<div class="document-widget-explorer-logo"><i class="uk-icon-rz-folder-tree-mini"></i></div>',
                 '<div class="document-widget-explorer-search">',
                     '<form action="#" method="POST" class="uk-form">',
                         '<div class="uk-form-icon">',
