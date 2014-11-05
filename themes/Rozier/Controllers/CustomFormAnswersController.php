@@ -80,7 +80,7 @@ class CustomFormAnswersController extends RozierApp
         $customFormAnswer = $this->getService('em')
             ->find('RZ\Renzo\Core\Entities\CustomFormAnswer', (int) $customFormAnswerId);
 
-        if (null !== $customForm) {
+        if (null !== $customFormAnswer) {
             $this->assignation['customFormAnswer'] = $customFormAnswer;
 
             $form = $this->buildDeleteForm($customFormAnswer);
@@ -100,7 +100,7 @@ class CustomFormAnswersController extends RozierApp
                  */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
-                        'customFormAnswersHomePage'
+                        'customFormAnswersHomePage', array("customFormAnswerId" => $customFormAnswerId)
                     )
                 );
                 $response->prepare($request);

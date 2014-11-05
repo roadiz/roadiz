@@ -78,7 +78,8 @@ class CustomFormAnswer extends AbstractEntity
     /**
      * @OneToMany(targetEntity="RZ\Renzo\Core\Entities\CustomFormFieldAttribute",
      *            mappedBy="customFormAnswer",
-     *            fetch="EXTRA_LAZY")
+     *            fetch="EXTRA_LAZY",
+     *            cascade={"ALL"})
      * @var ArrayCollection
      */
     private $answerField;
@@ -119,7 +120,7 @@ class CustomFormAnswer extends AbstractEntity
 
     /**
      * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\CustomForm",
-     *           inversedBy="customFormAnswers")
+     *           inversedBy="customFormAnswers", cascade={"all"})
      * @JoinColumn(name="custom_form_id", referencedColumnName="id")
      **/
     private $customForm;

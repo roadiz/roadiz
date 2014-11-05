@@ -32,10 +32,10 @@
 							{# <td>{{ type.getSourceEntityClassName }}</td> #}
 {# 							<td><div class="uk-badge">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormield|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td> #}
 							<td>
-								<a class="uk-button uk-button-small" href="{{ path('customFormFieldsListPage', { customFormId: type.getId }) }}">
+								<a class="uk-button uk-button-small" href="{{ path('customFormFieldAttributesHomePage', { customFormAnswerId: type.getId }) }}">
 									<i class="uk-icon-node-type-fields"></i> {% trans %}customFormAnswer.answers{% endtrans %}
 								</a>
-								<a class="uk-button uk-button-small uk-button-danger" href="{{ path('customFormsDeletePage', { customFormId: type.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+								<a class="uk-button uk-button-small uk-button-danger" href="{{ path('customFormAnswersDeletePage', { customFormAnswerId: type.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
 							</td>
 						</tr>
 					{% endfor %}

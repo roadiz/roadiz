@@ -228,7 +228,7 @@ class CustomForm extends AbstractDateTimed
 
    /**
      * @OneToMany(targetEntity="RZ\Renzo\Core\Entities\CustomFormAnswer",
-     *            mappedBy="customForm")
+     *            mappedBy="customForm", cascade={"ALL"})
      **/
 
    private $customFormAnswers;

@@ -25,7 +25,7 @@ class CustomFormFieldAttribute extends AbstractEntity
 {
 
     /**
-     * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\CustomFormAnswer", inversedBy="answerField")
+     * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\CustomFormAnswer", inversedBy="answerField", cascade={"all"})
      * @JoinColumn(name="custom_form_answer_id", referencedColumnName="id")
      */
 
