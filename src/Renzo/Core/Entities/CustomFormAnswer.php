@@ -10,7 +10,7 @@ namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
-use RZ\Renzo\Core\AbstractEntities\AbstractDateTimedPositioned;
+use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Entities\CustomFormFieldAttribute;
@@ -26,7 +26,7 @@ use RZ\Renzo\Core\Kernel;
  *     @index(name="submitted_customformanswer_idx", columns={"submitted_at"})
  * })
  */
-class CustomFormAnswer extends AbstractDateTimedPositioned
+class CustomFormAnswer extends AbstractEntity
 {
 
     /**
@@ -119,8 +119,8 @@ class CustomFormAnswer extends AbstractDateTimedPositioned
     }
 
     /**
-     * @OneToOne(targetEntity="RZ\Renzo\Core\Entities\CustomForm",
-     *           inversedBy="customFormAnswer")
+     * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\CustomForm",
+     *           inversedBy="customFormAnswers")
      * @JoinColumn(name="custom_form_id", referencedColumnName="id")
      **/
     private $customForm;

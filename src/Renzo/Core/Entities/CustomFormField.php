@@ -11,6 +11,7 @@ namespace RZ\Renzo\Core\Entities;
 
 use RZ\Renzo\Core\AbstractEntities\PersistableInterface;
 use RZ\Renzo\Core\AbstractEntities\AbstractPositioned;
+use RZ\Renzo\Core\Handlers\CustomFormFieldHandler;
 use RZ\Renzo\Core\Utils\StringHandler;
 
 /**
@@ -229,7 +230,7 @@ class CustomFormField extends AbstractPositioned implements PersistableInterface
     }
 
     /**
-     * @ManyToOne(targetEntity="CustomForm", inversedBy="fields")
+     * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\CustomForm", inversedBy="fields")
      * @JoinColumn(name="custom_form_id", onDelete="CASCADE")
      */
     private $customForm;
@@ -255,7 +256,7 @@ class CustomFormField extends AbstractPositioned implements PersistableInterface
     }
 
     /**
-     * @OneToOne(targetEntity="CustomFormFieldAttribute", mappedBy="customFormField")
+     * @OneToOne(targetEntity="RZ\Renzo\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
      */
     private $customFormFieldAttribute;
 
@@ -431,6 +432,25 @@ class CustomFormField extends AbstractPositioned implements PersistableInterface
         $this->require = $require;
 
         return $this;
+    }
+
+    /**
+     * @return  RZ\Renzo\Core\Handlers\CustomFormFieldHandler
+     */
+    public function getHandler()
+    {
+        return new CustomFormFieldHandler($this);
+    }
+
+    /**
+     * @PrePersist
+     */
+    public function prePersist()
+    {
+        /*
+         * Get the last index after last node in parent
+         */
+        $this->setPosition($this->getHandler()->cleanPositions());
     }
 
     /**

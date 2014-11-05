@@ -3,7 +3,7 @@
 {% block content %}
 <section class="content-global content-nav-and-filters">
 
-    <header class="content-header header-node-type-fields header-node-type-fields-list">
+    <header class="content-header header-custom-form-fields header-custom-form-fields-list">
         <h1 class="content-title">{{ "edit.customFormFields.for.customForm.%name%"|trans({'%name%': customForm.getDisplayName}) }}</h1>
 
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormsHomePage') }}" title="{% trans %}back_to.customForms{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
@@ -16,7 +16,7 @@
 
     <article class="content content-no-action-menu">
         <div class="content-table-cont">
-        	<table class="node-type-fields content-table uk-table">
+        	<table class="custom-form-fields content-table uk-table">
 				<thead>
 			        <tr>
 			            <th>{% trans %}name{% endtrans %}</th>
@@ -25,7 +25,7 @@
 			            <th>{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
-				<tbody class="uk-sortable" data-uk-sortable="{animation:0, dragCustomClass:'rz-node-type-field-dragged'}">
+				<tbody class="uk-sortable" data-uk-sortable="{animation:0, dragCustomClass:'rz-custom-form-field-dragged'}">
 					{% for field in fields %}
 					<tr data-position="{{ field.position }}" data-field-id="{{ field.getId }}">
 						<td><a href="{{ path('customFormFieldsEditPage', { customFormFieldId: field.getId }) }}">{{ field.getName }}</a></td>

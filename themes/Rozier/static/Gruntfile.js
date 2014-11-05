@@ -38,6 +38,7 @@ module.exports = function(grunt) {
 					'js/widgets/tagAutocomplete.js',
 					'js/widgets/stackNodeTree.js',
 					'js/widgets/nodeTypeFieldsPosition.js',
+					'js/widgets/customFormFieldsPosition.js',
 					'js/lazyload.js',
 					'js/plugins.js',
 					'js/main.js'

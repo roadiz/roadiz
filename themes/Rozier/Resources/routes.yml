@@ -531,6 +531,11 @@ customFormFieldsDeletePage:
     defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldsController::deleteAction }
     requirements: { customFormFieldId : "[0-9]+" }
 
+customFormFieldAjaxEdit:
+    path:     /rz-admin/ajax/custom-forms/fields/edit/{customFormFieldId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormFieldsController::editAction }
+    requirements: { customFormFieldId : "[0-9]+" }
+
 # searchPage:
 #     path:     /rz-admin/search/{q}
 #     defaults: { _controller: RZ\Renzo\Core\SearchEngine\FullTextSearchHandler::searchAction }

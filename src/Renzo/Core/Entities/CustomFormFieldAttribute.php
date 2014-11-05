@@ -10,7 +10,7 @@
 namespace RZ\Renzo\Core\Entities;
 
 use RZ\Renzo\Core\AbstractEntities\PersistableInterface;
-use RZ\Renzo\Core\AbstractEntities\AbstractPositioned;
+use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
 use RZ\Renzo\Core\Utils\StringHandler;
 
 /**
@@ -18,24 +18,11 @@ use RZ\Renzo\Core\Utils\StringHandler;
  * custom data structure.
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
- * @Table(name="custom_form_field_answer")
+ * @Table(name="custom_form_field_attributes")
  * @HasLifecycleCallbacks
  */
-class CustomFormFieldAttribute extends AbstractPositioned implements PersistableInterface
+class CustomFormFieldAttribute extends AbstractEntity
 {
-    /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
-     */
-    private $id;
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\CustomFormAnswer", inversedBy="answerField")

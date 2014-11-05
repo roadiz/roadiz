@@ -9,7 +9,7 @@
 namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
+use RZ\Renzo\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Renzo\Core\Handlers\CustomFormHandler;
 use RZ\Renzo\Core\Serializers\CustomFormSerializer;
 use RZ\Renzo\Core\Utils\StringHandler;
@@ -20,8 +20,9 @@ use RZ\Renzo\Core\Utils\StringHandler;
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\CustomFormRepository")
  * @Table(name="custom_forms")
+ * @HasLifecycleCallbacks
  */
-class CustomForm extends AbstractEntity
+class CustomForm extends AbstractDateTimed
 {
     /**
      * @Column(type="string", unique=true)
@@ -116,7 +117,7 @@ class CustomForm extends AbstractEntity
     }
 
     /**
-     * @Column(type="datetime")
+     * @Column(name="close_date", type="datetime")
      */
     private $closeDate = null;
     /**
@@ -226,21 +227,20 @@ class CustomForm extends AbstractEntity
     }
 
    /**
-     * @OneToOne(targetEntity="RZ\Renzo\Core\Entities\CustomFormAnswer",
-     *           mappedBy="customForm")
+     * @OneToMany(targetEntity="RZ\Renzo\Core\Entities\CustomFormAnswer",
+     *            mappedBy="customForm")
      **/
 
-   private $customFormAnswer;
+   private $customFormAnswers;
 
-   public function setCustomFormAnswer($customFormAnswer)
+   public function getCustomForAnswers()
    {
-        $this->customFormAnswer = $customFormAnswer;
-        return $this;
+        return $this->customFormAnswers;
    }
 
-   public function getCustomForAnswer()
+   public function getHandler()
    {
-        return $this->customFormAnswer;
+        return new CustomFormHandler($this);
    }
 
     /**
@@ -249,6 +249,7 @@ class CustomForm extends AbstractEntity
     public function __construct()
     {
         $this->fields = new ArrayCollection();
+        $this->customFormAnswers = new ArrayCollection();
     }
 
 
