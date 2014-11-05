@@ -88,7 +88,13 @@ class NodeTreeType extends AbstractType
 
         $view->vars['linkedTypes'] = $nodeTypes;
     }
-
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return 'hidden';
+    }
     /**
      * {@inheritdoc}
      */
