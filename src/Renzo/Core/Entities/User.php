@@ -24,7 +24,11 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * User Entity.
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\UserRepository")
- * @Table(name="users")
+ * @Table(name="users", indexes={
+ *     @index(name="enabled_users_idx",   columns={"enabled"}),
+ *     @index(name="expired_users_idx",   columns={"expired"}),
+ *     @index(name="expiresat_users_idx", columns={"expires_at"})
+ * })
  * @HasLifecycleCallbacks
  */
 class User extends AbstractHuman implements AdvancedUserInterface
