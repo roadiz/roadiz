@@ -85,10 +85,10 @@ class DebugPanel implements EventSubscriberInterface
      */
     private function initializeTwig()
     {
-        $cacheDir = RENZO_ROOT.'/cache/debug_panel/twig_cache';
+        $cacheDir = RENZO_ROOT.'/cache/twig_cache';
 
         $loader = new \Twig_Loader_Filesystem(array(
-            RENZO_ROOT.'/src/Renzo/Core/Resources/views', // Theme templates
+            RENZO_ROOT.'/src/Renzo/CMS/Resources/views', // Theme templates
         ));
         $this->twig = new \Twig_Environment($loader, array(
             'debug' => Kernel::getInstance()->isDebug(),

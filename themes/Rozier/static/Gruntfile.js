@@ -31,6 +31,7 @@ module.exports = function(grunt) {
 					'js/vendor/dropzone.js',
 					'js/widgets/documentsList.js',
 					'js/widgets/documentWidget.js',
+					'js/widgets/nodeWidget.js',
 					'js/widgets/documentUploader.js',
 					'js/widgets/saveButtons.js',
 					'js/widgets/nodeStatuses.js',

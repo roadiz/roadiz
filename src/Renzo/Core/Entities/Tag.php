@@ -21,8 +21,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\TagRepository")
  * @HasLifecycleCallbacks
  * @Table(name="tags", indexes={
- *     @index(name="visible_tag_idx", columns={"visible"}),
- *     @index(name="locked_tag_idx", columns={"locked"}),
+ *     @index(name="visible_tag_idx",  columns={"visible"}),
+ *     @index(name="locked_tag_idx",   columns={"locked"}),
  *     @index(name="position_tag_idx", columns={"position"})
  * })
  */

@@ -32,17 +32,47 @@
             {% include 'widgets/documentSmallThumbnail.html.twig' with {
                 'document':doc,
                 'name': name,
-                'full_name':full_name,
+                'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
                 'read_only': read_only,
                 'disabled':disabled,
                 'required':required,
                 'attr': attr
-            } %}
+            } only %}
             {% endfor %}
         </ul>
     </div>
     {% endspaceless %}
 {% endblock documents_widget %}
+
+{% block nodes_widget %}
+    {% spaceless %}
+    <div class="uk-form-row uk-margin-small-top nodes-widget" data-node-widget>
+        <nav class="nodes-widget-nav uk-navbar">
+            <ul class="uk-navbar-nav">
+                <li class="uk-navbar-brand"><i class="uk-icon-rz-nodes"></i></li>
+            </ul>
+            <div class="uk-navbar-content uk-navbar-flip">
+                <div class="nodes-widget-quick-creation uk-button-group">
+                    <a class="uk-button uk-button-small" href="#" data-node-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}nodes.toggle-explorer{% endtrans %}</a>
+                </div>
+            </div>
+        </nav>
+        <ul class="uk-sortable nodes-widget-sortable" data-uk-sortable="{group:'nodes-widget', dragCustomClass:'nodes-widget-dragging'}" data-input-name="{{ name }}">
+            {% for doc in data %}
+            {% include 'widgets/nodeSmallThumbnail.html.twig' with {
+                'node':doc,
+                'name': name,
+                'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
+                'read_only': read_only,
+                'disabled':disabled,
+                'required':required,
+                'attr': attr
+            } only %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endspaceless %}
+{% endblock nodes_widget %}
 
 {% block checkbox_widget -%}
     <input class="rz-boolean-checkbox" type="checkbox" data-on-text="I" data-off-text="O" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />

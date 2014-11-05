@@ -12,6 +12,7 @@ namespace RZ\Renzo\Core\Handlers;
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodeType;
+use RZ\Renzo\Core\Entities\NodesToNodes;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 use RZ\Renzo\Core\Entities\Translation;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -51,6 +52,66 @@ class NodeHandler
     public function __construct(Node $node)
     {
         $this->node = $node;
+    }
+
+
+    /**
+     * Remove every node to node associations for a given field.
+     *
+     * @param \RZ\Renzo\Core\Entities\NodeTypeField $field
+     *
+     * @return $this
+     */
+    public function cleanNodesFromField(NodeTypeField $field)
+    {
+        $nodesToNodes = Kernel::getService('em')
+                ->getRepository('RZ\Renzo\Core\Entities\NodesToNodes')
+                ->findBy(array('nodeA'=>$this->node, 'field'=>$field));
+
+        foreach ($nodesToNodes as $ntn) {
+            Kernel::getService('em')->remove($ntn);
+            Kernel::getService('em')->flush();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a node to current node for a given node-type field.
+     *
+     * @param Node          $node
+     * @param NodeTypeField $field
+     *
+     * @return $this
+     */
+    public function addNodeForField(Node $node, NodeTypeField $field)
+    {
+        $ntn = new NodesToNodes($this->node, $node, $field);
+
+        $latestPosition = Kernel::getService('em')
+                ->getRepository('RZ\Renzo\Core\Entities\NodesToNodes')
+                ->getLatestPosition($this->node, $field);
+
+        $ntn->setPosition($latestPosition + 1);
+
+        Kernel::getService('em')->persist($ntn);
+        Kernel::getService('em')->flush();
+
+        return $this;
+    }
+
+    /**
+     * Get nodes linked to current node for a given fieldname.
+     *
+     * @param string $fieldName Name of the node-type field
+     *
+     * @return ArrayCollection Collection of nodes
+     */
+    public function getNodesFromFieldName($fieldName)
+    {
+        return Kernel::getService('em')
+                ->getRepository('RZ\Renzo\Core\Entities\Node')
+                ->findByNodeAndFieldName($this->node, $fieldName);
     }
 
     /**

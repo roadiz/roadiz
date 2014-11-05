@@ -20,7 +20,9 @@ use RZ\Renzo\Core\Entities\NodeTypeField;
  * between NodesSources, Documents and NodeTypeFields.
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\NodesSourcesDocumentsRepository")
- * @Table(name="nodes_sources_documents")
+ * @Table(name="nodes_sources_documents", indexes={
+ *     @index(name="position_nodessourcesdocuments_idx", columns={"position"})
+ * })
  */
 class NodesSourcesDocuments extends AbstractPositioned implements PersistableInterface
 {

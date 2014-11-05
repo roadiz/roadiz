@@ -1116,4 +1116,51 @@ class NodeRepository extends EntityRepository
             return false;
         }
     }
+
+
+
+    /**
+     * @param RZ\Renzo\Core\Entities\Node          $node
+     * @param RZ\Renzo\Core\Entities\NodeTypeField $field
+     *
+     * @return array
+     */
+    public function findByNodeAndField($node, NodeTypeField $field)
+    {
+        $query = $this->_em->createQuery('
+            SELECT n FROM RZ\Renzo\Core\Entities\Node n
+            INNER JOIN n.aNodes ntn
+            WHERE ntn.field = :field AND ntn.nodeA = :nodeA
+            ORDER BY ntn.position ASC')
+                        ->setParameter('field', $field)
+                        ->setParameter('nodeA', $node);
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param RZ\Renzo\Core\Entities\Node $node
+     * @param string                      $fieldName
+     *
+     * @return array
+     */
+    public function findByNodeAndFieldName($node, $fieldName)
+    {
+        $query = $this->_em->createQuery('
+            SELECT n FROM RZ\Renzo\Core\Entities\Node n
+            INNER JOIN n.aNodes ntn
+            INNER JOIN ntn.field f
+            WHERE f.name = :name AND ntn.nodeA = :nodeA
+            ORDER BY ntn.position ASC')
+                        ->setParameter('name', (string) $fieldName)
+                        ->setParameter('nodeA', $node);
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
 }

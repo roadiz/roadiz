@@ -3,14 +3,14 @@
  * Copyright REZO ZERO 2014
  *
  *
- * @file DocumentsType.php
+ * @file NodesType.php
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Renzo\CMS\Forms;
 
 use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Document;
+use RZ\Renzo\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
@@ -19,20 +19,20 @@ use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * Document selector and uploader form field type.
+ * Node selector and uploader form field type.
  */
-class DocumentsType extends AbstractType
+class NodesType extends AbstractType
 {
-    protected $selectedDocuments;
+    protected $selectedNodes;
 
     /**
      * {@inheritdoc}
      *
-     * @param array $documents Array of Document instances
+     * @param array $nodes Array of Node instances
      */
-    public function __construct(array $documents)
+    public function __construct(array $nodes)
     {
-        $this->selectedDocuments = $documents;
+        $this->selectedNodes = $nodes;
     }
 
     /**
@@ -44,14 +44,14 @@ class DocumentsType extends AbstractType
     {
         $callback = function ($object, ExecutionContextInterface $context) {
 
-            $document = Kernel::getService('em')
-                            ->find('RZ\Renzo\Core\Entities\Document', (int) $object);
+            $node = Kernel::getService('em')
+                            ->find('RZ\Renzo\Core\Entities\Node', (int) $object);
 
             // Vérifie si le nom est bidon
-            if (null !== $object && null === $document) {
+            if (null !== $object && null === $node) {
                 $context->addViolationAt(
                     null,
-                    'Document '.$object.' does not exists',
+                    'Node '.$object.' does not exists',
                     array(),
                     null
                 );
@@ -59,7 +59,7 @@ class DocumentsType extends AbstractType
         };
 
         $resolver->setDefaults(array(
-            'class' => '\RZ\Renzo\Core\Entities\Document',
+            'class' => '\RZ\Renzo\Core\Entities\Node',
             'multiple' => true,
             'property' => 'id',
             'constraints' => array(
@@ -80,9 +80,9 @@ class DocumentsType extends AbstractType
         parent::finishView($view, $form, $options);
 
         /*
-         * Inject data as plain documents entities
+         * Inject data as plain nodes entities
          */
-        $view->vars['data'] = $this->selectedDocuments;
+        $view->vars['data'] = $this->selectedNodes;
     }
     /**
      * {@inheritdoc}
@@ -96,6 +96,6 @@ class DocumentsType extends AbstractType
      */
     public function getName()
     {
-        return 'documents';
+        return 'nodes';
     }
 }

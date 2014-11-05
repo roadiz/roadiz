@@ -20,7 +20,7 @@ use RZ\Renzo\Core\Handlers\DocumentHandler;
  * DocumentTranslation.
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
- * @Table(name="documents_translations")
+ * @Table(name="documents_translations", uniqueConstraints={@UniqueConstraint(columns={"document_id", "translation_id"})})
  */
 class DocumentTranslation extends AbstractEntity
 {

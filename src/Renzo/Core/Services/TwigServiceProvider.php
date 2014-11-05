@@ -49,7 +49,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             return new \Twig_Loader_Filesystem(array(
                 // Default Form extension templates
                 $vendorTwigBridgeDir.'/Resources/views/Form',
-                RENZO_ROOT.'/src/Renzo/Core/Resources/views',
+                RENZO_ROOT.'/src/Renzo/CMS/Resources/views',
             ));
         };
 

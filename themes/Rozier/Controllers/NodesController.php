@@ -1075,15 +1075,20 @@ class NodesController extends RozierApp
         $sourceClass = "GeneratedNodeSources\\".$node
                                 ->getNodeType()
                                 ->getSourceEntityClassName();
+
         $newTranslation = $this->getService('em')
                 ->find(
                     'RZ\Renzo\Core\Entities\Translation',
                     (int) $data['translationId']
                 );
+
         $baseSource = $node->getNodeSources()->first();
 
         $source = clone $baseSource;
 
+        foreach ($source->getDocumentsByFields() as $document) {
+           $this->getService('em')->persist($document);
+        }
         $source->setTranslation($newTranslation);
         $source->setNode($node);
 

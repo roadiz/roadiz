@@ -27,12 +27,13 @@ use RZ\Renzo\Core\Kernel;
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\NodeRepository")
  * @Table(name="nodes", indexes={
- *     @index(name="visible_node_idx",   columns={"visible"}),
- *     @index(name="status_node_idx", columns={"status"}),
- *     @index(name="locked_node_idx",    columns={"locked"}),
- *     @index(name="position_node_idx", columns={"position"}),
+ *     @index(name="visible_node_idx",       columns={"visible"}),
+ *     @index(name="status_node_idx",        columns={"status"}),
+ *     @index(name="locked_node_idx",        columns={"locked"}),
+ *     @index(name="sterile_node_idx",       columns={"sterile"}),
+ *     @index(name="position_node_idx",      columns={"position"}),
  *     @index(name="hide_children_node_idx", columns={"hide_children"}),
- *     @index(name="home_node_idx", columns={"home"})
+ *     @index(name="home_node_idx",          columns={"home"})
  * })
  * @HasLifecycleCallbacks
  */
@@ -541,6 +542,28 @@ class Node extends AbstractDateTimedPositioned
     {
         return $this->nodeSources;
     }
+
+
+    /**
+     * @OneToMany(targetEntity="NodesToNodes", mappedBy="nodeA")
+     * @var ArrayCollection
+     */
+    protected $bNodes;
+    public function getBNodes()
+    {
+        return $this->bNodes;
+    }
+
+    /**
+     * @OneToMany(targetEntity="NodesToNodes", mappedBy="nodeB")
+     * @var ArrayCollection
+     */
+    protected $aNodes;
+    public function getANodes()
+    {
+        return $this->aNodes;
+    }
+
 
     /**
      * Create a new empty Node according to given node-type.

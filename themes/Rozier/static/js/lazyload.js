@@ -123,6 +123,7 @@ Lazyload.prototype.generalBind = function() {
     // console.log('General bind');
     
     new DocumentWidget();
+    new NodeWidget();
     new DocumentUploader();
     new ChildrenNodesField();
     new StackNodeTree();
