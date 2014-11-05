@@ -4809,6 +4809,11 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="export.all.nodes">
+        <source>export.all.nodes</source>
+        <target></target>
+      </trans-unit>
+
 
     </body>
   </file>

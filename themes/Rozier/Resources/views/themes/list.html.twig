@@ -42,16 +42,18 @@
 							{% if theme.getHostname != "*" %}
 							{{ theme.getHostname }}
 							{% else %}
-							<div class="uk-badge uk-badge-success">{% trans %}all.hostnames{% endtrans %}</div>
+							<div class="uk-badge uk-badge-table">{% trans %}all.hostnames{% endtrans %}</div> <!-- uk-badge-success -->
 							{% endif %}
 						</td>
 						<td>
-						{% if not theme.isAvailable %}<div class="uk-badge uk-badge-warning"><span class="uk-icon-eye-slash"></span> {% trans %}theme.disabled{% endtrans %}</div>{% endif %}
-						{% if theme.isBackendTheme %}<div class="uk-badge uk-badge-success"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
+						{% if not theme.isAvailable %}<div class="uk-badge uk-badge-table"><span class="uk-icon-eye-slash"></span> {% trans %}theme.disabled{% endtrans %}</div>{% endif %}
+						{% if theme.isBackendTheme %}<div class="uk-badge uk-badge-table"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
 						</td>
 						<td>
-							<a class="uk-button uk-button-small" href="{{ path('themesEditPage', { themeId: theme.getId }) }}"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</a>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('themesDeletePage', { themeId: theme.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+                        {% spaceless %}
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('themesEditPage', { themeId: theme.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('themesDeletePage', { themeId: theme.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                        {% endspaceless %}
 						</td>
 					</tr>
 					{% endfor %}

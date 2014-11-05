@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-05 14:50+0000
+PO-Revision-Date: 2014-11-05 16:00+0000
 Last-Translator: Maxime Bérard &lt;maxime@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1415199037.769037
+X-POOTLE-MTIME: 1415203203.947837
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -4802,16 +4802,21 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="default.translation" approved="yes">
         <source>default.translation</source>
         <target state="translated">Default translation</target>
-      </trans-unit>
+      <note/></trans-unit>
 
       <trans-unit xml:space="preserve" id="nodeTypeField.minLength" approved="yes">
         <source>nodeTypeField.minLength</source>
         <target state="translated">Min length</target>
-      </trans-unit>
+      <note/></trans-unit>
 
       <trans-unit xml:space="preserve" id="nodeTypeField.maxLength" approved="yes">
         <source>nodeTypeField.maxLength</source>
         <target state="translated">Max length</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="export.all.nodes" approved="yes">
+        <source>export.all.nodes</source>
+        <target state="translated">Export all nodes</target>
       </trans-unit>
 
 

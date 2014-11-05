@@ -5,6 +5,7 @@
 
 	<header class="content-header header-group header-group-users">
         <h1 class="content-title group-add-title">{{ "edit.group.%name%.users"|trans({'%name%': group.getName}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>    
 		{% include 'groups/navBar.html.twig' with {'group':group, current:'users'} %}
     </header>
 
