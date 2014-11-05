@@ -57,18 +57,18 @@ class CustomFormAnswer extends AbstractEntity
      */
     private $submittedAt = null;
     /**
-     * @return boolean
+     * @return \DateTime
      */
-    public function getSummittedTime()
+    public function getSubmittedAt()
     {
-        return (boolean) $this->submittedAt;
+        return $this->submittedAt;
     }
     /**
-     * @param boolean $home
+     * @param \DateTime $home
      *
      * @return $this
      */
-    public function setSummittedTime($submittedAt)
+    public function setSubmittedAt($submittedAt)
     {
         $this->submittedAt = $submittedAt;
 
@@ -79,7 +79,6 @@ class CustomFormAnswer extends AbstractEntity
      * @OneToMany(targetEntity="RZ\Renzo\Core\Entities\CustomFormFieldAttribute",
      *            mappedBy="customFormAnswer",
      *            fetch="EXTRA_LAZY")
-     * @OrderBy({"position" = "ASC"})
      * @var ArrayCollection
      */
     private $answerField;

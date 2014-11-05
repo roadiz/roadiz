@@ -43,7 +43,7 @@ class CustomFormFieldAttribute extends AbstractEntity
     }
 
     /**
-     * @OneToOne(targetEntity="RZ\Renzo\Core\Entities\CustomFormField", inversedBy="customFormFieldAttribute")
+     * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\CustomFormField", inversedBy="customFormFieldAttribute")
      * @JoinColumn(name="custom_form_field_id", referencedColumnName="id")
      */
     private $customFormField;

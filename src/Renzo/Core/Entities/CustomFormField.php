@@ -256,19 +256,18 @@ class CustomFormField extends AbstractPositioned implements PersistableInterface
     }
 
     /**
-     * @OneToOne(targetEntity="RZ\Renzo\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
+     * @OneToMany(targetEntity="RZ\Renzo\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
      */
     private $customFormFieldAttribute;
-
-    public function setCustomFormFieldAttribute($customFormFieldAttribute)
-    {
-        $this->customFormFieldAttribute = $customFormFieldAttribute;
-        return $this;
-    }
 
     public function getCustomFormFieldAttribute()
     {
         return $this->customFormFieldAttribute;
+    }
+
+    public function __contruct()
+    {
+        $this->customFormFieldAttribute = new ArrayCollection();
     }
 
     /**

@@ -513,6 +513,17 @@ customFormsDeletePage:
     defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::deleteAction }
     requirements: { customFormId : "[0-9]+" }
 
+# Custom Form Answer
+customFormAnswersHomePage:
+    path:     /rz-admin/custom-form-answers/{customFormId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormAnswersController::listAction }
+    requirements: { customFormId : "[0-9]+" }
+
+customFormAnswersDeletePage:
+    path:     /rz-admin/custom-form-answers/delete/{customFormAnswerId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormAnswersController::deleteAction }
+    requirements: { customFormAnswerId : "[0-9]+" }
+
 # Custom Form FIELDS
 customFormFieldsListPage:
     path:     /rz-admin/custom-forms/fields/{customFormId}
