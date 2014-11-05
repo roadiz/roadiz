@@ -3,7 +3,7 @@
  * Copyright REZO ZERO 2014
  *
  *
- * @file NodesSourcesDocuments.php
+ * @file NodesToNodes.php
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
@@ -11,20 +11,19 @@ namespace RZ\Renzo\Core\Entities;
 
 use RZ\Renzo\Core\AbstractEntities\AbstractPositioned;
 use RZ\Renzo\Core\AbstractEntities\PersistableInterface;
-use RZ\Renzo\Core\Entities\NodesSources;
-use RZ\Renzo\Core\Entities\Document;
+use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodeTypeField;
 
 /**
  * Describes a complexe ManyToMany relation
- * between NodesSources, Documents and NodeTypeFields.
+ * between two Nodes and NodeTypeFields.
  *
- * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\NodesSourcesDocumentsRepository")
- * @Table(name="nodes_sources_documents", indexes={
- *     @index(name="position_nodessourcesdocuments_idx", columns={"position"})
+ * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\NodesToNodesRepository")
+ * @Table(name="nodes_to_nodes", indexes={
+ *     @index(name="position_nodestonodes_idx", columns={"position"})
  * })
  */
-class NodesSourcesDocuments extends AbstractPositioned implements PersistableInterface
+class NodesToNodes extends AbstractPositioned implements PersistableInterface
 {
     /**
      * @Id
@@ -41,11 +40,11 @@ class NodesSourcesDocuments extends AbstractPositioned implements PersistableInt
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\NodesSources", inversedBy="documentsByFields")
-     * @JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Renzo\Core\Entities\NodesSources
+     * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\Node", inversedBy="bNodes")
+     * @JoinColumn(name="node_a_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var RZ\Renzo\Core\Entities\Node
      */
-    private $nodeSource;
+    private $nodeA;
 
     /**
      * @return RZ\Renzo\Core\Entities\NodesSources
@@ -61,11 +60,11 @@ class NodesSourcesDocuments extends AbstractPositioned implements PersistableInt
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\Document", inversedBy="nodesSourcesByFields")
-     * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Renzo\Core\Entities\Document
+     * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\Node", inversedBy="aNodes")
+     * @JoinColumn(name="node_b_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var RZ\Renzo\Core\Entities\Node
      */
-    private $document;
+    private $nodeB;
 
     /**
      * @return RZ\Renzo\Core\Entities\Document
@@ -103,22 +102,22 @@ class NodesSourcesDocuments extends AbstractPositioned implements PersistableInt
 
 
     /**
-     * Create a new relation between NodeSource, a Document and a NodeTypeField.
+     * Create a new relation between two Nodes and a NodeTypeField.
      *
-     * @param mixed                                $nodeSource NodesSources and inherited types
-     * @param RZ\Renzo\Core\Entities\Document      $document   Document to link
-     * @param RZ\Renzo\Core\Entities\NodeTypeField $field      NodeTypeField
+     * @param RZ\Renzo\Core\Entities\Node $nodeA
+     * @param RZ\Renzo\Core\Entities\Node $nodeB
+     * @param RZ\Renzo\Core\Entities\NodeTypeField $field NodeTypeField
      */
-    public function __construct($nodeSource, Document $document, NodeTypeField $field)
+    public function __construct($nodeSource, Node $nodeA, Node $nodeB)
     {
-        $this->nodeSource = $nodeSource;
-        $this->document = $document;
+        $this->nodeA = $nodeA;
+        $this->nodeB = $nodeB;
         $this->field = $field;
     }
 
     public function __clone()
     {
         $this->id = 0;
-        $this->nodeSource = null;
+        $this->nodeA = null;
     }
 }

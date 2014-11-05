@@ -542,6 +542,28 @@ class Node extends AbstractDateTimedPositioned
         return $this->nodeSources;
     }
 
+
+    /**
+     * @OneToMany(targetEntity="NodesToNodes", mappedBy="nodeA")
+     * @var ArrayCollection
+     */
+    protected $bNodes;
+    public function getBNodes()
+    {
+        return $this->bNodes;
+    }
+
+    /**
+     * @OneToMany(targetEntity="NodesToNodes", mappedBy="nodeB")
+     * @var ArrayCollection
+     */
+    protected $aNodes;
+    public function getANodes()
+    {
+        return $this->aNodes;
+    }
+
+
     /**
      * Create a new empty Node according to given node-type.
      *
