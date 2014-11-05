@@ -456,6 +456,7 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 	});
 };
 
+
 /**
  * Resize
  * @return {[type]} [description]
@@ -466,7 +467,8 @@ Rozier.resize = function(){
 	_this.windowWidth = _this.$window.width();
 	_this.windowHeight = _this.$window.height();
 
-	if(this.windowWidth <= 1200 && _this.resizeFirst){
+	// Close tree panel if small screen & first resize
+	if(_this.windowWidth <= 1200 && _this.resizeFirst){
 		_this.$mainTrees[0].style.display = 'none';
 		_this.$minifyTreePanelButton.trigger('click');
 		setTimeout(function(){
@@ -474,9 +476,13 @@ Rozier.resize = function(){
 		}, 1000);
 	}
 
-	if(_this.resizeFirst) _this.resizeFirst = false;
-};
+	// Documents list
+	if(_this.lazyload !== null && !_this.resizeFirst) _this.lazyload.documentsList.resize();
 
+	// Set resize first to false
+	if(_this.resizeFirst) _this.resizeFirst = false;
+
+};
 
 
 /*

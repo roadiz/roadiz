@@ -23,6 +23,7 @@ Lazyload.prototype.htmlEditor = [];
 Lazyload.prototype.$HTMLeditorContent = null;
 Lazyload.prototype.$HTMLeditorNav = null;
 Lazyload.prototype.HTMLeditorNavToRemove = null;
+Lazyload.prototype.documentsList = null;
 
 Lazyload.prototype.onClick = function(event) {
     var _this = this;
@@ -119,6 +120,8 @@ Lazyload.prototype.applyContent = function(data) {
 Lazyload.prototype.generalBind = function() {
     var _this = this;
 
+    // console.log('General bind');
+    
     new DocumentWidget();
     new DocumentUploader();
     new ChildrenNodesField();
@@ -126,6 +129,8 @@ Lazyload.prototype.generalBind = function() {
     new SaveButtons();
     new TagAutocomplete();
     new NodeTypeFieldsPosition();
+
+    _this.documentsList = new DocumentsList();
 
 
     // Init markdown-preview

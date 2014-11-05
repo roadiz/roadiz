@@ -40,24 +40,24 @@
                     <tr>
                         <th>{% trans %}nodeName{% endtrans %}
                         {% if request.query.get("field") == 'nodeName' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=nodeName&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
+                            <a href="?field=nodeName&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
                         {% else %}
-                            <a href="?field=nodeName&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
+                            <a href="?field=nodeName&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
                         {% endif %}
                         </th>
                         <th>{% trans %}node.type{% endtrans %}
                         {% if request.query.get("field") == 'nodeType' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=nodeType&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a></th>
+                            <a href="?field=nodeType&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
                         {% else %}
-                            <a href="?field=nodeType&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a></th>
+                            <a href="?field=nodeType&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
                         {% endif %}
                         </th>
                         <th>{% trans %}node.status{% endtrans %}</th>
                         <th>{% trans %}last.modification{% endtrans %}
                         {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=updatedAt&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a></th>
+                            <a href="?field=updatedAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
                         {% else %}
-                            <a href="?field=updatedAt&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a></th>
+                            <a href="?field=updatedAt&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
                         {% endif %}
                         </th>
                         <th>{% trans %}actions{% endtrans %}</th>
@@ -109,13 +109,13 @@
                         <td>{{ node.getUpdatedAt|localizeddate('short', 'none') }}</td>
                         <td>
                             {% spaceless %}
-                                <a class="uk-button uk-button-table uk-button-small" href="{{ path('nodesEditPage', { nodeId: node.getId }) }}" title="{% trans %}edit.node{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                                <a class="uk-button uk-button-table uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}" title="{% trans %}see.nodetree{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-tree-mini"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditPage', { nodeId: node.getId }) }}" title="{% trans %}edit.node{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}" title="{% trans %}see.nodetree{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-tree-mini"></i></a>
                                 {% if not node.locked %}
                                     {% if not node.isDeleted %}
-                                    <a class="uk-button uk-button-table uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                    <a class="uk-button uk-button-content uk-button-small uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                                     {% else %}
-                                    <a class="uk-button uk-button-table uk-button-small" href="{{ path('nodesUndeletePage', { nodeId: node.getId }) }}" data-uk-tooltip="{animation:true}" title="{% trans %}undelete{% endtrans %}"><i class="uk-icon-rz-untrash"></i></a>
+                                    <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesUndeletePage', { nodeId: node.getId }) }}" data-uk-tooltip="{animation:true}" title="{% trans %}undelete{% endtrans %}"><i class="uk-icon-rz-untrash"></i></a>
                                     {% endif %}
                                 {% endif %}                                
                             {% endspaceless %}
