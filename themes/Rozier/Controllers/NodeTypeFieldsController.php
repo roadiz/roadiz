@@ -410,7 +410,7 @@ class NodeTypeFieldsController extends RozierApp
                         'minLength',
                         'integer',
                         array(
-                            'label' => $this->getTranslator()->trans('minLength'),
+                            'label' => $this->getTranslator()->trans('nodeTypeField.minLength'),
                             'required' => false
                         )
                     )
@@ -418,7 +418,7 @@ class NodeTypeFieldsController extends RozierApp
                         'maxLength',
                         'integer',
                         array(
-                            'label' => $this->getTranslator()->trans('maxLength'),
+                            'label' => $this->getTranslator()->trans('nodeTypeField.maxLength'),
                             'required' => false
                         )
                     );

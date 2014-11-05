@@ -8,8 +8,8 @@
         {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <nav>
-            	<a class="uk-button" href="{{ path('nodeTypesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.nodeType{% endtrans %}</a>
-				<a class="uk-button" href="{{ path('nodeTypesImportPage') }}"><i class="uk-icon-plus"></i> {% trans %}import.nodeType{% endtrans %}</a>
+            	<a class="uk-button" href="{{ path('nodeTypesAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.nodeType{% endtrans %}</a>
+				<a class="uk-button" href="{{ path('nodeTypesImportPage') }}"><i class="uk-icon-rz-import"></i> {% trans %}import.nodeType{% endtrans %}</a>
 			</nav>
         </div>
     </header>
@@ -37,7 +37,7 @@
                             </a></td>
 							<td>{{ type.getDisplayName }}</td>
 							<td>{{ type.getSourceEntityClassName }}</td>
-							<td><div class="uk-badge">{% transchoice type.getFields|length %}{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields{% endtranschoice %}</div></td>
+							<td><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields{% endtranschoice %}</div></td>
 							<td>
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodeTypesEditPage', { nodeTypeId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>

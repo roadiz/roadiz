@@ -8,7 +8,7 @@
         <h1 class="content-title translation-add-title">{% trans %}translations{% endtrans %}</h1>
         {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
-			<a class="uk-button" href="{{ path('translationsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.translation{% endtrans %}</a>
+			<a class="uk-button" href="{{ path('translationsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.translation{% endtrans %}</a>
 		</div>
     </header>
 
@@ -33,7 +33,7 @@
 						<td>
 						{% if t.translation.isAvailable == false %}<div class="uk-badge uk-badge-warning">{% trans %}not_available{% endtrans %}</div>{% endif %}
 						{% if t.translation.isDefaultTranslation == true %}
-						<div class="uk-badge uk-badge-notification"><i class="uk-icon-star"></i></div>
+						<div class="uk-badge uk-badge-table uk-badge-notification" title="{% trans %}default.translation{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-star"></i></div>
 						{% endif %}
 						</td>
 						<td>

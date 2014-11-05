@@ -4,7 +4,7 @@
     {% if (securityContext.Granted('ROLE_ACCESS_NODETYPES_DELETE')) %}
     {% if nodeType.getId %}
     <a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: nodeType.getId }) }}">
-        <span class="icon-container"><i class="uk-icon-node-type-fields"></i></span>
+        <span class="icon-container"><i class="uk-icon-rz-node-type-field"></i></span>
         <span class="label"><span class="label-text">{% trans %}manage.nodeTypeFields{% endtrans %}</span></span>
     </a>
     <a class="uk-button uk-button-danger" href="{{ path('nodeTypesDeletePage', { nodeTypeId: nodeType.getId}) }}">
