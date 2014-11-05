@@ -4,6 +4,7 @@
 			<a id="frontend-home-link"
 			   title="{% trans %}see.website{% endtrans %}"
 			   class="uk-icon-button uk-icon-rz-earth"
+			   data-uk-tooltip="{pos:'right', animation:'true'}"
 			   target="_blank"
 			   href="{{ path('homePage') }}"></a>
 		</div>
@@ -43,7 +44,7 @@
 		</li>
 		{% endif %}
 
-		
+
 		{# DOCUMENTS #}
 		{% if (securityContext.Granted('ROLE_ACCESS_DOCUMENTS')) %}
 
@@ -57,7 +58,7 @@
 
 		<li><a href="{{ path('tagsHomePage') }}"><i class="uk-icon-rz-tags"></i><span class="info">{% trans %}manage.tags{% endtrans %}</span></a></li>
 
-		{% endif %}	
+		{% endif %}
 
 
 		{# CONSTRUCTION #}
@@ -126,7 +127,7 @@
 		</li>
 
 		{% endif %}
-		
+
 
 		{# INTERACTIONS #}
 		<li class="uk-parent uk-rz-coming-soon">
@@ -175,7 +176,7 @@
 
 			</ul>
 		</li>
-		
+
 
 		{# SETTINGS #}
 		{% if (securityContext.Granted('ROLE_ACCESS_SETTINGS')) %}
