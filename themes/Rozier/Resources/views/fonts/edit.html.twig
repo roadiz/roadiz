@@ -5,6 +5,7 @@
 
     <header class="content-header header-font header-font-add">
         <h1 class="content-title font-add-title">{{ "edit.font.%name%"|trans({'%name%': font.getName}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('fontsHomePage') }}" title="{% trans %}back_to.fonts{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-edit">

@@ -5,11 +5,7 @@
 
     <header class="content-header header-setting header-setting-add">
        <h1 class="content-title setting-list-title">{% trans %}import.setting{% endtrans %}</h1>
-       <div class="content-header-action-menu">
-            <nav>
-                <a class="uk-button" href="{{ path('settingsHomePage') }}"><i class="uk-icon-rz-back-parent"></i><span class="label">{% trans %}back_to.settings{% endtrans %}</span></a>
-            </nav>
-       </div>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('settingsHomePage') }}" title="{% trans %}back_to.settings{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-no-action-menu">

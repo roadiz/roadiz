@@ -5,6 +5,8 @@
 
     <header class="content-header header-font header-font-add">
         <h1 class="content-title font-add-title">{% trans %}add.font{% endtrans %}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('fontsHomePage') }}" title="{% trans %}back_to.fonts{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </a>
     </header>
 
     <article class="content content-add">
@@ -13,8 +15,8 @@
     	    {{ form_widget(form) }}
     	    <fieldset data-uk-margin>
     		    <button data-action-save="#add-font-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                    <span class="icon-container"><i class="uk-icon-rz-plus"></i></span>
-                    <span class="label"><span class="label-text">{% trans %}add.font{% endtrans %}</span></span>
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
     	   	</fieldset>
     	</form>

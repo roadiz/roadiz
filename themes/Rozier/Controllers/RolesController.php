@@ -217,6 +217,7 @@ class RolesController extends RozierApp
             }
 
             $this->assignation['form'] = $form->createView();
+            $this->assignation['role'] = $role;
 
             return new Response(
                 $this->getTwig()->render('roles/edit.html.twig', $this->assignation),
