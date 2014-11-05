@@ -40,7 +40,7 @@
 				<tbody>
 					{% for user in users %}
 					<tr>
-						<td><img width="50" height="50" class="uk-thumbnail" src="{{ user.getPictureUrl }}" alt="{{ user.getUsername }}" /></td>
+						<td><img width="45" height="45" class="uk-thumbnail" src="{{ user.getPictureUrl }}" alt="{{ user.getUsername }}" /></td>
 						<td><a href="{{ path('usersEditPage', { userId: user.getId }) }}">{{ user.getUsername }}</a></td>
 						<td>{{ user.getEmail }}</td>
 						<td>
