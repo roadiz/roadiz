@@ -1,0 +1,27 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global edit-folder">
+
+    <header class="content-header header-folder header-folder-add">
+        <h1 class="content-title folder-add-title">{{ "edit.folder.%name%"|trans({'%name%': folder.getName}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('foldersHomePage') }}" title="{% trans %}back_to.folders{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </header>
+
+    <article class="content content-edit">
+    	{% form_theme form 'forms.html.twig' %}
+    	<form id="edit-folder-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    	    {{ form_widget(form) }}
+
+    	    <fieldset data-uk-margin>
+    		    <button data-action-save="#edit-folder-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}edit.folder{% endtrans %}</span></span>
+                </button>
+    	   	</fieldset>
+    	</form>
+    </article>
+
+    {% include 'folders/actionsMenu.html.twig' with {"folder": folder} only %}
+</section>
+{% endblock %}

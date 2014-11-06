@@ -330,6 +330,27 @@ fontsDeletePage:
     defaults: { _controller: Themes\Rozier\Controllers\FontsController::deleteAction }
     requirements: { userId : "[0-9]+", roleId : "[0-9]+" }
 
+# FOLDERS
+foldersHomePage:
+    path:     /rz-admin/folders
+    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::indexAction }
+foldersEditPage:
+    path:     /rz-admin/folders/edit/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::editAction }
+    requirements: { userId : "[0-9]+" }
+foldersDownloadPage:
+    path:     /rz-admin/folders/download/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::downloadAction }
+    requirements: { userId : "[0-9]+" }
+foldersAddPage:
+    path:     /rz-admin/folders/add
+    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::addAction }
+    requirements: { userId : "[0-9]+" }
+foldersDeletePage:
+    path:     /rz-admin/folders/delete/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::deleteAction }
+    requirements: { userId : "[0-9]+", roleId : "[0-9]+" }
+
 # TRANSLATIONS
 translationsHomePage:
     path:     /rz-admin/translations
@@ -372,14 +393,17 @@ documentsUsagePage:
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::usageAction }
     requirements: { documentId : "[0-9]+" }
 documentsUploadPage:
-    path:     /rz-admin/documents/upload
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::uploadAction }
+    path:     /rz-admin/documents/upload/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::uploadAction, folderId:null }
+    requirements: { folderId : "[0-9]+" }
 documentsRandomPage:
-    path:     /rz-admin/documents/random
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::randomAction }
+    path:     /rz-admin/documents/random/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::randomAction, folderId:null }
+    requirements: { folderId : "[0-9]+" }
 documentsEmbedPage:
-    path:     /rz-admin/documents/embed
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::embedAction }
+    path:     /rz-admin/documents/embed/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::embedAction, folderId:null }
+    requirements: { folderId : "[0-9]+" }
 documentsDeletePage:
     path:     /rz-admin/documents/delete/{documentId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::deleteAction }

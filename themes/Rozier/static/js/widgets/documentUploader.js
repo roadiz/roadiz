@@ -18,7 +18,18 @@ var DocumentUploader = function (options) {
         'uploadMultiple':false,
         'maxFilesize':   64,
         'autoDiscover':  false,
-        'headers': {"_token": Rozier.ajaxToken}
+        'headers': {"_token": Rozier.ajaxToken},
+        'dictDefaultMessage': "Drop files here to upload or click to open your explorer",
+        'dictFallbackMessage': "Your browser does not support drag'n'drop file uploads.",
+        'dictFallbackText': "Please use the fallback form below to upload your files like in the olden days.",
+        'dictFileTooBig': "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
+        'dictInvalidFileType': "You can't upload files of this type.",
+        'dictResponseError': "Server responded with {{statusCode}} code.",
+        'dictCancelUpload': "Cancel upload",
+        'dictCancelUploadConfirmation': "Are you sure you want to cancel this upload?",
+        'dictRemoveFile': "Remove file",
+        'dictRemoveFileConfirmation': null,
+        'dictMaxFilesExceeded': "You can not upload any more files."
     };
 
     if (typeof options !== "undefined") {
@@ -33,12 +44,23 @@ DocumentUploader.prototype.init = function() {
     var _this = this;
 
     Dropzone.options.uploadDropzoneDocument = {
-        url: Rozier.routes.documentsUploadPage,
-        method:'post',
-        headers:_this.options.headers,
-        paramName: _this.options.paramName,
-        uploadMultiple: _this.options.uploadMultiple,
-        maxFilesize: _this.options.maxFilesize,
+        url:                          Rozier.routes.documentsUploadPage,
+        method:                       'post',
+        headers:                      _this.options.headers,
+        paramName:                    _this.options.paramName,
+        uploadMultiple:               _this.options.uploadMultiple,
+        maxFilesize:                  _this.options.maxFilesize,
+        dictDefaultMessage:           _this.options.dictDefaultMessage,
+        dictFallbackMessage:          _this.options.dictFallbackMessage,
+        dictFallbackText:             _this.options.dictFallbackText,
+        dictFileTooBig:               _this.options.dictFileTooBig,
+        dictInvalidFileType:          _this.options.dictInvalidFileType,
+        dictResponseError:            _this.options.dictResponseError,
+        dictCancelUpload:             _this.options.dictCancelUpload,
+        dictCancelUploadConfirmation: _this.options.dictCancelUploadConfirmation,
+        dictRemoveFile:               _this.options.dictRemoveFile,
+        dictRemoveFileConfirmation:   _this.options.dictRemoveFileConfirmation,
+        dictMaxFilesExceeded:         _this.options.dictMaxFilesExceeded,
         init: function() {
             this.on("addedfile", function(file, data) {
                 _this.options.onAdded(file);

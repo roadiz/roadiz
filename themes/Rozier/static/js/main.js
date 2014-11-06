@@ -284,7 +284,7 @@ Rozier.onSearchNodesSources = function (event) {
 						    	'</span> <span class="type">'+data.data[i].typeName+
 						    	'</span></a></li>');
 					}
-					$results.append('<a id="see-all" href="#">seel all</a>');
+					$results.append('<a id="see-all" href="#">'+Rozier.messages.see_all+'</a>'); //Trans message (base.html.twig)
 				}
 			})
 			.fail(function( data ) {

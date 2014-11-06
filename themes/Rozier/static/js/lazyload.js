@@ -121,10 +121,10 @@ Lazyload.prototype.generalBind = function() {
     var _this = this;
 
     // console.log('General bind');
-    
+
     new DocumentWidget();
     new NodeWidget();
-    new DocumentUploader();
+    new DocumentUploader(Rozier.messages.dropzone);
     new ChildrenNodesField();
     new StackNodeTree();
     new SaveButtons();

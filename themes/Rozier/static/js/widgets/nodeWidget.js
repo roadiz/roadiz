@@ -136,7 +136,7 @@ NodeWidget.prototype.createExplorer = function(data, $originWidget) {
                     '<form action="#" method="POST" class="uk-form">',
                         '<div class="uk-form-icon">',
                             '<i class="uk-icon-search"></i>',
-                            '<input id="nodes-search-input" type="search" name="searchTerms" value="" placeholder="Search nodes"/>',
+                            '<input id="nodes-search-input" type="search" name="searchTerms" value="" placeholder="'+Rozier.messages.searchNodes+'"/>',
                         '</div>',
                     '</form>',
                 '</div>',
