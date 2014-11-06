@@ -1,84 +1,157 @@
 .root-tree {
-	margin: 0px;
-	padding: 0px;
+    margin: 0px;
+    padding: 0px;
 }
 
 .nodetree {
 
-	&-element {
-		&-inner {
-			position: relative;
-		}
-		&-name {
-			vertical-align: middle;
-			font-size: 12px;
-			display: inline-block;
-			position: relative;
-			max-width: 80%;
+    &-element {
+        &-inner {
+            position: relative;
+        }
+        &-name {
+            vertical-align: middle;
+            font-size: 12px;
+            display: inline-block;
+            position: relative;
+            max-width: 80%;
 
-			a {
-				white-space: nowrap;
-				max-width: 100%;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				display: inline-block;
-				vertical-align: middle;
-			}
-		}
-		&:hover {
-			.nodetree-contextualmenu {
-				.opacity(1);
-			}
-		}
-	}
-	&-tags {
-		vertical-align: middle;
-		display: inline-block;
-		position: relative;
+            a {
+                white-space: nowrap;
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: inline-block;
+                vertical-align: middle;
+            }
+        }
+        &:hover {
+            .nodetree-contextualmenu {
+                .opacity(1);
+            }
+        }
+    }
+    &-tags {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        padding:0 20px;
 
-		.uk-badge {
-			background: #CCC;
-			border:0 none;
-			text-shadow: none;
-			display: inline-block;
-		}
+        .uk-badge {
+            background: #CCC;
+            border:0 none;
+            text-shadow: none;
+            display: inline-block;
+        }
 
-		& > a {
-			display: inline-block !important;
-			color: white !important;
-		}
-	}
-	&-contextualmenu {
-		position: absolute;
-		right: 22px;
-		top: 2px;
-		.opacity(0);
+        & > a {
+            display: inline-block !important;
+            color: white !important;
+            margin:0 3px 3px 3px;
+        }
+    }
+    &-contextualmenu {
+        position: absolute;
+        right: 22px;
+        top: 2px;
+        .opacity(0);
 
-		.uk-icon-caret-down {
-			font-size: 10px;
-			margin: 0 0 0 1px;
-		}
-		&.uk-open {
-			.uk-button-mini {
-				background: @contextualdropdown-p-bg-color;
-			}
-		}
-	}
+        .uk-icon-caret-down {
+            font-size: 10px;
+            margin: 0 0 0 1px;
+        }
+        &.uk-open {
+            .uk-button-mini {
+                background: @contextualdropdown-p-bg-color;
+            }
+        }
+    }
 }
 
 .uk-nestable {
 
-	&-item {
-		margin-bottom: 1px;
-	}
-	&-placeholder {
-		margin-bottom: 1px;
-	}
-	&-list {
-		padding-left: 30px;
-	}
-	&-handle {
-		font-size: 15px;
-		vertical-align: middle;
-	}
+    &-item {
+        margin-bottom: 1px;
+    }
+    &-placeholder {
+        margin-bottom: 1px;
+    }
+    &-list {
+        padding-left: 30px;
+    }
+    &-handle {
+        font-size: 15px;
+        vertical-align: middle;
+    }
 }
+
+.nodetree-widget{
+
+    .nodetree-widget .root-tree>li:first-child{
+
+        &:before{
+            position: absolute;
+            content:'';
+            top: 0px; bottom:0; left: 0px; 
+            width:1px;
+        }
+    }
+}
+
+// .stack-tree-widget{
+
+//     &> .has-children{
+//         position: relative;
+
+//         &:first-child{
+//             &:before{
+//                 top:16px; left:17px;
+//             }
+
+//             &> .uk-nestable-list{
+
+//                 .uk-nestable-list-item:last-child{
+//                     &:after{
+//                         height:11px;
+//                     }
+//                 }
+//             }
+//         }
+        
+//         &:before{
+//             position: absolute;
+//             content:'';
+//             top: 21px; left: 18px;
+//             width:1px; height:52%;
+//             background: #b2b2b2;
+//         }
+        
+//         &> .uk-nestable-list{
+
+//             &:before{
+//                 position: absolute;
+//                 content:'';
+//                 top: 42px; bottom:0; left: 18px; 
+//                 width:2px;
+//                 background: @grey-verylight; 
+//             }
+
+//             .uk-nestable-list-item:last-child{
+//                 &:after{
+//                     position: absolute;
+//                     content:'';
+//                     bottom:0; left:0;
+//                     width:2px; height:11px;
+//                     background: @grey-verylight; 
+//                 }
+//             }
+
+//             .uk-nestable-list-item .uk-nestable-list{
+//                 position: relative;
+
+//                 // &:before{ 
+//                 // }
+//             }
+//         }
+//     }
+// }

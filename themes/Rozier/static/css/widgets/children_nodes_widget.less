@@ -13,10 +13,22 @@
 /* -------- STYLES -------- */
 
 .children-nodes-widget{
+    position: relative;
     border:1px solid @children-nodes-border;
 
     &> .children-nodes-tree{
         background: #fff;
+    }
+
+    .uk-form-label{
+        position: absolute;
+        left:80px;
+        height:55px;
+        line-height:55px;
+        
+        &:before{
+            display: none;
+        }
     }
 }
 

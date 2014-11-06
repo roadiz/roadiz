@@ -19,24 +19,24 @@
 			        <tr>
 			            <th>{% trans %}nodeName{% endtrans %}
 			            {% if request.query.get("field") == 'nodeName' and request.query.get("ordering") == "DESC" %}
-			            	<a href="?field=nodeName&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
+			            	<a href="?field=nodeName&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
 			            {% else %}
-			            	<a href="?field=nodeName&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
+			            	<a href="?field=nodeName&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
 			            {% endif %}
 			            </th>
 			            <th>{% trans %}node.type{% endtrans %}
 			            {% if request.query.get("field") == 'nodeType' and request.query.get("ordering") == "DESC" %}
-			            	<a href="?field=nodeType&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a></th>
+			            	<a href="?field=nodeType&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
 			            {% else %}
-			            	<a href="?field=nodeType&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a></th>
+			            	<a href="?field=nodeType&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
 			            {% endif %}
 			            </th>
 			            <th>{% trans %}node.status{% endtrans %}</th>
 			            <th>{% trans %}last.modification{% endtrans %}
 			            {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
-			            	<a href="?field=updatedAt&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a></th>
+			            	<a href="?field=updatedAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
 			            {% else %}
-			            	<a href="?field=updatedAt&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a></th>
+			            	<a href="?field=updatedAt&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
 			            {% endif %}
 			            </th>
 			            <th>{% trans %}actions{% endtrans %}</th>

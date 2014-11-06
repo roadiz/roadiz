@@ -1,9 +1,4 @@
 <nav data-action-menu class="actions-menu uk-navbar rz-vertical-align">
-    <a class="uk-button" href="{{ path('settingsHomePage') }}">
-        <span class="icon-container"><i class="uk-icon-rz-back-parent"></i></span>
-        <span class="label"><span class="label-text">{% trans %}back_to.settings{% endtrans %}</span></span>
-    </a>
-
     {% if setting.getId %}
     <a class="uk-button uk-button-danger" href="{{ path('settingsDeletePage', { settingId: setting.getId}) }}">
         <span class="icon-container"><i class="uk-icon-rz-trash-o"></i></span>

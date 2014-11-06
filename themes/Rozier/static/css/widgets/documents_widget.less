@@ -13,11 +13,23 @@
 /* -------- STYLES -------- */
 
 .documents-widget{
+    position: relative;
     border:1px solid @documents-widget-border;
 
     .documents-widget-uploader.dropzone {
         height: 200px;
         display: none;
+    }
+
+    .uk-form-label{
+        position: absolute;
+        left:80px;
+        height:55px;
+        line-height:55px;
+        
+        &:before{
+            display: none;
+        }
     }
 }
 
