@@ -11,10 +11,9 @@
         {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
 
-            <a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-rz-upload"></i> {% trans %}upload.document{% endtrans %}</a>
-           	<a class="uk-button" href="{{ path('documentsEmbedPage') }}"><i class="uk-icon-rz-embed"></i> {% trans %}embed.document{% endtrans %}</a>
-           	{# documentsRandomPage #}
-           	<a class="uk-button rz-no-ajax-link" href="{{ path('documentsRandomPage') }}"><i class="uk-icon-magic"></i> {% trans %}random.document{% endtrans %}</a>
+            <a class="uk-button" href="{{ path('documentsUploadPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-upload"></i> {% trans %}upload.document{% endtrans %}</a>
+           	<a class="uk-button" href="{{ path('documentsEmbedPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-embed"></i> {% trans %}embed.document{% endtrans %}</a>
+           	<a class="uk-button rz-no-ajax-link" href="{{ path('documentsRandomPage', {folderId: folder.id}) }}"><i class="uk-icon-magic"></i> {% trans %}random.document{% endtrans %}</a>
         </div>
     </header>
 
@@ -32,7 +31,7 @@
                     {% if document.isImage %}
                         {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
                     {% else %}
-                        <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div> 
+                        <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>
                     {% endif %}
                 </figure>
                 <div class="document-name">{{ document.getFilename }}</div>

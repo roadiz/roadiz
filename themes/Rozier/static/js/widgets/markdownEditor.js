@@ -35,7 +35,7 @@ MarkdownEditor.prototype.fullscreenActive = [];
 MarkdownEditor.prototype.init = function(){
     var _this = this;
 
-    if(_this.$cont.length){ 
+    if(_this.$cont.length){
 
         for(var i = 0; i < _this.$cont.length; i++) {
 
@@ -46,30 +46,31 @@ MarkdownEditor.prototype.init = function(){
             $(_this.$cont[i]).find('textarea').attr('data-index',i);
 
             // Check if a max length is defined
-            if(_this.$textarea[i].getAttribute('data-max-length') !== ''){
+            if( _this.$textarea[i].hasAttribute('data-max-length') &&
+                _this.$textarea[i].getAttribute('data-max-length') !== ''){
 
                 $(_this.$textarea[i]).on('keyup', $.proxy(_this.textareaChange, _this));
-                
+
                 _this.countLimit[i] = parseInt(_this.$textarea[i].getAttribute('data-max-length'));
 
                 $(_this.$cont[i]).find('.count-current')[0].innerHTML = stripTags(Rozier.lazyload.htmlEditor[i].currentvalue).length;
                 $(_this.$cont[i]).find('.count-limit')[0].innerHTML = _this.$textarea[i].getAttribute('data-max-length');
                 $(_this.$cont[i]).find('.uk-htmleditor-count')[0].style.display = 'block';
-                
+
                 if(stripTags(Rozier.lazyload.htmlEditor[i].currentvalue).length > _this.countLimit[i]){
                     _this.countAlertActive[i] = true;
                     removeClass(_this.$cont[i], 'content-limit');
                 }
                 else _this.countAlertActive[i] = false;
             }
-            else{
+            else {
                 _this.countLimit[i] = null;
                 _this.countAlertActive[i] = null;
             }
 
             _this.fullscreenActive[i] = false;
         }
-        
+
         // Selectors
         _this.$content = _this.$cont.find('.uk-htmleditor-content');
         _this.$buttonCode = _this.$cont.find('.uk-htmleditor-button-code');

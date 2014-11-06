@@ -63,15 +63,18 @@
         <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.1.1.min.js"><\/script>')</script>
 
         {% if head.devMode %}
+        <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
+
+        <script src="{{ head.resourcesUrl }}js/addons/sortable.js"></script>
+        <script src="{{ head.resourcesUrl }}js/addons/nestable.js"></script>
+        <script src="{{ head.resourcesUrl }}js/addons/pagination.js"></script>
+        <script src="{{ head.resourcesUrl }}js/addons/notify.js"></script>
+        <script src="{{ head.resourcesUrl }}js/addons/htmleditor.js"></script>
+
         <script src="{{ head.resourcesUrl }}js/vendor/jquery-ui.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/TweenMax.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/mousetrap.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/sortable.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/nestable.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/pagination.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/notify.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/jquery.minicolors.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/codemirror.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/mode/markdown/markdown.js"></script>
@@ -79,8 +82,8 @@
         <script src="{{ head.resourcesUrl }}js/vendor/mode/xml/xml.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/mode/gfm/gfm.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/marked.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/htmleditor.js"></script><!-- Switch to .min.js on prod -->
-        <script src="{{ head.resourcesUrl }}js/vendor/dropzone.js"></script> <!-- Switch to .min.js on prod -->
+        <script src="{{ head.resourcesUrl }}js/vendor/dropzone.js"></script>
+
         <script src="{{ head.resourcesUrl }}js/widgets/documentsList.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/documentWidget.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/nodeWidget.js"></script>
@@ -105,7 +108,42 @@
                 'resourcesUrl': '{{ head.resourcesUrl }}',
                 'ajaxToken':    '{{ head.ajaxToken }}',
                 'messages': {
-                    'forbiddenPage':'{{ 'forbidden.page'|trans() }}'
+                    'forbiddenPage':   '{{ 'forbidden.page'|trans() }}',
+                    'see_all':         '{{ 'see_all'|trans() }}',
+                    'searchDocuments': '{{ 'search.documents'|trans() }}',
+                    'searchNodes':     '{{ 'search.nodes'|trans() }}',
+                    'dropzone' : {
+                        'dictDefaultMessage':           "{{ 'drop.files.here.to.upload.or.click.to.open.your.explorer'|trans()}}",
+                        'dictFallbackMessage':          "{{ 'your.browser.does.not.support.dragndrop.file.uploads'|trans()}}",
+                        'dictFallbackText':             "{{ 'please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days'|trans()}}",
+                        'dictFileTooBig':               "{{ 'file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib'|trans()}}",
+                        'dictInvalidFileType':          "{{ 'you.cant.upload.files.of.this.type'|trans()}}",
+                        'dictResponseError':            "{{ 'server.responded.with.{{statuscode}}.code'|trans()}}",
+                        'dictCancelUpload':             "{{ 'cancel.upload'|trans()}}",
+                        'dictCancelUploadConfirmation': "{{ 'are.you.sure.you.want.to.cancel.this.upload'|trans()}}",
+                        'dictRemoveFile':               "{{ 'remove.file'|trans()}}",
+                        'dictRemoveFileConfirmation':   null,
+                        'dictMaxFilesExceeded':         "{{ 'you.can.not.upload.any.more.files'|trans()}}"
+                    },
+                    'htmleditor': {
+                        'h2':          '{{'headline.2'|trans() }}',
+                        'h3':          '{{'headline.3'|trans() }}',
+                        'h4':          '{{'headline.4'|trans() }}',
+                        'h5':          '{{'headline.5'|trans() }}',
+                        'h6':          '{{'headline.6'|trans() }}',
+                        'fullscreen':  '{{'fullscreen'|trans() }}',
+                        'bold' :       '{{'bold'|trans() }}',
+                        'italic' :     '{{'italic'|trans() }}',
+                        'strike' :     '{{'strikethrough'|trans() }}',
+                        'blockquote' : '{{'blockquote'|trans() }}',
+                        'link' :       '{{'link'|trans() }}',
+                        'image' :      '{{'image'|trans() }}',
+                        'listUl' :     '{{'unordered.list'|trans() }}',
+                        'listOl' :     '{{'ordered.list'|trans() }}',
+                        'back' :       '{{'back'|trans() }}',
+                        'hr' :         '{{'separator'|trans() }}',
+                        'nbsp' :       '{{'non_breaking.space'|trans() }}'
+                    }
                 },
                 'routes': {
                     'nodeAjaxEdit' :          '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',

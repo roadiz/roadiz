@@ -86,7 +86,7 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
         $widget.append('<div class="documents-widget-uploader dropzone"></div>');
         var $uploaderNew = $widget.find('.documents-widget-uploader');
 
-        _this.uploader = new DocumentUploader({
+        var options = {
             selector: '.documents-widget .documents-widget-uploader',
             headers: { "_token": Rozier.ajaxToken },
             onSuccess : function (data) {
@@ -101,7 +101,12 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
                     _this.onSortableDocumentWidgetChange(null, $sortable, $element);
                 }
             }
-        });
+        };
+
+        $.extend(options, Rozier.messages.dropzone);
+
+        console.log(options);
+        _this.uploader = new DocumentUploader(options);
 
         $uploaderNew.slideDown(500);
         $btn.addClass('active');
@@ -186,7 +191,7 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
                     '<form action="#" method="POST" class="uk-form">',
                         '<div class="uk-form-icon">',
                             '<i class="uk-icon-search"></i>',
-                            '<input id="documents-search-input" type="search" name="searchTerms" value="" placeholder="Search documents"/>',
+                            '<input id="documents-search-input" type="search" name="searchTerms" value="" placeholder="'+Rozier.messages.searchDocuments+'"/>',
                         '</div>',
                     '</form>',
                 '</div>',

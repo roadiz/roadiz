@@ -1,0 +1,42 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global content-nav-and-filters">
+
+	<header class="content-header header-folder header-folder-list">
+        <h1 class="content-title folder-list-title">{% trans %}folders{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
+        <div class="content-header-action-menu">
+            <a class="uk-button" href="{{ path('foldersAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.folder{% endtrans %}</a>
+        </div>
+    </header>
+
+	{% include 'widgets/filtersBar.html.twig' %}
+
+	<article class="content content-no-action-menu">
+		<div class="content-table-cont">
+			<table class="folders content-table uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}name{% endtrans %}</th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for folder in folders %}
+					<tr>
+						<td>
+							<a href="{{ path('foldersEditPage', { folderId: folder.getId }) }}">{{ folder.getName }}</a>
+						</td>
+						<td>
+							<a class="uk-button uk-button-small rz-no-ajax-link" href="{{ path('foldersDownloadPage', { folderId: folder.getId }) }}"><span class="uk-icon-rz-download"></span> {% trans %}download{% endtrans %}</a>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('foldersDeletePage', { folderId: folder.getId }) }}"><span class="uk-icon-rz-trash-mini-o"></span> {% trans %}delete{% endtrans %}</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</article>
+</section>
+{% endblock %}

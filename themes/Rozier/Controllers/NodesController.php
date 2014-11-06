@@ -799,7 +799,15 @@ class NodesController extends RozierApp
     {
         if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
-                'node.%name%.noCreation.urlAlias.alreadyExists',
+                'node.%name%.no_creation.urlAlias.alreadyExists',
+                array('%name%'=>$data['nodeName'])
+            );
+
+            throw new EntityAlreadyExistsException($msg, 1);
+        }
+        if ($this->nodeNameExists(StringHandler::slugify($data['nodeName']))) {
+            $msg = $this->getTranslator()->trans(
+                'node.%name%.no_creation.already_exists',
                 array('%name%'=>$data['nodeName'])
             );
 
@@ -839,6 +847,11 @@ class NodesController extends RozierApp
 
             throw new EntityAlreadyExistsException($msg, 1);
         }
+        if ($this->nodeNameExists(StringHandler::slugify($data['nodeName']))) {
+            $msg = $this->getTranslator()->trans('node.%name%.no_creation.already_exists', array('%name%'=>$data['nodeName']));
+
+            throw new EntityAlreadyExistsException($msg, 1);
+        }
         $type = null;
 
         if (!empty($data['nodeTypeId'])) {
@@ -869,7 +882,7 @@ class NodesController extends RozierApp
 
             return $node;
         } catch (\Exception $e) {
-            $msg = $this->getTranslator()->trans('node.%name%.noCreation.alreadyExists', array('%name%'=>$node->getNodeName()));
+            $msg = $this->getTranslator()->trans('node.%name%.no_creation.alreadyExists', array('%name%'=>$node->getNodeName()));
 
             throw new EntityAlreadyExistsException($msg, 1);
         }

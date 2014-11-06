@@ -16,7 +16,7 @@
 		    <nav class="uk-dropdown uk-dropdown-small uk-dropdown-flip">
 		        <div class="uk-nav uk-nav-dropdown uk-dropdown-flip">
 		            <p>
-		            	<a title="{{ "edit.folder.%name%"|trans({'%name%': folder.getName}) }}" href="{{ editUrl }}">
+		            	<a title="{{ "edit.folder.%name%"|trans({'%name%': folder.getName}) }}" href="{{ path('foldersEditPage', { folderId:folder.getId }) }}">
 		            		<i class="uk-icon-pencil"></i> {% trans %}edit.folder{% endtrans %}
 		            	</a>
 		            </p>

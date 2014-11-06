@@ -158,6 +158,7 @@ class FontsController extends RozierApp
             }
 
             $this->assignation['form'] = $form->createView();
+            $this->assignation['font'] = $font;
 
             return new Response(
                 $this->getTwig()->render('fonts/delete.html.twig', $this->assignation),

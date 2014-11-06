@@ -121,10 +121,10 @@ Lazyload.prototype.generalBind = function() {
     var _this = this;
 
     // console.log('General bind');
-    
+
     new DocumentWidget();
     new NodeWidget();
-    new DocumentUploader();
+    new DocumentUploader(Rozier.messages.dropzone);
     new ChildrenNodesField();
     new StackNodeTree();
     new SaveButtons();
@@ -135,19 +135,28 @@ Lazyload.prototype.generalBind = function() {
 
 
     // Init markdown-preview
-    _this.$textAreaHTMLeditor = $('textarea[data-uk-htmleditor]');
+    _this.$textAreaHTMLeditor = $('textarea[data-uk-htmleditor], textarea[data-uk-rz-htmleditor]').not('[data-uk-check-display]');
 
     if(_this.$textAreaHTMLeditor.length){
 
         setTimeout(function(){
             for(var i = 0; i < _this.$textAreaHTMLeditor.length; i++) {
 
-                _this.htmlEditor[i] = $.UIkit.htmleditor($(_this.$textAreaHTMLeditor[i]), {markdown:true, mode:'tab'});
+                _this.htmlEditor[i] = $.UIkit.htmleditor(
+                    $(_this.$textAreaHTMLeditor[i]),
+                    {
+                        markdown:true,
+                        mode:'tab',
+                        labels : Rozier.messages.htmleditor
+                    }
+                );
                 _this.$HTMLeditor = $('.uk-htmleditor');
                 _this.$HTMLeditorNav = $('.uk-htmleditor-navbar');
                 _this.HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+_this.$HTMLeditorNav[0].innerHTML+'</div>';
 
                 $(_this.$HTMLeditor[i]).append(_this.HTMLeditorNavInner);
+
+                _this.htmlEditor[i].redraw();
 
             }
 

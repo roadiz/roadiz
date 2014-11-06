@@ -4792,6 +4792,27 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <source>delete.folder</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.folders">
+        <source>back_to.folders</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="delete.folder.%name%">
+          <source>delete.folder.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.folder">
+          <source>are_you_sure.delete.folder</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.folder.%name%">
+          <source>edit.folder.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folders">
+          <source>folders</source>
+          <target></target>
+      </trans-unit>
 
 
       <trans-unit xml:space="preserve" id="default.translation">
@@ -4814,6 +4835,134 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
         <target></target>
       </trans-unit>
 
+
+
+      <trans-unit xml:space="preserve" id="drop.files.here.to.upload.or.click.to.open.your.explorer">
+          <source>drop.files.here.to.upload.or.click.to.open.your.explorer</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="your.browser.does.not.support.dragndrop.file.uploads">
+          <source>your.browser.does.not.support.dragndrop.file.uploads</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days">
+          <source>please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib">
+          <source>file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="you.cant.upload.files.of.this.type">
+          <source>you.cant.upload.files.of.this.type</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="server.responded.with.{{statuscode}}.code">
+          <source>server.responded.with.{{statuscode}}.code</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cancel.upload">
+          <source>cancel.upload</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are.you.sure.you.want.to.cancel.this.upload">
+          <source>are.you.sure.you.want.to.cancel.this.upload</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="remove.file">
+          <source>remove.file</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="you.can.not.upload.any.more.files">
+          <source>you.can.not.upload.any.more.files</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="headline.2">
+          <source>headline.2</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.3">
+          <source>headline.3</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.4">
+          <source>headline.4</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.5">
+          <source>headline.5</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.6">
+          <source>headline.6</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="fullscreen">
+          <source>fullscreen</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bold">
+          <source>bold</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="italic">
+          <source>italic</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="strikethrough">
+          <source>strikethrough</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="blockquote">
+          <source>blockquote</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="link">
+          <source>link</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="image">
+          <source>image</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unordered.list">
+          <source>unordered.list</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ordered.list">
+          <source>ordered.list</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back">
+          <source>back</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="separator">
+          <source>separator</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="non_breaking.space">
+          <source>non_breaking.space</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="forbidden.page">
+          <source>forbidden.page</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="see_all">
+          <source>see_all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="search.documents">
+          <source>search.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="search.nodes">
+          <source>search.nodes</source>
+          <target></target>
+      </trans-unit>
 
     </body>
   </file>
