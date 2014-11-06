@@ -70,6 +70,11 @@
 @import "forms/custom_switch.less";
 
 
+/* -------- FORMS -------- */
+
+@import "autocomplete/autocomplete.less";
+
+
 /* -------- BUTTONS -------- */
 
 @import "buttons/buttons.less";
@@ -108,6 +113,7 @@
 
 @import "users/users.less";
 @import "login/login.less";
+@import "history/history.less";
 
 
 /* -------- BREADCRUMB -------- */
@@ -141,4 +147,9 @@
 /* Width < 1024 */
 @media screen and (max-width: 1024px) {
     @import "responsive/less-1024.less";
+}
+
+/* Width < 768 */
+@media screen and (max-width: 768px) {
+    @import "responsive/less-768.less";
 }

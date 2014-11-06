@@ -21,16 +21,16 @@
 			            <th></th>
 			            <th>{% trans %}user.username{% endtrans %}
 			            	{% if request.query.get("field") == 'username' and request.query.get("ordering") == "DESC" %}
-			            		<a href="?field=username&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
+			            		<a href="?field=username&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
 			            	{% else %}
-			            		<a href="?field=username&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
+			            		<a href="?field=username&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
 			            	{% endif %}
 			            </th>
 			            <th>{% trans %}user.email{% endtrans %}
 			            	{% if request.query.get("field") == 'email' and request.query.get("ordering") == "DESC" %}
-			            		<a href="?field=email&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
+			            		<a href="?field=email&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
 			            	{% else %}
-			            		<a href="?field=email&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
+			            		<a href="?field=email&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
 			            	{% endif %}
 			            </th>
 			            <th>{% trans %}user.roles{% endtrans %}</th>

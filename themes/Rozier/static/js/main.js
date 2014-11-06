@@ -468,7 +468,7 @@ Rozier.resize = function(){
 	_this.windowHeight = _this.$window.height();
 
 	// Close tree panel if small screen & first resize
-	if(_this.windowWidth <= 1200 && _this.resizeFirst){
+	if(_this.windowWidth > 768 && _this.windowWidth <= 1200 && _this.resizeFirst){
 		_this.$mainTrees[0].style.display = 'none';
 		_this.$minifyTreePanelButton.trigger('click');
 		setTimeout(function(){

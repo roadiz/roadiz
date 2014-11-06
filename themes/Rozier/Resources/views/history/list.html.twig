@@ -20,9 +20,9 @@
 
 	{% include 'widgets/filtersBar.html.twig' %}
 
-	<article class="content content-manage-history">
-		<div class="content-table-cont">
-	        <table class="history content-table uk-table">
+	<article class="content content-no-action-menu content-manage-history">
+		<!--<div class="content-table-cont">
+	         <table class="history content-table uk-table">
 				<thead>
 			        <tr>
 			            <th colspan="2">{% trans %}datetime{% endtrans %}</th>
@@ -33,33 +33,57 @@
 			            <th>{% trans %}message{% endtrans %}</th>
 			        </tr>
 			    </thead>
-				<tbody>
-					{% for log in logs %}
+				<tbody> -->
 
-					{% if levels[log.getLevel] == 'error' %}
-					{% set tdClass = 'class="uk-alert-danger"' %}
-					{% set icon = 'uk-icon-warning' %}
-					{% else %}
-					{% set tdClass = 'class=""' %}
-					{% set icon = 'uk-icon-info-circle' %}
-					{% endif %}
+		{% spaceless %}
+		<div class="history-logs">	
+			{% for log in logs %}
 
+			{% if levels[log.getLevel] == 'error' %}
+			{% set tdClass = 'class="uk-alert-danger"' %}
+			{% set icon = 'uk-icon-warning' %}
+			{% else %}
+			{% set tdClass = 'class=""' %}
+			{% set icon = 'uk-icon-info-circle' %}
+			{% endif %}
+	
+			<div class="history-log-item">
+				<div class="history-log-date">
+					<div class="table">
+						<div class="table-cell">{{ log.getDatetime|localizeddate('medium') }}</div>
+					</div>
+				</div>
+				<div class="history-log-user">
+				{% if log.getUser %}
+					<a href="{{ path("usersEditPage", {"userId":log.getUser.getId }) }}"><img width="60" height="60" class="user-image uk-thumbnail" src="{{ log.getUser.getPictureUrl }}" alt="{{ log.getUser.getUsername }}" title="{{ log.getUser.getUsername }}" data-uk-tooltip="{animation:true}"/></a>
+				{% else %}
+				    <div class="user-image user-image-default"><i class="uk-icon-rz-users"></i></div>
+				{% endif %}
+				</div>
+				<div class="history-log-message">
+					<div class="table">
+						<div class="table-cell">{{ log.getMessage }}</div>
+					</div>
+				</div>
+			</div>
 
-
-					<tr>
-						<td {{ tdClass|raw }}>{{ log.getDatetime|date }}</td>
-						<td {{ tdClass|raw }}><i class="{{ icon }}"></i>{# {{ levels[log.getLevel] }} #}</td>
-						{% if not user %}
-						<td {{ tdClass|raw }}>{% if log.getUser %}
-							<a href="{{ path("usersEditPage", {"userId":log.getUser.getId }) }}">{{ log.getUser.getUsername }}</a>
-						{% endif %}</td>
-						{% endif %}
-						<td {{ tdClass|raw }}>{{ log.getMessage }}</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+			<!-- <tr>
+				<td {{ tdClass|raw }}>{{ log.getDatetime|date }}</td>
+				<td {{ tdClass|raw }}><i class="{{ icon }}"></i>{# {{ levels[log.getLevel] }} #}</td>
+				{% if not user %}
+				<td {{ tdClass|raw }}>{% if log.getUser %}
+					<a href="{{ path("usersEditPage", {"userId":log.getUser.getId }) }}">{{ log.getUser.getUsername }}</a>
+				{% endif %}</td>
+				{% endif %}
+				<td {{ tdClass|raw }}>{{ log.getMessage }}</td>
+			</tr> -->
+			{% endfor %}
 		</div>
+		{% endspaceless %}
+
+				<!-- </tbody>
+			</table>
+		</div> -->
     </article>
 
 </section>
