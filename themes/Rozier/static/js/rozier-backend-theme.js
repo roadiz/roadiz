@@ -16254,7 +16254,7 @@ DocumentsList.prototype.resize = function(){
 
 };
 ;/**
- *
+ * DOCUMENT WIDGET
  */
 var DocumentWidget = function () {
     var _this = this;
@@ -16276,6 +16276,11 @@ DocumentWidget.prototype.$unlinkDocumentButtons = null;
 DocumentWidget.prototype.$sortables = null;
 DocumentWidget.prototype.uploader = null;
 
+
+/**
+ * Init
+ * @return {[type]} [description]
+ */
 DocumentWidget.prototype.init = function() {
     var _this = this;
 
@@ -16301,6 +16306,7 @@ DocumentWidget.prototype.init = function() {
 
 };
 
+
 /**
  * Update document widget input values after being sorted.
  *
@@ -16322,6 +16328,12 @@ DocumentWidget.prototype.onSortableDocumentWidgetChange = function(event, list, 
     return false;
 };
 
+
+/**
+ * On uploader toggle
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 DocumentWidget.prototype.onUploaderToggle = function(event) {
     var _this = this;
 
@@ -16370,6 +16382,7 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
     return false;
 };
 
+
 /**
  * Create document explorer.
  *
@@ -16414,6 +16427,12 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
     return false;
 };
 
+
+/**
+ * Unlink document
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 DocumentWidget.prototype.onUnlinkDocument = function( event ) {
     var _this = this;
 
@@ -16427,6 +16446,7 @@ DocumentWidget.prototype.onUnlinkDocument = function( event ) {
 
     return false;
 };
+
 
 /**
  * Populate explorer with documents thumbnails
@@ -16493,6 +16513,7 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
     }, 0);
 };
 
+
 /**
  * Echap key to close explorer
  * @return {[type]} [description]
@@ -16504,6 +16525,7 @@ DocumentWidget.prototype.echapKey = function(e){
 
     return false;
 };
+
 
 /**
  * Close explorer
@@ -17105,7 +17127,9 @@ MarkdownEditor = function(){
     _this.$textarea = _this.$cont.find('textarea');
 
     // Methods
-    _this.init();
+    setTimeout(function(){
+        _this.init();
+    }, 0);
 
 };
 
@@ -17117,8 +17141,10 @@ MarkdownEditor.prototype.$buttonPreview = null;
 MarkdownEditor.prototype.$buttonFullscreen = null;
 MarkdownEditor.prototype.$count = null;
 MarkdownEditor.prototype.$countCurrent = null;
-MarkdownEditor.prototype.countLimit = [];
-MarkdownEditor.prototype.$countLimitText = null;
+MarkdownEditor.prototype.limit = [];
+MarkdownEditor.prototype.countMinLimit = [];
+MarkdownEditor.prototype.countMaxLimit = [];
+MarkdownEditor.prototype.$countMaxLimitText = null;
 MarkdownEditor.prototype.countAlertActive = [];
 MarkdownEditor.prototype.fullscreenActive = [];
 
@@ -17139,32 +17165,51 @@ MarkdownEditor.prototype.init = function(){
             $(_this.$cont[i]).find('.uk-htmleditor-button-preview').attr('data-index',i);
             $(_this.$cont[i]).find('.uk-htmleditor-button-fullscreen').attr('data-index',i);
             $(_this.$cont[i]).find('textarea').attr('data-index',i);
+            $(_this.$cont[i]).find('.CodeMirror').attr('data-index',i);
 
             // Check if a max length is defined
-            if( _this.$textarea[i].hasAttribute('data-max-length') &&
-                _this.$textarea[i].getAttribute('data-max-length') !== ''){
+            if(_this.$textarea[i].getAttribute('data-max-length') !== null){
 
-                $(_this.$textarea[i]).on('keyup', $.proxy(_this.textareaChange, _this));
-
-                _this.countLimit[i] = parseInt(_this.$textarea[i].getAttribute('data-max-length'));
-
+                _this.limit[i] = true;
+                _this.countMaxLimit[i] = parseInt(_this.$textarea[i].getAttribute('data-max-length'));
                 $(_this.$cont[i]).find('.count-current')[0].innerHTML = stripTags(Rozier.lazyload.htmlEditor[i].currentvalue).length;
                 $(_this.$cont[i]).find('.count-limit')[0].innerHTML = _this.$textarea[i].getAttribute('data-max-length');
                 $(_this.$cont[i]).find('.uk-htmleditor-count')[0].style.display = 'block';
-
-                if(stripTags(Rozier.lazyload.htmlEditor[i].currentvalue).length > _this.countLimit[i]){
-                    _this.countAlertActive[i] = true;
-                    removeClass(_this.$cont[i], 'content-limit');
-                }
-                else _this.countAlertActive[i] = false;
+                
             }
-            else {
-                _this.countLimit[i] = null;
+            
+            if(_this.$textarea[i].getAttribute('data-min-length') !== null){
+
+                _this.limit[i] = true;
+                _this.countMinLimit[i] = parseInt(_this.$textarea[i].getAttribute('data-min-length'));
+            }
+
+            if( _this.$textarea[i].getAttribute('data-min-length') === null && _this.$textarea[i].getAttribute('data-max-length') === null){
+
+                _this.limit[i] = false;
+                _this.countMaxLimit[i] = null;
                 _this.countAlertActive[i] = null;
             }
 
             _this.fullscreenActive[i] = false;
+
+            if(_this.limit[i]){
+
+                 // Check if current length is over limit
+                if(stripTags(Rozier.lazyload.htmlEditor[i].currentvalue).length > _this.countMaxLimit[i]){
+                    _this.countAlertActive[i] = true;
+                    addClass(_this.$cont[i], 'content-limit');
+                }
+                else if(stripTags(Rozier.lazyload.htmlEditor[i].currentvalue).length < _this.countMinLimit[i]){
+                    _this.countAlertActive[i] = true;
+                    addClass(_this.$cont[i], 'content-limit');
+                }
+                else _this.countAlertActive[i] = false;   
+            }
+
+            $(_this.$cont[i]).find('.CodeMirror').on('keyup', $.proxy(_this.textareaChange, _this));
         }
+        
 
         // Selectors
         _this.$content = _this.$cont.find('.uk-htmleditor-content');
@@ -17173,12 +17218,13 @@ MarkdownEditor.prototype.init = function(){
         _this.$buttonFullscreen = _this.$cont.find('.uk-htmleditor-button-fullscreen');
         _this.$count = _this.$cont.find('.uk-htmleditor-count');
         _this.$countCurrent = _this.$cont.find('.count-current');
-        _this.$countLimitText = _this.$cont.find('.count-limit');
+        _this.$countMaxLimitText = _this.$cont.find('.count-limit');
 
         // Events
         _this.$buttonPreview.on('click', $.proxy(_this.buttonPreviewClick, _this));
         _this.$buttonCode.on('click', $.proxy(_this.buttonCodeClick, _this));
         _this.$buttonFullscreen.on('click', $.proxy(_this.buttonFullscreenClick, _this));
+        Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
 
     }
 
@@ -17192,27 +17238,38 @@ MarkdownEditor.prototype.init = function(){
 MarkdownEditor.prototype.textareaChange = function(e){
     var _this = this;
 
-    setTimeout(function(){
-         var index = parseInt(e.currentTarget.getAttribute('data-index')),
-            textareaVal = Rozier.lazyload.htmlEditor[index].currentvalue,
-            textareaValStripped = stripTags(textareaVal),
-            textareaValLength = textareaValStripped.length;
+    var index = parseInt(e.currentTarget.getAttribute('data-index'));
 
-        _this.$countCurrent[index].innerHTML = textareaValLength;
+    if(_this.limit[index]){
+        setTimeout(function(){
+         
+            var textareaVal = Rozier.lazyload.htmlEditor[index].currentvalue,
+                textareaValStripped = stripTags(textareaVal),
+                textareaValLength = textareaValStripped.length;
 
-        if(textareaValLength > _this.countLimit[index]){
-            if(!_this.countAlertActive[index]){
-                addClass(_this.$cont[index], 'content-limit');
-                _this.countAlertActive[index] = true;
+            _this.$countCurrent[index].innerHTML = textareaValLength;
+
+            if(textareaValLength > _this.countMaxLimit[index]){
+                if(!_this.countAlertActive[index]){
+                    addClass(_this.$cont[index], 'content-limit');
+                    _this.countAlertActive[index] = true;
+                }
             }
-        }
-        else{
-            if(_this.countAlertActive[index]){
-                removeClass(_this.$cont[index], 'content-limit');
-                _this.countAlertActive[index] = false;
+            else if(textareaValLength < _this.countMinLimit[index]){
+                console.log('inf limit ');
+                if(!_this.countAlertActive[index]){
+                    addClass(_this.$cont[index], 'content-limit');
+                    _this.countAlertActive[index] = true;
+                }
             }
-        }
-    }, 100);
+            else{
+                if(_this.countAlertActive[index]){
+                    removeClass(_this.$cont[index], 'content-limit');
+                    _this.countAlertActive[index] = false;
+                }
+            }
+        }, 100);
+    }    
 
 };
 
@@ -17274,6 +17331,30 @@ MarkdownEditor.prototype.buttonFullscreenClick = function(e){
         _this.fullscreenActive[index] = false;
     }
 
+};
+
+
+/**
+ * Echap key to close explorer
+ * @return {[type]} [description]
+ */
+MarkdownEditor.prototype.echapKey = function(e){
+    var _this = this;
+
+    if(e.keyCode == 27){
+
+        for(var i = 0; i < _this.$cont.length; i++) {
+            
+            if(_this.fullscreenActive[i]){
+                $(_this.$buttonFullscreen[i]).find('a').trigger('click');
+                break;
+            }
+        }
+        
+
+    }
+
+    return false;
 };
 
 

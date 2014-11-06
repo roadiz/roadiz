@@ -1,5 +1,5 @@
 /**
- *
+ * DOCUMENT WIDGET
  */
 var DocumentWidget = function () {
     var _this = this;
@@ -21,6 +21,11 @@ DocumentWidget.prototype.$unlinkDocumentButtons = null;
 DocumentWidget.prototype.$sortables = null;
 DocumentWidget.prototype.uploader = null;
 
+
+/**
+ * Init
+ * @return {[type]} [description]
+ */
 DocumentWidget.prototype.init = function() {
     var _this = this;
 
@@ -46,6 +51,7 @@ DocumentWidget.prototype.init = function() {
 
 };
 
+
 /**
  * Update document widget input values after being sorted.
  *
@@ -67,6 +73,12 @@ DocumentWidget.prototype.onSortableDocumentWidgetChange = function(event, list, 
     return false;
 };
 
+
+/**
+ * On uploader toggle
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 DocumentWidget.prototype.onUploaderToggle = function(event) {
     var _this = this;
 
@@ -115,6 +127,7 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
     return false;
 };
 
+
 /**
  * Create document explorer.
  *
@@ -159,6 +172,12 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
     return false;
 };
 
+
+/**
+ * Unlink document
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 DocumentWidget.prototype.onUnlinkDocument = function( event ) {
     var _this = this;
 
@@ -172,6 +191,7 @@ DocumentWidget.prototype.onUnlinkDocument = function( event ) {
 
     return false;
 };
+
 
 /**
  * Populate explorer with documents thumbnails
@@ -238,6 +258,7 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
     }, 0);
 };
 
+
 /**
  * Echap key to close explorer
  * @return {[type]} [description]
@@ -249,6 +270,7 @@ DocumentWidget.prototype.echapKey = function(e){
 
     return false;
 };
+
 
 /**
  * Close explorer
