@@ -102,12 +102,18 @@ class LoginController extends RozierApp
 
         $builder = $this->getService('formFactory')
             ->createNamedBuilder(null, 'form', $defaults, array())
-            ->add('_username', 'text', array('constraints' => array(
-                new NotBlank()
-            )))
-            ->add('_password', 'password', array('constraints' => array(
-                new NotBlank()
-            )));
+            ->add('_username', 'text', array(
+                'label' => $this->getTranslator()->trans('username'),
+                'constraints' => array(
+                    new NotBlank()
+                )
+            ))
+            ->add('_password', 'password', array(
+                'label' => $this->getTranslator()->trans('password'),
+                'constraints' => array(
+                    new NotBlank()
+                )
+            ));
 
         return $builder->getForm();
     }

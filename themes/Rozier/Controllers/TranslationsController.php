@@ -66,7 +66,7 @@ class TranslationsController extends RozierApp
             $form = $this->buildMakeDefaultForm($translation);
             $form->handleRequest();
             if ($form->isValid() &&
-                $form->getData()['translation_id'] == $translation->getId()) {
+                $form->getData()['translationId'] == $translation->getId()) {
 
                 $translation->getHandler()->makeDefault();
 

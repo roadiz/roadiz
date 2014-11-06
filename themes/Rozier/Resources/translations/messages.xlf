@@ -4964,6 +4964,14 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="nodes.toggle-explorer">
+          <source>nodes.toggle-explorer</source>
+          <target></target>
+      </trans-unit>
+            <trans-unit xml:space="preserve" id="folder.name">
+          <source>folder.name</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
