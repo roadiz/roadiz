@@ -18,8 +18,8 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-05 16:00+0000
-Last-Translator: Maxime Bérard &lt;maxime@rezo-zero.com&gt;
+PO-Revision-Date: 2014-11-06 14:13+0000
+Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
 MIME-Version: 1.0
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1415203203.947837
+X-POOTLE-MTIME: 1415283192.088618
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -3021,7 +3021,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="269" approved="yes">
         <source>add.setting</source>
-        <target state="translated">Add settings</target>
+        <target state="translated">Add setting</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php</context>
           <context context-type="linenumber">41</context>
@@ -4797,6 +4797,27 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
         <source>delete.folder</source>
         <target state="translated">Delete folder</target>
       <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.folders" approved="yes">
+        <source>back_to.folders</source>
+        <target state="translated">Back to folders</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="delete.folder.%name%" approved="yes">
+          <source>delete.folder.%name%</source>
+          <target state="translated">Delete folder %name%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.folder" approved="yes">
+          <source>are_you_sure.delete.folder</source>
+          <target state="translated">Are you sure you want to delete this folder?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.folder.%name%" approved="yes">
+          <source>edit.folder.%name%</source>
+          <target state="translated">Edit folder “%name%”</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folders" approved="yes">
+          <source>folders</source>
+          <target state="translated">Folders</target>
+      </trans-unit>
 
 
       <trans-unit xml:space="preserve" id="default.translation" approved="yes">
@@ -4817,8 +4838,136 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="export.all.nodes" approved="yes">
         <source>export.all.nodes</source>
         <target state="translated">Export all nodes</target>
+      <note/></trans-unit>
+
+
+
+      <trans-unit xml:space="preserve" id="drop.files.here.to.upload.or.click.to.open.your.explorer" approved="yes">
+          <source>drop.files.here.to.upload.or.click.to.open.your.explorer</source>
+          <target state="translated">Drop files here to upload or click to open your explorer</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="your.browser.does.not.support.dragndrop.file.uploads" approved="yes">
+          <source>your.browser.does.not.support.dragndrop.file.uploads</source>
+          <target state="translated">Your browser does not support drag’n’drop file uploads</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days" approved="yes">
+          <source>please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days</source>
+          <target state="translated">Please use the fallback form below to upload your files like in the olden days</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib" approved="yes">
+          <source>file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib</source>
+          <target state="translated">File is too big ({{filesize}}MiB), max filesize {{maxfilesize}} MiB</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="you.cant.upload.files.of.this.type" approved="yes">
+          <source>you.cant.upload.files.of.this.type</source>
+          <target state="translated">You can’t upload files of this type</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="server.responded.with.{{statuscode}}.code" approved="yes">
+          <source>server.responded.with.{{statuscode}}.code</source>
+          <target state="translated">Server responded with {{statuscode}} code</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cancel.upload" approved="yes">
+          <source>cancel.upload</source>
+          <target state="translated">Cancel upload</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are.you.sure.you.want.to.cancel.this.upload" approved="yes">
+          <source>are.you.sure.you.want.to.cancel.this.upload</source>
+          <target state="translated">Are you sure you want to cancel this upload</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="remove.file" approved="yes">
+          <source>remove.file</source>
+          <target state="translated">Remove file</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="you.can.not.upload.any.more.files" approved="yes">
+          <source>you.can.not.upload.any.more.files</source>
+          <target state="translated">You can not upload any more files</target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="headline.2" approved="yes">
+          <source>headline.2</source>
+          <target state="translated">Headline 2</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.3" approved="yes">
+          <source>headline.3</source>
+          <target state="translated">Headline 3</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.4" approved="yes">
+          <source>headline.4</source>
+          <target state="translated">Headline 4</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.5" approved="yes">
+          <source>headline.5</source>
+          <target state="translated">Headline 5</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.6" approved="yes">
+          <source>headline.6</source>
+          <target state="translated">Headline 6</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="fullscreen" approved="yes">
+          <source>fullscreen</source>
+          <target state="translated">Fullscreen</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bold" approved="yes">
+          <source>bold</source>
+          <target state="translated">Bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="italic" approved="yes">
+          <source>italic</source>
+          <target state="translated">Italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="strikethrough" approved="yes">
+          <source>strikethrough</source>
+          <target state="translated">Strikethrough</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="blockquote" approved="yes">
+          <source>blockquote</source>
+          <target state="translated">Blockquote</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="link" approved="yes">
+          <source>link</source>
+          <target state="translated">Link</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="image" approved="yes">
+          <source>image</source>
+          <target state="translated">Image</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unordered.list" approved="yes">
+          <source>unordered.list</source>
+          <target state="translated">Unordered list</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ordered.list" approved="yes">
+          <source>ordered.list</source>
+          <target state="translated">Ordered list</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back" approved="yes">
+          <source>back</source>
+          <target state="translated">Back</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="separator" approved="yes">
+          <source>separator</source>
+          <target state="translated">Separator</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="non_breaking.space" approved="yes">
+          <source>non_breaking.space</source>
+          <target state="translated">Non-breaking space</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="forbidden.page" approved="yes">
+          <source>forbidden.page</source>
+          <target state="translated">Forbidden page, please connect again.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="see_all" approved="yes">
+          <source>see_all</source>
+          <target state="translated">See all…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="search.documents" approved="yes">
+          <source>search.documents</source>
+          <target state="translated">Search documents</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="search.nodes" approved="yes">
+          <source>search.nodes</source>
+          <target state="translated">Search nodes</target>
+      </trans-unit>
 
     </body>
   </file>

@@ -30,7 +30,45 @@
             toolbar      : [ 'h2', 'h3', 'h4', 'h5', 'h6', 'bold', 'italic', 'listUl', 'listOl', 'back', 'nbsp', 'hr', 'blockquote', 'link' ], // 'image', 'strike',
             lblPreview   : 'Preview',
             lblCodeview  : 'HTML',
-            lblMarkedview: 'Markdown'
+            lblMarkedview: 'Markdown',
+            labels       : {
+                h2:          'Headline 2',
+                h3:          'Headline 3',
+                h4:          'Headline 4',
+                h5:          'Headline 5',
+                h6:          'Headline 6',
+                fullscreen:  'Fullscreen',
+                bold :       'Bold',
+                italic :     'Italic',
+                strike :     'Strikethrough',
+                blockquote : 'Blockquote',
+                link :       'Link',
+                image :      'Image',
+                listUl :     'Unordered List',
+                listOl :     'Ordered List',
+                back :       'Back',
+                hr :         'Separator',
+                nbsp :       'Non-breaking space'
+            },
+            icons:{
+                h2:          '<i class="uk-icon-rz-h2"></i>',
+                h3:          '<i class="uk-icon-rz-h3"></i>',
+                h4:          '<i class="uk-icon-rz-h4"></i>',
+                h5:          '<i class="uk-icon-rz-h5"></i>',
+                h6:          '<i class="uk-icon-rz-h6"></i>',
+                fullscreen:  '<i class="uk-icon-rz-fullscreen"></i>',
+                bold :       '<i class="uk-icon-rz-bold"></i>',
+                italic :     '<i class="uk-icon-rz-italic"></i>',
+                strike :     '<i class="uk-icon-rz-strikethrough"></i>',
+                blockquote : '<i class="uk-icon-rz-quote"></i>',
+                link :       '<i class="uk-icon-rz-link"></i>',
+                image :      '<i class="uk-icon-rz-documents"></i>',
+                listUl :     '<i class="uk-icon-rz-unordered-list"></i>',
+                listOl :     '<i class="uk-icon-rz-ordered-list"></i>',
+                back :       '<i class="uk-icon-rz-back"></i>',
+                hr :         '<i class="uk-icon-rz-hr"></i>',
+                nbsp :       '<i class="uk-icon-rz-space-forced"></i>'
+            }
         },
 
         init: function() {
@@ -378,72 +416,72 @@
             editor.addButtons({
 
                 h2: {
-                    title  : 'Headline 2',
-                    label  : '<i class="uk-icon-rz-h2"></i>'
+                    title  : editor.options.labels.h2,
+                    label  : editor.options.icons.h2
                 },
                 h3: {
-                    title  : 'Headline 3',
-                    label  : '<i class="uk-icon-rz-h3"></i>'
+                    title  : editor.options.labels.h3,
+                    label  : editor.options.icons.h3
                 },
                 h4: {
-                    title  : 'Headline 4',
-                    label  : '<i class="uk-icon-rz-h4"></i>'
+                    title  : editor.options.labels.h4,
+                    label  : editor.options.icons.h4
                 },
                 h5: {
-                    title  : 'Headline 5',
-                    label  : '<i class="uk-icon-rz-h5"></i>'
+                    title  : editor.options.labels.h5,
+                    label  : editor.options.icons.h5
                 },
                 h6: {
-                    title  : 'Headline 6',
-                    label  : '<i class="uk-icon-rz-h6"></i>'
+                    title  : editor.options.labels.h6,
+                    label  : editor.options.icons.h6
                 },
                 fullscreen: {
-                    title  : 'Fullscreen',
-                    label  : '<i class="uk-icon-rz-fullscreen"></i>'
+                    title  : editor.options.labels.fullscreen,
+                    label  : editor.options.icons.fullscreen
                 },
                 bold : {
-                    title  : 'Bold',
-                    label  : '<i class="uk-icon-rz-bold"></i>'
+                    title  : editor.options.labels.bold,
+                    label  : editor.options.icons.bold
                 },
                 italic : {
-                    title  : 'Italic',
-                    label  : '<i class="uk-icon-rz-italic"></i>'
+                    title  : editor.options.labels.italic,
+                    label  : editor.options.icons.italic
                 },
                 strike : {
-                    title  : 'Strikethrough',
-                    label  : '<i class="uk-icon-rz-strikethrough"></i>'
+                    title  : editor.options.labels.strike,
+                    label  : editor.options.icons.strike
                 },
                 blockquote : {
-                    title  : 'Blockquote',
-                    label  : '<i class="uk-icon-rz-quote"></i>'
+                    title  : editor.options.labels.blockquote,
+                    label  : editor.options.icons.blockquote
                 },
                 link : {
-                    title  : 'Link',
-                    label  : '<i class="uk-icon-rz-link"></i>'
+                    title  : editor.options.labels.link,
+                    label  : editor.options.icons.link
                 },
                 image : {
-                    title  : 'Image',
-                    label  : '<i class="uk-icon-rz-documents"></i>'
+                    title  : editor.options.labels.image,
+                    label  : editor.options.icons.image
                 },
                 listUl : {
-                    title  : 'Unordered List',
-                    label  : '<i class="uk-icon-rz-unordered-list"></i>'
+                    title  : editor.options.labels.listUl,
+                    label  : editor.options.icons.listUl
                 },
                 listOl : {
-                    title  : 'Ordered List',
-                    label  : '<i class="uk-icon-rz-ordered-list"></i>'
+                    title  : editor.options.labels.listOl,
+                    label  : editor.options.icons.listOl
                 },
                 back : {
-                    title  : 'Back',
-                    label  : '<i class="uk-icon-rz-back"></i>'
+                    title  : editor.options.labels.back,
+                    label  : editor.options.icons.back
                 },
                 hr : {
-                    title  : 'Separator',
-                    label  : '<i class="uk-icon-rz-hr"></i>'
+                    title  : editor.options.labels.hr,
+                    label  : editor.options.icons.hr
                 },
                 nbsp : {
-                    title  : 'Non-breaking space',
-                    label  : '<i class="uk-icon-rz-space-forced"></i>'
+                    title  : editor.options.labels.nbsp,
+                    label  : editor.options.icons.nbsp
                 }
 
             });

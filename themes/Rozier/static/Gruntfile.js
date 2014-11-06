@@ -11,15 +11,18 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				'src': [
+					'js/vendor/uikit.min.js',
+
+					'js/addons/sortable.js',
+					'js/addons/nestable.js',
+					'js/addons/pagination.js',
+					'js/addons/notify.js',
+					'js/addons/htmleditor.js',
+
 					'js/vendor/jquery-ui.js',
 					'js/vendor/TweenMax.min.js',
 					'js/vendor/bootstrap-switch.js',
-					'js/vendor/uikit.min.js',
 					'js/vendor/mousetrap.min.js',
-					'js/addons/sortable.min.js',
-					'js/addons/nestable.js',
-					'js/addons/pagination.min.js',
-					'js/addons/notify.min.js',
 					'js/vendor/jquery.minicolors.min.js',
 					'js/vendor/codemirror.js',
 					'js/vendor/mode/markdown/markdown.js',
@@ -27,8 +30,8 @@ module.exports = function(grunt) {
 					'js/vendor/mode/xml/xml.js',
 					'js/vendor/mode/gfm/gfm.js',
 					'js/vendor/marked.min.js',
-					'js/addons/htmleditor.js',
 					'js/vendor/dropzone.js',
+
 					'js/widgets/documentsList.js',
 					'js/widgets/documentWidget.js',
 					'js/widgets/nodeWidget.js',
