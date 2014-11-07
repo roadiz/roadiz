@@ -132,6 +132,7 @@ Lazyload.prototype.generalBind = function() {
     new NodeTypeFieldsPosition();
 
     _this.documentsList = new DocumentsList();
+    _this.settingsSaveButtons = new SettingsSaveButtons();
 
 
     // Init markdown-preview

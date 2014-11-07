@@ -40,14 +40,15 @@
 						<td><a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">{{ setting.setting.getName|trans() }}</a></td>
 						<td>
 							{% form_theme setting.form 'horizontalForms.html.twig' %}
-							<form class="uk-form uk-form-horizontal" action="#" method="post" {{ form_enctype(setting.form) }}>
+							<form class="uk-form uk-form-settings uk-form-horizontal" action="#" method="post" {{ form_enctype(setting.form) }}>
 							    {{ form_widget(setting.form) }}
-								<!-- <button class="uk-button uk-button-primary uk-button-small" type="submit"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</button> -->
+                                <button class="uk-button uk-button-settings-submit uk-button-small" type="submit"><i class="uk-icon-rz-save-mini"></i></button> 
+                                <!-- uk-button-primary  -->
+                            </form>
 						</td>
 						<td>
 						{% spaceless %}
-								<button class="uk-button uk-button-content uk-button-small" title="{% trans %}save{% endtrans %}" data-uk-tooltip="{animation:true}" type="submit"><i class="uk-icon-rz-save-mini"></i> </button> <!-- uk-button-primary  -->
-							</form>
+                            <a class="uk-button uk-button-content uk-button-small uk-button-settings-save no-ajax-link" href="#" title="{% trans %}save{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-save-mini"></i></a>
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('settingsDeletePage', { settingId: setting.setting.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                         {% endspaceless %}

@@ -37,6 +37,7 @@ module.exports = function(grunt) {
 					'js/widgets/nodeWidget.js',
 					'js/widgets/documentUploader.js',
 					'js/widgets/saveButtons.js',
+					'js/widgets/settingsSaveButtons.js',
 					'js/widgets/nodeStatuses.js',
 					'js/widgets/childrenNodesField.js',
 					'js/widgets/markdownEditor.js',
