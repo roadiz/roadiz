@@ -6,6 +6,7 @@
 
 <header class="content-header header-settingGroup header-settingGroup-add">
        <h1 class="content-title settingGroup-list-title">{% trans %}add.settingGroup{% endtrans %}</h1>
+       <a class="content-header-nav-back uk-navbar-content" href="{{ path('settingGroupsHomePage') }}" title="{% trans %}back_to.settingGroups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-settingGroup-add">
@@ -14,8 +15,8 @@
             {{ form_widget(form) }}
     	    <fieldset data-uk-margin>
     	    	<button data-action-save="#add-settingGroup-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                    <span class="icon-container"><i class="uk-icon-plus"></i></span>
-                    <span class="label"><span class="label-text">{% trans %}add.settingGroup{% endtrans %}</span></span>
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
        		</fieldset>
     	</form>

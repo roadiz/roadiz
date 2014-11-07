@@ -22,7 +22,7 @@
 			            <th>{% trans %}font.variant{% endtrans %}</th>
 			            <th>{% trans %}font.files{% endtrans %}</th>
 			            <th>{% trans %}font.cssfamily{% endtrans %}</th>
-			            <th>{% trans %}actions{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
 				<tbody>
@@ -33,15 +33,18 @@
 						</td>
 						<td>{{ font.getReadableVariant }}</td>
 						<td>
-							{% if font.getEOTFilename %}<div class="uk-badge">EOT</div>{% endif %}
-							{% if font.getWOFFFilename %}<div class="uk-badge">WOFF</div>{% endif %}
-							{% if font.getSVGFilename %}<div class="uk-badge">SVG</div>{% endif %}
-							{% if font.getOTFFilename %}<div class="uk-badge">OTF</div>{% endif %}
+							{% if font.getEOTFilename %}<div class="uk-badge uk-badge-table">EOT</div>{% endif %}
+							{% if font.getWOFFFilename %}<div class="uk-badge uk-badge-table">WOFF</div>{% endif %}
+							{% if font.getSVGFilename %}<div class="uk-badge uk-badge-table">SVG</div>{% endif %}
+							{% if font.getOTFFilename %}<div class="uk-badge uk-badge-table">OTF</div>{% endif %}
 						</td>
 						<td><code>{{ font.getHash }}</code></td>
 						<td>
-							<a class="uk-button uk-button-small rz-no-ajax-link" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}"><span class="uk-icon-rz-download"></span> {% trans %}download{% endtrans %}</a>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('fontsDeletePage', { fontId: font.getId }) }}"><span class="uk-icon-rz-trash-mini-o"></span> {% trans %}delete{% endtrans %}</a>
+						{% spaceless %}
+							<a class="uk-button uk-button-content uk-button-small" href="{{ path('fontsEditPage', { fontId: font.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+							<a class="uk-button uk-button-content uk-button-small" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}" title="{% trans %}download{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
+							<a class="uk-button uk-button-content uk-button-small" href="{{ path('fontsDeletePage', { fontId: font.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>						    
+						{% endspaceless %}
 						</td>
 					</tr>
 					{% endfor %}

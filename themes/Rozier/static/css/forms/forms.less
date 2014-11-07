@@ -65,21 +65,34 @@
             color: #333;
         }
     }
+
     input[type=radio] {
-         background-color: @grey-form-submit;
-         &:checked:before {
+        background-color: @grey-form-submit;
+        &:checked:before {
             background: darken(@contrast-color, 10%);
-         }
-     }
+        }
+    }
+
+    input[type=file]{
+        font-size:12px;
+    }
+
+    textarea{
+        padding:10px 15px;
+    }
 
     .uk-form-icon > [class*=uk-icon-]{
         line-height:15px;
     }
-
+    
+    // Select
     .rz-select {
         position: relative;
-        width: 100%; height:36px;
-        font-weight: bold;
+        display: inline-block;
+        width: auto; height:36px;
+        padding-right:20px;
+        font-size:12px;
+        // font-weight: bold;
         color: @grey-form-text;
         background-color: white;
         border: 1px solid @grey-form-border;
@@ -115,6 +128,27 @@
             }
         }
     }
+    
+
+    // Select multiple
+    select[multiple]{
+        min-width: 100px; min-height: 120px;
+        font-size:12px;
+        -webkit-appearance:none;
+        .rounded(0px);
+
+        &:focus{
+            background-color: @grey-verylight;
+            border-color: @grey-form-submit-border-hover;
+            color: #333;
+        }
+    }
+
+    .form-col-choice{
+        min-width: 100px;
+        max-width: 600px;
+    }
+
 
     .uk-form-label {
         font-size: 12px;
@@ -145,11 +179,15 @@
 
         &> div > div{
             display:inline-block;
+            vertical-align: top;
         }
     }
 
-    // Default Button
+    #form_value_time{
+        margin-left:10px;
+    }
 
+    // Default input
     input[type="text"],
     input[type="password"],
     input[type="search"],

@@ -60,19 +60,19 @@
                             <a href="?field=updatedAt&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
                         {% endif %}
                         </th>
-                        <th>{% trans %}actions{% endtrans %}</th>
+                        <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for node in nodes %}
                     <tr>
                         {% if node.getNodeSources.first.getTitle %}
-                        <td><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeSources.first.getTitle }}</a></td>
+                        <td class="nodes-list-item-link"><span class="nodes-list-item-color" style="background-color:{{ node.nodeType.color }};"></span><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeSources.first.getTitle }}</a></td>
                         {% else %}
-                        <td><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeName }}</a></td>
+                        <td class="nodes-list-item-link"><span class="nodes-list-item-color" style="background-color:{{ node.nodeType.color }};"></span><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeName }}</a></td>
                         {% endif %}
                         <td>{{ node.getNodeType.getDisplayName }}</td>
-                        <td style="text-align:center;">
+                        <td>  <!-- style="text-align:center;" -->
                             {% spaceless %}
                                 {% if node.isDraft == true %} 
                                 <div class="uk-button-status" title="{% trans %}node.draft{% endtrans %}" data-uk-tooltip="{animation:true}">

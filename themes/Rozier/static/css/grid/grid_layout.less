@@ -52,20 +52,54 @@
     #main-trees {
         width: @trees-panel-width;
 
-        & > div {
+        #main-trees-container{
+
             width: @trees-panel-width;
-            overflow-y: auto;
+
+            & > div {
+                width: @trees-panel-width;
+                overflow-y: auto;
+            }
         }
 
         &.minified {
-            .transform(scale3D(0,1,1));
-            width: 1px;
+            width:1px;
+
+            #main-trees-overlay{
+                .opacity(0.7);
+            }
+
+            #main-trees-container{
+                left:-@trees-panel-width/4;
+            }
+
+            // .transform(perspective(700px) rotateY(90deg));
+            // .transform(scale3D(0,1,1));
+            // width: 1px;
         }
     }
 
     #main-content {
         & > div {
             overflow-y: auto;
+        }
+
+        #back-top-button{
+            position: fixed;
+            right:20px; bottom:20px;
+            width:36px; height:36px;
+            line-height:36px;
+            text-align: center;
+            background: #fff;
+            border:1px solid #cbcbcb;
+            color:@grey-medium;
+            cursor: pointer;
+            z-index:4;
+
+            &:hover{
+                background: darken(#fff, 10%);
+                border-color: darken(#cbcbcb, 10%);
+            }
         }
     }
 }

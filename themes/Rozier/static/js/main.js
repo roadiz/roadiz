@@ -19,6 +19,8 @@ Rozier.resizeFirst = true;
 
 Rozier.$minifyTreePanelButton = null;
 Rozier.$mainTrees = null;
+Rozier.$mainContentScrollable = null;
+Rozier.$backTopBtn = null;
 
 
 Rozier.onDocumentReady = function(event) {
@@ -39,6 +41,8 @@ Rozier.onDocumentReady = function(event) {
 
 	Rozier.$minifyTreePanelButton = $('#minify-tree-panel-button');
 	Rozier.$mainTrees = $('#main-trees');
+	Rozier.$mainContentScrollable = $('#main-content-scrollable');
+	Rozier.$backTopBtn = $('#back-top-button');
 
 
 	// Search node
@@ -55,6 +59,9 @@ Rozier.onDocumentReady = function(event) {
 
 	// Minify trees panel toggle button
 	Rozier.$minifyTreePanelButton.on('click', Rozier.toggleTreesPanel);
+
+	// Back top btn
+	Rozier.$backTopBtn.on('click', $.proxy(Rozier.backTopBtnClick, Rozier));
 
 	Rozier.lazyload.generalBind();
 
@@ -455,6 +462,21 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 		console.log(data);
 	});
 };
+
+
+/**
+ * Back top click
+ * @return {[type]} [description]
+ */
+Rozier.backTopBtnClick = function(e){
+	var _this = this;
+
+	TweenLite.to(_this.$mainContentScrollable, 0.6, {scrollTo:{y:0}, ease:Expo.easeOut});
+	
+	return false;
+};
+
+
 
 
 /**

@@ -22,7 +22,7 @@
 			            <th>{% trans %}name{% endtrans %}</th>
 			            <th>{% trans %}translation.locale{% endtrans %}</th>
 			            <th>{% trans %}status{% endtrans %}</th>
-			            <th>{% trans %}actions{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
 				<tbody>
@@ -33,7 +33,7 @@
 						<td>
 						{% if t.translation.isAvailable == false %}<div class="uk-badge uk-badge-warning">{% trans %}not_available{% endtrans %}</div>{% endif %}
 						{% if t.translation.isDefaultTranslation == true %}
-						<div class="uk-badge uk-badge-table uk-badge-notification" title="{% trans %}default.translation{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-star"></i></div>
+						<div class="uk-badge uk-badge-table uk-badge-notification" title="{% trans %}default.translation{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-star"></i></div>
 						{% endif %}
 						</td>
 						<td>
@@ -43,7 +43,7 @@
 								{% form_theme t.defaultForm 'forms.html.twig' %}
 								<form class="uk-form-translation-default" action="#" method="post" {{ form_enctype(t.defaultForm) }}>
 									{{ form_widget(t.defaultForm) }}
-									<button class="uk-button uk-button-content uk-button-small" title="{% trans %}set.default{% endtrans %}" type="submit" data-uk-tooltip="{animation:true}"><i class="uk-icon-star"></i></button>
+									<button class="uk-button uk-button-content uk-button-small" title="{% trans %}set.default{% endtrans %}" type="submit" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-star"></i></button>
 								</form>
 								<a class="uk-button uk-button-content uk-button-small uk-button-danger" title="{% trans %}delete{% endtrans %}" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
 							{% endif %}

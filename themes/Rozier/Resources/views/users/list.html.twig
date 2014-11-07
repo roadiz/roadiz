@@ -18,7 +18,7 @@
 			<table class="content-table users uk-table">
 				<thead>
 			        <tr>
-			            <th></th>
+			            <th class="table-actions-userpicture-row"></th>
 			            <th>{% trans %}user.username{% endtrans %}
 			            	{% if request.query.get("field") == 'username' and request.query.get("ordering") == "DESC" %}
 			            		<a href="?field=username&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
@@ -34,7 +34,7 @@
 			            	{% endif %}
 			            </th>
 			            <th>{% trans %}user.roles{% endtrans %}</th>
-			            <th>{% trans %}actions{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
 				<tbody>

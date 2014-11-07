@@ -39,20 +39,24 @@
                 </section>
                 {% if (securityContext.isGranted('ROLE_ACCESS_NODES') or securityContext.isGranted('ROLE_ACCESS_TAGS')) %}
                 <section id="main-trees" class="main-container-section">
-                    {% include 'panels/tree_panel.html.twig' with {
-                        'securityContext': securityContext,
-                        'nodeTree': nodeTree,
-                        'tagTree': tagTree,
-                        'folderTree':folderTree
-                    } only %}
+                    <div id="main-trees-overlay"></div>
+                    <div id="main-trees-container">
+                        {% include 'panels/tree_panel.html.twig' with {
+                            'securityContext': securityContext,
+                            'nodeTree': nodeTree,
+                            'tagTree': tagTree,
+                            'folderTree':folderTree
+                        } only %}
+                    </div>
                 </section>
                 {% endif %}
                 <!-- Add your site or application content here -->
                 <section id="main-content" class="main-container-section" data-uk-observe>
                     <div id="main-content-scrollable">
-                    {% block content %}
-                        <h1>{% trans %}Welcome{% endtrans %}</h1>
-                    {% endblock %}
+                        {% block content %}
+                            <h1>{% trans %}Welcome{% endtrans %}</h1>
+                        {% endblock %}
+                        <div id="back-top-button" title="{% trans %}back_to.top{% endtrans %}" data-uk-tooltip="{animation:true,pos:'top'}"><i class="uk-icon-rz-backtop"></i></div>
                     </div>
                 </section>
                 {# This is a debug panel placeholder… do not remove it. #}
@@ -73,6 +77,7 @@
 
         <script src="{{ head.resourcesUrl }}js/vendor/jquery-ui.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/TweenMax.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/ScrollToPlugin.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/mousetrap.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/jquery.minicolors.min.js"></script>

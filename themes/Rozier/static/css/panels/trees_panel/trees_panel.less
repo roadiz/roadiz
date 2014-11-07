@@ -1,6 +1,28 @@
 #main-trees {
-    .transform-origin(0%,0%);
-    .transform-transition(~"1s ease 0s, width 1s ease 0s");
+    position: relative;
+    left:0;
+    .transition(~'0.8s width ease');
+    .transition-timing-function(@easeOutExpo);
+    overflow:hidden;
+    z-index:1;
+
+    #main-trees-overlay{
+        position: absolute;
+        top:0; right:0; bottom:0; left:0;
+        background: @grey-interface;
+        .opacity(0);
+        .transition(~'0.6s opacity ease');
+        .transition-timing-function(@easeOutExpo);
+        z-index:2;
+        pointer-events: none;
+    }
+
+    #main-trees-container{
+        position: absolute;
+        left:0;
+        .transition(~'0.8s left ease');
+        .transition-timing-function(@easeOutExpo);
+    }
 
     & > div {
         background-color: @maintree-global-bg;

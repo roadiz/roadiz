@@ -14,6 +14,9 @@
 /* -------- STYLES -------- */
 
 #admin-menu {
+    position: relative;
+    background: #fff;
+    z-index:2;
 
     .uk-nav {
         display: block;
@@ -254,12 +257,15 @@
             background-position: @icon-size*-1 0;
             position: absolute;
             right: -15px; top: 117px;
-            .transform-transition(ease 1s);
+            .opacity(1);
+            .transform-transition(~'ease 0.8s, 0.8s opacity ease');
+            .transition-timing-function(@easeOutExpo);
         }
 
         &.tree-panel-hidden {
             &:after {
-                .transform(translate(100%));
+                .transform(translate(5px));
+                .opacity(0);
             }
         }
     }

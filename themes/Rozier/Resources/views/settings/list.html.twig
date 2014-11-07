@@ -31,7 +31,7 @@
 			        <tr>
 			            <th>{% trans %}name{% endtrans %}</th>
 			            <th>{% trans %}value{% endtrans %}</th>
-			            <th>{% trans %}actions{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
 				<tbody>
@@ -42,8 +42,7 @@
 							{% form_theme setting.form 'horizontalForms.html.twig' %}
 							<form class="uk-form uk-form-settings uk-form-horizontal" action="#" method="post" {{ form_enctype(setting.form) }}>
 							    {{ form_widget(setting.form) }}
-                                <button class="uk-button uk-button-settings-submit uk-button-small" type="submit"><i class="uk-icon-rz-save-mini"></i></button> 
-                                <!-- uk-button-primary  -->
+                                <button class="uk-button uk-button-settings-submit uk-button-small" type="submit"><i class="uk-icon-rz-save-mini"></i></button>
                             </form>
 						</td>
 						<td>
