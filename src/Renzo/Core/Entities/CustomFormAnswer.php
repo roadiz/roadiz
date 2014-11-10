@@ -82,14 +82,14 @@ class CustomFormAnswer extends AbstractEntity
      *            cascade={"ALL"})
      * @var ArrayCollection
      */
-    private $answerField;
+    private $answerFields;
 
     /**
      * @return ArrayCollection
      */
-    public function getAnswer()
+    public function getAnswers()
     {
-        return $this->answerField;
+        return $this->answerFields;
     }
     /**
      * @param CustomFormAnswer $field
@@ -98,8 +98,8 @@ class CustomFormAnswer extends AbstractEntity
      */
     public function addAnswerField($field)
     {
-        if (!$this->getAnswer()->contains($field)) {
-            $this->getAnswer()->add($field);
+        if (!$this->getAnswers()->contains($field)) {
+            $this->getAnswers()->add($field);
         }
 
         return $this;
@@ -111,8 +111,8 @@ class CustomFormAnswer extends AbstractEntity
      */
     public function removeAnswerField(CustomFormAnswer $field)
     {
-        if ($this->getAnswer()->contains($field)) {
-            $this->getAnswer()->removeElement($field);
+        if ($this->getAnswers()->contains($field)) {
+            $this->getAnswers()->removeElement($field);
         }
 
         return $this;
@@ -120,8 +120,8 @@ class CustomFormAnswer extends AbstractEntity
 
     /**
      * @ManyToOne(targetEntity="RZ\Renzo\Core\Entities\CustomForm",
-     *           inversedBy="customFormAnswers", cascade={"all"})
-     * @JoinColumn(name="custom_form_id", referencedColumnName="id")
+     *           inversedBy="customFormAnswers")
+     * @JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
      **/
     private $customForm;
 

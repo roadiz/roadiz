@@ -371,10 +371,10 @@ class FrontendController extends AppController
             if (null !== $ns) {
 
                 return array(
-                    'title' => !empty($ns->getMetaTitle()) ?
+                    'title' => ($ns->getMetaTitle() != "") ?
                                         $ns->getMetaTitle() :
                                         $ns->getTitle().' – '.SettingsBag::get('site_name'),
-                    'description' => !empty($ns->getMetaDescription()) ?
+                    'description' => ($ns->getMetaDescription() != "") ?
                                         $ns->getMetaDescription() :
                                         $ns->getTitle().', '.SettingsBag::get('seo_description'),
                     'keywords' => $ns->getMetaKeywords()
@@ -384,10 +384,10 @@ class FrontendController extends AppController
 
         if (null !== $fallbackNodeSource) {
             return array(
-                'title' => !empty($fallbackNodeSource->getMetaTitle()) ?
+                'title' => ($fallbackNodeSource->getMetaTitle() != "") ?
                                     $fallbackNodeSource->getMetaTitle() :
                                     $fallbackNodeSource->getTitle().' – '.SettingsBag::get('site_name'),
-                'description' => !empty($fallbackNodeSource->getMetaDescription()) ?
+                'description' => ($fallbackNodeSource->getMetaDescription() != "") ?
                                     $fallbackNodeSource->getMetaDescription() :
                                     $fallbackNodeSource->getTitle().', '.SettingsBag::get('seo_description'),
                 'keywords' => $fallbackNodeSource->getMetaKeywords()

@@ -56,8 +56,11 @@ class CustomFormFieldAttributesController extends RozierApp
         );
         $listManager->handle();
 
+        $customFormAnswer = $this->getService('em')->find('RZ\Renzo\Core\Entities\CustomFormAnswer', $customFormAnswerId);
+
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['fields'] = $listManager->getEntities();
+        $this->assignation['customFormId'] = $customFormAnswer->getCustomForm()->getId();
 
         return new Response(
             $this->getTwig()->render('custom-form-field-attributes/list.html.twig', $this->assignation),

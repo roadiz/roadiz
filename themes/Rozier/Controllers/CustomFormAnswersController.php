@@ -100,7 +100,7 @@ class CustomFormAnswersController extends RozierApp
                  */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
-                        'customFormAnswersHomePage', array("customFormAnswerId" => $customFormAnswerId)
+                        'customFormAnswersHomePage', array("customFormId" => $customFormAnswer->getCustomForm()->getId())
                     )
                 );
                 $response->prepare($request);

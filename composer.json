@@ -65,7 +65,8 @@
         "symfony/filesystem": "@stable",
         "solarium/solarium": "@stable",
         "pimple/pimple": "@stable",
-        "inlinestyle/inlinestyle": "@stable"
+        "inlinestyle/inlinestyle": "@stable",
+        "phpoffice/phpexcel": "@stable"
     },
     "autoload": {
         "psr-4": {

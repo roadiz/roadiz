@@ -13,7 +13,7 @@
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 <legend>{% trans %}are_you_sure.delete.customFormAnswer{% endtrans %}</legend>
-                <a href="{{ path('customFormAnswersHomePage', {customFormId: field.customForm.getId}) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <a href="{{ path('customFormAnswersHomePage', {customFormId: customFormAnswer.customForm.getId}) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
                 <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
             </fieldset>
         </form>

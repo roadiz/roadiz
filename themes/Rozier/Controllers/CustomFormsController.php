@@ -101,7 +101,7 @@ class CustomFormsController extends RozierApp
                  */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
-                        'customFormsSchemaUpdate',
+                        'customFormsHomePage',
                         array(
                             '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
                         )
@@ -249,11 +249,35 @@ class CustomFormsController extends RozierApp
      *
      * @return boolean
      */
+    private function editCustomForm($data, CustomForm $customForm)
+    {
+        foreach ($data as $key => $value) {
+            if (isset($data['name'])) {
+                throw new EntityAlreadyExistsException($this->getTranslator()->trans('customForm.%name%.cannot_rename_already_exists', array('%name%'=>$customForm->getName())), 1);
+            }
+            $setter = 'set'.ucwords($key);
+            $customForm->$setter( $value );
+        }
+
+        $this->getService('em')->flush();
+
+        return true;
+    }
+
+    /**
+     * @param array                           $data
+     * @param RZ\Renzo\Core\Entities\CustomForm $customForm
+     *
+     * @return boolean
+     */
     private function addCustomForm($data, CustomForm $customForm)
     {
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
-            $customForm->$setter( $value );
+            if ($key == "displayName") {
+              $customForm->setName($value);
+            }
+            $customForm->$setter($value);
         }
 
         $existing = $this->getService('em')
@@ -277,7 +301,6 @@ class CustomFormsController extends RozierApp
     private function buildForm(CustomForm $customForm)
     {
         $defaults = array(
-            'name' =>           $customForm->getName(),
             'displayName' =>    $customForm->getDisplayName(),
             'description' =>    $customForm->getDescription(),
             'open' =>           $customForm->isOpen(),
@@ -286,11 +309,6 @@ class CustomFormsController extends RozierApp
         );
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
-            ->add('name', 'text', array(
-                'label' => $this->getTranslator()->trans('name'),
-                'constraints' => array(
-                    new NotBlank()
-                )))
             ->add('displayName', 'text', array(
                 'label' => $this->getTranslator()->trans('customForm.displayName'),
                 'constraints' => array(

@@ -65,6 +65,12 @@ class CustomFormController extends AppController
         $customForm = $this->getService('em')->find("RZ\Renzo\Core\Entities\CustomForm", $customFormId);
 
         if (null !== $customForm) {
+            $closeDate = $customForm->getCloseDate();
+
+            $nowDate = new \DateTime();
+        }
+
+        if (null !== $customForm && $closeDate >= $nowDate) {
             $this->assignation['customForm'] = $customForm;
 
             /*
@@ -137,7 +143,7 @@ class CustomFormController extends AppController
 
         $answer = new CustomFormAnswer();
         $answer->setIp($data["ip"]);
-        $answer->setSummittedTime(new \DateTime('NOW'));
+        $answer->setSubmittedAt(new \DateTime('NOW'));
         $answer->setCustomForm($customForm);
 
         $this->getService('em')->persist($answer);
@@ -146,8 +152,27 @@ class CustomFormController extends AppController
             $fieldAttr = new CustomFormFieldAttribute();
             $fieldAttr->setCustomFormAnswer($answer);
             $fieldAttr->setCustomFormField($field);
-            $fieldAttr->setValue($data[$field->getName()]);
 
+            if (is_array($data[$field->getName()])) {
+
+                $values = array();
+
+                foreach ($data[$field->getName()] as $value) {
+                    $choices = explode(',', $field->getDefaultValues());
+                    $values[] = $choices[$value];
+                }
+
+                $fieldAttr->setValue(implode(',', $values));
+
+            } elseif (CustomFormField::$typeToForm[$field->getType()] == "enumeration") {
+
+                $choices = explode(',', $field->getDefaultValues());
+
+                $fieldAttr->setValue($choices[$data[$field->getName()]]);
+
+            } else {
+                $fieldAttr->setValue($data[$field->getName()]);
+            }
             $this->getService('em')->persist($fieldAttr);
         }
 
@@ -173,18 +198,32 @@ class CustomFormController extends AppController
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults);
             foreach ($fields as $field) {
+                $option = array("label" => $field->getLabel());
+                $type = null;
                 if ($field->isRequire()) {
-                    $builder->add($field->getName(), CustomFormField::$typeToForm[$field->getType()], array(
-                                  'label' => $field->getLabel(),
-                                  'constraints' => array(
-                                    new NotBlank()
-                                 )));
+                    $option['constraints'] = array(
+                        new NotBlank()
+                    );
                 } else {
-                    $builder->add($field->getName(), CustomFormField::$typeToForm[$field->getType()], array(
-                                  'label' => $field->getLabel(),
-                                  'required' => false
-                                  ));
+                    $option['required'] = false;
                 }
+                if (CustomFormField::$typeToForm[$field->getType()] == "enumeration") {
+                    $choices = explode(',', $field->getDefaultValues());
+                    $type = "choice";
+                    if (count($choices) < 4) {
+                        $option["expanded"] = true;
+                    }
+                    $option["choices"] = $choices;
+                } elseif (CustomFormField::$typeToForm[$field->getType()] == "multiple_enumeration") {
+                    $choices = explode(',', $field->getDefaultValues());
+                    $type = "choice";
+                    $option["choices"] = $choices;
+                    $option["multiple"] = true;
+                    $option["expanded"] = true;
+                } else {
+                    $type = CustomFormField::$typeToForm[$field->getType()];
+                }
+                $builder->add($field->getName(), $type, $option);
             }
             // ->add('name', 'text', array(
             //     'label' => $this->getTranslator()->trans('name'),
