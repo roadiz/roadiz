@@ -1,3 +1,16 @@
+/*------------------------------------*\
+   NODE TYPES FIELDS
+\*------------------------------------*/
+
+
+/*
+ * Styles for node-type-fields pages
+ */
+
+
+/* -------- STYLES -------- */
+
+// List
 .node-type-fields {
     .uk-sortable {
         tr {
@@ -63,8 +76,35 @@
     // }
 }
 
-// Add, edit
+// .node-type-field-row{
+//     background:white !important;
 
+//     &:nth-child(2n){
+//         background:#F4F4F4 !important;
+//     }
+// }
+
+.node-type-field-edit-form-row{
+    // display:none;
+    height:0px !important;
+    cursor: default !important;
+    border-top:0 !important;
+    border-bottom:0 !important;
+    background: #F2F2F2 !important;
+
+    td{
+        padding:0 !important; 
+        border:none !important;
+    }
+}
+
+.node-type-field-edit-form-cont{
+    overflow: hidden;
+    display: none;
+}
+
+
+// Add, edit
 #add-node-type-field-form, #edit-node-type-field-form{
 
     .form-col-checkbox{

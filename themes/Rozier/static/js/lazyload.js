@@ -4,12 +4,10 @@
 var Lazyload = function() {
     var _this = this;
 
-    _this.$linksSelector = "a:not('[target=_blank]')";
-
-    var onClickProxy = $.proxy(_this.onClick, _this);
     var onStateChangeProxy = $.proxy(_this.onPopState, _this);
 
-    $('body').on('click', _this.$linksSelector, onClickProxy);
+    _this.$linksSelector = $("a:not('[target=_blank]')");
+    // $('body').on('click', _this.$linksSelector, onClickProxy);
 
     $(window).on('popstate', function (event) {
         _this.onPopState(event);
@@ -25,9 +23,12 @@ Lazyload.prototype.$HTMLeditorNav = null;
 Lazyload.prototype.HTMLeditorNavToRemove = null;
 Lazyload.prototype.documentsList = null;
 
+
 Lazyload.prototype.onClick = function(event) {
     var _this = this;
     var $link = $(event.currentTarget);
+
+    // console.log($link);
 
     var href = $link.attr('href');
     if(typeof href !== "undefined" &&
@@ -36,7 +37,7 @@ Lazyload.prototype.onClick = function(event) {
         href != "#" &&
         href.indexOf(Rozier.baseUrl) >= 0){
 
-        console.log(href);
+        // console.log(href);
 
         history.pushState({}, null, $link.attr('href'));
         _this.onPopState(null);
@@ -134,6 +135,13 @@ Lazyload.prototype.generalBind = function() {
 
     _this.documentsList = new DocumentsList();
     _this.settingsSaveButtons = new SettingsSaveButtons();
+    _this.nodeTypeFieldEdit = new NodeTypeFieldEdit();
+    _this.nodeEditSource = new NodeEditSource();
+
+
+    _this.$linksSelector.off('click', $.proxy(_this.onClick, _this));
+    _this.$linksSelector = $("a:not('[target=_blank]')");
+    _this.$linksSelector.on('click', $.proxy(_this.onClick, _this));
 
 
     // Init markdown-preview

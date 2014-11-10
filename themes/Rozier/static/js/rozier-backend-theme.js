@@ -68,7 +68,6 @@ i.component("tab",{defaults:{target:">li:not(.uk-tab-responsive, .uk-disabled)",
             } else {
 
                 // prevent leaving page after link clicking
-                // prevent leaving page after link clicking
                 this.element.on('mousedown touchstart', 'a[href]', function(e) {
                     // don't break browser shortcuts for click+open in new tab
                     if(!e.ctrlKey && !e.metaKey && !e.shiftKey) {
@@ -523,7 +522,7 @@ i.component("tab",{defaults:{target:">li:not(.uk-tab-responsive, .uk-disabled)",
     UI.$html.on('mouseup touchend', function() {
 
         if(!moving && clickedlink) {
-            location.href = clickedlink.attr('href');
+            // location.href = clickedlink.attr('href');
         }
 
         delayIdle = clickedlink = false;
@@ -16949,6 +16948,66 @@ SettingsSaveButtons.prototype.buttonClick = function(e){
 SettingsSaveButtons.prototype.resize = function(){
     var _this = this;
 
+};;/**
+ * NODE EDIT SOURCE
+ */
+
+NodeEditSource = function(){
+    var _this = this;
+
+    // Selectors
+    _this.$content = $('.content-node-edit-source');
+
+    // Methods
+    if(_this.$content.length) _this.init();
+
+};
+
+
+NodeEditSource.prototype.$content = null;
+NodeEditSource.prototype.$input = null;
+
+
+/**
+ * Init
+ * @return {[type]} [description]
+ */
+NodeEditSource.prototype.init = function(){
+    var _this = this;
+
+   _this.$input = _this.$content.find('input, select');
+
+   console.log(_this.$input);
+
+    for(var i = 0; i < _this.$input.length; i++) {
+        
+        if(_this.$input[i].getAttribute('data-desc') !== null){
+            $(_this.$input[i]).after('<div class="uk-alert uk-alert-large">'+_this.$input[i].getAttribute('data-desc')+'</div>');
+        }   
+
+    }    
+
+};
+
+
+/**
+ * Destroy
+ * @return {[type]} [description]
+ */
+NodeEditSource.prototype.destroy = function(){
+    var _this = this;
+
+
+};
+
+
+/**
+ * Window resize callback
+ * @return {[type]} [description]
+ */
+NodeEditSource.prototype.resize = function(){
+    var _this = this;
+
 };;var NodeStatuses = function () {
     var _this = this;
 
@@ -17048,6 +17107,149 @@ NodeStatuses.prototype.onChange = function(event) {
         });
     }
 };;/**
+ * NODE TYPE FIELD EDIT
+ */
+
+NodeTypeFieldEdit = function(){
+    var _this = this;
+
+    // Selectors
+    _this.$btn = $('.node-type-field-edit-button');
+
+    // Methods
+    _this.init();
+
+};
+
+
+NodeTypeFieldEdit.prototype.$btn = null;
+NodeTypeFieldEdit.prototype.indexOpen = null;
+NodeTypeFieldEdit.prototype.openFormDelay = 0;
+NodeTypeFieldEdit.prototype.$formRow = null;
+NodeTypeFieldEdit.prototype.$formCont = null;
+NodeTypeFieldEdit.prototype.$form = null;
+NodeTypeFieldEdit.prototype.$formContHeight = null;
+
+
+/**
+ * Init
+ * @return {[type]} [description]
+ */
+NodeTypeFieldEdit.prototype.init = function(){
+    var _this = this;
+
+    // Events
+    _this.$btn.on('click', $.proxy(_this.btnClick, _this));
+};
+
+
+/**
+ * Btn click
+ * @return {[type]} [description]
+ */
+NodeTypeFieldEdit.prototype.btnClick = function(e){
+    var _this = this;
+
+    if(_this.indexOpen !== null){
+        _this.closeForm();
+        _this.openFormDelay = 500;
+    } 
+    else _this.openFormDelay = 0;
+
+    if(_this.indexOpen !==  parseInt(e.currentTarget.getAttribute('data-index')) ){
+
+        setTimeout(function(){
+
+            _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
+
+            $.ajax({
+                url: e.currentTarget.href,
+                type: 'get',
+                dataType: 'html'
+            })
+            .done(function(data) {
+                _this.applyContent(e.currentTarget, data, e.currentTarget.href);
+            })
+            .fail(function() {
+                console.log("error");
+                $.UIkit.notify({
+                    message : Rozier.messages.forbiddenPage,
+                    status  : 'danger',
+                    timeout : 3000,
+                    pos     : 'top-center'
+                });
+            });
+
+        }, _this.openFormDelay);
+
+    }
+
+    return false;
+};
+
+
+/**
+ * Apply content
+ * @return {[type]} [description]
+ */
+NodeTypeFieldEdit.prototype.applyContent = function(target, data, url){
+    var _this = this;
+
+    var dataWrapped = [
+        '<tr class="node-type-field-edit-form-row">',
+            '<td colspan="4">',
+                '<div class="node-type-field-edit-form-cont">',
+                    data,
+                '</div>',
+            '</td>',
+        '</tr>'
+    ].join('');
+
+    $(target).parent().parent().after(dataWrapped);  
+
+    setTimeout(function(){
+        _this.$formCont = $('.node-type-field-edit-form-cont');
+        _this.formContHeight = _this.$formCont.actual('height');
+        _this.$formRow = $('.node-type-field-edit-form-row');
+        _this.$form = $('#edit-node-type-field-form');
+
+        _this.$form.attr('action', url);
+
+        // _this.$form[0].style.height = '0px';
+        // _this.$form[0].style.display = 'table-row';
+        _this.$formCont[0].style.height = '0px';
+        _this.$formCont[0].style.display = 'block';
+        TweenLite.to(_this.$form, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
+        TweenLite.to(_this.$formCont, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
+    }, 200);       
+
+};
+
+
+/**
+ * Close form
+ * @return {[type]} [description]
+ */
+NodeTypeFieldEdit.prototype.closeForm = function(){
+    var _this = this;
+
+    TweenLite.to(_this.$formCont, 0.4, {height:0, ease:Expo.easeOut, onComplete:function(){
+        _this.$formRow.remove();
+        _this.indexOpen = null;
+    }});
+
+};
+
+
+/**
+ * Window resize callback
+ * @return {[type]} [description]
+ */
+NodeTypeFieldEdit.prototype.resize = function(){
+    var _this = this;
+
+};
+;/**
  *
  */
 var ChildrenNodesField = function () {
@@ -17222,6 +17424,12 @@ MarkdownEditor.prototype.init = function(){
             $(_this.$cont[i]).find('.uk-htmleditor-button-fullscreen').attr('data-index',i);
             $(_this.$cont[i]).find('textarea').attr('data-index',i);
             $(_this.$cont[i]).find('.CodeMirror').attr('data-index',i);
+
+
+            // Check if a desc is defined
+            if(_this.$textarea[i].getAttribute('data-desc') !== null){
+                $(_this.$cont[i]).after('<div class="uk-alert uk-alert-large">'+_this.$textarea[i].getAttribute('data-desc')+'</div>');
+            }   
 
             // Check if a max length is defined
             if(_this.$textarea[i].getAttribute('data-max-length') !== null){
@@ -17664,6 +17872,73 @@ NodeTypeFieldsPosition.prototype.onSortableChange = function(event, list, elemen
         console.log("complete");
     });
 
+};;var CustomFormFieldsPosition = function () {
+    var _this = this;
+
+    _this.$list = $(".custom-form-fields > .uk-sortable");
+
+    _this.init();
+};
+CustomFormFieldsPosition.prototype.$list = null;
+CustomFormFieldsPosition.prototype.init = function() {
+    var _this = this;
+
+    if (_this.$list.length &&
+        _this.$list.children().length > 1) {
+        var onChange = $.proxy(_this.onSortableChange, _this);
+        _this.$list.off('uk.sortable.change', onChange);
+        _this.$list.on('uk.sortable.change', onChange);
+    }
+};
+
+CustomFormFieldsPosition.prototype.onSortableChange = function(event, list, element) {
+    var _this = this;
+
+    var $element = $(element);
+    var customFormFieldId = parseInt($element.data('field-id'));
+    var $sibling = $element.prev();
+    var newPosition = 0.0;
+
+    if ($sibling.length === 0) {
+        $sibling = $element.next();
+        newPosition = parseInt($sibling.data('position')) - 0.5;
+    } else {
+        newPosition = parseInt($sibling.data('position')) + 0.5;
+    }
+
+    console.log("customFormFieldId="+customFormFieldId+"; newPosition="+newPosition);
+
+
+    var postData = {
+        '_token':          Rozier.ajaxToken,
+        '_action':         'updatePosition',
+        'customFormFieldId': customFormFieldId,
+        'newPosition':     newPosition
+    };
+
+    $.ajax({
+        url: Rozier.routes.customFormsFieldAjaxEdit.replace("%customFormFieldId%", customFormFieldId),
+        type: 'POST',
+        dataType: 'json',
+        data: postData,
+    })
+    .done(function(data) {
+        console.log(data);
+        $element.attr('data-position', newPosition);
+        $.UIkit.notify({
+            message : data.responseText,
+            status  : data.status,
+            timeout : 3000,
+            pos     : 'top-center'
+        });
+    })
+    .fail(function(data) {
+        console.log(data);
+    })
+    .always(function() {
+        console.log("complete");
+    });
+
 };
 ;/**
  * Lazyload
@@ -17671,12 +17946,10 @@ NodeTypeFieldsPosition.prototype.onSortableChange = function(event, list, elemen
 var Lazyload = function() {
     var _this = this;
 
-    _this.$linksSelector = "a:not('[target=_blank]')";
-
-    var onClickProxy = $.proxy(_this.onClick, _this);
     var onStateChangeProxy = $.proxy(_this.onPopState, _this);
 
-    $('body').on('click', _this.$linksSelector, onClickProxy);
+    _this.$linksSelector = $("a:not('[target=_blank]')");
+    // $('body').on('click', _this.$linksSelector, onClickProxy);
 
     $(window).on('popstate', function (event) {
         _this.onPopState(event);
@@ -17692,9 +17965,12 @@ Lazyload.prototype.$HTMLeditorNav = null;
 Lazyload.prototype.HTMLeditorNavToRemove = null;
 Lazyload.prototype.documentsList = null;
 
+
 Lazyload.prototype.onClick = function(event) {
     var _this = this;
     var $link = $(event.currentTarget);
+
+    // console.log($link);
 
     var href = $link.attr('href');
     if(typeof href !== "undefined" &&
@@ -17703,7 +17979,7 @@ Lazyload.prototype.onClick = function(event) {
         href != "#" &&
         href.indexOf(Rozier.baseUrl) >= 0){
 
-        console.log(href);
+        // console.log(href);
 
         history.pushState({}, null, $link.attr('href'));
         _this.onPopState(null);
@@ -17797,9 +18073,17 @@ Lazyload.prototype.generalBind = function() {
     new SaveButtons();
     new TagAutocomplete();
     new NodeTypeFieldsPosition();
+    new CustomFormFieldsPosition();
 
     _this.documentsList = new DocumentsList();
     _this.settingsSaveButtons = new SettingsSaveButtons();
+    _this.nodeTypeFieldEdit = new NodeTypeFieldEdit();
+    _this.nodeEditSource = new NodeEditSource();
+
+
+    _this.$linksSelector.off('click', $.proxy(_this.onClick, _this));
+    _this.$linksSelector = $("a:not('[target=_blank]')");
+    _this.$linksSelector.on('click', $.proxy(_this.onClick, _this));
 
 
     // Init markdown-preview

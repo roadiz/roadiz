@@ -77,6 +77,14 @@
         font-size:12px;
     }
 
+    input[type=checkbox]{
+    
+        &:focus{
+            border-color: @grey-form-submit-border-hover;
+        }
+
+    }
+
     textarea{
         padding:10px 15px;
     }
@@ -123,7 +131,7 @@
             appearance:none;
 
             &:focus, &:active{
-                background-color: @grey-verylight;
+                // background-color: @grey-verylight;
                 outline:none;
             }
         }
@@ -181,6 +189,13 @@
             display:inline-block;
             vertical-align: top;
         }
+    }
+
+    .datetime-separator{
+        display: inline-block;
+        vertical-align: top;
+        height: 38px;
+        line-height: 38px;
     }
 
     #form_value_time{
