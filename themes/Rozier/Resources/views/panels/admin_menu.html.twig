@@ -43,7 +43,7 @@
 		</li>
 		{% endif %}
 
-		
+
 		{# DOCUMENTS #}
 		{% if (securityContext.Granted('ROLE_ACCESS_DOCUMENTS')) %}
 
@@ -57,7 +57,7 @@
 
 		<li><a href="{{ path('tagsHomePage') }}"><i class="uk-icon-rz-tags"></i><span class="info">{% trans %}manage.tags{% endtrans %}</span></a></li>
 
-		{% endif %}	
+		{% endif %}
 
 
 		{# CONSTRUCTION #}
@@ -126,7 +126,7 @@
 		</li>
 
 		{% endif %}
-		
+
 
 		{# INTERACTIONS #}
 		<li class="uk-parent uk-rz-coming-soon">
@@ -134,9 +134,9 @@
 			<span class="info">{% trans %}interactions{% endtrans %}</span></p>
 			<ul class="uk-nav-sub">
 
-			{% if (securityContext.Granted('ROLE_ACCESS_SURVEYS')) %}
+			{% if (securityContext.Granted('ROLE_ACCESS_CUSTOMFORMS')) %}
 
-				<li><a href="#">
+				<li><a href="{{ path('customFormsHomePage') }}">
 					<i class="uk-icon-rz-surveys"></i>
 					<span class="info">{% trans %}manage.surveys{% endtrans %}</span>
 					</a>
@@ -175,7 +175,7 @@
 
 			</ul>
 		</li>
-		
+
 
 		{# SETTINGS #}
 		{% if (securityContext.Granted('ROLE_ACCESS_SETTINGS')) %}
