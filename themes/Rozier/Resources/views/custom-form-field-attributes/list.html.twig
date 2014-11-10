@@ -1,0 +1,37 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global content-nav-and-filters">
+
+    <header class="content-header header-node-types header-node-types-list">
+        <h1 class="content-title nodes-node-types-title">{% trans %}customFormFieldAttribute{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
+    </header>
+
+    {% include 'widgets/filtersBar.html.twig' %}
+
+    <article class="content content-no-action-menu content-node-types-list">
+        <div class="content-table-cont">
+            {% spaceless %}
+			<table class="node-types content-table uk-table">
+				<thead>
+			        <tr>
+                        <th>{% trans %}label{% endtrans %}</th>
+			            <th>{% trans %}value{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+                    {% for type in fields %}
+                        <tr>
+							<td>{{ type.customFormField.label }}</td>
+                            <td>{{ type.value }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% endspaceless %}
+        </div>
+    </article>
+
+</section>
+{% endblock %}

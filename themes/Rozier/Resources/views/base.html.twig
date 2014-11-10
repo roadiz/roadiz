@@ -101,6 +101,7 @@
         <script src="{{ head.resourcesUrl }}js/widgets/tagAutocomplete.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/stackNodeTree.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/nodeTypeFieldsPosition.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/customFormFieldsPosition.js"></script>
         <script src="{{ head.resourcesUrl }}js/lazyload.js"></script>
         <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
         <script src="{{ head.resourcesUrl }}js/main.js"></script>
@@ -155,6 +156,7 @@
                     'nodeAjaxEdit' :          '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',
                     'tagAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
                     'nodeTypesFieldAjaxEdit': '{{ head.baseUrl }}/rz-admin/ajax/node-types/fields/edit/%nodeTypeFieldId%',
+                    'customFormsFieldAjaxEdit': '{{ head.baseUrl }}/rz-admin/ajax/custom-forms/fields/edit/%customFormFieldId%',
                     'documentsAjaxExplorer' : '{{ path('documentsAjaxExplorerPage') }}',
                     'nodesAjaxExplorer' :     '{{ path('nodesAjaxExplorerPage') }}',
                     'documentsUploadPage' :   '{{ path('documentsUploadPage') }}',

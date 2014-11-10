@@ -7,3 +7,10 @@ contactFormLocaleAction:
     requirements:
         # Use every 2 letter codes (quick and dirty)
         _locale: "[a-z]{2}"
+
+customFormSendAction:
+    path:     /custom-form/{customFormId}
+    defaults: { _controller: \RZ\Renzo\CMS\Controllers\CustomFormController::addAction }
+    requirements:
+        # Use every 2 letter codes (quick and dirty)
+        customFormId: "[0-9]+"

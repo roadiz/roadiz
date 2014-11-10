@@ -135,9 +135,9 @@
 			<span class="info">{% trans %}interactions{% endtrans %}</span></p>
 			<ul class="uk-nav-sub">
 
-			{% if (securityContext.Granted('ROLE_ACCESS_SURVEYS')) %}
+			{% if (securityContext.Granted('ROLE_ACCESS_CUSTOMFORMS')) %}
 
-				<li><a href="#">
+				<li><a href="{{ path('customFormsHomePage') }}">
 					<i class="uk-icon-rz-surveys"></i>
 					<span class="info">{% trans %}manage.surveys{% endtrans %}</span>
 					</a>

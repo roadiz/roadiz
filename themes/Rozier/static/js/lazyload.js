@@ -130,6 +130,7 @@ Lazyload.prototype.generalBind = function() {
     new SaveButtons();
     new TagAutocomplete();
     new NodeTypeFieldsPosition();
+    new CustomFormFieldsPosition();
 
     _this.documentsList = new DocumentsList();
     _this.settingsSaveButtons = new SettingsSaveButtons();

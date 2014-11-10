@@ -1,0 +1,61 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global content-nav-and-filters">
+
+    <header class="content-header header-node-types header-node-types-list">
+        <h1 class="content-title nodes-node-types-title">{% trans %}customForm{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
+        <div class="content-header-action-menu">
+            <nav>
+            	<a class="uk-button" href="{{ path('customFormsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.customForm{% endtrans %}</a>
+			</nav>
+        </div>
+    </header>
+
+    {% include 'widgets/filtersBar.html.twig' %}
+
+    <article class="content content-no-action-menu content-node-types-list">
+        <div class="content-table-cont">
+            {% spaceless %}
+			<table class="node-types content-table uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}name{% endtrans %}</th>
+			            <th>{% trans %}nodeType.displayName{% endtrans %}</th>
+			            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
+			            <th></th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for type in custom_forms %}
+						<tr>
+							<td class="name"><a href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}">
+                                <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getName }}
+                            </a></td>
+							<td>{{ type.getDisplayName }}</td>
+							{# <td>{{ type.getSourceEntityClassName }}</td> #}
+							<td><div class="uk-badge">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormield|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
+							<td>
+								<a class="uk-button uk-button-small" href="{{ path('customFormFieldsListPage', { customFormId: type.getId }) }}">
+									<i class="uk-icon-node-type-fields"></i> {% trans %}manage.customFormFields{% endtrans %}
+								</a>
+                                <a class="uk-button uk-button-small" href="{{ path('customFormAnswersHomePage', { customFormId: type.getId }) }}">
+                                    <i class="uk-icon-node-type-fields"></i> {% trans %}customForm.answers{% endtrans %}
+                                </a>
+                                <a target="_blank" class="uk-button uk-button-small" href="{{ path('customFormSendAction', { customFormId: type.getId }) }}">
+                                    <i class="uk-icon-node-type-fields"></i> {% trans %}customForm.show{% endtrans %}
+                                </a>
+								<a class="uk-button uk-button-small uk-button-danger" href="{{ path('customFormsDeletePage', { customFormId: type.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% endspaceless %}
+        </div>
+    </article>
+
+</section>
+{% endblock %}

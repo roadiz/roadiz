@@ -525,17 +525,60 @@ historyUserPage:
     requirements: { userId : "[0-9]+" }
     defaults: { _controller: Themes\Rozier\Controllers\HistoryController::userAction }
 
-# Node TYPES
+# Custom Form
 customFormsHomePage:
     path:     /rz-admin/custom-forms
     defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::indexAction }
 customFormsEditPage:
-    path:     /rz-admin/custom-form/edit/{customFormId}
+    path:     /rz-admin/custom-forms/edit/{customFormId}
     defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::editAction }
     requirements: { customFormId : "[0-9]+" }
 customFormsAddPage:
     path:     /rz-admin/custom-forms/add
     defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::addAction }
+customFormsDeletePage:
+    path:     /rz-admin/custom-forms/delete/{customFormId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::deleteAction }
+    requirements: { customFormId : "[0-9]+" }
+
+# Custom Form Answer
+customFormAnswersHomePage:
+    path:     /rz-admin/custom-form-answers/{customFormId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormAnswersController::listAction }
+    requirements: { customFormId : "[0-9]+" }
+
+customFormAnswersDeletePage:
+    path:     /rz-admin/custom-form-answers/delete/{customFormAnswerId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormAnswersController::deleteAction }
+    requirements: { customFormAnswerId : "[0-9]+" }
+
+customFormFieldAttributesHomePage:
+    path:     /rz-admin/custom-form-answers/fields/{customFormAnswerId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldAttributesController::listAction }
+    requirements: { customFormAnswerId : "[0-9]+" }
+
+# Custom Form FIELDS
+customFormFieldsListPage:
+    path:     /rz-admin/custom-forms/fields/{customFormId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldsController::listAction }
+    requirements: { customFormId : "[0-9]+" }
+customFormFieldsEditPage:
+    path:     /rz-admin/custom-forms/fields/edit/{customFormFieldId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldsController::editAction }
+    requirements: { customFormFieldId : "[0-9]+" }
+customFormFieldsAddPage:
+    path:     /rz-admin/custom-forms/fields/add/{customFormId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldsController::addAction }
+    requirements: { customFormId : "[0-9]+" }
+customFormFieldsDeletePage:
+    path:     /rz-admin/custom-forms/fields/delete/{customFormFieldId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldsController::deleteAction }
+    requirements: { customFormFieldId : "[0-9]+" }
+
+customFormFieldAjaxEdit:
+    path:     /rz-admin/ajax/custom-forms/fields/edit/{customFormFieldId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormFieldsController::editAction }
+    requirements: { customFormFieldId : "[0-9]+" }
 
 # searchPage:
 #     path:     /rz-admin/search/{q}
