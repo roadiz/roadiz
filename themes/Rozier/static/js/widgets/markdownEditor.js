@@ -50,6 +50,12 @@ MarkdownEditor.prototype.init = function(){
             $(_this.$cont[i]).find('textarea').attr('data-index',i);
             $(_this.$cont[i]).find('.CodeMirror').attr('data-index',i);
 
+
+            // Check if a desc is defined
+            if(_this.$textarea[i].getAttribute('data-desc') !== null){
+                $(_this.$cont[i]).after('<div class="uk-alert uk-alert-large">'+_this.$textarea[i].getAttribute('data-desc')+'</div>');
+            }   
+
             // Check if a max length is defined
             if(_this.$textarea[i].getAttribute('data-max-length') !== null){
 

@@ -287,6 +287,7 @@ class NodesSourcesController extends RozierApp
                     'label' => $field->getLabel(),
                     'required' => false,
                     'attr' => array(
+                        'data-desc'       => $field->getDescription(),
                         'data-min-length' => $field->getMinLength(),
                         'data-max-length' => $field->getMaxLength()
                     )

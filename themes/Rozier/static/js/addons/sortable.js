@@ -66,7 +66,6 @@
             } else {
 
                 // prevent leaving page after link clicking
-                // prevent leaving page after link clicking
                 this.element.on('mousedown touchstart', 'a[href]', function(e) {
                     // don't break browser shortcuts for click+open in new tab
                     if(!e.ctrlKey && !e.metaKey && !e.shiftKey) {
@@ -521,7 +520,7 @@
     UI.$html.on('mouseup touchend', function() {
 
         if(!moving && clickedlink) {
-            location.href = clickedlink.attr('href');
+            // location.href = clickedlink.attr('href');
         }
 
         delayIdle = clickedlink = false;
