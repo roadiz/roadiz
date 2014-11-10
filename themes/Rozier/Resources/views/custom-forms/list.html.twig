@@ -22,7 +22,7 @@
 				<thead>
 			        <tr>
 			            <th>{% trans %}name{% endtrans %}</th>
-			            <th>{% trans %}nodeType.displayName{% endtrans %}</th>
+			            <th>{% trans %}customForm.displayName{% endtrans %}</th>
 			            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
 			            <th></th>
 			            <th>{% trans %}actions{% endtrans %}</th>
@@ -36,7 +36,7 @@
                             </a></td>
 							<td>{{ type.getDisplayName }}</td>
 							{# <td>{{ type.getSourceEntityClassName }}</td> #}
-							<td><div class="uk-badge">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormield|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
+							<td><div class="uk-badge">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
 							<td>
 								<a class="uk-button uk-button-small" href="{{ path('customFormFieldsListPage', { customFormId: type.getId }) }}">
 									<i class="uk-icon-node-type-fields"></i> {% trans %}manage.customFormFields{% endtrans %}

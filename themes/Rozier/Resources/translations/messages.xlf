@@ -4986,8 +4986,121 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
       <trans-unit xml:space="preserve" id="back_to.top">
           <source>back_to.top</source>
           <target></target>
-      </trans-unit>      
-      
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="no.customFormField">
+          <source>no.customFormField</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.customForm">
+          <source>add.customForm</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm">
+          <source>customForm</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.displayName">
+          <source>customForm.displayName</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%count%.customFormFields">
+          <source>%count%.customFormFields</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="manage.customFormFields">
+          <source>manage.customFormFields</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.answers">
+          <source>customForm.answers</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.show">
+          <source>customForm.show</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.customFormAnswer">
+          <source>are_you_sure.delete.customFormAnswer</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.customFormAnswer.%name%">
+          <source>delete.customFormAnswer.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.customFormAnswers">
+          <source>back_to.customFormAnswers</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormAnswer">
+          <source>customFormAnswer</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.customForms">
+          <source>back_to.customForms</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="submitted.date">
+          <source>submitted.date</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormAnswer.answers">
+          <source>customFormAnswer.answers</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormFieldAttribute">
+          <source>customFormFieldAttribute</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.customFormField">
+          <source>delete.customFormField</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.customFormField">
+          <source>add.customFormField</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.customFormFields">
+          <source>back_to.customFormFields</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.customFormField.%name%">
+          <source>delete.customFormField.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.customFormField">
+          <source>are_you_sure.delete.customFormField</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.customFormField.%name%">
+          <source>edit.customFormField.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.customFormFields.for.customForm.%name%">
+          <source>edit.customFormFields.for.customForm.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.customForm">
+          <source>delete.customForm</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.customForms">
+          <source>back_to.customForms</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.customForm.%name%">
+          <source>delete.customForm.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.customForm">
+          <source>are_you_sure.delete.customForm</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.customForm.%name%">
+          <source>edit.customForm.%name%</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
