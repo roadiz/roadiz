@@ -5084,10 +5084,6 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>delete.customForm</source>
           <target></target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="back_to.customForms">
-          <source>back_to.customForms</source>
-          <target></target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="delete.customForm.%name%">
           <source>delete.customForm.%name%</source>
           <target></target>
@@ -5101,6 +5097,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields">
+          <source>{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
