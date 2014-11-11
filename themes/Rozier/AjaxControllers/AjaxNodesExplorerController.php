@@ -60,6 +60,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'RZ\Renzo\Core\Entities\Node',
             $arrayFilter
         );
+        $listManager->setItemPerPage(40);
         $listManager->handle();
 
         $nodes = $listManager->getEntities();
@@ -77,7 +78,8 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'status' => 'confirm',
             'statusCode' => 200,
             'nodes' => $nodesArray,
-            'nodesCount' => count($nodes)
+            'nodesCount' => count($nodes),
+            'filters' => $listManager->getAssignation()
         );
 
         return new Response(

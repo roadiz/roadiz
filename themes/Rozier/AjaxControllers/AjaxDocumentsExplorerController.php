@@ -15,6 +15,7 @@ use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Handlers\NodeHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 use Themes\Rozier\RozierApp;
+use RZ\Renzo\Core\ListManagers\EntityListManager;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,9 +51,20 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $documents = $this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Document')
-            ->findBy(array(), array('createdAt' => 'DESC'));
+        $arrayFilter = array();
+        /*
+         * Manage get request to filter list
+         */
+        $listManager = new EntityListManager(
+            $request,
+            $this->getService('em'),
+            'RZ\Renzo\Core\Entities\Document',
+            $arrayFilter
+        );
+        $listManager->setItemPerPage(30);
+        $listManager->handle();
+
+        $documents = $listManager->getEntities();
 
         $documentsArray = array();
         foreach ($documents as $doc) {
@@ -68,7 +80,8 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             'status' => 'confirm',
             'statusCode' => 200,
             'documents' => $documentsArray,
-            'documentsCount' => count($documents)
+            'documentsCount' => count($documents),
+            'filters' => $listManager->getAssignation()
         );
 
         return new Response(

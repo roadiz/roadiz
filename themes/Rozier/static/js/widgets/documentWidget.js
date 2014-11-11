@@ -172,9 +172,97 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
     return false;
 };
 
+/**
+ * Query searched documents explorer.
+ *
+ * @param  {[type]} event   [description]
+ * @return false
+ */
+DocumentWidget.prototype.onExplorerSearch = function(event) {
+    var _this = this;
+
+    if (_this.$explorer !== null){
+        var $search = $(event.currentTarget).find('#documents-search-input');
+
+        var ajaxData = {
+            '_action':'toggleExplorer',
+            '_token': Rozier.ajaxToken,
+            'search': $search.val()
+        };
+
+        $.ajax({
+            url: Rozier.routes.documentsAjaxExplorer,
+            type: 'get',
+            dataType: 'json',
+            data: ajaxData
+        })
+        .success(function(data) {
+            console.log(data);
+            console.log("success");
+
+            if (typeof data.documents != "undefined") {
+
+                var $currentsortable = $($(event.currentTarget).parents('.documents-widget')[0]).find('.documents-widget-sortable');
+                _this.appendItemsToExplorer(data, $currentsortable, true);
+            }
+        })
+        .fail(function(data) {
+            console.log(data.responseText);
+            console.log("error");
+        });
+    }
+
+    return false;
+};
 
 /**
- * Unlink document
+ * Query next page documents explorer.
+ *
+ * @param  {[type]} filters [description]
+ * @param  {[type]} event   [description]
+ * @return false
+ */
+DocumentWidget.prototype.onExplorerNextPage = function(filters, event) {
+    var _this = this;
+
+    if (_this.$explorer !== null){
+        console.log(filters);
+        var ajaxData = {
+            '_action':'toggleExplorer',
+            '_token': Rozier.ajaxToken,
+            'search': filters.search,
+            'page': filters.nextPage
+        };
+
+        $.ajax({
+            url: Rozier.routes.documentsAjaxExplorer,
+            type: 'get',
+            dataType: 'json',
+            data: ajaxData
+        })
+        .success(function(data) {
+            console.log(data);
+            console.log("success");
+
+            if (typeof data.documents != "undefined") {
+
+                var $currentsortable = $($(event.currentTarget).parents('.documents-widget')[0]).find('.documents-widget-sortable');
+                _this.appendItemsToExplorer(data, $currentsortable);
+            }
+        })
+        .fail(function(data) {
+            console.log(data.responseText);
+            console.log("error");
+        });
+    }
+
+    return false;
+};
+
+
+/**
+ * Unlink document.
+ *
  * @param  {[type]} event [description]
  * @return {[type]}       [description]
  */
@@ -208,7 +296,7 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
             '<div class="document-widget-explorer-header">',
                 '<div class="document-widget-explorer-logo"><i class="uk-icon-rz-folder-tree-mini"></i></div>',
                 '<div class="document-widget-explorer-search">',
-                    '<form action="#" method="POST" class="uk-form">',
+                    '<form action="#" method="POST" class="explorer-search uk-form">',
                         '<div class="uk-form-icon">',
                             '<i class="uk-icon-search"></i>',
                             '<input id="documents-search-input" type="search" name="searchTerms" value="" placeholder="'+Rozier.messages.searchDocuments+'"/>',
@@ -227,37 +315,78 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
     _this.$explorerClose = $('.document-widget-explorer-close');
 
     _this.$explorerClose.on('click', $.proxy(_this.closeExplorer, _this));
+    _this.$explorer.find('.explorer-search').on('submit', $.proxy(_this.onExplorerSearch, _this));
 
-    var $sortable = _this.$explorer.find('.uk-sortable');
 
-    for (var i = 0; i < data.documents.length; i++) {
-        var doc = data.documents[i];
-        $sortable.append(doc.html);
-    }
-
-    $sortable.find('li').each (function (index, element) {
-        var $link = $(element).find('.link-button');
-        if($link.length){
-            $link.on('click', function (event) {
-
-                var $object = $(event.currentTarget).parent();
-                $object.appendTo($originWidget);
-
-                var inputName = 'source['+$originWidget.data('input-name')+']';
-                $originWidget.find('li').each(function (index, element) {
-                    $(element).find('input').attr('name', inputName+'['+index+']');
-                });
-
-                return false;
-            });
-        }
-    });
+    _this.appendItemsToExplorer(data, $originWidget);
 
     window.setTimeout(function () {
         _this.$explorer.addClass('visible');
     }, 0);
 };
 
+/**
+ * Append documents to explorer.
+ *
+ * @param  Ajax data data
+ * @param  jQuery $originWidget
+ * @param  boolean replace Replace instead of appending
+ */
+DocumentWidget.prototype.appendItemsToExplorer = function(data, $originWidget, replace) {
+    var _this = this;
+
+    var $sortable = _this.$explorer.find('.uk-sortable');
+
+    $sortable.find('.document-widget-explorer-nextpage').remove();
+
+    if (typeof replace !== 'undefined' && replace === true) {
+        $sortable.empty();
+    }
+
+    /*
+     * Add documents
+     */
+    for (var i = 0; i < data.documents.length; i++) {
+        var doc = data.documents[i];
+        $sortable.append(doc.html);
+    }
+
+    /*
+     * Add pagination
+     */
+    if (typeof data.filters.nextPage !== 'undefined' &&
+        data.filters.nextPage > 1) {
+
+        $sortable.append([
+            '<li class="document-widget-explorer-nextpage">',
+                '<i class="uk-icon-plus"></i><span class="label">More documents</span>',
+            '</li>'
+        ].join(''));
+
+        $sortable.find('.document-widget-explorer-nextpage').on('click', $.proxy(_this.onExplorerNextPage, _this, data.filters));
+    }
+
+    var onAddClick = $.proxy(function (event) {
+
+        var $object = $(event.currentTarget).parent();
+        $object.appendTo($originWidget);
+
+        var inputName = 'source['+$originWidget.data('input-name')+']';
+        $originWidget.find('li').each(function (index, element) {
+            $(element).find('input').attr('name', inputName+'['+index+']');
+        });
+
+        return false;
+    }, _this);
+
+    $sortable.find('li').each (function (index, element) {
+        var $link = $(element).find('.link-button');
+        if($link.length){
+            $link.off('click', onAddClick);
+            $link.on('click', onAddClick);
+        }
+    });
+};
 
 /**
  * Echap key to close explorer
