@@ -130,7 +130,7 @@
 
 
 		{# INTERACTIONS #}
-		<li class="uk-parent uk-rz-coming-soon">
+		<li class="uk-parent">
 			<p><i class="uk-icon-rz-interactions"></i>
 			<span class="info">{% trans %}interactions{% endtrans %}</span></p>
 			<ul class="uk-nav-sub">
@@ -147,7 +147,7 @@
 
 			{% if (securityContext.Granted('ROLE_ACCESS_NEWSLETTERS')) %}
 
-				<li><a href="#">
+				<li class="uk-rz-coming-soon"><a href="#">
 					<i class="uk-icon-rz-newsletters"></i>
 					<span class="info">{% trans %}manage.newsletters{% endtrans %}</span>
 					</a>
@@ -157,7 +157,7 @@
 
 			{% if (securityContext.Granted('ROLE_ACCESS_MANAGE_SUBSCRIBERS')) %}
 
-				<li><a href="#">
+				<li class="uk-rz-coming-soon"><a href="#">
 					<i class="uk-icon-rz-subscribers"></i>
 					<span class="info">{% trans %}manage.subscribers{% endtrans %}</span>
 					</a>
@@ -167,7 +167,7 @@
 
 			{% if (securityContext.Granted('ROLE_ACCESS_COMMENTS')) %}
 
-				<li><a href="#">
+				<li class="uk-rz-coming-soon"><a href="#">
 					<i class="uk-icon-rz-comments"></i><span class="info">{% trans %}manage.comments{% endtrans %}</span>
 					</a>
 				</li>

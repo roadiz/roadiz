@@ -165,11 +165,13 @@ class EntityListManager
             if ($this->currentPage > 1) {
                 $this->queryArray['page'] = $this->currentPage - 1;
                 $assign['previousPageQuery'] = http_build_query($this->queryArray);
+                $assign['previousPage'] = $this->currentPage - 1;
             }
             // compute next and prev page URL
             if ($this->currentPage < $this->paginator->getPageCount()) {
                 $this->queryArray['page'] = $this->currentPage + 1;
                 $assign['nextPageQuery'] = http_build_query($this->queryArray);
+                $assign['nextPage'] = $this->currentPage + 1;
             }
 
             return $assign;
