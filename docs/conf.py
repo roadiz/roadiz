@@ -31,7 +31,7 @@ import sphinx_rtd_theme
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.todo',
+    'sphinx.ext.todo'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -97,6 +97,14 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
+# loading PhpLexer
+from sphinx.highlighting import lexers
+from pygments.lexers.web import PhpLexer
+## enable highlighting for PHP code not between ``<?php ... ?>`` by default
+lexers['php'] = PhpLexer(startinline=True)
+lexers['php-annotations'] = PhpLexer(startinline=True)
+
+primary_domain = 'php'
 
 # -- Options for HTML output ----------------------------------------------
 

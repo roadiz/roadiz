@@ -14,11 +14,15 @@ Then import your dump and files into your new server.
 
 Once you’ve imported your database, you must edit manually your `conf/config.json`, you can reuse the former server’s one and adapt its database credentials. **Do not perform any schema update now**, it will erase your NodesSources data as their entities files haven’t been generated yet.
 
-When you’ve edited your `conf/config.json` file, regenerate your entities source files::
+When you’ve edited your `conf/config.json` file, regenerate your entities source files
+
+.. code-block:: bash
 
     bin/renzo core:node:types --regenerateAllEntities;
 
-Now you can perform a schema update without losing your nodes data::
+Now you can perform a schema update without losing your nodes data
+
+.. code-block:: bash
 
     bin/renzo schema --update;
     bin/renzo schema --update --execute;

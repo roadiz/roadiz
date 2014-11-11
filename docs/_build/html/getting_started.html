@@ -59,7 +59,6 @@
         
             <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="">Getting started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#prepare-your-files">Prepare your files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#prepare-your-server">Prepare your server</a></li>
 </ul>
 </li>
@@ -68,6 +67,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="moving.html">Moving a website to another server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="themes/create_theme.html">Creating a theme</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="themes/create_theme.html#dynamic-routing">Dynamic routing</a></li>
+</ul>
+</li>
 </ul>
 
         
@@ -104,19 +107,16 @@
             
   <div class="section" id="getting-started">
 <span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="prepare-your-files">
-<h2>Prepare your files<a class="headerlink" href="#prepare-your-files" title="Permalink to this headline">¶</a></h2>
-<p>First of all, download RZCMS latest version using Git:</p>
-<div class="highlight-python"><div class="highlight"><pre>cd your/webroot/folder;
+<p>First of all, download <em>Renzo</em> latest version using Git</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd </span>your/webroot/folder;
 git clone xxxxxxxxxxxx ./;
 </pre></div>
 </div>
-<p>Use <a class="reference external" href="https://getcomposer.org/doc/00-intro.md#globally">Composer</a> to download dependancies:</p>
-<div class="highlight-python"><div class="highlight"><pre>composer install;
+<p>Use <a class="reference external" href="https://getcomposer.org/doc/00-intro.md#globally">Composer</a> to download dependancies</p>
+<div class="highlight-bash"><div class="highlight"><pre>composer install;
 </pre></div>
 </div>
 <p>Then copy <cite>conf/config.default.json</cite> file to <cite>conf/config.json</cite>.</p>
-</div>
 <div class="section" id="prepare-your-server">
 <h2>Prepare your server<a class="headerlink" href="#prepare-your-server" title="Permalink to this headline">¶</a></h2>
 <p>You can either use <em>Apache</em> or <em>Nginx</em> with Renzo. An example virtual host is provided for each:</p>

@@ -29,6 +29,7 @@
 
   
     <link rel="top" title="Renzo 0.1 documentation" href="index.html"/>
+        <link rel="next" title="Creating a theme" href="themes/create_theme.html"/>
         <link rel="prev" title="Upgrading" href="upgrading.html"/> 
 
   
@@ -58,7 +59,6 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#prepare-your-files">Prepare your files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#prepare-your-server">Prepare your server</a></li>
 </ul>
 </li>
@@ -67,6 +67,10 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Moving a website to another server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="themes/create_theme.html">Creating a theme</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="themes/create_theme.html#dynamic-routing">Dynamic routing</a></li>
+</ul>
+</li>
 </ul>
 
         
@@ -111,12 +115,12 @@
 <p>From this point you can install your new webserver, as described in <a class="reference internal" href="getting_started.html#getting-started"><em>Install section</em></a>.</p>
 <p>Then import your dump and files into your new server.</p>
 <p>Once you’ve imported your database, you must edit manually your <cite>conf/config.json</cite>, you can reuse the former server’s one and adapt its database credentials. <strong>Do not perform any schema update now</strong>, it will erase your NodesSources data as their entities files haven’t been generated yet.</p>
-<p>When you’ve edited your <cite>conf/config.json</cite> file, regenerate your entities source files:</p>
-<div class="highlight-python"><div class="highlight"><pre>bin/renzo core:node:types --regenerateAllEntities;
+<p>When you’ve edited your <cite>conf/config.json</cite> file, regenerate your entities source files</p>
+<div class="highlight-bash"><div class="highlight"><pre>bin/renzo core:node:types --regenerateAllEntities;
 </pre></div>
 </div>
-<p>Now you can perform a schema update without losing your nodes data:</p>
-<div class="highlight-python"><div class="highlight"><pre>bin/renzo schema --update;
+<p>Now you can perform a schema update without losing your nodes data</p>
+<div class="highlight-bash"><div class="highlight"><pre>bin/renzo schema --update;
 bin/renzo schema --update --execute;
 
 bin/renzo cache --clear-all
@@ -129,6 +133,8 @@ bin/renzo cache --clear-all
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="themes/create_theme.html" class="btn btn-neutral float-right" title="Creating a theme"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="upgrading.html" class="btn btn-neutral" title="Upgrading"><span class="fa fa-arrow-circle-left"></span> Previous</a>
