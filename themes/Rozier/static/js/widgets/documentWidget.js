@@ -23,7 +23,8 @@ DocumentWidget.prototype.uploader = null;
 
 
 /**
- * Init
+ * Init.
+ *
  * @return {[type]} [description]
  */
 DocumentWidget.prototype.init = function() {
@@ -46,9 +47,6 @@ DocumentWidget.prototype.init = function() {
     _this.$unlinkDocumentButtons.on('click', onUnlinkDocumentP);
 
     Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
-
-    // _this.$toggleExplorerButtons.trigger('click');
-
 };
 
 

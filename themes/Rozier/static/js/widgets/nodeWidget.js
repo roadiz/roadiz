@@ -104,6 +104,93 @@ NodeWidget.prototype.onExplorerToggle = function(event) {
     return false;
 };
 
+/**
+ * Query searched nodes explorer.
+ *
+ * @param  {[type]} event   [description]
+ * @return false
+ */
+NodeWidget.prototype.onExplorerSearch = function(event) {
+    var _this = this;
+
+    if (_this.$explorer !== null){
+        var $search = $(event.currentTarget).find('#nodes-search-input');
+
+        var ajaxData = {
+            '_action':'toggleExplorer',
+            '_token': Rozier.ajaxToken,
+            'search': $search.val()
+        };
+
+        $.ajax({
+            url: Rozier.routes.nodesAjaxExplorer,
+            type: 'get',
+            dataType: 'json',
+            data: ajaxData
+        })
+        .success(function(data) {
+            console.log(data);
+            console.log("success");
+
+            if (typeof data.nodes != "undefined") {
+
+                var $currentsortable = $($(event.currentTarget).parents('.nodes-widget')[0]).find('.nodes-widget-sortable');
+                _this.appendItemsToExplorer(data, $currentsortable, true);
+            }
+        })
+        .fail(function(data) {
+            console.log(data.responseText);
+            console.log("error");
+        });
+    }
+
+    return false;
+};
+
+/**
+ * Query next page nodes explorer.
+ *
+ * @param  {[type]} filters [description]
+ * @param  {[type]} event   [description]
+ * @return false
+ */
+NodeWidget.prototype.onExplorerNextPage = function(filters, event) {
+    var _this = this;
+
+    if (_this.$explorer !== null){
+        console.log(filters);
+        var ajaxData = {
+            '_action':'toggleExplorer',
+            '_token': Rozier.ajaxToken,
+            'search': filters.search,
+            'page': filters.nextPage
+        };
+
+        $.ajax({
+            url: Rozier.routes.nodesAjaxExplorer,
+            type: 'get',
+            dataType: 'json',
+            data: ajaxData
+        })
+        .success(function(data) {
+            console.log(data);
+            console.log("success");
+
+            if (typeof data.nodes != "undefined") {
+
+                var $currentsortable = $($(event.currentTarget).parents('.nodes-widget')[0]).find('.nodes-widget-sortable');
+                _this.appendItemsToExplorer(data, $currentsortable);
+            }
+        })
+        .fail(function(data) {
+            console.log(data.responseText);
+            console.log("error");
+        });
+    }
+
+    return false;
+};
+
 NodeWidget.prototype.onUnlinkNode = function( event ) {
     var _this = this;
 
@@ -131,9 +218,9 @@ NodeWidget.prototype.createExplorer = function(data, $originWidget) {
     var explorerDom = [
         '<div class="node-widget-explorer">',
             '<div class="node-widget-explorer-header">',
-                '<div class="node-widget-explorer-logo"><i class="uk-icon-rz-folder-tree"></i></div>',
+                //'<div class="node-widget-explorer-logo"><i class="uk-icon-rz-folder-tree"></i></div>',
                 '<div class="node-widget-explorer-search">',
-                    '<form action="#" method="POST" class="uk-form">',
+                    '<form action="#" method="POST" class="explorer-search uk-form">',
                         '<div class="uk-form-icon">',
                             '<i class="uk-icon-search"></i>',
                             '<input id="nodes-search-input" type="search" name="searchTerms" value="" placeholder="'+Rozier.messages.searchNodes+'"/>',
@@ -153,34 +240,75 @@ NodeWidget.prototype.createExplorer = function(data, $originWidget) {
 
     _this.$explorerClose.on('click', $.proxy(_this.closeExplorer, _this));
 
-    var $sortable = _this.$explorer.find('.uk-sortable');
-
-    for (var i = 0; i < data.nodes.length; i++) {
-        var doc = data.nodes[i];
-        $sortable.append(doc.html);
-    }
-
-    $sortable.find('li').each (function (index, element) {
-        var $link = $(element).find('.link-button');
-        if($link.length){
-            $link.on('click', function (event) {
-
-                var $object = $(event.currentTarget).parent();
-                $object.appendTo($originWidget);
-
-                var inputName = 'source['+$originWidget.data('input-name')+']';
-                $originWidget.find('li').each(function (index, element) {
-                    $(element).find('input').attr('name', inputName+'['+index+']');
-                });
-
-                return false;
-            });
-        }
-    });
+    _this.$explorer.find('.explorer-search').on('submit', $.proxy(_this.onExplorerSearch, _this));
+    _this.appendItemsToExplorer(data, $originWidget);
 
     window.setTimeout(function () {
         _this.$explorer.addClass('visible');
     }, 0);
+};
+
+/**
+ * Append nodes to explorer.
+ *
+ * @param  Ajax data data
+ * @param  jQuery $originWidget
+ * @param  boolean replace Replace instead of appending
+ */
+NodeWidget.prototype.appendItemsToExplorer = function(data, $originWidget, replace) {
+    var _this = this;
+
+    var $sortable = _this.$explorer.find('.uk-sortable');
+
+    $sortable.find('.node-widget-explorer-nextpage').remove();
+
+    if (typeof replace !== 'undefined' && replace === true) {
+        $sortable.empty();
+    }
+
+    /*
+     * Add nodes
+     */
+    for (var i = 0; i < data.nodes.length; i++) {
+        var node = data.nodes[i];
+        $sortable.append(node.html);
+    }
+
+    /*
+     * Add pagination
+     */
+    if (typeof data.filters.nextPage !== 'undefined' &&
+        data.filters.nextPage > 1) {
+
+        $sortable.append([
+            '<li class="node-widget-explorer-nextpage">',
+                '<i class="uk-icon-plus"></i><span class="label">More nodes</span>',
+            '</li>'
+        ].join(''));
+
+        $sortable.find('.node-widget-explorer-nextpage').on('click', $.proxy(_this.onExplorerNextPage, _this, data.filters));
+    }
+
+    var onAddClick = $.proxy(function (event) {
+
+        var $object = $(event.currentTarget).parent();
+        $object.appendTo($originWidget);
+
+        var inputName = 'source['+$originWidget.data('input-name')+']';
+        $originWidget.find('li').each(function (index, element) {
+            $(element).find('input').attr('name', inputName+'['+index+']');
+        });
+
+        return false;
+    }, _this);
+
+    $sortable.find('li').each (function (index, element) {
+        var $link = $(element).find('.link-button');
+        if($link.length){
+            $link.off('click', onAddClick);
+            $link.on('click', onAddClick);
+        }
+    });
 };
 
 /**
