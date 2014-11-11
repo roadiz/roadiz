@@ -4,15 +4,17 @@
 Getting started
 ===============
 
-Prepare your files
-------------------
 
-First of all, download RZCMS latest version using Git::
+First of all, download *Renzo* latest version using Git
+
+.. code-block:: bash
 
     cd your/webroot/folder;
     git clone xxxxxxxxxxxx ./;
 
-Use `Composer <https://getcomposer.org/doc/00-intro.md#globally>`_ to download dependancies::
+Use `Composer <https://getcomposer.org/doc/00-intro.md#globally>`_ to download dependancies
+
+.. code-block:: bash
 
     composer install;
 

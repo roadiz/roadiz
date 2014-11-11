@@ -14,15 +14,16 @@ Contents:
    getting_started
    upgrading
    moving
+   themes/create_theme
 
 Renzo is a polymorphic CMS based on a node system which can handle many type of services.
 It’s based on Symfony components and Doctrine ORM for maximum performances and security.
 
 
 
-Indices and tables
-==================
+.. Indices and tables
+.. ==================
 
-* :ref:`genindex`
-* :ref:`search`
+.. * :ref:`genindex`
+.. * :ref:`search`
 
