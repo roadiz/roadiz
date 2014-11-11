@@ -34,7 +34,7 @@
                         <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>
                     {% endif %}
                 </figure>
-                <div class="document-name">{{ document.getFilename }}</div>
+                <div class="document-name">{{ document.getFilename|centralTruncate(18, -4)}}</div>
                 <div class="document-overflow">
                     <div class="document-links">
                         <a class="uk-button uk-button-small document-link" href="{{ path('documentsEditPage', { documentId: document.getId }) }}"><i class="uk-icon-rz-pencil"></i></a>
