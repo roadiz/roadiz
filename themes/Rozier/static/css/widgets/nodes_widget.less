@@ -13,18 +13,29 @@
 /* -------- STYLES -------- */
 
 .nodes-widget{
+    position: relative;
     border:1px solid @nodes-widget-border;
 
     .nodes-widget-uploader.dropzone {
         height: 200px;
         display: none;
     }
+
+    .uk-form-label{
+        position: absolute;
+        left:70px;
+        height:55px;
+        line-height:59px;
+
+        &:before{
+            display: none;
+        }
+    }
 }
 
 .nodes-widget-nav{
     height:55px;
     border-bottom:1px dashed @nodes-widget-border;
-    // background:#fff;
 
     .uk-navbar-brand{
         padding:0 10px 0 28px;
@@ -32,8 +43,9 @@
         line-height:55px;
     }
 
-    .uk-icon-rz-nodes{
-        font-size:28px;
+    .uk-icon-rz-global-nodes{
+        font-size: 30px;
+        line-height: 58px;
     }
 
     .nodes-widget-quick-creation{

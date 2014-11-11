@@ -21,12 +21,12 @@
 		{% if not node.isArchived %}archived-node {% endif %}
 		{% if not node.isLocked %}locked-node {% endif %}">
 		<div class="uk-nestable-handle">
-		
+
 			{% if not mainNodeTree and not nodeTree.isStackTree %}
 				{% set image = source.getDocumentsByFields.first.getDocument %}
-				{% if image %} 
+				{% if image %}
 				<figure class="nodetree-element-img">
-					<img src="{{ image.getViewer.getDocumentUrlByArray({"width":40, "crop":"1x1", "quality":50}) }}" alt="">
+					<img src="{{ image.getViewer.getDocumentUrlByArray({"width":60, "crop":"1x1", "quality":80}) }}" alt="">
 				</figure>
 				{% endif %}
 			{% endif %}
