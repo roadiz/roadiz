@@ -21,7 +21,6 @@
 			<table class="node-types content-table uk-table">
 				<thead>
 			        <tr>
-			            <th>{% trans %}name{% endtrans %}</th>
 			            <th>{% trans %}customForm.displayName{% endtrans %}</th>
 			            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
 			            <th></th>
@@ -32,20 +31,18 @@
 					{% for type in custom_forms %}
 						<tr>
 							<td class="name"><a href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}">
-                                <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getName }}
-                            </a></td>
-							<td>{{ type.getDisplayName }}</td>
+                                <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getDisplayName }}</a></td>
 							{# <td>{{ type.getSourceEntityClassName }}</td> #}
 							<td><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
 							<td>
-                            {% spaceless %}                                
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>  
+                            {% spaceless %}
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
 
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormFieldsListPage', { customFormId: type.getId }) }}" title="{% trans %}manage.customFormFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
 
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormAnswersHomePage', { customFormId: type.getId }) }}" title="{% trans %}customForm.answers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
 
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormSendAction', { customFormId: type.getId }) }}" title="{% trans %}customForm.show{% endtrans %}" data-uk-tooltip="{animation:true}" target="_blank"><i class="uk-icon-rz-visibility"></i></a>                            
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormSendAction', { customFormId: type.getId }) }}" title="{% trans %}customForm.show{% endtrans %}" data-uk-tooltip="{animation:true}" target="_blank"><i class="uk-icon-rz-visibility"></i></a>
 
                                 <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('customFormsDeletePage', { customFormId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}">
                                     <i class="uk-icon-rz-trash-o"></i>
