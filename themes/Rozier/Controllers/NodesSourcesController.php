@@ -281,6 +281,15 @@ class NodesSourcesController extends RozierApp
                         new Type('double')
                     )
                 );
+            case NodeTypeField::COLOUR_T:
+                return array(
+                    'label' => $field->getLabel(),
+                    'required' => false,
+                    'attr' => array(
+                        'data-desc'       => $field->getDescription(),
+                        'class' => 'colorpicker-input'
+                    )
+                );
 
             default:
                 return array(

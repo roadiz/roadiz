@@ -51,6 +51,7 @@ class NodeTypeField extends AbstractField
         AbstractField::DOCUMENTS_T =>'documents.type',
         AbstractField::NODES_T =>     'nodes.type',
         AbstractField::CHILDREN_T => 'children-nodes.type',
+        AbstractField::COLOUR_T =>   'colour.type',
     );
     /**
      * Associates node-type field type to a Doctrine type.
@@ -72,6 +73,7 @@ class NodeTypeField extends AbstractField
         AbstractField::DOCUMENTS_T => null,
         AbstractField::NODES_T =>      null,
         AbstractField::CHILDREN_T =>  null,
+        AbstractField::COLOUR_T =>  'string',
     );
     /**
      * Associates node-type field type to a Symfony Form type.
@@ -80,19 +82,20 @@ class NodeTypeField extends AbstractField
      */
     public static $typeToForm = array(
         AbstractField::STRING_T =>   'text',
-        AbstractField::DATETIME_T => 'datetime',
-        AbstractField::RICHTEXT_T => 'textarea',
-        AbstractField::TEXT_T =>     'textarea',
-        AbstractField::MARKDOWN_T => 'markdown',
-        AbstractField::BOOLEAN_T =>  'checkbox',
-        AbstractField::INTEGER_T =>  'integer',
-        AbstractField::DECIMAL_T =>  'number',
-        AbstractField::EMAIL_T =>    'email',
-        AbstractField::ENUM_T =>     'enumeration',
-        AbstractField::MULTIPLE_T => 'multiple_enumeration',
-        AbstractField::DOCUMENTS_T =>'documents',
+        AbstractField::DATETIME_T =>  'datetime',
+        AbstractField::RICHTEXT_T =>  'textarea',
+        AbstractField::TEXT_T =>      'textarea',
+        AbstractField::MARKDOWN_T =>  'markdown',
+        AbstractField::BOOLEAN_T =>   'checkbox',
+        AbstractField::INTEGER_T =>   'integer',
+        AbstractField::DECIMAL_T =>   'number',
+        AbstractField::EMAIL_T =>     'email',
+        AbstractField::ENUM_T =>      'enumeration',
+        AbstractField::MULTIPLE_T =>  'multiple_enumeration',
+        AbstractField::DOCUMENTS_T => 'documents',
         AbstractField::NODES_T =>     'referenced_nodes',
-        AbstractField::CHILDREN_T => 'children_nodes',
+        AbstractField::CHILDREN_T =>  'children_nodes',
+        AbstractField::COLOUR_T =>    'text',
     );
 
     /**

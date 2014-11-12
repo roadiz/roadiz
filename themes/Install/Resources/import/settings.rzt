@@ -92,6 +92,12 @@
                 "value": "",
                 "type": 0,
                 "visible": true
+            },
+            {
+                "name": "main_color",
+                "value": "#00deab",
+                "type": 11,
+                "visible": true
             }
         ]
     },

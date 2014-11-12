@@ -20,6 +20,8 @@ Rozier.resizeFirst = true;
 Rozier.$minifyTreePanelButton = null;
 Rozier.$mainTrees = null;
 Rozier.$mainContentScrollable = null;
+Rozier.mainContentScrollableWidth = null;
+Rozier.mainContentScrollableOffsetLeft = null;
 Rozier.$backTopBtn = null;
 
 
@@ -497,6 +499,11 @@ Rozier.resize = function(){
 			_this.$mainTrees[0].style.display = 'table-cell';
 		}, 1000);
 	}
+
+	_this.mainContentScrollableWidth = _this.$mainContentScrollable.width();
+	_this.mainContentScrollableOffsetLeft = _this.windowWidth - _this.mainContentScrollableWidth;
+
+	_this.lazyload.resize();
 
 	// Documents list
 	if(_this.lazyload !== null && !_this.resizeFirst) _this.lazyload.documentsList.resize();

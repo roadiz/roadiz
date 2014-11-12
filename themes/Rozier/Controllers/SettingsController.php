@@ -25,6 +25,7 @@ use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Translation\Translator;
 
 /**
 * Settings controller
@@ -458,13 +459,14 @@ class SettingsController extends RozierApp
                 'required' => true,
                 'choices' => NodeTypeField::$typeToHuman
             ))
-            ->add(
-                'group',
-                new \RZ\Renzo\CMS\Forms\SettingGroupType(),
-                array(
-                    'label' => $this->getTranslator()->trans('setting.group')
-                )
-            );
+            // ->add(
+            //     'settingGroup',
+            //     new \RZ\Renzo\CMS\Forms\SettingGroupType(),
+            //     array(
+            //         'label' => $this->getTranslator()->trans('setting.group')
+            //     )
+            // )
+            ;
 
         return $builder->getForm();
     }
@@ -514,10 +516,7 @@ class SettingsController extends RozierApp
             ->add(
                 'value',
                 NodeTypeField::$typeToForm[$setting->getType()],
-                array(
-                    'label' => $this->getTranslator()->trans('value'),
-                    'required' => false
-                )
+                static::getFormOptionsForSetting($setting, $this->getTranslator())
             )
             ->add(
                 'visible',
@@ -536,13 +535,14 @@ class SettingsController extends RozierApp
                     'choices' => NodeTypeField::$typeToHuman
                 )
             )
-            ->add(
-                'group',
-                new \RZ\Renzo\CMS\Forms\SettingGroupType(),
-                array(
-                    'label' => $this->getTranslator()->trans('setting.group')
-                )
-            );
+            // ->add(
+            //     'settingGroup',
+            //     new \RZ\Renzo\CMS\Forms\SettingGroupType(),
+            //     array(
+            //         'label' => $this->getTranslator()->trans('setting.group')
+            //     )
+            // )
+            ;
 
         return $builder->getForm();
     }
@@ -564,10 +564,9 @@ class SettingsController extends RozierApp
                 'data'=>$setting->getId(),
                 'required' => true
             ))
-            ->add('value', NodeTypeField::$typeToForm[$setting->getType()], array(
-                'label' => false,
-                'required' => false
-            ));
+            ->add('value', NodeTypeField::$typeToForm[$setting->getType()], 
+                static::getFormOptionsForSetting($setting, $this->getTranslator(), true)
+            );
 
         return $builder->getForm();
     }
@@ -599,5 +598,59 @@ class SettingsController extends RozierApp
         return $this->getService('em')
             ->getRepository('RZ\Renzo\Core\Entities\Setting')
             ->findAll();
+    }
+
+    public static function getFormOptionsForSetting(
+        $setting,
+        Translator $translator,
+        $shortEdit = false
+    ) {
+
+        $label = (!$shortEdit) ? $translator->trans('value') : false;
+
+        switch ($setting->getType()) {
+            case NodeTypeField::ENUM_T:
+                return array(
+                    'label' => $label,
+                    'empty_value' => $translator->trans('choose.value'),
+                    'required' => false
+                );
+            case NodeTypeField::DATETIME_T:
+                return array(
+                    'label' => $label,
+                    'years' => range(date('Y')-10, date('Y')+10),
+                    'required' => false
+                );
+            case NodeTypeField::INTEGER_T:
+                return array(
+                    'label' => $label,
+                    'required' => false,
+                    'constraints' => array(
+                        new Type('integer')
+                    )
+                );
+            case NodeTypeField::DECIMAL_T:
+                return array(
+                    'label' => $label,
+                    'required' => false,
+                    'constraints' => array(
+                        new Type('double')
+                    )
+                );
+            case NodeTypeField::COLOUR_T:
+                return array(
+                    'label' => $label,
+                    'required' => false,
+                    'attr' => array(
+                        'class' => 'colorpicker-input'
+                    )
+                );
+
+            default:
+                return array(
+                    'label' => $label,
+                    'required' => false
+                );
+        }
     }
 }

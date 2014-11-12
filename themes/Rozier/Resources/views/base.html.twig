@@ -56,6 +56,7 @@
                         {% block content %}
                             <h1>{% trans %}Welcome{% endtrans %}</h1>
                         {% endblock %}
+                        <div id="canvasloader-container"></div>
                         <div id="back-top-button" title="{% trans %}back_to.top{% endtrans %}" data-uk-tooltip="{animation:true,pos:'top'}"><i class="uk-icon-rz-backtop"></i></div>
                     </div>
                 </section>
@@ -116,6 +117,7 @@
                 'baseUrl':      '{{ head.baseUrl }}',
                 'resourcesUrl': '{{ head.resourcesUrl }}',
                 'ajaxToken':    '{{ head.ajaxToken }}',
+                'mainColor':    '{{ head.mainColor }}', 
                 'messages': {
                     'forbiddenPage':   '{{ 'forbidden.page'|trans() }}',
                     'see_all':         '{{ 'see_all'|trans() }}',

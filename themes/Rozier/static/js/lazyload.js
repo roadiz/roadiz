@@ -13,7 +13,10 @@ var Lazyload = function() {
         _this.onPopState(event);
     });
 
-    _this.initLoader();
+    _this.$canvasLoaderContainer = $('#canvasloader-container');
+    _this.mainColor = isset(Rozier.mainColor) ? Rozier.mainColor : '#ffffff';
+    // _this.initLoader();
+
 };
 
 Lazyload.prototype.$linksSelector = null;
@@ -24,6 +27,8 @@ Lazyload.prototype.$HTMLeditorContent = null;
 Lazyload.prototype.$HTMLeditorNav = null;
 Lazyload.prototype.HTMLeditorNavToRemove = null;
 Lazyload.prototype.documentsList = null;
+Lazyload.prototype.mainColor = null;
+Lazyload.prototype.$canvasLoaderContainer = null;
 
 
 /**
@@ -33,14 +38,14 @@ Lazyload.prototype.documentsList = null;
 Lazyload.prototype.initLoader = function(){
     var _this = this;
 
-    // _this.canvasLoader = new CanvasLoader('canvasloader-container');
-    // _this.canvasLoader.setColor('#ffffff'); // default is '#000000'
-    // _this.canvasLoader.setShape('square'); // default is 'oval'
-    // _this.canvasLoader.setDensity(90); // default is 40
-    // _this.canvasLoader.setRange(0.8); // default is 1.3
-    // _this.canvasLoader.setSpeed(4); // default is 2
-    // _this.canvasLoader.setFPS(30); // default is 24
-    // _this.canvasLoader.show(); // Hidden by default
+    _this.canvasLoader = new CanvasLoader('canvasloader-container');
+    _this.canvasLoader.setColor(_this.mainColor); // default is '#000000'
+    _this.canvasLoader.setShape('square'); // default is 'oval'
+    _this.canvasLoader.setDensity(90); // default is 40
+    _this.canvasLoader.setRange(0.8); // default is 1.3
+    _this.canvasLoader.setSpeed(4); // default is 2
+    _this.canvasLoader.setFPS(30); // default is 24
+    _this.canvasLoader.show(); // Hidden by default
 
 };
 
@@ -223,3 +228,18 @@ Lazyload.prototype.generalBind = function() {
 
     Rozier.getMessages();
 };
+
+
+/**
+ * Resize
+ * @return {[type]} [description]
+ */
+Lazyload.prototype.resize = function(){
+    var _this = this;
+
+    _this.$canvasLoaderContainer[0].style.left = Rozier.mainContentScrollableOffsetLeft + (Rozier.mainContentScrollableWidth/2) + 'px';
+    
+
+};
+
+
