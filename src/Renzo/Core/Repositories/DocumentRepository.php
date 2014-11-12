@@ -546,11 +546,11 @@ class DocumentRepository extends EntityRepository
     ) {
         $query = $this->_em->createQuery('
             SELECT d, dt FROM RZ\Renzo\Core\Entities\Document d
-            INNER JOIN d.documentTranslations dt
+            LEFT JOIN d.documentTranslations dt
+                WITH dt.translation = :translation
             INNER JOIN d.nodesSourcesByFields nsf
+                WITH nsf.nodeSource = :nodeSource
             WHERE nsf.field = :field
-            AND nsf.nodeSource = :nodeSource
-            AND dt.translation = :translation
             ORDER BY nsf.position ASC')
                         ->setParameter('field', $field)
                         ->setParameter('nodeSource', $nodeSource)
@@ -574,12 +574,12 @@ class DocumentRepository extends EntityRepository
     ) {
         $query = $this->_em->createQuery('
             SELECT d, dt FROM RZ\Renzo\Core\Entities\Document d
-            INNER JOIN d.documentTranslations dt
+            LEFT JOIN d.documentTranslations dt
+                WITH dt.translation = :translation
             INNER JOIN d.nodesSourcesByFields nsf
+                WITH nsf.nodeSource = :nodeSource
             INNER JOIN nsf.field f
-            WHERE f.name = :name
-            AND nsf.nodeSource = :nodeSource
-            AND dt.translation = :translation
+                WITH f.name = :name
             ORDER BY nsf.position ASC')
                         ->setParameter('name', (string) $fieldName)
                         ->setParameter('nodeSource', $nodeSource)
