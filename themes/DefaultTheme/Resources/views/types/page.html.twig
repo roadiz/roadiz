@@ -16,6 +16,8 @@
 <div>{{ nodeSource.getContent|markdown }}</div>
 <div class="image">
 	{% for document in nodeSource.getHandler.getDocumentsFromFieldName('images') %}
+
+		{% set imageMetas = document.documentTranslations.first %}
 		<figure class="uk-thumbnail">
 			{{ document.getViewer.getDocumentByArray({
 				"width":600,
@@ -23,6 +25,7 @@
 				"controls":true,
 				"embed":true
 			})|raw }}
+			<figcaption>{{ imageMetas.name }} — {{ imageMetas.copyright }}</figcaption>
 		</figure>
 	{% endfor %}
 </div>
