@@ -362,7 +362,7 @@ class SettingsController extends RozierApp
             }
             try {
                 foreach ($data as $key => $value) {
-                    if ($key != 'group') {
+                    if ($key != 'settingGroup') {
                         $setter = 'set'.ucwords($key);
                         $setting->$setter( $value );
                     } else {
@@ -397,8 +397,14 @@ class SettingsController extends RozierApp
 
         try {
             foreach ($data as $key => $value) {
-                $setter = 'set'.ucwords($key);
-                $setting->$setter( $value );
+                    if ($key != 'settingGroup') {
+                        $setter = 'set'.ucwords($key);
+                        $setting->$setter( $value );
+                    } else {
+                        $group = $this->getService('em')
+                                 ->find('RZ\Renzo\Core\Entities\SettingGroup', (int) $value);
+                        $setting->setSettingGroup($group);
+                    }
             }
 
             $this->getService('em')->persist($setting);
@@ -459,7 +465,7 @@ class SettingsController extends RozierApp
                 'choices' => NodeTypeField::$typeToHuman
             ))
             ->add(
-                'group',
+                'settingGroup',
                 new \RZ\Renzo\CMS\Forms\SettingGroupType(),
                 array(
                     'label' => $this->getTranslator()->trans('setting.group')
@@ -537,7 +543,7 @@ class SettingsController extends RozierApp
                 )
             )
             ->add(
-                'group',
+                'settingGroup',
                 new \RZ\Renzo\CMS\Forms\SettingGroupType(),
                 array(
                     'label' => $this->getTranslator()->trans('setting.group')
