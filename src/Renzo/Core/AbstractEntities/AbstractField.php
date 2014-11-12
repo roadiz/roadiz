@@ -77,7 +77,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     /**
      * Nodes field helps linking NodesSources with other Nodes entities.
      */
-    const NODE_T =          13;
+    const NODES_T =         13;
     /**
      * Nodes field helps linking NodesSources with Users entities.
      */
