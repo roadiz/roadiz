@@ -13,38 +13,54 @@ First contact
 -------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    intro/getting_started
    intro/upgrading
    intro/moving
 
+Document system
+---------------
+
+.. toctree::
+   :maxdepth: 1
+
+   documents/intro
+
 Node system
 -----------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    nodes-system/intro
    nodes-system/node_types
    nodes-system/nodes
    nodes-system/nodes_sources
 
+User system
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   users/intro
+
 Themes
 ------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    themes/create_theme
    themes/using_twig
-
+   themes/custom_assignations
 
 Forms
 -----
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    forms/contact_forms
    forms/custom_forms

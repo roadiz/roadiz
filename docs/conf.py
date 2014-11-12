@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Renzo'
+project = u'Renzo documentation'
 copyright = u'2014, REZO ZERO'
 
 # The version info for the project you're documenting, acts as replacement for

@@ -4,7 +4,6 @@
 Getting started
 ===============
 
-
 First of all, download *Renzo* latest version using Git
 
 .. code-block:: bash
