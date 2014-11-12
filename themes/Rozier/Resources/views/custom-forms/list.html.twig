@@ -8,7 +8,7 @@
         {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <nav>
-            	<a class="uk-button" href="{{ path('customFormsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.customForm{% endtrans %}</a>
+            	<a class="uk-button" href="{{ path('customFormsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.a.customForm{% endtrans %}</a>
 			</nav>
         </div>
     </header>
@@ -25,7 +25,7 @@
 			            <th>{% trans %}customForm.displayName{% endtrans %}</th>
 			            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
 			            <th></th>
-			            <th>{% trans %}actions{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-5">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
 				<tbody>
@@ -36,18 +36,21 @@
                             </a></td>
 							<td>{{ type.getDisplayName }}</td>
 							{# <td>{{ type.getSourceEntityClassName }}</td> #}
-							<td><div class="uk-badge">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
+							<td><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
 							<td>
-								<a class="uk-button uk-button-small" href="{{ path('customFormFieldsListPage', { customFormId: type.getId }) }}">
-									<i class="uk-icon-node-type-fields"></i> {% trans %}manage.customFormFields{% endtrans %}
-								</a>
-                                <a class="uk-button uk-button-small" href="{{ path('customFormAnswersHomePage', { customFormId: type.getId }) }}">
-                                    <i class="uk-icon-node-type-fields"></i> {% trans %}customForm.answers{% endtrans %}
+                            {% spaceless %}                                
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}" title="{% trans %}edit.customFormFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>  
+
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormFieldsListPage', { customFormId: type.getId }) }}" title="{% trans %}manage.customFormFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a> 
+
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormAnswersHomePage', { customFormId: type.getId }) }}" title="{% trans %}customForm.answers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a> 
+
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormSendAction', { customFormId: type.getId }) }}" title="{% trans %}customForm.show{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility"></i></a>                            
+
+                                <a class="uk-button uk-button-content uk-button-small uk-button-danger" href="{{ path('customFormsDeletePage', { customFormId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-trash-o"></i>
                                 </a>
-                                <a target="_blank" class="uk-button uk-button-small" href="{{ path('customFormSendAction', { customFormId: type.getId }) }}">
-                                    <i class="uk-icon-node-type-fields"></i> {% trans %}customForm.show{% endtrans %}
-                                </a>
-								<a class="uk-button uk-button-small uk-button-danger" href="{{ path('customFormsDeletePage', { customFormId: type.getId }) }}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</a>
+                            {% endspaceless %}
 							</td>
 						</tr>
 					{% endfor %}

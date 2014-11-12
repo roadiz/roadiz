@@ -319,11 +319,11 @@ class CustomFormsController extends RozierApp
                 'required' => false
             ))
             ->add('open', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('open'),
+                'label' => $this->getTranslator()->trans('customForm.open'),
                 'required' => false
             ))
             ->add('closeDate', 'datetime', array(
-                'label' => $this->getTranslator()->trans('closeDate'),
+                'label' => $this->getTranslator()->trans('customForm.closeDate'),
                 'required' => false
             ))
             ->add('color', 'text', array(
