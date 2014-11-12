@@ -540,6 +540,10 @@ customFormsDeletePage:
     path:     /rz-admin/custom-forms/delete/{customFormId}
     defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::deleteAction }
     requirements: { customFormId : "[0-9]+" }
+customFormsExportPage:
+    path:     /rz-admin/custom-forms/export/{customFormId}
+    requirements: { customFormId : "[0-9]+" }
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsUtilsController::exportAction }
 
 # Custom Form Answer
 customFormAnswersHomePage:

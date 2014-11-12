@@ -181,6 +181,7 @@ class CustomForm extends AbstractDateTimed
     {
         return $this->fields;
     }
+
     /**
      * Get every node-type fields names in
      * a simple array.
@@ -193,6 +194,23 @@ class CustomForm extends AbstractDateTimed
 
         foreach ($this->getFields() as $field) {
             $namesArray[] = $field->getName();
+        }
+
+        return $namesArray;
+    }
+
+    /**
+     * Get every node-type fields names in
+     * a simple array.
+     *
+     * @return array
+     */
+    public function getFieldsLabels()
+    {
+        $namesArray = array();
+
+        foreach ($this->getFields() as $field) {
+            $namesArray[] = $field->getLabel();
         }
 
         return $namesArray;
@@ -233,7 +251,7 @@ class CustomForm extends AbstractDateTimed
 
    private $customFormAnswers;
 
-   public function getCustomForAnswers()
+   public function getCustomFormAnswers()
    {
         return $this->customFormAnswers;
    }
