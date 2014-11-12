@@ -18,6 +18,7 @@ use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 
 use \Michelf\Markdown;
+use RZ\Renzo\Core\Utils\InlineMarkdown;
 
 use RZ\Renzo\Core\Kernel;
 
@@ -118,6 +119,16 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
 
             return new \Twig_SimpleFilter('markdown', function ($object) {
                 return Markdown::defaultTransform($object);
+            }, array('is_safe' => array('html')));
+        };
+
+        /*
+         * InlineMarkdown extension
+         */
+        $container['twig.inlineMarkdownExtension'] = function ($c) {
+
+            return new \Twig_SimpleFilter('inlineMarkdown', function ($object) {
+                return InlineMarkdown::defaultTransform($object);
             }, array('is_safe' => array('html')));
         };
 
