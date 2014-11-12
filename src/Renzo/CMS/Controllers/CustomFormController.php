@@ -19,6 +19,7 @@ use RZ\Renzo\Core\Entities\CustomForm;
 use RZ\Renzo\Core\Entities\CustomFormField;
 use RZ\Renzo\Core\Entities\CustomFormFieldAttribute;
 use RZ\Renzo\Core\Entities\CustomFormAnswer;
+use RZ\Renzo\CMS\Forms\CustomFormsType;
 
 
 class CustomFormController extends AppController
@@ -179,51 +180,11 @@ class CustomFormController extends AppController
      */
     private function buildForm(Request $request, CustomForm $customForm)
     {
-        $defaults = array();
-
         $fields = $customForm->getFields();
 
         $defaults = $request->query->all();
-        // foreach ($default as $key => $value) {
-        //     $fieldsName = array_map(function($x) {return $x->getName();}, count($fields));
-        //     if (in_array($key, $fieldsName, true)) {
+        $form = $this->getService('formFactory')->create(new CustomFormsType($customForm), $defaults);
 
-        //     }
-        // }
-
-        $builder = $this->getService('formFactory')
-            ->createBuilder('form', $defaults);
-            foreach ($fields as $field) {
-                $option = array("label" => $field->getLabel());
-                $type = null;
-                if ($field->isRequire()) {
-                    $option['constraints'] = array(
-                        new NotBlank()
-                    );
-                } else {
-                    $option['required'] = false;
-                }
-                if (CustomFormField::$typeToForm[$field->getType()] == "enumeration") {
-                    $choices = explode(',', $field->getDefaultValues());
-                    $choices = array_combine(array_values($choices), array_values($choices));
-                    $type = "choice";
-                    if (count($choices) < 4) {
-                        $option["expanded"] = true;
-                    }
-                    $option["choices"] = $choices;
-                } elseif (CustomFormField::$typeToForm[$field->getType()] == "multiple_enumeration") {
-                    $choices = explode(',', $field->getDefaultValues());
-                    $choices = array_combine(array_values($choices), array_values($choices));
-                    $type = "choice";
-                    $option["choices"] = $choices;
-                    $option["multiple"] = true;
-                    $option["expanded"] = true;
-                } else {
-                    $type = CustomFormField::$typeToForm[$field->getType()];
-                }
-                $builder->add($field->getName(), $type, $option);
-            }
-
-        return $builder->getForm();
+        return $form;
     }
 }
