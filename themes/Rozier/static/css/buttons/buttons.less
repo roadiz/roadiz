@@ -175,6 +175,60 @@
     }
 }
 
+// Statuses
+.uk-button-draft{
+    background: #e0e0e0;
+
+    [class*=uk-icon-]{
+        color:#333;
+    }
+}
+
+.uk-button-pending{
+    background: #d3d3d3;
+
+    [class*=uk-icon-]{
+        color:#333;
+    }
+}
+
+.uk-button-archived{
+    background: #b2b2b2;
+    border-color:#d3d3d3;
+
+    [class*=uk-icon-]{
+        color:#333;
+    }
+}
+
+.uk-button-deleted{
+    background:rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 0.2);
+    border-color: @alert-color;
+
+    [class*=uk-icon-]{
+        color: darken(@alert-color, 15%);
+    }
+}
+
+.uk-button-hidden{
+    background: #e0e0e0;
+    border-color:@grey-verylight;
+
+    [class*=uk-icon-]{
+        color:#333;
+    }
+}
+
+.uk-button-locked{
+    background: #c6c6c6;
+    border-color:#e0e0e0;
+
+    [class*=uk-icon-]{
+        color:#333;
+    }
+}
+
+
 .uk-button-table-save{
     background:rgba(@contrast-color-darker-red, @contrast-color-darker-green, @contrast-color-darker-blue, 0.3);
     border-color: @contrast-color-darker;

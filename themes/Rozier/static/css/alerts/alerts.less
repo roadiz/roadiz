@@ -69,22 +69,41 @@ td.uk-alert {
         padding: 0px;
         margin: 7px 0;
     }
-
-    .uk-alert {
-        position: relative;
-        border: 0 none;
-        left: 0px;
+    .form-help{
+        position: absolute;
+        display: inline-block;
+        top:100%; left: 0px;
+        max-width: 200px; width: auto; max-width: 400px;
         margin: 0px;
         padding: 10px 20px;
-        width: auto;
-        display: inline-block;
         border: 1px dashed #CCC;
+        text-align: left;
+        // height:0;
+        .transform(scaleY(0));
+        .transform-origin(left, top);
+        .opacity(0);
+        .transform-transition(~' 0.5s ease, 0.5s opacity ease, 0.1s height ease');
+        .transition-timing-function(@easeOutExpo);
+    }
+
+    .form-help-static{
+        position: relative;
+        left:0;
+        margin:0;
+        border: 1px dashed #CCC;
+    }
+
+    .form-col-focus{
+        .form-help{
+            // height:100%;
+            .transform(scaleY(1));
+            .opacity(1);
+        }
     }
 }
 
 
 .uk-notify-message {
-
     font-size: 12px;
     font-weight: bold;
     line-height: 18px;

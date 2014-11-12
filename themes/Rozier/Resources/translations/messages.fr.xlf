@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-12 11:15+0000
+PO-Revision-Date: 2014-11-12 14:45+0000
 Last-Translator: Maxime Bérard &lt;maxime@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n &gt; 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1415790951.931525
+X-POOTLE-MTIME: 1415803508.204275
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -1145,7 +1145,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="103" approved="yes">
         <source>node_source.%node_source%.updated.%translation%</source>
-        <target state="translated">La source de nœud «%node_source» a été mise à jour pour la traduction «%translation%».</target>
+        <target state="translated">La source de nœud «%node_source%» a été mise à jour pour la traduction «%translation%».</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
           <context context-type="linenumber">273</context>
@@ -5210,6 +5210,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="add.a.folder" approved="yes">
           <source>add.a.folder</source>
           <target state="translated">Ajouter un dossier</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="node.hidden" approved="yes">
+          <source>node.hidden</source>
+          <target state="translated">Caché</target>
       </trans-unit>
       
     

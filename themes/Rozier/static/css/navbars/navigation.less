@@ -39,6 +39,10 @@
                 top: 0px;
                 margin: 0px;
                 padding:0 6px;
+
+                &:active, &:focus{
+                    box-shadow: none;
+                }
             }
 
             &:after{
@@ -50,7 +54,7 @@
                 .transition(0.3s height ease);
             }
 
-            &:hover {
+            &:hover, &:active {
                 & > a {
                     box-shadow: none;
                 }

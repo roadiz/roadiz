@@ -1272,7 +1272,7 @@ class NodesController extends RozierApp
                     ))
                     ->add('separator_1', new SeparatorType(), array(
                         'label' => $this->getTranslator()->trans('use.new_or_existing.tags_with_hierarchy'),
-                        'attr' => array('class' => 'uk-alert uk-alert-large')
+                        'attr' => array('class' => 'form-help-static uk-alert uk-alert-large')
                     ));
 
         return $builder->getForm();

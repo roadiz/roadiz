@@ -45,9 +45,13 @@
                 font-size:10px; line-height:30px;
                 box-shadow: none;
                 .transition(0.3s color ease);
+
+               &:active, &:focus{
+                    box-shadow: none;
+                }
             }
 
-            &:hover{
+            &:hover, &:active {
 
                a{
                     color:@translation-nav-hover-color;

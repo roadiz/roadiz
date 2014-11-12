@@ -5206,6 +5206,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>add.a.folder</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="node.hidden">
+          <source>node.hidden</source>
+          <target></target>
+      </trans-unit>
       
     
     </body>
