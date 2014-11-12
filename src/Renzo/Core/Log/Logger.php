@@ -150,25 +150,27 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
+        if (Kernel::getService('em')->isOpen()) {
 
-        $log = new Log($level, $message, $context);
+            $log = new Log($level, $message, $context);
 
-        if (null !== $this->getSecurityContext() &&
-            null !== $this->getSecurityContext()->getToken() &&
-            null !== $this->getSecurityContext()->getToken()->getUser() &&
-            is_object($this->getSecurityContext()->getToken()->getUser())) {
+            if (null !== $this->getSecurityContext() &&
+                null !== $this->getSecurityContext()->getToken() &&
+                null !== $this->getSecurityContext()->getToken()->getUser() &&
+                is_object($this->getSecurityContext()->getToken()->getUser())) {
 
-            $log->setUser($this->getSecurityContext()->getToken()->getUser());
+                $log->setUser($this->getSecurityContext()->getToken()->getUser());
+            }
+
+            /*
+             * Add client IP to log if it’s an HTTP request
+             */
+            if (null !== Kernel::getInstance()->getRequest()) {
+                $log->setClientIp(Kernel::getInstance()->getRequest()->getClientIp());
+            }
+
+            Kernel::getService('em')->persist($log);
+            Kernel::getService('em')->flush();
         }
-
-        /*
-         * Add client IP to log if it’s an HTTP request
-         */
-        if (null !== Kernel::getInstance()->getRequest()) {
-            $log->setClientIp(Kernel::getInstance()->getRequest()->getClientIp());
-        }
-
-        Kernel::getService('em')->persist($log);
-        Kernel::getService('em')->flush();
     }
 }

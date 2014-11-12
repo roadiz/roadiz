@@ -66,26 +66,26 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @Column(type="boolean")
+     * @Column(name="field_required", type="boolean")
      */
-    private $require = false;
+    private $required = false;
 
     /**
-     * @return boolean $isRequire
+     * @return boolean $isRequired
      */
-    public function isRequire()
+    public function isRequired()
     {
-        return $this->require;
+        return $this->required;
     }
 
     /**
-     * @param boolean $require
+     * @param boolean $required
      *
      * @return $this
      */
-    public function setRequire($require)
+    public function setRequired($required)
     {
-        $this->require = $require;
+        $this->required = $required;
 
         return $this;
     }

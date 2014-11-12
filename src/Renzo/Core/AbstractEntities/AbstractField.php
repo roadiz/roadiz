@@ -289,7 +289,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         return $this;
     }
     /**
-     * @Column(type="text", nullable=true)
+     * @Column(name="default_values", type="text", nullable=true)
      */
     private $defaultValues;
 

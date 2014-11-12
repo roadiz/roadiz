@@ -282,7 +282,7 @@ class CustomFormFieldsController extends RozierApp
     }
 
     /**
-     * @param array                                $data
+     * @param array                                  $data
      * @param RZ\Renzo\Core\Entities\CustomFormField $field
      * @param RZ\Renzo\Core\Entities\CustomForm      $customForm
      */
@@ -342,7 +342,7 @@ class CustomFormFieldsController extends RozierApp
             'label' =>          $field->getLabel(),
             'type' =>           $field->getType(),
             'description' =>    $field->getDescription(),
-            'require' =>        $field->isRequire(),
+            'required' =>        $field->isRequired(),
             'defaultValues' =>  $field->getDefaultValues(),
         );
         $builder = $this->getService('formFactory')
@@ -368,7 +368,7 @@ class CustomFormFieldsController extends RozierApp
                         'label' => $this->getTranslator()->trans('description'),
                         'required' => false
                     ))
-                    ->add('require', 'checkbox', array(
+                    ->add('required', 'checkbox', array(
                         'label' => $this->getTranslator()->trans('require'),
                         'required' => false
                     ))
