@@ -43,7 +43,7 @@
                             {% if not group.required %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('groupsEditPage', { groupId: group.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('groupsDeletePage', { groupId: group.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('groupsExportPage', { groupId: group.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('groupsExportPage', { groupId: group.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
                             {% else %}
                                 <div class="uk-badge uk-badge-table"><span class="uk-icon-rz-lock"></span> {% trans %}group.required{% endtrans %}</div>
                             {% endif %}

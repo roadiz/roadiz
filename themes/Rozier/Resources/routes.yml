@@ -464,7 +464,7 @@ rolesDeletePage:
     defaults: { _controller: Themes\Rozier\Controllers\RolesController::deleteAction }
     requirements: { roleId : "[0-9]+" }
 rolesExportAllPage:
-    path:     /rz-admin/roless/export
+    path:     /rz-admin/roles/export
     defaults: { _controller: Themes\Rozier\Controllers\RolesUtilsController::exportAllAction }
 rolesExportPage:
     path:     /rz-admin/roles/export/{roleId}

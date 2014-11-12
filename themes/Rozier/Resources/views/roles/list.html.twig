@@ -37,7 +37,7 @@
                             {% if not role.required %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('rolesEditPage', { roleId: role.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('rolesDeletePage', { roleId: role.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small uk-button-success" href="{{ path('rolesExportPage', { roleId: role.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small uk-button-success rz-no-ajax-link" href="{{ path('rolesExportPage', { roleId: role.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
                             {% else %}
                             <div class="uk-badge uk-badge-table"><span class="uk-icon-rz-lock"></span> {% trans %}role.required{% endtrans %}</div> <!-- uk-badge-success -->
                             {% endif %}
