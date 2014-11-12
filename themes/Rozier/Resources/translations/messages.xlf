@@ -5210,6 +5210,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>node.hidden</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="required">
+          <source>required</source>
+          <target></target>
+      </trans-unit>
       
     
     </body>

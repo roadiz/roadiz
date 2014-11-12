@@ -38,14 +38,14 @@
 							{# <td>{{ type.getSourceEntityClassName }}</td> #}
 							<td><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
 							<td>
-                            {% spaceless %}
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}" title="{% trans %}edit.customFormFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            {% spaceless %}                                
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>  
 
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormFieldsListPage', { customFormId: type.getId }) }}" title="{% trans %}manage.customFormFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
 
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormAnswersHomePage', { customFormId: type.getId }) }}" title="{% trans %}customForm.answers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
 
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormSendAction', { customFormId: type.getId }) }}" title="{% trans %}customForm.show{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormSendAction', { customFormId: type.getId }) }}" title="{% trans %}customForm.show{% endtrans %}" data-uk-tooltip="{animation:true}" target="_blank"><i class="uk-icon-rz-visibility"></i></a>                            
 
                                 <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('customFormsDeletePage', { customFormId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}">
                                     <i class="uk-icon-rz-trash-o"></i>

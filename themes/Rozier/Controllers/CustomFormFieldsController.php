@@ -369,7 +369,7 @@ class CustomFormFieldsController extends RozierApp
                         'required' => false
                     ))
                     ->add('required', 'checkbox', array(
-                        'label' => $this->getTranslator()->trans('require'),
+                        'label' => $this->getTranslator()->trans('required'),
                         'required' => false
                     ))
                     ->add(

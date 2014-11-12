@@ -12,6 +12,8 @@ var Lazyload = function() {
     $(window).on('popstate', function (event) {
         _this.onPopState(event);
     });
+
+    _this.initLoader();
 };
 
 Lazyload.prototype.$linksSelector = null;
@@ -22,6 +24,25 @@ Lazyload.prototype.$HTMLeditorContent = null;
 Lazyload.prototype.$HTMLeditorNav = null;
 Lazyload.prototype.HTMLeditorNavToRemove = null;
 Lazyload.prototype.documentsList = null;
+
+
+/**
+ * Init loader
+ * @return {[type]} [description]
+ */
+Lazyload.prototype.initLoader = function(){
+    var _this = this;
+
+    // _this.canvasLoader = new CanvasLoader('canvasloader-container');
+    // _this.canvasLoader.setColor('#ffffff'); // default is '#000000'
+    // _this.canvasLoader.setShape('square'); // default is 'oval'
+    // _this.canvasLoader.setDensity(90); // default is 40
+    // _this.canvasLoader.setRange(0.8); // default is 1.3
+    // _this.canvasLoader.setSpeed(4); // default is 2
+    // _this.canvasLoader.setFPS(30); // default is 24
+    // _this.canvasLoader.show(); // Hidden by default
+
+};
 
 
 Lazyload.prototype.onClick = function(event) {
