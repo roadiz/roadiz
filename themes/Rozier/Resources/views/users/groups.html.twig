@@ -14,7 +14,7 @@
 				<thead>
 			        <tr>
 			            <th>{% trans %}group{% endtrans %}</th>
-			            <th>{% trans %}actions{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
 				<tbody>
@@ -22,8 +22,10 @@
 					<tr>
 						<td><a href="{{ path('groupsEditPage', {'groupId':group.getId}) }}">{{ group.getName }}</a></td>
 						<td>
-							<a class="uk-button uk-button-small" href="{{ path('groupsEditRolesPage', { groupId: group.getId }) }}"><i class="uk-icon-star-o"></i> {% trans %}roles{% endtrans %}</a>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveGroupsPage', { userId: user.getId, groupId: group.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}unlink{% endtrans %}</a>
+						{% spaceless %}
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('groupsEditRolesPage', { groupId: group.getId }) }}" title="{% trans %}roles{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-star"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('usersRemoveGroupsPage', { userId: user.getId, groupId: group.getId }) }}" title="{% trans %}unlink{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                        {% endspaceless %}
 						</td>
 					</tr>
 					{% endfor %}

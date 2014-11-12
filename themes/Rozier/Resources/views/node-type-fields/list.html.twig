@@ -34,7 +34,7 @@
 						<td>
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small node-type-field-edit-button rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}" data-index="{{ loop.index0 }}"><i class="uk-icon-rz-pencil"></i></a>
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                             {% endspaceless %}
 						</td>
 					</tr>

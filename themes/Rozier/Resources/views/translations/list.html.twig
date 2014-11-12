@@ -45,7 +45,7 @@
 									{{ form_widget(t.defaultForm) }}
 									<button class="uk-button uk-button-content uk-button-small" title="{% trans %}set.default{% endtrans %}" type="submit" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-star"></i></button>
 								</form>
-								<a class="uk-button uk-button-content uk-button-small uk-button-danger" title="{% trans %}delete{% endtrans %}" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+								<a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" title="{% trans %}delete{% endtrans %}" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
 							{% endif %}
                         {% endspaceless %}
 						</td>

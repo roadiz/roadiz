@@ -42,8 +42,8 @@
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodeTypesEditPage', { nodeTypeId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: type.getId }) }}" title="{% trans %}manage.nodeTypeFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodeTypesDeletePage', { nodeTypeId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                                 <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('nodesTypesExportPage', { nodeTypeId: type.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('nodeTypesDeletePage', { nodeTypeId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                             {% endspaceless %}
 							</td>
 						</tr>
