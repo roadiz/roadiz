@@ -16,18 +16,18 @@ Content-Transfer-Encoding: 8bit
 X-Generator: Translate Toolkit 1.9.0
 </source>
         <target state="translated">Project-Id-Version: PACKAGE VERSION
-Report-Msgid-Bugs-To:
+Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-10 10:14+0000
-Last-Translator: Maxime Constantinian &lt;azokal@rezo-zero.com&gt;
+PO-Revision-Date: 2014-11-12 10:41+0000
+Last-Translator: Maxime Bérard &lt;maxime@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
-Language:
+Language: 
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1415614451.973278
+X-POOTLE-MTIME: 1415788910.770612
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5105,7 +5105,114 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields" approved="yes">
           <source>{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields</source>
           <target state="translated">{0} No field|{1} 1 field|]1,Inf] %count% fields</target>
+      <note/></trans-unit>
+      
+      <trans-unit xml:space="preserve" id="create.a.node" approved="yes">
+          <source>create.a.node</source>
+          <target state="translated">Create a node</target>
+      <note/></trans-unit> 
+      <trans-unit xml:space="preserve" id="add.a.node" approved="yes">
+          <source>add.a.node</source>
+          <target state="translated">Add a node</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.tag" approved="yes">
+          <source>add.a.tag</source>
+          <target state="translated">Add a tag</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.urlAlias" approved="yes">
+          <source>add.a.urlAlias</source>
+          <target state="translated">Add an url-alias</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.child.node" approved="yes">
+          <source>add.a.child.node</source>
+          <target state="translated">Add a child node</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.child.tag" approved="yes">
+          <source>add.a.child.tag</source>
+          <target state="translated">Add a child tag</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.nodeType" approved="yes">
+          <source>add.a.nodeType</source>
+          <target state="translated">Add a %nodeType%</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.nodeTypeField" approved="yes">
+          <source>add.a.nodeTypeField</source>
+          <target state="translated">Add a node-type field</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.translation" approved="yes">
+          <source>add.a.translation</source>
+          <target state="translated">Add a translation</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.theme" approved="yes">
+          <source>add.a.theme</source>
+          <target state="translated">Add a theme</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.font" approved="yes">
+          <source>add.a.font</source>
+          <target state="translated">Add a font</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.user" approved="yes">
+          <source>add.a.user</source>
+          <target state="translated">Add an user</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.specific.role" approved="yes">
+          <source>add.a.specific.role</source>
+          <target state="translated">Add a specific role</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.group" approved="yes">
+          <source>add.a.group</source>
+          <target state="translated">Add a group</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.role" approved="yes">
+          <source>add.a.role</source>
+          <target state="translated">Add a role</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.setting" approved="yes">
+          <source>add.a.setting</source>
+          <target state="translated">Add a setting</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.settingGroup" approved="yes">
+          <source>add.a.settingGroup</source>
+          <target state="translated">Add a setting group</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="delete.font" approved="yes">
+          <source>delete.font</source>
+          <target state="translated">Delete font</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.customForm" approved="yes">
+          <source>add.a.customForm</source>
+          <target state="translated">Add a custom form</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.color" approved="yes">
+          <source>customForm.color</source>
+          <target state="translated">Couleur</target>
+      <note/></trans-unit>      
+      <trans-unit xml:space="preserve" id="manage.customForms" approved="yes">
+          <source>manage.customForms</source>
+          <target state="translated">Manage custom forms</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.open" approved="yes">
+          <source>customForm.open</source>
+          <target state="translated">Open</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.closeDate" approved="yes">
+          <source>customForm.closeDate</source>
+          <target state="translated">Close date</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.customFormField" approved="yes">
+          <source>add.a.customFormField</source>
+          <target state="translated">Add a custom form field</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="edit.customFormFields" approved="yes">
+          <source>edit.customFormFields</source>
+          <target state="translated">Add a field</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.folder" approved="yes">
+          <source>add.a.folder</source>
+          <target state="translated">Add a folder</target>
       </trans-unit>
+      
+    
     </body>
   </file>
 </xliff>
