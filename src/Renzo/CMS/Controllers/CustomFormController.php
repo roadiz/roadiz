@@ -76,7 +76,7 @@ class CustomFormController extends AppController
             /*
              * form
              */
-            $form = $this->buildForm($customForm);
+            $form = $this->buildForm($request, $customForm);
             $form->handleRequest();
             if ($form->isValid()) {
                 try {
@@ -110,7 +110,6 @@ class CustomFormController extends AppController
                 $response->prepare($request);
 
                 return $response->send();
-                return;
             }
 
             $this->assignation['form'] = $form->createView();
@@ -133,14 +132,6 @@ class CustomFormController extends AppController
      */
     private function addCustomFormAnswer($data, CustomForm $customForm)
     {
-        // $existing = $this->getService('em')
-        //     ->getRepository('RZ\Renzo\Core\Entities\CustomFormAnswer')
-        //     ->findOneBy(array('ip'=>$data->getClientIp()));
-
-        // if ($existing !== null) {
-        //     throw new EntityAlreadyExistsException($this->getTranslator()->trans('customForm.%name%.already_exists', array('%name%'=>$customForm->getName())), 1);
-        // }
-
         $answer = new CustomFormAnswer();
         $answer->setIp($data["ip"]);
         $answer->setSubmittedAt(new \DateTime('NOW'));
@@ -168,7 +159,7 @@ class CustomFormController extends AppController
 
                 $choices = explode(',', $field->getDefaultValues());
 
-                $fieldAttr->setValue($choices[$data[$field->getName()]]);
+                $fieldAttr->setValue($data[$field->getName()]);
 
             } else {
                 $fieldAttr->setValue($data[$field->getName()]);
@@ -186,13 +177,18 @@ class CustomFormController extends AppController
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildForm(CustomForm $customForm)
+    private function buildForm(Request $request, CustomForm $customForm)
     {
         $defaults = array();
 
         $fields = $customForm->getFields();
-        // foreach ($fields as $field) {
-        //     $defaults[] = array($field->getName()=>null);
+
+        $defaults = $request->query->all();
+        // foreach ($default as $key => $value) {
+        //     $fieldsName = array_map(function($x) {return $x->getName();}, count($fields));
+        //     if (in_array($key, $fieldsName, true)) {
+
+        //     }
         // }
 
         $builder = $this->getService('formFactory')
@@ -209,6 +205,7 @@ class CustomFormController extends AppController
                 }
                 if (CustomFormField::$typeToForm[$field->getType()] == "enumeration") {
                     $choices = explode(',', $field->getDefaultValues());
+                    $choices = array_combine(array_values($choices), array_values($choices));
                     $type = "choice";
                     if (count($choices) < 4) {
                         $option["expanded"] = true;
@@ -216,6 +213,7 @@ class CustomFormController extends AppController
                     $option["choices"] = $choices;
                 } elseif (CustomFormField::$typeToForm[$field->getType()] == "multiple_enumeration") {
                     $choices = explode(',', $field->getDefaultValues());
+                    $choices = array_combine(array_values($choices), array_values($choices));
                     $type = "choice";
                     $option["choices"] = $choices;
                     $option["multiple"] = true;
@@ -225,33 +223,6 @@ class CustomFormController extends AppController
                 }
                 $builder->add($field->getName(), $type, $option);
             }
-            // ->add('name', 'text', array(
-            //     'label' => $this->getTranslator()->trans('name'),
-            //     'constraints' => array(
-            //         new NotBlank()
-            //     )))
-            // ->add('displayName', 'text', array(
-            //     'label' => $this->getTranslator()->trans('customForm.displayName'),
-            //     'constraints' => array(
-            //         new NotBlank()
-            //     )))
-            // ->add('description', 'text', array(
-            //     'label' => $this->getTranslator()->trans('description'),
-            //     'required' => false
-            // ))
-            // ->add('open', 'checkbox', array(
-            //     'label' => $this->getTranslator()->trans('open'),
-            //     'required' => false
-            // ))
-            // ->add('closeDate', 'datetime', array(
-            //     'label' => $this->getTranslator()->trans('closeDate'),
-            //     'required' => false
-            // ))
-            // ->add('color', 'text', array(
-            //     'label' => $this->getTranslator()->trans('customForm.color'),
-            //     'required' => false,
-            //     'attr' => array('class'=>'colorpicker-input')
-            // ));
 
         return $builder->getForm();
     }
