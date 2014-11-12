@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Moving a website to another server &mdash; Renzo 0.1 documentation</title>
+  <title>Moving a website to another server &mdash; Renzo documentation 0.1 documentation</title>
   
 
   
@@ -28,8 +28,8 @@
   
 
   
-    <link rel="top" title="Renzo 0.1 documentation" href="../index.html"/>
-        <link rel="next" title="Creating a theme" href="../themes/create_theme.html"/>
+    <link rel="top" title="Renzo documentation 0.1 documentation" href="../index.html"/>
+        <link rel="next" title="Node-types, nodes and nodes-sources" href="../nodes-system/intro.html"/>
         <link rel="prev" title="Upgrading" href="upgrading.html"/> 
 
   
@@ -44,7 +44,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> Renzo</a>
+        <a href="../index.html" class="fa fa-home"> Renzo documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -68,7 +68,11 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Moving a website to another server</a></li>
 </ul>
-<ul class="simple">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../nodes-system/intro.html">Node-types, nodes and nodes-sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nodes-system/node_types.html">Defining node-types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nodes-system/nodes.html">Handling nodes and their hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nodes-system/nodes_sources.html">Node-sources and translations</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../themes/create_theme.html">Creating a theme</a><ul>
@@ -76,9 +80,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../themes/create_theme.html#dynamic-routing">Dynamic routing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../themes/using_twig.html">Using Twig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../themes/using_twig.html">Using Twig</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../themes/using_twig.html#additional-filters">Additional filters</a></li>
 </ul>
-<ul class="simple">
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../forms/contact_forms.html">Building contact forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../forms/custom_forms.html">Building custom forms</a></li>
 </ul>
 
         
@@ -91,7 +100,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">Renzo</a>
+        <a href="../index.html">Renzo documentation</a>
       </nav>
 
 
@@ -122,7 +131,11 @@
 </ul>
 <p>From this point you can install your new webserver, as described in <a class="reference internal" href="getting_started.html#getting-started"><em>Install section</em></a>.</p>
 <p>Then import your dump and files into your new server.</p>
-<p>Once you’ve imported your database, you must edit manually your <cite>conf/config.json</cite>, you can reuse the former server’s one and adapt its database credentials. <strong>Do not perform any schema update now</strong>, it will erase your NodesSources data as their entities files haven’t been generated yet.</p>
+<p>Once you’ve imported your database, you must edit manually your <cite>conf/config.json</cite>, you can reuse the former server’s one and adapt its database credentials.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last"><strong>Do not perform any schema update if no gen-src\GeneratedNodeSources classes is available</strong>, it will erase your NodesSources data as their entities files haven’t been generated yet.</p>
+</div>
 <p>When you’ve edited your <cite>conf/config.json</cite> file, regenerate your entities source files</p>
 <div class="highlight-bash"><div class="highlight"><pre>bin/renzo core:node:types --regenerateAllEntities;
 </pre></div>
@@ -142,7 +155,7 @@ bin/renzo cache --clear-all
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../themes/create_theme.html" class="btn btn-neutral float-right" title="Creating a theme"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../nodes-system/intro.html" class="btn btn-neutral float-right" title="Node-types, nodes and nodes-sources"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="upgrading.html" class="btn btn-neutral" title="Upgrading"><span class="fa fa-arrow-circle-left"></span> Previous</a>

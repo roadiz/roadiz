@@ -49,8 +49,10 @@ class NodesSourcesHandler
                 ->getRepository('RZ\Renzo\Core\Entities\NodesSourcesDocuments')
                 ->findBy(array('nodeSource'=>$this->nodeSource, 'field'=>$field));
 
-        foreach ($nsDocuments as $nsDoc) {
-            Kernel::getService('em')->remove($nsDoc);
+        if (count($nsDocuments) > 0) {
+            foreach ($nsDocuments as $nsDoc) {
+                Kernel::getService('em')->remove($nsDoc);
+            }
             Kernel::getService('em')->flush();
         }
 

@@ -176,7 +176,7 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
  * @param  {[type]} event   [description]
  * @return false
  */
-DocumentWidget.prototype.onExplorerSearch = function(event) {
+DocumentWidget.prototype.onExplorerSearch = function($originWidget, event) {
     var _this = this;
 
     if (_this.$explorer !== null){
@@ -200,8 +200,7 @@ DocumentWidget.prototype.onExplorerSearch = function(event) {
 
             if (typeof data.documents != "undefined") {
 
-                var $currentsortable = $($(event.currentTarget).parents('.documents-widget')[0]).find('.documents-widget-sortable');
-                _this.appendItemsToExplorer(data, $currentsortable, true);
+                _this.appendItemsToExplorer(data, $originWidget, true);
             }
         })
         .fail(function(data) {
@@ -220,7 +219,7 @@ DocumentWidget.prototype.onExplorerSearch = function(event) {
  * @param  {[type]} event   [description]
  * @return false
  */
-DocumentWidget.prototype.onExplorerNextPage = function(filters, event) {
+DocumentWidget.prototype.onExplorerNextPage = function(filters, $originWidget, event) {
     var _this = this;
 
     if (_this.$explorer !== null){
@@ -244,8 +243,7 @@ DocumentWidget.prototype.onExplorerNextPage = function(filters, event) {
 
             if (typeof data.documents != "undefined") {
 
-                var $currentsortable = $($(event.currentTarget).parents('.documents-widget')[0]).find('.documents-widget-sortable');
-                _this.appendItemsToExplorer(data, $currentsortable);
+                _this.appendItemsToExplorer(data, $originWidget);
             }
         })
         .fail(function(data) {
@@ -313,7 +311,7 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
     _this.$explorerClose = $('.document-widget-explorer-close');
 
     _this.$explorerClose.on('click', $.proxy(_this.closeExplorer, _this));
-    _this.$explorer.find('.explorer-search').on('submit', $.proxy(_this.onExplorerSearch, _this));
+    _this.$explorer.find('.explorer-search').on('submit', $.proxy(_this.onExplorerSearch, _this, $originWidget));
 
 
     _this.appendItemsToExplorer(data, $originWidget);
@@ -337,7 +335,8 @@ DocumentWidget.prototype.appendItemsToExplorer = function(data, $originWidget, r
 
     $sortable.find('.document-widget-explorer-nextpage').remove();
 
-    if (typeof replace !== 'undefined' && replace === true) {
+    if (typeof replace !== 'undefined' &&
+        replace === true) {
         $sortable.empty();
     }
 
@@ -348,6 +347,15 @@ DocumentWidget.prototype.appendItemsToExplorer = function(data, $originWidget, r
         var doc = data.documents[i];
         $sortable.append(doc.html);
     }
+
+
+    /*
+     * Bind add buttons.
+     */
+    var onAddClick = $.proxy(_this.onAddDocumentClick, _this, $originWidget);
+    var $links = $sortable.find('.link-button');
+    $links.on('click', onAddClick);
+
 
     /*
      * Add pagination
@@ -361,29 +369,28 @@ DocumentWidget.prototype.appendItemsToExplorer = function(data, $originWidget, r
             '</li>'
         ].join(''));
 
-        $sortable.find('.document-widget-explorer-nextpage').on('click', $.proxy(_this.onExplorerNextPage, _this, data.filters));
+        $sortable.find('.document-widget-explorer-nextpage').on('click', $.proxy(_this.onExplorerNextPage, _this, data.filters, $originWidget));
     }
 
-    var onAddClick = $.proxy(function (event) {
 
-        var $object = $(event.currentTarget).parent();
-        $object.appendTo($originWidget);
+};
 
-        var inputName = 'source['+$originWidget.data('input-name')+']';
-        $originWidget.find('li').each(function (index, element) {
-            $(element).find('input').attr('name', inputName+'['+index+']');
-        });
+DocumentWidget.prototype.onAddDocumentClick = function($originWidget, event) {
+    var _this = this;
 
-        return false;
-    }, _this);
 
-    $sortable.find('li').each (function (index, element) {
-        var $link = $(element).find('.link-button');
-        if($link.length){
-            $link.off('click', onAddClick);
-            $link.on('click', onAddClick);
-        }
+    var $object = $(event.currentTarget).parents('.uk-sortable-list-item');
+    $object.appendTo($originWidget);
+    console.log("click");
+    console.log($originWidget);
+    console.log($object);
+
+    var inputName = 'source['+$originWidget.data('input-name')+']';
+    $originWidget.find('li').each(function (index, element) {
+        $(element).find('input').attr('name', inputName+'['+index+']');
     });
+
+    return false;
 };
 
 /**

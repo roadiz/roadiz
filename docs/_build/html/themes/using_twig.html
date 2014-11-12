@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Using Twig &mdash; Renzo 0.1 documentation</title>
+  <title>Using Twig &mdash; Renzo documentation 0.1 documentation</title>
   
 
   
@@ -28,7 +28,8 @@
   
 
   
-    <link rel="top" title="Renzo 0.1 documentation" href="../index.html"/>
+    <link rel="top" title="Renzo documentation 0.1 documentation" href="../index.html"/>
+        <link rel="next" title="Building contact forms" href="../forms/contact_forms.html"/>
         <link rel="prev" title="Creating a theme" href="create_theme.html"/> 
 
   
@@ -43,7 +44,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> Renzo</a>
+        <a href="../index.html" class="fa fa-home"> Renzo documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -67,7 +68,11 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../intro/moving.html">Moving a website to another server</a></li>
 </ul>
-<ul class="simple">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../nodes-system/intro.html">Node-types, nodes and nodes-sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nodes-system/node_types.html">Defining node-types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nodes-system/nodes.html">Handling nodes and their hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nodes-system/nodes_sources.html">Node-sources and translations</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="create_theme.html">Creating a theme</a><ul>
@@ -75,9 +80,14 @@
 <li class="toctree-l2"><a class="reference internal" href="create_theme.html#dynamic-routing">Dynamic routing</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Using Twig</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Using Twig</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#additional-filters">Additional filters</a></li>
 </ul>
-<ul class="simple">
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../forms/contact_forms.html">Building contact forms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../forms/custom_forms.html">Building custom forms</a></li>
 </ul>
 
         
@@ -90,7 +100,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">Renzo</a>
+        <a href="../index.html">Renzo documentation</a>
       </nav>
 
 
@@ -118,92 +128,76 @@
 <p class="first admonition-title">Note</p>
 <p class="last">Twig is the default rendering engine for <em>Renzo</em> CMS. You’ll find its documentation at <a class="reference external" href="http://twig.sensiolabs.org/doc/templates.html">http://twig.sensiolabs.org/doc/templates.html</a></p>
 </div>
-<p>When you use Dynamic routing within your theme, Renzo will automatically assign some variables for you:</p>
-<ul>
-<li><p class="first">request: Main request object</p>
-</li>
-<li><dl class="first docutils">
-<dt>head</dt>
-<dd><ul class="first last simple">
-<li>ajax: <cite>boolean</cite></li>
-<li>cmsVersion</li>
-<li>cmsBuild</li>
-<li>devMode: <cite>boolean</cite></li>
-<li>baseUrl</li>
-<li>filesUrl</li>
-<li>resourcesUrl</li>
-<li>ajaxToken</li>
-<li>fontToken</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>session</dt>
-<dd><ul class="first last simple">
-<li>messages</li>
-<li>id</li>
-<li>user</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><p class="first">securityContext</p>
-</li>
-</ul>
+<p>When you use <a class="reference internal" href="create_theme.html#dynamic-routing"><em>Dynamic routing</em></a> within your theme, Renzo will automatically assign some variables for&nbsp;you:</p>
+<div class="highlight-python"><div class="highlight"><pre>* request
+* head
+    * ajax
+    * cmsVersion
+    * cmsBuild
+    * devMode
+    * baseUrl
+    * filesUrl
+    * resourcesUrl
+    * ajaxToken
+    * fontToken
+* session
+    * messages
+    * id
+    * user
+* securityContext
+</pre></div>
+</div>
 <p>There are some more content only available from <em>FrontendControllers</em>:</p>
-<ul>
-<li><p class="first"><strong>_default_locale</strong></p>
-</li>
-<li><dl class="first docutils">
-<dt>meta</dt>
-<dd><ul class="first last simple">
-<li>siteName</li>
-<li>siteCopyright</li>
-<li>siteDescription</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
+<div class="highlight-python"><div class="highlight"><pre>* _default_locale
+* meta
+    * siteName
+    * siteCopyright
+    * siteDescription
+</pre></div>
+</div>
 <p>Then, in each dynamic routing <em>actions</em> you will need this line <tt class="docutils literal"><span class="pre">$this-&gt;storeNodeAndTranslation($node,</span> <span class="pre">$translation);</span></tt>
 in order to make page content available from your Twig template:</p>
-<ul>
-<li><p class="first">node</p>
-</li>
-<li><p class="first">nodeSource</p>
-</li>
-<li><p class="first">translation</p>
-</li>
-<li><dl class="first docutils">
-<dt>pageMeta</dt>
-<dd><ul class="first last simple">
-<li>title</li>
-<li>description</li>
-<li>keywords</li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
+<div class="highlight-python"><div class="highlight"><pre>* node
+* nodeSource
+* translation
+* pageMeta
+    * title
+    * description
+    * keywords
+</pre></div>
+</div>
 <p>All these data will be available in your Twig template using <tt class="docutils literal"><span class="pre">{{&nbsp;}}</span></tt> syntax.
 For example use <tt class="docutils literal"><span class="pre">{{&nbsp;pageMeta.title&nbsp;}}</span></tt> inside your head’s <tt class="docutils literal"><span class="pre">&lt;title&gt;</span></tt> tag.
 You can of course call objects members within Twig using the <em>dot</em> separator.</p>
-<div class="code html+jinja highlight-python"><div class="highlight"><pre>&lt;article&gt;
-    &lt;h1&gt;{{ nodeSource.title }}&lt;/h1&gt;
-    &lt;div&gt;{{ nodeSource.content|markdown }}&lt;/div&gt;
+<div class="highlight-html+jinja"><div class="highlight"><pre><span class="nt">&lt;article&gt;</span>
+    <span class="nt">&lt;h1&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">nodeSource.handler.getUrl</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span><span class="cp">{{</span> <span class="nv">nodeSource.title</span> <span class="cp">}}</span><span class="nt">&lt;/a&gt;&lt;/h1&gt;</span>
+    <span class="nt">&lt;div&gt;</span><span class="cp">{{</span> <span class="nv">nodeSource.content</span><span class="o">|</span><span class="nf">markdown</span> <span class="cp">}}</span><span class="nt">&lt;/div&gt;</span>
 
-    {% set images = nodeSource.handler.getDocumentsFromFieldName(&#39;images&#39;) %}
-    {% for image in images %}
+    <span class="cp">{%</span> <span class="k">set</span> <span class="nv">images</span> <span class="o">=</span> <span class="nv">nodeSource.handler.getDocumentsFromFieldName</span><span class="o">(</span><span class="s1">&#39;images&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+    <span class="cp">{%</span> <span class="k">for</span> <span class="nv">image</span> <span class="k">in</span> <span class="nv">images</span> <span class="cp">%}</span>
 
-        {% set imageMetas = image.documentTranslations.first %}
-        &lt;figure&gt;
-            {{ image.viewer.getDocumentByArray({ width:200 })|raw }}
-            &lt;figcaption&gt;{{ imageMetas.name }} — {{ imageMetas.copyright }}&lt;/figcaption&gt;
-        &lt;/figure&gt;
-    {% endfor %}
-&lt;/article&gt;
+        <span class="cp">{%</span> <span class="k">set</span> <span class="nv">imageMetas</span> <span class="o">=</span> <span class="nv">image.documentTranslations.first</span> <span class="cp">%}</span>
+        <span class="nt">&lt;figure&gt;</span>
+            <span class="cp">{{</span> <span class="nv">image.viewer.getDocumentByArray</span><span class="o">({</span> <span class="nv">width</span><span class="o">:</span><span class="m">200</span> <span class="o">})|</span><span class="nf">raw</span> <span class="cp">}}</span>
+            <span class="nt">&lt;figcaption&gt;</span><span class="cp">{{</span> <span class="nv">imageMetas.name</span> <span class="cp">}}</span> — <span class="cp">{{</span> <span class="nv">imageMetas.copyright</span> <span class="cp">}}</span><span class="nt">&lt;/figcaption&gt;</span>
+        <span class="nt">&lt;/figure&gt;</span>
+    <span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+<span class="nt">&lt;/article&gt;</span>
 </pre></div>
+</div>
+<div class="section" id="additional-filters">
+<h2>Additional filters<a class="headerlink" href="#additional-filters" title="Permalink to this headline">¶</a></h2>
+<p>Renzo’s Twig environment implements some useful filters, such as:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">markdown</span></tt>: Convert a markdown text to HTML</li>
+<li><tt class="docutils literal"><span class="pre">inlineMarkdown</span></tt>: Convert a markdown text to HTML&nbsp;without parsing <em>block</em> elements (useful for just italics and bolds)</li>
+<li><tt class="docutils literal"><span class="pre">centralTruncate(length,</span> <span class="pre">offset,</span> <span class="pre">ellipsis)</span></tt>: Generate an ellipsis at the middle of your text (useful for filenames). You can decenter the ellipsis position using <tt class="docutils literal"><span class="pre">offset</span></tt> parameter, and even change your ellipsis character with <tt class="docutils literal"><span class="pre">ellipsis</span></tt> parameter.</li>
+</ul>
+<p>Standard filters and extensions are also available:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">{{</span> <span class="pre">path('myRoute')</span> <span class="pre">}}</span></tt>: for generating static routes Url.</li>
+<li><tt class="docutils literal"><span class="pre">truncate</span></tt> and <tt class="docutils literal"><span class="pre">wordwrap</span></tt> which are parts of the <a class="reference external" href="http://twig.sensiolabs.org/doc/extensions/text.html">Text Extension</a> .</li>
+</ul>
 </div>
 </div>
 
@@ -212,6 +206,8 @@ You can of course call objects members within Twig using the <em>dot</em> separa
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../forms/contact_forms.html" class="btn btn-neutral float-right" title="Building contact forms"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="create_theme.html" class="btn btn-neutral" title="Creating a theme"><span class="fa fa-arrow-circle-left"></span> Previous</a>

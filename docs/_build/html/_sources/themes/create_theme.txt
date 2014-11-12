@@ -179,6 +179,8 @@ multilingual pages.
         );
     }
 
+.. _dynamic-routing:
+
 Dynamic routing
 ---------------
 
