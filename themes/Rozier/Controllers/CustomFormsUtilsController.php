@@ -53,7 +53,7 @@ class CustomFormsUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'export.xlsx'
+                $customForm->getName() . '.xlsx'
             )
         ); // Rezo-Zero Type
 

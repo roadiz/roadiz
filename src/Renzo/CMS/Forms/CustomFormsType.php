@@ -30,7 +30,7 @@ class CustomFormsType extends AbstractType
         foreach ($fields as $field) {
                 $option = array("label" => $field->getLabel());
                 $type = null;
-                if ($field->isRequire()) {
+                if ($field->isRequired()) {
                     $option['constraints'] = array(
                         new NotBlank()
                     );

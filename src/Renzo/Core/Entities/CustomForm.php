@@ -42,7 +42,7 @@ class CustomForm extends AbstractDateTimed
      */
     public function setName($name)
     {
-        $this->name = StringHandler::classify($name);
+        $this->name = StringHandler::slugify($name);
 
         return $this;
     }

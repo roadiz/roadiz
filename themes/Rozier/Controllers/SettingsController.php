@@ -363,7 +363,7 @@ class SettingsController extends RozierApp
             }
             try {
                 foreach ($data as $key => $value) {
-                    if ($key != 'group') {
+                    if ($key != 'settingGroup') {
                         $setter = 'set'.ucwords($key);
                         $setting->$setter( $value );
                     } else {
@@ -398,8 +398,14 @@ class SettingsController extends RozierApp
 
         try {
             foreach ($data as $key => $value) {
-                $setter = 'set'.ucwords($key);
-                $setting->$setter( $value );
+                    if ($key != 'settingGroup') {
+                        $setter = 'set'.ucwords($key);
+                        $setting->$setter( $value );
+                    } else {
+                        $group = $this->getService('em')
+                                 ->find('RZ\Renzo\Core\Entities\SettingGroup', (int) $value);
+                        $setting->setSettingGroup($group);
+                    }
             }
 
             $this->getService('em')->persist($setting);
@@ -459,14 +465,13 @@ class SettingsController extends RozierApp
                 'required' => true,
                 'choices' => NodeTypeField::$typeToHuman
             ))
-            // ->add(
-            //     'settingGroup',
-            //     new \RZ\Renzo\CMS\Forms\SettingGroupType(),
-            //     array(
-            //         'label' => $this->getTranslator()->trans('setting.group')
-            //     )
-            // )
-            ;
+            ->add(
+                'settingGroup',
+                new \RZ\Renzo\CMS\Forms\SettingGroupType(),
+                array(
+                    'label' => $this->getTranslator()->trans('setting.group')
+                )
+            );
 
         return $builder->getForm();
     }
@@ -535,14 +540,13 @@ class SettingsController extends RozierApp
                     'choices' => NodeTypeField::$typeToHuman
                 )
             )
-            // ->add(
-            //     'settingGroup',
-            //     new \RZ\Renzo\CMS\Forms\SettingGroupType(),
-            //     array(
-            //         'label' => $this->getTranslator()->trans('setting.group')
-            //     )
-            // )
-            ;
+            ->add(
+                'settingGroup',
+                new \RZ\Renzo\CMS\Forms\SettingGroupType(),
+                array(
+                    'label' => $this->getTranslator()->trans('setting.group')
+                )
+            );
 
         return $builder->getForm();
     }
