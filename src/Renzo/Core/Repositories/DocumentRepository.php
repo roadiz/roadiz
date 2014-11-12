@@ -540,15 +540,21 @@ class DocumentRepository extends EntityRepository
      *
      * @return array
      */
-    public function findByNodeSourceAndField($nodeSource, NodeTypeField $field)
-    {
+    public function findByNodeSourceAndField(
+        $nodeSource,
+        NodeTypeField $field
+    ) {
         $query = $this->_em->createQuery('
-            SELECT d FROM RZ\Renzo\Core\Entities\Document d
+            SELECT d, dt FROM RZ\Renzo\Core\Entities\Document d
+            INNER JOIN d.documentTranslations dt
             INNER JOIN d.nodesSourcesByFields nsf
-            WHERE nsf.field = :field AND nsf.nodeSource = :nodeSource
+            WHERE nsf.field = :field
+            AND nsf.nodeSource = :nodeSource
+            AND dt.translation = :translation
             ORDER BY nsf.position ASC')
                         ->setParameter('field', $field)
-                        ->setParameter('nodeSource', $nodeSource);
+                        ->setParameter('nodeSource', $nodeSource)
+                        ->setParameter('translation', $nodeSource->getTranslation());
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -562,16 +568,22 @@ class DocumentRepository extends EntityRepository
      *
      * @return array
      */
-    public function findByNodeSourceAndFieldName($nodeSource, $fieldName)
-    {
+    public function findByNodeSourceAndFieldName(
+        $nodeSource,
+        $fieldName
+    ) {
         $query = $this->_em->createQuery('
-            SELECT d FROM RZ\Renzo\Core\Entities\Document d
+            SELECT d, dt FROM RZ\Renzo\Core\Entities\Document d
+            INNER JOIN d.documentTranslations dt
             INNER JOIN d.nodesSourcesByFields nsf
             INNER JOIN nsf.field f
-            WHERE f.name = :name AND nsf.nodeSource = :nodeSource
+            WHERE f.name = :name
+            AND nsf.nodeSource = :nodeSource
+            AND dt.translation = :translation
             ORDER BY nsf.position ASC')
                         ->setParameter('name', (string) $fieldName)
-                        ->setParameter('nodeSource', $nodeSource);
+                        ->setParameter('nodeSource', $nodeSource)
+                        ->setParameter('translation', $nodeSource->getTranslation());
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {

@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Using Twig &mdash; Renzo 0.1 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="Renzo 0.1 documentation" href="../index.html"/>
+        <link rel="prev" title="Creating a theme" href="create_theme.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" class="fa fa-home"> Renzo</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/getting_started.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/getting_started.html#prepare-your-server">Prepare your server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/upgrading.html">Upgrading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/upgrading.html#upgrading-node-types-source-entities">Upgrading Node-types source entities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/moving.html">Moving a website to another server</a></li>
+</ul>
+<ul class="simple">
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="create_theme.html">Creating a theme</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="create_theme.html#static-routing">Static routing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_theme.html#dynamic-routing">Dynamic routing</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Using Twig</a></li>
+</ul>
+<ul class="simple">
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Renzo</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Using Twig</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/themes/using_twig.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="using-twig">
+<span id="id1"></span><h1>Using Twig<a class="headerlink" href="#using-twig" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Twig is the default rendering engine for <em>Renzo</em> CMS. You’ll find its documentation at <a class="reference external" href="http://twig.sensiolabs.org/doc/templates.html">http://twig.sensiolabs.org/doc/templates.html</a></p>
+</div>
+<p>When you use Dynamic routing within your theme, Renzo will automatically assign some variables for you:</p>
+<ul>
+<li><p class="first">request: Main request object</p>
+</li>
+<li><dl class="first docutils">
+<dt>head</dt>
+<dd><ul class="first last simple">
+<li>ajax: <cite>boolean</cite></li>
+<li>cmsVersion</li>
+<li>cmsBuild</li>
+<li>devMode: <cite>boolean</cite></li>
+<li>baseUrl</li>
+<li>filesUrl</li>
+<li>resourcesUrl</li>
+<li>ajaxToken</li>
+<li>fontToken</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>session</dt>
+<dd><ul class="first last simple">
+<li>messages</li>
+<li>id</li>
+<li>user</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">securityContext</p>
+</li>
+</ul>
+<p>There are some more content only available from <em>FrontendControllers</em>:</p>
+<ul>
+<li><p class="first"><strong>_default_locale</strong></p>
+</li>
+<li><dl class="first docutils">
+<dt>meta</dt>
+<dd><ul class="first last simple">
+<li>siteName</li>
+<li>siteCopyright</li>
+<li>siteDescription</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Then, in each dynamic routing <em>actions</em> you will need this line <tt class="docutils literal"><span class="pre">$this-&gt;storeNodeAndTranslation($node,</span> <span class="pre">$translation);</span></tt>
+in order to make page content available from your Twig template:</p>
+<ul>
+<li><p class="first">node</p>
+</li>
+<li><p class="first">nodeSource</p>
+</li>
+<li><p class="first">translation</p>
+</li>
+<li><dl class="first docutils">
+<dt>pageMeta</dt>
+<dd><ul class="first last simple">
+<li>title</li>
+<li>description</li>
+<li>keywords</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>All these data will be available in your Twig template using <tt class="docutils literal"><span class="pre">{{&nbsp;}}</span></tt> syntax.
+For example use <tt class="docutils literal"><span class="pre">{{&nbsp;pageMeta.title&nbsp;}}</span></tt> inside your head’s <tt class="docutils literal"><span class="pre">&lt;title&gt;</span></tt> tag.
+You can of course call objects members within Twig using the <em>dot</em> separator.</p>
+<div class="code html+jinja highlight-python"><div class="highlight"><pre>&lt;article&gt;
+    &lt;h1&gt;{{ nodeSource.title }}&lt;/h1&gt;
+    &lt;div&gt;{{ nodeSource.content|markdown }}&lt;/div&gt;
+
+    {% set images = nodeSource.handler.getDocumentsFromFieldName(&#39;images&#39;) %}
+    {% for image in images %}
+
+        {% set imageMetas = image.documentTranslations.first %}
+        &lt;figure&gt;
+            {{ image.viewer.getDocumentByArray({ width:200 })|raw }}
+            &lt;figcaption&gt;{{ imageMetas.name }} — {{ imageMetas.copyright }}&lt;/figcaption&gt;
+        &lt;/figure&gt;
+    {% endfor %}
+&lt;/article&gt;
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="create_theme.html" class="btn btn-neutral" title="Creating a theme"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, REZO ZERO.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

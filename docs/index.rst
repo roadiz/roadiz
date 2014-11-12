@@ -6,18 +6,49 @@
 Welcome to Renzo's documentation!
 =================================
 
-Contents:
+Renzo is a polymorphic CMS based on a node system which can handle many type of services.
+It’s based on *Symfony* components and *Doctrine ORM* for maximum performances and security.
+
+First contact
+-------------
 
 .. toctree::
    :maxdepth: 2
 
-   getting_started
-   upgrading
-   moving
-   themes/create_theme
+   intro/getting_started
+   intro/upgrading
+   intro/moving
 
-Renzo is a polymorphic CMS based on a node system which can handle many type of services.
-It’s based on Symfony components and Doctrine ORM for maximum performances and security.
+Node system
+-----------
+
+.. toctree::
+   :maxdepth: 2
+
+   nodes-system/intro
+   nodes-system/node_types
+   nodes-system/nodes
+   nodes-system/nodes_sources
+
+Themes
+------
+
+.. toctree::
+   :maxdepth: 2
+
+   themes/create_theme
+   themes/using_twig
+
+
+Forms
+-----
+
+.. toctree::
+   :maxdepth: 2
+
+   forms/contact_forms
+   forms/custom_forms
+
 
 
 

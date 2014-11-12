@@ -5,11 +5,11 @@ Creating a theme
 ================
 
 
-First copy `DefaultTheme` folder and rename it against your new theme.
+First copy ``DefaultTheme`` folder and rename it against your new theme.
 Do not forget to rename every references in:
 
 * **Folder name** and **Class namespace** must be the same (Ex: “MyAwesomeTheme”) for making autoloader works with your theme.
-* **Theme entry point class**: your main theme class must be named after your folder name plus `App` suffix (Ex: “MyAwesomeThemeApp.php”)
+* **Theme entry point class**: your main theme class must be named after your folder name plus ``App`` suffix (Ex: “MyAwesomeThemeApp.php”)
 * **routes.yml**: rename every route class path using your namespace:
 
 .. code-block:: yaml
@@ -49,7 +49,7 @@ Do not forget to rename every references in:
         methods: [GET]
 
 
-* Create your own `config.json` file:
+* Create your own ``config.json`` file:
 
 .. code-block:: json
 
@@ -70,7 +70,7 @@ Do not forget to rename every references in:
         }
     }
 
-* Edit your main class informations (`MyAwesomeThemeApp.php`)
+* Edit your main class informations (``MyAwesomeThemeApp.php``)
 
 .. code-block:: php
    :linenos:
@@ -130,10 +130,10 @@ Do not forget to rename every references in:
 Static routing
 --------------
 
-Before searching for a node’s Url (Dynamic routing), Renzo will parse your theme `route.yml`
+Before searching for a node’s Url (Dynamic routing), Renzo will parse your theme ``route.yml``
 to find static controllers and actions to execute.
-Static actions just have to comply with the `Request` / `Response` scheme.
-It is adviced to add `$_locale` and `$_route` optional arguments to better handle
+Static actions just have to comply with the ``Request`` / ``Response`` scheme.
+It is adviced to add ``$_locale`` and ``$_route`` optional arguments to better handle
 multilingual pages.
 
 .. code-block:: yaml
@@ -184,12 +184,12 @@ Dynamic routing
 
 .. Note::
 
-    Every node-types will be handled by a specific `Controller`.
-    If your created a “Page” type, Renzo will search for a …\\Controllers\\PageController class and
-    it will try to execute the `indexAction` method.
+    Every node-types will be handled by a specific ``Controller``.
+    If your created a “Page” type, Renzo will search for a ``…\\Controllers\\PageController`` class and
+    it will try to execute the ``indexAction`` method.
 
 An indexAction method must comply with the following signature.
-It will take the HttpFoundation’s Request as first then a `Node` and a `Translation` instances.
+It will take the HttpFoundation’s Request as first then a ``Node`` and a ``Translation`` instances.
 These two last arguments will be useful to generate your page information and to
 render your current node.
 
@@ -220,4 +220,4 @@ render your current node.
         );
     }
 
-As *Symfony* controllers do, every Renzo controllers actions have to return a valid `Response` object.
+As *Symfony* controllers do, every Renzo controllers actions have to return a valid ``Response`` object.
