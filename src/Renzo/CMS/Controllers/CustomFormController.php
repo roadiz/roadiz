@@ -27,17 +27,6 @@ class CustomFormController extends AppController
     public static $themeDir = 'Rozier';
 
     /**
-     * Initialize controller with NO twig environment.
-     */
-    public function __init()
-    {
-        $this->getTwigLoader()
-             ->initializeTwig()
-             ->initializeTranslator()
-             ->prepareBaseAssignation();
-    }
-
-    /**
      * @return string
      */
     public static function getResourcesFolder()
@@ -75,6 +64,7 @@ class CustomFormController extends AppController
 
         if (null !== $customForm && $closeDate >= $nowDate) {
             $this->assignation['customForm'] = $customForm;
+            $this->assignation['fields'] = $customForm->getFields();
 
             /*
              * form

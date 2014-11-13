@@ -9,14 +9,27 @@
     </header>
 
     <article class="content">
+        {% form_theme form 'customForms.html.twig' %}
         <form id="add-custom-form-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-            {{ form_widget(form) }}
 
+            {% for form_field in form %}
+            <div class="data-uk-margin" {{ block('widget_container_attributes') }}>
+                <div class="uk-form-row form-col form-col-{{ form_field.vars.block_prefixes[1] }} form-col-{{ form_field.vars.name }}">
+                    {{ form_label(form_field) }}
+                    <div class="uk-form-description">
+                        {{ fields[loop.index0].description|markdown }}
+                    </div>
+                    {{ form_widget(form_field) }}
+                </div>
+            </div>
+            {% endfor %}
+            {{ form_rest(form) }}
+            
             <fieldset data-uk-margin>
                 {% spaceless %}
                 <button data-action-save="#add-custom-form-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-plus"></i></span>
-                    <span class="label"><span class="label-text">{% trans %}add.customForm.answer{% endtrans %}</span></span>
+                    <span class="label"><span class="label-text">{% trans %}form.submit{% endtrans %}</span></span>
                 </button>
                 {% endspaceless %}
             </fieldset>

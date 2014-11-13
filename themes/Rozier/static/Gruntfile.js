@@ -71,10 +71,17 @@ module.exports = function(grunt) {
 				yuicompress: true,
 				optimization: 3
 			},
-			files: {
-				src : "css/style.less",
+			rozier:
+			{
+			 	src : "css/style.less",
 				dest : "css/style.min.css"
+			},
+			customForms:
+			{
+				src : "css/custom-forms-front.less",
+				dest : "css/custom-forms-front.min.css"
 			}
+		
 		},
 		watch: {
 			scripts: {

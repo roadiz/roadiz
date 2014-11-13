@@ -134,7 +134,6 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::ENUM_T =>     'single-choice.type',
         AbstractField::MULTIPLE_T => 'multiple-choice.type',
         AbstractField::DOCUMENTS_T =>'documents.type',
-        AbstractField::CHILDREN_T => 'children-nodes.type',
     );
     /**
      * Associates node-type field type to a Doctrine type.
@@ -154,7 +153,6 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::ENUM_T =>     'string',
         AbstractField::MULTIPLE_T => 'simple_array',
         AbstractField::DOCUMENTS_T => null,
-        AbstractField::CHILDREN_T =>  null,
     );
     /**
      * Associates node-type field type to a Symfony Form type.
@@ -174,7 +172,6 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::ENUM_T =>     'enumeration',
         AbstractField::MULTIPLE_T => 'multiple_enumeration',
         AbstractField::DOCUMENTS_T =>'documents',
-        AbstractField::CHILDREN_T => 'children_nodes',
     );
 
     /**
