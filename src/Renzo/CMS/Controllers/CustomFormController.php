@@ -24,6 +24,8 @@ use RZ\Renzo\CMS\Forms\CustomFormsType;
 
 class CustomFormController extends AppController
 {
+    public static $themeDir = 'Rozier';
+
     /**
      * Initialize controller with NO twig environment.
      */

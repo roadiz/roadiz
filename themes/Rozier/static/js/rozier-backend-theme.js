@@ -16398,6 +16398,8 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
             '_token': Rozier.ajaxToken
         };
 
+        Rozier.lazyload.canvasLoader.show();
+
         $.ajax({
             url: Rozier.routes.documentsAjaxExplorer,
             type: 'get',
@@ -16407,6 +16409,7 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
         .success(function(data) {
             console.log(data);
             console.log("success");
+            Rozier.lazyload.canvasLoader.hide();
 
             if (typeof data.documents != "undefined") {
 
@@ -16423,6 +16426,7 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
 
     return false;
 };
+
 
 /**
  * Query searched documents explorer.
@@ -16442,6 +16446,8 @@ DocumentWidget.prototype.onExplorerSearch = function($originWidget, event) {
             'search': $search.val()
         };
 
+        Rozier.lazyload.canvasLoader.show();
+
         $.ajax({
             url: Rozier.routes.documentsAjaxExplorer,
             type: 'get',
@@ -16451,6 +16457,7 @@ DocumentWidget.prototype.onExplorerSearch = function($originWidget, event) {
         .success(function(data) {
             console.log(data);
             console.log("success");
+            Rozier.lazyload.canvasLoader.hide();
 
             if (typeof data.documents != "undefined") {
 
@@ -16465,6 +16472,7 @@ DocumentWidget.prototype.onExplorerSearch = function($originWidget, event) {
 
     return false;
 };
+
 
 /**
  * Query next page documents explorer.
@@ -16485,6 +16493,8 @@ DocumentWidget.prototype.onExplorerNextPage = function(filters, $originWidget, e
             'page': filters.nextPage
         };
 
+        Rozier.lazyload.canvasLoader.show();
+
         $.ajax({
             url: Rozier.routes.documentsAjaxExplorer,
             type: 'get',
@@ -16494,9 +16504,9 @@ DocumentWidget.prototype.onExplorerNextPage = function(filters, $originWidget, e
         .success(function(data) {
             console.log(data);
             console.log("success");
+            Rozier.lazyload.canvasLoader.hide();
 
             if (typeof data.documents != "undefined") {
-
                 _this.appendItemsToExplorer(data, $originWidget);
             }
         })
@@ -16575,6 +16585,7 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
     }, 0);
 };
 
+
 /**
  * Append documents to explorer.
  *
@@ -16602,7 +16613,6 @@ DocumentWidget.prototype.appendItemsToExplorer = function(data, $originWidget, r
         $sortable.append(doc.html);
     }
 
-
     /*
      * Bind add buttons.
      */
@@ -16629,9 +16639,15 @@ DocumentWidget.prototype.appendItemsToExplorer = function(data, $originWidget, r
 
 };
 
+
+/**
+ * Add document click
+ * @param  {[type]} $originWidget [description]
+ * @param  {[type]} event         [description]
+ * @return {[type]}               [description]
+ */
 DocumentWidget.prototype.onAddDocumentClick = function($originWidget, event) {
     var _this = this;
-
 
     var $object = $(event.currentTarget).parents('.uk-sortable-list-item');
     $object.appendTo($originWidget);
@@ -16646,6 +16662,7 @@ DocumentWidget.prototype.onAddDocumentClick = function($originWidget, event) {
 
     return false;
 };
+
 
 /**
  * Echap key to close explorer
@@ -18274,6 +18291,149 @@ CustomFormFieldsPosition.prototype.onSortableChange = function(event, list, elem
 
 };
 ;/**
+ * CUSTOM FORM FIELD EDIT
+ */
+
+CustomFormFieldEdit = function(){
+    var _this = this;
+
+    // Selectors
+    _this.$btn = $('.custom-form-field-edit-button');
+
+    // Methods
+    _this.init();
+
+};
+
+
+CustomFormFieldEdit.prototype.$btn = null;
+CustomFormFieldEdit.prototype.indexOpen = null;
+CustomFormFieldEdit.prototype.openFormDelay = 0;
+CustomFormFieldEdit.prototype.$formRow = null;
+CustomFormFieldEdit.prototype.$formCont = null;
+CustomFormFieldEdit.prototype.$form = null;
+CustomFormFieldEdit.prototype.$formContHeight = null;
+
+
+/**
+ * Init
+ * @return {[type]} [description]
+ */
+CustomFormFieldEdit.prototype.init = function(){
+    var _this = this;
+
+    // Events
+    _this.$btn.on('click', $.proxy(_this.btnClick, _this));
+};
+
+
+/**
+ * Btn click
+ * @return {[type]} [description]
+ */
+CustomFormFieldEdit.prototype.btnClick = function(e){
+    var _this = this;
+
+    if(_this.indexOpen !== null){
+        _this.closeForm();
+        _this.openFormDelay = 500;
+    } 
+    else _this.openFormDelay = 0;
+
+    if(_this.indexOpen !==  parseInt(e.currentTarget.getAttribute('data-index')) ){
+
+        setTimeout(function(){
+
+            _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
+
+            $.ajax({
+                url: e.currentTarget.href,
+                type: 'get',
+                dataType: 'html'
+            })
+            .done(function(data) {
+                _this.applyContent(e.currentTarget, data, e.currentTarget.href);
+            })
+            .fail(function() {
+                console.log("error");
+                $.UIkit.notify({
+                    message : Rozier.messages.forbiddenPage,
+                    status  : 'danger',
+                    timeout : 3000,
+                    pos     : 'top-center'
+                });
+            });
+
+        }, _this.openFormDelay);
+
+    }
+
+    return false;
+};
+
+
+/**
+ * Apply content
+ * @return {[type]} [description]
+ */
+CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
+    var _this = this;
+
+    var dataWrapped = [
+        '<tr class="custom-form-field-edit-form-row">',
+            '<td colspan="4">',
+                '<div class="custom-form-field-edit-form-cont">',
+                    data,
+                '</div>',
+            '</td>',
+        '</tr>'
+    ].join('');
+
+    $(target).parent().parent().after(dataWrapped);  
+
+    setTimeout(function(){
+        _this.$formCont = $('.custom-form-field-edit-form-cont');
+        _this.formContHeight = _this.$formCont.actual('height');
+        _this.$formRow = $('.custom-form-field-edit-form-row');
+        _this.$form = $('#edit-custom-form-field-form');
+
+        _this.$form.attr('action', url);
+
+        // _this.$form[0].style.height = '0px';
+        // _this.$form[0].style.display = 'table-row';
+        _this.$formCont[0].style.height = '0px';
+        _this.$formCont[0].style.display = 'block';
+        TweenLite.to(_this.$form, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
+        TweenLite.to(_this.$formCont, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
+    }, 200);       
+
+};
+
+
+/**
+ * Close form
+ * @return {[type]} [description]
+ */
+CustomFormFieldEdit.prototype.closeForm = function(){
+    var _this = this;
+
+    TweenLite.to(_this.$formCont, 0.4, {height:0, ease:Expo.easeOut, onComplete:function(){
+        _this.$formRow.remove();
+        _this.indexOpen = null;
+    }});
+
+};
+
+
+/**
+ * Window resize callback
+ * @return {[type]} [description]
+ */
+CustomFormFieldEdit.prototype.resize = function(){
+    var _this = this;
+
+};
+;/**
  * Lazyload
  */
 var Lazyload = function() {
@@ -18282,7 +18442,6 @@ var Lazyload = function() {
     var onStateChangeProxy = $.proxy(_this.onPopState, _this);
 
     _this.$linksSelector = $("a:not('[target=_blank]')");
-    // $('body').on('click', _this.$linksSelector, onClickProxy);
 
     $(window).on('popstate', function (event) {
         _this.onPopState(event);
@@ -18290,7 +18449,7 @@ var Lazyload = function() {
 
     _this.$canvasLoaderContainer = $('#canvasloader-container');
     _this.mainColor = isset(Rozier.mainColor) ? Rozier.mainColor : '#ffffff';
-    // _this.initLoader();
+    _this.initLoader();
 
 };
 
@@ -18314,31 +18473,34 @@ Lazyload.prototype.initLoader = function(){
     var _this = this;
 
     _this.canvasLoader = new CanvasLoader('canvasloader-container');
-    _this.canvasLoader.setColor(_this.mainColor); // default is '#000000'
-    _this.canvasLoader.setShape('square'); // default is 'oval'
-    _this.canvasLoader.setDensity(90); // default is 40
-    _this.canvasLoader.setRange(0.8); // default is 1.3
-    _this.canvasLoader.setSpeed(4); // default is 2
-    _this.canvasLoader.setFPS(30); // default is 24
-    _this.canvasLoader.show(); // Hidden by default
+    _this.canvasLoader.setColor(_this.mainColor);
+    _this.canvasLoader.setShape('square'); 
+    _this.canvasLoader.setDensity(90); 
+    _this.canvasLoader.setRange(0.8); 
+    _this.canvasLoader.setSpeed(4); 
+    _this.canvasLoader.setFPS(30); 
 
 };
 
 
+/**
+ * Bind links to load pages
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 Lazyload.prototype.onClick = function(event) {
     var _this = this;
-    var $link = $(event.currentTarget);
 
-    // console.log($link);
+    var $link = $(event.currentTarget), 
+        href = $link.attr('href');
 
-    var href = $link.attr('href');
     if(typeof href !== "undefined" &&
         !$link.hasClass('rz-no-ajax-link') &&
         href !== "" &&
         href != "#" &&
         href.indexOf(Rozier.baseUrl) >= 0){
 
-        // console.log(href);
+        _this.canvasLoader.show();
 
         history.pushState({}, null, $link.attr('href'));
         _this.onPopState(null);
@@ -18346,6 +18508,12 @@ Lazyload.prototype.onClick = function(event) {
     }
 };
 
+
+/**
+ * On pop state
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 Lazyload.prototype.onPopState = function(event) {
     var _this = this;
 
@@ -18372,6 +18540,12 @@ Lazyload.prototype.onPopState = function(event) {
 };
 
 
+/**
+ * Load content (ajax)
+ * @param  {[type]} state    [description]
+ * @param  {[type]} location [description]
+ * @return {[type]}          [description]
+ */
 Lazyload.prototype.loadContent = function(state, location) {
     var _this = this;
 
@@ -18382,6 +18556,7 @@ Lazyload.prototype.loadContent = function(state, location) {
     })
     .done(function(data) {
         _this.applyContent(data);
+        _this.canvasLoader.hide();
     })
     .fail(function() {
         console.log("error");
@@ -18394,6 +18569,12 @@ Lazyload.prototype.loadContent = function(state, location) {
     });
 };
 
+
+/**
+ * Apply content to main content
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
 Lazyload.prototype.applyContent = function(data) {
     var _this = this;
 
@@ -18419,6 +18600,10 @@ Lazyload.prototype.applyContent = function(data) {
 };
 
 
+/**
+ * General bind on page load
+ * @return {[type]} [description]
+ */
 Lazyload.prototype.generalBind = function() {
     var _this = this;
 
@@ -18438,6 +18623,7 @@ Lazyload.prototype.generalBind = function() {
     _this.settingsSaveButtons = new SettingsSaveButtons();
     _this.nodeTypeFieldEdit = new NodeTypeFieldEdit();
     _this.nodeEditSource = new NodeEditSource();
+    _this.customFormFieldEdit = new CustomFormFieldEdit();
 
 
     _this.$linksSelector.off('click', $.proxy(_this.onClick, _this));
@@ -18514,10 +18700,7 @@ Lazyload.prototype.resize = function(){
 
     _this.$canvasLoaderContainer[0].style.left = Rozier.mainContentScrollableOffsetLeft + (Rozier.mainContentScrollableWidth/2) + 'px';
     
-
 };
-
-
 ;// Avoid `console` errors in browsers that lack a console.
 (function() {
     var method;
@@ -18597,7 +18780,77 @@ c,c);break;case f[3]:case f[4]:a=g*0.3,d=a*0.27,e=Math.cos(j)*(d+(g-d)*0.13)+g*0
 i.restore();++b}}else{m(this.cont,{width:g,height:g});m(this.vml,{width:g,height:g});switch(this.shape){case f[0]:case f[1]:j="oval";c=140;break;case f[2]:j="roundrect";c=120;break;case f[3]:case f[4]:j="roundrect",c=300}a=d=c;e=500-d;for(h=-d*0.5;b<r;){l=b<=s?1-1/s*b:l=0;k=270-360/r*b;switch(this.shape){case f[1]:a=d=c*l;e=500-c*0.5-c*l*0.5;h=(c-c*l)*0.5;break;case f[0]:case f[2]:v&&(h=0,this.shape===f[2]&&(e=500-d*0.5));break;case f[3]:case f[4]:a=c*0.95,d=a*0.28,v?(e=0,h=500-d*0.5):(e=500-a,h=
 -d*0.5),q=this.shape===f[4]?0.6:0}i=t(m(n("group",this.vml),{width:1E3,height:1E3,rotation:k}),{coordsize:"1000,1000",coordorigin:"-500,-500"});i=m(n(j,i,{stroked:false,arcSize:q}),{width:a,height:d,top:h,left:e});n("fill",i,{color:this.color,opacity:l});++b}}this.tick(true)};a.clean=function(){if(o===p[0])this.con.clearRect(0,0,1E3,1E3);else{var b=this.vml;if(b.hasChildNodes())for(;b.childNodes.length>=1;)b.removeChild(b.firstChild)}};a.redraw=function(){this.clean();this.draw()};a.reset=function(){typeof this.timer===
 "number"&&(this.hide(),this.show())};a.tick=function(b){var a=this.con,f=this.diameter;b||(this.activeId+=360/this.density*this.speed);o===p[0]?(a.clearRect(0,0,f,f),u(a,f*0.5,f*0.5,this.activeId/180*Math.PI),a.drawImage(this.cCan,0,0,f,f),a.restore()):(this.activeId>=360&&(this.activeId-=360),m(this.vml,{rotation:this.activeId}))};a.show=function(){if(typeof this.timer!=="number"){var a=this;this.timer=self.setInterval(function(){a.tick()},Math.round(1E3/this.fps));m(this.cont,{display:"block"})}};
-a.hide=function(){typeof this.timer==="number"&&(clearInterval(this.timer),delete this.timer,m(this.cont,{display:"none"}))};a.kill=function(){var a=this.cont;typeof this.timer==="number"&&this.hide();o===p[0]?(a.removeChild(this.can),a.removeChild(this.cCan)):a.removeChild(this.vml);for(var c in this)delete this[c]};w.CanvasLoader=k})(window);;/*
+a.hide=function(){typeof this.timer==="number"&&(clearInterval(this.timer),delete this.timer,m(this.cont,{display:"none"}))};a.kill=function(){var a=this.cont;typeof this.timer==="number"&&this.hide();o===p[0]?(a.removeChild(this.can),a.removeChild(this.cCan)):a.removeChild(this.vml);for(var c in this)delete this[c]};w.CanvasLoader=k})(window);
+
+
+/*
+ * Pointer Events Polyfill: Adds support for the style attribute "pointer-events: none" to browsers without this feature (namely, IE).
+ * (c) 2013, Kent Mewhort, licensed under BSD. See LICENSE.txt for details.
+ */
+// constructor
+function PointerEventsPolyfill(options){
+    // set defaults
+    this.options = {
+        selector: '*',
+        mouseEvents: ['click','dblclick','mousedown','mouseup'],
+        usePolyfillIf: function(){
+            if(navigator.appName == 'Microsoft Internet Explorer')
+            {
+                var agent = navigator.userAgent;
+                if (agent.match(/MSIE ([0-9]{1,}[\.0-9]{0,})/) != null){
+                    var version = parseFloat( RegExp.$1 );
+                    if(version < 11)
+                      return true;
+                }
+            }
+            return false;
+        }
+    };
+    if(options){
+        var obj = this;
+        $.each(options, function(k,v){
+          obj.options[k] = v;
+        });
+    }
+
+    if(this.options.usePolyfillIf())
+      this.register_mouse_events();
+}
+
+// singleton initializer
+PointerEventsPolyfill.initialize = function(options){
+    if(PointerEventsPolyfill.singleton == null)
+      PointerEventsPolyfill.singleton = new PointerEventsPolyfill(options);
+    return PointerEventsPolyfill.singleton;
+};
+
+// handle mouse events w/ support for pointer-events: none
+PointerEventsPolyfill.prototype.register_mouse_events = function(){
+    // register on all elements (and all future elements) matching the selector
+    $(document).on(this.options.mouseEvents.join(" "), this.options.selector, function(e){
+       if($(this).css('pointer-events') == 'none'){
+             // peak at the element below
+             var origDisplayAttribute = $(this).css('display');
+             $(this).css('display','none');
+
+             var underneathElem = document.elementFromPoint(e.clientX, e.clientY);
+
+            if(origDisplayAttribute)
+                $(this)
+                    .css('display', origDisplayAttribute);
+            else
+                $(this).css('display','');
+
+             // fire the mouse event on the element below
+            e.target = underneathElem;
+            $(underneathElem).trigger(e);
+
+            return false;
+        }
+        return true;
+    });
+};
+;/*
  * ============================================================================
  * Rozier entry point
  * ============================================================================
@@ -18645,6 +18898,10 @@ Rozier.onDocumentReady = function(event) {
 	Rozier.$mainContentScrollable = $('#main-content-scrollable');
 	Rozier.$backTopBtn = $('#back-top-button');
 
+	// Pointer events polyfill
+    if(!Modernizr.testProp('pointerEvents')){
+        PointerEventsPolyfill.initialize({'selector':'#main-trees-overlay'});
+    }
 
 	// Search node
 	$("#nodes-sources-search-input").on('focus', function(){

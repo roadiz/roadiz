@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<section class="content-global manage-custom-form-field">
+
+    <header class="content-header header-custom-form-fields header-custom-form-field-edit">
+         <h1 class="content-title custom-form-field-edit-title">{{ "edit.nodeTypeField.%name%"|trans({'%name%': field.getName}) }}</h1>
+         <a class="content-header-nav-back uk-navbar-content" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: nodeType.getId }) }}" title="{% trans %}back_to.nodeTypeFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </header>
+    
+    {% block subcontent %}{% endblock %}
+
+    {% include 'custom-form-fields/actionsMenu.html.twig' %}
+</section>
+{% endblock %}

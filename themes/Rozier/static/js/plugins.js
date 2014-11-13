@@ -78,3 +78,72 @@ i.restore();++b}}else{m(this.cont,{width:g,height:g});m(this.vml,{width:g,height
 -d*0.5),q=this.shape===f[4]?0.6:0}i=t(m(n("group",this.vml),{width:1E3,height:1E3,rotation:k}),{coordsize:"1000,1000",coordorigin:"-500,-500"});i=m(n(j,i,{stroked:false,arcSize:q}),{width:a,height:d,top:h,left:e});n("fill",i,{color:this.color,opacity:l});++b}}this.tick(true)};a.clean=function(){if(o===p[0])this.con.clearRect(0,0,1E3,1E3);else{var b=this.vml;if(b.hasChildNodes())for(;b.childNodes.length>=1;)b.removeChild(b.firstChild)}};a.redraw=function(){this.clean();this.draw()};a.reset=function(){typeof this.timer===
 "number"&&(this.hide(),this.show())};a.tick=function(b){var a=this.con,f=this.diameter;b||(this.activeId+=360/this.density*this.speed);o===p[0]?(a.clearRect(0,0,f,f),u(a,f*0.5,f*0.5,this.activeId/180*Math.PI),a.drawImage(this.cCan,0,0,f,f),a.restore()):(this.activeId>=360&&(this.activeId-=360),m(this.vml,{rotation:this.activeId}))};a.show=function(){if(typeof this.timer!=="number"){var a=this;this.timer=self.setInterval(function(){a.tick()},Math.round(1E3/this.fps));m(this.cont,{display:"block"})}};
 a.hide=function(){typeof this.timer==="number"&&(clearInterval(this.timer),delete this.timer,m(this.cont,{display:"none"}))};a.kill=function(){var a=this.cont;typeof this.timer==="number"&&this.hide();o===p[0]?(a.removeChild(this.can),a.removeChild(this.cCan)):a.removeChild(this.vml);for(var c in this)delete this[c]};w.CanvasLoader=k})(window);
+
+
+/*
+ * Pointer Events Polyfill: Adds support for the style attribute "pointer-events: none" to browsers without this feature (namely, IE).
+ * (c) 2013, Kent Mewhort, licensed under BSD. See LICENSE.txt for details.
+ */
+// constructor
+function PointerEventsPolyfill(options){
+    // set defaults
+    this.options = {
+        selector: '*',
+        mouseEvents: ['click','dblclick','mousedown','mouseup'],
+        usePolyfillIf: function(){
+            if(navigator.appName == 'Microsoft Internet Explorer')
+            {
+                var agent = navigator.userAgent;
+                if (agent.match(/MSIE ([0-9]{1,}[\.0-9]{0,})/) != null){
+                    var version = parseFloat( RegExp.$1 );
+                    if(version < 11)
+                      return true;
+                }
+            }
+            return false;
+        }
+    };
+    if(options){
+        var obj = this;
+        $.each(options, function(k,v){
+          obj.options[k] = v;
+        });
+    }
+
+    if(this.options.usePolyfillIf())
+      this.register_mouse_events();
+}
+
+// singleton initializer
+PointerEventsPolyfill.initialize = function(options){
+    if(PointerEventsPolyfill.singleton == null)
+      PointerEventsPolyfill.singleton = new PointerEventsPolyfill(options);
+    return PointerEventsPolyfill.singleton;
+};
+
+// handle mouse events w/ support for pointer-events: none
+PointerEventsPolyfill.prototype.register_mouse_events = function(){
+    // register on all elements (and all future elements) matching the selector
+    $(document).on(this.options.mouseEvents.join(" "), this.options.selector, function(e){
+       if($(this).css('pointer-events') == 'none'){
+             // peak at the element below
+             var origDisplayAttribute = $(this).css('display');
+             $(this).css('display','none');
+
+             var underneathElem = document.elementFromPoint(e.clientX, e.clientY);
+
+            if(origDisplayAttribute)
+                $(this)
+                    .css('display', origDisplayAttribute);
+            else
+                $(this).css('display','');
+
+             // fire the mouse event on the element below
+            e.target = underneathElem;
+            $(underneathElem).trigger(e);
+
+            return false;
+        }
+        return true;
+    });
+};
