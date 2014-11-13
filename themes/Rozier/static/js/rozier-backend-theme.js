@@ -17028,6 +17028,7 @@ NodeWidget.prototype.closeExplorer = function(){
         'onAdded' : function (file) {
             console.log("Added file");
         },
+        'url':           Rozier.routes.documentsUploadPage,
         'selector':      "#upload-dropzone-document",
         'paramName':     "form[attachment]",
         'uploadMultiple':false,
@@ -17058,8 +17059,19 @@ DocumentUploader.prototype.options = null;
 DocumentUploader.prototype.init = function() {
     var _this = this;
 
+    /*
+     * Get folder id
+     */
+    var form = $('#upload-dropzone-document');
+    if (isset(form.attr('data-folder-id')) &&
+        form.attr('data-folder-id') > 0) {
+
+        _this.options.headers.folderId = parseInt(form.attr('data-folder-id'));
+        _this.options.url = Rozier.routes.documentsUploadPage + '/' + parseInt(form.attr('data-folder-id'));
+    }
+
     Dropzone.options.uploadDropzoneDocument = {
-        url:                          Rozier.routes.documentsUploadPage,
+        url:                          _this.options.url,
         method:                       'post',
         headers:                      _this.options.headers,
         paramName:                    _this.options.paramName,
@@ -17081,6 +17093,7 @@ DocumentUploader.prototype.init = function() {
                 _this.options.onAdded(file);
             });
             this.on("success", function(file, data) {
+                console.log(data);
                 _this.options.onSuccess(JSON.parse(data));
                 Rozier.getMessages();
             });
@@ -17091,6 +17104,8 @@ DocumentUploader.prototype.init = function() {
         }
     };
     Dropzone.autoDiscover = _this.options.autoDiscover;
+
+
     var dropZone = new Dropzone(
         _this.options.selector,
         Dropzone.options.uploadDropzoneDocument

@@ -6,7 +6,10 @@
 
 	<header class="content-header header-document header-document-embed">
         <h1 class="content-title document-embed-title">{% trans %}embed.document{% endtrans %}</h1>
-		<a class="content-header-nav-back uk-navbar-content" href="{{ path('documentsHomePage') }}" title="{% trans %}back_to.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+		<a class="content-header-nav-back uk-navbar-content"
+           href="{{ path('documentsHomePage', {folderId: folder.id}) }}"
+           title="{% trans %}back_to.documents{% endtrans %}"
+           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-embed">

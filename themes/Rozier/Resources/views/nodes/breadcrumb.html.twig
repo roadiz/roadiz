@@ -16,7 +16,10 @@
         {% if parent.isHidingChildren %}
             {% set url = path('nodesTreePage', { nodeId: parent.getId }) %}
         {% else %}
-            {% set url = path('nodesEditPage', { nodeId: parent.getId }) %}
+            {% set url = path('nodesEditSourcePage', {
+                nodeId: parent.getId,
+                translationId: parent.getNodeSources.first.translation.id
+            }) %}
         {% endif %}
         <li class="node-breadcrumb-item">
             <a class="node-breadcrumb-link" href="{{ url }}">

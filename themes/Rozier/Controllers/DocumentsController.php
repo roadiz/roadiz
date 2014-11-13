@@ -234,9 +234,19 @@ class DocumentsController extends RozierApp
      *
      * @return Response
      */
-    public function embedAction(Request $request)
+    public function embedAction(Request $request, $folderId = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        if (null !== $folderId &&
+            $folderId > 0) {
+
+            $folder = $this->getService('em')
+                           ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+
+            $prefilters['folders'] = array($folder);
+            $this->assignation['folder'] = $folder;
+        }
 
         /*
          * Handle main form
@@ -247,7 +257,7 @@ class DocumentsController extends RozierApp
         if ($form->isValid()) {
 
             try {
-                $document = $this->embedDocument($form->getData());
+                $document = $this->embedDocument($form->getData(), $folderId);
 
                 $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
                     '%name%'=>$document->getFilename()
@@ -263,7 +273,7 @@ class DocumentsController extends RozierApp
              * Force redirect to avoid resending form when refreshing page
              */
             $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate('documentsHomePage')
+                $this->getService('urlGenerator')->generate('documentsHomePage', array('folderId'=>$folderId))
             );
             $response->prepare($request);
 
@@ -287,12 +297,12 @@ class DocumentsController extends RozierApp
      *
      * @return Response
      */
-    public function randomAction(Request $request)
+    public function randomAction(Request $request, $folderId = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         try {
-            $document = $this->randomDocument();
+            $document = $this->randomDocument($folderId);
 
             $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
                 '%name%'=>$document->getFilename()
@@ -308,7 +318,7 @@ class DocumentsController extends RozierApp
          * Force redirect to avoid resending form when refreshing page
          */
         $response = new RedirectResponse(
-            $this->getService('urlGenerator')->generate('documentsHomePage')
+            $this->getService('urlGenerator')->generate('documentsHomePage', array('folderId'=>$folderId))
         );
         $response->prepare($request);
 
@@ -320,19 +330,29 @@ class DocumentsController extends RozierApp
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function uploadAction(Request $request)
+    public function uploadAction(Request $request, $folderId = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        if (null !== $folderId &&
+            $folderId > 0) {
+
+            $folder = $this->getService('em')
+                           ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+
+            $prefilters['folders'] = array($folder);
+            $this->assignation['folder'] = $folder;
+        }
 
         /*
          * Handle main form
          */
-        $form = $this->buildUploadForm();
+        $form = $this->buildUploadForm($folderId);
         $form->handleRequest();
 
         if ($form->isValid()) {
 
-            $document = $this->uploadDocument($form);
+            $document = $this->uploadDocument($form, $folderId);
 
             if (false !== $document) {
 
@@ -460,7 +480,7 @@ class DocumentsController extends RozierApp
     /**
      * @return Symfony\Component\Form\Form
      */
-    private function buildUploadForm()
+    private function buildUploadForm($folderId = null)
     {
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', array(), array(
@@ -472,6 +492,13 @@ class DocumentsController extends RozierApp
                     ->add('attachment', 'file', array(
                         'label' => $this->getTranslator()->trans('choose.documents.to_upload')
                     ));
+
+        if (null !== $folderId &&
+            $folderId > 0) {
+            $builder->add('folderId', 'hidden', array(
+                'data' => $folderId
+            ));
+        }
 
         return $builder->getForm();
     }
@@ -499,7 +526,7 @@ class DocumentsController extends RozierApp
         return $builder->getForm();
     }
 
-    private function embedDocument($data)
+    private function embedDocument($data, $folderId = null)
     {
         $handlers = $this->getService('document.platforms');
 
@@ -511,7 +538,22 @@ class DocumentsController extends RozierApp
             $finder = new $class($data['embedId']);
 
             if ($finder->exists()) {
-                return $finder->createDocumentFromFeed($this->getService());
+
+                $document = $finder->createDocumentFromFeed($this->getService());
+
+                if (null !== $document &&
+                    null !== $folderId &&
+                    $folderId > 0) {
+
+                    $folder = $this->getService('em')
+                                   ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+
+                    $document->addFolder($folder);
+                    $folder->addDocument($document);
+                    $this->getService('em')->flush();
+                }
+
+                return $document;
 
             } else {
                 throw new \RuntimeException("embedId.does_not_exist", 1);
@@ -526,10 +568,23 @@ class DocumentsController extends RozierApp
      *
      * @return RZ\Renzo\Core\Entities\Document
      */
-    public function randomDocument()
+    public function randomDocument($folderId = null)
     {
         $finder = new SplashbasePictureFinder();
-        return $finder->createDocumentFromFeed($this->getService());
+        $document = $finder->createDocumentFromFeed($this->getService());
+
+        if (null !== $document &&
+            null !== $folderId &&
+            $folderId > 0) {
+
+            $folder = $this->getService('em')
+                           ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+
+            $document->addFolder($folder);
+            $folder->addDocument($document);
+            $this->getService('em')->flush();
+        }
+        return $document;
     }
 
     /**
@@ -571,7 +626,7 @@ class DocumentsController extends RozierApp
      *
      * @return boolean
      */
-    private function uploadDocument($data)
+    private function uploadDocument($data, $folderId = null)
     {
         if (!empty($data['attachment'])) {
 
@@ -593,9 +648,18 @@ class DocumentsController extends RozierApp
                     $document = new Document();
                     $document->setFilename($uploadedFile->getClientOriginalName());
                     $document->setMimeType($uploadedFile->getMimeType());
-
                     $this->getService('em')->persist($document);
                     $this->getService('em')->flush();
+
+                    if (null !== $folderId && $folderId > 0) {
+
+                        $folder = $this->getService('em')
+                                       ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+
+                        $document->addFolder($folder);
+                        $folder->addDocument($document);
+                        $this->getService('em')->flush();
+                    }
 
                     $uploadedFile->move(Document::getFilesFolder().'/'.$document->getFolder(), $document->getFilename());
 
