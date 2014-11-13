@@ -4,7 +4,8 @@
 <section id="login" {% if error %}class="uk-animation-shake"{% endif %}>
     <div id="login-infos">
         <div id="login-logo">
-            {% if head.companyLogo %}
+            {% if adminImage %}
+                {{ adminImage.viewer.getDocumentByArray({width:200, crop:'1:1'})|raw }}
             {% else %}
                 <i class="uk-icon-rz-rezozero"></i>
             {% endif %}

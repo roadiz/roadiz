@@ -134,9 +134,14 @@ class DocumentRepository extends EntityRepository
                 $prefix = 't.';
                 $key = str_replace('translation.', '', $key);
             }
-             /*
-             * Search in nodeSource fields
+            /*
+             * Search in translation fields
              */
+            if (false !== strpos($key, 'documentTranslations.')) {
+                $prefix = 'dt.';
+                $key = str_replace('documentTranslations.', '', $key);
+            }
+
             if ($key == 'translation') {
                 $prefix = 'dt.';
             }
@@ -207,6 +212,81 @@ class DocumentRepository extends EntityRepository
             $qb->andWhere($res);
         }
     }
+
+   /**
+    * Create a Criteria object from a search pattern and additionnal fields.
+    *
+    * @param string                  $pattern  Search pattern
+    * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
+    * @param array                   $criteria Additionnal criteria
+    * @param string                  $alias    SQL query table alias
+    *
+    * @return \Doctrine\ORM\QueryBuilder
+    */
+    protected function createSearchBy(
+        $pattern,
+        \Doctrine\ORM\QueryBuilder $qb,
+        array $criteria = array(),
+        $alias = "obj"
+    ) {
+        /*
+         * get fields needed for a search
+         * query
+         */
+        $types = array('string', 'text');
+
+        /*
+         * Search in document fields
+         */
+        $criteriaFields = array();
+        $metadatas = $this->_em->getClassMetadata($this->getEntityName());
+        $cols = $metadatas->getColumnNames();
+        foreach ($cols as $col) {
+            $field = $metadatas->getFieldName($col);
+            $type = $metadatas->getTypeOfField($field);
+            if (in_array($type, $types)) {
+                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
+            }
+        }
+        foreach ($criteriaFields as $key => $value) {
+            $qb->orWhere($qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value)));
+        }
+
+        /*
+         * Search in translations
+         */
+        $qb->leftJoin('obj.documentTranslations', 'dt');
+        $criteriaFields = array();
+        $metadatas = $this->_em->getClassMetadata('RZ\Renzo\Core\Entities\DocumentTranslation');
+        $cols = $metadatas->getColumnNames();
+        foreach ($cols as $col) {
+            $field = $metadatas->getFieldName($col);
+            $type = $metadatas->getTypeOfField($field);
+            if (in_array($type, $types)) {
+                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
+            }
+        }
+        foreach ($criteriaFields as $key => $value) {
+            $qb->orWhere($qb->expr()->like('dt.' .$key, $qb->expr()->literal($value)));
+        }
+
+        foreach ($criteria as $key => $value) {
+            if (is_object($value) && $value instanceof PersistableInterface) {
+                $res = $qb->expr()->eq($alias . '.' .$key, $value->getId());
+            } elseif (is_array($value)) {
+                $res = $qb->expr()->in($alias . '.' .$key, $value);
+            } elseif (is_bool($value)) {
+                $res = $qb->expr()->eq($alias . '.' .$key, (int) $value);
+            } else {
+                $res = $qb->expr()->eq($alias . '.' .$key, $value);
+            }
+
+            $qb->andWhere($res);
+        }
+
+        return $qb;
+    }
+
     /**
      * Bind parameters to generated query.
      *

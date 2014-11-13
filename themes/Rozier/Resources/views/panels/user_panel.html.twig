@@ -6,7 +6,7 @@
 
 {%  spaceless %}
 <div>
-    
+
     <div id="menu-mobile">
         <div class="menu-mobile-bar" id="menu-mobile-bar-1"></div>
         <div class="menu-mobile-bar" id="menu-mobile-bar-2"></div>
@@ -14,7 +14,8 @@
     </div>
 
     <div id="company" style="background-color:{{ head.mainColor }};">
-        {% if head.companyLogo %}
+        {% if adminImage %}
+            <a class="admin-image" href="{{ path('adminHomePage') }}">{{ adminImage.viewer.getDocumentByArray({width:70, crop:'1:1'})|raw }}</a>
         {% else %}
             <a class="uk-icon-rz-rezozero" href="{{ path('adminHomePage') }}"></a>
         {% endif %}

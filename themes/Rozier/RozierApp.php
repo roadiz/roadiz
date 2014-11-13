@@ -63,6 +63,18 @@ class RozierApp extends BackendController
                                                    ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
                                                    ->findBy(array('inMenu' => true), array('name'=>'ASC'));
 
+        /*
+         * Get admin image
+         */
+        $adminImage = $this->getService('em')
+                           ->getRepository('RZ\Renzo\Core\Entities\DocumentTranslation')
+                           ->findOneBy(array(
+                                'name' => '_admin_image_'
+                            ));
+        if (null !== $adminImage) {
+            $this->assignation['adminImage'] = $adminImage->getDocument();
+        }
+
         $this->assignation['nodeStatuses'] = array(
             'draft' => Node::DRAFT,
             'pending' => Node::PENDING,
@@ -90,11 +102,11 @@ class RozierApp extends BackendController
 
     /**
      * @param Symfony\Component\HttpFoundation\Request $request
-     * 
+     *
      * @return Symfony\Component\HttpFoundation\Response $response
      */
     public function cssAction(Request $request)
-    {   
+    {
 
         $this->assignation['mainColor'] = SettingsBag::get('main_color');
 

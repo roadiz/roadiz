@@ -29,7 +29,8 @@
                     {% include 'panels/user_panel.html.twig' with {
                         'session' : session,
                         'securityContext' : securityContext,
-                        'head' : head
+                        'head' : head,
+                        'adminImage':adminImage
                     } only %}
                 </section>
                 <section class="main-container-section" id="admin-menu">

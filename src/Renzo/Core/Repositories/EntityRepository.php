@@ -79,11 +79,12 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
          * query
          */
         $types = array('string', 'text');
+        $metadatas = $this->_em->getClassMetadata($this->getEntityName());
         $criteriaFields = array();
-        $cols = $this->_em->getClassMetadata($this->getEntityName())->getColumnNames();
+        $cols = $metadatas->getColumnNames();
         foreach ($cols as $col) {
-            $field = $this->_em->getClassMetadata($this->getEntityName())->getFieldName($col);
-            $type = $this->_em->getClassMetadata($this->getEntityName())->getTypeOfField($field);
+            $field = $metadatas->getFieldName($col);
+            $type = $metadatas->getTypeOfField($field);
             if (in_array($type, $types)) {
                 $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
             }

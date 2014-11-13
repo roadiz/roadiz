@@ -649,15 +649,15 @@ class TagRepository extends EntityRepository
 
 
     /**
-     * Create a Criteria object from a search pattern and additionnal fields.
-     *
-     * @param string                     $pattern  Search pattern
-     * @param \Doctrine\ORM\QueryBuilder $qb       QueryBuilder
-     * @param array                      $criteria Additionnal criteria
-     * @param string                     $alias    SQL table alias
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
+    * Create a Criteria object from a search pattern and additionnal fields.
+    *
+    * @param string                  $pattern  Search pattern
+    * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
+    * @param array                   $criteria Additionnal criteria
+    * @param string                  $alias    SQL query table alias
+    *
+    * @return \Doctrine\ORM\QueryBuilder
+    */
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
@@ -668,87 +668,58 @@ class TagRepository extends EntityRepository
          * get fields needed for a search
          * query
          */
-        $realSearchEntity = 'RZ\Renzo\Core\Entities\TagTranslation';
         $types = array('string', 'text');
-        $criteriaFields = array();
-        $cols = $this->_em->getClassMetadata($realSearchEntity)->getColumnNames();
-
-        foreach ($cols as $col) {
-            $field = $this->_em->getClassMetadata($realSearchEntity)->getFieldName($col);
-            $type = $this->_em->getClassMetadata($realSearchEntity)->getTypeOfField($field);
-
-            if (in_array($type, $types)) {
-                $criteriaFields[$this->_em->getClassMetadata($realSearchEntity)->getFieldName($col)] =
-                    '%'.strip_tags($pattern).'%';
-            }
-        }
 
         /*
-         * Search criteria operate on TagTranslation
+         * Search in tag fields
          */
+        $criteriaFields = array();
+        $metadatas = $this->_em->getClassMetadata($this->getEntityName());
+        $cols = $metadatas->getColumnNames();
+        foreach ($cols as $col) {
+            $field = $metadatas->getFieldName($col);
+            $type = $metadatas->getTypeOfField($field);
+            if (in_array($type, $types)) {
+                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
+            }
+        }
         foreach ($criteriaFields as $key => $value) {
             $qb->orWhere($qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value)));
         }
 
         /*
-         * Standard criteria operate on Tag -> t
+         * Search in translations
          */
-        foreach ($criteria as $key => $value) {
+        $qb->leftJoin('obj.translatedTags', 'tt');
+        $criteriaFields = array();
+        $metadatas = $this->_em->getClassMetadata('RZ\Renzo\Core\Entities\TagTranslation');
+        $cols = $metadatas->getColumnNames();
+        foreach ($cols as $col) {
+            $field = $metadatas->getFieldName($col);
+            $type = $metadatas->getTypeOfField($field);
+            if (in_array($type, $types)) {
+                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
+            }
+        }
+        foreach ($criteriaFields as $key => $value) {
+            $qb->orWhere($qb->expr()->like('tt.' .$key, $qb->expr()->literal($value)));
+        }
 
-            if (is_array($value)) {
-                $res = $qb->expr()->in('t.' .$key, $value);
+        foreach ($criteria as $key => $value) {
+            if (is_object($value) && $value instanceof PersistableInterface) {
+                $res = $qb->expr()->eq($alias . '.' .$key, $value->getId());
+            } elseif (is_array($value)) {
+                $res = $qb->expr()->in($alias . '.' .$key, $value);
             } elseif (is_bool($value)) {
-                $res = $qb->expr()->eq('t.' .$key, (int) $value);
+                $res = $qb->expr()->eq($alias . '.' .$key, (int) $value);
             } else {
-                $res = $qb->expr()->eq('t.' .$key, $value);
+                $res = $qb->expr()->eq($alias . '.' .$key, $value);
             }
 
             $qb->andWhere($res);
         }
 
         return $qb;
-    }
-
-    /**
-     * @param string  $pattern  Search pattern
-     * @param array   $criteria Additionnal criteria
-     * @param array   $orders   Ordering criteria
-     * @param integer $limit    SQL query limit
-     * @param integer $offset   SQL query offset
-     *
-     * @return Doctrine\Common\Collections\ArrayCollection
-     */
-    public function searchBy(
-        $pattern,
-        array $criteria = array(),
-        array $orders = array(),
-        $limit = null,
-        $offset = null
-    ) {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 't, obj')
-           ->add('from', $this->getEntityName() . ' t')
-           ->innerJoin('t.translatedTags', 'obj');
-
-        $qb = $this->createSearchBy($pattern, $qb, $criteria, 'obj');
-        foreach ($orders as $key => $value) {
-            $qb->addOrderBy('obj.'.$key, $value);
-        }
-
-        if ($offset > -1) {
-            $qb->setFirstResult($offset);
-        }
-        if ($limit !== null) {
-            $qb->setMaxResults($limit);
-        }
-
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (\Doctrine\ORM\Query\QueryException $e) {
-            return null;
-        } catch (\Doctrine\ORM\NoResultException $e) {
-            return null;
-        }
     }
 
     /**

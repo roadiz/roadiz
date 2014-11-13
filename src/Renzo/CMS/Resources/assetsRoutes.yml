@@ -15,4 +15,4 @@ FontFaceCSS:
 SLIRProcess:
     path:     /assets/{queryString}/{filename}
     defaults: { _controller: \RZ\Renzo\CMS\Controllers\AssetsController::slirAction }
-    requirements: { queryString : "[a-zA-Z0-9\-]+", filename : "[a-zA-Z0-9\-_\.\/]+" }
+    requirements: { queryString : "[a-zA-Z:0-9\-]+", filename : "[a-zA-Z0-9\-_\.\/]+" }
