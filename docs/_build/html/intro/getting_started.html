@@ -59,7 +59,10 @@
         
             <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cms-structure">CMS&nbsp;Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#prepare-your-server">Prepare your server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="upgrading.html">Upgrading</a><ul>
@@ -128,6 +131,46 @@
             
   <div class="section" id="getting-started">
 <span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cms-structure">
+<h2>CMS&nbsp;Structure<a class="headerlink" href="#cms-structure" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">bin</span></tt> : Contains the Renzo CLI&nbsp;executable</li>
+<li><tt class="docutils literal"><span class="pre">cache</span></tt> : Every caches files for <em>Twig</em> templates and <em>SLIR</em> images</li>
+<li><tt class="docutils literal"><span class="pre">conf</span></tt> : Your setup configuration file(s)</li>
+<li><tt class="docutils literal"><span class="pre">docs</span></tt> : Current documentation working files</li>
+<li><tt class="docutils literal"><span class="pre">files</span></tt> : Documents and fonts files root</li>
+<li><tt class="docutils literal"><span class="pre">gen-src</span></tt> : Generated PHP code for Doctrine and your Node-types entities</li>
+<li><tt class="docutils literal"><span class="pre">src</span></tt> : Renzo CMS&nbsp;logic and core source code</li>
+<li><tt class="docutils literal"><span class="pre">tests</span></tt> : PHP Unit tests root</li>
+<li><tt class="docutils literal"><span class="pre">themes</span></tt> : Contains your themes and systems themes such as <em>Rozier</em> and <em>Install</em></li>
+<li><tt class="docutils literal"><span class="pre">vendor</span></tt> : Dependencies folder managed by <em>Composer</em></li>
+</ul>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Nginx or Apache</li>
+<li>PHP 5.4+</li>
+<li><tt class="docutils literal"><span class="pre">php5-gd</span></tt> extension</li>
+<li><tt class="docutils literal"><span class="pre">php5-intl</span></tt> extension</li>
+<li><tt class="docutils literal"><span class="pre">php5-imap</span></tt> extension</li>
+<li><tt class="docutils literal"><span class="pre">php5-curl</span></tt> extension</li>
+<li>Zip/Unzip</li>
+<li>cUrl</li>
+<li>PHP cache (APC/XCache) + Var cache</li>
+<li>Composer</li>
+</ul>
+</div>
+<div class="section" id="prepare-your-server">
+<h2>Prepare your server<a class="headerlink" href="#prepare-your-server" title="Permalink to this headline">¶</a></h2>
+<p>You can either use <em>Apache</em> or <em>Nginx</em> with Renzo. An example virtual host is provided for each:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">apache.conf</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">nginx.conf</span></tt></li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>First of all, download <em>Renzo</em> latest version using Git</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd </span>your/webroot/folder;
 git clone xxxxxxxxxxxx ./;
@@ -137,14 +180,15 @@ git clone xxxxxxxxxxxx ./;
 <div class="highlight-bash"><div class="highlight"><pre>composer install;
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Once your website will be ready and every node-types created you will be able to
+optimize <em>Composer</em> autoload process: <tt class="docutils literal"><span class="pre">composer</span> <span class="pre">dumpautoload</span> <span class="pre">-o</span></tt></p>
+</div>
 <p>Then copy <cite>conf/config.default.json</cite> file to <cite>conf/config.json</cite>.</p>
-<div class="section" id="prepare-your-server">
-<h2>Prepare your server<a class="headerlink" href="#prepare-your-server" title="Permalink to this headline">¶</a></h2>
-<p>You can either use <em>Apache</em> or <em>Nginx</em> with Renzo. An example virtual host is provided for each:</p>
-<ul class="simple">
-<li>apache.conf</li>
-<li>nginx.conf</li>
-</ul>
+<div class="highlight-bash"><div class="highlight"><pre>cp conf/config.default.json conf/config.json;
+</pre></div>
+</div>
 <p>When your virtual host is ready, just go to your website to begin with the setup assistant.</p>
 </div>
 </div>
