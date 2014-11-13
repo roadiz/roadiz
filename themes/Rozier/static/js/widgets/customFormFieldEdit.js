@@ -7,6 +7,7 @@ CustomFormFieldEdit = function(){
 
     // Selectors
     _this.$btn = $('.custom-form-field-edit-button');
+    _this.$formFieldRow = $('.custom-form-field-row');
 
     // Methods
     _this.init();
@@ -17,9 +18,11 @@ CustomFormFieldEdit = function(){
 CustomFormFieldEdit.prototype.$btn = null;
 CustomFormFieldEdit.prototype.indexOpen = null;
 CustomFormFieldEdit.prototype.openFormDelay = 0;
+CustomFormFieldEdit.prototype.$formFieldRow = null;
 CustomFormFieldEdit.prototype.$formRow = null;
 CustomFormFieldEdit.prototype.$formCont = null;
 CustomFormFieldEdit.prototype.$form = null;
+CustomFormFieldEdit.prototype.$formIcon = null;
 CustomFormFieldEdit.prototype.$formContHeight = null;
 
 
@@ -104,11 +107,11 @@ CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
         _this.formContHeight = _this.$formCont.actual('height');
         _this.$formRow = $('.custom-form-field-edit-form-row');
         _this.$form = $('#edit-custom-form-field-form');
+        _this.$formIcon = $(_this.$formFieldRow[_this.indexOpen]).find('.custom-form-field-col-1 i');
 
         _this.$form.attr('action', url);
+        _this.$formIcon[0].className = 'uk-icon-chevron-down';
 
-        // _this.$form[0].style.height = '0px';
-        // _this.$form[0].style.display = 'table-row';
         _this.$formCont[0].style.height = '0px';
         _this.$formCont[0].style.display = 'block';
         TweenLite.to(_this.$form, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
@@ -124,6 +127,8 @@ CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
  */
 CustomFormFieldEdit.prototype.closeForm = function(){
     var _this = this;
+
+    _this.$formIcon[0].className = 'uk-icon-chevron-right';
 
     TweenLite.to(_this.$formCont, 0.4, {height:0, ease:Expo.easeOut, onComplete:function(){
         _this.$formRow.remove();

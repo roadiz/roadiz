@@ -18,8 +18,8 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-13 15:07+0000
-Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
+PO-Revision-Date: 2014-11-13 16:07+0000
+Last-Translator: Maxime Bérard &lt;maxime@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
 MIME-Version: 1.0
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1415891247.604132
+X-POOTLE-MTIME: 1415894836.583790
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5223,26 +5223,30 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="delete.documents" approved="yes">
           <source>delete.documents</source>
           <target state="translated">Delete documents</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.these.documents" approved="yes">
           <source>are_you_sure.delete.these.documents</source>
           <target state="translated">Are you sure you want to delete these documents ?</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="bulk.delete.documents" approved="yes">
           <source>bulk.delete.documents</source>
           <target state="translated">Delete selected documents</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="main_color" approved="yes">
           <source>main_color</source>
           <target state="translated">Main back-office color</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="colour.type" approved="yes">
           <source>colour.type</source>
           <target state="translated">Color</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="nodes.type" approved="yes">
           <source>nodes.type</source>
           <target state="translated">Nodes references</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="embed.preview" approved="yes">
+          <source>embed.preview</source>
+          <target state="translated">External media preview</target>
       </trans-unit>
 
     </body>

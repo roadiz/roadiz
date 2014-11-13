@@ -1303,6 +1303,7 @@ NodeTypeFieldEdit = function(){
 
     // Selectors
     _this.$btn = $('.node-type-field-edit-button');
+    _this.$formFieldRow = $('.node-type-field-row');
 
     // Methods
     _this.init();
@@ -1314,8 +1315,10 @@ NodeTypeFieldEdit.prototype.$btn = null;
 NodeTypeFieldEdit.prototype.indexOpen = null;
 NodeTypeFieldEdit.prototype.openFormDelay = 0;
 NodeTypeFieldEdit.prototype.$formRow = null;
+NodeTypeFieldEdit.prototype.$formRow = null;
 NodeTypeFieldEdit.prototype.$formCont = null;
 NodeTypeFieldEdit.prototype.$form = null;
+NodeTypeFieldEdit.prototype.$formIcon = null;
 NodeTypeFieldEdit.prototype.$formContHeight = null;
 
 
@@ -1400,8 +1403,10 @@ NodeTypeFieldEdit.prototype.applyContent = function(target, data, url){
         _this.formContHeight = _this.$formCont.actual('height');
         _this.$formRow = $('.node-type-field-edit-form-row');
         _this.$form = $('#edit-node-type-field-form');
+        _this.$formIcon = $(_this.$formFieldRow[_this.indexOpen]).find('.node-type-field-col-1 i');
 
         _this.$form.attr('action', url);
+        _this.$formIcon[0].className = 'uk-icon-chevron-down';
 
         // _this.$form[0].style.height = '0px';
         // _this.$form[0].style.display = 'table-row';
@@ -1420,6 +1425,8 @@ NodeTypeFieldEdit.prototype.applyContent = function(target, data, url){
  */
 NodeTypeFieldEdit.prototype.closeForm = function(){
     var _this = this;
+
+    _this.$formIcon[0].className = 'uk-icon-chevron-right';
 
     TweenLite.to(_this.$formCont, 0.4, {height:0, ease:Expo.easeOut, onComplete:function(){
         _this.$formRow.remove();
@@ -2167,6 +2174,7 @@ CustomFormFieldEdit = function(){
 
     // Selectors
     _this.$btn = $('.custom-form-field-edit-button');
+    _this.$formFieldRow = $('.custom-form-field-row');
 
     // Methods
     _this.init();
@@ -2177,9 +2185,11 @@ CustomFormFieldEdit = function(){
 CustomFormFieldEdit.prototype.$btn = null;
 CustomFormFieldEdit.prototype.indexOpen = null;
 CustomFormFieldEdit.prototype.openFormDelay = 0;
+CustomFormFieldEdit.prototype.$formFieldRow = null;
 CustomFormFieldEdit.prototype.$formRow = null;
 CustomFormFieldEdit.prototype.$formCont = null;
 CustomFormFieldEdit.prototype.$form = null;
+CustomFormFieldEdit.prototype.$formIcon = null;
 CustomFormFieldEdit.prototype.$formContHeight = null;
 
 
@@ -2264,11 +2274,11 @@ CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
         _this.formContHeight = _this.$formCont.actual('height');
         _this.$formRow = $('.custom-form-field-edit-form-row');
         _this.$form = $('#edit-custom-form-field-form');
+        _this.$formIcon = $(_this.$formFieldRow[_this.indexOpen]).find('.custom-form-field-col-1 i');
 
         _this.$form.attr('action', url);
+        _this.$formIcon[0].className = 'uk-icon-chevron-down';
 
-        // _this.$form[0].style.height = '0px';
-        // _this.$form[0].style.display = 'table-row';
         _this.$formCont[0].style.height = '0px';
         _this.$formCont[0].style.display = 'block';
         TweenLite.to(_this.$form, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
@@ -2284,6 +2294,8 @@ CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
  */
 CustomFormFieldEdit.prototype.closeForm = function(){
     var _this = this;
+
+    _this.$formIcon[0].className = 'uk-icon-chevron-right';
 
     TweenLite.to(_this.$formCont, 0.4, {height:0, ease:Expo.easeOut, onComplete:function(){
         _this.$formRow.remove();

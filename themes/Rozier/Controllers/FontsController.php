@@ -297,9 +297,6 @@ class FontsController extends RozierApp
             ->add('name', 'text', array(
                 'label' => $this->getTranslator()->trans('font.name'),
             ))
-            ->add('variant', new \RZ\Renzo\CMS\Forms\FontVariantsType(), array(
-                'label' => $this->getTranslator()->trans('font.variant')
-            ))
             ->add('eotFile', 'file', array(
                 'label' => $this->getTranslator()->trans('font.eotFile'),
                 'required' => false
@@ -315,6 +312,9 @@ class FontsController extends RozierApp
             ->add('woffFile', 'file', array(
                 'label' => $this->getTranslator()->trans('font.woffFile'),
                 'required' => false
+            ))
+            ->add('variant', new \RZ\Renzo\CMS\Forms\FontVariantsType(), array(
+                'label' => $this->getTranslator()->trans('font.variant')
             ));
 
         return $builder->getForm();
@@ -357,13 +357,6 @@ class FontsController extends RozierApp
             ->add('name', 'text', array(
                 'label' => $this->getTranslator()->trans('font.name'),
             ))
-            ->add(
-                'variant',
-                new \RZ\Renzo\CMS\Forms\FontVariantsType(),
-                array(
-                    'label' => $this->getTranslator()->trans('font.variant')
-                )
-            )
             ->add('eotFile', 'file', array(
                 'label' => $this->getTranslator()->trans('font.eotFile'),
                 'required' => false
@@ -379,7 +372,14 @@ class FontsController extends RozierApp
             ->add('woffFile', 'file', array(
                 'label' => $this->getTranslator()->trans('font.woffFile'),
                 'required' => false
-            ));
+            ))
+            ->add(
+                'variant',
+                new \RZ\Renzo\CMS\Forms\FontVariantsType(),
+                array(
+                    'label' => $this->getTranslator()->trans('font.variant')
+                )
+            );
 
         return $builder->getForm();
     }

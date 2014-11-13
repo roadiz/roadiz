@@ -10,17 +10,17 @@
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('documentsHomePage') }}" title="{% trans %}back_to.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
-    <article class="content content-document-edit">
+    <article class="content content-document-preview">
 
         <div class="content-inner">
             <figure class="uk-thumbnail">{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}</figure>
-            <p><code>{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}</code></p>
+            <div class="document-source"><code>{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}</code></div>
 
             {% if document.isEmbed and document.getViewer.getEmbedFinder %}
             <hr />
             <h3>{% trans %}embed.preview{% endtrans %}</h3>
             <figure class="uk-thumbnail">{{ document.getViewer.getEmbedByArray(thumbnailFormat)|raw }}</figure>
-            <p><code>{{ document.getViewer.getEmbedFinder.getSource }}</code></p>
+            <div class="document-source"><code>{{ document.getViewer.getEmbedFinder.getSource }}</code></div>
             {% endif %}
         </div>
     	
