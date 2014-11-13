@@ -94,9 +94,28 @@
 
     // Admin menu
     #admin-menu{
-        display: none;
-        // display: block;
+        // display: none;
+        display: block;
         width:100%;
+
+        li{
+            width:100%;
+        }
+
+        .info {
+            display: inline-block;
+            position: relative;
+            z-index: 5;
+            background: none;
+            line-height: 55px;
+            padding: 0 22px 0 20px;
+            margin: 0;
+            top: 0; left:0;
+            text-align: left;
+            .box-sizing();
+            white-space: nowrap;
+            .box-shadow(none);
+        }
     }
 
     // Main trees

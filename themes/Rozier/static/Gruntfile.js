@@ -54,6 +54,8 @@ module.exports = function(grunt) {
 					'js/widgets/nodeTypeFieldsPosition.js',
 					'js/widgets/customFormFieldsPosition.js',
 					'js/widgets/customFormFieldEdit.js',
+
+					'js/rozierMobile.js',
 					'js/lazyload.js',
 					'js/plugins.js',
 					'js/main.js'

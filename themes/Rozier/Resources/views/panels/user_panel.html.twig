@@ -13,7 +13,7 @@
         <div class="menu-mobile-bar" id="menu-mobile-bar-3"></div>
     </div>
 
-    <div id="company" style="background-color:{{ head.mainColor }};">
+    <div id="company">
         {% if adminImage %}
             <a class="admin-image" href="{{ path('adminHomePage') }}">{{ adminImage.viewer.getDocumentByArray({width:70, crop:'1:1'})|raw }}</a>
         {% else %}
