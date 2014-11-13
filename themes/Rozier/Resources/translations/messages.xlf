@@ -5239,6 +5239,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>nodes.type</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="embed.preview">
+          <source>embed.preview</source>
+          <target></target>
+      </trans-unit>
 
     </body>
   </file>
