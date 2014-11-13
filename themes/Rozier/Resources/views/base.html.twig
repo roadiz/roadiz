@@ -90,6 +90,8 @@
         <script src="{{ head.resourcesUrl }}js/vendor/marked.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/dropzone.js"></script>
 
+        <script src="{{ head.resourcesUrl }}js/bulk-edits/documentsBulk.js"></script>
+
         <script src="{{ head.resourcesUrl }}js/widgets/documentsList.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/documentWidget.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/nodeWidget.js"></script>
@@ -110,6 +112,7 @@
         <script src="{{ head.resourcesUrl }}js/main.js"></script>
         {% else %}
         <script src="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.js[0] }}"></script>
+        <script src="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.js[1] }}"></script>
         {% endif %}
 
         <script type="text/javascript">
@@ -117,12 +120,14 @@
                 'baseUrl':      '{{ head.baseUrl }}',
                 'resourcesUrl': '{{ head.resourcesUrl }}',
                 'ajaxToken':    '{{ head.ajaxToken }}',
-                'mainColor':    '{{ head.mainColor }}', 
+                'mainColor':    '{{ head.mainColor }}',
                 'messages': {
                     'forbiddenPage':   '{{ 'forbidden.page'|trans() }}',
                     'see_all':         '{{ 'see_all'|trans() }}',
                     'searchDocuments': '{{ 'search.documents'|trans() }}',
                     'searchNodes':     '{{ 'search.nodes'|trans() }}',
+                    'moreDocuments':   '{{ 'more.documents'|trans() }}',
+                    'moreNodes':       '{{ 'more.nodes'|trans() }}',
                     'dropzone' : {
                         'dictDefaultMessage':           "{{ 'drop.files.here.to.upload.or.click.to.open.your.explorer'|trans()}}",
                         'dictFallbackMessage':          "{{ 'your.browser.does.not.support.dragndrop.file.uploads'|trans()}}",
@@ -161,6 +166,7 @@
                     'tagAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
                     'nodeTypesFieldAjaxEdit': '{{ head.baseUrl }}/rz-admin/ajax/node-types/fields/edit/%nodeTypeFieldId%',
                     'customFormsFieldAjaxEdit': '{{ head.baseUrl }}/rz-admin/ajax/custom-forms/fields/edit/%customFormFieldId%',
+                    'documentsBulkDeletePage' :'{{ path('documentsBulkDeletePage') }}',
                     'documentsAjaxExplorer' : '{{ path('documentsAjaxExplorerPage') }}',
                     'nodesAjaxExplorer' :     '{{ path('nodesAjaxExplorerPage') }}',
                     'documentsUploadPage' :   '{{ path('documentsUploadPage') }}',

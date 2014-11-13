@@ -365,7 +365,7 @@ DocumentWidget.prototype.appendItemsToExplorer = function(data, $originWidget, r
 
         $sortable.append([
             '<li class="document-widget-explorer-nextpage">',
-                '<i class="uk-icon-plus"></i><span class="label">More documents</span>',
+                '<i class="uk-icon-plus"></i><span class="label">'+Rozier.messages.moreDocuments+'</span>',
             '</li>'
         ].join(''));
 

@@ -103,7 +103,8 @@ Lazyload.prototype.loadContent = function(state, location) {
     $.ajax({
         url: location.href,
         type: 'get',
-        dataType: 'html'
+        dataType: 'html',
+        data: state.headerData
     })
     .done(function(data) {
         _this.applyContent(data);
@@ -148,7 +149,7 @@ Lazyload.prototype.generalBind = function() {
     var _this = this;
 
     // console.log('General bind');
-
+    new DocumentsBulk();
     new DocumentWidget();
     new NodeWidget();
     new DocumentUploader(Rozier.messages.dropzone);
@@ -238,7 +239,7 @@ Lazyload.prototype.resize = function(){
     var _this = this;
 
     _this.$canvasLoaderContainer[0].style.left = Rozier.mainContentScrollableOffsetLeft + (Rozier.mainContentScrollableWidth/2) + 'px';
-    
+
 
 };
 

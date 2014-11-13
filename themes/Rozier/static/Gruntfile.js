@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 			options: {
 			  separator: ';',
 			},
-			dist: {
+			vendor:{
 				'src': [
 					'js/vendor/uikit.min.js',
 
@@ -30,7 +30,13 @@ module.exports = function(grunt) {
 					'js/vendor/mode/xml/xml.js',
 					'js/vendor/mode/gfm/gfm.js',
 					'js/vendor/marked.min.js',
-					'js/vendor/dropzone.js',
+					'js/vendor/dropzone.js'
+				],
+				dest: 'js/<%= pkg.name %>-vendor.js',
+			},
+			rezozero:{
+				'src': [
+					'js/bulk-edits/documentsBulk.js',
 
 					'js/widgets/documentsList.js',
 					'js/widgets/documentWidget.js',
@@ -47,22 +53,26 @@ module.exports = function(grunt) {
 					'js/widgets/stackNodeTree.js',
 					'js/widgets/nodeTypeFieldsPosition.js',
 					'js/widgets/customFormFieldsPosition.js',
-					
+
 					'js/lazyload.js',
 					'js/plugins.js',
 					'js/main.js'
 				],
 				dest: 'js/<%= pkg.name %>.js',
-			},
+			}
 		},
 		uglify: {
-		  options: {
-			banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %> */\n'
-		  },
-		  build: {
-			src: 'js/<%= pkg.name %>.js',
-			dest: 'js/<%= pkg.name %>.min.js'
-		  }
+			options: {
+				banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %> */\n'
+			},
+			vendor: {
+				src: 'js/<%= pkg.name %>-vendor.js',
+				dest: 'js/<%= pkg.name %>-vendor.min.js'
+			},
+			rezozero: {
+				src: 'js/<%= pkg.name %>.js',
+				dest: 'js/<%= pkg.name %>.min.js'
+			}
 		},
 		less: {
 			options: {
@@ -99,7 +109,9 @@ module.exports = function(grunt) {
 		    	'!js/vendor/**/*.js',
 				'!js/addons/**/*.js',
 				'!js/<%= pkg.name %>.js',
-				'!js/<%= pkg.name %>.min.js'
+				'!js/<%= pkg.name %>.min.js',
+				'!js/<%= pkg.name %>-vendor.js',
+				'!js/<%= pkg.name %>-vendor.min.js'
 			]
 		},
 		imagemin: {
@@ -137,7 +149,18 @@ module.exports = function(grunt) {
 					dest: '',
 					type: 'js',
 					ext: '.min.js'
-				}, {
+				},
+				{
+					assets: [{
+			            src: [ 'js/<%= pkg.name %>-vendor.min.js' ],
+			            dest: 'js/<%= pkg.name %>-vendor.min.js'
+			        }],
+					key: 'global',
+					dest: '',
+					type: 'js',
+					ext: '.min.js'
+				},
+				{
 					assets: [{
 			            src: [ 'css/style.min.css' ],
 			            dest: 'css/style.min.css'
@@ -157,7 +180,7 @@ module.exports = function(grunt) {
 	 */
 	grunt.event.on('watch', function(action, filepath) {
 		if (filepath.indexOf('.js') > -1 ) {
-			grunt.config('watch.scripts.tasks', ['clean','jshint', 'concat', 'versioning']); // 'uglify',
+			grunt.config('watch.scripts.tasks', ['clean','jshint','uglify:rezozero', 'concat:rezozero', 'versioning']); // 'uglify',
 		}
 		else if(filepath.indexOf('.less') > -1 ){
 			grunt.config('watch.scripts.tasks', ['clean','less', 'versioning']);

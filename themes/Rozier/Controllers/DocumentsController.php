@@ -227,6 +227,75 @@ class DocumentsController extends RozierApp
         }
     }
 
+
+    /**
+     * Return an deletion form for multiple docs.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
+
+        $documentsIds = $request->get('documents');
+
+        $documents = $this->getService('em')
+            ->getRepository('RZ\Renzo\Core\Entities\Document')
+            ->findBy(array(
+                'id' => $documentsIds
+            ));
+
+        if ($documents !== null &&
+            count($documents) > 0) {
+
+            $this->assignation['documents'] = $documents;
+            $form = $this->buildBulkDeleteForm($documentsIds);
+
+            $form->handleRequest();
+
+            if ($form->isValid()) {
+
+                try {
+
+                    foreach ($documents as $document) {
+                        $document->getHandler()->removeWithAssets();
+                        $msg = $this->getTranslator()->trans('document.%name%.deleted', array('%name%'=>$document->getFilename()));
+                        $request->getSession()->getFlashBag()->add('confirm', $msg);
+                        $this->getService('logger')->info($msg);
+                    }
+
+                } catch (\Exception $e) {
+
+                    $msg = $this->getTranslator()->trans('document.%name%.cannot_delete', array('%name%'=>$document->getFilename()));
+                    $request->getSession()->getFlashBag()->add('error', $msg);
+                    $this->getService('logger')->warning($msg);
+                }
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate('documentsHomePage')
+                );
+                $response->prepare($request);
+
+                return $response->send();
+            }
+
+            $this->assignation['form'] = $form->createView();
+            $this->assignation['action'] = '?'. http_build_query(array('documents'=>$documentsIds));
+
+            return new Response(
+                $this->getTwig()->render('documents/bulkDelete.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        } else {
+            return $this->throw404();
+        }
+    }
+
     /**
      * Embed external document page.
      *
@@ -444,6 +513,27 @@ class DocumentsController extends RozierApp
                     ->createBuilder('form', $defaults)
                     ->add('documentId', 'hidden', array(
                         'data' => $doc->getId(),
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ));
+
+        return $builder->getForm();
+    }
+    /**
+     * @param array $documentsIds
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildBulkDeleteForm($documentsIds)
+    {
+        $defaults = array();
+        $builder = $this->getService('formFactory')
+                    ->createBuilder('form', $defaults, array(
+                        'action' => '?'. http_build_query(array('documents'=>$documentsIds))
+                    ))
+                    ->add('checksum', 'hidden', array(
+                        'data' => md5(serialize($documentsIds)),
                         'constraints' => array(
                             new NotBlank()
                         )

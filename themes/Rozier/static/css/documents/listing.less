@@ -8,9 +8,31 @@ table.documents {
     }
 }
 
+.documents-bulk-actions {
+    display: none;
+    text-align: center;
+    padding: 10px 0;
+
+    &.visible {
+        display: block;
+    }
+}
+
 .documents-list{
     margin:0;
     list-style-type:none;
+
+    .document-checkbox {
+
+        position: absolute;
+        top: 5px;
+        right: 1px;
+        display: none;
+
+        &:checked {
+            display: block;
+        }
+    }
 
     .document-item{
         position: relative;
@@ -30,6 +52,10 @@ table.documents {
             }
             .document-platform-icon {
                 .opacity(0);
+            }
+
+            .document-checkbox {
+                display: block;
             }
         }
     }
@@ -136,5 +162,4 @@ table.documents {
             color: #3C3C3C;
         }
     }
-
 }
