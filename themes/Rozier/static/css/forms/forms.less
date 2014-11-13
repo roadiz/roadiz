@@ -8,6 +8,22 @@
  */
 
 
+/* -------- VARS -------- */
+
+@grey-form-border:              #D3D3D3;
+@grey-form-before:              #BBBBBB;
+@grey-form-label:               #555555;
+@grey-form-text:                #666666;
+@grey-form-submit:              #EAEAEA;
+@grey-form-submit-hover:        #CECECE;
+@grey-form-submit-border:       #ADADAD;
+@grey-form-submit-border-hover: #888888;
+@grey-form-submit-color:        #333333;
+@grey-form-submit-icon:         #777777;
+@grey-form-submit-icon-hover:   #555555;
+@grey-form-submit-textsimple:   #999999;
+
+
 /* -------- STYLES -------- */
 
 .uk-form {
@@ -65,22 +81,47 @@
             color: #333;
         }
     }
-
+    
+    // Radio
     input[type=radio] {
         background-color: @grey-form-submit;
+        margin:3px;
         &:checked:before {
             background: darken(@contrast-color, 10%);
         }
     }
 
+    .uk-form-row > div input[type=radio]{
+        margin-left:12px;
+        
+        &:first-of-type{
+            margin-left:0;
+        }
+
+    }
+    
+    // File
     input[type=file]{
         font-size:12px;
     }
 
+    // Checkbox
     input[type=checkbox]{
     
         &:focus{
             border-color: @grey-form-submit-border-hover;
+        }
+
+        &:checked:before{
+            color: darken(@contrast-color, 10%);
+        }
+    }
+
+    .uk-form-row > div input[type=checkbox]{
+        margin-left:12px;
+        
+        &:first-of-type{
+            margin-left:0;
         }
 
     }
@@ -157,17 +198,24 @@
         min-width: 100px;
         max-width: 600px;
     }
-
-
-    .uk-form-label {
+    
+    // Labels
+    .uk-form-row > .uk-form-label { 
         font-size: 12px;
-        line-height: 12px;
         color: @grey-form-label;
 
         &:before {
             content: "— ";
             color: @grey-form-before;
         }
+    }
+
+    .uk-form-row > div .uk-form-label{
+        display: inline-block;
+        font-size: 12px;
+        line-height: 12px;
+        font-weight: normal;
+        color: @grey-form-label;
     }
 
     legend{
@@ -190,6 +238,10 @@
             display:inline-block;
             vertical-align: top;
         }
+
+        &> div:last-child > div:last-child{
+            margin-left:10px;
+        }
     }
 
     .datetime-separator{
@@ -197,10 +249,6 @@
         vertical-align: top;
         height: 38px;
         line-height: 38px;
-    }
-
-    #form_value_time{
-        margin-left:10px;
     }
 
     // Default input
@@ -265,6 +313,10 @@
 
     // Settings
     .uk-button-settings-submit{
+        display: none;
+    }
+
+    .form-col-hidden .uk-form-label{
         display: none;
     }
 

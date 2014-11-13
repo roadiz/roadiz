@@ -59,6 +59,11 @@
                 <target state="translated">Adresse IP</target>
             </trans-unit>
 
+            <trans-unit id="form.submit" approved="yes">
+                <source>form.submit</source>
+                <target state="translated">Envoyer</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

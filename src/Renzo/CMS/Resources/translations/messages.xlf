@@ -59,6 +59,11 @@
                 <target/>
             </trans-unit>
 
+            <trans-unit id="form.submit">
+                <source>form.submit</source>
+                <target/>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

@@ -41,6 +41,7 @@ class CustomFormsType extends AbstractType
                     $choices = explode(',', $field->getDefaultValues());
                     $choices = array_combine(array_values($choices), array_values($choices));
                     $type = "choice";
+                    $option["expanded"] = false;
                     if (count($choices) < 4) {
                         $option["expanded"] = true;
                     }
@@ -51,10 +52,21 @@ class CustomFormsType extends AbstractType
                     $type = "choice";
                     $option["choices"] = $choices;
                     $option["multiple"] = true;
-                    $option["expanded"] = true;
+                    $option["expanded"] = false;
+                    if (count($choices) < 4) {
+                        $option["expanded"] = true;
+                    }
                 } else {
                     $type = CustomFormField::$typeToForm[$field->getType()];
                 }
+
+                if($field->getType() === CustomFormField::MARKDOWN_T){
+                    $type = new \RZ\Renzo\CMS\Forms\MarkdownType();
+                }
+                elseif($field->getType() === CustomFormField::DOCUMENTS_T){
+                    $type = "file";
+                }
+
                 $builder->add($field->getName(), $type, $option);
             }
     }

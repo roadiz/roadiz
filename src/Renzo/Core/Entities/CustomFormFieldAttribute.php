@@ -60,7 +60,7 @@ class CustomFormFieldAttribute extends AbstractEntity
     }
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      */
     private $value;
 
