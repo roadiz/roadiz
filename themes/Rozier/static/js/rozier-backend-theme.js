@@ -2314,6 +2314,92 @@ CustomFormFieldEdit.prototype.resize = function(){
 
 };
 ;/**
+ * Rozier Mobile
+ */
+
+RozierMobile = function(){
+    var _this = this;
+
+    // Selectors
+    _this.$menu = $('#menu-mobile');
+    _this.$adminMenu = $('#admin-menu');
+
+    // Methods
+    _this.init();
+
+};
+
+
+RozierMobile.prototype.$menu = null;
+RozierMobile.prototype.menuOpen = false;
+RozierMobile.prototype.$adminMenu = null;
+
+
+/**
+ * Init
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.init = function(){
+    var _this = this;
+
+    // Events
+    _this.$menu.on('click', $.proxy(_this.menuClick, _this));
+
+};
+
+
+/**
+ * Menu click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.menuClick = function(e){
+    var _this = this;
+
+    
+    if(!_this.menuOpen){
+        _this.openMenu();
+    }
+    else{
+        _this.closeMenu();
+    }
+
+};
+
+
+/**
+ * Open menu
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.openMenu = function(){
+    var _this = this;
+
+    _this.$adminMenu[0].style.display = 'block';
+    _this.menuOpen = true;
+
+};
+
+
+/**
+ * Close menu
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.closeMenu = function(){
+    var _this = this;
+
+    _this.$adminMenu[0].style.display = 'none';  
+    _this.menuOpen = false;  
+
+};
+
+
+/**
+ * Window resize callback
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.resize = function(){
+    var _this = this;
+
+};;/**
  * Lazyload
  */
 var Lazyload = function() {
@@ -2581,7 +2667,30 @@ Lazyload.prototype.resize = function(){
 
     _this.$canvasLoaderContainer[0].style.left = Rozier.mainContentScrollableOffsetLeft + (Rozier.mainContentScrollableWidth/2) + 'px';
 };
-;// Avoid `console` errors in browsers that lack a console.
+;// is mobile
+var isMobile = {
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+
+
+// Avoid `console` errors in browsers that lack a console.
 (function() {
     var method;
     var noop = function () {};
@@ -3235,6 +3344,9 @@ Rozier.resize = function(){
 			_this.$mainTrees[0].style.display = 'table-cell';
 		}, 1000);
 	}
+
+	// Check if mobile
+	if(_this.windowWidth <= 768 && isMobile.any() !== null) _this.mobile = new RozierMobile();
 
 	_this.mainContentScrollableWidth = _this.$mainContentScrollable.width();
 	_this.mainContentScrollableOffsetLeft = _this.windowWidth - _this.mainContentScrollableWidth;

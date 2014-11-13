@@ -30,7 +30,7 @@
         {% for document in documents %}
 
             <li class="document-item">
-                <div class="document-border" style="background-color:{{ head.mainColor }};"></div>
+                <div class="document-border"></div>
                 <figure class="document-image">
                     {% if document.isImage %}
                         {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}

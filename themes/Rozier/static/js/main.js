@@ -504,6 +504,9 @@ Rozier.resize = function(){
 		}, 1000);
 	}
 
+	// Check if mobile
+	if(_this.windowWidth <= 768 && isMobile.any() !== null) _this.mobile = new RozierMobile();
+
 	_this.mainContentScrollableWidth = _this.$mainContentScrollable.width();
 	_this.mainContentScrollableOffsetLeft = _this.windowWidth - _this.mainContentScrollableWidth;
 
