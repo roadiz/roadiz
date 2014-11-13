@@ -8,9 +8,31 @@
     </header>
 
     <article class="content content-delete content-no-action-menu">
+        {% spaceless %}
+        <ul class="documents-list">
         {% for document in documents %}
-            <p>{{ document.filename }}</p>
+            <li class="document-item">
+                <div class="document-border" style="background-color:{{ head.mainColor }};"></div>
+                <figure class="document-image">
+                    {% if document.isImage %}
+                        {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
+                    {% else %}
+                        <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>
+                    {% endif %}
+                </figure>
+                <div class="document-name">{{ document.getFilename|centralTruncate(18, -4)}}</div>
+                <div class="document-overflow">
+                    {% if document.isEmbed %}
+                        <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
+                        <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
+                    {% else %}
+                        <div class="document-mime-type">{{ document.getShortMimeType }}</div>
+                    {% endif %}
+                </div>
+            </li>
         {% endfor %}
+        </ul>
+        {% endspaceless %}
 		{% form_theme form 'forms.html.twig' %}
 		<form class="uk-form uk-form-stacked" action="{{ action }}" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}
