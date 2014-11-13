@@ -46,6 +46,10 @@ Rozier.onDocumentReady = function(event) {
 	Rozier.$mainContentScrollable = $('#main-content-scrollable');
 	Rozier.$backTopBtn = $('#back-top-button');
 
+	// Pointer events polyfill
+    if(!Modernizr.testProp('pointerEvents')){
+        PointerEventsPolyfill.initialize({'selector':'#main-trees-overlay'});
+    }
 
 	// Search node
 	$("#nodes-sources-search-input").on('focus', function(){

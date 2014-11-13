@@ -1,20 +1,14 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = 'custom-form-fields/editBase.html.twig' %}{% else %}{% set baseTemplate = 'custom-form-fields/ajaxEditBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
-{% block content %}
-<section class="content-global manage-node-type-field">
-
-    <header class="content-header header-node-type-fields header-node-type-field-edit">
-         <h1 class="content-title node-type-field-edit-title">{{ "edit.customFormField.%name%"|trans({'%name%': field.getName}) }}</h1>
-         <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormFieldsListPage', { customFormId: customForm.getId }) }}" title="{% trans %}back_to.customFormFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
-    </header>
+{% block subcontent %}
 
     <article class="content content-node-type-field-edit">
        {% form_theme form 'forms.html.twig' %}
-        <form id="edit-node-type-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        <form id="edit-custom-form-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% spaceless %}
-                <button data-action-save="#edit-node-type-field-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                <button data-action-save="#edit-custom-form-field-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                     <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
@@ -23,6 +17,4 @@
         </form>
     </article>
 
-    {% include 'custom-form-fields/actionsMenu.html.twig' %}
-</section>
 {% endblock %}

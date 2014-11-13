@@ -7,7 +7,6 @@ var Lazyload = function() {
     var onStateChangeProxy = $.proxy(_this.onPopState, _this);
 
     _this.$linksSelector = $("a:not('[target=_blank]')");
-    // $('body').on('click', _this.$linksSelector, onClickProxy);
 
     $(window).on('popstate', function (event) {
         _this.onPopState(event);
@@ -15,7 +14,7 @@ var Lazyload = function() {
 
     _this.$canvasLoaderContainer = $('#canvasloader-container');
     _this.mainColor = isset(Rozier.mainColor) ? Rozier.mainColor : '#ffffff';
-    // _this.initLoader();
+    _this.initLoader();
 
 };
 
@@ -39,31 +38,34 @@ Lazyload.prototype.initLoader = function(){
     var _this = this;
 
     _this.canvasLoader = new CanvasLoader('canvasloader-container');
-    _this.canvasLoader.setColor(_this.mainColor); // default is '#000000'
-    _this.canvasLoader.setShape('square'); // default is 'oval'
-    _this.canvasLoader.setDensity(90); // default is 40
-    _this.canvasLoader.setRange(0.8); // default is 1.3
-    _this.canvasLoader.setSpeed(4); // default is 2
-    _this.canvasLoader.setFPS(30); // default is 24
-    _this.canvasLoader.show(); // Hidden by default
+    _this.canvasLoader.setColor(_this.mainColor);
+    _this.canvasLoader.setShape('square'); 
+    _this.canvasLoader.setDensity(90); 
+    _this.canvasLoader.setRange(0.8); 
+    _this.canvasLoader.setSpeed(4); 
+    _this.canvasLoader.setFPS(30); 
 
 };
 
 
+/**
+ * Bind links to load pages
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 Lazyload.prototype.onClick = function(event) {
     var _this = this;
-    var $link = $(event.currentTarget);
 
-    // console.log($link);
+    var $link = $(event.currentTarget), 
+        href = $link.attr('href');
 
-    var href = $link.attr('href');
     if(typeof href !== "undefined" &&
         !$link.hasClass('rz-no-ajax-link') &&
         href !== "" &&
         href != "#" &&
         href.indexOf(Rozier.baseUrl) >= 0){
 
-        // console.log(href);
+        _this.canvasLoader.show();
 
         history.pushState({}, null, $link.attr('href'));
         _this.onPopState(null);
@@ -71,6 +73,12 @@ Lazyload.prototype.onClick = function(event) {
     }
 };
 
+
+/**
+ * On pop state
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 Lazyload.prototype.onPopState = function(event) {
     var _this = this;
 
@@ -97,6 +105,12 @@ Lazyload.prototype.onPopState = function(event) {
 };
 
 
+/**
+ * Load content (ajax)
+ * @param  {[type]} state    [description]
+ * @param  {[type]} location [description]
+ * @return {[type]}          [description]
+ */
 Lazyload.prototype.loadContent = function(state, location) {
     var _this = this;
 
@@ -107,6 +121,7 @@ Lazyload.prototype.loadContent = function(state, location) {
     })
     .done(function(data) {
         _this.applyContent(data);
+        _this.canvasLoader.hide();
     })
     .fail(function() {
         console.log("error");
@@ -119,6 +134,12 @@ Lazyload.prototype.loadContent = function(state, location) {
     });
 };
 
+
+/**
+ * Apply content to main content
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
 Lazyload.prototype.applyContent = function(data) {
     var _this = this;
 
@@ -144,6 +165,10 @@ Lazyload.prototype.applyContent = function(data) {
 };
 
 
+/**
+ * General bind on page load
+ * @return {[type]} [description]
+ */
 Lazyload.prototype.generalBind = function() {
     var _this = this;
 
@@ -163,6 +188,7 @@ Lazyload.prototype.generalBind = function() {
     _this.settingsSaveButtons = new SettingsSaveButtons();
     _this.nodeTypeFieldEdit = new NodeTypeFieldEdit();
     _this.nodeEditSource = new NodeEditSource();
+    _this.customFormFieldEdit = new CustomFormFieldEdit();
 
 
     _this.$linksSelector.off('click', $.proxy(_this.onClick, _this));
@@ -239,7 +265,4 @@ Lazyload.prototype.resize = function(){
 
     _this.$canvasLoaderContainer[0].style.left = Rozier.mainContentScrollableOffsetLeft + (Rozier.mainContentScrollableWidth/2) + 'px';
     
-
 };
-
-

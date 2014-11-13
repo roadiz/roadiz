@@ -87,4 +87,23 @@ class RozierApp extends BackendController
             array('content-type' => 'text/html')
         );
     }
+
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * 
+     * @return Symfony\Component\HttpFoundation\Response $response
+     */
+    public function cssAction(Request $request)
+    {   
+
+        $this->assignation['mainColor'] = SettingsBag::get('main_color');
+
+        // var_dump(SettingsBag::get('main_color'));
+
+        return new Response(
+            $this->getTwig()->render('css/mainColor.css.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/css')
+        );
+    }
 }

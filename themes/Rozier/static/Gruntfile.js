@@ -47,6 +47,7 @@ module.exports = function(grunt) {
 					'js/widgets/stackNodeTree.js',
 					'js/widgets/nodeTypeFieldsPosition.js',
 					'js/widgets/customFormFieldsPosition.js',
+					'js/widgets/customFormFieldEdit.js',
 					
 					'js/lazyload.js',
 					'js/plugins.js',

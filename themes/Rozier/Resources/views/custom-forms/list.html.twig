@@ -24,7 +24,7 @@
 			            <th>{% trans %}customForm.displayName{% endtrans %}</th>
 			            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
 			            <th></th>
-			            <th class="table-actions-row table-actions-row-5">{% trans %}actions{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-6">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
 				<tbody>
@@ -44,12 +44,12 @@
 
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormSendAction', { customFormId: type.getId }) }}" title="{% trans %}customForm.show{% endtrans %}" data-uk-tooltip="{animation:true}" target="_blank"><i class="uk-icon-rz-visibility"></i></a>
 
-                                <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('customFormsDeletePage', { customFormId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}">
-                                    <i class="uk-icon-rz-trash-o"></i>
-                                </a>
-
                                 <a class="uk-button uk-button-content uk-button-small uk-button-success rz-no-ajax-link" href="{{ path('customFormsExportPage', { customFormId: type.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}">
                                     <i class="uk-icon-rz-download"></i>
+                                </a>
+
+                                <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('customFormsDeletePage', { customFormId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-trash-o"></i>
                                 </a>
                             {% endspaceless %}
 							</td>

@@ -1,17 +1,20 @@
+{% extends 'base_custom_form.html.twig' %}
+
 {% block content %}
 <section class="content-global">
 
-    <header class="content-header header-node-types header-node-types-add">
-        <h1 class="content-title">{% trans %}add.customForm.answer{% endtrans %}</h1>
+    <header class="content-header header-custom-form header-custom-form-add">
+        <h1 class="content-title">{{ customForm.displayName }}</h1>
+        <div class="content-desc">{{ customForm.description|markdown }}</div>
     </header>
 
     <article class="content">
-        <form id="add-node-type-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        <form id="add-custom-form-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
 
             <fieldset data-uk-margin>
                 {% spaceless %}
-                <button data-action-save="#add-node-type-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                <button data-action-save="#add-custom-form-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-plus"></i></span>
                     <span class="label"><span class="label-text">{% trans %}add.customForm.answer{% endtrans %}</span></span>
                 </button>

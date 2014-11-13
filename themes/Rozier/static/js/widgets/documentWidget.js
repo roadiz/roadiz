@@ -144,6 +144,8 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
             '_token': Rozier.ajaxToken
         };
 
+        Rozier.lazyload.canvasLoader.show();
+
         $.ajax({
             url: Rozier.routes.documentsAjaxExplorer,
             type: 'get',
@@ -153,6 +155,7 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
         .success(function(data) {
             console.log(data);
             console.log("success");
+            Rozier.lazyload.canvasLoader.hide();
 
             if (typeof data.documents != "undefined") {
 
@@ -169,6 +172,7 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
 
     return false;
 };
+
 
 /**
  * Query searched documents explorer.
@@ -188,6 +192,8 @@ DocumentWidget.prototype.onExplorerSearch = function($originWidget, event) {
             'search': $search.val()
         };
 
+        Rozier.lazyload.canvasLoader.show();
+
         $.ajax({
             url: Rozier.routes.documentsAjaxExplorer,
             type: 'get',
@@ -197,6 +203,7 @@ DocumentWidget.prototype.onExplorerSearch = function($originWidget, event) {
         .success(function(data) {
             console.log(data);
             console.log("success");
+            Rozier.lazyload.canvasLoader.hide();
 
             if (typeof data.documents != "undefined") {
 
@@ -211,6 +218,7 @@ DocumentWidget.prototype.onExplorerSearch = function($originWidget, event) {
 
     return false;
 };
+
 
 /**
  * Query next page documents explorer.
@@ -231,6 +239,8 @@ DocumentWidget.prototype.onExplorerNextPage = function(filters, $originWidget, e
             'page': filters.nextPage
         };
 
+        Rozier.lazyload.canvasLoader.show();
+
         $.ajax({
             url: Rozier.routes.documentsAjaxExplorer,
             type: 'get',
@@ -240,9 +250,9 @@ DocumentWidget.prototype.onExplorerNextPage = function(filters, $originWidget, e
         .success(function(data) {
             console.log(data);
             console.log("success");
+            Rozier.lazyload.canvasLoader.hide();
 
             if (typeof data.documents != "undefined") {
-
                 _this.appendItemsToExplorer(data, $originWidget);
             }
         })
@@ -321,6 +331,7 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
     }, 0);
 };
 
+
 /**
  * Append documents to explorer.
  *
@@ -348,7 +359,6 @@ DocumentWidget.prototype.appendItemsToExplorer = function(data, $originWidget, r
         $sortable.append(doc.html);
     }
 
-
     /*
      * Bind add buttons.
      */
@@ -375,9 +385,15 @@ DocumentWidget.prototype.appendItemsToExplorer = function(data, $originWidget, r
 
 };
 
+
+/**
+ * Add document click
+ * @param  {[type]} $originWidget [description]
+ * @param  {[type]} event         [description]
+ * @return {[type]}               [description]
+ */
 DocumentWidget.prototype.onAddDocumentClick = function($originWidget, event) {
     var _this = this;
-
 
     var $object = $(event.currentTarget).parents('.uk-sortable-list-item');
     $object.appendTo($originWidget);
@@ -392,6 +408,7 @@ DocumentWidget.prototype.onAddDocumentClick = function($originWidget, event) {
 
     return false;
 };
+
 
 /**
  * Echap key to close explorer

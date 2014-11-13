@@ -21,6 +21,11 @@ table.documents {
         //overflow: hidden;
 
         &:hover{
+            
+            .document-border{
+                background: #eaeaea;
+            }
+
             .document-links{
                 bottom:0px;
             }
@@ -45,7 +50,9 @@ table.documents {
         position: absolute;
         top:0; right:0; left:0;
         height:4px;
-        background:@contrast-color;
+        background-color:#eaeaea;
+        .transition(0.5s background-color @easeOutExpo);
+        z-index:3;
     }
 
     .document-image{
@@ -71,8 +78,9 @@ table.documents {
         font-family: arial, helvetica, sans-serif;
         text-transform: uppercase;
         padding:0 5px;
-        background:@contrast-color;
+        background:#eaeaea;
         .transition(0.4s top @easeOutExpo);
+        z-index:2;
     }
 
     .document-links{

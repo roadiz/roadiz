@@ -3,7 +3,7 @@
 
 	<div class="uk-sortable-handle"></div>
 
-    <div class="document-border"></div>  <!-- style="background-color:;" -->
+    <div class="document-border" style="background-color:{{ head.mainColor }};"></div>
 
 	{% if document.isImage %}
 	   <img class="document-image" src="{{ document.getViewer.getDocumentUrlByArray({"width":80, "crop":"1x1", "quality":50}) }}" />
