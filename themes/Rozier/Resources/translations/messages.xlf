@@ -5101,11 +5101,11 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields</source>
           <target></target>
       </trans-unit>
-      
+
       <trans-unit xml:space="preserve" id="create.a.node">
           <source>create.a.node</source>
           <target></target>
-      </trans-unit> 
+      </trans-unit>
       <trans-unit xml:space="preserve" id="add.a.node">
           <source>add.a.node</source>
           <target></target>
@@ -5181,7 +5181,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
       <trans-unit xml:space="preserve" id="customForm.color">
           <source>customForm.color</source>
           <target></target>
-      </trans-unit>      
+      </trans-unit>
       <trans-unit xml:space="preserve" id="manage.customForms">
           <source>manage.customForms</source>
           <target></target>
@@ -5214,8 +5214,32 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>required</source>
           <target></target>
       </trans-unit>
-      
-    
+
+      <trans-unit xml:space="preserve" id="delete.documents">
+          <source>delete.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.these.documents">
+          <source>are_you_sure.delete.these.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.delete.documents">
+          <source>bulk.delete.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="main_color">
+          <source>main_color</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="colour.type">
+          <source>colour.type</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.type">
+          <source>nodes.type</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

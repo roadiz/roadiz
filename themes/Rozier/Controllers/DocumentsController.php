@@ -285,6 +285,11 @@ class DocumentsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
             $this->assignation['action'] = '?'. http_build_query(array('documents'=>$documentsIds));
+            $this->assignation['thumbnailFormat'] = array(
+                'width' =>   128,
+                'quality' => 50,
+                'crop' =>    '1x1'
+            );
 
             return new Response(
                 $this->getTwig()->render('documents/bulkDelete.html.twig', $this->assignation),

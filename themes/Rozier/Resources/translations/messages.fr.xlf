@@ -18,8 +18,8 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-12 15:45+0000
-Last-Translator: Maxime Bérard &lt;maxime@rezo-zero.com&gt;
+PO-Revision-Date: 2014-11-13 15:09+0000
+Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
 MIME-Version: 1.0
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n &gt; 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1415807100.985898
+X-POOTLE-MTIME: 1415891365.107954
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5106,11 +5106,11 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields</source>
           <target state="translated">{0} Aucune question|{1} 1 question|]1,Inf] %count% questions</target>
       <note/></trans-unit>
-      
+
       <trans-unit xml:space="preserve" id="create.a.node" approved="yes">
           <source>create.a.node</source>
           <target state="translated">Créer un nœud</target>
-      <note/></trans-unit> 
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="add.a.node" approved="yes">
           <source>add.a.node</source>
           <target state="translated">Ajouter un nœud</target>
@@ -5186,7 +5186,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="customForm.color" approved="yes">
           <source>customForm.color</source>
           <target state="translated">Couleur</target>
-      <note/></trans-unit>      
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="manage.customForms" approved="yes">
           <source>manage.customForms</source>
           <target state="translated">Formulaires personnalisés</target>
@@ -5218,9 +5218,33 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="required" approved="yes">
           <source>required</source>
           <target state="translated">Requis</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="delete.documents" approved="yes">
+          <source>delete.documents</source>
+          <target state="translated">Supprimer les documents</target>
       </trans-unit>
-      
-    
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.these.documents" approved="yes">
+          <source>are_you_sure.delete.these.documents</source>
+          <target state="translated">Êtes-vous sûr(e) de vouloir supprimer ces documents ?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.delete.documents" approved="yes">
+          <source>bulk.delete.documents</source>
+          <target state="translated">Supprimer les documents sélectionnés</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="main_color" approved="yes">
+          <source>main_color</source>
+          <target state="translated">Couleur principale du back-office</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="colour.type" approved="yes">
+          <source>colour.type</source>
+          <target state="translated">Couleur</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.type" approved="yes">
+          <source>nodes.type</source>
+          <target state="translated">Références de nœuds</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
