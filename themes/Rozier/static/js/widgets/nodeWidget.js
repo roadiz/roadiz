@@ -284,7 +284,7 @@ NodeWidget.prototype.appendItemsToExplorer = function(data, $originWidget, repla
 
         $sortable.append([
             '<li class="node-widget-explorer-nextpage">',
-                '<i class="uk-icon-plus"></i><span class="label">More nodes</span>',
+                '<i class="uk-icon-plus"></i><span class="label">'+Rozier.messages.moreNodes+'</span>',
             '</li>'
         ].join(''));
 

@@ -39,11 +39,11 @@ Lazyload.prototype.initLoader = function(){
 
     _this.canvasLoader = new CanvasLoader('canvasloader-container');
     _this.canvasLoader.setColor(_this.mainColor);
-    _this.canvasLoader.setShape('square'); 
-    _this.canvasLoader.setDensity(90); 
-    _this.canvasLoader.setRange(0.8); 
-    _this.canvasLoader.setSpeed(4); 
-    _this.canvasLoader.setFPS(30); 
+    _this.canvasLoader.setShape('square');
+    _this.canvasLoader.setDensity(90);
+    _this.canvasLoader.setRange(0.8);
+    _this.canvasLoader.setSpeed(4);
+    _this.canvasLoader.setFPS(30);
 
 };
 
@@ -56,7 +56,7 @@ Lazyload.prototype.initLoader = function(){
 Lazyload.prototype.onClick = function(event) {
     var _this = this;
 
-    var $link = $(event.currentTarget), 
+    var $link = $(event.currentTarget),
         href = $link.attr('href');
 
     if(typeof href !== "undefined" &&
@@ -117,7 +117,8 @@ Lazyload.prototype.loadContent = function(state, location) {
     $.ajax({
         url: location.href,
         type: 'get',
-        dataType: 'html'
+        dataType: 'html',
+        data: state.headerData
     })
     .done(function(data) {
         _this.applyContent(data);
@@ -173,7 +174,7 @@ Lazyload.prototype.generalBind = function() {
     var _this = this;
 
     // console.log('General bind');
-
+    new DocumentsBulk();
     new DocumentWidget();
     new NodeWidget();
     new DocumentUploader(Rozier.messages.dropzone);
@@ -264,5 +265,4 @@ Lazyload.prototype.resize = function(){
     var _this = this;
 
     _this.$canvasLoaderContainer[0].style.left = Rozier.mainContentScrollableOffsetLeft + (Rozier.mainContentScrollableWidth/2) + 'px';
-    
 };

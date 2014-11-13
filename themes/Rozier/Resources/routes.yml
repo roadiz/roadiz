@@ -408,6 +408,9 @@ documentsDeletePage:
     path:     /rz-admin/documents/delete/{documentId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::deleteAction }
     requirements: { documentId : "[0-9]+" }
+documentsBulkDeletePage:
+    path:     /rz-admin/documents/bulk-delete
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::bulkDeleteAction }
 
 # Ajax
 documentsAjaxExplorerPage:
