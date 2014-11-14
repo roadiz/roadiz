@@ -252,7 +252,7 @@
                 <target />
             </trans-unit>
             <trans-unit id="skip.user.goto.done">
-                <source>goto.done</source>
+                <source>skip.user.goto.done</source>
                 <target />
             </trans-unit>
             <trans-unit id="skip.database.goto.import">
@@ -266,6 +266,11 @@
             </trans-unit>
             <trans-unit id="choose.a.language">
                 <source>choose.a.language</source>
+                <target />
+            </trans-unit>
+
+            <trans-unit id="skip.database.goto.theme">
+                <source>skip.database.goto.theme</source>
                 <target />
             </trans-unit>
 

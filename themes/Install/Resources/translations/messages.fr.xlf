@@ -19,9 +19,9 @@
                 <source>_password</source>
                 <target state="translated">Mot de passe</target>
             </trans-unit>
-            <trans-unit id="password">
+            <trans-unit id="password" approved="yes">
                 <source>password</source>
-                <target>Mot de passe</target>
+                <target state="translated">Mot de passe</target>
             </trans-unit>
             <trans-unit id="password.verify" approved="yes">
                 <source>password.verify</source>
@@ -252,7 +252,7 @@
                 <target state="translated">Passser "Utilisateur"</target>
             </trans-unit>
             <trans-unit id="skip.user.goto.done" approved="yes">
-                <source>goto.done</source>
+                <source>skip.user.goto.done</source>
                 <target state="translated">Aller à "Succès"</target>
             </trans-unit>
             <trans-unit id="skip.database.goto.import" approved="yes">
@@ -267,6 +267,11 @@
             <trans-unit id="choose.a.language" approved="yes">
                 <source>choose.a.language</source>
                 <target state="translated">Veuillez choisir la langue d’installation de votre CMS.</target>
+            </trans-unit>
+
+            <trans-unit id="skip.database.goto.theme" approved="yes">
+                <source>skip.database.goto.theme</source>
+                <target state="translated">Passer "Base de données"</target>
             </trans-unit>
 
         </body>
