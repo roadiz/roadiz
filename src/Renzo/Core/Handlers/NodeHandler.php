@@ -497,11 +497,14 @@ class NodeHandler
         return $node;
     }
 
-    public function duplicate() {
+    public function duplicate()
+    {
         Kernel::getService('em')->refresh($this->node);
+
         $parent = $this->node->getParent();
         $node = clone $this->node;
         Kernel::getService('em')->clear();
+
         $newNode = $this->duplicateRec($node, 0);
         if ($parent !== null) {
             $parent = Kernel::getService('em')->find("RZ\Renzo\Core\Entities\Node", $parent->getId());
@@ -509,6 +512,7 @@ class NodeHandler
         }
         Kernel::getService('em')->flush();
         Kernel::getService('em')->refresh($newNode);
+
         return $newNode;
     }
 }

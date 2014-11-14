@@ -86,9 +86,10 @@ class StringHandler
      */
     public static function variablize($string)
     {
-        $string = trim(strtolower($string));
         $string = static::removeDiacritics($string);
         $string = preg_replace('#([^a-zA-Z0-9]+)#', '_', $string);
+        $string = strtolower($string);
+        $string = trim($string);
 
         return $string;
     }

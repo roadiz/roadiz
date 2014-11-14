@@ -33,7 +33,7 @@ class RoleTest extends PHPUnit_Framework_TestCase
     public function roleNameProvider()
     {
         return array(
-            array("role___asdfasdf", "ROLE_ASDFASDF"),
+            array("role___àsdfasdf", "ROLE_ASDFASDF"),
             array("asdf ààsdf", "ROLE_ASDF_AASDF"),
             array("asdfasdf", "ROLE_ASDFASDF"),
         );

@@ -4,6 +4,9 @@ use RZ\Renzo\Core\Entities\Node;
 use RZ\Renzo\Core\Entities\NodesSources;
 use RZ\Renzo\Core\Kernel;
 
+use RZ\Renzo\Core\Exceptions\SolrServerNotAvailableException;
+use Solarium\Exception\HttpException;
+
 /**
  * SolrWrapperTest.
  */
@@ -25,7 +28,10 @@ class SolrWrapperTest extends PHPUnit_Framework_TestCase
             try {
                 $result = $solr->ping($ping);
             } catch (\Solarium\Exception $e) {
-                echo PHP_EOL. 'No Solr server available.';
+                echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
+                return;
+            } catch (HttpException $e) {
+                echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
                 return;
             }
 
@@ -80,18 +86,24 @@ class SolrWrapperTest extends PHPUnit_Framework_TestCase
 
         if (null !== $solr) {
 
-            // get an update query instance
-            $update = $solr->createUpdate();
+            try {
+                // get an update query instance
+                $update = $solr->createUpdate();
 
-            // add the delete query and a commit command to the update query
-            foreach (static::$entityCollection as $document) {
-                $update->addDeleteById($document->id);
+                // add the delete query and a commit command to the update query
+                foreach (static::$entityCollection as $document) {
+                    $update->addDeleteById($document->id);
+                }
+
+                $update->addCommit();
+
+                // this executes the query and returns the result
+                $result = $solr->update($update);
+
+            } catch (HttpException $e) {
+                echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
+                return;
             }
-
-            $update->addCommit();
-
-            // this executes the query and returns the result
-            $result = $solr->update($update);
         }
     }
 }

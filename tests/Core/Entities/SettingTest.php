@@ -57,6 +57,5 @@ class SettingTest extends PHPUnit_Framework_TestCase
         }
 
         Kernel::getService('em')->flush();
-        Kernel::getService('em')->clear(); // Detaches all objects from Doctrine!
     }
 }
