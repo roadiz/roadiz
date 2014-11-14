@@ -147,7 +147,7 @@ class Requirements
             'status'=>$this->testPHPIntValue('post_max_size', '16M'),
             'value_minimum' => '16M',
             'found' => ini_get('post_max_size'),
-            'message' => 'Your PHP configuration has a too low value for “upload_max_filesize”'
+            'message' => 'Your PHP configuration has a too low value for “post_max_size”'
         );
 
         if ($checks['post_max_size']['status']) {

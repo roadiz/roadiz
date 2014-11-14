@@ -23,7 +23,7 @@ class Paginator
     protected $em;
 
     /**
-     * @param Doctrine\ORM\EntityManager $em          Entity manager
+     * @param Doctrine\ORM\EntityManager $em           Entity manager
      * @param string                     $entityName   Full qualified entity classname
      * @param integer                    $itemPerPages Item par pages
      * @param array                      $criteria     Force selection criteria

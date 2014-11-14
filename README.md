@@ -1,8 +1,12 @@
-# RZCMS v3
+# Renzo
 ## REZO ZERO CMS
 
-RZ-CMS is a polymorphic CMS based on a node system which can handle many type of services.
+Renzo is a polymorphic CMS based on a node system which can handle many type of services.
 It’s based on Symfony components and Doctrine ORM for maximum performances and security.
+
+* *Renzo CMS* is released under **MIT** licence
+* *RZ Icons* font-icon is released under **MIT** licence too
+* *Rezo-Zero Sans* font is released under **GPL+FE** licence and is edited by *Nonpareille* type foundry
 
 ### Installation
 
