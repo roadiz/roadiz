@@ -1,0 +1,63 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, REZO ZERO
+# This file is distributed under the same license as the Renzo documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Renzo documentation 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-11-14 19:52+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../intro/upgrading.rst:5
+# 0c713718912b4b65bbd51e0aeec46af1
+msgid "Upgrading"
+msgstr ""
+
+#: ../../intro/upgrading.rst:7
+# a549ebbea13041ed8264b48d505ac316
+msgid "**Always do a database backup before upgrading.**"
+msgstr ""
+
+#: ../../intro/upgrading.rst:9
+# ea6290122b8b48f886396ab234a284bc
+msgid "Download latest version using *Git*"
+msgstr ""
+
+#: ../../intro/upgrading.rst:16
+# 38b351efdcb54ddf8091ea10d70d18cd
+msgid "Use *Composer* to update dependancies"
+msgstr ""
+
+#: ../../intro/upgrading.rst:22
+# 1e9ecb617ae347ac8741d85da68a3986
+msgid "Then run database schema update"
+msgstr ""
+
+#: ../../intro/upgrading.rst:28
+# 98793e7c142449659a5e1609c11a2135
+msgid "If migration summary is OK, perform the changes"
+msgstr ""
+
+#: ../../intro/upgrading.rst:36
+# 5c6343dac51a4818a9f6abc3c53a240c
+msgid "Upgrading Node-types source entities"
+msgstr ""
+
+#: ../../intro/upgrading.rst:38
+# f2834302b59d4f6f9e8b5eea835c2b0a
+msgid "If some Doctrine errors occur about some fields missing in your *NodesSources*, you must *regenerate all entities* source files"
+msgstr ""
+
+#: ../../intro/upgrading.rst:46
+# 93f52c069d1a4960bedcc34628f75d1a
+msgid "Verify here that no data field will be removed and apply changes"
+msgstr ""
+

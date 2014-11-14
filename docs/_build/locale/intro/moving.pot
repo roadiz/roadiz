@@ -1,0 +1,68 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2014, REZO ZERO
+# This file is distributed under the same license as the Renzo documentation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Renzo documentation 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-11-14 19:52+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../intro/moving.rst:4
+# aff2fa3f941644919cdacfb5c5b4a9ab
+msgid "Moving a website to another server"
+msgstr ""
+
+#: ../../intro/moving.rst:6
+# 9c89ec75fb904deab6a133d30025f835
+msgid "Before moving your website, make sure you have backed up your data:"
+msgstr ""
+
+#: ../../intro/moving.rst:8
+# 3bcbb1de5b784bf2b4fece7a8c80cbe4
+msgid "Dump your database, using `mysql_dump` or `pg_dump` tools."
+msgstr ""
+
+#: ../../intro/moving.rst:9
+# 98cdbfaa0bda404b854b2be8f5bd0f44
+msgid "Archive your `/files` folder, it will contain all your documents and font files"
+msgstr ""
+
+#: ../../intro/moving.rst:11
+# 685756f7e7b54c6daacb1cf193eb8f75
+msgid "From this point you can install your new webserver, as described in :ref:`Install section <getting-started>`."
+msgstr ""
+
+#: ../../intro/moving.rst:13
+# 963ff9714cb247d3a3242571555f371f
+msgid "Then import your dump and files into your new server."
+msgstr ""
+
+#: ../../intro/moving.rst:15
+# 3950f1e3ab0642c49df9833e6489fa24
+msgid "Once you’ve imported your database, you must edit manually your `conf/config.json`, you can reuse the former server’s one and adapt its database credentials."
+msgstr ""
+
+#: ../../intro/moving.rst:18
+# 5e464703e57b441990ae63fa1b0b3ad0
+msgid "**Do not perform any schema update if no gen-src\\\\GeneratedNodeSources classes is available**, it will erase your NodesSources data as their entities files haven’t been generated yet."
+msgstr ""
+
+#: ../../intro/moving.rst:20
+# 93b50d78c8cc47eb8b283350abaedf98
+msgid "When you’ve edited your `conf/config.json` file, regenerate your entities source files"
+msgstr ""
+
+#: ../../intro/moving.rst:26
+# 1d1f3aba7d5c4f698e06eb2fa85bad6f
+msgid "Now you can perform a schema update without losing your nodes data"
+msgstr ""
+
