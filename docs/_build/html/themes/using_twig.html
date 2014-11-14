@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -39,12 +39,27 @@
 
 <body class="wy-body-for-nav" role="document">
 
+  <nav id="rezozero-header">
+    <span class="rezozero-title">Renzo CMS</span>
+    <ul>
+      <li><a href="#">Renzo</a></li>
+      <li class="active"><a href="#">Documentation</a></li>
+      <li><a href="#">API</a></li>
+    </ul>
+
+    <ul>
+      <li><a class="fa fa-github" href="#"></a></li>
+    </ul>
+</nav>
+
   <div class="wy-grid-for-nav">
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> Renzo documentation</a>
+        
+          <a href="../index.html" class="fa fa-home"> Renzo documentation</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -60,8 +75,9 @@
             <ul>
 <li class="toctree-l1"><a class="reference internal" href="../intro/getting_started.html">Getting started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../intro/getting_started.html#cms-structure">CMS&nbsp;Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../intro/getting_started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/getting_started.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../intro/getting_started.html#prepare-your-server">Prepare your server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/getting_started.html#installation">Installation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../intro/upgrading.html">Upgrading</a><ul>
@@ -90,6 +106,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#additional-filters">Additional filters</a></li>
 </ul>
 </li>
+</ul>
+<ul class="simple">
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../forms/contact_forms.html">Building contact forms</a></li>
@@ -126,7 +144,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="using-twig">
 <span id="id1"></span><h1>Using Twig<a class="headerlink" href="#using-twig" title="Permalink to this headline">¶</a></h1>
@@ -213,7 +231,7 @@ You can of course call objects members within Twig using the <em>dot</em> separa
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../forms/contact_forms.html" class="btn btn-neutral float-right" title="Building contact forms"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../forms/contact_forms.html" class="btn btn-neutral float-right" title="Building contact forms">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="create_theme.html" class="btn btn-neutral" title="Creating a theme"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -228,8 +246,6 @@ You can of course call objects members within Twig using the <em>dot</em> separa
         &copy; Copyright 2014, REZO ZERO.
     </p>
   </div>
-
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

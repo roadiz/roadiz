@@ -18,6 +18,7 @@ First contact
    intro/getting_started
    intro/upgrading
    intro/moving
+   intro/manual_config
 
 Document system
 ---------------
@@ -55,6 +56,14 @@ Themes
    themes/create_theme
    themes/using_twig
    themes/custom_assignations
+
+Services
+--------
+
+.. toctree::
+   :maxdepth: 1
+
+   services/intro
 
 Forms
 -----

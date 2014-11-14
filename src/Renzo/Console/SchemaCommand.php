@@ -69,6 +69,12 @@ class SchemaCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Apply changes'
+            )
+            ->addOption(
+                'delete',
+                null,
+                InputOption::VALUE_NONE,
+                'Apply changes including deletions (you may lose data)'
             );
     }
 
@@ -84,28 +90,65 @@ class SchemaCommand extends Command
 
             if ($count > 0) {
                 /*
-                 * Print changes
+                 * If execute option = Perform changes
                  */
-                for ($i=0; $i<$count; $i++) {
-                    $text .= $sql[$i].PHP_EOL;
-                }
-                $text .= '<info>'.$count.'</info> change(s) in your database schema… Use <info>--execute</info> to apply'.PHP_EOL;
+                if ($input->getOption('execute') &&
+                    $input->getOption('delete')) {
+                    if ($this->dialog->askConfirmation(
+                        $output,
+                        'Deletions may remove some of your data.'.PHP_EOL.'Have you done a database backup before?'.PHP_EOL.'<question>Are you sure to update your database schema? [y / N]</question> : ',
+                        false
+                    )) {
 
+                        if (static::updateSchema(true)) {
+                            $text .= '<info>Schema updated…</info>'.PHP_EOL;
+                        }
+                    } else {
+                        $text .= '<info>Schema update aborted</info>'.PHP_EOL;
+                    }
+                }
                 /*
                  * If execute option = Perform changes
                  */
-                if ($input->getOption('execute')) {
+                elseif ($input->getOption('execute')) {
                     if ($this->dialog->askConfirmation(
                         $output,
-                        '<question>Are you sure to update your database schema?</question> : ',
+                        '<question>Are you sure to update your database schema? [y / N]</question> : ',
                         false
                     )) {
 
                         if (static::updateSchema()) {
                             $text .= '<info>Schema updated…</info>'.PHP_EOL;
                         }
+                    } else {
+                        $text .= '<info>Schema update aborted</info>'.PHP_EOL;
+                    }
+                } else {
+
+                    /*
+                     * Print changes
+                     */
+                    $text .= '<info>'.$count.'</info> change(s) in your database schema… Use <info>--execute</info> to apply only new changes with no deletions:'.PHP_EOL;
+                    $deletions = array();
+                    for ($i=0; $i<$count; $i++) {
+
+                        if (strpos($sql[$i], 'DELETE') ||
+                            strpos($sql[$i], 'DROP')) {
+                            $deletions[] = $sql[$i];
+                        } else {
+                            $text .= $sql[$i].PHP_EOL;
+                        }
+                    }
+
+                    if (count($deletions) > 0) {
+                        # code...
+                        $text .= '<info>'.count($deletions).'</info> deletion(s) will be performed! Use <info>--execute --delete</info> to apply:'.PHP_EOL;
+                        foreach ($deletions as $statement) {
+                            $text .= $statement.PHP_EOL;
+                        }
                     }
                 }
+
             } else {
                 $text .= '<info>Your database schema is already up to date…</info>'.PHP_EOL;
             }
@@ -117,18 +160,34 @@ class SchemaCommand extends Command
     /**
      * Update database schema.
      *
+     * @param boolean $delete Enable DELETE and DROP statements
+     *
      * @return boolean
      */
-    public static function updateSchema()
+    public static function updateSchema($delete = false)
     {
         CacheCommand::clearDoctrine();
 
         $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
+
         $sql = $tool->getUpdateSchemaSql($meta);
+        $deletions = array();
 
         foreach ($sql as $statement) {
-            Kernel::getService('em')->getConnection()->exec($statement);
+
+            if (strpos($statement, 'DELETE') ||
+                strpos($statement, 'DROP')) {
+                $deletions[] = $statement;
+            } else {
+                Kernel::getService('em')->getConnection()->exec($statement);
+            }
+        }
+
+        if (true === $delete) {
+            foreach ($deletions as $statement) {
+                Kernel::getService('em')->getConnection()->exec($statement);
+            }
         }
 
         return true;
