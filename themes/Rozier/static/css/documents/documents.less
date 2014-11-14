@@ -40,12 +40,34 @@ table.documents {
     .document-checkbox {
 
         position: absolute;
-        top: 5px;
-        right: 1px;
+        top: 8px;
+        right: 5px;
         display: none;
+        width: 14px; height: 14px;
+        line-height:12px;
+        border: 1px solid #aaa;
+        overflow: hidden;
+        vertical-align: middle;
+        -webkit-appearance: none;
+        outline: 0;
+        background: #fff;
+
+        &:focus{
+            border-color: @grey-form-submit-border-hover;
+        }
 
         &:checked {
-            display: block;
+            display: inline-block;
+
+            &:before{
+                content: "\f00c";
+                font-family: FontAwesome;
+                font-size: 12px;
+                -webkit-font-smoothing: antialiased;
+                text-align: center;
+                line-height: 12px;
+                color: darken(@contrast-color, 10%);
+            }
         }
     }
 

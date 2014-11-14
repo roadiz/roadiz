@@ -95,11 +95,40 @@
     // Admin menu
     #admin-menu{
         // display: none;
+        position:fixed;
         display: block;
-        width:100%;
+        top:50px; bottom:0; left:0;
+        width:80%;
+
+        header{
+            display: none;
+        }
+
+        .uk-nav{
+            padding-top:0;
+        }
 
         li{
             width:100%;
+            text-align: left;
+            padding:14px 0px 11px;
+            
+            &> a, &> p{
+                padding-left:20px;
+            }
+
+            &:hover{
+
+                &:after{
+                    display: none;
+                }
+
+                .uk-nav-sub{
+                    display: none;
+                }
+
+            }
+
         }
 
         .info {

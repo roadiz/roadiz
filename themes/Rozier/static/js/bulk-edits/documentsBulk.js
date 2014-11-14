@@ -1,3 +1,7 @@
+/**
+ * Documents bulk
+ */
+
 var DocumentsBulk = function () {
     var _this = this;
 
@@ -8,9 +12,16 @@ var DocumentsBulk = function () {
         _this.init();
     }
 };
+
+
 DocumentsBulk.prototype.$documentsCheckboxes = null;
 DocumentsBulk.prototype.$actionsMenu = null;
 DocumentsBulk.prototype.documentsIds = null;
+
+/**
+ * Init
+ * @return {[type]} [description]
+ */
 DocumentsBulk.prototype.init = function() {
     var _this = this;
 
@@ -24,6 +35,12 @@ DocumentsBulk.prototype.init = function() {
     $bulkDeleteButton.on('click', deleteProxy);
 };
 
+
+/**
+ * On checkbox change
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 DocumentsBulk.prototype.onCheckboxChange = function(event) {
     var _this = this;
 
@@ -32,7 +49,7 @@ DocumentsBulk.prototype.onCheckboxChange = function(event) {
         _this.documentsIds.push($(domElement).val());
     });
 
-    console.log(_this.documentsIds);
+    // console.log(_this.documentsIds);
 
     if(_this.documentsIds.length > 0){
         _this.showActions();
@@ -41,6 +58,12 @@ DocumentsBulk.prototype.onCheckboxChange = function(event) {
     }
 };
 
+
+/**
+ * On bulk delete
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
 DocumentsBulk.prototype.onBulkDelete = function(event) {
     var _this = this;
 
@@ -58,6 +81,11 @@ DocumentsBulk.prototype.onBulkDelete = function(event) {
     return false;
 };
 
+
+/**
+ * Show actions
+ * @return {[type]} [description]
+ */
 DocumentsBulk.prototype.showActions = function () {
     var _this = this;
 
@@ -65,6 +93,11 @@ DocumentsBulk.prototype.showActions = function () {
     //_this.$actionsMenu.addClass('visible');
 };
 
+
+/**
+ * Hide actions
+ * @return {[type]} [description]
+ */
 DocumentsBulk.prototype.hideActions = function () {
     var _this = this;
 
