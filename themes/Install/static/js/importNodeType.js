@@ -17,11 +17,13 @@ ImportNodeType.prototype.always = function( index, request ) {
             url:request,
             type: 'GET',
             dataType: 'json',
-            async: false
-        })
-        .always(function() {
-            console.log("updateSchema");
+            complete: function() {
+                console.log("updateSchema");
+            }
         });
+        // .always(function() {
+        //     console.log("updateSchema");
+        // });
     }
 };
 
@@ -43,31 +45,29 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
             url: _this.routes[index].url,
             type: 'GET',
             dataType: 'json',
-            async: false
-        })
-        .done(function(data) {
-            console.log("success");
-            console.log(data);
+            success: function(data) {
+                console.log("success");
+                console.log(data);
 
-            $icon.removeClass('uk-icon-spinner');
-            $icon.addClass('uk-icon-check');
-            $row.addClass('uk-badge-success');
-        })
-        .fail(function(data) {
+                $icon.removeClass('uk-icon-spinner');
+                $icon.addClass('uk-icon-check');
+                $row.addClass('uk-badge-success');
+            },
+            error: function(data) {
+                $icon.removeClass('uk-icon-spinner');
+                $icon.addClass('uk-icon-warning');
+                $row.addClass('uk-badge-danger');
 
-            $icon.removeClass('uk-icon-spinner');
-            $icon.addClass('uk-icon-warning');
-            $row.addClass('uk-badge-danger');
-
-            if (typeof data.responseJSON != "undefined" && typeof data.responseJSON.error != "undefined") {
-                $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>");
+                if (typeof data.responseJSON != "undefined" && typeof data.responseJSON.error != "undefined") {
+                    $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>");
+                }
+            },
+            complete: function(data) {
+                console.log("complete");
+                console.log(index);
+                $icon.removeClass('uk-icon-spin');
+                _this.callSingleImport(index + 1);
             }
-        })
-        .always(function(data) {
-            console.log("complete");
-            console.log(index);
-            $icon.removeClass('uk-icon-spin');
-            _this.callSingleImport(index + 1);
         });
     } else {
       $('#next-step-button').removeClass('uk-button-disabled');

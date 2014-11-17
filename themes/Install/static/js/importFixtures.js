@@ -24,32 +24,31 @@ ImportFixtures.prototype.callSingleImport = function( index ) {
             url: _this.routes[index].url,
             type: 'GET',
             dataType: 'json',
-            async: false
-        })
-        .done(function(data) {
-            console.log("success");
-            _this.score++;
+            success: function(data) {
+                console.log("success");
+                _this.score++;
 
-            $icon.removeClass('uk-icon-spinner');
-            $icon.addClass('uk-icon-check');
-            $row.addClass('uk-badge-success');
+                $icon.removeClass('uk-icon-spinner');
+                $icon.addClass('uk-icon-check');
+                $row.addClass('uk-badge-success');
 
-        })
-        .fail(function(data) {
-            console.log("error");
+            },
+            error: function(data) {
+                console.log("error");
 
-            $icon.removeClass('uk-icon-spinner');
-            $icon.addClass('uk-icon-warning');
-            $row.addClass('uk-badge-danger');
-            if (typeof data.responseJSON != "undefined" && typeof data.responseJSON.error != "undefined") {
-                $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>");
+                $icon.removeClass('uk-icon-spinner');
+                $icon.addClass('uk-icon-warning');
+                $row.addClass('uk-badge-danger');
+                if (typeof data.responseJSON != "undefined" && typeof data.responseJSON.error != "undefined") {
+                    $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>");
+                }
+            },
+            complete: function(data) {
+                console.log("complete");
+                $icon.removeClass('uk-icon-spin');
+
+                _this.callSingleImport(index + 1);
             }
-        })
-        .always(function(data) {
-            console.log("complete");
-            $icon.removeClass('uk-icon-spin');
-
-            _this.callSingleImport(index + 1);
         });
     } else {
 
