@@ -23,7 +23,8 @@ ImportFixtures.prototype.callSingleImport = function( index ) {
         $.ajax({
             url: _this.routes[index].url,
             type: 'GET',
-            dataType: 'json'
+            dataType: 'json',
+            async: false
         })
         .done(function(data) {
             console.log("success");
