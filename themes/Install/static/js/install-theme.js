@@ -582,7 +582,8 @@ ImportFixtures.prototype.callSingleImport = function( index ) {
         $.ajax({
             url: _this.routes[index].url,
             type: 'GET',
-            dataType: 'json'
+            dataType: 'json',
+            async: false
         })
         .done(function(data) {
             console.log("success");
@@ -633,7 +634,8 @@ ImportNodeType.prototype.always = function( index, request ) {
         $.ajax({
             url:request,
             type: 'GET',
-            dataType: 'json'
+            dataType: 'json',
+            async: false
         })
         .always(function() {
             console.log("updateSchema");
@@ -645,9 +647,9 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
     var _this = this;
 
     if(_this.routes.length > index) {
-      if (typeof _this.routes.update != "undefined") {
-        console.log(_this.routes.update).
-        _this.always(index, _this.routes.update);
+      if (typeof _this.routes[index].update != "undefined") {
+        console.log(_this.routes[index].update);
+        _this.always(index, _this.routes[index].update);
       }
         var $row = $("#"+_this.routes[index].id);
         var $icon = $row.find("i");
@@ -658,7 +660,8 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
         $.ajax({
             url: _this.routes[index].url,
             type: 'GET',
-            dataType: 'json'
+            dataType: 'json',
+            async: false
         })
         .done(function(data) {
             console.log("success");
