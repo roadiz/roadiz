@@ -64,6 +64,19 @@
                 <target state="translated">Submit</target>
             </trans-unit>
 
+            <trans-unit xml:space="preserve" id="answer.form" approved="yes">
+                <source>answer.form</source>
+                <target state="translated">Answer form.</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="customForm.%name%.send" approved="yes">
+                <source>customForm.%name%.send</source>
+                <target state="translated">The answer "%name%" sent.</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="new.answer.form.%site%" approved="yes">
+                <source>new.answer.form.%site%</source>
+                <target state="translated">New answer from "%site%" form.</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

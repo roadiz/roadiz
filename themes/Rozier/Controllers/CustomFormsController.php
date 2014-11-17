@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Type;
 
 /**
@@ -303,6 +304,7 @@ class CustomFormsController extends RozierApp
         $defaults = array(
             'displayName' =>    $customForm->getDisplayName(),
             'description' =>    $customForm->getDescription(),
+            'email' =>    $customForm->getEmail(),
             'open' =>           $customForm->isOpen(),
             'closeDate' =>      $customForm->getCloseDate(),
             'color' =>          $customForm->getColor(),
@@ -317,6 +319,13 @@ class CustomFormsController extends RozierApp
             ->add('description', 'text', array(
                 'label' => $this->getTranslator()->trans('description'),
                 'required' => false
+            ))
+            ->add('email', 'email', array(
+                'label' => $this->getTranslator()->trans('email'),
+                'required' => false,
+                'constraints' => array(
+                    new Email()
+                )
             ))
             ->add('open', 'checkbox', array(
                 'label' => $this->getTranslator()->trans('customForm.open'),

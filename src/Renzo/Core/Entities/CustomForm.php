@@ -116,6 +116,29 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
+     * @Column(type="text", nullable=true)
+     */
+    private $email;
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+    /**
+     * @param string $email
+     *
+     * @return $this
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
      * @Column(type="boolean")
      */
     private $open = true;

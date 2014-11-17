@@ -39,6 +39,8 @@ use RZ\Renzo\Core\Entities\CustomFormFieldAttribute;
 use RZ\Renzo\Core\Entities\CustomFormAnswer;
 use RZ\Renzo\CMS\Forms\CustomFormsType;
 
+use RZ\Renzo\Core\Bags\SettingsBag;
+use \InlineStyle\InlineStyle;
 
 class CustomFormController extends AppController
 {
@@ -100,6 +102,15 @@ class CustomFormController extends AppController
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
+                    $this->assignation['title'] = $this->getTranslator()->trans(
+                        'new.answer.form.%site%',
+                        array('%site%'=>$customForm->getDisplayName())
+                    );
+
+                    $this->assignation['mailContact'] = SettingsBag::get('email_sender');
+
+                    $this->sendAnswer($this->assignation, $customForm->getEmail());
+
                     /*
                      * Redirect to update schema page
                      */
@@ -136,6 +147,43 @@ class CustomFormController extends AppController
     }
 
     /**
+     * Send a answer form by Email.
+     *
+     * @param  array $assignation
+     * @param  string $receiver
+     *
+     * @return boolean
+     */
+    protected function sendAnswer($assignation, $receiver)
+    {
+        $emailBody = $this->getTwig()->render('forms/answerForm.html.twig', $assignation);
+        /*
+         * inline CSS
+         */
+        $htmldoc = new InlineStyle($emailBody);
+        $htmldoc->applyStylesheet(file_get_contents(
+            RENZO_ROOT."/src/Renzo/CMS/Resources/css/transactionalStyles.css"
+        ));
+        if (empty($receiver))
+            $receiver = SettingsBag::get('email_sender');
+        // Create the message
+        $message = \Swift_Message::newInstance()
+            // Give the message a subject
+            ->setSubject($this->assignation['title'])
+            // Set the From address with an associative array
+            ->setFrom(array(SettingsBag::get('email_sender')))
+            // Set the To addresses with an associative array
+            ->setTo(array($receiver))
+            // Give it a body
+            ->setBody($htmldoc->getHTML(), 'text/html');
+        // Create the Transport
+        $transport = \Swift_MailTransport::newInstance();
+        $mailer = \Swift_Mailer::newInstance($transport);
+        // Send the message
+        return $mailer->send($message);
+    }
+
+    /**
      * @param array                           $data
      * @param RZ\Renzo\Core\Entities\CustomForm $customForm
      *
@@ -147,6 +195,11 @@ class CustomFormController extends AppController
         $answer->setIp($data["ip"]);
         $answer->setSubmittedAt(new \DateTime('NOW'));
         $answer->setCustomForm($customForm);
+
+        $this->assignation["fields"] = array(
+                array("name" => "ip", "value" => $data["ip"]),
+                array("name" => "submittedAt", "value" => new \DateTime('NOW'))
+            );
 
         $this->getService('em')->persist($answer);
 
@@ -164,16 +217,15 @@ class CustomFormController extends AppController
                     $values[] = $choices[$value];
                 }
 
-                $fieldAttr->setValue(implode(',', $values));
-
-            } elseif (CustomFormField::$typeToForm[$field->getType()] == "enumeration") {
-
-                $choices = explode(',', $field->getDefaultValues());
-
-                $fieldAttr->setValue($data[$field->getName()]);
+                $val = implode(',', $values);
+                $fieldAttr->setValue($val);
+                $this->assignation["fields"][] = array("name" => $field->getName(), "value" => $val);
 
             } else {
+
                 $fieldAttr->setValue($data[$field->getName()]);
+                $this->assignation["fields"][] = array("name" => $field->getName(), "value" => $data[$field->getName()]);
+
             }
             $this->getService('em')->persist($fieldAttr);
         }

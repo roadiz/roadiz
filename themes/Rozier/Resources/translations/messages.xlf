@@ -5243,6 +5243,35 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>embed.preview</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="answer.form">
+          <source>answer.form</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.send">
+          <source>customForm.%name%.send</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.answer.form.%site%">
+          <source>new.answer.form.%site%</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="customFormAnswer.%id%.deleted">
+          <source>customFormAnswer.%id%.deleted</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.%name%.updated">
+          <source>customFormField.%name%.updated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.%name%.created">
+          <source>customFormField.%name%.created</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.%name%.deleted">
+          <source>customFormField.%name%.deleted</source>
+          <target></target>
+      </trans-unit>
 
     </body>
   </file>
