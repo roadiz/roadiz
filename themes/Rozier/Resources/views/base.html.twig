@@ -106,6 +106,7 @@
         <script src="{{ head.resourcesUrl }}js/widgets/childrenNodesField.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/markdownEditor.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/tagAutocomplete.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/folderAutocomplete.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/stackNodeTree.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/nodeTypeFieldsPosition.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/customFormFieldsPosition.js"></script>
@@ -166,20 +167,22 @@
                     }
                 },
                 'routes': {
-                    'nodeAjaxEdit' :          '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',
-                    'tagAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
-                    'nodeTypesFieldAjaxEdit': '{{ head.baseUrl }}/rz-admin/ajax/node-types/fields/edit/%nodeTypeFieldId%',
-                    'customFormsFieldAjaxEdit': '{{ head.baseUrl }}/rz-admin/ajax/custom-forms/fields/edit/%customFormFieldId%',
+                    'nodeAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',
+                    'tagAjaxEdit' :            '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
+                    'folderAjaxEdit' :         '{{ head.baseUrl }}/rz-admin/ajax/folder/edit/%folderId%',
+                    'nodeTypesFieldAjaxEdit':  '{{ head.baseUrl }}/rz-admin/ajax/node-types/fields/edit/%nodeTypeFieldId%',
+                    'customFormsFieldAjaxEdit':'{{ head.baseUrl }}/rz-admin/ajax/custom-forms/fields/edit/%customFormFieldId%',
                     'documentsBulkDeletePage' :'{{ path('documentsBulkDeletePage') }}',
-                    'documentsAjaxExplorer' : '{{ path('documentsAjaxExplorerPage') }}',
-                    'nodesAjaxExplorer' :     '{{ path('nodesAjaxExplorerPage') }}',
-                    'documentsUploadPage' :   '{{ path('documentsUploadPage') }}',
-                    'searchNodesSourcesAjax': '{{ path('searchNodesSourcesAjax') }}',
-                    'nodesStatusesAjax' :     '{{ path('nodesStatusesAjax') }}',
-                    'nodesTreeAjax' :         '{{ path('nodesTreeAjax') }}',
-                    'nodesQuickAddAjax' :     '{{ path('nodesQuickAddAjax')}}',
-                    'tagAjaxSearch':          '{{ path('tagAjaxSearch') }}',
-                    'ajaxSessionMessages':    '{{ path('ajaxSessionMessages') }}'
+                    'documentsAjaxExplorer' :  '{{ path('documentsAjaxExplorerPage') }}',
+                    'nodesAjaxExplorer' :      '{{ path('nodesAjaxExplorerPage') }}',
+                    'documentsUploadPage' :    '{{ path('documentsUploadPage') }}',
+                    'searchNodesSourcesAjax':  '{{ path('searchNodesSourcesAjax') }}',
+                    'nodesStatusesAjax' :      '{{ path('nodesStatusesAjax') }}',
+                    'nodesTreeAjax' :          '{{ path('nodesTreeAjax') }}',
+                    'nodesQuickAddAjax' :      '{{ path('nodesQuickAddAjax')}}',
+                    'tagAjaxSearch':           '{{ path('tagAjaxSearch') }}',
+                    'foldersAjaxSearch':       '{{ path('foldersAjaxSearch') }}',
+                    'ajaxSessionMessages':     '{{ path('ajaxSessionMessages') }}'
                 }
             };
         </script>

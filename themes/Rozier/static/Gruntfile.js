@@ -50,6 +50,7 @@ module.exports = function(grunt) {
 					'js/widgets/childrenNodesField.js',
 					'js/widgets/markdownEditor.js',
 					'js/widgets/tagAutocomplete.js',
+					'js/widgets/folderAutocomplete.js',
 					'js/widgets/stackNodeTree.js',
 					'js/widgets/nodeTypeFieldsPosition.js',
 					'js/widgets/customFormFieldsPosition.js',
@@ -92,7 +93,7 @@ module.exports = function(grunt) {
 				src : "css/custom-forms-front.less",
 				dest : "css/custom-forms-front.min.css"
 			}
-		
+
 		},
 		watch: {
 			scripts: {

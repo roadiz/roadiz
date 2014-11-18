@@ -102,6 +102,9 @@ Rozier.bindMainTrees = function () {
 
 	$('.tagtree-widget .root-tree').off('uk.nestable.change');
 	$('.tagtree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableTagTreeChange );
+
+	$('.foldertree-widget .root-tree').off('uk.nestable.change');
+	$('.foldertree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableFolderTreeChange );
 };
 
 
@@ -469,6 +472,85 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 	});
 };
 
+/**
+ *
+ * @param  Event event
+ * @param  jQueryFolder element
+ * @param  string status  added, moved or removed
+ * @return boolean
+ */
+Rozier.onNestableFolderTreeChange = function (event, element, status) {
+	var _this = this;
+
+	console.log("Folder: "+element.data('folder-id')+ " status : "+status);
+
+	/*
+	 * If folder removed, do not do anything, the other folderTree will be triggered
+	 */
+	if (status == 'removed') {
+		return false;
+	}
+
+	var folder_id = parseInt(element.data('folder-id'));
+	var parent_folder_id = parseInt(element.parents('ul').first().data('parent-folder-id'));
+
+	/*
+	 * User dragged folder inside itself
+	 * It will destroy the Internet !
+	 */
+	if (folder_id === parent_folder_id) {
+		console.log("You cannot move a folder inside itself!");
+		alert("You cannot move a folder inside itself!");
+		window.location.reload();
+		return false;
+	}
+
+	var postData = {
+		_token: Rozier.ajaxToken,
+		_action: 'updatePosition',
+		folderId: folder_id
+	};
+
+	/*
+	 * Get folder siblings id to compute new position
+	 */
+	if (element.next().length) {
+		postData.nextFolderId = parseInt(element.next().data('folder-id'));
+	}
+	else if(element.prev().length) {
+		postData.prevFolderId = parseInt(element.prev().data('folder-id'));
+	}
+
+	/*
+	 * When dropping to route
+	 * set parentFolderId to NULL
+	 */
+	if(isNaN(parent_folder_id)){
+		parent_folder_id = null;
+	}
+	postData.newParent = parent_folder_id;
+
+	console.log(postData);
+	$.ajax({
+		url: Rozier.routes.folderAjaxEdit.replace("%folderId%", folder_id),
+		type: 'POST',
+		dataType: 'json',
+		data: postData
+	})
+	.done(function( data ) {
+		console.log(data);
+		$.UIkit.notify({
+			message : data.responseText,
+			status  : data.status,
+			timeout : 3000,
+			pos     : 'top-center'
+		});
+
+	})
+	.fail(function( data ) {
+		console.log(data);
+	});
+};
 
 /**
  * Back top click
@@ -478,7 +560,7 @@ Rozier.backTopBtnClick = function(e){
 	var _this = this;
 
 	TweenLite.to(_this.$mainContentScrollable, 0.6, {scrollTo:{y:0}, ease:Expo.easeOut});
-	
+
 	return false;
 };
 

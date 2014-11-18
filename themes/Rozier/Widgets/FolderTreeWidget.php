@@ -46,7 +46,10 @@ class FolderTreeWidget extends AbstractWidget
     {
         $this->folders = $this->getController()->getService('em')
                 ->getRepository('RZ\Renzo\Core\Entities\Folder')
-                ->findBy(array('parent'=>$this->parentFolder));
+                ->findBy(
+                    array('parent'=>$this->parentFolder),
+                    array('position'=>'ASC')
+                );
     }
 
     /**
@@ -58,7 +61,7 @@ class FolderTreeWidget extends AbstractWidget
     {
         return $this->folders = $this->getController()->getService('em')
                     ->getRepository('RZ\Renzo\Core\Entities\Folder')
-                    ->findBy(array('parent'=>$parent));
+                    ->findBy(array('parent'=>$parent), array('position'=>'ASC'));
     }
     /**
      * @return RZ\Renzo\Core\Entities\Folder

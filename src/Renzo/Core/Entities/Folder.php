@@ -31,18 +31,21 @@
 namespace RZ\Renzo\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\AbstractEntities\AbstractDateTimed;
+use RZ\Renzo\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\Viewers\DocumentViewer;
 use RZ\Renzo\Core\Handlers\DocumentHandler;
+use RZ\Renzo\Core\Handlers\FolderHandler;
 
 /**
  * Folders entity represent a directory on server with datetime and naming.
  *
  * @Entity(repositoryClass="RZ\Renzo\Core\Repositories\EntityRepository")
- * @Table(name="folders")
+ * @Table(name="folders", indexes={
+ *     @index(name="position_tag_idx", columns={"position"})
+ * })
  */
-class Folder extends AbstractDateTimed
+class Folder extends AbstractDateTimedPositioned
 {
     /**
      * @Column(type="string", unique=true, nullable=false)
@@ -148,5 +151,13 @@ class Folder extends AbstractDateTimed
     {
         $this->children = new ArrayCollection();
         $this->documents = new ArrayCollection();
+    }
+
+    /**
+     * @return RZ\Renzo\Core\Handlers\FolderHandler
+     */
+    public function getHandler()
+    {
+        return new FolderHandler($this);
     }
 }

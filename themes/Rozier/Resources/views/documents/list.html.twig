@@ -21,6 +21,10 @@
 
     <nav class="documents-bulk-actions">
         <a class="uk-button uk-button-small uk-button-danger document-bulk-delete" href="#"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}bulk.delete.documents{% endtrans %}</a>
+        <form class="uk-form document-bulk-fold">
+            <input placeholder="{% trans %}set.folder.for.selected.documents{% endtrans %}" class="rz-folder-autocomplete" type="text" name="rz-folder-autocomplete" value="" />
+            <a class="uk-button uk-button-small" href="#"><i class="uk-icon-folder-o"></i> {% trans %}bulk.fold.documents{% endtrans %}</a>
+        </form>
     </nav>
 
     <article class="content content-no-action-menu">
