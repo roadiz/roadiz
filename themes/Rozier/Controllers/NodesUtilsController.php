@@ -121,6 +121,8 @@ class NodesUtilsController extends RozierApp
      */
     public function duplicateAction(Request $request, $nodeId)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
         try {
 
             $existingNode = $this->getService('em')
@@ -130,10 +132,7 @@ class NodesUtilsController extends RozierApp
             $msg = $this->getTranslator()->trans("duplicated.node.%name%", array(
                 '%name%' => $existingNode->getNodeName()
             ));
-            $request->getSession()->getFlashBag()->add(
-                'confirm',
-                $msg
-            );
+            $request->getSession()->getFlashBag()->add('confirm', $msg);
             $this->getService('logger')->info($msg);
 
             $response = new RedirectResponse($this->getService('urlGenerator')
@@ -147,10 +146,8 @@ class NodesUtilsController extends RozierApp
                     '%name%' => $existingNode->getNodeName()
                 ))
             );
-            $request->getSession()->getFlashBag()->add(
-                'error',
-                $e->getMessage()
-            );
+            $request->getSession()->getFlashBag()->add('error',  $e->getMessage());
+
             $response = new RedirectResponse($this->getService('urlGenerator')
                                                       ->generate('nodesEditPage',
                                                                  array("nodeId" => $existingNode->getId())));
