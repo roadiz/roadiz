@@ -6,6 +6,7 @@ var DocumentsBulk = function () {
     var _this = this;
 
     _this.$documentsCheckboxes = $('input.document-checkbox');
+    _this.$documentsIdBulkFolders = $('input.document-id-bulk-folder');
     _this.$actionsMenu = $('.documents-bulk-actions');
 
     if (_this.$documentsCheckboxes.length) {
@@ -15,6 +16,7 @@ var DocumentsBulk = function () {
 
 
 DocumentsBulk.prototype.$documentsCheckboxes = null;
+DocumentsBulk.prototype.$documentsIdBulkFolders = null;
 DocumentsBulk.prototype.$actionsMenu = null;
 DocumentsBulk.prototype.documentsIds = null;
 
@@ -48,6 +50,10 @@ DocumentsBulk.prototype.onCheckboxChange = function(event) {
     $("input.document-checkbox:checked").each(function(index,domElement) {
         _this.documentsIds.push($(domElement).val());
     });
+
+    if(_this.$documentsIdBulkFolders.length){
+        _this.$documentsIdBulkFolders.val(_this.documentsIds.join(','));
+    }
 
     // console.log(_this.documentsIds);
 

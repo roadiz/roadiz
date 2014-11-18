@@ -11,6 +11,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Renzo\Core\Kernel;
 use RZ\Renzo\Core\Entities\Document;
+use RZ\Renzo\Core\Entities\Folder;
 use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
 use RZ\Renzo\Core\Utils\SplashbasePictureFinder;
@@ -51,6 +52,30 @@ class DocumentsController extends RozierApp
             $prefilters['folders'] = array($folder);
             $this->assignation['folder'] = $folder;
         }
+
+        /*
+         * Handle bulk folder form
+         */
+        $joinFolderForm = $this->buildLinkFoldersForm();
+        $joinFolderForm->handleRequest();
+        if ($joinFolderForm->isValid()) {
+
+            $msg = $this->joinFolder($joinFolderForm->getData());
+            $request->getSession()->getFlashBag()->add('confirm', $msg);
+            $this->getService('logger')->info($msg);
+
+            $response = new RedirectResponse(
+                $this->getService('urlGenerator')->generate(
+                    'documentsHomePage',
+                    array('folderId' => $folderId)
+                )
+            );
+            $response->prepare($request);
+
+            return $response->send();
+        }
+
+        $this->assignation['joinFolderForm'] = $joinFolderForm->createView();
 
         /*
          * Manage get request to filter list
@@ -619,6 +644,110 @@ class DocumentsController extends RozierApp
                     ));
 
         return $builder->getForm();
+    }
+
+    /**
+     * @param RZ\Renzo\Core\Entities\Node $node
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildLinkFoldersForm()
+    {
+        $builder = $this->getService('formFactory')
+                    ->createBuilder('form')
+                    ->add('documentsId', 'hidden', array(
+                        'attr' => array('class' => 'document-id-bulk-folder'),
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ))
+                    ->add('folderPaths', 'text', array(
+                        'label' => $this->getTranslator()->trans('list.folders.to_link'),
+                        'attr' => array('class' => 'rz-folder-autocomplete'),
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ));
+
+        return $builder->getForm();
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return string
+     */
+    private function joinFolder($data)
+    {
+        $msg = $this->getTranslator()->trans('no_documents.linked_to.folders');
+
+        if (!empty($data['documentsId']) &&
+            !empty($data['folderPaths'])) {
+
+            $documentsIds = explode(',', $data['documentsId']);
+
+            $documents = $this->getService('em')
+                    ->getRepository('RZ\Renzo\Core\Entities\Document')
+                    ->findBy(array(
+                        'id' => $documentsIds
+                    ));
+
+            $folderPaths = explode(',', $data['folderPaths']);
+            $folderPaths = array_filter($folderPaths);
+
+            foreach ($folderPaths as $path) {
+                $path = trim($path);
+
+                $folders = explode('/', $path);
+                $folders = array_filter($folders);
+
+                $folderName = $folders[count($folders) - 1];
+                $parentName = null;
+                $parentFolder = null;
+
+                if (count($folders) > 1) {
+                    $parentName = $folders[count($folders) - 2];
+
+                    $parentFolder = $this->getService('em')
+                                ->getRepository('RZ\Renzo\Core\Entities\Folder')
+                                ->findOneByName($parentName);
+                }
+
+                $folder = $this->getService('em')
+                            ->getRepository('RZ\Renzo\Core\Entities\Folder')
+                            ->findOneByName($folderName);
+
+
+                if (null === $folder) {
+                    /*
+                     * Creation of a new folder
+                     * before linking it to the node
+                     */
+                    $folder = new Folder();
+                    $folder->setName($folderName);
+
+                    if (null !== $parentFolder) {
+                        $folder->setParent($parentFolder);
+                    }
+
+                    $this->getService('em')->persist($folder);
+                    $this->getService('em')->flush();
+                }
+
+                /*
+                 * Add each selected documents
+                 */
+                foreach ($documents as $document) {
+                    $folder->addDocument($document);
+                }
+
+                $this->getService('em')->flush();
+            }
+
+            $msg = $this->getTranslator()->trans('documents.linked_to.folders');
+        }
+
+        return $msg;
     }
 
     private function embedDocument($data, $folderId = null)
