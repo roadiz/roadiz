@@ -1006,8 +1006,6 @@ class NodesController extends RozierApp
                     }
                 }
 
-
-
                 $tag = $this->getService('em')
                             ->getRepository('RZ\Renzo\Core\Entities\Tag')
                             ->findOneByTagName($tagName);

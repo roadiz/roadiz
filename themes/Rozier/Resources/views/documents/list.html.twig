@@ -21,6 +21,17 @@
 
     <nav class="documents-bulk-actions">
         <a class="uk-button uk-button-small uk-button-danger document-bulk-delete" href="#"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}bulk.delete.documents{% endtrans %}</a>
+
+        {% form_theme joinFolderForm 'forms.html.twig' %}
+        <form class="uk-form uk-form-horizontal document-bulk-folder-form" action="#" method="post" {{ form_enctype(joinFolderForm) }}>
+            {{ form_widget(joinFolderForm) }}
+            {% spaceless %}
+            <button class="uk-button uk-button-primary" type="submit">
+                <span class="icon-container"><i class="uk-icon-folder-o"></i></span>
+                <span class="label"><span class="label-text">{% trans %}bulk.fold.documents{% endtrans %}</span></span>
+            </button>
+            {% endspaceless %}
+        </form>
     </nav>
 
     <article class="content content-no-action-menu">

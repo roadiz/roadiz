@@ -351,6 +351,15 @@ foldersDeletePage:
     defaults: { _controller: Themes\Rozier\Controllers\FoldersController::deleteAction }
     requirements: { userId : "[0-9]+", roleId : "[0-9]+" }
 
+## Ajax
+foldersAjaxEdit:
+    path:     /rz-admin/ajax/folder/edit/{folderId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxFoldersController::editAction }
+    requirements: { tagId : "[0-9]+" }
+foldersAjaxSearch:
+    path:     /rz-admin/ajax/folder/search
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxFoldersController::searchAction }
+
 # TRANSLATIONS
 translationsHomePage:
     path:     /rz-admin/translations

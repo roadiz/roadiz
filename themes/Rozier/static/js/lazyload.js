@@ -182,6 +182,7 @@ Lazyload.prototype.generalBind = function() {
     new StackNodeTree();
     new SaveButtons();
     new TagAutocomplete();
+    new FolderAutocomplete();
     new NodeTypeFieldsPosition();
     new CustomFormFieldsPosition();
 
