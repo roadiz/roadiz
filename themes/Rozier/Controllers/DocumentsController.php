@@ -662,8 +662,11 @@ class DocumentsController extends RozierApp
                         )
                     ))
                     ->add('folderPaths', 'text', array(
-                        'label' => $this->getTranslator()->trans('list.folders.to_link'),
-                        'attr' => array('class' => 'rz-folder-autocomplete'),
+                        'label' => false,
+                        'attr' => array(
+                            'class' => 'rz-folder-autocomplete',
+                            'placeholder' => $this->getTranslator()->trans('list.folders.to_link')
+                        ),
                         'constraints' => array(
                             new NotBlank()
                         )
