@@ -5273,6 +5273,16 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+
+      <trans-unit xml:space="preserve" id="duplicated.node.%name%">
+          <source>duplicated.node.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.node.%name%">
+          <source>impossible.duplicate.node.%name%</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

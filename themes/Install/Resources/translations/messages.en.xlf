@@ -168,7 +168,7 @@
             <!-- Themes -->
             <trans-unit id="themes.title" approved="yes">
                 <source>themes.title</source>
-                <target state="translated">Information</target>
+                <target state="translated">Informations</target>
             </trans-unit>
             <trans-unit id="themes.message" approved="yes">
                 <source>themes.message</source>
@@ -176,7 +176,7 @@
             </trans-unit>
             <trans-unit id="themes.save_informations" approved="yes">
                 <source>themes.save_informations</source>
-                <target state="translated">Save information</target>
+                <target state="translated">Save informations</target>
             </trans-unit>
             <trans-unit id="themes.frontend.description" approved="yes">
                 <source>themes.frontend.description</source>
@@ -229,35 +229,35 @@
             </trans-unit>
             <trans-unit id="goto.database" approved="yes">
                 <source>goto.database</source>
-                <target state="translated">Go to "database"</target>
+                <target state="translated">Database</target>
             </trans-unit>
             <trans-unit id="goto.import" approved="yes">
                 <source>goto.import</source>
-                <target state="translated">Go to "import"</target>
+                <target state="translated">Import</target>
             </trans-unit>
             <trans-unit id="goto.user" approved="yes">
                 <source>goto.user</source>
-                <target state="translated">Go to "user"</target>
+                <target state="translated">User</target>
             </trans-unit>
             <trans-unit id="goto.theme" approved="yes">
                 <source>goto.theme</source>
-                <target state="translated">Go to "theme"</target>
+                <target state="translated">Theme</target>
             </trans-unit>
             <trans-unit id="goto.informations" approved="yes">
                 <source>goto.informations</source>
-                <target state="translated">Go to "information"</target>
+                <target state="translated">Informations</target>
             </trans-unit>
             <trans-unit id="skip.user.goto.theme" approved="yes">
                 <source>skip.user.goto.theme</source>
-                <target state="translated">Skip "user"</target>
+                <target state="translated">Skip “user”</target>
             </trans-unit>
             <trans-unit id="skip.user.goto.done" approved="yes">
                 <source>skip.user.goto.done</source>
-                <target state="translated">Go to "finish"</target>
+                <target state="translated">User summary</target>
             </trans-unit>
             <trans-unit id="skip.database.goto.import" approved="yes">
                 <source>skip.database.goto.import</source>
-                <target state="translated">Skip "database"</target>
+                <target state="translated">Skip “database”</target>
             </trans-unit>
 
             <trans-unit id="choose.language" approved="yes">
@@ -271,9 +271,97 @@
 
             <trans-unit id="skip.database.goto.theme" approved="yes">
                 <source>skip.database.goto.theme</source>
-                <target state="translated">Skip "database"</target>
+                <target state="translated">Skip “database”</target>
             </trans-unit>
 
+            <trans-unit xml:space="preserve" id="theme.summary.title" approved="yes">
+                <source>theme.summary.title</source>
+                <target state="translated">Theme setup summary</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="check.version" approved="yes">
+                <source>check.version</source>
+                <target state="translated">Version</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="theme.name" approved="yes">
+                <source>theme.name</source>
+                <target state="translated">Name</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="theme.version" approved="yes">
+                <source>theme.version</source>
+                <target state="translated">Version</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="cms.version" approved="yes">
+                <source>cms.version</source>
+                <target state="translated">CMS version</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="theme.supportedLocale" approved="yes">
+                <source>theme.supportedLocale</source>
+                <target state="translated">Supported locale(s)</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="cms.locale" approved="yes">
+                <source>cms.locale</source>
+                <target state="translated">CMS locale</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="name" approved="yes">
+                <source>name</source>
+                <target state="translated">Name</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="filename" approved="yes">
+                <source>filename</source>
+                <target state="translated">Filename</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="nodetypes" approved="yes">
+                <source>nodetypes</source>
+                <target state="translated">Node-types</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="nodes" approved="yes">
+                <source>nodes</source>
+                <target state="translated">Nodes</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="install.theme" approved="yes">
+                <source>install.theme</source>
+                <target state="translated">Perform theme install</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="import.theme.content.title" approved="yes">
+                <source>import.theme.content.title</source>
+                <target state="translated">Import theme content</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="step.name" approved="yes">
+                <source>step.name</source>
+                <target state="translated">Step</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="goto.done" approved="yes">
+                <source>goto.done</source>
+                <target state="translated">Done</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="import_roles" approved="yes">
+                <source>import_roles</source>
+                <target state="translated">Roles</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="import_groups" approved="yes">
+                <source>import_groups</source>
+                <target state="translated">Roles groups</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="import_settings" approved="yes">
+                <source>import_settings</source>
+                <target state="translated">Settings</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="theme.selector" approved="yes">
+                <source>theme.selector</source>
+                <target state="translated">Available themes</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="check.locale" approved="yes">
+                <source>check.locale</source>
+                <target state="translated">Locale</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="check.import.files" approved="yes">
+                <source>check.import.files</source>
+                <target state="translated">Files to import</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

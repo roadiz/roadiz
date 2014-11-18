@@ -121,14 +121,42 @@ class NodesUtilsController extends RozierApp
      */
     public function duplicateAction(Request $request, $nodeId)
     {
-        $request->getSession()->getFlashBag()->add('confirm', "duplicate.node");
-        $existingNode = $this->getService('em')
-                              ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
-        $newNode = $existingNode->getHandler()->duplicate();
-        $response = new RedirectResponse($this->getService('urlGenerator')
-                                              ->generate('nodesEditPage',
-                                                         array("nodeId" => $newNode->getId())));
-        $response->prepare($request);
-        return $response->send();
+        try {
+
+            $existingNode = $this->getService('em')
+                                  ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+            $newNode = $existingNode->getHandler()->duplicate();
+
+            $msg = $this->getTranslator()->trans("duplicated.node.%name%", array(
+                '%name%' => $existingNode->getNodeName()
+            ));
+            $request->getSession()->getFlashBag()->add(
+                'confirm',
+                $msg
+            );
+            $this->getService('logger')->info($msg);
+
+            $response = new RedirectResponse($this->getService('urlGenerator')
+                                                  ->generate('nodesEditPage',
+                                                             array("nodeId" => $newNode->getId())));
+        } catch(\Exception $e) {
+
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                $this->getTranslator()->trans("impossible.duplicate.node.%name%", array(
+                    '%name%' => $existingNode->getNodeName()
+                ))
+            );
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                $e->getMessage()
+            );
+            $response = new RedirectResponse($this->getService('urlGenerator')
+                                                      ->generate('nodesEditPage',
+                                                                 array("nodeId" => $existingNode->getId())));
+        } finally {
+            $response->prepare($request);
+            return $response->send();
+        }
     }
 }

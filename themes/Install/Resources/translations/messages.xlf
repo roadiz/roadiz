@@ -274,6 +274,94 @@
                 <target />
             </trans-unit>
 
+            <trans-unit xml:space="preserve" id="theme.summary.title">
+                <source>theme.summary.title</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="check.version">
+                <source>check.version</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="theme.name">
+                <source>theme.name</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="theme.version">
+                <source>theme.version</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="cms.version">
+                <source>cms.version</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="theme.supportedLocale">
+                <source>theme.supportedLocale</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="cms.locale">
+                <source>cms.locale</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="name">
+                <source>name</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="filename">
+                <source>filename</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="nodetypes">
+                <source>nodetypes</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="nodes">
+                <source>nodes</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="install.theme">
+                <source>install.theme</source>
+                <target></target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="import.theme.content.title">
+                <source>import.theme.content.title</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="step.name">
+                <source>step.name</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="goto.done">
+                <source>goto.done</source>
+                <target></target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="import_roles">
+                <source>import_roles</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="import_groups">
+                <source>import_groups</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="import_settings">
+                <source>import_settings</source>
+                <target></target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="theme.selector">
+                <source>theme.selector</source>
+                <target></target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="check.locale">
+                <source>check.locale</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="check.import.files">
+                <source>check.import.files</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

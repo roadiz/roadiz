@@ -18,8 +18,8 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-17 14:57+0000
-Last-Translator: Maxime Constantinian &lt;azokal@rezo-zero.com&gt;
+PO-Revision-Date: 2014-11-18 10:50+0000
+Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
 MIME-Version: 1.0
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1416236254.486554
+X-POOTLE-MTIME: 1416307833.349114
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5251,31 +5251,41 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="answer.form" approved="yes">
           <source>answer.form</source>
           <target state="translated">Answer form.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.send" approved="yes">
           <source>customForm.%name%.send</source>
           <target state="translated">The custom form "%name%" sent.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="new.answer.form.%site%" approved="yes">
           <source>new.answer.form.%site%</source>
           <target state="translated">New answer for "%site%" form.</target>
-      </trans-unit>
+      <note/></trans-unit>
 
       <trans-unit xml:space="preserve" id="customFormAnswer.%id%.deleted" approved="yes">
           <source>customFormAnswer.%id%.deleted</source>
           <target state="translated">Answer "%id%" deleted.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="customFormField.%name%.updated" approved="yes">
           <source>customFormField.%name%.updated</source>
           <target state="translated">Field "%name%" updated.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="customFormField.%name%.created" approved="yes">
           <source>customFormField.%name%.created</source>
           <target state="translated">Field "%name%" created.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="customFormField.%name%.deleted" approved="yes">
           <source>customFormField.%name%.deleted</source>
           <target state="translated">Field "%name%" deleted.</target>
+      <note/></trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="duplicated.node.%name%" approved="yes">
+          <source>duplicated.node.%name%</source>
+          <target state="translated">Node “%name%” has been duplicated</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.node.%name%" approved="yes">
+          <source>impossible.duplicate.node.%name%</source>
+          <target state="translated">Impossible to duplicate node “%name%”</target>
       </trans-unit>
 
     </body>
