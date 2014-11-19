@@ -34,7 +34,7 @@
             </form>
         {% endif %}
         {% form_theme tagNodesForm 'forms.html.twig' %}
-        <form class="uk-form uk-form-horizontal node-bulk-folder-form" action="#" method="post" {{ form_enctype(tagNodesForm) }}>
+        <form class="uk-form uk-form-horizontal node-bulk-tag-form" action="#" method="post" {{ form_enctype(tagNodesForm) }}>
             {{ form_widget(tagNodesForm) }}
         </form>
     </nav>
