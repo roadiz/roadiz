@@ -91,6 +91,10 @@ class SearchController extends RozierApp
 
         if (isset($data["tags"])) {
             $data["tags"] = explode(',', $data["tags"]);
+            foreach ($data["tags"] as $key => $value) {
+                $data["tags"][$key] = $this->getService("em")->getRepository("RZ\Renzo\Core\Entities\Tag")->findByPath($value);
+            }
+            array_filter($data["tags"]);
         }
 
         return $data;
