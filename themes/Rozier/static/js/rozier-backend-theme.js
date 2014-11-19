@@ -6,6 +6,7 @@ var DocumentsBulk = function () {
     var _this = this;
 
     _this.$documentsCheckboxes = $('input.document-checkbox');
+    _this.$documentsIdBulkFolders = $('input.document-id-bulk-folder');
     _this.$actionsMenu = $('.documents-bulk-actions');
 
     if (_this.$documentsCheckboxes.length) {
@@ -15,6 +16,7 @@ var DocumentsBulk = function () {
 
 
 DocumentsBulk.prototype.$documentsCheckboxes = null;
+DocumentsBulk.prototype.$documentsIdBulkFolders = null;
 DocumentsBulk.prototype.$actionsMenu = null;
 DocumentsBulk.prototype.documentsIds = null;
 
@@ -48,6 +50,10 @@ DocumentsBulk.prototype.onCheckboxChange = function(event) {
     $("input.document-checkbox:checked").each(function(index,domElement) {
         _this.documentsIds.push($(domElement).val());
     });
+
+    if(_this.$documentsIdBulkFolders.length){
+        _this.$documentsIdBulkFolders.val(_this.documentsIds.join(','));
+    }
 
     // console.log(_this.documentsIds);
 
@@ -99,6 +105,117 @@ DocumentsBulk.prototype.showActions = function () {
  * @return {[type]} [description]
  */
 DocumentsBulk.prototype.hideActions = function () {
+    var _this = this;
+
+    _this.$actionsMenu.slideUp();
+    //_this.$actionsMenu.removeClass('visible');
+};;/**
+ * Nodes bulk
+ */
+
+var NodesBulk = function () {
+    var _this = this;
+
+    _this.$nodesCheckboxes = $('input.node-checkbox');
+    _this.$nodesIdBulkTags = $('input.nodes-id-bulk-tags');
+    _this.$actionsMenu = $('.nodes-bulk-actions');
+
+    if (_this.$nodesCheckboxes.length) {
+        _this.init();
+    }
+};
+
+
+NodesBulk.prototype.$nodesCheckboxes = null;
+NodesBulk.prototype.$nodesIdBulkTags = null;
+NodesBulk.prototype.$actionsMenu = null;
+NodesBulk.prototype.nodesIds = null;
+
+/**
+ * Init
+ * @return {[type]} [description]
+ */
+NodesBulk.prototype.init = function() {
+    var _this = this;
+
+    var proxy = $.proxy(_this.onCheckboxChange, _this);
+    _this.$nodesCheckboxes.off('change', proxy);
+    _this.$nodesCheckboxes.on('change', proxy);
+
+    var $bulkDeleteButton = _this.$actionsMenu.find('.node-bulk-delete');
+    var deleteProxy = $.proxy(_this.onBulkDelete, _this);
+    $bulkDeleteButton.off('click', deleteProxy);
+    $bulkDeleteButton.on('click', deleteProxy);
+};
+
+
+/**
+ * On checkbox change
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
+NodesBulk.prototype.onCheckboxChange = function(event) {
+    var _this = this;
+
+    _this.nodesIds = [];
+    $("input.node-checkbox:checked").each(function(index,domElement) {
+        _this.nodesIds.push($(domElement).val());
+    });
+
+    if(_this.$nodesIdBulkTags.length){
+        _this.$nodesIdBulkTags.val(_this.nodesIds.join(','));
+    }
+
+    console.log(_this.nodesIds);
+
+    if(_this.nodesIds.length > 0){
+        _this.showActions();
+    } else {
+        _this.hideActions();
+    }
+};
+
+
+/**
+ * On bulk delete
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
+NodesBulk.prototype.onBulkDelete = function(event) {
+    var _this = this;
+
+    if(_this.nodesIds.length > 0){
+
+        history.pushState({
+            'headerData' : {
+                'nodes': _this.nodesIds
+            }
+        }, null, Rozier.routes.nodesBulkDeletePage);
+
+        Rozier.lazyload.onPopState(null);
+    }
+
+    return false;
+};
+
+
+/**
+ * Show actions
+ * @return {[type]} [description]
+ */
+NodesBulk.prototype.showActions = function () {
+    var _this = this;
+
+    _this.$actionsMenu.slideDown();
+    //_this.$actionsMenu.addClass('visible');
+};
+
+
+/**
+ * Hide actions
+ * @return {[type]} [description]
+ */
+NodesBulk.prototype.hideActions = function () {
     var _this = this;
 
     _this.$actionsMenu.slideUp();
@@ -1941,6 +2058,60 @@ var TagAutocomplete = function () {
               return false;
         }
     });
+};;/*
+ *
+ *
+ */
+var FolderAutocomplete = function () {
+    var _this = this;
+
+    function split( val ) {
+        return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+        return split( term ).pop();
+    }
+    $(".rz-folder-autocomplete")
+        // don't navigate away from the field on tab when selecting an item
+        .bind( "keydown", function( event ) {
+            if ( event.keyCode === $.ui.keyCode.TAB &&
+                $( this ).autocomplete( "instance" ).menu.active ) {
+                event.preventDefault();
+            }
+        })
+        .autocomplete({
+            source: function( request, response ) {
+
+                $.getJSON( Rozier.routes.foldersAjaxSearch, {
+                    '_action': 'folderAutocomplete',
+                    '_token': Rozier.ajaxToken,
+                    'search': extractLast( request.term )
+                }, response);
+            },
+            search: function() {
+
+                // custom minLength
+                var term = extractLast( this.value );
+                if ( term.length < 2 ) {
+                  return false;
+                }
+            },
+            focus: function() {
+              // prevent value inserted on focus
+              return false;
+            },
+            select: function( event, ui ) {
+              var terms = split( this.value );
+              // remove the current input
+              terms.pop();
+              // add the selected item
+              terms.push( ui.item.value );
+              // add placeholder to get the comma-and-space at the end
+              terms.push( "" );
+              this.value = terms.join( ", " );
+              return false;
+        }
+    });
 };;var StackNodeTree = function () {
     var _this = this;
 
@@ -2030,9 +2201,10 @@ StackNodeTree.prototype.refreshNodeTree = function( $link, rootNodeId ) {
 
     if($nodeTree.length){
         var postData = {
-            "_token": Rozier.ajaxToken,
-            "_action":'requestNodeTree',
-            "parentNodeId":parseInt(rootNodeId)
+            "_token":       Rozier.ajaxToken,
+            "_action":      'requestNodeTree',
+            "stackTree":    true,
+            "parentNodeId": parseInt(rootNodeId)
         };
 
         $.ajax({
@@ -2609,6 +2781,7 @@ Lazyload.prototype.generalBind = function() {
 
     // console.log('General bind');
     new DocumentsBulk();
+    new NodesBulk();
     new DocumentWidget();
     new NodeWidget();
     new DocumentUploader(Rozier.messages.dropzone);
@@ -2616,6 +2789,7 @@ Lazyload.prototype.generalBind = function() {
     new StackNodeTree();
     new SaveButtons();
     new TagAutocomplete();
+    new FolderAutocomplete();
     new NodeTypeFieldsPosition();
     new CustomFormFieldsPosition();
 
@@ -2976,6 +3150,9 @@ Rozier.bindMainTrees = function () {
 
 	$('.tagtree-widget .root-tree').off('uk.nestable.change');
 	$('.tagtree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableTagTreeChange );
+
+	$('.foldertree-widget .root-tree').off('uk.nestable.change');
+	$('.foldertree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableFolderTreeChange );
 };
 
 
@@ -3343,6 +3520,85 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 	});
 };
 
+/**
+ *
+ * @param  Event event
+ * @param  jQueryFolder element
+ * @param  string status  added, moved or removed
+ * @return boolean
+ */
+Rozier.onNestableFolderTreeChange = function (event, element, status) {
+	var _this = this;
+
+	console.log("Folder: "+element.data('folder-id')+ " status : "+status);
+
+	/*
+	 * If folder removed, do not do anything, the other folderTree will be triggered
+	 */
+	if (status == 'removed') {
+		return false;
+	}
+
+	var folder_id = parseInt(element.data('folder-id'));
+	var parent_folder_id = parseInt(element.parents('ul').first().data('parent-folder-id'));
+
+	/*
+	 * User dragged folder inside itself
+	 * It will destroy the Internet !
+	 */
+	if (folder_id === parent_folder_id) {
+		console.log("You cannot move a folder inside itself!");
+		alert("You cannot move a folder inside itself!");
+		window.location.reload();
+		return false;
+	}
+
+	var postData = {
+		_token: Rozier.ajaxToken,
+		_action: 'updatePosition',
+		folderId: folder_id
+	};
+
+	/*
+	 * Get folder siblings id to compute new position
+	 */
+	if (element.next().length) {
+		postData.nextFolderId = parseInt(element.next().data('folder-id'));
+	}
+	else if(element.prev().length) {
+		postData.prevFolderId = parseInt(element.prev().data('folder-id'));
+	}
+
+	/*
+	 * When dropping to route
+	 * set parentFolderId to NULL
+	 */
+	if(isNaN(parent_folder_id)){
+		parent_folder_id = null;
+	}
+	postData.newParent = parent_folder_id;
+
+	console.log(postData);
+	$.ajax({
+		url: Rozier.routes.folderAjaxEdit.replace("%folderId%", folder_id),
+		type: 'POST',
+		dataType: 'json',
+		data: postData
+	})
+	.done(function( data ) {
+		console.log(data);
+		$.UIkit.notify({
+			message : data.responseText,
+			status  : data.status,
+			timeout : 3000,
+			pos     : 'top-center'
+		});
+
+	})
+	.fail(function( data ) {
+		console.log(data);
+	});
+};
 
 /**
  * Back top click
@@ -3352,7 +3608,7 @@ Rozier.backTopBtnClick = function(e){
 	var _this = this;
 
 	TweenLite.to(_this.$mainContentScrollable, 0.6, {scrollTo:{y:0}, ease:Expo.easeOut});
-	
+
 	return false;
 };
 

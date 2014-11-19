@@ -41,6 +41,7 @@ use RZ\Renzo\Core\AbstractEntities\AbstractEntity;
  * @Table(name="nodes_sources", uniqueConstraints={@UniqueConstraint(columns={"id","node_id", "translation_id"})})
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="discr", type="string")
+ * @HasLifecycleCallbacks
  */
 class NodesSources extends AbstractEntity
 {
@@ -70,6 +71,15 @@ class NodesSources extends AbstractEntity
         return $this;
     }
 
+    /**
+     * @PreUpdate
+     */
+    public function preUpdate()
+    {
+        if (null !== $this->getNode()) {
+            $this->getNode()->setUpdatedAt(new \DateTime("now"));
+        }
+    }
 
     /**
      * @ManyToOne(targetEntity="Translation", inversedBy="nodeSources")

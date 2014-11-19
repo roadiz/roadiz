@@ -5,6 +5,23 @@
 
 .nodetree {
 
+    &-bulk-selection {
+        position: absolute;
+        display: inline-block;
+        vertical-align: middle;
+        left: -24px;
+        padding: 10px;
+        top: -5px;
+
+        input[type="checkbox"] {
+            display: none;
+
+
+            &:checked {
+                display: block;
+            }
+        }
+    }
     &-element {
         &-inner {
             position: relative;
@@ -28,6 +45,13 @@
         &:hover {
             .nodetree-contextualmenu {
                 .opacity(1);
+            }
+
+
+            .nodetree-bulk-selection {
+                input[type="checkbox"] {
+                    display: block;
+                }
             }
         }
     }
@@ -66,7 +90,11 @@
             }
         }
     }
+
+
+
 }
+
 
 .uk-nestable {
 
@@ -92,66 +120,8 @@
         &:before{
             position: absolute;
             content:'';
-            top: 0px; bottom:0; left: 0px; 
+            top: 0px; bottom:0; left: 0px;
             width:1px;
         }
     }
 }
-
-// .stack-tree-widget{
-
-//     &> .has-children{
-//         position: relative;
-
-//         &:first-child{
-//             &:before{
-//                 top:16px; left:17px;
-//             }
-
-//             &> .uk-nestable-list{
-
-//                 .uk-nestable-list-item:last-child{
-//                     &:after{
-//                         height:11px;
-//                     }
-//                 }
-//             }
-//         }
-        
-//         &:before{
-//             position: absolute;
-//             content:'';
-//             top: 21px; left: 18px;
-//             width:1px; height:52%;
-//             background: #b2b2b2;
-//         }
-        
-//         &> .uk-nestable-list{
-
-//             &:before{
-//                 position: absolute;
-//                 content:'';
-//                 top: 42px; bottom:0; left: 18px; 
-//                 width:2px;
-//                 background: @grey-verylight; 
-//             }
-
-//             .uk-nestable-list-item:last-child{
-//                 &:after{
-//                     position: absolute;
-//                     content:'';
-//                     bottom:0; left:0;
-//                     width:2px; height:11px;
-//                     background: @grey-verylight; 
-//                 }
-//             }
-
-//             .uk-nestable-list-item .uk-nestable-list{
-//                 position: relative;
-
-//                 // &:before{ 
-//                 // }
-//             }
-//         }
-//     }
-// }

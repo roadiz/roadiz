@@ -87,9 +87,10 @@ StackNodeTree.prototype.refreshNodeTree = function( $link, rootNodeId ) {
 
     if($nodeTree.length){
         var postData = {
-            "_token": Rozier.ajaxToken,
-            "_action":'requestNodeTree',
-            "parentNodeId":parseInt(rootNodeId)
+            "_token":       Rozier.ajaxToken,
+            "_action":      'requestNodeTree',
+            "stackTree":    true,
+            "parentNodeId": parseInt(rootNodeId)
         };
 
         $.ajax({

@@ -24,6 +24,16 @@
     </header>
 
     {% include 'widgets/filtersBar.html.twig' with {filters: specificNodeTree.filters} only %}
+
+    <nav class="nodes-bulk-actions">
+        <a class="uk-button uk-button-small uk-button-danger node-bulk-delete" href="#"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}bulk.delete.nodes{% endtrans %}</a>
+
+        {% form_theme tagNodesForm 'forms.html.twig' %}
+        <form class="uk-form uk-form-horizontal node-bulk-folder-form" action="#" method="post" {{ form_enctype(tagNodesForm) }}>
+            {{ form_widget(tagNodesForm) }}
+        </form>
+    </nav>
+
     <article class="content content-no-action-menu">
         {% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
     </article>

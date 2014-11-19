@@ -20,8 +20,6 @@ use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Handlers\NodeHandler;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
-
-
 use RZ\Renzo\CMS\Forms\SeparatorType;
 
 use Themes\Rozier\Widgets\NodeTreeWidget;
@@ -33,7 +31,7 @@ use RZ\Renzo\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\Form\Form;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -153,13 +151,47 @@ class NodesController extends RozierApp
             $this->assignation['source'] = $node->getNodeSources()->first();
             $this->assignation['translation'] = $translation;
             $this->assignation['specificNodeTree'] = $widget;
-        }
 
-        return new Response(
-            $this->getTwig()->render('nodes/tree.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
+            /*
+             * Handle bulk folder form
+             */
+            $tagNodesForm = $this->buildBulkTagForm();
+            $tagNodesForm->handleRequest();
+            if ($tagNodesForm->isValid()) {
+                $data = $tagNodesForm->getData();
+
+                if ($tagNodesForm->get('submitTag')->isClicked()) {
+                    $msg = $this->tagNodes($data);
+                } elseif ($tagNodesForm->get('submitUntag')->isClicked()) {
+                    $msg = $this->untagNodes($data);
+                } else {
+                    $msg = $this->getTranslator()->trans('wrong.request');
+                }
+
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                $this->getService('logger')->info($msg);
+
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate(
+                        'nodesTreePage',
+                        array('nodeId' => $nodeId, 'translationId' => $translationId)
+                    )
+                );
+                $response->prepare($request);
+
+                return $response->send();
+            }
+            $this->assignation['tagNodesForm'] = $tagNodesForm->createView();
+
+
+            return new Response(
+                $this->getTwig()->render('nodes/tree.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        } else {
+            return $this->throw404();
+        }
     }
 
     /**
@@ -980,70 +1012,9 @@ class NodesController extends RozierApp
             $paths = array_filter($paths);
 
             foreach ($paths as $path) {
-                $path = trim($path);
-
-                $tags = explode('/', $path);
-                $tags = array_filter($tags);
-
-                $tagName = $tags[count($tags) - 1];
-                $parentName = null;
-                $parentTag = null;
-
-                if (count($tags) > 1) {
-                    $parentName = $tags[count($tags) - 2];
-
-                    $parentTag = $this->getService('em')
-                                ->getRepository('RZ\Renzo\Core\Entities\Tag')
-                                ->findOneByTagName($parentName);
-
-                    if (null === $parentTag) {
-                        $ttagParent = $this->getService('em')
-                                    ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
-                                    ->findOneByName($parentName);
-                        if (null !== $ttagParent) {
-                            $parentTag = $ttagParent->getTag();
-                        }
-                    }
-                }
-
                 $tag = $this->getService('em')
                             ->getRepository('RZ\Renzo\Core\Entities\Tag')
-                            ->findOneByTagName($tagName);
-
-
-                if (null === $tag) {
-                    $ttag = $this->getService('em')
-                                ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
-                                ->findOneByName($tagName);
-                    if (null !== $ttag) {
-                        $tag = $ttag->getTag();
-                    }
-                }
-
-                if (null === $tag) {
-
-                    /*
-                     * Creation of a new tag
-                     * before linking it to the node
-                     */
-                    $trans = $this->getService('em')
-                                ->getRepository('RZ\Renzo\Core\Entities\Translation')
-                                ->findDefault();
-
-                    $tag = new Tag();
-                    $tag->setTagName($tagName);
-                    $translatedTag = new TagTranslation($tag, $trans);
-                    $translatedTag->setName($tagName);
-                    $tag->getTranslatedTags()->add($translatedTag);
-
-                    if (null !== $parentTag) {
-                        $tag->setParent($parentTag);
-                    }
-
-                    $this->getService('em')->persist($translatedTag);
-                    $this->getService('em')->persist($tag);
-                    $this->getService('em')->flush();
-                }
+                            ->findOrCreateByPath($path);
 
                 $node->addTag($tag);
             }
@@ -1245,6 +1216,125 @@ class NodesController extends RozierApp
 
         return $builder->getForm();
     }
+
+     /**
+     * @param RZ\Renzo\Core\Entities\Node $node
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildBulkTagForm()
+    {
+        $builder = $this->getService('formFactory')
+                    ->createBuilder('form')
+                    ->add('nodesIds', 'hidden', array(
+                        'attr' => array('class' => 'nodes-id-bulk-tags'),
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ))
+                    ->add('tagsPaths', 'text', array(
+                        'label' => false,
+                        'attr' => array(
+                            'class' => 'rz-tag-autocomplete',
+                            'placeholder' => $this->getTranslator()->trans('list.tags.to_link.or_unlink')
+                        ),
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ))
+                    ->add('submitTag', 'submit', array(
+                        'label' => $this->getTranslator()->trans('link.tags'),
+                        'attr' => array(
+                            'class' => 'uk-button'
+                        )
+                    ))
+                    ->add('submitUntag', 'submit', array(
+                        'label' => $this->getTranslator()->trans('unlink.tags'),
+                        'attr' => array(
+                            'class' => 'uk-button'
+                        )
+                    ));
+
+        return $builder->getForm();
+    }
+
+    private function tagNodes($data)
+    {
+        $msg = $this->getTranslator()->trans('nodes.bulk.not_tagged');
+
+        if (!empty($data['tagsPaths']) &&
+            !empty($data['nodesIds'])) {
+
+            $nodesIds = explode(',', $data['nodesIds']);
+            $nodesIds = array_filter($nodesIds);
+
+            $nodes = $this->getService('em')
+                            ->getRepository('RZ\Renzo\Core\Entities\Node')
+                            ->findBy(array(
+                                'id' => $nodesIds
+                            ));
+
+
+            $paths = explode(',', $data['tagsPaths']);
+            $paths = array_filter($paths);
+
+            foreach ($paths as $path) {
+                $tag = $this->getService('em')
+                            ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                            ->findOrCreateByPath($path);
+
+
+                foreach ($nodes as $node) {
+                    $node->addTag($tag);
+                }
+            }
+            $msg = $this->getTranslator()->trans('nodes.bulk.tagged');
+        }
+
+        $this->getService('em')->flush();
+
+        return $msg;
+    }
+
+    private function untagNodes($data)
+    {
+        $msg = $this->getTranslator()->trans('nodes.bulk.not_untagged');
+
+        if (!empty($data['tagsPaths']) &&
+            !empty($data['nodesIds'])) {
+
+            $nodesIds = explode(',', $data['nodesIds']);
+            $nodesIds = array_filter($nodesIds);
+
+            $nodes = $this->getService('em')
+                            ->getRepository('RZ\Renzo\Core\Entities\Node')
+                            ->findBy(array(
+                                'id' => $nodesIds
+                            ));
+
+
+            $paths = explode(',', $data['tagsPaths']);
+            $paths = array_filter($paths);
+
+            foreach ($paths as $path) {
+                $tag = $this->getService('em')
+                            ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                            ->findOrCreateByPath($path);
+
+
+                foreach ($nodes as $node) {
+                    $node->removeTag($tag);
+                }
+            }
+            $msg = $this->getTranslator()->trans('nodes.bulk.untagged');
+        }
+
+        $this->getService('em')->flush();
+
+        return $msg;
+    }
+
+
 
     /**
      * @param RZ\Renzo\Core\Entities\Node $node

@@ -74,7 +74,6 @@ class DocumentsController extends RozierApp
 
             return $response->send();
         }
-
         $this->assignation['joinFolderForm'] = $joinFolderForm->createView();
 
         /*

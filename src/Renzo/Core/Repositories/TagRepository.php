@@ -766,4 +766,124 @@ class TagRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * Find a tag according to the given path or create it.
+     *
+     * @param string $tagPath
+     *
+     * @return RZ\Renzo\Core\Entities\Tag
+     */
+    public function findOrCreateByPath($tagPath)
+    {
+        $tagPath = trim($tagPath);
+        $tags = explode('/', $tagPath);
+        $tags = array_filter($tags);
+
+        $tagName = $tags[count($tags) - 1];
+        $parentName = null;
+        $parentTag = null;
+
+        if (count($tags) > 1) {
+            $parentName = $tags[count($tags) - 2];
+
+            $parentTag = $this->findOneByTagName($parentName);
+
+            if (null === $parentTag) {
+                $ttagParent = $this->_em
+                            ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
+                            ->findOneByName($parentName);
+                if (null !== $ttagParent) {
+                    $parentTag = $ttagParent->getTag();
+                }
+            }
+        }
+
+        $tag = $this->findOneByTagName($tagName);
+
+
+        if (null === $tag) {
+            $ttag = $this->_em
+                        ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
+                        ->findOneByName($tagName);
+            if (null !== $ttag) {
+                $tag = $ttag->getTag();
+            }
+        }
+
+        if (null === $tag) {
+
+            /*
+             * Creation of a new tag
+             * before linking it to the node
+             */
+            $trans = $this->_em
+                        ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                        ->findDefault();
+
+            $tag = new Tag();
+            $tag->setTagName($tagName);
+            $translatedTag = new TagTranslation($tag, $trans);
+            $translatedTag->setName($tagName);
+            $tag->getTranslatedTags()->add($translatedTag);
+
+            if (null !== $parentTag) {
+                $tag->setParent($parentTag);
+            }
+
+            $this->_em->persist($translatedTag);
+            $this->_em->persist($tag);
+            $this->_em->flush();
+        }
+
+        return $tag;
+    }
+
+    /**
+     * Find a tag according to the given path.
+     *
+     * @param string $tagPath
+     *
+     * @return RZ\Renzo\Core\Entities\Tag|null
+     */
+    public function findByPath($tagPath)
+    {
+        $tagPath = trim($tagPath);
+        $tags = explode('/', $tagPath);
+        $tags = array_filter($tags);
+
+        $tagName = $tags[count($tags) - 1];
+        $parentName = null;
+        $parentTag = null;
+
+        if (count($tags) > 1) {
+            $parentName = $tags[count($tags) - 2];
+
+            $parentTag = $this->findOneByTagName($parentName);
+
+            if (null === $parentTag) {
+                $ttagParent = $this->_em
+                            ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
+                            ->findOneByName($parentName);
+                if (null !== $ttagParent) {
+                    $parentTag = $ttagParent->getTag();
+                }
+            }
+        }
+
+        $tag = $this->findOneByTagName($tagName);
+
+
+        if (null === $tag) {
+            $ttag = $this->_em
+                        ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
+                        ->findOneByName($tagName);
+            if (null !== $ttag) {
+                $tag = $ttag->getTag();
+            }
+        }
+
+
+        return $tag;
+    }
 }
