@@ -31,10 +31,10 @@ NodesBulk.prototype.init = function() {
     _this.$nodesCheckboxes.off('change', proxy);
     _this.$nodesCheckboxes.on('change', proxy);
 
-    var $bulkDeleteButton = _this.$actionsMenu.find('.node-bulk-delete');
-    var deleteProxy = $.proxy(_this.onBulkDelete, _this);
-    $bulkDeleteButton.off('click', deleteProxy);
-    $bulkDeleteButton.on('click', deleteProxy);
+    //var $bulkDeleteButton = _this.$actionsMenu.find('.node-bulk-delete');
+    //var deleteProxy = $.proxy(_this.onBulkDelete, _this);
+    //$bulkDeleteButton.off('click', deleteProxy);
+    //$bulkDeleteButton.on('click', deleteProxy);
 };
 
 
