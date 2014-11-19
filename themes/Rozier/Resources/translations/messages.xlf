@@ -5300,6 +5300,59 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="wrong.request">
+          <source>wrong.request</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.nodes">
+          <source>delete.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.these.nodes">
+          <source>are_you_sure.delete.these.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.all">
+          <source>delete.all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.delete.nodes">
+          <source>bulk.delete.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="link.tags">
+          <source>link.tags</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unlink.tags">
+          <source>unlink.tags</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="list.tags.to_link.or_unlink">
+          <source>list.tags.to_link.or_unlink</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.deleted">
+          <source>nodes.bulk.deleted</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.not_tagged">
+          <source>nodes.bulk.not_tagged</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.tagged">
+          <source>nodes.bulk.tagged</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.not_untagged">
+          <source>nodes.bulk.not_untagged</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.untagged">
+          <source>nodes.bulk.untagged</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

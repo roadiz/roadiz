@@ -75,8 +75,11 @@ nodesEditSEOPage:
     requirements: { nodeId : "[0-9]+" }
 nodesTreePage:
     path:     /rz-admin/nodes/tree/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodesController::treeAction }
+    defaults: { _controller: Themes\Rozier\Controllers\NodesTreesController::treeAction }
     requirements: { nodeId : "[0-9]+" }
+nodesBulkDeletePage:
+    path:     /rz-admin/nodes/bulk-delete
+    defaults: { _controller: Themes\Rozier\Controllers\NodesTreesController::bulkDeleteAction }
 nodesAddPage:
     path:     /rz-admin/nodes/add/{nodeTypeId}/{translationId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::addAction }

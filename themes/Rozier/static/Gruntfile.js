@@ -37,6 +37,7 @@ module.exports = function(grunt) {
 			rezozero:{
 				'src': [
 					'js/bulk-edits/documentsBulk.js',
+					'js/bulk-edits/nodesBulk.js',
 
 					'js/widgets/documentsList.js',
 					'js/widgets/documentWidget.js',

@@ -32,17 +32,138 @@
     }
 }
 
-.node-list-item-color-cont{
-    position:relative;
-    width:4px;
+.node-list-item {
+
+    &-color-cont{
+        position:relative;
+        width:4px;
+    }
+
+    &-link{
+        position: relative;
+    }
+
+    &-color{
+        position: absolute;
+        top:0; bottom:0; left:0;
+        width:4px;
+    }
 }
 
-.nodes-list-item-link{
-    position: relative;
+
+.nodes-bulk-actions {
+    display: none;
+    text-align: center;
+    padding: 10px 0;
+
+    &.visible {
+        display: block;
+    }
+
+    form {
+        display: inline-block;
+    }
 }
 
-.nodes-list-item-color{
-    position: absolute;
-    top:0; bottom:0; left:0;
-    width:4px;
+.node-bulk-tag-form {
+    display: inline-block;
+
+    div,
+    .data-uk-margin {
+        display: inline-block;
+    }
+}
+
+.nodes-list{
+    margin:0;
+    list-style-type:none;
+
+    .node-item{
+        position: relative;
+        display: inline-block;
+        //width:128px; height:128px;
+        margin:0 16px 39px 0;
+        background:white;
+        //overflow: hidden;
+
+        &:hover{
+
+            .node-border{
+                background: #eaeaea;
+            }
+
+            .node-links{
+                bottom:0px;
+            }
+        }
+    }
+
+    .node-overflow{
+        position: absolute;
+        top: 0; left: 0;
+        width:128px; height:128px;
+        overflow: hidden;
+    }
+
+    .node-border{
+        position: absolute;
+        top:0; right:0; left:0;
+        height:4px;
+        background-color:#eaeaea;
+        .transition(0.5s background-color @easeOutExpo);
+        z-index:3;
+    }
+
+    .node-image{
+        width:128px; height:128px;
+    }
+
+    .node-name{
+        color: #909090;
+        font-size: 14px;
+        //.text-ellipsis();
+        margin-top: 2px;
+        padding: 5px 12px;
+    }
+
+    .node-links{
+        position:absolute;
+        width:128px; height:30px;
+        bottom:0;
+        bottom:-30px;
+        overflow: hidden;
+        .transition(0.4s bottom @easeOutExpo);
+        .box-sizing();
+
+        .node-link{ // a
+            display: inline-block;
+            width:64px; height:30px;
+            color:#333;
+            border:none;
+            .rounded(0);
+            .box-sizing();
+
+            &:hover{
+                color:darken(#333, 10%);
+            }
+
+            &:last-child{
+                background: #BBB;
+
+                &:hover{
+                    background: darken(#BBB, 10%);
+                }
+            }
+
+            i{
+                margin:0;
+                line-height:30px;
+                vertical-align: top;
+            }
+
+            .label{
+                display: none;
+            }
+        }
+    }
 }

@@ -20,8 +20,6 @@ use RZ\Renzo\Core\Entities\Translation;
 use RZ\Renzo\Core\Handlers\NodeHandler;
 use RZ\Renzo\Core\Utils\StringHandler;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
-
-
 use RZ\Renzo\CMS\Forms\SeparatorType;
 
 use Themes\Rozier\Widgets\NodeTreeWidget;
@@ -33,7 +31,7 @@ use RZ\Renzo\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\Form\Form;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -114,49 +112,6 @@ class NodesController extends RozierApp
 
         return new Response(
             $this->getTwig()->render('nodes/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
-    }
-
-    /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
-     * @param int                                      $translationId
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function treeAction(Request $request, $nodeId, $translationId = null)
-    {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
-
-        $node = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
-        $this->getService('em')->refresh($node);
-
-        $translation = null;
-        if (null !== $translationId) {
-            $translation = $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Translation')
-                ->findOneBy(array('id'=>(int) $translationId));
-        } else {
-            $translation = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
-                    ->findDefault();
-        }
-
-        if (null !== $node) {
-            $widget = new NodeTreeWidget($request, $this, $node, $translation);
-            $widget->setStackTree(true);
-            $widget->getNodes(); //pre-fetch nodes for enable filters
-            $this->assignation['node'] = $node;
-            $this->assignation['source'] = $node->getNodeSources()->first();
-            $this->assignation['translation'] = $translation;
-            $this->assignation['specificNodeTree'] = $widget;
-        }
-
-        return new Response(
-            $this->getTwig()->render('nodes/tree.html.twig', $this->assignation),
             Response::HTTP_OK,
             array('content-type' => 'text/html')
         );
@@ -980,70 +935,9 @@ class NodesController extends RozierApp
             $paths = array_filter($paths);
 
             foreach ($paths as $path) {
-                $path = trim($path);
-
-                $tags = explode('/', $path);
-                $tags = array_filter($tags);
-
-                $tagName = $tags[count($tags) - 1];
-                $parentName = null;
-                $parentTag = null;
-
-                if (count($tags) > 1) {
-                    $parentName = $tags[count($tags) - 2];
-
-                    $parentTag = $this->getService('em')
-                                ->getRepository('RZ\Renzo\Core\Entities\Tag')
-                                ->findOneByTagName($parentName);
-
-                    if (null === $parentTag) {
-                        $ttagParent = $this->getService('em')
-                                    ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
-                                    ->findOneByName($parentName);
-                        if (null !== $ttagParent) {
-                            $parentTag = $ttagParent->getTag();
-                        }
-                    }
-                }
-
                 $tag = $this->getService('em')
                             ->getRepository('RZ\Renzo\Core\Entities\Tag')
-                            ->findOneByTagName($tagName);
-
-
-                if (null === $tag) {
-                    $ttag = $this->getService('em')
-                                ->getRepository('RZ\Renzo\Core\Entities\TagTranslation')
-                                ->findOneByName($tagName);
-                    if (null !== $ttag) {
-                        $tag = $ttag->getTag();
-                    }
-                }
-
-                if (null === $tag) {
-
-                    /*
-                     * Creation of a new tag
-                     * before linking it to the node
-                     */
-                    $trans = $this->getService('em')
-                                ->getRepository('RZ\Renzo\Core\Entities\Translation')
-                                ->findDefault();
-
-                    $tag = new Tag();
-                    $tag->setTagName($tagName);
-                    $translatedTag = new TagTranslation($tag, $trans);
-                    $translatedTag->setName($tagName);
-                    $tag->getTranslatedTags()->add($translatedTag);
-
-                    if (null !== $parentTag) {
-                        $tag->setParent($parentTag);
-                    }
-
-                    $this->getService('em')->persist($translatedTag);
-                    $this->getService('em')->persist($tag);
-                    $this->getService('em')->flush();
-                }
+                            ->findOrCreateByPath($path);
 
                 $node->addTag($tag);
             }

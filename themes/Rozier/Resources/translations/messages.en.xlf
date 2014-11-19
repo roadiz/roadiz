@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-18 16:56+0000
+PO-Revision-Date: 2014-11-19 15:43+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1416329801.016091
+X-POOTLE-MTIME: 1416411817.485383
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5291,18 +5291,71 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="list.folders.to_link" approved="yes">
           <source>list.folders.to_link</source>
           <target state="translated">List folders (existant or not) to link your documents with.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="bulk.fold.documents" approved="yes">
           <source>bulk.fold.documents</source>
           <target state="translated">Link selected documents</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="documents.linked_to.folders" approved="yes">
           <source>documents.linked_to.folders</source>
           <target state="translated">Documents have been linked to folders.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="no_documents.linked_to.folders" approved="yes">
           <source>no_documents.linked_to.folders</source>
           <target state="translated">No documents have linked.</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="wrong.request" approved="yes">
+          <source>wrong.request</source>
+          <target state="translated">Wrong request</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.nodes" approved="yes">
+          <source>delete.nodes</source>
+          <target state="translated">Delete selected nodes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.these.nodes" approved="yes">
+          <source>are_you_sure.delete.these.nodes</source>
+          <target state="translated">Are you sure you want to delete these nodes ?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.all" approved="yes">
+          <source>delete.all</source>
+          <target state="translated">Delete all</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.delete.nodes" approved="yes">
+          <source>bulk.delete.nodes</source>
+          <target state="translated">Delete selected nodes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="link.tags" approved="yes">
+          <source>link.tags</source>
+          <target state="translated">Tag selected</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unlink.tags" approved="yes">
+          <source>unlink.tags</source>
+          <target state="translated">Untag selected</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="list.tags.to_link.or_unlink" approved="yes">
+          <source>list.tags.to_link.or_unlink</source>
+          <target state="translated">List tags to link or unlink…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.deleted" approved="yes">
+          <source>nodes.bulk.deleted</source>
+          <target state="translated">Selected nodes have been deleted</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.not_tagged" approved="yes">
+          <source>nodes.bulk.not_tagged</source>
+          <target state="translated">Impossible to tag selected nodes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.tagged" approved="yes">
+          <source>nodes.bulk.tagged</source>
+          <target state="translated">Selected nodes have been tagged</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.not_untagged" approved="yes">
+          <source>nodes.bulk.not_untagged</source>
+          <target state="translated">Impossible to untag selected nodes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.untagged" approved="yes">
+          <source>nodes.bulk.untagged</source>
+          <target state="translated">Selected nodes have been untagged</target>
       </trans-unit>
 
     </body>

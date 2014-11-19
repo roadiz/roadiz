@@ -175,6 +175,7 @@ Lazyload.prototype.generalBind = function() {
 
     // console.log('General bind');
     new DocumentsBulk();
+    new NodesBulk();
     new DocumentWidget();
     new NodeWidget();
     new DocumentUploader(Rozier.messages.dropzone);
