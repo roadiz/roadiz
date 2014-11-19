@@ -37,6 +37,7 @@ use RZ\Renzo\Core\Entities\NodeType;
 use RZ\Renzo\Core\ListManagers\EntityListManager;
 
 use RZ\Renzo\CMS\Forms\NodeStatesType;
+use RZ\Renzo\CMS\Forms\CompareDatetimeType;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,14 +58,27 @@ class SearchController extends RozierApp
         if (!empty($data["nodeName"])) {
             $data["nodeName"] = array("LIKE", "%" . $data["nodeName"] . "%");
         }
-        if (!$this->isBlank($data["parent"])) {
+
+        if (isset($data['parent']) && !$this->isBlank($data["parent"])) {
             if ($data["parent"] == "null" || $data["parent"] == 0) {
                 $data["parent"] = null;
             }
         }
+
         if (isset($data['visible'])) {
             $data['visible'] = (bool) $data['visible'];
         }
+
+        if (isset($data['createdAt'])) {
+            $data["createdAt"] = array($data['createdAt']['compareOp'], $data['createdAt']['compareDatetime']);
+            unset($data['createdAt']);
+        }
+
+        if (isset($data['updatedAt'])) {
+            $data["updatedAt"] = array($data['updatedAt']['compareOp'], $data['updatedAt']['compareDatetime']);
+            unset($data['updatedAt']);
+        }
+
         return $data;
     }
 
@@ -78,7 +92,10 @@ class SearchController extends RozierApp
             // $data = array_filter($form->getData(), $this->isBlank);
             $data = array();
             foreach ($form->getData() as $key => $value) {
-                if ($this->notBlank($value)) {
+                // if (is_array($value) && isset($value["compareDatetime"])) {
+                //     var_dump($value["compareDatetime"]);
+                // }
+                if ((!is_array($value) && $this->notBlank($value)) || (is_array($value) && isset($value["compareDatetime"]))) {
                     $data[$key] = $value;
                 }
             }
@@ -108,7 +125,7 @@ class SearchController extends RozierApp
 
     function buildSimpleForm() {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form')
+            ->createBuilder('form', array(), array("method" => "get"))
             ->add('status', new NodeStatesType(), array(
                 'label' => $this->getTranslator()->trans('node.status'),
                 'required' => false
@@ -148,7 +165,16 @@ class SearchController extends RozierApp
             ->add('parent', 'text', array(
                 'label' => $this->getTranslator()->trans('node.id.parent'),
                 'required' => false
+                ))
+            ->add("createdAt", new CompareDatetimeType($this->getTranslator()), array(
+                'virtual' => false,
+                'required' => false
+                ))
+            ->add("updatedAt", new CompareDatetimeType($this->getTranslator()), array(
+                'virtual' => false,
+                'required' => false
                 ));
+
 
         return $builder->getForm();
     }

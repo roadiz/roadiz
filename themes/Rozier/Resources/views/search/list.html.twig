@@ -34,7 +34,7 @@
 
     <article class="content content-no-action-menu">
         {% form_theme form 'forms.html.twig' %}
-        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        <form class="uk-form uk-form-stacked" action="#" method="get" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
             {% spaceless %}
             <button class="uk-button uk-button-primary" type="submit">
@@ -61,7 +61,8 @@
                         {% endif %}
                         </th>
                         <th>{% trans %}node.status{% endtrans %}</th>
-                        <th>{% trans %}last.modification{% endtrans %}
+                        <th>{% trans %}created.at{% endtrans %}
+                        <th>{% trans %}updated.at{% endtrans %}
                         {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
                             <a href="?field=updatedAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
                         {% else %}
@@ -114,7 +115,8 @@
                                 {% endif %}
                             {% endspaceless %}
                         </td>
-                        <td>{{ node.getUpdatedAt|localizeddate('short', 'none') }}</td>
+                        <td>{{ node.getCreatedAt|localizeddate('short', 'short') }}</td>
+                        <td>{{ node.getUpdatedAt|localizeddate('short', 'short') }}</td>
                         <td>
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditPage', { nodeId: node.getId }) }}" title="{% trans %}edit.node{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>

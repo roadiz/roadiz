@@ -32,20 +32,26 @@ namespace RZ\Renzo\CMS\Forms;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class CompareDatetimeType extends AbstractType
 {
-    public function __construct() {
+    private $translator;
+
+    public function __construct($translator) {
+        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $encoderFactory = $this->encoderFactory;
+        //$encoderFactory = $this->encoderFactory;
         $builder->add('compareOp', 'choice', array(
-            'label' => $this->getTranslator()->trans('node.datetime.operator'),
+            'label' => $this->translator->trans('node.datetime.operator'),
             'choices' => array('<' => '<', '>' => '>', '<=' => '<=', '>=' => '>=', '=' => '=')
         ))->add('compareDatetime', 'datetime', array(
-            'default' => false
+            'label' => $this->translator->trans('node.datetime.value'),
+            'required' => false
         ));
     }
 
