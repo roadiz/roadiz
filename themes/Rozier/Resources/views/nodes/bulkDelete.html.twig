@@ -12,10 +12,10 @@
         <ul class="nodes-list">
         {% for node in nodes %}
             {% set source = node.nodeSources.first %}
+            {% if source.title %}{% set title = source.title %}{% else %}{% set title = node.nodeName %}{% endif %}
             <li class="node-item">
                 <div class="node-border"></div>
-                <div class="node-title">{{ source.title }}</div>
-                <div class="node-name">{{ node.nodeName }}</div>
+                <div class="node-name">{{ title }}</div>
             </li>
         {% endfor %}
         </ul>
@@ -26,7 +26,7 @@
 		    <fieldset data-uk-margin>
 		    	<legend>{% trans %}are_you_sure.delete.these.nodes{% endtrans %}</legend>
 		    	<a href="{{ path('nodesHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
-		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}delete{% endtrans %}</button>
+		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}delete.all{% endtrans %}</button>
 	   		</fieldset>
 		</form>
 	</article>
