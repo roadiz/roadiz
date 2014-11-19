@@ -43,9 +43,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 
 class SearchController extends RozierApp
 {
+    protected $pagination = true;
+    protected $itemPerPage = null;
+
     public function isBlank($var) {
         return empty($var) && !is_numeric($var);
     }
@@ -79,6 +83,12 @@ class SearchController extends RozierApp
             unset($data['updatedAt']);
         }
 
+        if (isset($data["limitResult"])) {
+            $this->pagination = false;
+            $this->itemPerPage = $data["limitResult"];
+            unset($data["limitResult"]);
+        }
+
         return $data;
     }
 
@@ -106,6 +116,10 @@ class SearchController extends RozierApp
                 'RZ\Renzo\Core\Entities\Node',
                 $data
             );
+            if ($this->pagination == false) {
+                $listManager->setItemPerPage($this->itemPerPage);
+                $listManager->disablePagination();
+            }
             $listManager->handle();
 
             $this->assignation['filters'] = $listManager->getAssignation();
@@ -173,6 +187,13 @@ class SearchController extends RozierApp
             ->add("updatedAt", new CompareDatetimeType($this->getTranslator()), array(
                 'virtual' => false,
                 'required' => false
+                ))
+            ->add("limitResult", "number", array(
+                'label' => $this->getTranslator()->trans('node.limit.result'),
+                'required' => false,
+                'constraints' => array(
+                           new GreaterThan(0)
+                       ),
                 ));
 
 
