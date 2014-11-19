@@ -89,6 +89,10 @@ class SearchController extends RozierApp
             unset($data["limitResult"]);
         }
 
+        if (isset($data["tags"])) {
+            $data["tags"] = explode(',', $data["tags"]);
+        }
+
         return $data;
     }
 
@@ -194,6 +198,11 @@ class SearchController extends RozierApp
                 'constraints' => array(
                            new GreaterThan(0)
                        ),
+                ))
+            ->add('tags', 'text', array(
+                'label' => $this->getTranslator()->trans('node.tags'),
+                'required' => false,
+                'attr' => array ("class" => "rz-tag-autocomplete")
                 ));
 
 
