@@ -48,6 +48,8 @@ class EntityListManager
     protected $entityName;
     protected $paginator = null;
 
+    protected $pagination = true;
+
     protected $orderingArray = null;
     protected $filteringArray = null;
     protected $queryArray = null;
@@ -99,6 +101,14 @@ class EntityListManager
         $this->itemPerPage = (int) $itemPerPage;
 
         return $this;
+    }
+
+    public function enablePagination() {
+        $this->pagination = true;
+    }
+
+    public function disablePagination() {
+        $this->pagination = false;
     }
 
     /**
@@ -207,7 +217,14 @@ class EntityListManager
     public function getEntities()
     {
         try {
-            return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
+            if ($this->pagination == true) {
+                return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
+            } else {
+                return $this->_em->getRepository($this->entityName)
+                                 ->findBy($this->filteringArray,
+                                          $this->orderingArray,
+                                          $this->itemPerPage);
+            }
         } catch (\Exception $e) {
             return null;
         }
