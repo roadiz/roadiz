@@ -142,7 +142,9 @@ class NodesSourcesController extends RozierApp
         $fields = $nodeSource->getNode()->getNodeType()->getFields();
         foreach ($fields as $field) {
             if (isset($data[$field->getName()])) {
-                static::setValueFromFieldType($data, $nodeSource, $field);
+                static::setValueFromFieldType($data[$field->getName()], $nodeSource, $field);
+            } else {
+                static::setValueFromFieldType(null, $nodeSource, $field);
             }
         }
 
@@ -257,13 +259,20 @@ class NodesSourcesController extends RozierApp
                 return array(
                     'label' => $field->getLabel(),
                     'empty_value' => $translator->trans('choose.value'),
-                    'required' => false
+                    'required' => false,
+                    'attr' => array(
+                        'data-desc' => $field->getDescription()
+                    )
                 );
             case NodeTypeField::DATETIME_T:
                 return array(
                     'label' => $field->getLabel(),
                     'years' => range(date('Y')-10, date('Y')+10),
-                    'required' => false
+                    'required' => false,
+                    'attr' => array(
+                        'data-desc' => $field->getDescription(),
+                        'class' => 'rz-datetime-field'
+                    )
                 );
             case NodeTypeField::INTEGER_T:
                 return array(
@@ -286,8 +295,17 @@ class NodesSourcesController extends RozierApp
                     'label' => $field->getLabel(),
                     'required' => false,
                     'attr' => array(
-                        'data-desc'       => $field->getDescription(),
+                        'data-desc' => $field->getDescription(),
                         'class' => 'colorpicker-input'
+                    )
+                );
+            case NodeTypeField::GEOTAG_T:
+                return array(
+                    'label' => $field->getLabel(),
+                    'required' => false,
+                    'attr' => array(
+                        'data-desc' => $field->getDescription(),
+                        'class' => 'rz-geotag-field'
                     )
                 );
 
@@ -306,24 +324,25 @@ class NodesSourcesController extends RozierApp
 
     /**
      * Fill node-source content according to field type.
-     * @param array         $data
+     * @param mixed         $dataValue
      * @param NodesSources  $nodeSource
      * @param NodeTypeField $field
      *
      * @return void
      */
-    public static function setValueFromFieldType($data, $nodeSource, NodeTypeField $field)
+    public static function setValueFromFieldType($dataValue, $nodeSource, NodeTypeField $field)
     {
         switch ($field->getType()) {
             case NodeTypeField::DOCUMENTS_T:
                 $hdlr = $nodeSource->getHandler();
                 $hdlr->cleanDocumentsFromField($field);
-
-                foreach ($data[$field->getName()] as $documentId) {
-                    $tempDoc = Kernel::getService('em')
-                                    ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
-                    if ($tempDoc !== null) {
-                        $hdlr->addDocumentForField($tempDoc, $field);
+                if (is_array($dataValue)) {
+                    foreach ($dataValue as $documentId) {
+                        $tempDoc = Kernel::getService('em')
+                                        ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
+                        if ($tempDoc !== null) {
+                            $hdlr->addDocumentForField($tempDoc, $field);
+                        }
                     }
                 }
                 break;
@@ -331,11 +350,13 @@ class NodesSourcesController extends RozierApp
                 $hdlr = $nodeSource->getNode()->getHandler();
                 $hdlr->cleanNodesFromField($field);
 
-                foreach ($data[$field->getName()] as $nodeId) {
-                    $tempNode = Kernel::getService('em')
-                                    ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
-                    if ($tempNode !== null) {
-                        $hdlr->addNodeForField($tempNode, $field);
+                if (is_array($dataValue)) {
+                    foreach ($dataValue as $nodeId) {
+                        $tempNode = Kernel::getService('em')
+                                        ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+                        if ($tempNode !== null) {
+                            $hdlr->addNodeForField($tempNode, $field);
+                        }
                     }
                 }
                 break;
@@ -343,7 +364,7 @@ class NodesSourcesController extends RozierApp
                 break;
             default:
                 $setter = $field->getSetterName();
-                $nodeSource->$setter( $data[$field->getName()] );
+                $nodeSource->$setter( $dataValue );
                 break;
         }
     }

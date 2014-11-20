@@ -16,6 +16,7 @@ Rozier.$body = null;
 Rozier.windowWidth = null;
 Rozier.windowHeight = null;
 Rozier.resizeFirst = true;
+Rozier.gMapLoaded = false;
 
 Rozier.$minifyTreePanelButton = null;
 Rozier.$mainTrees = null;

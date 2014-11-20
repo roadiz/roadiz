@@ -105,6 +105,7 @@
         <script src="{{ head.resourcesUrl }}js/widgets/nodeStatuses.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/nodeTypeFieldEdit.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/childrenNodesField.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/geotagField.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/markdownEditor.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/tagAutocomplete.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/folderAutocomplete.js"></script>
@@ -123,10 +124,11 @@
 
         <script type="text/javascript">
             var temp = {
-                'baseUrl':      '{{ head.baseUrl }}',
-                'resourcesUrl': '{{ head.resourcesUrl }}',
-                'ajaxToken':    '{{ head.ajaxToken }}',
-                'mainColor':    '{{ head.mainColor }}',
+                'baseUrl':        '{{ head.baseUrl }}',
+                'resourcesUrl':   '{{ head.resourcesUrl }}',
+                'ajaxToken':      '{{ head.ajaxToken }}',
+                'mainColor':      '{{ head.mainColor }}',
+                'googleClientId': '{{ head.googleClientId }}',
                 'messages': {
                     'forbiddenPage':   '{{ 'forbidden.page'|trans() }}',
                     'see_all':         '{{ 'see_all'|trans() }}',
@@ -135,17 +137,17 @@
                     'moreDocuments':   '{{ 'more.documents'|trans() }}',
                     'moreNodes':       '{{ 'more.nodes'|trans() }}',
                     'dropzone' : {
-                        'dictDefaultMessage':           "{{ 'drop.files.here.to.upload.or.click.to.open.your.explorer'|trans()}}",
-                        'dictFallbackMessage':          "{{ 'your.browser.does.not.support.dragndrop.file.uploads'|trans()}}",
-                        'dictFallbackText':             "{{ 'please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days'|trans()}}",
-                        'dictFileTooBig':               "{{ 'file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib'|trans()}}",
-                        'dictInvalidFileType':          "{{ 'you.cant.upload.files.of.this.type'|trans()}}",
-                        'dictResponseError':            "{{ 'server.responded.with.{{statuscode}}.code'|trans()}}",
-                        'dictCancelUpload':             "{{ 'cancel.upload'|trans()}}",
-                        'dictCancelUploadConfirmation': "{{ 'are.you.sure.you.want.to.cancel.this.upload'|trans()}}",
-                        'dictRemoveFile':               "{{ 'remove.file'|trans()}}",
+                        'dictDefaultMessage':           "{{ 'drop.files.here.to.upload.or.click.to.open.your.explorer'|trans() }}",
+                        'dictFallbackMessage':          "{{ 'your.browser.does.not.support.dragndrop.file.uploads'|trans() }}",
+                        'dictFallbackText':             "{{ 'please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days'|trans() }}",
+                        'dictFileTooBig':               "{{ 'file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib'|trans() }}",
+                        'dictInvalidFileType':          "{{ 'you.cant.upload.files.of.this.type'|trans() }}",
+                        'dictResponseError':            "{{ 'server.responded.with.{{statuscode}}.code'|trans() }}",
+                        'dictCancelUpload':             "{{ 'cancel.upload'|trans() }}",
+                        'dictCancelUploadConfirmation': "{{ 'are.you.sure.you.want.to.cancel.this.upload'|trans() }}",
+                        'dictRemoveFile':               "{{ 'remove.file'|trans() }}",
                         'dictRemoveFileConfirmation':   null,
-                        'dictMaxFilesExceeded':         "{{ 'you.can.not.upload.any.more.files'|trans()}}"
+                        'dictMaxFilesExceeded':         "{{ 'you.can.not.upload.any.more.files'|trans() }}"
                     },
                     'htmleditor': {
                         'h2':          '{{'headline.2'|trans() }}',
