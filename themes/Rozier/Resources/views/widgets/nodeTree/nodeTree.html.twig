@@ -10,14 +10,18 @@
             {% endif %}
         </div>       
     {% endif %}
+    {% if mainNodeTree %}
     <div class="tree-scroll-cont">
-        <div class="tree-scroll">
+        <div class="tree-scroll">    
+        {% endif %}
             <ul class="root-tree uk-nestable{% if not mainNodeTree and not nodeTree.isStackTree %} children-node-widget {% elseif nodeTree.isStackTree %} stack-tree-widget{% endif %}" data-uk-nestable="{'group':'nodeTree'}" data-parent-node-id="{{ node.getId }}" {% if nodeTree.isStackTree %}data-stack-tree="1"{% endif %}>
-        {% for cnode in nodeTree.getNodes %}
-            {% include 'widgets/nodeTree/singleNode.html.twig' with { "node":cnode, "nodeTree":nodeTree, "securityContext":securityContext, "mainNodeTree":mainNodeTree} only %}
-        {% endfor %}
-    </ul>
+            {% for cnode in nodeTree.getNodes %}
+                {% include 'widgets/nodeTree/singleNode.html.twig' with { "node":cnode, "nodeTree":nodeTree, "securityContext":securityContext, "mainNodeTree":mainNodeTree} only %}
+            {% endfor %}
+            </ul>
+        {% if mainNodeTree %}
         </div>
     </div>
+    {% endif %}
 </nav>
 {% endif %}

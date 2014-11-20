@@ -18,8 +18,8 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-20 13:52+0000
-Last-Translator: Maxime Bérard &lt;maxime@rezo-zero.com&gt;
+PO-Revision-Date: 2014-11-19 15:54+0000
+Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
 MIME-Version: 1.0
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n &gt; 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1416491563.389898
+X-POOTLE-MTIME: 1416412470.612934
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5290,7 +5290,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
 
       <trans-unit xml:space="preserve" id="list.folders.to_link" approved="yes">
           <source>list.folders.to_link</source>
-          <target state="translated">Lister les dossiers (existants ou non)</target>
+          <target state="translated">Lister les dossiers (existants ou non) qui contiendront ces documents</target>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="bulk.fold.documents" approved="yes">
           <source>bulk.fold.documents</source>
@@ -5308,58 +5308,54 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="wrong.request" approved="yes">
           <source>wrong.request</source>
           <target state="translated">Mauvaise requête</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="delete.nodes" approved="yes">
           <source>delete.nodes</source>
           <target state="translated">Supprimer les nœuds sélectionnés</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.these.nodes" approved="yes">
           <source>are_you_sure.delete.these.nodes</source>
           <target state="translated">Êtes-vous sûr(e) de vouloir supprimer ces nœuds ?</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="delete.all" approved="yes">
           <source>delete.all</source>
           <target state="translated">Tout supprimer</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="bulk.delete.nodes" approved="yes">
           <source>bulk.delete.nodes</source>
           <target state="translated">Supprimer la sélection</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="link.tags" approved="yes">
           <source>link.tags</source>
           <target state="translated">Étiqueter la sélection</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="unlink.tags" approved="yes">
           <source>unlink.tags</source>
           <target state="translated">Désétiqueter la sélection</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="list.tags.to_link.or_unlink" approved="yes">
           <source>list.tags.to_link.or_unlink</source>
           <target state="translated">Lister les étiquettes à lier ou à délier…</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="nodes.bulk.deleted" approved="yes">
           <source>nodes.bulk.deleted</source>
           <target state="translated">La sélection de nœuds a été supprimée</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="nodes.bulk.not_tagged" approved="yes">
           <source>nodes.bulk.not_tagged</source>
           <target state="translated">Impossible d’étiqueter la sélection</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="nodes.bulk.tagged" approved="yes">
           <source>nodes.bulk.tagged</source>
           <target state="translated">La sélection de nœuds a été étiquetée</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="nodes.bulk.not_untagged" approved="yes">
           <source>nodes.bulk.not_untagged</source>
           <target state="translated">Impossible de désétiqueter la sélection</target>
-      <note/></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="nodes.bulk.untagged" approved="yes">
           <source>nodes.bulk.untagged</source>
           <target state="translated">La sélection de nœuds a été désétiquetée</target>
-      <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="bulk.actions" approved="yes">
-          <source>bulk.actions</source>
-          <target state="translated">Actions groupées</target>
       </trans-unit>
 
     </body>

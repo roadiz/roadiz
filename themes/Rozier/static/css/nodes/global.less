@@ -53,9 +53,6 @@
 
 .nodes-bulk-actions {
     display: none;
-    text-align: center;
-    padding: 10px 0;
-
     &.visible {
         display: block;
     }
@@ -165,5 +162,67 @@
                 display: none;
             }
         }
+    }
+}
+
+// Tree
+.node-checkbox{
+    position: absolute;
+    top: 10px; right: 0px;
+    display: none;
+    width: 14px; height: 14px;
+    line-height:12px;
+    border: 1px solid #aaa;
+    overflow: hidden;
+    vertical-align: middle;
+    -webkit-appearance: none;
+    outline: 0;
+    background: #fff;
+
+    &:focus{
+        border-color: @grey-form-submit-border-hover;
+    }
+
+    &:checked {
+        display: inline-block;
+
+        &:before{
+            content: "\f00c";
+            font-family: FontAwesome;
+            font-size: 12px;
+            -webkit-font-smoothing: antialiased;
+            text-align: center;
+            line-height: 12px;
+            color: darken(@contrast-color, 10%);
+        }
+    }
+}
+
+#tagForm_submitTag, #tagForm_submitUntag{    
+    position: relative; 
+    width:32px;
+    padding:0;
+    overflow: hidden;
+
+    &:before{
+        position: relative;
+        display: block;
+        width:32px; height:32px;
+        content:@plus;
+        font-size:16px; line-height:32px;
+        font-family: 'rz-icons';       
+        text-align: center;
+    }
+
+}
+
+#tagForm_submitTag{
+    margin-left:4px;
+}
+
+#tagForm_submitUntag{
+
+    &:before{
+        content:@minus;
     }
 }

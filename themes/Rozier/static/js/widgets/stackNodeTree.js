@@ -85,6 +85,8 @@ StackNodeTree.prototype.refreshNodeTree = function( $link, rootNodeId ) {
     var _this = this;
     var $nodeTree = _this.$page.find('.nodetree-widget');
 
+    console.log('REFRESH NODE TREE');
+
     if($nodeTree.length){
         var postData = {
             "_token":       Rozier.ajaxToken,
@@ -108,10 +110,10 @@ StackNodeTree.prototype.refreshNodeTree = function( $link, rootNodeId ) {
                     $nodeTree.replaceWith(data.nodeTree);
                     $nodeTree = _this.$page.find('.nodetree-widget');
 
-
                     Rozier.initNestables();
                     Rozier.bindMainTrees();
                     $nodeTree.fadeIn();
+                    Rozier.resize();
                 });
             }
         })

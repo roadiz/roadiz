@@ -1,0 +1,76 @@
+/*------------------------------------*\
+   BULK
+\*------------------------------------*/
+
+
+/*
+ * Styles for bulk actions sections
+ */
+
+
+/* -------- STYLES -------- */
+
+.bulk-actions{
+    text-align: center;
+    padding: 20px 0 10px 0;
+
+    .uk-form{
+
+        input[type="text"],
+        input[type="password"],
+        input[type="search"],
+        input[type="email"],
+        input[type="number"] {
+            min-width: 230px;
+            height: 32px;
+            padding: 9px 8px 5px 8px;
+        }
+
+        .uk-button-bulk-primary{
+            [class*=uk-icon-rz-] {
+                color:#fff;
+            }
+        }
+    }
+
+    .uk-button{
+        height:32px;
+    }
+}
+
+.bulk-actions-title-cont{
+    position: relative;
+    height:9px;
+    margin:0 100px 30px;
+    border-bottom:1px solid #cbcbcb;
+
+    &:before{
+        position: absolute;
+        content:'';
+        width:1px;
+        top: 5px; bottom:-5px; left: 0;  
+        background:  #cbcbcb;
+    }
+
+    &:after{
+        position: absolute;
+        content:'';
+        width:1px;
+        top: 5px; right: 0;  bottom:-5px; 
+        background:  #cbcbcb;
+    }
+
+}
+
+.uk-button-bulk-delete{
+    margin-right:10px;
+}
+
+.bulk-actions-title{
+    display: inline-block;
+    margin:-2px 0 0 0;
+    padding:0 10px;
+    font-size:12px;
+    color: #333;
+    background: @grey-verylight;
+}

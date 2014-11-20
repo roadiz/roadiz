@@ -55,9 +55,6 @@ Rozier.onDocumentReady = function(event) {
 	Rozier.$minifyTreePanelButton = $('#minify-tree-panel-button');
 	Rozier.$mainTrees = $('#main-trees');
 	Rozier.$nodesSourcesSearch = $('#nodes-sources-search');
-	Rozier.$nodeTreeHead = Rozier.$mainTrees.find('.nodetree-head');
-	Rozier.$treeScrollCont = $('.tree-scroll-cont');
-	Rozier.$treeScroll = $('.tree-scroll');
 
 	Rozier.$mainContentScrollable = $('#main-content-scrollable');
 	Rozier.$backTopBtn = $('#back-top-button');
@@ -218,6 +215,7 @@ Rozier.refreshMainNodeTree = function () {
 					$currentNodeTree.fadeIn();
 					Rozier.initNestables();
 					Rozier.bindMainTrees();
+					Rozier.resize();
 				});
 			}
 		})
@@ -610,6 +608,9 @@ Rozier.resize = function(){
 
 
 	// Tree scroll height
+	_this.$nodeTreeHead = _this.$mainTrees.find('.nodetree-head');
+	_this.$treeScrollCont = _this.$mainTrees.find('.tree-scroll-cont');
+	_this.$treeScroll = _this.$mainTrees.find('.tree-scroll');
 	_this.nodesSourcesSearchHeight = _this.$nodesSourcesSearch.height();
 	_this.nodeTreeHeadHeight = _this.$nodeTreeHead.height();
 	_this.treeScrollHeight = _this.windowHeight - (_this.nodesSourcesSearchHeight + _this.nodeTreeHeadHeight);

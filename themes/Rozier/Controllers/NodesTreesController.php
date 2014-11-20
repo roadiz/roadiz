@@ -261,13 +261,17 @@ class NodesTreesController extends RozierApp
                     ->add('submitTag', 'submit', array(
                         'label' => $this->getTranslator()->trans('link.tags'),
                         'attr' => array(
-                            'class' => 'uk-button'
+                            'class' => 'uk-button uk-button-primary',
+                            'title' => $this->getTranslator()->trans('link.tags'),
+                            'data-uk-tooltip' => "{animation:true}"
                         )
                     ))
                     ->add('submitUntag', 'submit', array(
                         'label' => $this->getTranslator()->trans('unlink.tags'),
                         'attr' => array(
-                            'class' => 'uk-button'
+                            'class' => 'uk-button',
+                            'title' => $this->getTranslator()->trans('unlink.tags'),
+                            'data-uk-tooltip' => "{animation:true}"
                         )
                     ));
 

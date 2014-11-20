@@ -5352,6 +5352,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>nodes.bulk.untagged</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.actions">
+          <source>bulk.actions</source>
+          <target></target>
+      </trans-unit>
 
     </body>
   </file>
