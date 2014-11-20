@@ -4,7 +4,7 @@ var GeotagField = function () {
     _this.$fields = $('input.rz-geotag-field');
 
     if( _this.$fields.length &&
-        Rozier.googleClientId != ""){
+        Rozier.googleClientId !== ""){
 
         _this.init();
     }
@@ -60,11 +60,11 @@ GeotagField.prototype.bindSingleField = function(element) {
     $input.after('<div class="rz-geotag-canvas" id="'+fieldId+'" style="width: 100%; height: 400px;"></div>');
     // Geocode input text
     var metaDOM = '<nav class="rz-geotag-meta"><input class="rz-geotag-address" id="'+fieldAddressId+'" type="text" value="" />';
-    metaDOM += '<a id="'+resetButtonId+'" class="uk-button rz-geotag-reset"><i class="uk-icon-rz-trash-o"></i> Remove marker</a></nav>';
+    metaDOM += '<a id="'+resetButtonId+'" class="uk-button rz-geotag-reset"><i class="uk-icon-rz-trash-o"></i> '+Rozier.messages.geotag.resetMarker+'</a></nav>';
     $input.after(metaDOM);
 
     var $geocodeInput = $('#'+fieldAddressId);
-    $geocodeInput.attr('placeholder', 'Type an address then Enter…');
+    $geocodeInput.attr('placeholder', Rozier.messages.geotag.typeAnAddress);
     // Reset button
     var $geocodeReset = $('#'+resetButtonId);
     $geocodeReset.hide();
@@ -75,7 +75,7 @@ GeotagField.prototype.bindSingleField = function(element) {
     var map = new google.maps.Map(document.getElementById(fieldId), mapOptions);
     var marker = null;
 
-    if($input.val() != ""){
+    if($input.val() !== ""){
         try {
             jsonCode = JSON.parse($input.val());
             marker = _this.createMarker(jsonCode, $input, map);
@@ -211,6 +211,6 @@ var initializeGeotagFields = function () {
 };
 
 GeotagField.uniqid = function () {
-    var n=new Date()
+    var n = new Date();
     return n.getTime();
 };
