@@ -18,8 +18,8 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-20 13:52+0000
-Last-Translator: Maxime Bérard &lt;maxime@rezo-zero.com&gt;
+PO-Revision-Date: 2014-11-20 16:17+0000
+Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
 MIME-Version: 1.0
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1416491532.742423
+X-POOTLE-MTIME: 1416500249.695348
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5360,6 +5360,19 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="bulk.actions" approved="yes">
           <source>bulk.actions</source>
           <target state="translated">Bulk actions</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="reset.marker" approved="yes">
+          <source>reset.marker</source>
+          <target state="translated">Reset marker</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="geotag.type_an_address.then_type_enter" approved="yes">
+          <source>geotag.type_an_address.then_type_enter</source>
+          <target state="translated">Type an address then type “Enter”…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="geographic.coordinates.type" approved="yes">
+          <source>geographic.coordinates.type</source>
+          <target state="translated">Single geographic coordinates</target>
       </trans-unit>
 
     </body>

@@ -5357,6 +5357,19 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="reset.marker">
+          <source>reset.marker</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="geotag.type_an_address.then_type_enter">
+          <source>geotag.type_an_address.then_type_enter</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="geographic.coordinates.type">
+          <source>geographic.coordinates.type</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
