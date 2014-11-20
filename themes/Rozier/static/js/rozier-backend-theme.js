@@ -1789,8 +1789,7 @@ GeotagField.prototype.requestGeocode = function(marker, $input, $geocodeReset, m
 
         _this.geocoder.geocode( {'address': address}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-
-                _this.setMarker(marker, $input, map, results[0].geometry.location);
+                _this.setMarker(marker, $input, $geocodeReset, map, results[0].geometry.location);
 
             } else {
                 console.err("Geocode was not successful for the following reason: " + status);
