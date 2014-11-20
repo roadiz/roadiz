@@ -48,6 +48,7 @@ module.exports = function(grunt) {
 					'js/widgets/nodeEditSource.js',
 					'js/widgets/nodeStatuses.js',
 					'js/widgets/nodeTypeFieldEdit.js',
+					'js/widgets/geotagField.js',
 					'js/widgets/childrenNodesField.js',
 					'js/widgets/markdownEditor.js',
 					'js/widgets/tagAutocomplete.js',

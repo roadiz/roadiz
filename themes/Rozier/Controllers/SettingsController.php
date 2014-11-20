@@ -491,15 +491,11 @@ class SettingsController extends RozierApp
             'visible' => $setting->isVisible(),
             'type' =>    $setting->getType()
         );
+
         if (null !== $setting->getSettingGroup()) {
-            $defaults['group'] = $setting->getSettingGroup()->getId();
+            $defaults['settingGroup'] = $setting->getSettingGroup()->getId();
         }
 
-        if ($setting->getSettingGroup() == null) {
-            $default['group'] = null;
-        } else {
-            $default['group'] = $setting->getSettingGroup()->getId();
-        }
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add(
@@ -568,7 +564,7 @@ class SettingsController extends RozierApp
                 'data'=>$setting->getId(),
                 'required' => true
             ))
-            ->add('value', NodeTypeField::$typeToForm[$setting->getType()], 
+            ->add('value', NodeTypeField::$typeToForm[$setting->getType()],
                 static::getFormOptionsForSetting($setting, $this->getTranslator(), true)
             );
 

@@ -180,6 +180,7 @@ Lazyload.prototype.generalBind = function() {
     new NodeWidget();
     new DocumentUploader(Rozier.messages.dropzone);
     new ChildrenNodesField();
+    new GeotagField();
     new StackNodeTree();
     new SaveButtons();
     new TagAutocomplete();
