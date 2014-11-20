@@ -22,6 +22,8 @@
         position: absolute;
         left:0;
         height:100%;
+        overflow: hidden;
+        padding-bottom:0;
         .transition(~'0.8s left ease');
         .transition-timing-function(@easeOutExpo);
     }
@@ -29,6 +31,54 @@
     & > div {
         background-color: @maintree-global-bg;
     }
+}
+
+#tree-container{
+    position: relative;
+    margin:0;
+
+    &> li{
+        position: relative;
+        width:100%; height:100%;
+    }
+
+    .nodetree-widget{
+        position: relative;
+        width:100%; height:100%;
+    }
+}
+
+.tree-widget{
+    margin:0; padding:0;
+}
+
+.tree-scroll-cont{
+    display:block;
+    position: relative;
+    height:100%;
+
+    & > div{
+        overflow: hidden;
+        overflow-y:auto;
+        position:absolute;
+        top:0;
+        bottom:0;
+        left:0;
+        right:0;
+        -webkit-overflow-scrolling: touch;
+
+        & > ul{
+            position: relative;
+        }
+    }
+}
+
+.tree-scroll{
+    
+    &> .root-tree{
+        padding-top:15px;
+    }
+    
 }
 
 #nodes-sources-search {

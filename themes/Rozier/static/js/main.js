@@ -6,10 +6,6 @@
 
 var Rozier = {};
 
-Rozier.searchNodesSourcesDelay = null;
-Rozier.nodeTrees = [];
-Rozier.treeTrees = [];
-
 Rozier.$window = null;
 Rozier.$body = null;
 
@@ -17,8 +13,20 @@ Rozier.windowWidth = null;
 Rozier.windowHeight = null;
 Rozier.resizeFirst = true;
 
+Rozier.searchNodesSourcesDelay = null;
+Rozier.nodeTrees = [];
+Rozier.treeTrees = [];
+
 Rozier.$minifyTreePanelButton = null;
 Rozier.$mainTrees = null;
+Rozier.$nodesSourcesSearch = null;
+Rozier.nodesSourcesSearchHeight = null;
+Rozier.$nodeTreeHead = null;
+Rozier.nodeTreeHeadHeight = null;
+Rozier.$treeScrollCont = null;
+Rozier.$treeScroll = null;
+Rozier.treeScrollHeight = null;
+
 Rozier.$mainContentScrollable = null;
 Rozier.mainContentScrollableWidth = null;
 Rozier.mainContentScrollableOffsetLeft = null;
@@ -41,8 +49,16 @@ Rozier.onDocumentReady = function(event) {
 
 	Rozier.centerVerticalObjects(); // this must be done before generalBind!
 
+
+	// --- Selectors --- //
+	
 	Rozier.$minifyTreePanelButton = $('#minify-tree-panel-button');
 	Rozier.$mainTrees = $('#main-trees');
+	Rozier.$nodesSourcesSearch = $('#nodes-sources-search');
+	Rozier.$nodeTreeHead = Rozier.$mainTrees.find('.nodetree-head');
+	Rozier.$treeScrollCont = $('.tree-scroll-cont');
+	Rozier.$treeScroll = $('.tree-scroll');
+
 	Rozier.$mainContentScrollable = $('#main-content-scrollable');
 	Rozier.$backTopBtn = $('#back-top-button');
 
@@ -51,15 +67,20 @@ Rozier.onDocumentReady = function(event) {
         PointerEventsPolyfill.initialize({'selector':'#main-trees-overlay'});
     }
 
+
+    // --- Events --- //
+
 	// Search node
 	$("#nodes-sources-search-input").on('focus', function(){
 		$('#nodes-sources-search').addClass("focus-on");
 		$('#nodes-sources-search-results').fadeIn();
+		setTimeout(function(){ Rozier.resize(); }, 500);
 	});
 	$("#nodes-sources-search-input").on('focusout', function(){
 		$('#nodes-sources-search-results').fadeOut();
 		$('#nodes-sources-search').removeClass("focus-on");
 		$(this).val("");
+		setTimeout(function(){ Rozier.resize(); }, 500);
 	});
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
 
@@ -483,8 +504,6 @@ Rozier.backTopBtnClick = function(e){
 };
 
 
-
-
 /**
  * Resize
  * @return {[type]} [description]
@@ -505,8 +524,25 @@ Rozier.resize = function(){
 	}
 
 	// Check if mobile
-	if(_this.windowWidth <= 768 && isMobile.any() !== null) _this.mobile = new RozierMobile();
+	if(_this.windowWidth <= 768 && isMobile.any() !== null && _this.resizeFirst) _this.mobile = new RozierMobile();
 
+
+	// Tree scroll height
+	_this.nodesSourcesSearchHeight = _this.$nodesSourcesSearch.height();
+	_this.nodeTreeHeadHeight = _this.$nodeTreeHead.height();
+	_this.treeScrollHeight = _this.windowHeight - (_this.nodesSourcesSearchHeight + _this.nodeTreeHeadHeight);
+
+	// console.log('search height           : '+_this.nodesSourcesSearchHeight);
+	// console.log('node tree head height : '+_this.nodeTreeHeadHeight);
+	// console.log('windows height          : '+_this.windowHeight);
+	// console.log('tree scroll height     : '+_this.treeScrollHeight);
+	// console.log('----------------');
+
+	for(var i = 0; i < _this.$treeScrollCont.length; i++) {
+		_this.$treeScrollCont[i].style.height = _this.treeScrollHeight + 'px';
+	}
+	
+	// Main content
 	_this.mainContentScrollableWidth = _this.$mainContentScrollable.width();
 	_this.mainContentScrollableOffsetLeft = _this.windowWidth - _this.mainContentScrollableWidth;
 

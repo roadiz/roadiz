@@ -1,17 +1,24 @@
 {% if nodeTree %}
-<nav class="nodetree-widget">
+<nav class="tree-widget nodetree-widget">
     {% if mainNodeTree %}
-        <h4>{% trans %}nodeTree{% endtrans %}</h4>
-        {% if nodeTree.getRootNode == null %}
-            <a href="{{ path('nodesAddChildPage', {nodeId : 0}) }}" class="tree-btn-add" id="nodetree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.a.node{% endtrans %}</a>
-        {% else %}
-            <a href="{{ path('nodesAddChildPage', { nodeId : nodeTree.getRootNode.getId }) }}" class="tree-btn-add" id="nodetree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.child.node{% endtrans %}</a>
-        {% endif %}
+        <div class="tree-head nodetree-head">
+             <h4>{% trans %}nodeTree{% endtrans %}</h4>
+            {% if nodeTree.getRootNode == null %}
+                <a href="{{ path('nodesAddChildPage', {nodeId : 0}) }}" class="tree-btn-add" id="nodetree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.a.node{% endtrans %}</a>
+            {% else %}
+                <a href="{{ path('nodesAddChildPage', { nodeId : nodeTree.getRootNode.getId }) }}" class="tree-btn-add" id="nodetree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.child.node{% endtrans %}</a>
+            {% endif %}
+        </div>       
     {% endif %}
-	<ul class="root-tree uk-nestable{% if not mainNodeTree and not nodeTree.isStackTree %} children-node-widget {% elseif nodeTree.isStackTree %} stack-tree-widget{% endif %}" data-uk-nestable="{'group':'nodeTree'}" data-parent-node-id="{{ node.getId }}">
-		{% for cnode in nodeTree.getNodes %}
-			{% include 'widgets/nodeTree/singleNode.html.twig' with { "node":cnode, "nodeTree":nodeTree, "securityContext":securityContext, "mainNodeTree":mainNodeTree} only %}
-		{% endfor %}
-	</ul>
+    <div class="tree-scroll-cont">
+        <div class="tree-scroll">
+            <ul class="root-tree uk-nestable{% if not mainNodeTree and not nodeTree.isStackTree %} children-node-widget {% elseif nodeTree.isStackTree %} stack-tree-widget{% endif %}" data-uk-nestable="{'group':'nodeTree'}" data-parent-node-id="{{ node.getId }}">
+                {% for cnode in nodeTree.getNodes %}
+                    {% include 'widgets/nodeTree/singleNode.html.twig' with { "node":cnode, "nodeTree":nodeTree, "securityContext":securityContext, "mainNodeTree":mainNodeTree} only %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+	
 </nav>
 {% endif %}
