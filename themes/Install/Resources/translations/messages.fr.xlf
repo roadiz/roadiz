@@ -61,7 +61,7 @@
             </trans-unit>
             <trans-unit id="requirements.message" approved="yes">
                 <source>requirements.message</source>
-                <target state="translated">&lt;p&gt;Pour pouvoir utiliser ce CMS, votre serveur a besoin de quelques pré-requis, notamment en matière de PHP. Si vous avez accès au fichier de configuration (php.ini), vous devriez pouvoir en modifier certains.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Pour pouvoir utiliser Roadiz, votre serveur a besoin de quelques pré-requis, notamment concernant PHP. Si vous avez accès au fichier de configuration (php.ini), vous devriez pouvoir en modifier certains.&lt;/p&gt;</target>
             </trans-unit>
             <trans-unit id="requirements.spec" approved="yes">
                 <source>requirements.spec</source>
@@ -210,7 +210,7 @@
             </trans-unit>
             <trans-unit id="success.message" approved="yes">
                 <source>success.message</source>
-                <target state="translated">&lt;p&gt;Votre CMS est prêt à être utiliser! Le plaisir, c'est maintenant!&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Votre site est prêt à être utilisé. Amusez-vous bien !&lt;/p&gt;</target>
             </trans-unit>
             <trans-unit id="success.quit_install" approved="yes">
                 <source>success.quit_install</source>
@@ -266,7 +266,7 @@
             </trans-unit>
             <trans-unit id="choose.a.language" approved="yes">
                 <source>choose.a.language</source>
-                <target state="translated">Veuillez choisir la langue d’installation de votre CMS.</target>
+                <target state="translated">Veuillez choisir la langue d’installation.</target>
             </trans-unit>
 
             <trans-unit id="skip.database.goto.theme" approved="yes">

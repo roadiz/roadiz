@@ -42,7 +42,7 @@
             <!-- Welcome -->
             <trans-unit id="welcome.title" approved="yes">
                 <source>welcome.title</source>
-                <target state="translated">Roadiz's Installation</target>
+                <target state="translated">Roadiz’s Installation</target>
             </trans-unit>
             <trans-unit id="welcome.subtitle" approved="yes">
                 <source>welcome.subtitle</source>
@@ -61,11 +61,11 @@
             </trans-unit>
             <trans-unit id="requirements.message" approved="yes">
                 <source>requirements.message</source>
-                <target state="translated">&lt;p&gt;To use this CMS, your server need some requirements, particularly in PHP. If you have access to your configuration file (php.ini), you could modify some of them.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;To use Roadiz, your server need some requirements, particularly in PHP. If you have access to your configuration file (php.ini), you could modify some of them.&lt;/p&gt;</target>
             </trans-unit>
             <trans-unit id="requirements.spec" approved="yes">
                 <source>requirements.spec</source>
-                <target state="translated">Spécification</target>
+                <target state="translated">Specification</target>
             </trans-unit>
             <trans-unit id="requirements.requirement" approved="yes">
                 <source>requirements.requirement</source>
@@ -84,7 +84,7 @@
             </trans-unit>
             <trans-unit id="database.message" approved="yes">
                 <source>database.message</source>
-                <target state="translated">&lt;p&gt;Roadiz need a databse to store all your content. You could select your favorite database driver and configure it.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Roadiz need a database to store all your content. You could select your favorite database driver and configure it.&lt;/p&gt;</target>
             </trans-unit>
             <trans-unit id="database.cannot_connect" approved="yes">
                 <source>database.cannot_connect</source>
@@ -172,7 +172,7 @@
             </trans-unit>
             <trans-unit id="themes.message" approved="yes">
                 <source>themes.message</source>
-                <target state="translated">&lt;p&gt;Enter basic information about your website&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Enter basic informations about your site&lt;/p&gt;</target>
             </trans-unit>
             <trans-unit id="themes.save_informations" approved="yes">
                 <source>themes.save_informations</source>
@@ -180,7 +180,7 @@
             </trans-unit>
             <trans-unit id="themes.frontend.description" approved="yes">
                 <source>themes.frontend.description</source>
-                <target state="translated">You could install some default theme(s) and content to your CMS</target>
+                <target state="translated">You can install some default theme(s) and content to your site</target>
             </trans-unit>
 
             <!-- Import node type -->
@@ -221,7 +221,7 @@
             <!-- Goto -->
             <trans-unit id="goto.requirements" approved="yes">
                 <source>goto.requirements</source>
-                <target state="translated">Go to "requirements"</target>
+                <target state="translated">Requirements</target>
             </trans-unit>
             <trans-unit id="goto.welcome" approved="yes">
                 <source>goto.welcome</source>
@@ -266,7 +266,7 @@
             </trans-unit>
             <trans-unit id="choose.a.language" approved="yes">
                 <source>choose.a.language</source>
-                <target state="translated">Choose your website main language</target>
+                <target state="translated">Choose your main language</target>
             </trans-unit>
 
             <trans-unit id="skip.database.goto.theme" approved="yes">

@@ -84,4 +84,55 @@ class CacheController extends RozierApp
 
         return $builder->getForm();
     }
+
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteSLIRCache(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCTRINE_CACHE_DELETE');
+
+        $form = $this->buildDeleteSLIRForm();
+        $form->handleRequest();
+
+        if ($form->isValid()) {
+
+            CacheCommand::clearCachedAssets();
+
+            $msg = $this->getTranslator()->trans('cache.deleted');
+            $request->getSession()->getFlashBag()->add('confirm', $msg);
+            $this->getService('logger')->info($msg);
+
+            /*
+             * Force redirect to avoid resending form when refreshing page
+             */
+            $response = new RedirectResponse(
+                $this->getService('urlGenerator')->generate('adminHomePage')
+            );
+            $response->prepare($request);
+
+            return $response->send();
+        }
+
+        $this->assignation['form'] = $form->createView();
+
+        return new Response(
+            $this->getTwig()->render('cache/deleteSLIR.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
+
+    /**
+     * @return Symfony\Component\Form\Form
+     */
+    private function buildDeleteSLIRForm()
+    {
+        $builder = $this->getService('formFactory')
+            ->createBuilder('form');
+
+        return $builder->getForm();
+    }
 }

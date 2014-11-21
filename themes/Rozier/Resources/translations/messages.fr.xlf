@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-21 15:27+0000
+PO-Revision-Date: 2014-11-21 16:15+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n &gt; 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1416583657.489887
+X-POOTLE-MTIME: 1416586554.794425
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5379,22 +5379,35 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="link.folders" approved="yes">
           <source>link.folders</source>
           <target state="translated">Lier au(x) dossier(s)</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="unlink.folders" approved="yes">
           <source>unlink.folders</source>
           <target state="translated">Délier du/des dossier(s)</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="bulk.download.documents" approved="yes">
           <source>bulk.download.documents</source>
           <target state="translated">Télécharger les documents sélectionnés</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="download.documents" approved="yes">
           <source>download.documents</source>
           <target state="translated">Télécharger les documents</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.download.these.documents" approved="yes">
           <source>are_you_sure.download.these.documents</source>
           <target state="translated">Êtes-vous sûr(e) de vouloir télécharger ces documents ?</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="purge.generated_images.cache" approved="yes">
+          <source>purge.generated_images.cache</source>
+          <target state="translated">Purger le cache des images générées</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.purge.generated_images.cache" approved="yes">
+          <source>are_you_sure.purge.generated_images.cache</source>
+          <target state="translated">Êtes-vous sûr(e) de vouloir purger le cache des images générées ?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.generated_images.cache" approved="yes">
+          <source>delete.generated_images.cache</source>
+          <target state="translated">Purger le cache des images générées</target>
       </trans-unit>
 
     </body>

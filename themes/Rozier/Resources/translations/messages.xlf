@@ -5392,6 +5392,19 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="purge.generated_images.cache">
+          <source>purge.generated_images.cache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.purge.generated_images.cache">
+          <source>are_you_sure.purge.generated_images.cache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.generated_images.cache">
+          <source>delete.generated_images.cache</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
