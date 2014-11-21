@@ -8,6 +8,8 @@ var DocumentsBulk = function () {
     _this.$documentsCheckboxes = $('input.document-checkbox');
     _this.$documentsIdBulkFolders = $('input.document-id-bulk-folder');
     _this.$actionsMenu = $('.documents-bulk-actions');
+    _this.$documentsFolderButton = $('.uk-button-bulk-folder-documents');
+    _this.$documentsFolderCont = $('.documents-bulk-folder-cont');
 
     if (_this.$documentsCheckboxes.length) {
         _this.init();
@@ -18,6 +20,9 @@ var DocumentsBulk = function () {
 DocumentsBulk.prototype.$documentsCheckboxes = null;
 DocumentsBulk.prototype.$documentsIdBulkFolders = null;
 DocumentsBulk.prototype.$actionsMenu = null;
+DocumentsBulk.prototype.$documentsFolderButton = null;
+DocumentsBulk.prototype.$documentsFolderCont = null;
+DocumentsBulk.prototype.documentsFolderOpen = false;
 DocumentsBulk.prototype.documentsIds = null;
 
 /**
@@ -31,10 +36,12 @@ DocumentsBulk.prototype.init = function() {
     _this.$documentsCheckboxes.off('change', proxy);
     _this.$documentsCheckboxes.on('change', proxy);
 
-    var $bulkDeleteButton = _this.$actionsMenu.find('.document-bulk-delete');
+    var $bulkDeleteButton = _this.$actionsMenu.find('.uk-button-bulk-delete-documents');
     var deleteProxy = $.proxy(_this.onBulkDelete, _this);
     $bulkDeleteButton.off('click', deleteProxy);
     $bulkDeleteButton.on('click', deleteProxy);
+
+    _this.$documentsFolderButton.on('click', $.proxy(_this.documentsFolderButtonClick, _this));
 };
 
 
@@ -109,7 +116,27 @@ DocumentsBulk.prototype.hideActions = function () {
 
     _this.$actionsMenu.slideUp();
     //_this.$actionsMenu.removeClass('visible');
-};;/**
+};
+
+
+/**
+ * Documents folder button click
+ * @return {[type]} [description]
+ */
+DocumentsBulk.prototype.documentsFolderButtonClick = function(e){
+    var _this = this;
+
+    if(!_this.documentsFolderOpen){
+        _this.$documentsFolderCont.slideDown();
+        _this.documentsFolderOpen = true;
+    }
+    else{        
+        _this.$documentsFolderCont.slideUp();
+        _this.documentsFolderOpen = false;
+    }
+
+};
+;/**
  * Nodes bulk
  */
 
@@ -119,6 +146,8 @@ var NodesBulk = function () {
     _this.$nodesCheckboxes = $('input.node-checkbox');
     _this.$nodesIdBulkTags = $('input.nodes-id-bulk-tags');
     _this.$actionsMenu = $('.nodes-bulk-actions');
+    _this.$nodesFolderButton = $('.uk-button-bulk-folder-nodes');
+    _this.$nodesFolderCont = $('.nodes-bulk-folder-cont');
 
     if (_this.$nodesCheckboxes.length) {
         _this.init();
@@ -129,6 +158,9 @@ var NodesBulk = function () {
 NodesBulk.prototype.$nodesCheckboxes = null;
 NodesBulk.prototype.$nodesIdBulkTags = null;
 NodesBulk.prototype.$actionsMenu = null;
+NodesBulk.prototype.$nodesFolderButton = null;
+NodesBulk.prototype.$nodesFolderCont = null;
+NodesBulk.prototype.nodesFolderOpen = false;
 NodesBulk.prototype.nodesIds = null;
 
 /**
@@ -141,6 +173,8 @@ NodesBulk.prototype.init = function() {
     var proxy = $.proxy(_this.onCheckboxChange, _this);
     _this.$nodesCheckboxes.off('change', proxy);
     _this.$nodesCheckboxes.on('change', proxy);
+
+    _this.$nodesFolderButton.on('click', $.proxy(_this.nodesFolderButtonClick, _this));
 
     //var $bulkDeleteButton = _this.$actionsMenu.find('.node-bulk-delete');
     //var deleteProxy = $.proxy(_this.onBulkDelete, _this);
@@ -220,7 +254,27 @@ NodesBulk.prototype.hideActions = function () {
 
     _this.$actionsMenu.slideUp();
     //_this.$actionsMenu.removeClass('visible');
-};;/**
+};
+
+
+/**
+ * Nodes folder button click
+ * @return {[type]} [description]
+ */
+NodesBulk.prototype.nodesFolderButtonClick = function(e){
+    var _this = this;
+
+    if(!_this.nodesFolderOpen){
+        _this.$nodesFolderCont.slideDown();
+        _this.nodesFolderOpen = true;
+    }
+    else{        
+        _this.$nodesFolderCont.slideUp();
+        _this.nodesFolderOpen = false;
+    }
+
+};
+;/**
  * Documents list
  */
 

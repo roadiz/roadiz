@@ -31,10 +31,7 @@
                 color:#fff;
             }
         }
-    }
 
-    .uk-button{
-        height:32px;
     }
 }
 
@@ -48,7 +45,7 @@
         position: absolute;
         content:'';
         width:1px;
-        top: 5px; bottom:-5px; left: 0;  
+        top: 5px; bottom:-5px; left: 0;
         background:  #cbcbcb;
     }
 
@@ -62,15 +59,22 @@
 
 }
 
-.uk-button-bulk-delete{
-    margin-right:10px;
-}
-
 .bulk-actions-title{
     display: inline-block;
     margin:-2px 0 0 0;
     padding:0 10px;
     font-size:12px;
     color: #333;
-    background: @grey-verylight;
+    background: #EFEFEF;
+}
+
+.documents-bulk-folder-cont, .nodes-bulk-folder-cont{
+    display: none;
+    margin:10px 100px 0;
+    padding:10px 0 0 0;
+    border-top:1px dashed #c3c3c3;
+
+    .uk-form .data-uk-margin>div{
+        margin-bottom:0;
+    }
 }

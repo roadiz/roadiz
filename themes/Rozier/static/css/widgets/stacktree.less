@@ -1,0 +1,37 @@
+/*------------------------------------*\
+    STACK TREE
+\*------------------------------------*/
+
+
+/* -------- STYLES -------- */
+
+.stack-tree-widget{
+
+    &> .uk-nestable-list-item{
+        
+        // 1st level
+        &> .nodetree-element-inner > .nodetree-bulk-selection{
+            left:-24px;
+        }
+
+        &> .uk-nestable-list > .uk-nestable-list-item{
+            
+            // 2nd level
+            &> .nodetree-element-inner > .nodetree-bulk-selection{
+                left:-42px;
+            }  
+
+            &> .uk-nestable-list > .uk-nestable-list-item{
+            
+                // 3rd level
+                &> .nodetree-element-inner > .nodetree-bulk-selection{
+                    left:-60px;
+                }  
+
+            }
+
+        }
+
+    }
+
+}

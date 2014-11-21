@@ -8,6 +8,8 @@ var DocumentsBulk = function () {
     _this.$documentsCheckboxes = $('input.document-checkbox');
     _this.$documentsIdBulkFolders = $('input.document-id-bulk-folder');
     _this.$actionsMenu = $('.documents-bulk-actions');
+    _this.$documentsFolderButton = $('.uk-button-bulk-folder-documents');
+    _this.$documentsFolderCont = $('.documents-bulk-folder-cont');
 
     if (_this.$documentsCheckboxes.length) {
         _this.init();
@@ -18,6 +20,9 @@ var DocumentsBulk = function () {
 DocumentsBulk.prototype.$documentsCheckboxes = null;
 DocumentsBulk.prototype.$documentsIdBulkFolders = null;
 DocumentsBulk.prototype.$actionsMenu = null;
+DocumentsBulk.prototype.$documentsFolderButton = null;
+DocumentsBulk.prototype.$documentsFolderCont = null;
+DocumentsBulk.prototype.documentsFolderOpen = false;
 DocumentsBulk.prototype.documentsIds = null;
 
 /**
@@ -31,10 +36,12 @@ DocumentsBulk.prototype.init = function() {
     _this.$documentsCheckboxes.off('change', proxy);
     _this.$documentsCheckboxes.on('change', proxy);
 
-    var $bulkDeleteButton = _this.$actionsMenu.find('.document-bulk-delete');
+    var $bulkDeleteButton = _this.$actionsMenu.find('.uk-button-bulk-delete-documents');
     var deleteProxy = $.proxy(_this.onBulkDelete, _this);
     $bulkDeleteButton.off('click', deleteProxy);
     $bulkDeleteButton.on('click', deleteProxy);
+
+    _this.$documentsFolderButton.on('click', $.proxy(_this.documentsFolderButtonClick, _this));
 };
 
 
@@ -109,4 +116,23 @@ DocumentsBulk.prototype.hideActions = function () {
 
     _this.$actionsMenu.slideUp();
     //_this.$actionsMenu.removeClass('visible');
+};
+
+
+/**
+ * Documents folder button click
+ * @return {[type]} [description]
+ */
+DocumentsBulk.prototype.documentsFolderButtonClick = function(e){
+    var _this = this;
+
+    if(!_this.documentsFolderOpen){
+        _this.$documentsFolderCont.slideDown();
+        _this.documentsFolderOpen = true;
+    }
+    else{        
+        _this.$documentsFolderCont.slideUp();
+        _this.documentsFolderOpen = false;
+    }
+
 };

@@ -23,33 +23,14 @@
         {% endif %}
     </header>
 
-    {% include 'widgets/filtersBar.html.twig' with {filters: specificNodeTree.filters} only %}
-
-    <nav class="bulk-actions nodes-bulk-actions">
-
-        <div class="bulk-actions-title-cont">
-            <h3 class="bulk-actions-title nodes-bulk-actions-title">{% trans %}bulk.actions{% endtrans %}</h3>
-        </div>
-
-        {% if deleteNodesForm %}
-            {% form_theme deleteNodesForm 'forms.html.twig' %}
-            <form class="uk-form uk-form-horizontal node-bulk-delete-form" action="{{ path('nodesBulkDeletePage') }}" method="get" {{ form_enctype(deleteNodesForm) }}>
-                {{ form_widget(deleteNodesForm) }}
-
-                <button type="submit" class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-bulk-delete node-bulk-delete" title="{% trans %}bulk.delete.nodes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i> </button>
-            </form>
-        {% endif %}
-        {% form_theme tagNodesForm 'forms.html.twig' %}
-        <form class="uk-form uk-form-horizontal node-bulk-tag-form" action="#" method="post" {{ form_enctype(tagNodesForm) }}>
-            {{ form_widget(tagNodesForm) }}
-        </form>
-    </nav>
+    {% include 'nodes/filtersBar.html.twig' with {filters: specificNodeTree.filters,deleteNodesForm:deleteNodesForm, tagNodesForm:tagNodesForm} only %}
 
     <article class="content content-no-action-menu">
         {% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
     </article>
 
     {% include 'nodes/actionsMenu.html.twig' %}
+
 </section>
 {% endblock %}
 
