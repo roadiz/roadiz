@@ -40,7 +40,7 @@ use RZ\Roadiz\Core\Handlers\FolderHandler;
 /**
  * Folders entity represent a directory on server with datetime and naming.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FolderRepository")
  * @Table(name="folders", indexes={
  *     @index(name="position_tag_idx", columns={"position"})
  * })
@@ -139,6 +139,18 @@ class Folder extends AbstractDateTimedPositioned
     {
         if (!$this->getDocuments()->contains($document)) {
             $this->documents->add($document);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Document $document
+     */
+    public function removeDocument(Document $document)
+    {
+        if ($this->getDocuments()->contains($document)) {
+            $this->documents->removeElement($document);
         }
 
         return $this;

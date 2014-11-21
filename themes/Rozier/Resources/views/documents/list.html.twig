@@ -20,7 +20,7 @@
     {% include 'widgets/filtersBar.html.twig' %}
 
     <nav class="bulk-actions documents-bulk-actions">
-        
+
         <div class="bulk-actions-title-cont">
             <h3 class="bulk-actions-title documents-bulk-actions-title">{% trans %}bulk.actions{% endtrans %}</h3>
         </div>
@@ -30,13 +30,6 @@
         {% form_theme joinFolderForm 'forms.html.twig' %}
         <form class="uk-form uk-form-horizontal document-bulk-folder-form" action="#" method="post" {{ form_enctype(joinFolderForm) }}>
             {{ form_widget(joinFolderForm) }}
-            {% spaceless %}
-            <button class="uk-button uk-button-primary uk-button-content uk-button-bulk-primary" type="submit" title="{% trans %}bulk.fold.documents{% endtrans %}" data-uk-tooltip="{animation:true}">
-                <i class="uk-icon-rz-plus-simple"></i>
-                <!-- <span class="icon-container"><i class="uk-icon-folder-o"></i></span> -->
-                <!-- <span class="label"><span class="label-text">{% trans %}bulk.fold.documents{% endtrans %}</span></span> -->
-            </button>
-            {% endspaceless %}
         </form>
     </nav>
 

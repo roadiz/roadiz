@@ -349,11 +349,12 @@ class NodesTreesController extends RozierApp
             foreach ($paths as $path) {
                 $tag = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                            ->findOrCreateByPath($path);
+                            ->findByPath($path);
 
-
-                foreach ($nodes as $node) {
-                    $node->removeTag($tag);
+                if (null !== $tag) {
+                    foreach ($nodes as $node) {
+                        $node->removeTag($tag);
+                    }
                 }
             }
             $msg = $this->getTranslator()->trans('nodes.bulk.untagged');

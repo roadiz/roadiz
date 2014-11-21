@@ -60,7 +60,16 @@ class DocumentsController extends RozierApp
         $joinFolderForm->handleRequest();
         if ($joinFolderForm->isValid()) {
 
-            $msg = $this->joinFolder($joinFolderForm->getData());
+            $data = $joinFolderForm->getData();
+
+            if ($joinFolderForm->get('submitFolder')->isClicked()) {
+                $msg = $this->joinFolder($data);
+            } elseif ($joinFolderForm->get('submitUnfolder')->isClicked()) {
+                $msg = $this->leaveFolder($data);
+            } else {
+                $msg = $this->getTranslator()->trans('wrong.request');
+            }
+
             $request->getSession()->getFlashBag()->add('confirm', $msg);
             $this->getService('logger')->info($msg);
 
@@ -653,7 +662,7 @@ class DocumentsController extends RozierApp
     private function buildLinkFoldersForm()
     {
         $builder = $this->getService('formFactory')
-                    ->createBuilder('form')
+                    ->createNamedBuilder('folderForm')
                     ->add('documentsId', 'hidden', array(
                         'attr' => array('class' => 'document-id-bulk-folder'),
                         'constraints' => array(
@@ -668,6 +677,22 @@ class DocumentsController extends RozierApp
                         ),
                         'constraints' => array(
                             new NotBlank()
+                        )
+                    ))
+                    ->add('submitFolder', 'submit', array(
+                        'label' => $this->getTranslator()->trans('link.folders'),
+                        'attr' => array(
+                            'class' => 'uk-button uk-button-primary',
+                            'title' => $this->getTranslator()->trans('link.folders'),
+                            'data-uk-tooltip' => "{animation:true}"
+                        )
+                    ))
+                    ->add('submitUnfolder', 'submit', array(
+                        'label' => $this->getTranslator()->trans('unlink.folders'),
+                        'attr' => array(
+                            'class' => 'uk-button',
+                            'title' => $this->getTranslator()->trans('unlink.folders'),
+                            'data-uk-tooltip' => "{animation:true}"
                         )
                     ));
 
@@ -698,43 +723,10 @@ class DocumentsController extends RozierApp
             $folderPaths = array_filter($folderPaths);
 
             foreach ($folderPaths as $path) {
-                $path = trim($path);
-
-                $folders = explode('/', $path);
-                $folders = array_filter($folders);
-
-                $folderName = $folders[count($folders) - 1];
-                $parentName = null;
-                $parentFolder = null;
-
-                if (count($folders) > 1) {
-                    $parentName = $folders[count($folders) - 2];
-
-                    $parentFolder = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                                ->findOneByName($parentName);
-                }
 
                 $folder = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                            ->findOneByName($folderName);
-
-
-                if (null === $folder) {
-                    /*
-                     * Creation of a new folder
-                     * before linking it to the node
-                     */
-                    $folder = new Folder();
-                    $folder->setName($folderName);
-
-                    if (null !== $parentFolder) {
-                        $folder->setParent($parentFolder);
-                    }
-
-                    $this->getService('em')->persist($folder);
-                    $this->getService('em')->flush();
-                }
+                            ->findOrCreateByPath($path);
 
                 /*
                  * Add each selected documents
@@ -747,6 +739,53 @@ class DocumentsController extends RozierApp
             }
 
             $msg = $this->getTranslator()->trans('documents.linked_to.folders');
+        }
+
+        return $msg;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return string
+     */
+    private function leaveFolder($data)
+    {
+        $msg = $this->getTranslator()->trans('no_documents.removed_from.folders');
+
+        if (!empty($data['documentsId']) &&
+            !empty($data['folderPaths'])) {
+
+            $documentsIds = explode(',', $data['documentsId']);
+
+            $documents = $this->getService('em')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                    ->findBy(array(
+                        'id' => $documentsIds
+                    ));
+
+            $folderPaths = explode(',', $data['folderPaths']);
+            $folderPaths = array_filter($folderPaths);
+
+            foreach ($folderPaths as $path) {
+
+                $folder = $this->getService('em')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                            ->findByPath($path);
+
+                if (null !== $folder) {
+                    /*
+                     * Add each selected documents
+                     */
+                    foreach ($documents as $document) {
+                        $folder->removeDocument($document);
+                    }
+
+                    $this->getService('em')->flush();
+                }
+            }
+
+            $msg = $this->getTranslator()->trans('documents.removed_from.folders');
         }
 
         return $msg;
