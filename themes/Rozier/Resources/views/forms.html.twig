@@ -126,7 +126,11 @@
             <div class="uk-navbar-content uk-navbar-flip">
                 <div class="children-nodes-quick-creation uk-button-group">
                     {% for linkedType in linkedTypes %}
-                    <a class="uk-button uk-button-small" href="#" data-children-node-type="{{ linkedType.getId }}" data-children-parent-node="{{ nodeTree.getRootNode.getId }}">
+                    <a class="uk-button uk-button-small"
+                        href="#"
+                        data-children-node-type="{{ linkedType.getId }}"
+                        data-children-parent-node="{{ nodeTree.rootNode.getId }}"
+                        data-translation-id="{{ nodeTree.translation.getId }}">
                         <i class="uk-icon-rz-plus-simple"></i> {{ "add.a.%nodeType%"|trans({'%nodeType%': linkedType.getDisplayName}) }}
                     </a>
                     {% endfor %}

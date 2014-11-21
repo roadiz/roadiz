@@ -52,7 +52,7 @@ Rozier.onDocumentReady = function(event) {
 
 
 	// --- Selectors --- //
-	
+
 	Rozier.$minifyTreePanelButton = $('#minify-tree-panel-button');
 	Rozier.$mainTrees = $('#main-trees');
 	Rozier.$nodesSourcesSearch = $('#nodes-sources-search');
@@ -89,6 +89,7 @@ Rozier.onDocumentReady = function(event) {
 	Rozier.$backTopBtn.on('click', $.proxy(Rozier.backTopBtnClick, Rozier));
 
 	Rozier.lazyload.generalBind();
+	Rozier.bindMainNodeTreeLangs();
 
 	Rozier.$window.on('resize', $.proxy(Rozier.resize, Rozier));
 	Rozier.$window.trigger('resize');
@@ -124,6 +125,18 @@ Rozier.bindMainTrees = function () {
 
 	$('.foldertree-widget .root-tree').off('uk.nestable.change');
 	$('.foldertree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableFolderTreeChange );
+};
+
+Rozier.bindMainNodeTreeLangs = function () {
+	var _this = this;
+
+	$('body').on('click', '#tree-container .nodetree-langs a', function (event) {
+
+		var $link = $(event.currentTarget);
+		var translationId = parseInt($link.attr('data-translation-id'));
+
+		Rozier.refreshMainNodeTree(translationId);
+	});
 };
 
 
@@ -185,7 +198,7 @@ Rozier.getMessages = function () {
  * Refresh only main nodeTree.
  *
  */
-Rozier.refreshMainNodeTree = function () {
+Rozier.refreshMainNodeTree = function (translationId) {
 	var _this = this;
 
 	var $currentNodeTree = $('#tree-container').find('.nodetree-widget');
@@ -197,8 +210,13 @@ Rozier.refreshMainNodeTree = function () {
 		    "_action":'requestMainNodeTree'
 		};
 
+		var url = Rozier.routes.nodesTreeAjax;
+		if(isset(translationId) && translationId > 0){
+			url += '/'+translationId;
+		}
+
 		$.ajax({
-			url: Rozier.routes.nodesTreeAjax,
+			url: url,
 			type: 'post',
 			dataType: 'json',
 			data: postData,
@@ -217,6 +235,7 @@ Rozier.refreshMainNodeTree = function () {
 					Rozier.initNestables();
 					Rozier.bindMainTrees();
 					Rozier.resize();
+					Rozier.lazyload.generalBind();
 				});
 			}
 		})
@@ -353,6 +372,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 	var node_id = parseInt(element.data('node-id'));
 	var parent_node_id = parseInt(element.parents('ul').first().data('parent-node-id'));
 
+	console.log(parent_node_id);
 	/*
 	 * User dragged node inside itself
 	 * It will destroy the Internet !
@@ -625,7 +645,7 @@ Rozier.resize = function(){
 	for(var i = 0; i < _this.$treeScrollCont.length; i++) {
 		_this.$treeScrollCont[i].style.height = _this.treeScrollHeight + 'px';
 	}
-	
+
 	// Main content
 	_this.mainContentScrollableWidth = _this.$mainContentScrollable.width();
 	_this.mainContentScrollableOffsetLeft = _this.windowWidth - _this.mainContentScrollableWidth;

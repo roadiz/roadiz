@@ -126,8 +126,9 @@ nodesStatusesAjax:
     path:     /rz-admin/ajax/nodes/statuses
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::statusesAction }
 nodesTreeAjax:
-    path:     /rz-admin/ajax/nodes/tree
-    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodeTreeController::getTreeAction }
+    path:     /rz-admin/ajax/nodes/tree/{translationId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodeTreeController::getTreeAction, translationId:null }
+    requirements: { translationId : "[0-9]+" }
 nodesQuickAddAjax:
     path:     /rz-admin/ajax/nodes/add
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::quickAddAction }
