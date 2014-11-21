@@ -95,7 +95,7 @@ class AssetsController extends AppController
     }
 
     /**
-     * Request a single protected font file from RZCMS.
+     * Request a single protected font file from Roadiz.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param string                                   $filename

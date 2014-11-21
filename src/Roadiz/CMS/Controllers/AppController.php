@@ -99,7 +99,7 @@ class AppController implements ViewableInterface
         $this->kernel = $newKernel;
     }
     /**
-     * Get current RZCMS Kernel instance.
+     * Get current Roadiz Kernel instance.
      *
      * Prefer this methods instead of calling static getInstance
      * method of RZ\Roadiz\Core\Kernel.

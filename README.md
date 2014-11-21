@@ -48,8 +48,8 @@ For more options you can visit *Doctrine* website: http://doctrine-dbal.readthed
 
 ### Apache Solr
 
-RZCMS v3 can use Apache Solr search-engine to index nodes.
-Add this to your `config.json` to link your RZCMS install to your Solr server:
+Roadiz can use Apache Solr search-engine to index nodes.
+Add this to your `config.json` to link your Roadiz install to your Solr server:
 
 ```
 "solr": {
@@ -87,7 +87,7 @@ This will parse every node-types from your database and recreate PHP classes in 
 
 ### Upgrading database schema
 
-If you just updated your *RZCMS v3* sources files, you shoud perform a database migration.
+If you just updated your *Roadiz* sources files, you shoud perform a database migration.
 First **be sure your node-types sources classes exist**.
 If you did’nt generate them just have a look at *Migrating with an existing database* section.
 Then you can perform migration :
@@ -137,7 +137,7 @@ bin/roadiz cache --clear-all;
 
 ### Problem with entities and Doctrine cache?
 
-After each RZCMS upgrade you should upgrade your node-sources entity classes and upgrade database schema.
+After each Roadiz upgrade you should upgrade your node-sources entity classes and upgrade database schema.
 
 ```
 bin/roadiz core:node:types --regenerateAllEntities;
@@ -147,6 +147,6 @@ bin/roadiz cache --clear-all;
 
 ```
 
-If you are using a *OPCode var cache* like *APC*, *XCache*, you should empty it as RZCMS store doctrine
+If you are using a *OPCode var cache* like *APC*, *XCache*, you should empty it as Roadiz store doctrine
 configuration there for better performances.
 

@@ -48,7 +48,7 @@ use Symfony\Component\Config\FileLocator;
 use \InlineStyle\InlineStyle;
 
 /**
- * Defines entry points for RZCMS v3.
+ * Defines entry points for Roadiz.
  */
 class EntryPointsController extends AppController
 {
