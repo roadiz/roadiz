@@ -60,7 +60,16 @@ class DocumentsController extends RozierApp
         $joinFolderForm->handleRequest();
         if ($joinFolderForm->isValid()) {
 
-            $msg = $this->joinFolder($joinFolderForm->getData());
+            $data = $joinFolderForm->getData();
+
+            if ($joinFolderForm->get('submitFolder')->isClicked()) {
+                $msg = $this->joinFolder($data);
+            } elseif ($joinFolderForm->get('submitUnfolder')->isClicked()) {
+                $msg = $this->leaveFolder($data);
+            } else {
+                $msg = $this->getTranslator()->trans('wrong.request');
+            }
+
             $request->getSession()->getFlashBag()->add('confirm', $msg);
             $this->getService('logger')->info($msg);
 
@@ -292,7 +301,7 @@ class DocumentsController extends RozierApp
 
                 } catch (\Exception $e) {
 
-                    $msg = $this->getTranslator()->trans('document.%name%.cannot_delete', array('%name%'=>$document->getFilename()));
+                    $msg = $this->getTranslator()->trans('documents.cannot_delete');
                     $request->getSession()->getFlashBag()->add('error', $msg);
                     $this->getService('logger')->warning($msg);
                 }
@@ -317,6 +326,76 @@ class DocumentsController extends RozierApp
 
             return new Response(
                 $this->getTwig()->render('documents/bulkDelete.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        } else {
+            return $this->throw404();
+        }
+    }
+
+
+    /**
+     * Return an deletion form for multiple docs.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function bulkDownloadAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        $documentsIds = $request->get('documents');
+
+        $documents = $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->findBy(array(
+                'id' => $documentsIds
+            ));
+
+        if ($documents !== null &&
+            count($documents) > 0) {
+
+            $this->assignation['documents'] = $documents;
+            $form = $this->buildBulkDownloadForm($documentsIds);
+
+            $form->handleRequest();
+
+            if ($form->isValid()) {
+
+                try {
+
+                    return $this->downloadDocuments($documents);
+
+                } catch (\Exception $e) {
+
+                    $msg = $this->getTranslator()->trans('documents.cannot_download');
+                    $request->getSession()->getFlashBag()->add('error', $msg);
+                    $this->getService('logger')->warning($msg);
+
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate('documentsHomePage')
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
+                }
+            }
+
+            $this->assignation['form'] = $form->createView();
+            $this->assignation['action'] = '?'. http_build_query(array('documents'=>$documentsIds));
+            $this->assignation['thumbnailFormat'] = array(
+                'width' =>   128,
+                'quality' => 50,
+                'crop' =>    '1x1'
+            );
+
+            return new Response(
+                $this->getTwig()->render('documents/bulkDownload.html.twig', $this->assignation),
                 Response::HTTP_OK,
                 array('content-type' => 'text/html')
             );
@@ -558,9 +637,7 @@ class DocumentsController extends RozierApp
     {
         $defaults = array();
         $builder = $this->getService('formFactory')
-                    ->createBuilder('form', $defaults, array(
-                        'action' => '?'. http_build_query(array('documents'=>$documentsIds))
-                    ))
+                    ->createBuilder('form', $defaults)
                     ->add('checksum', 'hidden', array(
                         'data' => md5(serialize($documentsIds)),
                         'constraints' => array(
@@ -570,6 +647,27 @@ class DocumentsController extends RozierApp
 
         return $builder->getForm();
     }
+
+    /**
+     * @param array $documentsIds
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildBulkDownloadForm($documentsIds)
+    {
+        $defaults = array();
+        $builder = $this->getService('formFactory')
+                    ->createBuilder('form', $defaults)
+                    ->add('checksum', 'hidden', array(
+                        'data' => md5(serialize($documentsIds)),
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ));
+
+        return $builder->getForm();
+    }
+
     /**
      * @param RZ\Roadiz\Core\Entities\Document $document
      *
@@ -653,7 +751,7 @@ class DocumentsController extends RozierApp
     private function buildLinkFoldersForm()
     {
         $builder = $this->getService('formFactory')
-                    ->createBuilder('form')
+                    ->createNamedBuilder('folderForm')
                     ->add('documentsId', 'hidden', array(
                         'attr' => array('class' => 'document-id-bulk-folder'),
                         'constraints' => array(
@@ -668,6 +766,22 @@ class DocumentsController extends RozierApp
                         ),
                         'constraints' => array(
                             new NotBlank()
+                        )
+                    ))
+                    ->add('submitFolder', 'submit', array(
+                        'label' => $this->getTranslator()->trans('link.folders'),
+                        'attr' => array(
+                            'class' => 'uk-button uk-button-primary',
+                            'title' => $this->getTranslator()->trans('link.folders'),
+                            'data-uk-tooltip' => "{animation:true}"
+                        )
+                    ))
+                    ->add('submitUnfolder', 'submit', array(
+                        'label' => $this->getTranslator()->trans('unlink.folders'),
+                        'attr' => array(
+                            'class' => 'uk-button',
+                            'title' => $this->getTranslator()->trans('unlink.folders'),
+                            'data-uk-tooltip' => "{animation:true}"
                         )
                     ));
 
@@ -698,43 +812,10 @@ class DocumentsController extends RozierApp
             $folderPaths = array_filter($folderPaths);
 
             foreach ($folderPaths as $path) {
-                $path = trim($path);
-
-                $folders = explode('/', $path);
-                $folders = array_filter($folders);
-
-                $folderName = $folders[count($folders) - 1];
-                $parentName = null;
-                $parentFolder = null;
-
-                if (count($folders) > 1) {
-                    $parentName = $folders[count($folders) - 2];
-
-                    $parentFolder = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                                ->findOneByName($parentName);
-                }
 
                 $folder = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                            ->findOneByName($folderName);
-
-
-                if (null === $folder) {
-                    /*
-                     * Creation of a new folder
-                     * before linking it to the node
-                     */
-                    $folder = new Folder();
-                    $folder->setName($folderName);
-
-                    if (null !== $parentFolder) {
-                        $folder->setParent($parentFolder);
-                    }
-
-                    $this->getService('em')->persist($folder);
-                    $this->getService('em')->flush();
-                }
+                            ->findOrCreateByPath($path);
 
                 /*
                  * Add each selected documents
@@ -750,6 +831,92 @@ class DocumentsController extends RozierApp
         }
 
         return $msg;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return string
+     */
+    private function leaveFolder($data)
+    {
+        $msg = $this->getTranslator()->trans('no_documents.removed_from.folders');
+
+        if (!empty($data['documentsId']) &&
+            !empty($data['folderPaths'])) {
+
+            $documentsIds = explode(',', $data['documentsId']);
+
+            $documents = $this->getService('em')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                    ->findBy(array(
+                        'id' => $documentsIds
+                    ));
+
+            $folderPaths = explode(',', $data['folderPaths']);
+            $folderPaths = array_filter($folderPaths);
+
+            foreach ($folderPaths as $path) {
+
+                $folder = $this->getService('em')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                            ->findByPath($path);
+
+                if (null !== $folder) {
+                    /*
+                     * Add each selected documents
+                     */
+                    foreach ($documents as $document) {
+                        $folder->removeDocument($document);
+                    }
+
+                    $this->getService('em')->flush();
+                }
+            }
+
+            $msg = $this->getTranslator()->trans('documents.removed_from.folders');
+        }
+
+        return $msg;
+    }
+    /**
+     * @param array $documents
+     *
+     * @return @return Symfony\Component\HttpFoundation\Response
+     */
+    private function downloadDocuments($documents)
+    {
+        if (count($documents) > 0) {
+
+            $tmpFileName = tempnam("/tmp", "rzdocs_");
+            $zip = new \ZipArchive();
+            $zip->open($tmpFileName, \ZipArchive::CREATE);
+
+            foreach ($documents as $document) {
+
+                $zip->addFile($document->getAbsolutePath(), $document->getFilename());
+            }
+
+            $zip->close();
+
+            $response = new Response(
+                file_get_contents($tmpFileName),
+                Response::HTTP_OK,
+                array(
+                    'content-control' => 'private',
+                    'content-type' => 'application/zip',
+                    'content-length' => filesize($tmpFileName),
+                    'content-disposition' => 'attachment; filename=documents_archive.zip'
+                )
+            );
+
+            unlink($tmpFileName);
+
+            return $response;
+
+        } else {
+            return $this->throw404();
+        }
     }
 
     private function embedDocument($data, $folderId = null)
