@@ -8,6 +8,8 @@ var NodesBulk = function () {
     _this.$nodesCheckboxes = $('input.node-checkbox');
     _this.$nodesIdBulkTags = $('input.nodes-id-bulk-tags');
     _this.$actionsMenu = $('.nodes-bulk-actions');
+    _this.$nodesFolderButton = $('.uk-button-bulk-folder-nodes');
+    _this.$nodesFolderCont = $('.nodes-bulk-folder-cont');
 
     if (_this.$nodesCheckboxes.length) {
         _this.init();
@@ -18,6 +20,9 @@ var NodesBulk = function () {
 NodesBulk.prototype.$nodesCheckboxes = null;
 NodesBulk.prototype.$nodesIdBulkTags = null;
 NodesBulk.prototype.$actionsMenu = null;
+NodesBulk.prototype.$nodesFolderButton = null;
+NodesBulk.prototype.$nodesFolderCont = null;
+NodesBulk.prototype.nodesFolderOpen = false;
 NodesBulk.prototype.nodesIds = null;
 
 /**
@@ -30,6 +35,8 @@ NodesBulk.prototype.init = function() {
     var proxy = $.proxy(_this.onCheckboxChange, _this);
     _this.$nodesCheckboxes.off('change', proxy);
     _this.$nodesCheckboxes.on('change', proxy);
+
+    _this.$nodesFolderButton.on('click', $.proxy(_this.nodesFolderButtonClick, _this));
 
     //var $bulkDeleteButton = _this.$actionsMenu.find('.node-bulk-delete');
     //var deleteProxy = $.proxy(_this.onBulkDelete, _this);
@@ -109,4 +116,23 @@ NodesBulk.prototype.hideActions = function () {
 
     _this.$actionsMenu.slideUp();
     //_this.$actionsMenu.removeClass('visible');
+};
+
+
+/**
+ * Nodes folder button click
+ * @return {[type]} [description]
+ */
+NodesBulk.prototype.nodesFolderButtonClick = function(e){
+    var _this = this;
+
+    if(!_this.nodesFolderOpen){
+        _this.$nodesFolderCont.slideDown();
+        _this.nodesFolderOpen = true;
+    }
+    else{        
+        _this.$nodesFolderCont.slideUp();
+        _this.nodesFolderOpen = false;
+    }
+
 };

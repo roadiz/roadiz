@@ -13,7 +13,7 @@
 .uk-button{
     height: 36px;
     font-size: 12px;
-    line-height: 37px;
+    line-height: 36px;
     font-weight: bold;
     .border-radius(0px);
     text-shadow: 0 1px 0 rgba(255,255,255,.5);
@@ -33,6 +33,7 @@
         font-size:14px;
         margin:0 4px 0 0;
     }
+
     [class*=uk-icon-rz-] {
       font-size: 16px;
     }
@@ -264,3 +265,43 @@
         }
     }
 }
+
+
+.uk-button-bulk{
+    width:49px; height:53px;
+    padding:8px 6px;
+    margin-left:-1px;
+
+    [class*=uk-icon-rz-] {
+        width:34px; height:34px;
+        line-height:34px;
+        background:#fff;
+        .rounded(18px);
+        border:1px solid #cbcbcb;
+        .box-sizing();
+    }
+
+    &.uk-button-bulk-delete{
+
+        [class*=uk-icon-rz-] {
+            border-color: @alert-color;
+        }
+
+        &:hover{
+            [class*=uk-icon-rz-] {
+                border-color: darken(@alert-color, 15%);
+            }
+        }
+    }
+
+    &:hover{
+        [class*=uk-icon-rz-] {
+            border-color: #888888;
+        }
+    }
+}
+
+.uk-button-bulk-form{
+    height:32px;
+}
+

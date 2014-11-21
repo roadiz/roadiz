@@ -5,7 +5,7 @@
 	class="uk-nestable-list-item uk-nestable-list-item-folder foldertree-element{% if folder.getChildren.count > 0 %} has-children{% endif %}">
 
 	<div class="foldertree-element-inner uk-nestable-item uk-nestable-item-folder">
-		<div class="uk-nestable-handle uk-nestable-handle-folder"><i class="{% if folder.getChildren.count > 0 %}uk-icon-rz-folders{% else %}uk-icon-rz-folder-tree{% endif %}"></i></div>
+		<div class="uk-nestable-handle uk-nestable-handle-folder"><i class="{% if folder.getChildren.count > 0 %}uk-icon-rz-folders{% else %}uk-icon-rz-folder-tree-mini{% endif %}"></i></div>
 		<div data-nestable-action="toggle"></div>
 		<div class="foldertree-element-name">
 			<a href="{{ editUrl }}">{{ folder.getName }}</a>

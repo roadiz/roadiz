@@ -30,5 +30,31 @@
         </div>
         {% endif %}
 
+        <nav class="bulk-actions documents-bulk-actions">  
+
+            <div class="bulk-actions-title-cont">
+                <h3 class="bulk-actions-title documents-bulk-actions-title">{% trans %}bulk.actions{% endtrans %}</h3>
+            </div>
+            
+            {% spaceless %}
+                <a class="uk-button uk-button-bulk uk-button-danger uk-button-bulk-delete uk-button-bulk-delete-documents" href="#" title="{% trans %}bulk.delete.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
+            
+                <a class="uk-button uk-button-bulk uk-button-bulk-folder uk-button-bulk-folder-documents" href="#" title="{% trans %}bulk.fold.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-folder-tree-mini"></i></a>
+            {% endspaceless %}
+
+            <div class="bulk-folder-cont documents-bulk-folder-cont">
+                {% form_theme joinFolderForm 'forms.html.twig' %}
+                <form class="uk-form uk-form-horizontal document-bulk-folder-form" action="#" method="post" {{ form_enctype(joinFolderForm) }}>
+                    {{ form_widget(joinFolderForm) }}
+                    {% spaceless %}
+                    <button class="uk-button uk-button-primary uk-button-content uk-button-bulk-primary uk-button-bulk-form" type="submit" title="{% trans %}bulk.fold.documents{% endtrans %}" data-uk-tooltip="{animation:true}">
+                        <i class="uk-icon-rz-plus-simple"></i>
+                    </button>
+                    {% endspaceless %}
+                </form>
+            </div>
+            
+        </nav>
+
     </div>
 </nav>
