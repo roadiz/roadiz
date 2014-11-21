@@ -75,6 +75,37 @@
     border-top:1px dashed #c3c3c3;
 
     .uk-form .data-uk-margin>div{
+        display: inline-block;
         margin-bottom:0;
+    }
+}
+
+
+#tagForm_submitTag, #tagForm_submitUntag, #folderForm_submitFolder, #folderForm_submitUnfolder{    
+    position: relative; 
+    width:32px; height:32px;
+    padding:0;
+    overflow: hidden;
+
+    &:before{
+        position: relative;
+        display: block;
+        width:32px; height:32px;
+        content:@plus;
+        font-size:16px; line-height:32px;
+        font-family: 'rz-icons';       
+        text-align: center;
+    }
+
+}
+
+#tagForm_submitTag, #folderForm_submitFolder{
+    margin-left:4px;
+}
+
+#tagForm_submitUntag, #folderForm_submitUnfolder{
+
+    &:before{
+        content:@minus;
     }
 }

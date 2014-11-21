@@ -42,14 +42,14 @@
                 <a class="uk-button uk-button-bulk uk-button-bulk-download uk-button-bulk-download-documents" href="#" title="{% trans %}bulk.download.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
 
                 <a class="uk-button uk-button-bulk uk-button-bulk-folder uk-button-bulk-folder-documents" href="#" title="{% trans %}bulk.fold.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-folder-tree-mini"></i></a>
-            {% endspaceless %}
 
-            <div class="bulk-folder-cont documents-bulk-folder-cont">
-                {% form_theme joinFolderForm 'forms.html.twig' %}
-                <form class="uk-form uk-form-horizontal document-bulk-folder-form" action="#" method="post" {{ form_enctype(joinFolderForm) }}>
-                    {{ form_widget(joinFolderForm) }}
-                </form>
-            </div>
+                <div class="bulk-folder-cont documents-bulk-folder-cont">
+                    {% form_theme joinFolderForm 'forms.html.twig' %}
+                    <form class="uk-form uk-form-horizontal document-bulk-folder-form" action="#" method="post" {{ form_enctype(joinFolderForm) }}>
+                        {{ form_widget(joinFolderForm) }}
+                    </form>
+                </div>            
+            {% endspaceless %}
 
         </nav>
 
