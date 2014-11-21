@@ -5370,6 +5370,28 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+
+      <trans-unit xml:space="preserve" id="link.folders">
+          <source>link.folders</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unlink.folders">
+          <source>unlink.folders</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.download.documents">
+          <source>bulk.download.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="download.documents">
+          <source>download.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.download.these.documents">
+          <source>are_you_sure.download.these.documents</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

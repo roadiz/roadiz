@@ -48,11 +48,6 @@
                 {% form_theme joinFolderForm 'forms.html.twig' %}
                 <form class="uk-form uk-form-horizontal document-bulk-folder-form" action="#" method="post" {{ form_enctype(joinFolderForm) }}>
                     {{ form_widget(joinFolderForm) }}
-                    {% spaceless %}
-                    <button class="uk-button uk-button-primary uk-button-content uk-button-bulk-primary uk-button-bulk-form" type="submit" title="{% trans %}bulk.fold.documents{% endtrans %}" data-uk-tooltip="{animation:true}">
-                        <i class="uk-icon-rz-plus-simple"></i>
-                    </button>
-                    {% endspaceless %}
                 </form>
             </div>
 
