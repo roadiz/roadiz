@@ -35,6 +35,11 @@ DocumentsBulk.prototype.init = function() {
     var deleteProxy = $.proxy(_this.onBulkDelete, _this);
     $bulkDeleteButton.off('click', deleteProxy);
     $bulkDeleteButton.on('click', deleteProxy);
+
+    var $bulkDownloadButton = _this.$actionsMenu.find('.document-bulk-download');
+    var downloadProxy = $.proxy(_this.onBulkDownload, _this);
+    $bulkDownloadButton.off('click', downloadProxy);
+    $bulkDownloadButton.on('click', downloadProxy);
 };
 
 
@@ -80,6 +85,28 @@ DocumentsBulk.prototype.onBulkDelete = function(event) {
                 'documents': _this.documentsIds
             }
         }, null, Rozier.routes.documentsBulkDeletePage);
+
+        Rozier.lazyload.onPopState(null);
+    }
+
+    return false;
+};
+
+/**
+ * On bulk Download
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
+DocumentsBulk.prototype.onBulkDownload = function(event) {
+    var _this = this;
+
+    if(_this.documentsIds.length > 0){
+
+        history.pushState({
+            'headerData' : {
+                'documents': _this.documentsIds
+            }
+        }, null, Rozier.routes.documentsBulkDownloadPage);
 
         Rozier.lazyload.onPopState(null);
     }

@@ -27,6 +27,8 @@
 
         <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-bulk-delete document-bulk-delete" href="#" title="{% trans %}bulk.delete.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
 
+        <a class="uk-button uk-button-content uk-button-small uk-button-bulk-download document-bulk-download" href="#" title="{% trans %}bulk.download.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
+
         {% form_theme joinFolderForm 'forms.html.twig' %}
         <form class="uk-form uk-form-horizontal document-bulk-folder-form" action="#" method="post" {{ form_enctype(joinFolderForm) }}>
             {{ form_widget(joinFolderForm) }}

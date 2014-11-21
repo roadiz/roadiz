@@ -1,0 +1,47 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+
+{% block content %}
+<section class="content-global download-document">
+	<header class="content-header header-document header-document-preview">
+        <h1 class="content-title document-download-title">{{ "download.documents"|trans() }}</h1>
+    </header>
+
+    <article class="content content-download content-no-action-menu">
+        {% spaceless %}
+        <ul class="documents-list">
+        {% for document in documents %}
+            <li class="document-item">
+                <div class="document-border"></div>
+                <figure class="document-image">
+                    {% if document.isImage %}
+                        {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
+                    {% else %}
+                        <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>
+                    {% endif %}
+                </figure>
+                <div class="document-name">{{ document.getFilename|centralTruncate(18, -4)}}</div>
+                <div class="document-overflow">
+                    {% if document.isEmbed %}
+                        <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
+                        <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
+                    {% else %}
+                        <div class="document-mime-type">{{ document.getShortMimeType }}</div>
+                    {% endif %}
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+        {% endspaceless %}
+		{% form_theme form 'forms.html.twig' %}
+		<form class="uk-form uk-form-stacked" action="{{ action }}" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<legend>{% trans %}are_you_sure.download.these.documents{% endtrans %}</legend>
+		    	<a href="{{ path('documentsHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-download"></i> {% trans %}download{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+	</article>
+</section>
+{% endblock %}

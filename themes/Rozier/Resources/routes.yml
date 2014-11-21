@@ -423,6 +423,9 @@ documentsDeletePage:
 documentsBulkDeletePage:
     path:     /rz-admin/documents/bulk-delete
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::bulkDeleteAction }
+documentsBulkDownloadPage:
+    path:     /rz-admin/documents/bulk-download
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::bulkDownloadAction }
 
 # Ajax
 documentsAjaxExplorerPage:

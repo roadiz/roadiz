@@ -272,6 +272,7 @@ class FontsController extends RozierApp
                 file_get_contents($file),
                 Response::HTTP_OK,
                 array(
+                    'content-control' => 'private',
                     'content-type' => 'application/zip',
                     'content-length' => filesize($file),
                     'content-disposition' => 'attachment; filename='.$filename
