@@ -488,8 +488,8 @@ class DocumentsController extends RozierApp
             $this->getService('logger')->info($msg);
 
         } catch (\Exception $e) {
-            $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-            $this->getService('logger')->error($e->getMessage());
+            $request->getSession()->getFlashBag()->add('error', $this->getTranslator()->trans($e->getMessage()));
+            $this->getService('logger')->error($this->getTranslator()->trans($e->getMessage()));
         }
         /*
          * Force redirect to avoid resending form when refreshing page
