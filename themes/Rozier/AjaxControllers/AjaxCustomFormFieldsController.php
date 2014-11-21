@@ -9,9 +9,9 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\CustomFormField;
-use RZ\Renzo\Core\Entities\Translation;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\CustomFormField;
+use RZ\Roadiz\Core\Entities\Translation;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 use Themes\Rozier\RozierApp;
 
@@ -53,7 +53,7 @@ class AjaxCustomFormFieldsController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $field = $this->getService('em')
-                      ->find('RZ\Renzo\Core\Entities\CustomFormField', (int) $customFormFieldId);
+                      ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
 
         if ($field !== null) {
 

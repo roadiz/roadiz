@@ -1,10 +1,10 @@
-.. Renzo documentation master file, created by Ambroise Maupate
+.. Roadiz documentation master file, created by Ambroise Maupate
 
 =================================
-Welcome to Renzo's documentation!
+Welcome to Roadiz's documentation!
 =================================
 
-Renzo is a polymorphic CMS based on a node system which can handle many type of services.
+Roadiz is a polymorphic CMS based on a node system which can handle many type of services.
 It’s based on *Symfony* components and *Doctrine ORM* for maximum performances and security.
 
 First contact

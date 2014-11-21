@@ -10,16 +10,16 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodeType;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeTypeHandler;
-use RZ\Renzo\Core\Serializers\NodeTypeJsonSerializer;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
+use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,7 +50,7 @@ class NodeTypesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $nodeType = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
+            ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         $response =  new Response(
             NodeTypeJsonSerializer::serialize($nodeType),
@@ -99,7 +99,7 @@ class NodeTypesUtilsController extends RozierApp
 
                     $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
                     $existingNT = $this->getService('em')
-                        ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+                        ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                         ->findOneBy(array('name'=>$nodeType->getName()));
 
                     if (null === $existingNT) {

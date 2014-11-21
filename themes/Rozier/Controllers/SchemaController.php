@@ -11,15 +11,15 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodeType;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\CMS\Controllers\FrontendController;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\CMS\Controllers\FrontendController;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,7 +58,7 @@ class SchemaController extends RozierApp
         if ($this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
 
-            \RZ\Renzo\Console\SchemaCommand::updateSchema();
+            \RZ\Roadiz\Console\SchemaCommand::updateSchema();
 
             $msg = $this->getTranslator()->trans('database.schema.updated');
             $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -97,7 +97,7 @@ class SchemaController extends RozierApp
 
         if ($this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
-            \RZ\Renzo\Console\SchemaCommand::updateSchema();
+            \RZ\Roadiz\Console\SchemaCommand::updateSchema();
 
             $msg = $this->getTranslator()->trans('database.schema.updated');
             $request->getSession()->getFlashBag()->add('confirm', $msg);

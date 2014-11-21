@@ -23,14 +23,14 @@ Then run database schema update
 
 .. code-block:: bash
 
-    bin/renzo schema --update;
+    bin/roadiz schema --update;
 
 If migration summary is OK, perform the changes
 
 .. code-block:: bash
 
-    bin/renzo schema --update --execute;
-    bin/renzo cache --clear-all
+    bin/roadiz schema --update --execute;
+    bin/roadiz cache --clear-all
 
 Upgrading Node-types source entities
 ------------------------------------
@@ -40,12 +40,12 @@ you must *regenerate all entities* source files
 
 .. code-block:: bash
 
-    bin/renzo core:node:types --regenerateAllEntities;
-    bin/renzo schema --update;
+    bin/roadiz core:node:types --regenerateAllEntities;
+    bin/roadiz schema --update;
 
 Verify here that no data field will be removed and apply changes
 
 .. code-block:: bash
 
-    bin/renzo schema --update --execute;
-    bin/renzo cache --clear-all
+    bin/roadiz schema --update --execute;
+    bin/roadiz cache --clear-all

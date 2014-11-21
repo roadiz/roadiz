@@ -1,12 +1,12 @@
 <?php
 
-use RZ\Renzo\Core\Handlers\NodeHandler;
-use RZ\Renzo\Core\Entities\NodesSources;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
 use GeneratedNodeSources\NSPage;
-use RZ\Renzo\CMS\Controllers\ImportController;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\CMS\Controllers\ImportController;
+use RZ\Roadiz\Core\Kernel;
 
 class NodeHandlerTest extends PHPUnit_Framework_TestCase
 {
@@ -41,10 +41,10 @@ class NodeHandlerTest extends PHPUnit_Framework_TestCase
     public static function duplicateProvider()
     {
         $nodeType = Kernel::getService("em")
-                        ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+                        ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                         ->findOneByName('Page');
         $tran = Kernel::getService("em")
-                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                     ->findDefault();
 
         if (null !== $nodeType &&
@@ -76,7 +76,7 @@ class NodeHandlerTest extends PHPUnit_Framework_TestCase
 
         date_default_timezone_set('Europe/Paris');
         ImportController::importContent(RENZO_ROOT . '/tests/Fixtures/Handlers/Page.json',
-                                        "RZ\Renzo\CMS\Importers\NodeTypesImporter", null);
+                                        "RZ\Roadiz\CMS\Importers\NodeTypesImporter", null);
     }
 
     /**
@@ -85,12 +85,12 @@ class NodeHandlerTest extends PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         foreach (static::$entityCollection as $node) {
-            $node = Kernel::getService("em")->find("RZ\Renzo\Core\Entities\Node", $node->getId());
+            $node = Kernel::getService("em")->find("RZ\Roadiz\Core\Entities\Node", $node->getId());
             Kernel::getService('em')->remove($node);
         }
 
         foreach (static::$runtimeCollection as $node) {
-            $node = Kernel::getService("em")->find("RZ\Renzo\Core\Entities\Node", $node->getId());
+            $node = Kernel::getService("em")->find("RZ\Roadiz\Core\Entities\Node", $node->getId());
             Kernel::getService('em')->remove($node);
         }
 

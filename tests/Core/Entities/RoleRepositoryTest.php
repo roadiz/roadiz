@@ -1,8 +1,8 @@
 <?php
 
-use RZ\Renzo\Core\Entities\RoleRepository;
-use RZ\Renzo\Core\Entities\Role;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\RoleRepository;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Kernel;
 
 class RoleRepositoryTest extends PHPUnit_Framework_TestCase
 {
@@ -14,11 +14,11 @@ class RoleRepositoryTest extends PHPUnit_Framework_TestCase
     public function testRoleValue($name, $expected)
     {
         echo Kernel::getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Role')
+            ->getRepository('RZ\Roadiz\Core\Entities\Role')
             ->countByName($name);
 
         $role = Kernel::getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Role')
+            ->getRepository('RZ\Roadiz\Core\Entities\Role')
             ->findOneByName($name);
 
         static::$entityCollection[] = $role;
@@ -48,7 +48,7 @@ class RoleRepositoryTest extends PHPUnit_Framework_TestCase
 
         foreach ($roles as $value) {
             $role = Kernel::getService('em')
-                        ->getRepository('RZ\Renzo\Core\Entities\Role')
+                        ->getRepository('RZ\Roadiz\Core\Entities\Role')
                         ->findOneByName($value[1]);
 
             if (null === $role) {

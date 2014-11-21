@@ -611,4 +611,4 @@ cssMainColor:
 
 # searchPage:
 #     path:     /rz-admin/search/{q}
-#     defaults: { _controller: RZ\Renzo\Core\SearchEngine\FullTextSearchHandler::searchAction }
+#     defaults: { _controller: RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler::searchAction }

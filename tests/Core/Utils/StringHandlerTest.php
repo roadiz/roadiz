@@ -8,7 +8,7 @@
  * @author Ambroise Maupate
  */
 
-use RZ\Renzo\Core\Utils\StringHandler;
+use RZ\Roadiz\Core\Utils\StringHandler;
 
 /**
  *

@@ -9,22 +9,22 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Tag;
-use RZ\Renzo\Core\Entities\NodeType;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Entities\UrlAlias;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeHandler;
-use RZ\Renzo\Core\Utils\StringHandler;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\UrlAlias;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Utils\StringHandler;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\NoTranslationAvailableException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,7 +57,7 @@ class NodesSourcesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $translation = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
+                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
 
@@ -67,10 +67,10 @@ class NodesSourcesController extends RozierApp
              * that is initialized before calling route method.
              */
             $gnode = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+                ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
             $source = $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                 ->findOneBy(array('translation'=>$translation, 'node'=>$gnode));
 
             if (null !== $source) {
@@ -129,7 +129,7 @@ class NodesSourcesController extends RozierApp
      * Edit node source parameters.
      *
      * @param array                               $data
-     * @param RZ\Renzo\Core\Entities\NodesSources $nodeSource
+     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      *
      * @return void
      */
@@ -152,7 +152,7 @@ class NodesSourcesController extends RozierApp
 
         // Update Solr Serach engine if setup
         if (true === $this->getKernel()->pingSolrServer()) {
-            $solrSource = new \RZ\Renzo\Core\SearchEngine\SolariumNodeSource(
+            $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
                 $nodeSource,
                 $this->getService('solr')
             );
@@ -162,8 +162,8 @@ class NodesSourcesController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Node         $node
-     * @param RZ\Renzo\Core\Entities\NodesSources $source
+     * @param RZ\Roadiz\Core\Entities\Node         $node
+     * @param RZ\Roadiz\Core\Entities\NodesSources $source
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -221,12 +221,12 @@ class NodesSourcesController extends RozierApp
                 $documents = $nodeSource->getHandler()
                                 ->getDocumentsFromFieldName($field->getName());
 
-                return new \RZ\Renzo\CMS\Forms\DocumentsType($documents);
+                return new \RZ\Roadiz\CMS\Forms\DocumentsType($documents);
             case NodeTypeField::NODES_T:
                 $nodes = $nodeSource->getNode()->getHandler()
                                 ->getNodesFromFieldName($field->getName());
 
-                return new \RZ\Renzo\CMS\Forms\NodesType($nodes);
+                return new \RZ\Roadiz\CMS\Forms\NodesType($nodes);
             case NodeTypeField::CHILDREN_T:
                 /*
                  * NodeTreeType is a virtual type which is only available
@@ -238,11 +238,11 @@ class NodesSourcesController extends RozierApp
                     $controller
                 );
             case NodeTypeField::MARKDOWN_T:
-                return new \RZ\Renzo\CMS\Forms\MarkdownType();
+                return new \RZ\Roadiz\CMS\Forms\MarkdownType();
             case NodeTypeField::ENUM_T:
-                return new \RZ\Renzo\CMS\Forms\EnumerationType($field);
+                return new \RZ\Roadiz\CMS\Forms\EnumerationType($field);
             case NodeTypeField::MULTIPLE_T:
-                return new \RZ\Renzo\CMS\Forms\MultipleEnumerationType($field);
+                return new \RZ\Roadiz\CMS\Forms\MultipleEnumerationType($field);
 
             default:
                 return NodeTypeField::$typeToForm[$field->getType()];
@@ -339,7 +339,7 @@ class NodesSourcesController extends RozierApp
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $documentId) {
                         $tempDoc = Kernel::getService('em')
-                                        ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
+                                        ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
                         if ($tempDoc !== null) {
                             $hdlr->addDocumentForField($tempDoc, $field);
                         }
@@ -353,7 +353,7 @@ class NodesSourcesController extends RozierApp
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $nodeId) {
                         $tempNode = Kernel::getService('em')
-                                        ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+                                        ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
                         if ($tempNode !== null) {
                             $hdlr->addNodeForField($tempNode, $field);
                         }

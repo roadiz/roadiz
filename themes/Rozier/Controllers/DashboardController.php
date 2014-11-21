@@ -9,7 +9,7 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Kernel;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;

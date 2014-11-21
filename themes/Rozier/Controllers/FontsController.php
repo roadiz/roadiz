@@ -11,12 +11,12 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Font;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
-use RZ\Renzo\Core\Utils\StringHandler;
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\EntityRequiredException;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Font;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Utils\StringHandler;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +44,7 @@ class FontsController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\Font'
+            'RZ\Roadiz\Core\Entities\Font'
         );
         $listManager->handle();
 
@@ -123,7 +123,7 @@ class FontsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
         $font = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Font', (int) $fontId);
+            ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
         if (null !== $font) {
             $form = $this->buildDeleteForm($font);
@@ -182,7 +182,7 @@ class FontsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
         $font = $this->getService('em')
-                    ->find('RZ\Renzo\Core\Entities\Font', (int) $fontId);
+                    ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
         if ($font !== null) {
 
@@ -242,7 +242,7 @@ class FontsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
         $font = $this->getService('em')
-                    ->find('RZ\Renzo\Core\Entities\Font', (int) $fontId);
+                    ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
         if ($font !== null) {
 
@@ -313,7 +313,7 @@ class FontsController extends RozierApp
                 'label' => $this->getTranslator()->trans('font.woffFile'),
                 'required' => false
             ))
-            ->add('variant', new \RZ\Renzo\CMS\Forms\FontVariantsType(), array(
+            ->add('variant', new \RZ\Roadiz\CMS\Forms\FontVariantsType(), array(
                 'label' => $this->getTranslator()->trans('font.variant')
             ));
 
@@ -322,7 +322,7 @@ class FontsController extends RozierApp
 
     /**
      * Build delete font form with name constraint.
-     * @param RZ\Renzo\Core\Entities\Font $font
+     * @param RZ\Roadiz\Core\Entities\Font $font
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -339,7 +339,7 @@ class FontsController extends RozierApp
 
     /**
      * Build edit font form with name constraint.
-     * @param RZ\Renzo\Core\Entities\Font $font
+     * @param RZ\Roadiz\Core\Entities\Font $font
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -375,7 +375,7 @@ class FontsController extends RozierApp
             ))
             ->add(
                 'variant',
-                new \RZ\Renzo\CMS\Forms\FontVariantsType(),
+                new \RZ\Roadiz\CMS\Forms\FontVariantsType(),
                 array(
                     'label' => $this->getTranslator()->trans('font.variant')
                 )
@@ -387,7 +387,7 @@ class FontsController extends RozierApp
     /**
      * @param \Symfony\Component\Form\Form $rawData
      *
-     * @return RZ\Renzo\Core\Entities\Font
+     * @return RZ\Roadiz\Core\Entities\Font
      */
     protected function addFont(\Symfony\Component\Form\Form $rawData)
     {
@@ -396,7 +396,7 @@ class FontsController extends RozierApp
 
         if (isset($data['name'])) {
             $existing = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Font')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Font')
                     ->findOneBy(array('name' => $data['name'], 'variant' => $data['variant']));
 
             if ($existing !== null) {
@@ -424,7 +424,7 @@ class FontsController extends RozierApp
     /**
      * Process font file uploads.
      * @param \Symfony\Component\Form\Form $data
-     * @param RZ\Renzo\Core\Entities\Font  $font
+     * @param RZ\Roadiz\Core\Entities\Font  $font
      *
      * @return
      */
@@ -522,9 +522,9 @@ class FontsController extends RozierApp
 
     /**
      * @param \Symfony\Component\Form\Form $rawData
-     * @param RZ\Renzo\Core\Entities\Font  $font
+     * @param RZ\Roadiz\Core\Entities\Font  $font
      *
-     * @return RZ\Renzo\Core\Entities\Font
+     * @return RZ\Roadiz\Core\Entities\Font
      */
     protected function editFont(\Symfony\Component\Form\Form $rawData, Font $font)
     {
@@ -532,7 +532,7 @@ class FontsController extends RozierApp
 
         if (isset($data['name'])) {
             $existing = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Font')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Font')
                     ->findOneBy(array('name' => $data['name'], 'variant' => $data['variant']));
             if ($existing !== null &&
                 $existing->getId() != $font->getId()) {
@@ -557,7 +557,7 @@ class FontsController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\Font $font
+     * @param RZ\Roadiz\Core\Entities\Font $font
      *
      * @return void
      */

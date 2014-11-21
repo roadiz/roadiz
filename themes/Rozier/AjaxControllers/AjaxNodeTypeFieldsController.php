@@ -9,11 +9,11 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 use Themes\Rozier\RozierApp;
 
@@ -55,7 +55,7 @@ class AjaxNodeTypeFieldsController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
 
         $field = $this->getService('em')
-                      ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
+                      ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
         if ($field !== null) {
 

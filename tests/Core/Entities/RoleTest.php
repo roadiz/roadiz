@@ -8,7 +8,7 @@
  * @author Thomas Aufresne
  */
 
-use RZ\Renzo\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Role;
 
 /**
  * Test Role features

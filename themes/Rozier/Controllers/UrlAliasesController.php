@@ -9,18 +9,18 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodeType;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Entities\UrlAlias;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeHandler;
-use RZ\Renzo\Core\Utils\StringHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\UrlAlias;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Utils\StringHandler;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\NoTranslationAvailableException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,16 +53,16 @@ class UrlAliasesController extends RozierApp
 
         if (null === $translationId && $translationId < 1) {
             $translation = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                     ->findDefault();
         } else {
             $translation = $this->getService('em')
-                    ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
+                    ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
 
 
         $source = $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                 ->findOneBy(array('translation'=>$translation, 'node.id'=>(int) $nodeId));
 
         $node = $source->getNode();
@@ -71,7 +71,7 @@ class UrlAliasesController extends RozierApp
             $node !== null) {
 
             $uas = $this->getService('em')
-                            ->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
+                            ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
                             ->findAllFromNode($node->getId());
 
             $this->assignation['node'] = $node;
@@ -234,19 +234,19 @@ class UrlAliasesController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\Node $node
+     * @param RZ\Roadiz\Core\Entities\Node $node
      *
-     * @return RZ\Renzo\Core\Entities\UrlAlias
+     * @return RZ\Roadiz\Core\Entities\UrlAlias
      */
     private function addNodeUrlAlias($data, Node $node)
     {
         if ($data['nodeId'] == $node->getId()) {
 
             $translation = $this->getService('em')
-                        ->find('RZ\Renzo\Core\Entities\Translation', (int) $data['translationId']);
+                        ->find('RZ\Roadiz\Core\Entities\Translation', (int) $data['translationId']);
 
             $nodeSource = $this->getService('em')
-                        ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+                        ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                         ->findOneBy(array('node'=>$node, 'translation'=>$translation));
 
             if ($translation !== null &&
@@ -286,7 +286,7 @@ class UrlAliasesController extends RozierApp
      * Edit NodesSources SEO fields.
      *
      * @param array                               $data
-     * @param RZ\Renzo\Core\Entities\NodesSources $nodeSource
+     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      *
      * @return boolean
      */
@@ -313,7 +313,7 @@ class UrlAliasesController extends RozierApp
     private function urlAliasExists($name)
     {
         return (boolean) $this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\UrlAlias')
+            ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
             ->exists($name);
     }
     /**
@@ -324,13 +324,13 @@ class UrlAliasesController extends RozierApp
     private function nodeNameExists($name)
     {
         return (boolean) $this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Node')
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->exists($name);
     }
 
     /**
      * @param array                           $data
-     * @param RZ\Renzo\Core\Entities\UrlAlias $ua
+     * @param RZ\Roadiz\Core\Entities\UrlAlias $ua
      *
      * @return boolean
      */
@@ -366,7 +366,7 @@ class UrlAliasesController extends RozierApp
 
     /**
      * @param array                           $data
-     * @param RZ\Renzo\Core\Entities\UrlAlias $ua
+     * @param RZ\Roadiz\Core\Entities\UrlAlias $ua
      */
     private function deleteUrlAlias($data, UrlAlias $ua)
     {
@@ -377,7 +377,7 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Node $node
+     * @param RZ\Roadiz\Core\Entities\Node $node
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -397,7 +397,7 @@ class UrlAliasesController extends RozierApp
             ->add('alias', 'text', array(
                 'label'=>$this->getTranslator()->trans('urlAlias'),
             ))
-            ->add('translationId', new \RZ\Renzo\CMS\Forms\TranslationsType(), array(
+            ->add('translationId', new \RZ\Roadiz\CMS\Forms\TranslationsType(), array(
                 'label'=>$this->getTranslator()->trans('translation'),
             ));
 
@@ -405,7 +405,7 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\UrlAlias $ua
+     * @param RZ\Roadiz\Core\Entities\UrlAlias $ua
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -434,7 +434,7 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\NodesSources $ns
+     * @param RZ\Roadiz\Core\Entities\NodesSources $ns
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -471,7 +471,7 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\UrlAlias $ua
+     * @param RZ\Roadiz\Core\Entities\UrlAlias $ua
      *
      * @return \Symfony\Component\Form\Form
      */

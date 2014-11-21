@@ -1,7 +1,7 @@
 <?php
 
-use RZ\Renzo\Core\Utils\InlineMarkdown;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Utils\InlineMarkdown;
+use RZ\Roadiz\Core\Kernel;
 
 class InlineMarkdownTest extends PHPUnit_Framework_TestCase
 {

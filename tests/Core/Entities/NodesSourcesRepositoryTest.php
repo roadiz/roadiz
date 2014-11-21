@@ -7,9 +7,9 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-use RZ\Renzo\Core\Entities\NodesSources;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Kernel;
 /**
  * NodesSourcesRepositoryTest.
  */
@@ -21,7 +21,7 @@ class NodesSourcesRepositoryTest extends PHPUnit_Framework_TestCase
     public function testFindBySearchQuery($query, $expectedClass)
     {
         $nSources = Kernel::getService('em')
-                                ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+                                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                                 ->findBySearchQuery($query);
 
         if (null !== $nSources) {
@@ -48,7 +48,7 @@ class NodesSourcesRepositoryTest extends PHPUnit_Framework_TestCase
     public function testFindBySearchQueryAndTranslation($query, $expectedClass, Translation $translation)
     {
         $nSources = Kernel::getService('em')
-                                ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+                                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                                 ->findBySearchQueryAndTranslation($query, $translation);
 
         if (null !== $nSources) {

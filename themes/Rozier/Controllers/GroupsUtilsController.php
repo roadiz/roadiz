@@ -10,14 +10,14 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Group;
-use RZ\Renzo\Core\Entities\Role;
-use RZ\Renzo\Core\Handlers\GroupHandler;
-use RZ\Renzo\Core\Serializers\GroupJsonSerializer;
-use RZ\Renzo\Core\Serializers\GroupCollectionJsonSerializer;
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\CMS\Importers\GroupsImporter;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Group;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Handlers\GroupHandler;
+use RZ\Roadiz\Core\Serializers\GroupJsonSerializer;
+use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +47,7 @@ class GroupsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
         $existingGroup = $this->getService('em')
-                              ->getRepository('RZ\Renzo\Core\Entities\Group')
+                              ->getRepository('RZ\Roadiz\Core\Entities\Group')
                               ->findAll();
         $group = GroupCollectionJsonSerializer::serialize($existingGroup);
 
@@ -83,7 +83,7 @@ class GroupsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
         $existingGroup = $this->getService('em')
-                              ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
+                              ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
 
         $group = GroupCollectionJsonSerializer::serialize(array($existingGroup));
 

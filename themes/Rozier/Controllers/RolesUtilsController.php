@@ -10,16 +10,16 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Role;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Role;
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\Serializers\RoleJsonSerializer;
-use RZ\Renzo\Core\Serializers\RoleCollectionJsonSerializer;
+use RZ\Roadiz\Core\Serializers\RoleJsonSerializer;
+use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\CMS\Importers\RolesImporter;
+use RZ\Roadiz\CMS\Importers\RolesImporter;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,7 +49,7 @@ class RolesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $existingRole = $this->getService('em')
-                              ->getRepository('RZ\Renzo\Core\Entities\Role')
+                              ->getRepository('RZ\Roadiz\Core\Entities\Role')
                               ->findAll();
         $role = RoleCollectionJsonSerializer::serialize($existingRole);
 
@@ -85,7 +85,7 @@ class RolesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $existingRole= $this->getService('em')
-                            ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
+                            ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
 
         $role = RoleCollectionJsonSerializer::serialize(array($existingRole));
 

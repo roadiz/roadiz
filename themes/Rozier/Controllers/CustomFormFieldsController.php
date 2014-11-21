@@ -9,12 +9,12 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\CustomForm;
-use RZ\Renzo\Core\Entities\CustomFormField;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\ReservedSQLWordException;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Entities\CustomFormField;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\ReservedSQLWordException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +43,7 @@ class CustomFormFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         $customForm = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\CustomForm', (int) $customFormId);
+            ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
         if ($customForm !== null) {
             $fields = $customForm->getFields();
@@ -74,7 +74,7 @@ class CustomFormFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         $field = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\CustomFormField', (int) $customFormFieldId);
+            ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
 
         if ($field !== null) {
 
@@ -132,7 +132,7 @@ class CustomFormFieldsController extends RozierApp
 
         $field = new CustomFormField();
         $customForm = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\CustomForm', (int) $customFormId);
+            ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
         if ($customForm !== null &&
             $field !== null) {
@@ -211,7 +211,7 @@ class CustomFormFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $field = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\CustomFormField', (int) $customFormFieldId);
+            ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
 
         if ($field !== null) {
             $this->assignation['field'] = $field;
@@ -230,7 +230,7 @@ class CustomFormFieldsController extends RozierApp
                  * Update Database
                  */
                 $customForm = $this->getService('em')
-                    ->find('RZ\Renzo\Core\Entities\CustomForm', (int) $customFormId);
+                    ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
                 $msg = $this->getTranslator()->trans(
                     'customFormField.%name%.deleted',
@@ -269,7 +269,7 @@ class CustomFormFieldsController extends RozierApp
 
     /**
      * @param array                                $data
-     * @param RZ\Renzo\Core\Entities\CustomFormField $field
+     * @param RZ\Roadiz\Core\Entities\CustomFormField $field
      */
     private function editCustomFormField($data, CustomFormField $field)
     {
@@ -283,8 +283,8 @@ class CustomFormFieldsController extends RozierApp
 
     /**
      * @param array                                  $data
-     * @param RZ\Renzo\Core\Entities\CustomFormField $field
-     * @param RZ\Renzo\Core\Entities\CustomForm      $customForm
+     * @param RZ\Roadiz\Core\Entities\CustomFormField $field
+     * @param RZ\Roadiz\Core\Entities\CustomForm      $customForm
      */
     private function addCustomFormField(
         $data,
@@ -306,7 +306,7 @@ class CustomFormFieldsController extends RozierApp
          * Check existing
          */
         $existing = $this->getService('em')
-                         ->getRepository('RZ\Renzo\Core\Entities\CustomFormField')
+                         ->getRepository('RZ\Roadiz\Core\Entities\CustomFormField')
                          ->findOneBy(array(
                             'name' => $data['name'],
                             'customForm' => $customForm
@@ -331,7 +331,7 @@ class CustomFormFieldsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\CustomFormField $field
+     * @param RZ\Roadiz\Core\Entities\CustomFormField $field
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -388,7 +388,7 @@ class CustomFormFieldsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\CustomFormField $field
+     * @param RZ\Roadiz\Core\Entities\CustomFormField $field
      *
      * @return \Symfony\Component\Form\Form
      */

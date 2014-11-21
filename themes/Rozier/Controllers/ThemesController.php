@@ -9,14 +9,14 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Theme;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\CMS\Controllers\FrontendController;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\CMS\Controllers\FrontendController;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +46,7 @@ class ThemesController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\Theme'
+            'RZ\Roadiz\Core\Entities\Theme'
         );
         $listManager->handle();
 
@@ -120,7 +120,7 @@ class ThemesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);
+            ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
 
@@ -179,7 +179,7 @@ class ThemesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);
+            ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
             $form = $this->buildDeleteForm($theme);
@@ -229,7 +229,7 @@ class ThemesController extends RozierApp
     /**
      * Build add theme form with classname constraint.
      *
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -239,7 +239,7 @@ class ThemesController extends RozierApp
             ->createBuilder('form')
             ->add(
                 'className',
-                new \RZ\Renzo\CMS\Forms\ThemesType(),
+                new \RZ\Roadiz\CMS\Forms\ThemesType(),
                 array(
                     'label' => $this->getTranslator()->trans('themeClass'),
                     'required' => true,
@@ -282,7 +282,7 @@ class ThemesController extends RozierApp
     /**
      * Build edit theme form with classname constraint.
      *
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -318,7 +318,7 @@ class ThemesController extends RozierApp
     /**
      * Build delete theme form with classname constraint.
      *
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -335,7 +335,7 @@ class ThemesController extends RozierApp
 
     /**
      * @param array                        $data
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      */
     private function addTheme(array $data, Theme $theme)
     {
@@ -345,7 +345,7 @@ class ThemesController extends RozierApp
         }
 
         $existing = $this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Theme')
+            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
             ->findOneBy(array('className'=>$theme->getClassName()));
 
         if ($existing !== null) {
@@ -364,7 +364,7 @@ class ThemesController extends RozierApp
 
     /**
      * @param array                        $data
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      *
      * @return boolean
      */
@@ -382,7 +382,7 @@ class ThemesController extends RozierApp
 
     /**
      * @param array                        $data
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      */
     protected function deleteTheme(array $data, Theme $theme)
     {

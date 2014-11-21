@@ -11,11 +11,11 @@
 
 namespace Themes\DefaultTheme;
 
-use RZ\Renzo\CMS\Controllers\FrontendController;
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Utils\StringHandler;
+use RZ\Roadiz\CMS\Controllers\FrontendController;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,7 +71,7 @@ class DefaultThemeApp extends FrontendController
         $translation = $this->bindLocaleFromRoute($request, $_locale);
 
         $node = $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Node')
+                ->getRepository('RZ\Roadiz\Core\Entities\Node')
                 ->findOneBy(
                     array('home'=>true),
                     null,
@@ -97,8 +97,8 @@ class DefaultThemeApp extends FrontendController
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Node        $node
-     * @param RZ\Renzo\Core\Entities\Translation $translation
+     * @param RZ\Roadiz\Core\Entities\Node        $node
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
      *
      * @return void
      */
@@ -108,7 +108,7 @@ class DefaultThemeApp extends FrontendController
         $this->assignation['navigation'] = $this->assignMainNavigation();
 
         $this->assignation['home'] = $this->getService('em')
-                                          ->getRepository('RZ\Renzo\Core\Entities\Node')
+                                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
                                           ->findHomeWithTranslation($translation);
 
         /*
@@ -121,19 +121,19 @@ class DefaultThemeApp extends FrontendController
     }
 
     /**
-     * @return RZ\Renzo\Core\Entities\Node
+     * @return RZ\Roadiz\Core\Entities\Node
      */
     protected function assignMainNavigation()
     {
         if ($this->translation === null) {
             $this->translation = $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                 ->findOneBy(
                     array('defaultTranslation'=>true)
                 );
         }
         $parent = $this->getService('em')
-                       ->getRepository('RZ\Renzo\Core\Entities\Node')
+                       ->getRepository('RZ\Roadiz\Core\Entities\Node')
                        ->findHomeWithTranslation($this->translation);
 
         if ($parent !== null) {

@@ -9,13 +9,13 @@
  */
 namespace Themes\Rozier\Widgets;
 
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Kernel;
 use Themes\Rozier\Widgets\AbstractWidget;
 use Symfony\Component\HttpFoundation\Request;
 
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 
 /**
  * Prepare a Node tree according to Node hierarchy and given options.
@@ -33,8 +33,8 @@ class NodeTreeWidget extends AbstractWidget
     /**
      * @param Request                            $request           Current kernel request
      * @param AppController                      $refereeController Calling controller
-     * @param RZ\Renzo\Core\Entities\Node        $parent            Entry point of NodeTreeWidget, set null if it's root
-     * @param RZ\Renzo\Core\Entities\Translation $translation       NodeTree translation
+     * @param RZ\Roadiz\Core\Entities\Node        $parent            Entry point of NodeTreeWidget, set null if it's root
+     * @param RZ\Roadiz\Core\Entities\Translation $translation       NodeTree translation
      */
     public function __construct(
         Request $request,
@@ -77,7 +77,7 @@ class NodeTreeWidget extends AbstractWidget
     {
         if ($this->translation === null) {
             $this->translation = $this->getController()->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                     ->findOneBy(array('defaultTranslation'=>true));
         }
 
@@ -87,7 +87,7 @@ class NodeTreeWidget extends AbstractWidget
         $listManager = new EntityListManager(
             $this->request,
             $this->controller->getService('em'),
-            'RZ\Renzo\Core\Entities\Node',
+            'RZ\Roadiz\Core\Entities\Node',
             array(
                 'parent' => $parent,
                 'status' => array('<=', Node::PUBLISHED),
@@ -106,7 +106,7 @@ class NodeTreeWidget extends AbstractWidget
         return $listManager;
     }
     /**
-     * @param RZ\Renzo\Core\Entities\Node $parent
+     * @param RZ\Roadiz\Core\Entities\Node $parent
      *
      * @return ArrayCollection
      */
@@ -115,7 +115,7 @@ class NodeTreeWidget extends AbstractWidget
         return $this->getListManager($parent)->getEntities();
     }
     /**
-     * @return RZ\Renzo\Core\Entities\Node
+     * @return RZ\Roadiz\Core\Entities\Node
      */
     public function getRootNode()
     {
@@ -127,7 +127,7 @@ class NodeTreeWidget extends AbstractWidget
         return $this->filters;
     }
     /**
-     * @return RZ\Renzo\Core\Entities\Translation
+     * @return RZ\Roadiz\Core\Entities\Translation
      */
     public function getTranslation()
     {

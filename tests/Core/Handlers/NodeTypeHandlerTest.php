@@ -1,9 +1,9 @@
 <?php
 
-use RZ\Renzo\Core\Handlers\NodeTypeHandler;
-use RZ\Renzo\Core\Entities\NodeType;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Serializers\NodeTypeJsonSerializer;
+use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 
 class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
 {

@@ -12,15 +12,15 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodeType;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,7 +50,7 @@ class NodeTypesController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\NodeType'
+            'RZ\Roadiz\Core\Entities\NodeType'
         );
         $listManager->handle();
 
@@ -76,7 +76,7 @@ class NodeTypesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $nodeType = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
+            ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if (null !== $nodeType) {
             $this->assignation['nodeType'] = $nodeType;
@@ -204,7 +204,7 @@ class NodeTypesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES_DELETE');
 
         $nodeType = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
+            ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if (null !== $nodeType) {
             $this->assignation['nodeType'] = $nodeType;
@@ -254,7 +254,7 @@ class NodeTypesController extends RozierApp
 
     /**
      * @param array                           $data
-     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return boolean
      */
@@ -276,7 +276,7 @@ class NodeTypesController extends RozierApp
 
     /**
      * @param array                           $data
-     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return boolean
      */
@@ -288,7 +288,7 @@ class NodeTypesController extends RozierApp
         }
 
         $existing = $this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findOneBy(array('name'=>$nodeType->getName()));
         if ($existing !== null) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans('nodeType.%name%.already_exists', array('%name%'=>$nodeType->getName())), 1);
@@ -303,7 +303,7 @@ class NodeTypesController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -356,7 +356,7 @@ class NodeTypesController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -403,7 +403,7 @@ class NodeTypesController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -427,7 +427,7 @@ class NodeTypesController extends RozierApp
     public static function getNewsletterNodeTypes()
     {
         return $this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findBy(array('newsletterType' => true));
     }
 }

@@ -9,9 +9,9 @@
  */
 namespace Themes\Rozier\Widgets;
 
-use RZ\Renzo\Core\Entities\Tag;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Kernel;
 use Themes\Rozier\Widgets\AbstractWidget;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,7 @@ class TagTreeWidget extends AbstractWidget
     /**
      * @param Request                    $request
      * @param AppController              $refereeController
-     * @param RZ\Renzo\Core\Entities\Tag $parent
+     * @param RZ\Roadiz\Core\Entities\Tag $parent
      */
     public function __construct(
         Request $request,
@@ -48,12 +48,12 @@ class TagTreeWidget extends AbstractWidget
     {
         if ($this->translation === null) {
             $this->translation = $this->getController()->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                     ->findOneBy(array('defaultTranslation'=>true));
         }
 
         $this->tags = $this->getController()->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                 ->findBy(
                     array('parent'=>$this->parentTag, 'translation'=>$this->translation),
                     array('position'=>'ASC')
@@ -61,7 +61,7 @@ class TagTreeWidget extends AbstractWidget
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Tag $parent
+     * @param RZ\Roadiz\Core\Entities\Tag $parent
      *
      * @return ArrayCollection
      */
@@ -69,26 +69,26 @@ class TagTreeWidget extends AbstractWidget
     {
         if ($this->translation === null) {
             $this->translation = $this->getController()->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                     ->findOneBy(array('defaultTranslation'=>true));
         }
         if ($parent !== null) {
             return $this->tags = $this->getController()->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                     ->findBy(array('parent'=>$parent), array('position'=>'ASC'));
         }
 
         return null;
     }
     /**
-     * @return RZ\Renzo\Core\Entities\Tag
+     * @return RZ\Roadiz\Core\Entities\Tag
      */
     public function getRootTag()
     {
         return $this->parentTag;
     }
     /**
-     * @return RZ\Renzo\Core\Entities\Translation
+     * @return RZ\Roadiz\Core\Entities\Translation
      */
     public function getTranslation()
     {

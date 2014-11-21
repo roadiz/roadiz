@@ -1,8 +1,8 @@
 <?php
 
-use RZ\Renzo\Core\Entities\Setting;
-use RZ\Renzo\Core\Serializers\SettingJsonSerializer;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
+use RZ\Roadiz\Core\Kernel;
 /**
  * Description.
  */
@@ -67,7 +67,7 @@ class SettingJsonSerializerTest extends PHPUnit_Framework_TestCase
         return array(
             array(
                 file_get_contents(RENZO_ROOT.'/tests/Fixtures/Serializers/settingJsonSerializer01.json'),
-                "RZ\Renzo\Core\Entities\Setting"
+                "RZ\Roadiz\Core\Entities\Setting"
             ),
         );
     }

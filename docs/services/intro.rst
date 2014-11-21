@@ -1,4 +1,4 @@
 .. _services:
 
-Using Renzo services
+Using Roadiz services
 ====================

@@ -9,12 +9,12 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Document;
-use RZ\Renzo\Core\Entities\Folder;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
-use RZ\Renzo\Core\Utils\SplashbasePictureFinder;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Utils\SplashbasePictureFinder;
 use Themes\Rozier\RozierApp;
 
 use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
@@ -47,7 +47,7 @@ class DocumentsController extends RozierApp
             $folderId > 0) {
 
             $folder = $this->getService('em')
-                           ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+                           ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
             $prefilters['folders'] = array($folder);
             $this->assignation['folder'] = $folder;
@@ -82,7 +82,7 @@ class DocumentsController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\Document',
+            'RZ\Roadiz\Core\Entities\Document',
             $prefilters,
             array('createdAt'=> 'DESC')
         );
@@ -116,7 +116,7 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $document = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
 
@@ -173,7 +173,7 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $document = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
 
@@ -206,7 +206,7 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
 
         $document = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -266,7 +266,7 @@ class DocumentsController extends RozierApp
         $documentsIds = $request->get('documents');
 
         $documents = $this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Document')
+            ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->findBy(array(
                 'id' => $documentsIds
             ));
@@ -340,7 +340,7 @@ class DocumentsController extends RozierApp
             $folderId > 0) {
 
             $folder = $this->getService('em')
-                           ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+                           ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
             $prefilters['folders'] = array($folder);
             $this->assignation['folder'] = $folder;
@@ -436,7 +436,7 @@ class DocumentsController extends RozierApp
             $folderId > 0) {
 
             $folder = $this->getService('em')
-                           ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+                           ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
             $prefilters['folders'] = array($folder);
             $this->assignation['folder'] = $folder;
@@ -512,7 +512,7 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $document = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -529,7 +529,7 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Document $doc
+     * @param RZ\Roadiz\Core\Entities\Document $doc
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -571,7 +571,7 @@ class DocumentsController extends RozierApp
         return $builder->getForm();
     }
     /**
-     * @param RZ\Renzo\Core\Entities\Document $document
+     * @param RZ\Roadiz\Core\Entities\Document $document
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -646,7 +646,7 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Node $node
+     * @param RZ\Roadiz\Core\Entities\Node $node
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -689,7 +689,7 @@ class DocumentsController extends RozierApp
             $documentsIds = explode(',', $data['documentsId']);
 
             $documents = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Document')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Document')
                     ->findBy(array(
                         'id' => $documentsIds
                     ));
@@ -711,12 +711,12 @@ class DocumentsController extends RozierApp
                     $parentName = $folders[count($folders) - 2];
 
                     $parentFolder = $this->getService('em')
-                                ->getRepository('RZ\Renzo\Core\Entities\Folder')
+                                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                                 ->findOneByName($parentName);
                 }
 
                 $folder = $this->getService('em')
-                            ->getRepository('RZ\Renzo\Core\Entities\Folder')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                             ->findOneByName($folderName);
 
 
@@ -772,7 +772,7 @@ class DocumentsController extends RozierApp
                     $folderId > 0) {
 
                     $folder = $this->getService('em')
-                                   ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+                                   ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
                     $document->addFolder($folder);
                     $folder->addDocument($document);
@@ -792,7 +792,7 @@ class DocumentsController extends RozierApp
     /**
      * Download a random document.
      *
-     * @return RZ\Renzo\Core\Entities\Document
+     * @return RZ\Roadiz\Core\Entities\Document
      */
     public function randomDocument($folderId = null)
     {
@@ -804,7 +804,7 @@ class DocumentsController extends RozierApp
             $folderId > 0) {
 
             $folder = $this->getService('em')
-                           ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+                           ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
             $document->addFolder($folder);
             $folder->addDocument($document);
@@ -815,7 +815,7 @@ class DocumentsController extends RozierApp
 
     /**
      * @param array                           $data
-     * @param RZ\Renzo\Core\Entities\Document $document
+     * @param RZ\Roadiz\Core\Entities\Document $document
      */
     private function editDocument($data, Document $document)
     {
@@ -880,7 +880,7 @@ class DocumentsController extends RozierApp
                     if (null !== $folderId && $folderId > 0) {
 
                         $folder = $this->getService('em')
-                                       ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+                                       ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
                         $document->addFolder($folder);
                         $folder->addDocument($document);

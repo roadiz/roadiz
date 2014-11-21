@@ -1,10 +1,10 @@
 <?php
 
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodesSources;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Kernel;
 
-use RZ\Renzo\Core\Exceptions\SolrServerNotAvailableException;
+use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
 use Solarium\Exception\HttpException;
 
 /**
@@ -20,7 +20,7 @@ class SolrWrapperTest extends PHPUnit_Framework_TestCase
 
         if (null !== $solr) {
 
-            $testTitle = "Renzo first test";
+            $testTitle = "Roadiz first test";
 
             // create a ping query
             $ping = $solr->createPing();

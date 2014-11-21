@@ -10,10 +10,10 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Tag;
-use RZ\Renzo\Core\Serializers\TagJsonSerializer;
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +45,7 @@ class TagsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $existingTag = $this->getService('em')
-                              ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
+                              ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
         $this->getService('em')->refresh($existingTag);
         $tag = TagJsonSerializer::serialize(array($existingTag));
 
@@ -81,7 +81,7 @@ class TagsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $existingTags = $this->getService('em')
-                              ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                              ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                               ->findBy(array("parent" => null));
         foreach ($existingTags as $existingTag) {
             $this->getService('em')->refresh($existingTag);

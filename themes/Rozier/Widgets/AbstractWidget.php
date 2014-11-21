@@ -9,7 +9,7 @@
  */
 namespace Themes\Rozier\Widgets;
 
-use RZ\Renzo\CMS\Controller\AppController;
+use RZ\Roadiz\CMS\Controller\AppController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,7 +31,7 @@ abstract class AbstractWidget
         return $this->request;
     }
     /**
-     * @return RZ\Renzo\CMS\Controller\AppController
+     * @return RZ\Roadiz\CMS\Controller\AppController
      */
     protected function getController()
     {
@@ -40,7 +40,7 @@ abstract class AbstractWidget
 
     /**
      * @param Symfony\Component\HttpFoundation\Request $request           Current kernel request
-     * @param RZ\Renzo\CMS\Controller\AppController    $refereeController Referee controller to get Twig, security context from.
+     * @param RZ\Roadiz\CMS\Controller\AppController    $refereeController Referee controller to get Twig, security context from.
      */
     public function __construct(Request $request, $refereeController)
     {

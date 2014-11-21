@@ -34,17 +34,17 @@ namespace Themes\Install;
 use Themes\Install\Controllers\Configuration;
 use Themes\Install\Controllers\Fixtures;
 use Themes\Install\Controllers\Requirements;
-use RZ\Renzo\Core\Events\DataInheritanceEvent;
-use RZ\Renzo\Core\Services\DoctrineServiceProvider;
+use RZ\Roadiz\Core\Events\DataInheritanceEvent;
+use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\CMS\Controllers\AppController;
-use RZ\Renzo\Core\Entities\Document;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Entities\User;
-use RZ\Renzo\Core\Entities\Role;
-use RZ\Renzo\CMS\Forms\SeparatorType;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\CMS\Controllers\AppController;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\CMS\Forms\SeparatorType;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
@@ -118,8 +118,8 @@ class InstallApp extends AppController
      * Welcome screen.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
+     * @param RZ\Roadiz\Core\Entities\Node              $node
+     * @param RZ\Roadiz\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -179,8 +179,8 @@ class InstallApp extends AppController
      * Check requirement screen.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
+     * @param RZ\Roadiz\Core\Entities\Node              $node
+     * @param RZ\Roadiz\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -226,7 +226,7 @@ class InstallApp extends AppController
     public function importThemeAction(Request $request, $id)
     {
 
-        $result = $this->getService('em')->find('RZ\Renzo\Core\Entities\Theme', $id);
+        $result = $this->getService('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
 
         $array = explode('\\', $result->getClassName());
         $data = json_decode(file_get_contents(RENZO_ROOT . "/themes/". $array[2] . "/config.json"), true);
@@ -332,8 +332,8 @@ class InstallApp extends AppController
             try {
                 $fixtures = new Fixtures();
 
-                \RZ\Renzo\Console\SchemaCommand::createSchema();
-                \RZ\Renzo\Console\CacheCommand::clearDoctrine();
+                \RZ\Roadiz\Console\SchemaCommand::createSchema();
+                \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
 
                 $fixtures->installFixtures();
 
@@ -392,7 +392,7 @@ class InstallApp extends AppController
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $user = $this->getService('em')
-                                 ->getRepository('RZ\Renzo\Core\Entities\User')
+                                 ->getRepository('RZ\Roadiz\Core\Entities\User')
                                  ->findOneBy(array('username' => $userForm->getData()['username']));
 
                     $response = new RedirectResponse(
@@ -428,7 +428,7 @@ class InstallApp extends AppController
      */
     public function updateSchemaAction(Request $request)
     {
-        \RZ\Renzo\Console\SchemaCommand::updateSchema();
+        \RZ\Roadiz\Console\SchemaCommand::updateSchema();
         return new Response(
             json_encode(array('status' => true)),
             Response::HTTP_OK,
@@ -446,7 +446,7 @@ class InstallApp extends AppController
      */
     public function userSummaryAction(Request $request, $userId)
     {
-        $user = $this->getService('em')->find('RZ\Renzo\Core\Entities\User', $userId);
+        $user = $this->getService('em')->find('RZ\Roadiz\Core\Entities\User', $userId);
         $this->assignation['name'] = $user->getUsername();
         $this->assignation['email'] = $user->getEmail();
         return new Response(
@@ -464,10 +464,10 @@ class InstallApp extends AppController
         $fix = new Fixtures();
         $data["className"] = $request->get("classname");
         $fix->installTheme($data);
-        $theme = $this->getService("em")->getRepository("RZ\Renzo\Core\Entities\Theme")
+        $theme = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Theme")
                       ->findOneByClassName($request->get("classname"));
 
-        $installedLanguage = $this->getService("em")->getRepository("RZ\Renzo\Core\Entities\Translation")
+        $installedLanguage = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Translation")
                                   ->findAll();
 
         foreach ($installedLanguage as $key => $locale) {
@@ -635,7 +635,7 @@ class InstallApp extends AppController
 
                     $config->writeConfiguration();
 
-                    \RZ\Renzo\Console\CacheCommand::clearDoctrine();
+                    \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
 
                     /*
                      * Force redirect to avoid resending form when refreshing page
@@ -824,10 +824,10 @@ class InstallApp extends AppController
      */
     protected function buildInformationsForm(Request $request)
     {
-        $siteName = \RZ\Renzo\Core\Bags\SettingsBag::get('site_name');
-        $metaDescription = \RZ\Renzo\Core\Bags\SettingsBag::get('meta_description');
-        $emailSender = \RZ\Renzo\Core\Bags\SettingsBag::get('email_sender');
-        $emailSenderName = \RZ\Renzo\Core\Bags\SettingsBag::get('email_sender_name');
+        $siteName = \RZ\Roadiz\Core\Bags\SettingsBag::get('site_name');
+        $metaDescription = \RZ\Roadiz\Core\Bags\SettingsBag::get('meta_description');
+        $emailSender = \RZ\Roadiz\Core\Bags\SettingsBag::get('email_sender');
+        $emailSenderName = \RZ\Roadiz\Core\Bags\SettingsBag::get('email_sender_name');
         $timeZone = $this->getService('config')['timezone'];
 
         $timeZoneList = include(dirname(__FILE__).'/Resources/import/timezones.php');
@@ -869,7 +869,7 @@ class InstallApp extends AppController
                 'required' => true
             ));
 
-            $themesType = new \RZ\Renzo\CMS\Forms\ThemesType();
+            $themesType = new \RZ\Roadiz\CMS\Forms\ThemesType();
 
             if ($themesType->getSize() > 0) {
                 $builder->add('separator_1', new SeparatorType(), array(

@@ -9,10 +9,10 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 use Themes\Rozier\RozierApp;
 
@@ -55,12 +55,12 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
         if ("" != $request->get('searchTerms')) {
 
             $nodesSources = $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                 ->findBySearchQuery(strip_tags($request->get('searchTerms')));
 
             if (null === $nodesSources) {
                 $nodesSources = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                     ->searchBy(strip_tags($request->get('searchTerms')));
             }
 

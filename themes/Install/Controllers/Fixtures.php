@@ -31,14 +31,14 @@
 
 namespace Themes\Install\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Theme;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\User;
-use RZ\Renzo\Core\Entities\Role;
-use RZ\Renzo\Core\Entities\Setting;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Entities\Translation;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
 
 /**
 * Fixtures class
@@ -84,7 +84,7 @@ class Fixtures
     protected function installBackofficeTheme()
     {
         $existing = Kernel::getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Theme')
+            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
             ->findOneBy(array('backendTheme'=>true, 'available'=>true));
 
         if (null === $existing) {
@@ -103,7 +103,7 @@ class Fixtures
     protected function installDefaultTranslation()
     {
         $existing = Kernel::getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Translation')
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findOneBy(array('defaultTranslation'=>true, 'available'=>true));
 
         if (null === $existing) {
@@ -138,7 +138,7 @@ class Fixtures
     public function createDefaultUser($data)
     {
         $existing = Kernel::getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\User')
+            ->getRepository('RZ\Roadiz\Core\Entities\User')
             ->findOneBy(array('username'=>$data['username'], 'email'=>$data['email']));
 
         if ($existing === null) {
@@ -154,7 +154,7 @@ class Fixtures
             $user->setPictureUrl($url);
 
             $existingGroup = Kernel::getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Group')
+                ->getRepository('RZ\Roadiz\Core\Entities\Group')
                 ->findOneByName('Admin');
             $user->addGroup($existingGroup);
 
@@ -174,7 +174,7 @@ class Fixtures
     protected function getRole($roleName = Role::ROLE_SUPER_ADMIN)
     {
         $role = Kernel::getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Role')
+                ->getRepository('RZ\Roadiz\Core\Entities\Role')
                 ->findOneBy(array('name'=>$roleName));
 
         if ($role === null) {
@@ -189,12 +189,12 @@ class Fixtures
      * Get role by name, and create it if does not exist.
      * @param string $name
      *
-     * @return RZ\Renzo\Core\Entities\Role
+     * @return RZ\Roadiz\Core\Entities\Role
      */
     protected function getSetting($name)
     {
         $setting = Kernel::getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Setting')
+            ->getRepository('RZ\Roadiz\Core\Entities\Setting')
             ->findOneBy(array('name'=>$name));
 
         if (null === $setting) {
@@ -266,7 +266,7 @@ class Fixtures
     protected function installFrontendTheme($classname)
     {
         $existing = Kernel::getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Theme')
+            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
             ->findOneByClassName($classname);
 
         if (null === $existing) {

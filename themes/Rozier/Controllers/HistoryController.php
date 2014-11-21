@@ -11,13 +11,13 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Log;
-use RZ\Renzo\Core\Entities\User;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\EntityRequiredException;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Log;
+use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -70,7 +70,7 @@ class HistoryController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->em(),
-            'RZ\Renzo\Core\Entities\Log',
+            'RZ\Roadiz\Core\Entities\Log',
             array(),
             array('datetime'=> 'DESC')
         );
@@ -99,7 +99,7 @@ class HistoryController extends RozierApp
     public function userAction(Request $request, $userId)
     {
         $user = $this->em()
-                     ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
+                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if (null !== $user) {
             /*
@@ -108,7 +108,7 @@ class HistoryController extends RozierApp
             $listManager = new EntityListManager(
                 $request,
                 $this->em(),
-                'RZ\Renzo\Core\Entities\Log',
+                'RZ\Roadiz\Core\Entities\Log',
                 array('user'=>$user),
                 array('datetime'=> 'DESC')
             );

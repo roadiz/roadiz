@@ -1,8 +1,8 @@
 <?php
 
-use RZ\Renzo\Core\Entities\Setting;
-use RZ\Renzo\Core\Serializers\SettingCollectionJsonSerializer;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
+use RZ\Roadiz\Core\Kernel;
 /**
  * Description.
  */

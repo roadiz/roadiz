@@ -9,14 +9,14 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodeType;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\ReservedSQLWordException;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\ReservedSQLWordException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +45,7 @@ class NodeTypeFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $nodeType = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
+            ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if ($nodeType !== null) {
             $fields = $nodeType->getFields();
@@ -76,7 +76,7 @@ class NodeTypeFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $field = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
+            ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
         if ($field !== null) {
 
@@ -137,7 +137,7 @@ class NodeTypeFieldsController extends RozierApp
 
         $field = new NodeTypeField();
         $nodeType = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
+            ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if ($nodeType !== null &&
             $field !== null) {
@@ -219,7 +219,7 @@ class NodeTypeFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
 
         $field = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
+            ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
         if ($field !== null) {
             $this->assignation['field'] = $field;
@@ -238,7 +238,7 @@ class NodeTypeFieldsController extends RozierApp
                  * Update Database
                  */
                 $nodeType = $this->getService('em')
-                    ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
+                    ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
                 $nodeType->getHandler()->regenerateEntityClass();
 
@@ -282,7 +282,7 @@ class NodeTypeFieldsController extends RozierApp
 
     /**
      * @param array                                $data
-     * @param RZ\Renzo\Core\Entities\NodeTypeField $field
+     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
      */
     private function editNodeTypeField($data, NodeTypeField $field)
     {
@@ -297,8 +297,8 @@ class NodeTypeFieldsController extends RozierApp
 
     /**
      * @param array                                $data
-     * @param RZ\Renzo\Core\Entities\NodeTypeField $field
-     * @param RZ\Renzo\Core\Entities\NodeType      $nodeType
+     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param RZ\Roadiz\Core\Entities\NodeType      $nodeType
      */
     private function addNodeTypeField(
         $data,
@@ -320,7 +320,7 @@ class NodeTypeFieldsController extends RozierApp
          * Check existing
          */
         $existing = $this->getService('em')
-                         ->getRepository('RZ\Renzo\Core\Entities\NodeTypeField')
+                         ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
                          ->findOneBy(array(
                             'name' => $data['name'],
                             'nodeType' => $nodeType
@@ -347,7 +347,7 @@ class NodeTypeFieldsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\NodeTypeField $field
+     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -427,7 +427,7 @@ class NodeTypeFieldsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\NodeTypeField $field
+     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
      * @return \Symfony\Component\Form\Form
      */

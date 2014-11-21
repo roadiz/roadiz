@@ -9,10 +9,10 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 use Themes\Rozier\RozierApp;
 
@@ -54,7 +54,7 @@ class AjaxNodesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $node = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if ($node !== null) {
 
@@ -117,7 +117,7 @@ class AjaxNodesController extends AbstractAjaxController
             $parameters['newParent'] > 0) {
 
             $parent = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['newParent']);
+                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $node->setParent($parent);
@@ -132,14 +132,14 @@ class AjaxNodesController extends AbstractAjaxController
         if (!empty($parameters['nextNodeId']) &&
             $parameters['nextNodeId'] > 0) {
             $nextNode = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['nextNodeId']);
+                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['nextNodeId']);
             if ($nextNode !== null) {
                 $node->setPosition($nextNode->getPosition() - 0.5);
             }
         } elseif (!empty($parameters['prevNodeId']) &&
             $parameters['prevNodeId'] > 0) {
             $prevNode = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Node', (int) $parameters['prevNodeId']);
+                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['prevNodeId']);
             if ($prevNode !== null) {
                 $node->setPosition($prevNode->getPosition() + 0.5);
             }
@@ -205,7 +205,7 @@ class AjaxNodesController extends AbstractAjaxController
                 if ($request->get('nodeId') > 0) {
 
                     $node = $this->getService('em')
-                                 ->find('RZ\Renzo\Core\Entities\Node', (int) $request->get('nodeId'));
+                                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $request->get('nodeId'));
 
                     if (null !== $node) {
 
@@ -227,7 +227,7 @@ class AjaxNodesController extends AbstractAjaxController
                                 if (true === $this->getKernel()->pingSolrServer()) {
 
                                     foreach ($node->getNodeSources() as $nodeSource) {
-                                        $solrSource = new \RZ\Renzo\Core\SearchEngine\SolariumNodeSource(
+                                        $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
                                             $nodeSource,
                                             $this->getService('solr')
                                         );
@@ -324,13 +324,13 @@ class AjaxNodesController extends AbstractAjaxController
 
             $nodeType = $this->getService('em')
                             ->find(
-                                'RZ\Renzo\Core\Entities\NodeType',
+                                'RZ\Roadiz\Core\Entities\NodeType',
                                 (int) $request->get('nodeTypeId')
                             );
 
             $parent = $this->getService('em')
                             ->find(
-                                'RZ\Renzo\Core\Entities\Node',
+                                'RZ\Roadiz\Core\Entities\Node',
                                 (int) $request->get('parentNodeId')
                             );
 
@@ -341,7 +341,7 @@ class AjaxNodesController extends AbstractAjaxController
 
                 if (null === $translation) {
                     $translation = $this->getService('em')
-                                        ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                         ->findDefault();
                 }
 

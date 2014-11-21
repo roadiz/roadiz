@@ -11,10 +11,10 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Document;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Utils\SplashbasePictureFinder;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Utils\SplashbasePictureFinder;
 
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;

@@ -10,13 +10,13 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Role;
-use RZ\Renzo\Core\Handlers\NodeHandler;
-use RZ\Renzo\Core\Serializers\NodeJsonSerializer;
-use RZ\Renzo\Core\Serializers\NodeCollectionJsonSerializer;
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
+use RZ\Roadiz\Core\Serializers\NodeCollectionJsonSerializer;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +48,7 @@ class NodesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $existingNode = $this->getService('em')
-                              ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+                              ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         $this->getService('em')->refresh($existingNode);
         $node = NodeJsonSerializer::serialize(array($existingNode));
 
@@ -83,7 +83,7 @@ class NodesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $existingNodes = $this->getService('em')
-                              ->getRepository('RZ\Renzo\Core\Entities\Node')
+                              ->getRepository('RZ\Roadiz\Core\Entities\Node')
                               ->findBy(array("parent"=>null));
 
         foreach ($existingNodes as $existingNode) {
@@ -126,7 +126,7 @@ class NodesUtilsController extends RozierApp
         try {
 
             $existingNode = $this->getService('em')
-                                  ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+                                  ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
             $newNode = $existingNode->getHandler()->duplicate();
 
             $msg = $this->getTranslator()->trans("duplicated.node.%name%", array(

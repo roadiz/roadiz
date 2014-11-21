@@ -10,14 +10,14 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Utils\StringHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Themes\DefaultTheme\DefaultThemeApp;
 
-use RZ\Renzo\CMS\Controllers\EntryPointsController;
+use RZ\Roadiz\CMS\Controllers\EntryPointsController;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

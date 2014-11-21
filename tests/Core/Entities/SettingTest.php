@@ -1,7 +1,7 @@
 <?php
 
-use RZ\Renzo\Core\Entities\Setting;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Kernel;
 
 class SettingTest extends PHPUnit_Framework_TestCase
 {
@@ -13,7 +13,7 @@ class SettingTest extends PHPUnit_Framework_TestCase
     public function testGetValue($name, $expected)
     {
         $value = Kernel::getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Setting')
+            ->getRepository('RZ\Roadiz\Core\Entities\Setting')
             ->getValue($name);
 
         // Assert

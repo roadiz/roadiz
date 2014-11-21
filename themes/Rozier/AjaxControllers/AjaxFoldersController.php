@@ -9,10 +9,10 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Folder;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\FolderHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\FolderHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 use Themes\Rozier\RozierApp;
 
@@ -54,7 +54,7 @@ class AjaxFoldersController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $folder = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if ($folder !== null) {
 
@@ -125,7 +125,7 @@ class AjaxFoldersController extends AbstractAjaxController
 
             $pattern = strip_tags($request->get('search'));
             $folders = $this->getService('em')
-                        ->getRepository('RZ\Renzo\Core\Entities\Folder')
+                        ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                         ->searchBy(
                             $pattern,
                             array(),
@@ -160,7 +160,7 @@ class AjaxFoldersController extends AbstractAjaxController
             $parameters['newParent'] > 0) {
 
             $parent = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Folder', (int) $parameters['newParent']);
+                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $folder->setParent($parent);
@@ -175,7 +175,7 @@ class AjaxFoldersController extends AbstractAjaxController
         if (!empty($parameters['nextFolderId']) &&
             $parameters['nextFolderId'] > 0) {
             $nextFolder = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Folder', (int) $parameters['nextFolderId']);
+                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['nextFolderId']);
             if ($nextFolder !== null) {
                 $folder->setPosition($nextFolder->getPosition() - 0.5);
             }
@@ -183,7 +183,7 @@ class AjaxFoldersController extends AbstractAjaxController
             $parameters['prevFolderId'] > 0) {
 
             $prevFolder = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Folder', (int) $parameters['prevFolderId']);
+                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['prevFolderId']);
             if ($prevFolder !== null) {
                 $folder->setPosition($prevFolder->getPosition() + 0.5);
             }

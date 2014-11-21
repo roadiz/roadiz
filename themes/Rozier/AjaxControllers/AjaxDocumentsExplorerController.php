@@ -9,13 +9,13 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Document;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 use Themes\Rozier\RozierApp;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,7 +58,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\Document',
+            'RZ\Roadiz\Core\Entities\Document',
             $arrayFilter
         );
         $listManager->setItemPerPage(30);

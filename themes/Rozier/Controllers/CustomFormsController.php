@@ -12,15 +12,15 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\CustomForm;
-use RZ\Renzo\Core\Entities\CustomFormField;
-use RZ\Renzo\Core\Entities\CustomFormFieldAttribute;
-use RZ\Renzo\Core\Entities\CustomFormAnswer;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Entities\CustomFormField;
+use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
+use RZ\Roadiz\Core\Entities\CustomFormAnswer;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,7 +51,7 @@ class CustomFormsController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\CustomForm'
+            'RZ\Roadiz\Core\Entities\CustomForm'
         );
         $listManager->handle();
 
@@ -77,7 +77,7 @@ class CustomFormsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         $customForm = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\CustomForm', (int) $customFormId);
+            ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
@@ -202,7 +202,7 @@ class CustomFormsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $customForm = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\CustomForm', (int) $customFormId);
+            ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
@@ -246,7 +246,7 @@ class CustomFormsController extends RozierApp
 
     /**
      * @param array                           $data
-     * @param RZ\Renzo\Core\Entities\CustomForm $customForm
+     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
      *
      * @return boolean
      */
@@ -267,7 +267,7 @@ class CustomFormsController extends RozierApp
 
     /**
      * @param array                           $data
-     * @param RZ\Renzo\Core\Entities\CustomForm $customForm
+     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
      *
      * @return boolean
      */
@@ -282,7 +282,7 @@ class CustomFormsController extends RozierApp
         }
 
         $existing = $this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\CustomForm')
+            ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
             ->findOneBy(array('name'=>$customForm->getName()));
         if ($existing !== null) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans('customForm.%name%.already_exists', array('%name%'=>$customForm->getName())), 1);
@@ -295,7 +295,7 @@ class CustomFormsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\CustomForm $customForm
+     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -345,7 +345,7 @@ class CustomFormsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\CustomForm $customForm
+     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
      *
      * @return \Symfony\Component\Form\Form
      */

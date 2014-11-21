@@ -21,13 +21,13 @@ When you’ve edited your `conf/config.json` file, regenerate your entities sour
 
 .. code-block:: bash
 
-    bin/renzo core:node:types --regenerateAllEntities;
+    bin/roadiz core:node:types --regenerateAllEntities;
 
 Now you can perform a schema update without losing your nodes data
 
 .. code-block:: bash
 
-    bin/renzo schema --update;
-    bin/renzo schema --update --execute;
+    bin/roadiz schema --update;
+    bin/roadiz schema --update --execute;
 
-    bin/renzo cache --clear-all
+    bin/roadiz cache --clear-all

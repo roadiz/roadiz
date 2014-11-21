@@ -87,8 +87,8 @@ class Configuration
                 "secret" => "change#this#secret#very#important"
             ),
             "entities" => array(
-                "src/Renzo/Core/Entities",
-                "src/Renzo/Core/AbstractEntities",
+                "src/Roadiz/Core/Entities",
+                "src/Roadiz/Core/AbstractEntities",
                 "sources/GeneratedNodeSources"
             )
         );

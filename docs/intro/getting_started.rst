@@ -7,13 +7,13 @@ Getting started
 CMS Structure
 -------------
 
-* ``bin`` : Contains the Renzo CLI executable
+* ``bin`` : Contains the Roadiz CLI executable
 * ``cache`` : Every caches files for *Twig* templates and *SLIR* images
 * ``conf`` : Your setup configuration file(s)
 * ``docs`` : Current documentation working files
 * ``files`` : Documents and fonts files root
 * ``gen-src`` : Generated PHP code for Doctrine and your Node-types entities
-* ``src`` : Renzo CMS logic and core source code
+* ``src`` : Roadiz CMS logic and core source code
 * ``tests`` : PHP Unit tests root
 * ``themes`` : Contains your themes and systems themes such as *Rozier* and *Install*
 * ``vendor`` : Dependencies folder managed by *Composer*
@@ -35,7 +35,7 @@ Requirements
 Prepare your server
 -------------------
 
-You can either use *Apache* or *Nginx* with Renzo. An example virtual host is provided for each:
+You can either use *Apache* or *Nginx* with Roadiz. An example virtual host is provided for each:
 
 * ``apache.conf``
 * ``nginx.conf``
@@ -43,7 +43,7 @@ You can either use *Apache* or *Nginx* with Renzo. An example virtual host is pr
 Installation
 ------------
 
-First of all, download *Renzo* latest version using Git
+First of all, download *Roadiz* latest version using Git
 
 .. code-block:: bash
 

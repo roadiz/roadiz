@@ -9,10 +9,10 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Role;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,8 +21,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\EntityRequiredException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 
 /**
  * {@inheritdoc}
@@ -42,7 +42,7 @@ class RolesController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\Role',
+            'RZ\Roadiz\Core\Entities\Role',
             array(),
             array('name' => 'ASC')
         );
@@ -121,7 +121,7 @@ class RolesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $role = $this->getService('em')
-                    ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
+                    ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
         if ($role !== null) {
 
             $form = $this->buildDeleteForm($role);
@@ -180,7 +180,7 @@ class RolesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $role = $this->getService('em')
-                     ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
+                     ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
 
         if ($role !== null &&
             !$role->required()) {
@@ -254,7 +254,7 @@ class RolesController extends RozierApp
     /**
      * Build delete role form with name constraint.
      *
-     * @param RZ\Renzo\Core\Entities\Role $role
+     * @param RZ\Roadiz\Core\Entities\Role $role
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -275,7 +275,7 @@ class RolesController extends RozierApp
     /**
      * Build edit role form with name constraint.
      *
-     * @param RZ\Renzo\Core\Entities\Role $role
+     * @param RZ\Roadiz\Core\Entities\Role $role
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -309,13 +309,13 @@ class RolesController extends RozierApp
     /**
      * @param array $data
      *
-     * @return RZ\Renzo\Core\Entities\Role
+     * @return RZ\Roadiz\Core\Entities\Role
      */
     protected function addRole(array $data)
     {
         if (isset($data['name'])) {
             $existing = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Role')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Role')
                     ->findOneBy(array('name' => $data['name']));
             if ($existing !== null) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans("role.name.already.exists"), 1);
@@ -335,9 +335,9 @@ class RolesController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\Role $role
+     * @param RZ\Roadiz\Core\Entities\Role $role
      *
-     * @return RZ\Renzo\Core\Entities\Role
+     * @return RZ\Roadiz\Core\Entities\Role
      */
     protected function editRole(array $data, Role $role)
     {
@@ -347,7 +347,7 @@ class RolesController extends RozierApp
 
         if (isset($data['name'])) {
             $existing = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Role')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Role')
                     ->findOneBy(array('name' => $data['name']));
             if ($existing !== null &&
                 $existing->getId() != $role->getId()) {
@@ -367,7 +367,7 @@ class RolesController extends RozierApp
 
     /**
      * @param array                        $data
-     * @param RZ\Renzo\Core\Entities\Role  $role
+     * @param RZ\Roadiz\Core\Entities\Role  $role
      */
     protected function deleteRole(array $data, Role $role)
     {

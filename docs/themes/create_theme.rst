@@ -88,11 +88,11 @@ Do not forget to rename every references in:
 
     namespace Themes\MyAwesomeTheme;
 
-    use RZ\Renzo\CMS\Controllers\FrontendController;
-    use RZ\Renzo\Core\Kernel;
-    use RZ\Renzo\Core\Entities\Node;
-    use RZ\Renzo\Core\Entities\Translation;
-    use RZ\Renzo\Core\Utils\StringHandler;
+    use RZ\Roadiz\CMS\Controllers\FrontendController;
+    use RZ\Roadiz\Core\Kernel;
+    use RZ\Roadiz\Core\Entities\Node;
+    use RZ\Roadiz\Core\Entities\Translation;
+    use RZ\Roadiz\Core\Utils\StringHandler;
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
@@ -130,7 +130,7 @@ Do not forget to rename every references in:
 Static routing
 --------------
 
-Before searching for a node’s Url (Dynamic routing), Renzo will parse your theme ``route.yml``
+Before searching for a node’s Url (Dynamic routing), Roadiz will parse your theme ``route.yml``
 to find static controllers and actions to execute.
 Static actions just have to comply with the ``Request`` / ``Response`` scheme.
 It is adviced to add ``$_locale`` and ``$_route`` optional arguments to better handle
@@ -187,7 +187,7 @@ Dynamic routing
 .. Note::
 
     Every node-types will be handled by a specific ``Controller``.
-    If your created a “Page” type, Renzo will search for a ``…\\Controllers\\PageController`` class and
+    If your created a “Page” type, Roadiz will search for a ``…\\Controllers\\PageController`` class and
     it will try to execute the ``indexAction`` method.
 
 An indexAction method must comply with the following signature.
@@ -201,8 +201,8 @@ render your current node.
      * Default action for any Page node.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
+     * @param RZ\Roadiz\Core\Entities\Node              $node
+     * @param RZ\Roadiz\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -222,4 +222,4 @@ render your current node.
         );
     }
 
-As *Symfony* controllers do, every Renzo controllers actions have to return a valid ``Response`` object.
+As *Symfony* controllers do, every Roadiz controllers actions have to return a valid ``Response`` object.

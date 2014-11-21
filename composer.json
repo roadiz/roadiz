@@ -1,6 +1,6 @@
 {
-    "name": "rezozero/renzo",
-    "description":"RZ-CMS is a polymorphic CMS based on a node system which can handle many type of services. It’s based on Symfony component and Doctrine ORM for maximum performances and security.",
+    "name": "roadiz/roadiz",
+    "description":"Roadiz is a polymorphic CMS based on a node system which can handle many type of services. It’s based on Symfony component and Doctrine ORM for maximum performances and security.",
     "license":"MIT",
     "type": "project",
     "keywords": [

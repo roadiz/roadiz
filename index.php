@@ -28,12 +28,12 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Kernel;
 
 require 'bootstrap.php';
 
 if (php_sapi_name() == 'cli') {
-    echo 'Use "bin/renzo" as an executable instead of calling index.php'.PHP_EOL;
+    echo 'Use "bin/roadiz" as an executable instead of calling index.php'.PHP_EOL;
 } else {
     Kernel::getInstance()->runApp();
 }

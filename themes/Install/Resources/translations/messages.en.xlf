@@ -42,15 +42,15 @@
             <!-- Welcome -->
             <trans-unit id="welcome.title" approved="yes">
                 <source>welcome.title</source>
-                <target state="translated">Renzo's Installation</target>
+                <target state="translated">Roadiz's Installation</target>
             </trans-unit>
             <trans-unit id="welcome.subtitle" approved="yes">
                 <source>welcome.subtitle</source>
-                <target state="translated">Welcome to Renzo CMS Installation</target>
+                <target state="translated">Welcome to Roadiz CMS Installation</target>
             </trans-unit>
             <trans-unit id="welcome.message" approved="yes">
                 <source>welcome.message</source>
-                <target state="translated">&lt;p&gt;Welcome to Renzo CMS install assistant. Here is just a bit of configuration before letting you play.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Welcome to Roadiz CMS install assistant. Here is just a bit of configuration before letting you play.&lt;/p&gt;</target>
             </trans-unit>
 
 
@@ -84,7 +84,7 @@
             </trans-unit>
             <trans-unit id="database.message" approved="yes">
                 <source>database.message</source>
-                <target state="translated">&lt;p&gt;Renzo need a databse to store all your content. You could select your favorite database driver and configure it.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Roadiz need a databse to store all your content. You could select your favorite database driver and configure it.&lt;/p&gt;</target>
             </trans-unit>
             <trans-unit id="database.cannot_connect" approved="yes">
                 <source>database.cannot_connect</source>
@@ -210,7 +210,7 @@
             </trans-unit>
             <trans-unit id="success.message" approved="yes">
                 <source>success.message</source>
-                <target state="translated">&lt;p&gt;Renzo has been successfully installed&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Roadiz has been successfully installed&lt;/p&gt;</target>
             </trans-unit>
             <trans-unit id="success.quit_install" approved="yes">
                 <source>success.quit_install</source>

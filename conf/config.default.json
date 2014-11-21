@@ -14,8 +14,8 @@
 		"secret": "change#this#secret#very#important"
 	},
     "entities": [
-        "src/Renzo/Core/Entities",
-        "src/Renzo/Core/AbstractEntities",
+        "src/Roadiz/Core/Entities",
+        "src/Roadiz/Core/AbstractEntities",
         "gen-src/GeneratedNodeSources"
     ]
 }

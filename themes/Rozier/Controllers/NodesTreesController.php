@@ -9,24 +9,24 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Tag;
-use RZ\Renzo\Core\Entities\TagTranslation;
-use RZ\Renzo\Core\Entities\NodeType;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Entities\UrlAlias;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeHandler;
-use RZ\Renzo\Core\Utils\StringHandler;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
-use RZ\Renzo\CMS\Forms\SeparatorType;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\TagTranslation;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\UrlAlias;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Utils\StringHandler;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\CMS\Forms\SeparatorType;
 
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\NoTranslationAvailableException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,17 +56,17 @@ class NodesTreesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $node = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Node', (int) $nodeId);
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         $this->getService('em')->refresh($node);
 
         $translation = null;
         if (null !== $translationId) {
             $translation = $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                 ->findOneBy(array('id'=>(int) $translationId));
         } else {
             $translation = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                     ->findDefault();
         }
 
@@ -147,7 +147,7 @@ class NodesTreesController extends RozierApp
             array_filter($nodesIds);
 
             $nodes = $this->getService('em')
-                            ->getRepository('RZ\Renzo\Core\Entities\Node')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Node')
                             ->findBy(array(
                                 'id' => $nodesIds
                             ));
@@ -218,7 +218,7 @@ class NodesTreesController extends RozierApp
             array_filter($nodesIds);
 
             $nodes = $this->getService('em')
-                            ->getRepository('RZ\Renzo\Core\Entities\Node')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Node')
                             ->findBy(array(
                                 'id' => $nodesIds
                             ));
@@ -294,7 +294,7 @@ class NodesTreesController extends RozierApp
             $nodesIds = array_filter($nodesIds);
 
             $nodes = $this->getService('em')
-                            ->getRepository('RZ\Renzo\Core\Entities\Node')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Node')
                             ->findBy(array(
                                 'id' => $nodesIds
                             ));
@@ -305,7 +305,7 @@ class NodesTreesController extends RozierApp
 
             foreach ($paths as $path) {
                 $tag = $this->getService('em')
-                            ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                             ->findOrCreateByPath($path);
 
 
@@ -337,7 +337,7 @@ class NodesTreesController extends RozierApp
             $nodesIds = array_filter($nodesIds);
 
             $nodes = $this->getService('em')
-                            ->getRepository('RZ\Renzo\Core\Entities\Node')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Node')
                             ->findBy(array(
                                 'id' => $nodesIds
                             ));
@@ -348,7 +348,7 @@ class NodesTreesController extends RozierApp
 
             foreach ($paths as $path) {
                 $tag = $this->getService('em')
-                            ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                             ->findOrCreateByPath($path);
 
 

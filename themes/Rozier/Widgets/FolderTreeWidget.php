@@ -9,8 +9,8 @@
  */
 namespace Themes\Rozier\Widgets;
 
-use RZ\Renzo\Core\Entities\Folder;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Kernel;
 use Themes\Rozier\Widgets\AbstractWidget;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +26,7 @@ class FolderTreeWidget extends AbstractWidget
     /**
      * @param Request                    $request
      * @param AppController              $refereeController
-     * @param RZ\Renzo\Core\Entities\Folder $parent
+     * @param RZ\Roadiz\Core\Entities\Folder $parent
      */
     public function __construct(
         Request $request,
@@ -45,7 +45,7 @@ class FolderTreeWidget extends AbstractWidget
     protected function getFolderTreeAssignationForParent()
     {
         $this->folders = $this->getController()->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Folder')
+                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                 ->findBy(
                     array('parent'=>$this->parentFolder),
                     array('position'=>'ASC')
@@ -53,25 +53,25 @@ class FolderTreeWidget extends AbstractWidget
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Folder $parent
+     * @param RZ\Roadiz\Core\Entities\Folder $parent
      *
      * @return ArrayCollection
      */
     public function getChildrenFolders(Folder $parent)
     {
         return $this->folders = $this->getController()->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Folder')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                     ->findBy(array('parent'=>$parent), array('position'=>'ASC'));
     }
     /**
-     * @return RZ\Renzo\Core\Entities\Folder
+     * @return RZ\Roadiz\Core\Entities\Folder
      */
     public function getRootFolder()
     {
         return $this->parentFolder;
     }
     /**
-     * @return RZ\Renzo\Core\Entities\Translation
+     * @return RZ\Roadiz\Core\Entities\Translation
      */
     public function getTranslation()
     {

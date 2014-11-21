@@ -1,6 +1,6 @@
 <?php
 
-use RZ\Renzo\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeType;
 
 class NodeTypeTest extends PHPUnit_Framework_TestCase
 {

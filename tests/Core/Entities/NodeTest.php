@@ -7,7 +7,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-use RZ\Renzo\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Node;
 /**
  * Test Node features
  */

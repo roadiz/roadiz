@@ -32,12 +32,12 @@
 namespace Themes\Rozier\Controllers;
 
 use Themes\Rozier\RozierApp;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodeType;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 
-use RZ\Renzo\CMS\Forms\NodeStatesType;
-use RZ\Renzo\CMS\Forms\CompareDatetimeType;
+use RZ\Roadiz\CMS\Forms\NodeStatesType;
+use RZ\Roadiz\CMS\Forms\CompareDatetimeType;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,7 +92,7 @@ class SearchController extends RozierApp
         if (isset($data["tags"])) {
             $data["tags"] = explode(',', $data["tags"]);
             foreach ($data["tags"] as $key => $value) {
-                $data["tags"][$key] = $this->getService("em")->getRepository("RZ\Renzo\Core\Entities\Tag")->findByPath($value);
+                $data["tags"][$key] = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Tag")->findByPath($value);
             }
             array_filter($data["tags"]);
         }
@@ -121,7 +121,7 @@ class SearchController extends RozierApp
             $listManager = new EntityListManager(
                 $request,
                 $this->getService('em'),
-                'RZ\Renzo\Core\Entities\Node',
+                'RZ\Roadiz\Core\Entities\Node',
                 $data
             );
             if ($this->pagination == false) {

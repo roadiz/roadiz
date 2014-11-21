@@ -9,11 +9,11 @@
 
 namespace Themes\Rozier;
 
-use RZ\Renzo\CMS\Controllers\BackendController;
-use RZ\Renzo\Core\Entities\Role;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Bags\SettingsBag;
+use RZ\Roadiz\CMS\Controllers\BackendController;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Bags\SettingsBag;
 
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;
@@ -63,14 +63,14 @@ class RozierApp extends BackendController
         $this->assignation['head']['grunt'] = include(dirname(__FILE__).'/static/public/config/assets.config.php');
 
         $this->assignation['settingGroups'] = $this->getService('em')
-                                                   ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
+                                                   ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                                                    ->findBy(array('inMenu' => true), array('name'=>'ASC'));
 
         /*
          * Get admin image
          */
         $adminImage = $this->getService('em')
-                           ->getRepository('RZ\Renzo\Core\Entities\DocumentTranslation')
+                           ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
                            ->findOneBy(array(
                                 'name' => '_admin_image_'
                             ));

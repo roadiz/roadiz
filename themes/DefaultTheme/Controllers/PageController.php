@@ -10,9 +10,9 @@
 namespace Themes\DefaultTheme\Controllers;
 
 use Themes\DefaultTheme\DefaultThemeApp;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Utils\StringHandler;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,8 +27,8 @@ class PageController extends DefaultThemeApp
      * Default action for any Page node.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
+     * @param RZ\Roadiz\Core\Entities\Node              $node
+     * @param RZ\Roadiz\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */

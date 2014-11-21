@@ -9,14 +9,14 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\User;
-use RZ\Renzo\Core\Entities\Role;
-use RZ\Renzo\Core\Entities\Group;
-use RZ\Renzo\Core\Utils\FacebookPictureFinder;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\FacebookUsernameNotFoundException;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Group;
+use RZ\Roadiz\Core\Utils\FacebookPictureFinder;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\FacebookUsernameNotFoundException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -49,7 +49,7 @@ class UsersController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\User'
+            'RZ\Roadiz\Core\Entities\User'
         );
         $listManager->handle();
 
@@ -79,7 +79,7 @@ class UsersController extends RozierApp
         }
 
         $user = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -140,7 +140,7 @@ class UsersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
 
@@ -198,9 +198,9 @@ class UsersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
         $role = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
+            ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
 
         if ($user !== null && $role !== null) {
             $this->assignation['user'] = $user;
@@ -253,7 +253,7 @@ class UsersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -311,9 +311,9 @@ class UsersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
         $group = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
+            ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -431,7 +431,7 @@ class UsersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS_DELETE');
 
         $user = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -477,13 +477,13 @@ class UsersController extends RozierApp
     }
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      */
     private function editUser($data, User $user)
     {
         if ($data['username'] != $user->getUsername() &&
                 $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\User')
+                ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->usernameExists($data['username'])
             ) {
 
@@ -497,7 +497,7 @@ class UsersController extends RozierApp
         }
         if ($data['email'] != $user->getEmail() &&
             $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\User')
+                ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->emailExists($data['email'])) {
 
             throw new EntityAlreadyExistsException(
@@ -520,15 +520,15 @@ class UsersController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      */
     private function addUser($data, User $user)
     {
         if ($this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\User')
+                ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->usernameExists($data['username']) ||
             $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\User')
+                ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->emailExists($data['email'])) {
 
             throw new EntityAlreadyExistsException(
@@ -551,7 +551,7 @@ class UsersController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      */
     private function updateProfileImage(User $user)
     {
@@ -579,7 +579,7 @@ class UsersController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      */
     private function deleteUser($data, User $user)
     {
@@ -589,15 +589,15 @@ class UsersController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
-     * @return RZ\Renzo\Core\Entities\Role
+     * @return RZ\Roadiz\Core\Entities\Role
      */
     private function addUserRole($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
             $role = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Role', $data['roleId']);
+                ->find('RZ\Roadiz\Core\Entities\Role', $data['roleId']);
 
             $user->addRole($role);
             $this->getService('em')->flush();
@@ -610,15 +610,15 @@ class UsersController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
-     * @return RZ\Renzo\Core\Entities\Role
+     * @return RZ\Roadiz\Core\Entities\Role
      */
     private function removeUserRole($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
             $role = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Role', $data['roleId']);
+                ->find('RZ\Roadiz\Core\Entities\Role', $data['roleId']);
 
             if ($role !== null) {
                 $user->removeRole($role);
@@ -633,15 +633,15 @@ class UsersController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
-     * @return RZ\Renzo\Core\Entities\Group
+     * @return RZ\Roadiz\Core\Entities\Group
      */
     private function addUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
             $group = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Group', $data['group']);
+                ->find('RZ\Roadiz\Core\Entities\Group', $data['group']);
 
             if ($group !== null) {
                 $user->addGroup($group);
@@ -656,15 +656,15 @@ class UsersController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
-     * @return RZ\Renzo\Core\Entities\Group
+     * @return RZ\Roadiz\Core\Entities\Group
      */
     private function removeUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
             $group = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Group', $data['groupId']);
+                ->find('RZ\Roadiz\Core\Entities\Group', $data['groupId']);
 
             if ($group !== null) {
                 $user->removeGroup($group);
@@ -678,7 +678,7 @@ class UsersController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -739,7 +739,7 @@ class UsersController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -762,7 +762,7 @@ class UsersController extends RozierApp
             )
             ->add(
                 'roleId',
-                new \RZ\Renzo\CMS\Forms\RolesType($user->getRolesEntities()),
+                new \RZ\Roadiz\CMS\Forms\RolesType($user->getRolesEntities()),
                 array('label' => 'Role')
             );
 
@@ -770,7 +770,7 @@ class UsersController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -873,7 +873,7 @@ class UsersController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -896,8 +896,8 @@ class UsersController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
-     * @param RZ\Renzo\Core\Entities\Role $role
+     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\Role $role
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -930,7 +930,7 @@ class UsersController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -953,7 +953,7 @@ class UsersController extends RozierApp
                     )
                     ->add(
                         'group',
-                        new \RZ\Renzo\CMS\Forms\GroupsType($user->getGroups()),
+                        new \RZ\Roadiz\CMS\Forms\GroupsType($user->getGroups()),
                         array('label' => 'Group')
                     );
 
@@ -961,8 +961,8 @@ class UsersController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User  $user
-     * @param RZ\Renzo\Core\Entities\Group $group
+     * @param RZ\Roadiz\Core\Entities\User  $user
+     * @param RZ\Roadiz\Core\Entities\Group $group
      *
      * @return \Symfony\Component\Form\Form
      */

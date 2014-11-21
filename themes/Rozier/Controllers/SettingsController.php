@@ -9,14 +9,14 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Setting;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +48,7 @@ class SettingsController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\Setting',
+            'RZ\Roadiz\Core\Entities\Setting',
             array(),
             array('name'=>'ASC')
         );
@@ -111,7 +111,7 @@ class SettingsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $settingGroup = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\SettingGroup', (int) $settingGroupId);
+            ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $settingGroupId);
 
         if ($settingGroup !== null) {
             $this->assignation['settingGroup'] = $settingGroup;
@@ -122,7 +122,7 @@ class SettingsController extends RozierApp
             $listManager = new EntityListManager(
                 $request,
                 $this->getService('em'),
-                'RZ\Renzo\Core\Entities\Setting',
+                'RZ\Roadiz\Core\Entities\Setting',
                 array('settingGroup'=>$settingGroup),
                 array('name'=>'ASC')
             );
@@ -188,7 +188,7 @@ class SettingsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $setting = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Setting', (int) $settingId);
+            ->find('RZ\Roadiz\Core\Entities\Setting', (int) $settingId);
 
         if ($setting !== null) {
             $this->assignation['setting'] = $setting;
@@ -302,7 +302,7 @@ class SettingsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $setting = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Setting', (int) $settingId);
+            ->find('RZ\Roadiz\Core\Entities\Setting', (int) $settingId);
 
         if (null !== $setting) {
             $this->assignation['setting'] = $setting;
@@ -345,7 +345,7 @@ class SettingsController extends RozierApp
 
     /**
      * @param array                          $data
-     * @param RZ\Renzo\Core\Entities\Setting $setting
+     * @param RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return boolean
      */
@@ -357,7 +357,7 @@ class SettingsController extends RozierApp
             if (isset($data['name']) &&
                 $data['name'] != $setting->getName() &&
                 $this->getService('em')
-                ->getRepository('RZ\Renzo\Core\Entities\Setting')
+                ->getRepository('RZ\Roadiz\Core\Entities\Setting')
                 ->exists($data['name'])) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
             }
@@ -368,7 +368,7 @@ class SettingsController extends RozierApp
                         $setting->$setter( $value );
                     } else {
                         $group = $this->getService('em')
-                                 ->find('RZ\Renzo\Core\Entities\SettingGroup', (int) $value);
+                                 ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $value);
                         $setting->setSettingGroup($group);
                     }
                 }
@@ -384,14 +384,14 @@ class SettingsController extends RozierApp
 
     /**
      * @param array                          $data
-     * @param RZ\Renzo\Core\Entities\Setting $setting
+     * @param RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return boolean
      */
     private function addSetting($data, Setting $setting)
     {
         if ($this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Setting')
+            ->getRepository('RZ\Roadiz\Core\Entities\Setting')
             ->exists($data['name'])) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_creation.already_exists', array('%name%'=>$setting->getName())), 1);
         }
@@ -403,7 +403,7 @@ class SettingsController extends RozierApp
                         $setting->$setter( $value );
                     } else {
                         $group = $this->getService('em')
-                                 ->find('RZ\Renzo\Core\Entities\SettingGroup', (int) $value);
+                                 ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $value);
                         $setting->setSettingGroup($group);
                     }
             }
@@ -419,7 +419,7 @@ class SettingsController extends RozierApp
 
     /**
      * @param array                          $data
-     * @param RZ\Renzo\Core\Entities\Setting $setting
+     * @param RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return boolean
      */
@@ -432,7 +432,7 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Setting $setting
+     * @param RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -467,7 +467,7 @@ class SettingsController extends RozierApp
             ))
             ->add(
                 'settingGroup',
-                new \RZ\Renzo\CMS\Forms\SettingGroupType(),
+                new \RZ\Roadiz\CMS\Forms\SettingGroupType(),
                 array(
                     'label' => $this->getTranslator()->trans('setting.group')
                 )
@@ -478,7 +478,7 @@ class SettingsController extends RozierApp
 
 
     /**
-     * @param RZ\Renzo\Core\Entities\Setting $setting
+     * @param RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -538,7 +538,7 @@ class SettingsController extends RozierApp
             )
             ->add(
                 'settingGroup',
-                new \RZ\Renzo\CMS\Forms\SettingGroupType(),
+                new \RZ\Roadiz\CMS\Forms\SettingGroupType(),
                 array(
                     'label' => $this->getTranslator()->trans('setting.group')
                 )
@@ -548,7 +548,7 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Setting $setting
+     * @param RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -572,7 +572,7 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Setting $setting
+     * @param RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -596,7 +596,7 @@ class SettingsController extends RozierApp
     public static function getSettings()
     {
         return $this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\Setting')
+            ->getRepository('RZ\Roadiz\Core\Entities\Setting')
             ->findAll();
     }
 

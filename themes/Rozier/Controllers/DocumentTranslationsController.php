@@ -9,12 +9,12 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Document;
-use RZ\Renzo\Core\Entities\DocumentTranslation;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
-use RZ\Renzo\Core\Utils\SplashbasePictureFinder;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\DocumentTranslation;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Utils\SplashbasePictureFinder;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -43,23 +43,23 @@ class DocumentTranslationsController extends RozierApp
 
         if (null === $translationId) {
             $translation = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                     ->findDefault();
 
             $translationId = $translation->getId();
         } else {
             $translation = $this->getService('em')
-                    ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
+                    ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
 
         $this->assignation['available_translations'] = $this->getService('em')
-                                                            ->getRepository('RZ\Renzo\Core\Entities\Translation')
+                                                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                                             ->findAll();
 
         $document = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
         $documentTr = $this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\DocumentTranslation')
+            ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
             ->findOneBy(array('document'=>(int) $documentId, 'translation'=>(int) $translationId));
 
         if ($documentTr === null &&
@@ -151,10 +151,10 @@ class DocumentTranslationsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
 
         $documentTr = $this->getService('em')
-            ->getRepository('RZ\Renzo\Core\Entities\DocumentTranslation')
+            ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
             ->findOneBy(array('document'=>(int) $documentId, 'translation'=>(int) $translationId));
         $document = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Document', (int) $documentId);
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($documentTr !== null &&
             $document !== null) {
@@ -208,7 +208,7 @@ class DocumentTranslationsController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\DocumentTranslation $doc
+     * @param RZ\Roadiz\Core\Entities\DocumentTranslation $doc
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -229,7 +229,7 @@ class DocumentTranslationsController extends RozierApp
         return $builder->getForm();
     }
     /**
-     * @param RZ\Renzo\Core\Entities\DocumentTranslation $document
+     * @param RZ\Roadiz\Core\Entities\DocumentTranslation $document
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -247,7 +247,7 @@ class DocumentTranslationsController extends RozierApp
                         'label' => $this->getTranslator()->trans('name'),
                         'required' => false
                     ))
-                    ->add('description', new \RZ\Renzo\CMS\Forms\MarkdownType(), array(
+                    ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), array(
                         'label' => $this->getTranslator()->trans('description'),
                         'required' => false
                     ))
@@ -262,7 +262,7 @@ class DocumentTranslationsController extends RozierApp
 
     /**
      * @param array                                      $data
-     * @param RZ\Renzo\Core\Entities\DocumentTranslation $document
+     * @param RZ\Roadiz\Core\Entities\DocumentTranslation $document
      */
     private function editDocument($data, DocumentTranslation $document)
     {

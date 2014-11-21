@@ -1,10 +1,10 @@
-# Renzo
+# Roadiz
 ## REZO ZERO CMS
 
-Renzo is a polymorphic CMS based on a node system which can handle many type of services.
+Roadiz is a polymorphic CMS based on a node system which can handle many type of services.
 It’s based on Symfony components and Doctrine ORM for maximum performances and security.
 
-* *Renzo CMS* is released under **MIT** licence
+* *Roadiz CMS* is released under **MIT** licence
 * *RZ Icons* font-icon is released under **MIT** licence too
 * *Rezo-Zero Sans* font is released under **GPL+FE** licence and is edited by *Nonpareille* type foundry
 
@@ -80,7 +80,7 @@ phpcs --report=full --report-file=./report.txt --extensions=php --warning-severi
 When you import your existing database, you must regenerate all node-types sources classes.
 
 ```
-bin/renzo core:node:types --regenerateAllEntities
+bin/roadiz core:node:types --regenerateAllEntities
 ```
 
 This will parse every node-types from your database and recreate PHP classes in your `gen-src/GeneratedNodeSources` folder.
@@ -93,7 +93,7 @@ If you did’nt generate them just have a look at *Migrating with an existing da
 Then you can perform migration :
 
 ```
-bin/renzo schema --update
+bin/roadiz schema --update
 ```
 
 Be careful, check the output to see if any node-source data will be deleted!
@@ -101,8 +101,8 @@ Doctrine will parse every node-type classes to see new and deprecated node-types
 Then when you are sure to perform migration, just do:
 
 ```
-bin/renzo schema --update --execute
-bin/renzo cache --clear-all;
+bin/roadiz schema --update --execute
+bin/roadiz cache --clear-all;
 ```
 
 The `cache --clear-all` command force Doctrine to purge its metadata cache.
@@ -114,8 +114,8 @@ to the global configuration file.
 
 ```
 "entities": [
-    "src/Renzo/Core/Entities",
-    "src/Renzo/Core/AbstractEntities",
+    "src/Roadiz/Core/Entities",
+    "src/Roadiz/Core/AbstractEntities",
     "gen-src/GeneratedNodeSources",
     "add/here/your/entities/folder",
     …
@@ -125,14 +125,14 @@ to the global configuration file.
 Verify if everything is OK by checking migrations:
 
 ```
-bin/renzo schema --update;
+bin/roadiz schema --update;
 ```
 
 If you see your entities being created and no system database erased, just `--execute` your migration.
 If Doctrine send some error, you probably need to clear metadata cache:
 
 ```
-bin/renzo cache --clear-all;
+bin/roadiz cache --clear-all;
 ```
 
 ### Problem with entities and Doctrine cache?
@@ -140,10 +140,10 @@ bin/renzo cache --clear-all;
 After each RZCMS upgrade you should upgrade your node-sources entity classes and upgrade database schema.
 
 ```
-bin/renzo core:node:types --regenerateAllEntities;
-bin/renzo schema --update;
-bin/renzo schema --update --execute;
-bin/renzo cache --clear-all;
+bin/roadiz core:node:types --regenerateAllEntities;
+bin/roadiz schema --update;
+bin/roadiz schema --update --execute;
+bin/roadiz cache --clear-all;
 
 ```
 

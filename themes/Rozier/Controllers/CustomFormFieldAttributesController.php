@@ -12,15 +12,15 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\CustomForm;
-use RZ\Renzo\Core\Entities\CustomFormField;
-use RZ\Renzo\Core\Entities\CustomFormFieldAttribute;
-use RZ\Renzo\Core\Entities\CustomFormAnswer;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Entities\CustomFormField;
+use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
+use RZ\Roadiz\Core\Entities\CustomFormAnswer;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,12 +51,12 @@ class CustomFormFieldAttributesController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\CustomFormFieldAttribute',
+            'RZ\Roadiz\Core\Entities\CustomFormFieldAttribute',
             array("customFormAnswer" => $customFormAnswerId)
         );
         $listManager->handle();
 
-        $customFormAnswer = $this->getService('em')->find('RZ\Renzo\Core\Entities\CustomFormAnswer', $customFormAnswerId);
+        $customFormAnswer = $this->getService('em')->find('RZ\Roadiz\Core\Entities\CustomFormAnswer', $customFormAnswerId);
 
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['fields'] = $listManager->getEntities();

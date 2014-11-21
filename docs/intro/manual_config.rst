@@ -20,7 +20,7 @@ The most important part is the database credentials part:
         "dbname": ""
     }
 
-Renzo uses *Doctrine ORM* to store your data. It will directly pass this part to *Doctrine* so
+Roadiz uses *Doctrine ORM* to store your data. It will directly pass this part to *Doctrine* so
 you can use every available drivers or options from its documentation at
 http://doctrine-dbal.readthedocs.org/en/latest/reference/configuration.html
 
@@ -28,7 +28,7 @@ http://doctrine-dbal.readthedocs.org/en/latest/reference/configuration.html
 Solr endpoint
 -------------
 
-Renzo can use an *Apache Solr* search-engine to index nodes-sources.
+Roadiz can use an *Apache Solr* search-engine to index nodes-sources.
 Add this to your `config.json` to link your CMS to your *Solr* server:
 
 .. code-block:: json
@@ -51,13 +51,13 @@ Add this to your `config.json` to link your CMS to your *Solr* server:
 Entities paths
 --------------
 
-Renzo uses *Doctrine* to map object entities to database tables.
-In order to make Renzo more extensible, you can add your own paths to the ``entities`` part.
+Roadiz uses *Doctrine* to map object entities to database tables.
+In order to make Roadiz more extensible, you can add your own paths to the ``entities`` part.
 
 .. code-block:: json
 
     "entities": [
-        "src/Renzo/Core/Entities",
-        "src/Renzo/Core/AbstractEntities",
+        "src/Roadiz/Core/Entities",
+        "src/Roadiz/Core/AbstractEntities",
         "gen-src/GeneratedNodeSources"
     ]

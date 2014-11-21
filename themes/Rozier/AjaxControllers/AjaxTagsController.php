@@ -9,10 +9,10 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Tag;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\TagHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\TagHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 use Themes\Rozier\RozierApp;
 
@@ -54,7 +54,7 @@ class AjaxTagsController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $tag = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
+            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
 
@@ -125,7 +125,7 @@ class AjaxTagsController extends AbstractAjaxController
 
             $pattern = strip_tags($request->get('search'));
             $tags = $this->getService('em')
-                        ->getRepository('RZ\Renzo\Core\Entities\Tag')
+                        ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                         ->findBy(
                             array('translatedTag.name' => array('LIKE', '%'.$pattern.'%')),
                             null,
@@ -159,7 +159,7 @@ class AjaxTagsController extends AbstractAjaxController
             $parameters['newParent'] > 0) {
 
             $parent = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['newParent']);
+                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $tag->setParent($parent);
@@ -174,7 +174,7 @@ class AjaxTagsController extends AbstractAjaxController
         if (!empty($parameters['nextTagId']) &&
             $parameters['nextTagId'] > 0) {
             $nextTag = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['nextTagId']);
+                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['nextTagId']);
             if ($nextTag !== null) {
                 $tag->setPosition($nextTag->getPosition() - 0.5);
             }
@@ -182,7 +182,7 @@ class AjaxTagsController extends AbstractAjaxController
             $parameters['prevTagId'] > 0) {
 
             $prevTag = $this->getService('em')
-                ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['prevTagId']);
+                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['prevTagId']);
             if ($prevTag !== null) {
                 $tag->setPosition($prevTag->getPosition() + 0.5);
             }

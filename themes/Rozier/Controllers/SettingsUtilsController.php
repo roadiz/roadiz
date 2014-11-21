@@ -10,17 +10,17 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Setting;
-use RZ\Renzo\Core\Entities\SettingGroup;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Entities\SettingGroup;
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\Serializers\SettingJsonSerializer;
-use RZ\Renzo\Core\Serializers\SettingCollectionJsonSerializer;
+use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
+use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
-use RZ\Renzo\CMS\Importers\SettingsImporter;
+use RZ\Roadiz\CMS\Importers\SettingsImporter;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,10 +53,10 @@ class SettingsUtilsController extends RozierApp
         //     return $this->throw404();
 
         $groups = $this->getService('em')
-                  ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
+                  ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                   ->findAll();
         $lonelySettings = $this->getService('em')
-                          ->getRepository('RZ\Renzo\Core\Entities\Setting')
+                          ->getRepository('RZ\Roadiz\Core\Entities\Setting')
                           ->findBy(array('settingGroup' => null));
         //\Doctrine\Common\Util\Debug::dump($lonelySettings);
         $tmpGroup = new SettingGroup();

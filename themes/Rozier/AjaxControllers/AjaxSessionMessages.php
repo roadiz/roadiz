@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * AjaxSessionMessages.

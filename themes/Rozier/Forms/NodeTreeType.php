@@ -10,10 +10,10 @@
  */
 namespace Themes\Rozier\Forms;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodesSources;
-use RZ\Renzo\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormView;
@@ -23,7 +23,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * Node tree embedded type in a node source form.
  *
- * This form type is not published inside Renzo CMS as it needs
+ * This form type is not published inside Roadiz CMS as it needs
  * NodeTreeWidget which is part of Rozier Theme.
  *
  */
@@ -36,9 +36,9 @@ class NodeTreeType extends AbstractType
     /**
      * {@inheritdoc}
      *
-     * @param RZ\Renzo\Core\Entities\NodesSources     $source
-     * @param RZ\Renzo\Core\Entities\NodeTypeField    $field
-     * @param \RZ\Renzo\CMS\Controllers\AppController $refereeController
+     * @param RZ\Roadiz\Core\Entities\NodesSources     $source
+     * @param RZ\Roadiz\Core\Entities\NodeTypeField    $field
+     * @param \RZ\Roadiz\CMS\Controllers\AppController $refereeController
      */
     public function __construct(
         NodesSources $source,
@@ -83,7 +83,7 @@ class NodeTreeType extends AbstractType
         }
 
         $nodeTypes = $this->controller->getService('em')
-                                      ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+                                      ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                                       ->findBy(array('name' => $defaultValues));
 
         $view->vars['linkedTypes'] = $nodeTypes;

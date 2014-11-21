@@ -9,14 +9,14 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Console\SchemaCommand;
-use RZ\Renzo\Console\CacheCommand;
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Tag;
-use RZ\Renzo\Core\Entities\TagTranslation;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Console\SchemaCommand;
+use RZ\Roadiz\Console\CacheCommand;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\TagTranslation;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;

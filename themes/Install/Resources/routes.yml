@@ -19,37 +19,37 @@ installDatabaseSchemaPage:
 #     defaults: { _controller: Themes\Install\InstallApp::importAction }
 installImportSettings:
     path:     /install/import/settings/{filename}/{themeId}
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importSettingsAction, themeId: null }
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importSettingsAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/\.-]+$"
         themeId: "[0-9]+"
 installImportGroups:
     path:     /install/import/groups/{filename}/{themeId}
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importGroupsAction, themeId: null }
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importGroupsAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/\.-]+$"
         themeId: "[0-9]+"
 installImportRoles:
     path:     /install/import/roles/{filename}/{themeId}
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importRolesAction, themeId: null }
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importRolesAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/\.-]+$"
         themeId: "[0-9]+"
 installImportNodes:
     path:     /install/import/nodes/{filename}/{themeId}
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importNodesAction, themeId: null }
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodesAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         id: "[0-9]+"
 installImportNodeTypes:
     path:     /install/import/nodetypes/{filename}/{themeId}
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importNodeTypesAction }
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodeTypesAction }
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         themeId: "[0-9]+"
 installImportTags:
     path:     /install/import/tags/{filename}/{themeId}
-    defaults: { _controller: RZ\Renzo\CMS\Controllers\ImportController::importTagsAction }
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importTagsAction }
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         themeId: "[0-9]+"

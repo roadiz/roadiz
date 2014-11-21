@@ -29,7 +29,7 @@
  * @author Ambroise Maupate
  */
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Kernel;
 
 // replace with file to your own project bootstrap
 require_once 'bootstrap.php';

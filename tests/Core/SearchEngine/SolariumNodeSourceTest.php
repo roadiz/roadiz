@@ -1,11 +1,11 @@
 <?php
 
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodesSources;
-use RZ\Renzo\Core\SearchEngine\SolariumNodeSource;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
+use RZ\Roadiz\Core\Kernel;
 
-use RZ\Renzo\Core\Exceptions\SolrServerNotAvailableException;
+use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
 use Solarium\Exception\HttpException;
 /**
  * SolariumNodeSourceTest.

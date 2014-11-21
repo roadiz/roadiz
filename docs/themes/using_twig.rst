@@ -6,9 +6,9 @@ Using Twig
 
 .. Note::
 
-    Twig is the default rendering engine for *Renzo* CMS. You’ll find its documentation at http://twig.sensiolabs.org/doc/templates.html
+    Twig is the default rendering engine for *Roadiz* CMS. You’ll find its documentation at http://twig.sensiolabs.org/doc/templates.html
 
-When you use :ref:`Dynamic routing <dynamic-routing>` within your theme, Renzo will automatically assign some variables for you::
+When you use :ref:`Dynamic routing <dynamic-routing>` within your theme, Roadiz will automatically assign some variables for you::
 
     * request
     * head
@@ -70,7 +70,7 @@ You can of course call objects members within Twig using the *dot* separator.
 Additional filters
 ------------------
 
-Renzo’s Twig environment implements some useful filters, such as:
+Roadiz’s Twig environment implements some useful filters, such as:
 
 * ``markdown``: Convert a markdown text to HTML
 * ``inlineMarkdown``: Convert a markdown text to HTML without parsing *block* elements (useful for just italics and bolds)

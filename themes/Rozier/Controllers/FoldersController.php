@@ -11,12 +11,12 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Folder;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
-use RZ\Renzo\Core\Utils\StringHandler;
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\EntityRequiredException;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Utils\StringHandler;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +44,7 @@ class FoldersController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Renzo\Core\Entities\Folder'
+            'RZ\Roadiz\Core\Entities\Folder'
         );
         $listManager->handle();
 
@@ -120,7 +120,7 @@ class FoldersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $folder = $this->getService('em')
-            ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if (null !== $folder) {
             $form = $this->buildDeleteForm($folder);
@@ -179,7 +179,7 @@ class FoldersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $folder = $this->getService('em')
-                    ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+                    ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if ($folder !== null) {
 
@@ -239,7 +239,7 @@ class FoldersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $folder = $this->getService('em')
-                    ->find('RZ\Renzo\Core\Entities\Folder', (int) $folderId);
+                    ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if ($folder !== null) {
 
@@ -300,7 +300,7 @@ class FoldersController extends RozierApp
 
     /**
      * Build delete folder form with name constraint.
-     * @param RZ\Renzo\Core\Entities\Folder $folder
+     * @param RZ\Roadiz\Core\Entities\Folder $folder
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -317,7 +317,7 @@ class FoldersController extends RozierApp
 
     /**
      * Build edit folder form with name constraint.
-     * @param RZ\Renzo\Core\Entities\Folder $folder
+     * @param RZ\Roadiz\Core\Entities\Folder $folder
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -341,7 +341,7 @@ class FoldersController extends RozierApp
     /**
      * @param \Symfony\Component\Form\Form $rawData
      *
-     * @return RZ\Renzo\Core\Entities\Folder
+     * @return RZ\Roadiz\Core\Entities\Folder
      */
     protected function addFolder(\Symfony\Component\Form\Form $rawData)
     {
@@ -350,7 +350,7 @@ class FoldersController extends RozierApp
 
         if (isset($data['name'])) {
             $existing = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Folder')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                     ->findOneBy(array('name' => $data['name']));
 
             if ($existing !== null) {
@@ -373,9 +373,9 @@ class FoldersController extends RozierApp
 
     /**
      * @param \Symfony\Component\Form\Form  $rawData
-     * @param RZ\Renzo\Core\Entities\Folder $folder
+     * @param RZ\Roadiz\Core\Entities\Folder $folder
      *
-     * @return RZ\Renzo\Core\Entities\Folder
+     * @return RZ\Roadiz\Core\Entities\Folder
      */
     protected function editFolder(\Symfony\Component\Form\Form $rawData, Folder $folder)
     {
@@ -383,7 +383,7 @@ class FoldersController extends RozierApp
 
         if (isset($data['name'])) {
             $existing = $this->getService('em')
-                    ->getRepository('RZ\Renzo\Core\Entities\Folder')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                     ->findOneBy(array('name' => $data['name']));
             if ($existing !== null &&
                 $existing->getId() != $folder->getId()) {
@@ -404,7 +404,7 @@ class FoldersController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\Folder $folder
+     * @param RZ\Roadiz\Core\Entities\Folder $folder
      *
      * @return void
      */

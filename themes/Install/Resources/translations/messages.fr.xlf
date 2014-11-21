@@ -42,15 +42,15 @@
             <!-- Welcome -->
             <trans-unit id="welcome.title" approved="yes">
                 <source>welcome.title</source>
-                <target state="translated">Installation de Renzo CMS</target>
+                <target state="translated">Installation de Roadiz CMS</target>
             </trans-unit>
             <trans-unit id="welcome.subtitle" approved="yes">
                 <source>welcome.subtitle</source>
-                <target state="translated">Installation de Renzo CMS</target>
+                <target state="translated">Installation de Roadiz CMS</target>
             </trans-unit>
             <trans-unit id="welcome.message" approved="yes">
                 <source>welcome.message</source>
-                <target state="translated">&lt;p&gt;Bienvenue dans l'assistant d'installation de Renzo CMS, quelques petites minutes de configuration et à vous de jouer&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Bienvenue dans l'assistant d'installation de Roadiz CMS, quelques petites minutes de configuration et à vous de jouer&lt;/p&gt;</target>
             </trans-unit>
 
 
@@ -84,7 +84,7 @@
             </trans-unit>
             <trans-unit id="database.message" approved="yes">
                 <source>database.message</source>
-                <target state="translated">&lt;p&gt;Renzo a besoin d'une base de données pour stocker vos contenus de qualités. Vous pouvez même sélectionner votre moteur de base de données préféré!&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Roadiz a besoin d'une base de données pour stocker vos contenus de qualités. Vous pouvez même sélectionner votre moteur de base de données préféré!&lt;/p&gt;</target>
             </trans-unit>
             <trans-unit id="database.cannot_connect" approved="yes">
                 <source>database.cannot_connect</source>
@@ -103,7 +103,7 @@
             </trans-unit>
             <trans-unit id="database_done.message" approved="yes">
                 <source>database_done.message</source>
-                <target state="translated">&lt;p&gt;Renzo a besoin d'une base de données pour stocker vos contenus de qualité. Vous pouvez même sélectionner votre moteur de base de données préféré!&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Roadiz a besoin d'une base de données pour stocker vos contenus de qualité. Vous pouvez même sélectionner votre moteur de base de données préféré!&lt;/p&gt;</target>
             </trans-unit>
 
             <!-- Database fail -->

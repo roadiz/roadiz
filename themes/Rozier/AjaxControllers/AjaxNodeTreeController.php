@@ -9,10 +9,10 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 use Themes\Rozier\RozierApp;
 
@@ -57,7 +57,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
 
                     $node = $this->getService('em')
                                  ->find(
-                                     '\RZ\Renzo\Core\Entities\Node',
+                                     '\RZ\Roadiz\Core\Entities\Node',
                                      (int) $request->get('parentNodeId')
                                  );
 
