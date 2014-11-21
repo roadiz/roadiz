@@ -24,11 +24,12 @@ use RZ\Roadiz\Core\ListManagers\EntityListManager;
  */
 class NodeTreeWidget extends AbstractWidget
 {
-    protected $parentNode =  null;
-    protected $nodes =       null;
-    protected $translation = null;
-    protected $stackTree =   false;
-    protected $filters =     null;
+    protected $parentNode =            null;
+    protected $nodes =                 null;
+    protected $translation =           null;
+    protected $availableTranslations = null;
+    protected $stackTree =             false;
+    protected $filters =               null;
 
     /**
      * @param Request                            $request           Current kernel request
@@ -46,6 +47,16 @@ class NodeTreeWidget extends AbstractWidget
 
         $this->parentNode = $parent;
         $this->translation = $translation;
+
+        if ($this->translation === null) {
+            $this->translation = $this->getController()->getService('em')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                    ->findDefault();
+        }
+
+        $this->availableTranslations = $this->getController()->getService('em')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                    ->findAll();
     }
 
 
@@ -75,12 +86,6 @@ class NodeTreeWidget extends AbstractWidget
 
     protected function getListManager(Node $parent = null)
     {
-        if ($this->translation === null) {
-            $this->translation = $this->getController()->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findOneBy(array('defaultTranslation'=>true));
-        }
-
         /*
          * Manage get request to filter list
          */
@@ -89,8 +94,9 @@ class NodeTreeWidget extends AbstractWidget
             $this->controller->getService('em'),
             'RZ\Roadiz\Core\Entities\Node',
             array(
-                'parent' => $parent,
-                'status' => array('<=', Node::PUBLISHED),
+                'parent' =>      $parent,
+                'translation' => $this->translation,
+                'status' =>      array('<=', Node::PUBLISHED),
             ),
             array('position'=>'ASC')
         );
@@ -132,6 +138,13 @@ class NodeTreeWidget extends AbstractWidget
     public function getTranslation()
     {
         return $this->translation;
+    }
+    /**
+     * @return array
+     */
+    public function getAvailableTranslations()
+    {
+        return $this->availableTranslations;
     }
     /**
      * @return ArrayCollection

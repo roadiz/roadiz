@@ -3,11 +3,13 @@ var StackNodeTree = function () {
 
     _this.$page = $('.stack-tree');
     _this.$quickAddNodeButtons = _this.$page.find('.stack-tree-quick-creation a');
+    _this.$switchLangButtons = _this.$page.find('.nodetree-langs a');
 
     _this.init();
 };
 
 StackNodeTree.prototype.$page = null;
+StackNodeTree.prototype.$switchLangButtons = null;
 StackNodeTree.prototype.$quickAddNodeButtons = null;
 
 StackNodeTree.prototype.init = function() {
@@ -19,7 +21,25 @@ StackNodeTree.prototype.init = function() {
 
         _this.$quickAddNodeButtons.off("click", proxiedClick);
         _this.$quickAddNodeButtons.on("click", proxiedClick);
+
+        if(_this.$switchLangButtons.length){
+            var proxiedChangeLang = $.proxy(_this.onChangeLangClick, _this);
+            _this.$switchLangButtons.off("click", proxiedChangeLang);
+            _this.$switchLangButtons.on("click", proxiedChangeLang);
+        }
     }
+};
+StackNodeTree.prototype.onChangeLangClick = function(event) {
+    var _this = this;
+    var $link = $(event.currentTarget);
+
+    var $nodeTree = _this.$page.find('.nodetree-widget');
+    var parentNodeId = parseInt($link.attr('data-children-parent-node'));
+    var translationId = parseInt($link.attr('data-translation-id'));
+
+    _this.refreshNodeTree(parentNodeId, translationId);
+
+    return false;
 };
 
 StackNodeTree.prototype.onQuickAddClick = function(event) {
@@ -51,7 +71,7 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
             console.log(data);
 
             Rozier.refreshMainNodeTree();
-            _this.refreshNodeTree($link, parentNodeId);
+            _this.refreshNodeTree(parentNodeId);
 
             $.UIkit.notify({
                 message : data.responseText,
@@ -81,13 +101,12 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
     return false;
 };
 
-StackNodeTree.prototype.refreshNodeTree = function( $link, rootNodeId ) {
+StackNodeTree.prototype.refreshNodeTree = function( rootNodeId, translationId ) {
     var _this = this;
     var $nodeTree = _this.$page.find('.nodetree-widget');
 
-    console.log('REFRESH NODE TREE');
-
     if($nodeTree.length){
+        Rozier.lazyload.canvasLoader.show();
         var postData = {
             "_token":       Rozier.ajaxToken,
             "_action":      'requestNodeTree',
@@ -95,8 +114,13 @@ StackNodeTree.prototype.refreshNodeTree = function( $link, rootNodeId ) {
             "parentNodeId": parseInt(rootNodeId)
         };
 
+        var url = Rozier.routes.nodesTreeAjax;
+        if(isset(translationId) && translationId > 0){
+            url += '/'+translationId;
+        }
+
         $.ajax({
-            url: Rozier.routes.nodesTreeAjax,
+            url: url,
             type: 'post',
             dataType: 'json',
             data: postData,
@@ -112,8 +136,19 @@ StackNodeTree.prototype.refreshNodeTree = function( $link, rootNodeId ) {
 
                     Rozier.initNestables();
                     Rozier.bindMainTrees();
+
+                    Rozier.lazyload.generalBind();
                     $nodeTree.fadeIn();
                     Rozier.resize();
+
+                    _this.$switchLangButtons = _this.$page.find('.nodetree-langs a');
+                    if(_this.$switchLangButtons.length){
+                        var proxiedChangeLang = $.proxy(_this.onChangeLangClick, _this);
+                        _this.$switchLangButtons.off("click", proxiedChangeLang);
+                        _this.$switchLangButtons.on("click", proxiedChangeLang);
+                    }
+
+                    Rozier.lazyload.canvasLoader.hide();
                 });
             }
         })

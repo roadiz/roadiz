@@ -337,12 +337,19 @@ class AjaxNodesController extends AbstractAjaxController
             if (null !== $nodeType &&
                 null !== $parent) {
 
-                $translation = $parent->getNodeSources()->first()->getTranslation();
 
-                if (null === $translation) {
+                if ($request->get('translationId') > 0) {
                     $translation = $this->getService('em')
-                                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                        ->findDefault();
+                                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $request->get('translationId'));
+
+                } else {
+                    $translation = $parent->getNodeSources()->first()->getTranslation();
+
+                    if (null === $translation) {
+                        $translation = $this->getService('em')
+                                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                            ->findDefault();
+                    }
                 }
 
                 try {

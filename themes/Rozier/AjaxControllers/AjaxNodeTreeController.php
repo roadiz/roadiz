@@ -32,7 +32,7 @@ use Themes\Rozier\Widgets\TagTreeWidget;
  */
 class AjaxNodeTreeController extends AbstractAjaxController
 {
-    public function getTreeAction(Request $request)
+    public function getTreeAction(Request $request, $translationId = null)
     {
         /*
          * Validate
@@ -46,6 +46,21 @@ class AjaxNodeTreeController extends AbstractAjaxController
         }
 
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
+
+        $translation = null;
+
+        if (null === $translationId) {
+            $translation = $this->getService('em')
+                                ->getRepository('\RZ\Roadiz\Core\Entities\Translation')
+                                ->findDefault();
+        } else {
+            $translation = $this->getService('em')
+                                ->find(
+                                    '\RZ\Roadiz\Core\Entities\Translation',
+                                    (int) $translationId
+                                );
+        }
 
 
         switch ($request->get("_action")) {
@@ -64,7 +79,8 @@ class AjaxNodeTreeController extends AbstractAjaxController
                     $this->assignation['nodeTree'] = new NodeTreeWidget(
                         $this->getKernel()->getRequest(),
                         $this,
-                        $node
+                        $node,
+                        $translation
                     );
                     $this->assignation['mainNodeTree'] = false;
 
@@ -83,14 +99,14 @@ class AjaxNodeTreeController extends AbstractAjaxController
             case 'requestMainNodeTree':
                 $this->assignation['nodeTree'] = new NodeTreeWidget(
                     $this->getKernel()->getRequest(),
-                    $this
+                    $this,
+                    null,
+                    $translation
                 );
                 $this->assignation['mainNodeTree'] = true;
 
                 break;
         }
-
-
 
 
         $responseArray = array(

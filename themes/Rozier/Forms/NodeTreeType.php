@@ -71,7 +71,8 @@ class NodeTreeType extends AbstractType
         $view->vars['nodeTree'] = new NodeTreeWidget(
             $this->controller->getKernel()->getRequest(),
             $this->controller,
-            $this->nodeSource->getNode()
+            $this->nodeSource->getNode(),
+            $this->nodeSource->getTranslation()
         );
 
         /*
