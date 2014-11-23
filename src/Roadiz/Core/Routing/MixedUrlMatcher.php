@@ -99,7 +99,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             return array(
                 '_controller' => $this->getThemeController().'::indexAction',
                 'node'        => $node,
-                'urlAlias'    => null,
                 'translation' => $translation
             );
         } else {
@@ -120,7 +119,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                 return array(
                     '_controller' => $this->getThemeController().'::indexAction',
                     'node'        => $node,
-                    'urlAlias'    => null,
                     'translation' => $translation
                 );
             } else {
@@ -263,12 +261,8 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                 if ($locale !== null && $locale != '') {
                     return Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->findOneBy(array('locale'=>$locale));
+                        ->findOneByLocale($locale);
                 }
-            } else {
-                return Kernel::getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->findOneBy(array('defaultTranslation'=>true));
             }
         }
 
