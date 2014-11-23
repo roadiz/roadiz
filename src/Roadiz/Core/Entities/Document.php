@@ -316,20 +316,6 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @ManyToMany(targetEntity="Tag", inversedBy="documents")
-     * @JoinTable(name="documents_tags")
-     * @var ArrayCollection
-     */
-    private $tags = null;
-    /**
-     * @return ArrayCollection
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
      * @return RZ\Roadiz\Core\Viewers\DocumentViewer
      */
     public function getViewer()

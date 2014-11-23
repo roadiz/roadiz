@@ -99,14 +99,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $this->container['stopwatch']->openSection();
 
         $this->request = Request::createFromGlobals();
-        if ($this->isDebug() ||
-            !file_exists(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php') ||
-            !file_exists(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php')) {
-
-            $this->container['stopwatch']->start('dumpUrlUtils');
-            $this->dumpUrlUtils();
-            $this->container['stopwatch']->stop('dumpUrlUtils');
-        }
     }
 
     /**
@@ -235,7 +227,14 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function runApp()
     {
+        if ($this->isDebug() ||
+            !file_exists(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php') ||
+            !file_exists(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php')) {
 
+            $this->container['stopwatch']->start('dumpUrlUtils');
+            $this->dumpUrlUtils();
+            $this->container['stopwatch']->stop('dumpUrlUtils');
+        }
         /*
          * Define a request wide timezone
          */
@@ -335,23 +334,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $this->container['stopwatch']->stop('prepareTranslation');
 
         $this->container['stopwatch']->start('initThemes');
-        /*
-         * Security
-         */
-        // Register back-end security scheme
-        $beClass = $this->container['backendClass'];
-        $beClass::setupDependencyInjection($this->container);
-
-        // Register front-end security scheme
-        foreach ($this->container['frontendThemes'] as $theme) {
-            $feClass = $theme->getClassName();
-            $feClass::setupDependencyInjection($this->container);
-        }
-        $this->container['stopwatch']->stop('initThemes');
-
-        $this->container['stopwatch']->start('firewall');
-        $firewall = new Firewall($this->container['firewallMap'], $this->container['dispatcher']);
-        $this->container['stopwatch']->stop('firewall');
 
         /*
          * Events
@@ -366,7 +348,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
             array(
-                $firewall,
+                $this->container['firewall'],
                 'onKernelRequest'
             )
         );
@@ -495,7 +477,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function isDebug()
     {
-        return (boolean) $this->container['config']['devMode'] || (boolean) $this->container['config']['install'];
+        return (boolean) $this->container['config']['devMode'] ||
+               (boolean) $this->container['config']['install'];
     }
 
     /**

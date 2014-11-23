@@ -94,7 +94,7 @@ class InstallCommand extends Command
                     $defaultTrans = new Translation();
                     $defaultTrans
                         ->setDefaultTranslation(true)
-                        ->setLocale("en_GB")
+                        ->setLocale("en")
                         ->setName("Default translation");
 
                     Kernel::getService('em')->persist($defaultTrans);

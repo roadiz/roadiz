@@ -131,8 +131,7 @@ class SchemaCommand extends Command
                     $text .= '<info>'.$count.'</info> change(s) in your database schema… Use <info>--execute</info> to apply only new changes with no deletions:'.PHP_EOL;
                     $deletions = array();
                     for ($i=0; $i<$count; $i++) {
-
-                        if (strpos($sql[$i], 'DELETE') ||
+                        if (substr($sql[$i], 0, 6) == 'DELETE' ||
                             strpos($sql[$i], 'DROP')) {
                             $deletions[] = $sql[$i];
                         } else {
@@ -141,7 +140,6 @@ class SchemaCommand extends Command
                     }
 
                     if (count($deletions) > 0) {
-                        # code...
                         $text .= '<info>'.count($deletions).'</info> deletion(s) will be performed! Use <info>--execute --delete</info> to apply:'.PHP_EOL;
                         foreach ($deletions as $statement) {
                             $text .= $statement.PHP_EOL;
@@ -176,7 +174,7 @@ class SchemaCommand extends Command
 
         foreach ($sql as $statement) {
 
-            if (strpos($statement, 'DELETE') ||
+            if (substr($statement, 0, 6) == 'DELETE' ||
                 strpos($statement, 'DROP')) {
                 $deletions[] = $statement;
             } else {

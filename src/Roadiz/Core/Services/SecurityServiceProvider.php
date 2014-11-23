@@ -188,6 +188,26 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
 
+        $container['firewall'] = function($c) {
+
+            // Register back-end security scheme
+            $beClass = $c['backendClass'];
+            $beClass::setupDependencyInjection($c);
+
+            // Register front-end security scheme
+            foreach ($c['frontendThemes'] as $theme) {
+                $feClass = $theme->getClassName();
+                $feClass::setupDependencyInjection($c);
+            }
+            $c['stopwatch']->stop('initThemes');
+
+            $c['stopwatch']->start('firewall');
+            $firewall = new Firewall($c['firewallMap'], $c['dispatcher']);
+            $c['stopwatch']->stop('firewall');
+
+            return $firewall;
+        };
+
 
         /*
          * Default denied handler
