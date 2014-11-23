@@ -65,17 +65,37 @@ class DocumentsType extends AbstractType
     {
         $callback = function ($object, ExecutionContextInterface $context) {
 
-            $document = Kernel::getService('em')
-                            ->find('RZ\Roadiz\Core\Entities\Document', (int) $object);
+            if (is_array($object)) {
+                $documents = Kernel::getService('em')
+                                ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                                ->findBy(array('id'=>$object));
 
-            // Vérifie si le nom est bidon
-            if (null !== $object && null === $document) {
-                $context->addViolationAt(
-                    null,
-                    'Document '.$object.' does not exists',
-                    array(),
-                    null
-                );
+                foreach ($object as $key => $value) {
+                    // Vérifie si le nom est bidon
+                    if (null !== $value && null === $documents[$key]) {
+                        $context->addViolationAt(
+                            null,
+                            'Document #'.$value.' does not exists',
+                            array(),
+                            null
+                        );
+                    }
+                }
+
+            } else {
+
+                $document = Kernel::getService('em')
+                                ->find('RZ\Roadiz\Core\Entities\Document', (int) $object);
+
+                // Vérifie si le nom est bidon
+                if (null !== $object && null === $document) {
+                    $context->addViolationAt(
+                        null,
+                        'Document '.$object.' does not exists',
+                        array(),
+                        null
+                    );
+                }
             }
         };
 
