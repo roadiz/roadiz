@@ -65,7 +65,6 @@ class EntryPointsController extends AppController
     public function __init()
     {
         $this->getTwigLoader()
-             ->initializeTwig()
              ->initializeTranslator()
              ->prepareBaseAssignation();
     }

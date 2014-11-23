@@ -237,12 +237,6 @@ class AppController implements ViewableInterface
     }
 
     /**
-     * Twig environment instance.
-     *
-     * @var \Twig_Environment
-     */
-    protected $twig = null;
-    /**
      * Assignation for twig template engine.
      *
      * @var array
@@ -269,7 +263,6 @@ class AppController implements ViewableInterface
     public function __init()
     {
         $this->getTwigLoader()
-             ->initializeTwig()
              ->initializeTranslator()
              ->prepareBaseAssignation();
     }
@@ -278,17 +271,13 @@ class AppController implements ViewableInterface
      * Initialize controller with environment from an other controller
      * in order to avoid initializing same componant again.
      *
-     * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
-     * @param \Twig_Environment                                $twigEnvironment
      * @param Translator                                       $translator
      * @param array                                            $baseAssignation
      */
     public function __initFromOtherController(
-        \Twig_Environment $twigEnvironment,
         Translator $translator = null,
         array $baseAssignation = null
     ) {
-        $this->twig = $twigEnvironment;
         $this->translator = $translator;
         $this->assignation = $baseAssignation;
     }
@@ -331,18 +320,15 @@ class AppController implements ViewableInterface
         $this->translator = new Translator($lang);
 
         if (file_exists($msgPath)) {
-            // instancier un objet de la classe Translator
-            // charger, en quelque sorte, des traductions dans ce translator
             $this->translator->addLoader('xlf', new XliffFileLoader());
             $this->translator->addResource(
                 'xlf',
                 $msgPath,
                 $lang
             );
-            // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
         }
-        $this->twig->addExtension(new TranslationExtension($this->translator));
-        $this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
+        $this->getService('twig.environment')->addExtension(new TranslationExtension($this->translator));
+        $this->getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
         $this->getService('stopwatch')->stop('initTranslations');
 
         return $this;
@@ -388,15 +374,6 @@ class AppController implements ViewableInterface
 
         return $this;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function initializeTwig()
-    {
-        $this->twig = $this->getService('twig.environment');
-
-        return $this;
-    }
 
     /**
      * Force current AppController twig templates compilation.
@@ -409,7 +386,6 @@ class AppController implements ViewableInterface
 
             $ctrl = new static();
             $ctrl->setKernel(Kernel::getInstance());
-            $ctrl->initializeTwig();
             $ctrl->initializeTranslator();
 
             try {
@@ -463,7 +439,7 @@ class AppController implements ViewableInterface
      */
     public function getTwig()
     {
-        return $this->twig;
+        return $this->getService('twig.environment');
     }
     /**
      * Prepare base informations to be rendered in twig templates.

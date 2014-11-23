@@ -164,6 +164,7 @@ class FrontendController extends AppController
      */
     public function indexAction(Request $request, Node $node = null, Translation $translation = null)
     {
+        Kernel::getService('stopwatch')->start('handleNodeController');
         $this->node = $node;
         $this->translation = $translation;
 
@@ -315,12 +316,11 @@ class FrontendController extends AppController
                  * environment to the next level.
                  */
                 $ctrl->__initFromOtherController(
-                    $this->twig,
                     $this->translator,
                     $this->assignation
                 );
             }
-
+            Kernel::getService('stopwatch')->stop('handleNodeController');
             return $ctrl->indexAction(
                 $request,
                 $this->getRequestedNode(),
