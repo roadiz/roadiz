@@ -54,6 +54,8 @@ class SettingRepository extends EntityRepository
             WHERE s.name = :name')
                         ->setParameter('name', $name);
 
+        $query->useResultCache(true, 3600, 'RZSettingValue_'.$name);
+
         try {
             return $query->getSingleScalarResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -72,6 +74,8 @@ class SettingRepository extends EntityRepository
             SELECT COUNT(s.value) FROM RZ\Roadiz\Core\Entities\Setting s
             WHERE s.name = :name')
                         ->setParameter('name', $name);
+
+        $query->useResultCache(true, 3600, 'RZSettingExists_'.$name);
 
         try {
             return (boolean) $query->getSingleScalarResult();

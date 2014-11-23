@@ -132,6 +132,13 @@ class SettingsImporter implements ImporterInterface
         }
         $return = true;
         Kernel::getService('em')->flush();
+
+        // Clear result cache
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        if ($cacheDriver !== null) {
+            $cacheDriver->deleteAll();
+        }
+
         return $return;
     }
 }

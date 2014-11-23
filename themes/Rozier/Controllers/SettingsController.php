@@ -357,8 +357,8 @@ class SettingsController extends RozierApp
             if (isset($data['name']) &&
                 $data['name'] != $setting->getName() &&
                 $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Setting')
-                ->exists($data['name'])) {
+                     ->getRepository('RZ\Roadiz\Core\Entities\Setting')
+                     ->exists($data['name'])) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
             }
             try {
@@ -374,6 +374,12 @@ class SettingsController extends RozierApp
                 }
 
                 $this->getService('em')->flush();
+
+                // Clear result cache
+                $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+                if ($cacheDriver !== null) {
+                    $cacheDriver->deleteAll();
+                }
 
                 return true;
             } catch (\Exception $e) {

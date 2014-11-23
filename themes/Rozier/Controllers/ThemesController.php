@@ -360,6 +360,12 @@ class ThemesController extends RozierApp
 
         $this->getService('em')->persist($theme);
         $this->getService('em')->flush();
+
+        // Clear result cache
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        if ($cacheDriver !== null) {
+            $cacheDriver->deleteAll();
+        }
     }
 
     /**
@@ -377,6 +383,12 @@ class ThemesController extends RozierApp
 
         $this->getService('em')->flush();
 
+        // Clear result cache
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        if ($cacheDriver !== null) {
+            $cacheDriver->deleteAll();
+        }
+
         return true;
     }
 
@@ -388,5 +400,11 @@ class ThemesController extends RozierApp
     {
         $this->getService('em')->remove($theme);
         $this->getService('em')->flush();
+
+        // Clear result cache
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        if ($cacheDriver !== null) {
+            $cacheDriver->deleteAll();
+        }
     }
 }

@@ -94,6 +94,8 @@ class RoleRepository extends EntityRepository
             WHERE r.name != :name')
             ->setParameter('name', Role::ROLE_SUPERADMIN);
 
+        $query->useResultCache(true, 3600, 'RZRoleAll');
+
         $rolesNames = $query->getScalarResult();
 
         foreach ($rolesNames as $role) {

@@ -91,6 +91,11 @@ class TranslationHandler
         $this->translation->setDefaultTranslation(true);
         Kernel::getService('em')->flush();
 
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        if ($cacheDriver !== null) {
+            $cacheDriver->deleteAll();
+        }
+
         return $this;
     }
 }

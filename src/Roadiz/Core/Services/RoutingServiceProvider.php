@@ -62,7 +62,7 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
              */
             $container['backendClass'] = function ($c) {
                 $theme = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                                 ->findOneBy(array('available'=>true, 'backendTheme'=>true));
+                                 ->findAvailableBackend();
 
                 if ($theme !== null) {
                     return $theme->getClassName();
@@ -73,10 +73,7 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
 
             $container['frontendThemes'] = function ($c) {
                 $themes = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                                  ->findBy(array(
-                                      'available'=>    true,
-                                      'backendTheme'=> false
-                                  ));
+                                  ->findAvailableFrontends();
 
 
 

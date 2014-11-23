@@ -140,6 +140,12 @@ class RolesUtilsController extends RozierApp
 
                         $this->getService('em')->flush();
 
+                        // Clear result cache
+                        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+                        if ($cacheDriver !== null) {
+                            $cacheDriver->deleteAll();
+                        }
+
                          // redirect even if its null
                         $response = new RedirectResponse(
                             $this->getService('urlGenerator')->generate(

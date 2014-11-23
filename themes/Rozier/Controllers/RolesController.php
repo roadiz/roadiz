@@ -325,6 +325,12 @@ class RolesController extends RozierApp
             $this->getService('em')->persist($role);
             $this->getService('em')->flush();
 
+            // Clear result cache
+            $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+            if ($cacheDriver !== null) {
+                $cacheDriver->deleteAll();
+            }
+
             return $role;
         } else {
             throw new \RuntimeException("Role name is not defined", 1);
@@ -357,6 +363,12 @@ class RolesController extends RozierApp
             $role->setName($data['name']);
             $this->getService('em')->flush();
 
+            // Clear result cache
+            $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+            if ($cacheDriver !== null) {
+                $cacheDriver->deleteAll();
+            }
+
             return $role;
         } else {
             throw new \RuntimeException("Role name is not defined", 1);
@@ -374,6 +386,12 @@ class RolesController extends RozierApp
         if (!$role->required()) {
             $this->getService('em')->remove($role);
             $this->getService('em')->flush();
+
+            // Clear result cache
+            $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+            if ($cacheDriver !== null) {
+                $cacheDriver->deleteAll();
+            }
         } else {
             throw new EntityRequiredException($this->getTranslator()->trans("role.is.required"), 1);
         }

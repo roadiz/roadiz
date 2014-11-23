@@ -55,6 +55,12 @@ class Fixtures
         $this->installBackofficeTheme();
 
         Kernel::getService('em')->flush();
+
+        // Clear result cache
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        if ($cacheDriver !== null) {
+            $cacheDriver->deleteAll();
+        }
     }
 
     /**
@@ -277,6 +283,12 @@ class Fixtures
 
             Kernel::getService('em')->persist($feTheme);
             Kernel::getService('em')->flush();
+
+            // Clear result cache
+            $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+            if ($cacheDriver !== null) {
+                $cacheDriver->deleteAll();
+            }
         }
     }
 }

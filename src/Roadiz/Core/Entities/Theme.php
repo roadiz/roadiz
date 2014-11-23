@@ -37,7 +37,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
  * Themes describe a database entity to store
  * front-end and back-end controllers.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\ThemeRepository")
  * @Table(name="themes", indexes={
  *      @index(name="backend_theme_idx", columns={"backend"}),
  *      @index(name="available_theme_idx", columns={"available"})

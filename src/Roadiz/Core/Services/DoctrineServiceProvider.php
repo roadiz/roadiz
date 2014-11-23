@@ -78,25 +78,24 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                      */
                     $evm->addEventListener(Events::loadClassMetadata, new DataInheritanceEvent());
 
-                    if ($em->getConfiguration()->getResultCacheImpl() !== null) {
-                        $em->getConfiguration()
-                                ->getResultCacheImpl()
-                                ->setNamespace($c['config']["appNamespace"]);
+                    $resultCacheDriver = $em->getConfiguration()->getResultCacheImpl();
+                    if ($resultCacheDriver !== null) {
+                        $resultCacheDriver->setNamespace($c['config']["appNamespace"]);
                     }
-                    if ($em->getConfiguration()->getHydrationCacheImpl() !== null) {
-                        $em->getConfiguration()
-                                ->getHydrationCacheImpl()
-                                ->setNamespace($c['config']["appNamespace"]);
+
+                    $hydratationCacheDriver = $em->getConfiguration()->getHydrationCacheImpl();
+                    if ($hydratationCacheDriver !== null) {
+                        $hydratationCacheDriver->setNamespace($c['config']["appNamespace"]);
                     }
-                    if ($em->getConfiguration()->getQueryCacheImpl() !== null) {
-                        $em->getConfiguration()
-                                ->getQueryCacheImpl()
-                                ->setNamespace($c['config']["appNamespace"]);
+
+                    $queryCacheDriver = $em->getConfiguration()->getQueryCacheImpl();
+                    if ($queryCacheDriver !== null) {
+                        $queryCacheDriver->setNamespace($c['config']["appNamespace"]);
                     }
-                    if ($em->getConfiguration()->getMetadataCacheImpl()) {
-                        $em->getConfiguration()
-                                ->getMetadataCacheImpl()
-                                ->setNamespace($c['config']["appNamespace"]);
+
+                    $metadataCacheDriver = $em->getConfiguration()->getMetadataCacheImpl();
+                    if (null !== $metadataCacheDriver) {
+                        $metadataCacheDriver->setNamespace($c['config']["appNamespace"]);
                     }
 
                     $c['stopwatch']->stop('initDoctrine');

@@ -59,6 +59,12 @@ class CacheCommand extends Command
         $this->setName('cache')
             ->setDescription('Manage cache and compiled data.')
             ->addOption(
+                'infos',
+                null,
+                InputOption::VALUE_NONE,
+                'Get informations about caches.'
+            )
+            ->addOption(
                 'clear-doctrine',
                 null,
                 InputOption::VALUE_NONE,
@@ -96,7 +102,9 @@ class CacheCommand extends Command
         $this->dialog = $this->getHelperSet()->get('dialog');
         $text="";
 
-        if ($input->getOption('clear-all')) {
+        if ($input->getOption('infos')) {
+            $text .= static::getInformations();
+        } elseif ($input->getOption('clear-all')) {
             $text .= static::clearDoctrine();
             $text .= static::clearRouteCollections();
             $text .= static::clearCachedAssets();
@@ -125,6 +133,24 @@ class CacheCommand extends Command
         $output->writeln($text);
     }
 
+    public static function getInformations()
+    {
+        $text = '';
+
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        $text .= "Result cache driver: ".get_class($cacheDriver).PHP_EOL;
+
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getHydrationCacheImpl();
+        $text .= "Hydratation cache driver: ".get_class($cacheDriver).PHP_EOL;
+
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getQueryCacheImpl();
+        $text .= "Query cache driver: ".get_class($cacheDriver).PHP_EOL;
+
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getMetadataCacheImpl();
+        $text .= "Metadata cache driver: ".get_class($cacheDriver).PHP_EOL;
+
+        return $text;
+    }
 
     /**
      * Clear doctrine caches and rebuild entities proxies.

@@ -24,34 +24,36 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from the REZO ZERO SARL.
  *
- * @file TranslationRepository.php
+ * @file ThemeRepository.php
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use RZ\Roadiz\Core\Entities\Translation;
+use Doctrine\Common\Collections\ArrayCollection;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\Kernel;
 
 /**
  * {@inheritdoc}
  */
-class TranslationRepository extends EntityRepository
-{
+class ThemeRepository extends EntityRepository {
+
     /**
-     * Get single default translation.
+     * Get available backend theme.
      *
-     * @return Translation
+     * This method use Result cache.
+     *
+     * @return RZ\Roadiz\Core\Entities\Theme
      */
-    public function findDefault()
+    public function findAvailableBackend()
     {
         $query = $this->_em->createQuery('
-            SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
-            WHERE t.defaultTranslation = true
-            AND t.available = true
-        ');
+            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
+            WHERE t.available = true AND t.backendTheme = true');
 
-        $query->useResultCache(true, 60, 'RZTranslationDefault');
+        $query->useResultCache(true, 3600, 'RZTheme_backend');
 
         try {
             return $query->getSingleResult();
@@ -61,42 +63,24 @@ class TranslationRepository extends EntityRepository
     }
 
     /**
-     * Get all available translations.
+     * Get available frontend themes.
      *
-     * @return ArrayCollection
+     * This method uses Result cache.
+     *
+     * @return array
      */
-    public function findAllAvailable()
+    public function findAvailableFrontends()
     {
         $query = $this->_em->createQuery('
-            SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
-            WHERE t.available = true
-        ');
+            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
+            WHERE t.available = true AND t.backendTheme = false');
 
-        $query->useResultCache(true, 60, 'RZTranslationAllAvailable');
+        $query->useResultCache(true, 3600, 'RZTheme_frontends');
 
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
             return null;
-        }
-    }
-
-    /**
-     * @param string $locale
-     *
-     * @return boolean
-     */
-    public function exists($locale)
-    {
-        $query = $this->_em->createQuery('
-            SELECT COUNT(t.locale) FROM RZ\Roadiz\Core\Entities\Translation t
-            WHERE t.locale = :locale
-        ')->setParameter('locale', $locale);
-
-        try {
-            return (boolean) $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
-            return false;
         }
     }
 }
