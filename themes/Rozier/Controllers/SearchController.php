@@ -34,6 +34,7 @@ namespace Themes\Rozier\Controllers;
 use Themes\Rozier\RozierApp;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 
 use RZ\Roadiz\CMS\Forms\NodeStatesType;
@@ -58,43 +59,61 @@ class SearchController extends RozierApp
         return !$this->isBlank($var);
     }
 
-    public function processCriteria($data) {
-        if (!empty($data["nodeName"])) {
-            $data["nodeName"] = array("LIKE", "%" . $data["nodeName"] . "%");
+    public function processCriteria($data, $prefix = "") {
+        if (!empty($data[$prefix."nodeName"])) {
+            $data[$prefix."nodeName"] = array("LIKE", "%" . $data[$prefix."nodeName"] . "%");
         }
 
-        if (isset($data['parent']) && !$this->isBlank($data["parent"])) {
-            if ($data["parent"] == "null" || $data["parent"] == 0) {
-                $data["parent"] = null;
+        if (isset($data[$prefix.'parent']) && !$this->isBlank($data[$prefix."parent"])) {
+            if ($data[$prefix."parent"] == "null" || $data[$prefix."parent"] == 0) {
+                $data[$prefix."parent"] = null;
             }
         }
 
-        if (isset($data['visible'])) {
-            $data['visible'] = (bool) $data['visible'];
+        if (isset($data[$prefix.'visible'])) {
+            $data[$prefix.'visible'] = (bool) $data[$prefix.'visible'];
         }
 
-        if (isset($data['createdAt'])) {
-            $data["createdAt"] = array($data['createdAt']['compareOp'], $data['createdAt']['compareDatetime']);
-            unset($data['createdAt']);
+        if (isset($data[$prefix.'createdAt'])) {
+            $data[$prefix."createdAt"] = array($data[$prefix.'createdAt']['compareOp'], $data[$prefix.'createdAt']['compareDatetime']);
+            unset($data[$prefix.'createdAt']);
         }
 
-        if (isset($data['updatedAt'])) {
-            $data["updatedAt"] = array($data['updatedAt']['compareOp'], $data['updatedAt']['compareDatetime']);
-            unset($data['updatedAt']);
+        if (isset($data[$prefix.'updatedAt'])) {
+            $data[$prefix."updatedAt"] = array($data[$prefix.'updatedAt']['compareOp'], $data[$prefix.'updatedAt']['compareDatetime']);
+            unset($data[$prefix.'updatedAt']);
         }
 
-        if (isset($data["limitResult"])) {
+        if (isset($data[$prefix."limitResult"])) {
             $this->pagination = false;
-            $this->itemPerPage = $data["limitResult"];
-            unset($data["limitResult"]);
+            $this->itemPerPage = $data[$prefix."limitResult"];
+            unset($data[$prefix."limitResult"]);
         }
 
-        if (isset($data["tags"])) {
-            $data["tags"] = explode(',', $data["tags"]);
-            foreach ($data["tags"] as $key => $value) {
-                $data["tags"][$key] = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Tag")->findByPath($value);
+        if (isset($data[$prefix."tags"])) {
+            $data[$prefix."tags"] = explode(',', $data[$prefix."tags"]);
+            foreach ($data[$prefix."tags"] as $key => $value) {
+                $data[$prefix."tags"][$key] = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Tag")->findByPath($value);
             }
-            array_filter($data["tags"]);
+            array_filter($data[$prefix."tags"]);
+        }
+
+        return $data;
+    }
+
+    public function processCriteriaNodetype($data, $nodetype) {
+        $fields = $nodetype->getFields();
+        foreach ($data as $key => $value) {
+            foreach ($fields as $field) {
+                if ($key == $field->getName()) {
+                    if ($field->getType() === NodeTypeField::MARKDOWN_T
+                        || $field->getType() === NodeTypeField::STRING_T
+                        || $field->getType() === NodeTypeField::TEXT_T
+                        || $field->getType() === NodeTypeField::EMAIL_T) {
+                        $data[$key] = array("LIKE", "%" . $data[$key] . "%");
+                    }
+                }
+            }
         }
 
         return $data;
@@ -102,7 +121,7 @@ class SearchController extends RozierApp
 
     public function searchNodeAction(Request $request) {
 
-        $form = $this->buildSimpleForm();
+        $form = $this->buildSimpleForm("")->getForm();
         $form->handleRequest();
 
         if ($form->isValid()) {
@@ -145,71 +164,179 @@ class SearchController extends RozierApp
         );
     }
 
-    function buildSimpleForm() {
+    public function searchNodeSourceAction(Request $request, $nodetypeId) {
+
+        $nodetype = $this->getService('em')->find('RZ\Roadiz\Core\Entities\NodeType', $nodetypeId);
+
+        $builder = $this->buildSimpleForm("__node__");
+        $form = $this->extendForm($builder, $nodetype)->getForm();
+        $form->handleRequest();
+
+        if ($form->isValid()) {
+
+            // $data = array_filter($form->getData(), $this->isBlank);
+            $data = array();
+            foreach ($form->getData() as $key => $value) {
+                // if (is_array($value) && isset($value["compareDatetime"])) {
+                //     var_dump($value["compareDatetime"]);
+                // }
+                if ((!is_array($value) && $this->notBlank($value)) || (is_array($value) && isset($value["compareDatetime"]))) {
+                    if (strstr($key, "__node__") == 0) {
+                        $data[str_replace("__node__", "node.", $key)] = $value;
+                    } else {
+                        $data[$key] = $value;
+                    }
+                }
+            }
+            $data = $this->processCriteria($data);
+            $data = $this->processCriteriaNodetype($data, $nodetype);
+            $listManager = new EntityListManager(
+                $request,
+                $this->getService('em'),
+                NodeType::getGeneratedEntitiesNamespace().'\\'.$nodetype->getSourceEntityClassName(),
+                //'RZ\Roadiz\Core\Entities\NodesSources',
+                $data
+            );
+            if ($this->pagination == false) {
+                $listManager->setItemPerPage($this->itemPerPage);
+                $listManager->disablePagination();
+            }
+            $listManager->handle();
+            $this->assignation['filters'] = $listManager->getAssignation();
+            $this->assignation['filters']['search'] = false;
+            $this->assignation['nodes'] = $listManager->getEntities();
+
+        }
+
+        $this->assignation['form'] = $form->createView();
+
+        return new Response(
+            $this->getTwig()->render('search/list.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
+
+    function buildSimpleForm($prefix) {
         $builder = $this->getService('formFactory')
             ->createBuilder('form', array(), array("method" => "get"))
-            ->add('status', new NodeStatesType(), array(
+            ->add($prefix.'status', new NodeStatesType(), array(
                 'label' => $this->getTranslator()->trans('node.status'),
                 'required' => false
                 ))
-            ->add('visible', 'choice', array(
+            ->add($prefix.'visible', 'choice', array(
                 'label' => $this->getTranslator()->trans('node.visible'),
                 'choices' => array(true => 'true', false => 'false'),
                 'empty_value' => "ignore",
                 'required' => false,
                 'expanded' => true
                 ))
-            ->add('locked', 'choice', array(
+            ->add($prefix.'locked', 'choice', array(
                 'label' => $this->getTranslator()->trans('node.locked'),
                 'choices' => array(true => 'true', false => 'false'),
                 'empty_value' => "ignore",
                 'required' => false,
                 'expanded' => true
                 ))
-            ->add('sterile', 'choice', array(
+            ->add($prefix.'sterile', 'choice', array(
                 'label' => $this->getTranslator()->trans('node.sterile'),
                 'choices' => array(true => 'true', false => 'false'),
                 'empty_value' => "ignore",
                 'required' => false,
                 'expanded' => true
                 ))
-            ->add('hideChildren', 'choice', array(
+            ->add($prefix.'hideChildren', 'choice', array(
                 'label' => $this->getTranslator()->trans('node.container'),
                 'choices' => array(true => 'true', false => 'false'),
                 'empty_value' => "ignore",
                 'required' => false,
                 'expanded' => true
                 ))
-            ->add('nodeName', 'text', array(
+            ->add($prefix.'nodeName', 'text', array(
                 'label' => $this->getTranslator()->trans('node.name'),
                 'required' => false
                 ))
-            ->add('parent', 'text', array(
+            ->add($prefix.'parent', 'text', array(
                 'label' => $this->getTranslator()->trans('node.id.parent'),
                 'required' => false
                 ))
-            ->add("createdAt", new CompareDatetimeType($this->getTranslator()), array(
+            ->add($prefix."createdAt", new CompareDatetimeType($this->getTranslator()), array(
                 'virtual' => false,
                 'required' => false
                 ))
-            ->add("updatedAt", new CompareDatetimeType($this->getTranslator()), array(
+            ->add($prefix."updatedAt", new CompareDatetimeType($this->getTranslator()), array(
                 'virtual' => false,
                 'required' => false
                 ))
-            ->add("limitResult", "number", array(
+            ->add($prefix."limitResult", "number", array(
                 'label' => $this->getTranslator()->trans('node.limit.result'),
                 'required' => false,
                 'constraints' => array(
                            new GreaterThan(0)
                        ),
                 ))
-            ->add('tags', 'text', array(
+            ->add($prefix.'tags', 'text', array(
                 'label' => $this->getTranslator()->trans('node.tags'),
                 'required' => false,
                 'attr' => array ("class" => "rz-tag-autocomplete")
+                ))
+            ->add($prefix.'tagExclusive', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('node.tag.exclusive'),
+                'required' => false
                 ));
 
 
-        return $builder->getForm();
+        return $builder;
+    }
+
+    private function extendForm($builder, $nodetype) {
+        $fields = $nodetype->getFields();
+
+        $builder->add("nodetypefield", new \RZ\Roadiz\CMS\Forms\SeparatorType(),
+                array(
+                    'label' => $this->getTranslator()->trans('nodetypefield'),
+                    'attr' => array("class" => "label-separator")
+                ));
+
+        foreach ($fields as $field) {
+                $option = array("label" => $field->getLabel());
+                $type = null;
+                $option['required'] = false;
+                if ($field->isVirtual()) {
+                    continue;
+                }
+                if (NodeTypeField::$typeToForm[$field->getType()] == "enumeration") {
+                    $choices = explode(',', $field->getDefaultValues());
+                    $choices = array_combine(array_values($choices), array_values($choices));
+                    $type = "choice";
+                    $option["expanded"] = false;
+                    if (count($choices) < 4) {
+                        $option["expanded"] = true;
+                    }
+                    $option["choices"] = $choices;
+                } elseif (NodeTypeField::$typeToForm[$field->getType()] == "multiple_enumeration") {
+                    $choices = explode(',', $field->getDefaultValues());
+                    $choices = array_combine(array_values($choices), array_values($choices));
+                    $type = "choice";
+                    $option["choices"] = $choices;
+                    $option["multiple"] = true;
+                    $option["expanded"] = false;
+                    if (count($choices) < 4) {
+                        $option["expanded"] = true;
+                    }
+                } else {
+                    $type = NodeTypeField::$typeToForm[$field->getType()];
+                }
+
+                if($field->getType() === NodeTypeField::MARKDOWN_T
+                    || $field->getType() === NodeTypeField::STRING_T
+                    || $field->getType() === NodeTypeField::TEXT_T
+                    || $field->getType() === NodeTypeField::EMAIL_T) {
+                    $type = "text";
+                }
+
+                $builder->add($field->getName(), $type, $option);
+            }
+        return $builder;
     }
 }

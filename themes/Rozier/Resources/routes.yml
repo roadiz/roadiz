@@ -613,7 +613,11 @@ customFormFieldAjaxEdit:
 searchNodeAction:
     path:     /rz-admin/search
     defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeAction }
-    requirements: { customFormFieldId : "[0-9]+" }
+
+searchNodeSourceAction:
+    path:     /rz-admin/search/{nodetypeId}
+    defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeSourceAction }
+    requirements: { nodetypeId : "[0-9]+" }
 
 # CSS to style with main color
 cssMainColor:

@@ -167,7 +167,7 @@ class EntityListManager
      */
     public function getAssignation()
     {
-        try {
+        // try {
             $assign = array(
                 'description'       => '',
                 'search'            => $this->searchPattern,
@@ -180,15 +180,15 @@ class EntityListManager
             );
 
             // Edit item count after a search
-            try {
+            //try {
                 if ($this->searchPattern != '') {
                     $assign['itemCount'] = $this->_em
                         ->getRepository($this->entityName)
                         ->countSearchBy($this->searchPattern, $this->filteringArray);
                 }
-            } catch (\Exception $e) {
+            // } catch (\Exception $e) {
 
-            }
+            // }
 
             // compute next and prev page URL
             if ($this->currentPage > 1) {
@@ -204,9 +204,9 @@ class EntityListManager
             }
 
             return $assign;
-        } catch (\Exception $e) {
-            return null;
-        }
+        // } catch (\Exception $e) {
+        //     return null;
+        // }
     }
 
     /**
@@ -216,7 +216,7 @@ class EntityListManager
      */
     public function getEntities()
     {
-        try {
+        // try {
             if ($this->pagination == true) {
                 return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
             } else {
@@ -225,8 +225,8 @@ class EntityListManager
                                           $this->orderingArray,
                                           $this->itemPerPage);
             }
-        } catch (\Exception $e) {
-            return null;
-        }
+        // } catch (\Exception $e) {
+        //     return null;
+        // }
     }
 }
