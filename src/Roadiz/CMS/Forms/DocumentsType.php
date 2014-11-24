@@ -70,7 +70,7 @@ class DocumentsType extends AbstractType
                                 ->getRepository('RZ\Roadiz\Core\Entities\Document')
                                 ->findBy(array('id'=>$object));
 
-                foreach ($object as $key => $value) {
+                foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
                     if (null !== $value && null === $documents[$key]) {
                         $context->addViolationAt(

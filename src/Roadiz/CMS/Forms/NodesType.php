@@ -70,7 +70,7 @@ class NodesType extends AbstractType
                                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
                                 ->findBy(array('id'=>$object));
 
-                foreach ($object as $key => $value) {
+                foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
                     if (null !== $value && null === $nodes[$key]) {
                         $context->addViolationAt(

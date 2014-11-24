@@ -70,7 +70,7 @@ class CustomFormsNodesType extends AbstractType
                                 ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
                                 ->findBy(array('id'=>$object));
 
-                foreach ($object as $key => $value) {
+                foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
                     if (null !== $value && null === $customForms[$key]) {
                         $context->addViolationAt(
