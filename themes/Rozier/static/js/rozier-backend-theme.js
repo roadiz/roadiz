@@ -1686,6 +1686,7 @@ NodeTypeFieldEdit.prototype.resize = function(){
         _this.init();
     }
 };
+
 GeotagField.prototype.geocoder = null;
 GeotagField.prototype.$fields = null;
 GeotagField.prototype.init = function() {
@@ -1704,6 +1705,7 @@ GeotagField.prototype.init = function() {
     }
 };
 
+
 GeotagField.prototype.bindFields = function() {
     var _this = this;
 
@@ -1714,6 +1716,7 @@ GeotagField.prototype.bindFields = function() {
         _this.bindSingleField(element);
     });
 };
+
 
 GeotagField.prototype.bindSingleField = function(element) {
     var _this = this;
@@ -1737,7 +1740,7 @@ GeotagField.prototype.bindSingleField = function(element) {
     $input.after('<div class="rz-geotag-canvas" id="'+fieldId+'" style="width: 100%; height: 400px;"></div>');
     // Geocode input text
     var metaDOM = '<nav class="rz-geotag-meta"><input class="rz-geotag-address" id="'+fieldAddressId+'" type="text" value="" />';
-    metaDOM += '<a id="'+resetButtonId+'" class="uk-button rz-geotag-reset"><i class="uk-icon-rz-trash-o"></i> '+Rozier.messages.geotag.resetMarker+'</a></nav>';
+    metaDOM += '<a id="'+resetButtonId+'" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="'+Rozier.messages.geotag.resetMarker+'" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a></nav>';
     $input.after(metaDOM);
 
     var $geocodeInput = $('#'+fieldAddressId);
@@ -1920,8 +1923,9 @@ ChildrenNodesField.prototype.init = function() {
             _this.$switchLangButtons.on("click", proxiedChangeLang);
         }*/
 
-        _this.$fields.find('.nodetree-langs').remove();
     }
+    
+    _this.$fields.find('.nodetree-langs').remove();
 };
 
 /*ChildrenNodesField.prototype.onChangeLangClick = function(event) {
@@ -2066,7 +2070,7 @@ MarkdownEditor = function(){
 
     // Selectors
     _this.$cont = $('.uk-htmleditor');
-    _this.$textarea = _this.$cont.find('textarea');
+    _this.$textarea = _this.$cont.find('.markdown_textarea');
 
     // Methods
     setTimeout(function(){
@@ -2111,12 +2115,12 @@ MarkdownEditor.prototype.init = function(){
 
 
             // Check if a desc is defined
-            if(_this.$textarea[i].getAttribute('data-desc') !== null){
+            if(_this.$textarea[i].getAttribute('data-desc') !== ''){
                 $(_this.$cont[i]).after('<div class="form-help uk-alert uk-alert-large">'+_this.$textarea[i].getAttribute('data-desc')+'</div>');
-            }   
+            }
 
             // Check if a max length is defined
-            if(_this.$textarea[i].getAttribute('data-max-length') !== null){
+            if(_this.$textarea[i].getAttribute('data-max-length') !== ''){
 
                 _this.limit[i] = true;
                 _this.countMaxLimit[i] = parseInt(_this.$textarea[i].getAttribute('data-max-length'));
@@ -2126,13 +2130,13 @@ MarkdownEditor.prototype.init = function(){
                 
             }
             
-            if(_this.$textarea[i].getAttribute('data-min-length') !== null){
+            if(_this.$textarea[i].getAttribute('data-min-length') !== ''){
 
                 _this.limit[i] = true;
                 _this.countMinLimit[i] = parseInt(_this.$textarea[i].getAttribute('data-min-length'));
             }
 
-            if( _this.$textarea[i].getAttribute('data-min-length') === null && _this.$textarea[i].getAttribute('data-max-length') === null){
+            if( _this.$textarea[i].getAttribute('data-min-length') === '' && _this.$textarea[i].getAttribute('data-max-length') === ''){
 
                 _this.limit[i] = false;
                 _this.countMaxLimit[i] = null;
@@ -3443,8 +3447,12 @@ Rozier.searchNodesSourcesDelay = null;
 Rozier.nodeTrees = [];
 Rozier.treeTrees = [];
 
+Rozier.$userPanelContainer = null;
 Rozier.$minifyTreePanelButton = null;
 Rozier.$mainTrees = null;
+Rozier.$mainTreesContainer = null;
+Rozier.$mainTreeElementName = null;
+Rozier.$treeContextualButton = null;
 Rozier.$nodesSourcesSearch = null;
 Rozier.nodesSourcesSearchHeight = null;
 Rozier.$nodeTreeHead = null;
@@ -3477,9 +3485,10 @@ Rozier.onDocumentReady = function(event) {
 
 
 	// --- Selectors --- //
-
+	Rozier.$userPanelContainer = $('#user-panel-container');
 	Rozier.$minifyTreePanelButton = $('#minify-tree-panel-button');
 	Rozier.$mainTrees = $('#main-trees');
+	Rozier.$mainTreesContainer = $('#main-trees-container');
 	Rozier.$nodesSourcesSearch = $('#nodes-sources-search');
 
 	Rozier.$mainContentScrollable = $('#main-content-scrollable');
@@ -3550,8 +3559,39 @@ Rozier.bindMainTrees = function () {
 
 	$('.foldertree-widget .root-tree').off('uk.nestable.change');
 	$('.foldertree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableFolderTreeChange );
+	
+	// Tree element name 
+	_this.$mainTreeElementName = _this.$mainTrees.find('.tree-element-name');	
+	_this.$mainTreeElementName.off('contextmenu', $.proxy(_this.maintreeElementNameRightClick, _this));
+	_this.$mainTreeElementName.on('contextmenu', $.proxy(_this.maintreeElementNameRightClick, _this));
+
 };
 
+
+/**
+ * Main tree element name right click
+ * @return {[type]} [description]
+ */
+Rozier.maintreeElementNameRightClick = function(e){
+	var _this = this;
+
+	var $contextualMenu = $(e.currentTarget).parent().find('.tree-contextualmenu');
+
+	if($contextualMenu[0].className.indexOf('uk-open') == -1) {
+		addClass($contextualMenu[0], 'uk-open');
+	}
+	else removeClass($contextualMenu[0], 'uk-open');
+
+
+	return false;
+
+};
+
+
+/**
+ * Bind main node tree langs
+ * @return {[type]} [description]
+ */
 Rozier.bindMainNodeTreeLangs = function () {
 	var _this = this;
 
@@ -4017,6 +4057,7 @@ Rozier.onNestableFolderTreeChange = function (event, element, status) {
 	});
 };
 
+
 /**
  * Back top click
  * @return {[type]} [description]
@@ -4052,6 +4093,11 @@ Rozier.resize = function(){
 	// Check if mobile
 	if(_this.windowWidth <= 768 && isMobile.any() !== null && _this.resizeFirst) _this.mobile = new RozierMobile();
 
+
+	// Set height to panels (fix for IE9,10)
+	_this.$userPanelContainer[0].style.height = _this.windowHeight+'px';
+	_this.$mainTreesContainer[0].style.height = _this.windowHeight+'px';
+	_this.$mainContentScrollable[0].style.height = _this.windowHeight+'px';  
 
 	// Tree scroll height
 	_this.$nodeTreeHead = _this.$mainTrees.find('.nodetree-head');

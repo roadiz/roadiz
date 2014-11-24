@@ -7,7 +7,7 @@ MarkdownEditor = function(){
 
     // Selectors
     _this.$cont = $('.uk-htmleditor');
-    _this.$textarea = _this.$cont.find('textarea');
+    _this.$textarea = _this.$cont.find('.markdown_textarea');
 
     // Methods
     setTimeout(function(){
@@ -52,12 +52,12 @@ MarkdownEditor.prototype.init = function(){
 
 
             // Check if a desc is defined
-            if(_this.$textarea[i].getAttribute('data-desc') !== null){
+            if(_this.$textarea[i].getAttribute('data-desc') !== ''){
                 $(_this.$cont[i]).after('<div class="form-help uk-alert uk-alert-large">'+_this.$textarea[i].getAttribute('data-desc')+'</div>');
-            }   
+            }
 
             // Check if a max length is defined
-            if(_this.$textarea[i].getAttribute('data-max-length') !== null){
+            if(_this.$textarea[i].getAttribute('data-max-length') !== ''){
 
                 _this.limit[i] = true;
                 _this.countMaxLimit[i] = parseInt(_this.$textarea[i].getAttribute('data-max-length'));
@@ -67,13 +67,13 @@ MarkdownEditor.prototype.init = function(){
                 
             }
             
-            if(_this.$textarea[i].getAttribute('data-min-length') !== null){
+            if(_this.$textarea[i].getAttribute('data-min-length') !== ''){
 
                 _this.limit[i] = true;
                 _this.countMinLimit[i] = parseInt(_this.$textarea[i].getAttribute('data-min-length'));
             }
 
-            if( _this.$textarea[i].getAttribute('data-min-length') === null && _this.$textarea[i].getAttribute('data-max-length') === null){
+            if( _this.$textarea[i].getAttribute('data-min-length') === '' && _this.$textarea[i].getAttribute('data-max-length') === ''){
 
                 _this.limit[i] = false;
                 _this.countMaxLimit[i] = null;
