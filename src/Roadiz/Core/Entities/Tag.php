@@ -147,20 +147,6 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ManyToMany(targetEntity="Document", mappedBy="tags")
-     * @JoinTable(name="documents_tags")
-     * @var ArrayCollection
-     */
-    private $documents = null;
-    /**
-     * @return ArrayCollection
-     */
-    public function getDocuments()
-    {
-        return $this->documents;
-    }
-
-    /**
      * @ManyToOne(targetEntity="Tag", inversedBy="children", fetch="EXTRA_LAZY")
      * @JoinColumn(name="parent_tag_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Tag
