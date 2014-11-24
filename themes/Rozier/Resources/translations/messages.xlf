@@ -5405,6 +5405,27 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="more.documents">
+          <source>more.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.nodes">
+          <source>more.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.custom_forms">
+          <source>more.custom_forms</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="search.custom_forms">
+          <source>search.custom_forms</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-forms.toggle-explorer">
+          <source>custom-forms.toggle-explorer</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
