@@ -511,6 +511,19 @@ class Node extends AbstractDateTimedPositioned
         return $this;
     }
 
+    /**
+     * @OneToMany(targetEntity="NodesCustomForms", mappedBy="node", fetch="EXTRA_LAZY")
+     * @var ArrayCollection
+     */
+    private $customForms = null;
+    /**
+     * @return ArrayCollection
+     */
+    public function getCustomForms()
+    {
+        return $this->customForms;
+    }
+
 
     /**
      * @ManyToMany(targetEntity="NodeType", fetch="EXTRA_LAZY")
@@ -598,6 +611,7 @@ class Node extends AbstractDateTimedPositioned
         $this->children = new ArrayCollection();
         $this->nodeSources = new ArrayCollection();
         $this->stackTypes = new ArrayCollection();
+        $this->customForms = new ArrayCollection();
         $this->setNodeType($nodeType);
     }
     /**

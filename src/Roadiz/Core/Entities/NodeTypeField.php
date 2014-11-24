@@ -60,21 +60,22 @@ class NodeTypeField extends AbstractField
      * @var array
      */
     public static $typeToHuman = array(
-        AbstractField::STRING_T =>    'string.type',
-        AbstractField::DATETIME_T =>  'date-time.type',
-        AbstractField::TEXT_T =>      'text.type',
-        AbstractField::MARKDOWN_T =>  'markdown.type',
-        AbstractField::BOOLEAN_T =>   'boolean.type',
-        AbstractField::INTEGER_T =>   'integer.type',
-        AbstractField::DECIMAL_T =>   'decimal.type',
-        AbstractField::EMAIL_T =>     'email.type',
-        AbstractField::ENUM_T =>      'single-choice.type',
-        AbstractField::MULTIPLE_T =>  'multiple-choice.type',
-        AbstractField::DOCUMENTS_T => 'documents.type',
-        AbstractField::NODES_T =>     'nodes.type',
-        AbstractField::CHILDREN_T =>  'children-nodes.type',
-        AbstractField::COLOUR_T =>    'colour.type',
-        AbstractField::GEOTAG_T =>    'geographic.coordinates.type',
+        AbstractField::STRING_T =>      'string.type',
+        AbstractField::DATETIME_T =>    'date-time.type',
+        AbstractField::TEXT_T =>        'text.type',
+        AbstractField::MARKDOWN_T =>    'markdown.type',
+        AbstractField::BOOLEAN_T =>     'boolean.type',
+        AbstractField::INTEGER_T =>     'integer.type',
+        AbstractField::DECIMAL_T =>     'decimal.type',
+        AbstractField::EMAIL_T =>       'email.type',
+        AbstractField::ENUM_T =>        'single-choice.type',
+        AbstractField::MULTIPLE_T =>    'multiple-choice.type',
+        AbstractField::DOCUMENTS_T =>   'documents.type',
+        AbstractField::NODES_T =>       'nodes.type',
+        AbstractField::CHILDREN_T =>    'children-nodes.type',
+        AbstractField::COLOUR_T =>      'colour.type',
+        AbstractField::GEOTAG_T =>      'geographic.coordinates.type',
+        AbstractField::CUSTOM_FORMS_T => 'custom-forms.type'
     );
     /**
      * Associates node-type field type to a Doctrine type.
@@ -82,22 +83,23 @@ class NodeTypeField extends AbstractField
      * @var array
      */
     public static $typeToDoctrine = array(
-        AbstractField::STRING_T =>     'string',
-        AbstractField::DATETIME_T =>   'datetime',
-        AbstractField::RICHTEXT_T =>   'text',
-        AbstractField::TEXT_T =>       'text',
-        AbstractField::MARKDOWN_T =>   'text',
-        AbstractField::BOOLEAN_T =>    'boolean',
-        AbstractField::INTEGER_T =>    'integer',
-        AbstractField::DECIMAL_T =>    'decimal',
-        AbstractField::EMAIL_T =>      'string',
-        AbstractField::ENUM_T =>       'string',
-        AbstractField::MULTIPLE_T =>   'simple_array',
-        AbstractField::DOCUMENTS_T =>  null,
-        AbstractField::NODES_T =>      null,
-        AbstractField::CHILDREN_T =>   null,
-        AbstractField::COLOUR_T =>     'string',
-        AbstractField::GEOTAG_T =>     'string',
+        AbstractField::STRING_T =>      'string',
+        AbstractField::DATETIME_T =>    'datetime',
+        AbstractField::RICHTEXT_T =>    'text',
+        AbstractField::TEXT_T =>        'text',
+        AbstractField::MARKDOWN_T =>    'text',
+        AbstractField::BOOLEAN_T =>     'boolean',
+        AbstractField::INTEGER_T =>     'integer',
+        AbstractField::DECIMAL_T =>     'decimal',
+        AbstractField::EMAIL_T =>       'string',
+        AbstractField::ENUM_T =>        'string',
+        AbstractField::MULTIPLE_T =>    'simple_array',
+        AbstractField::DOCUMENTS_T =>   null,
+        AbstractField::NODES_T =>       null,
+        AbstractField::CHILDREN_T =>    null,
+        AbstractField::COLOUR_T =>      'string',
+        AbstractField::GEOTAG_T =>      'string',
+        AbstractField::CUSTOM_FORMS_T => null
     );
     /**
      * Associates node-type field type to a Symfony Form type.
@@ -105,22 +107,23 @@ class NodeTypeField extends AbstractField
      * @var array
      */
     public static $typeToForm = array(
-        AbstractField::STRING_T =>    'text',
-        AbstractField::DATETIME_T =>  'datetime',
-        AbstractField::RICHTEXT_T =>  'textarea',
-        AbstractField::TEXT_T =>      'textarea',
-        AbstractField::MARKDOWN_T =>  'markdown',
-        AbstractField::BOOLEAN_T =>   'checkbox',
-        AbstractField::INTEGER_T =>   'integer',
-        AbstractField::DECIMAL_T =>   'number',
-        AbstractField::EMAIL_T =>     'email',
-        AbstractField::ENUM_T =>      'enumeration',
-        AbstractField::MULTIPLE_T =>  'multiple_enumeration',
-        AbstractField::DOCUMENTS_T => 'documents',
-        AbstractField::NODES_T =>     'referenced_nodes',
-        AbstractField::CHILDREN_T =>  'children_nodes',
-        AbstractField::COLOUR_T =>    'text',
-        AbstractField::GEOTAG_T =>    'text',
+        AbstractField::STRING_T =>      'text',
+        AbstractField::DATETIME_T =>    'datetime',
+        AbstractField::RICHTEXT_T =>    'textarea',
+        AbstractField::TEXT_T =>        'textarea',
+        AbstractField::MARKDOWN_T =>    'markdown',
+        AbstractField::BOOLEAN_T =>     'checkbox',
+        AbstractField::INTEGER_T =>     'integer',
+        AbstractField::DECIMAL_T =>     'number',
+        AbstractField::EMAIL_T =>       'email',
+        AbstractField::ENUM_T =>        'enumeration',
+        AbstractField::MULTIPLE_T =>    'multiple_enumeration',
+        AbstractField::DOCUMENTS_T =>   'documents',
+        AbstractField::NODES_T =>       'referenced_nodes',
+        AbstractField::CHILDREN_T =>    'children_nodes',
+        AbstractField::COLOUR_T =>      'text',
+        AbstractField::GEOTAG_T =>      'text',
+        AbstractField::CUSTOM_FORMS_T => 'custom_forms'
     );
 
     /**

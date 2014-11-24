@@ -313,6 +313,7 @@ class CustomForm extends AbstractDateTimed
     {
         $this->fields = new ArrayCollection();
         $this->customFormAnswers = new ArrayCollection();
+        $this->nodes = new ArrayCollection();
     }
 
 
@@ -340,4 +341,16 @@ class CustomForm extends AbstractDateTimed
         return $text;
     }
 
+    /**
+     * @OneToMany(targetEntity="NodesCustomForms", mappedBy="customForm", fetch="EXTRA_LAZY")
+     * @var ArrayCollection
+     */
+    private $nodes = null;
+    /**
+     * @return ArrayCollection
+     */
+    public function getNodes()
+    {
+        return $this->nodes;
+    }
 }

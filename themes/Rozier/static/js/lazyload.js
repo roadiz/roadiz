@@ -65,8 +65,6 @@ Lazyload.prototype.onClick = function(event) {
         href != "#" &&
         href.indexOf(Rozier.baseUrl) >= 0){
 
-        _this.canvasLoader.show();
-
         history.pushState({}, null, $link.attr('href'));
         _this.onPopState(null);
         return false;
@@ -99,6 +97,7 @@ Lazyload.prototype.onPopState = function(event) {
     //console.log(document.location);
 
     if (null !== state) {
+        _this.canvasLoader.show();
         _this.loadContent(state, window.location);
     }
 
@@ -178,6 +177,7 @@ Lazyload.prototype.generalBind = function() {
     new NodesBulk();
     new DocumentWidget();
     new NodeWidget();
+    new CustomFormWidget();
     new DocumentUploader(Rozier.messages.dropzone);
     new ChildrenNodesField();
     new GeotagField();

@@ -227,6 +227,11 @@ class NodesSourcesController extends RozierApp
                                 ->getNodesFromFieldName($field->getName());
 
                 return new \RZ\Roadiz\CMS\Forms\NodesType($nodes);
+            case NodeTypeField::CUSTOM_FORMS_T:
+                $customForms = $nodeSource->getNode()->getHandler()
+                                ->getCustomFormsFromFieldName($field->getName());
+
+                return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms);
             case NodeTypeField::CHILDREN_T:
                 /*
                  * NodeTreeType is a virtual type which is only available
@@ -342,6 +347,19 @@ class NodesSourcesController extends RozierApp
                                         ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
                         if ($tempDoc !== null) {
                             $hdlr->addDocumentForField($tempDoc, $field);
+                        }
+                    }
+                }
+                break;
+            case NodeTypeField::CUSTOM_FORMS_T:
+                $hdlr = $nodeSource->getNode()->getHandler();
+                $hdlr->cleanCustomFormsFromField($field);
+                if (is_array($dataValue)) {
+                    foreach ($dataValue as $customFormId) {
+                        $tempCForm = Kernel::getService('em')
+                                        ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                        if ($tempCForm !== null) {
+                            $hdlr->addCustomFormForField($tempCForm, $field);
                         }
                     }
                 }
