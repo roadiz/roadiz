@@ -52,7 +52,8 @@ GeotagField.prototype.bindSingleField = function(element) {
 
     var mapOptions = {
         center: new google.maps.LatLng(jsonCode.lat, jsonCode.lng),
-        zoom: jsonCode.zoom
+        zoom: jsonCode.zoom,
+        styles: Rozier.mapsStyle
     };
 
     /*
@@ -107,6 +108,13 @@ GeotagField.prototype.bindSingleField = function(element) {
 
     setTimeout(function () {
         google.maps.event.trigger(map, "resize");
+
+        if (null !== marker) {
+            map.panTo(marker.getPosition());
+        } else {
+            map.panTo(mapOptions.center);
+        }
+
     }, 500);
 };
 

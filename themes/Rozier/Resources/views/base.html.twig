@@ -129,6 +129,7 @@
                 'resourcesUrl':   '{{ head.resourcesUrl }}',
                 'ajaxToken':      '{{ head.ajaxToken }}',
                 'mainColor':      '{{ head.mainColor }}',
+                'mapsStyle':      {% if head.mapsStyle %}{{ head.mapsStyle|raw }}{% else %}[]{% endif %},
                 'googleClientId': '{{ head.googleClientId }}',
                 'messages': {
                     'forbiddenPage':     '{{ 'forbidden.page'|trans() }}',
