@@ -313,6 +313,17 @@ class NodesSourcesController extends RozierApp
                         'class' => 'rz-geotag-field'
                     )
                 );
+            case NodeTypeField::MARKDOWN_T:
+                return array(
+                    'label' => $field->getLabel(),
+                    'required' => false,
+                    'attr' => array(
+                        'class'           => 'markdown_textarea',
+                        'data-desc'       => $field->getDescription(),
+                        'data-min-length' => $field->getMinLength(),
+                        'data-max-length' => $field->getMaxLength()
+                    )
+                );
 
             default:
                 return array(

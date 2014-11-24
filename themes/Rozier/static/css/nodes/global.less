@@ -32,7 +32,7 @@
     }
 }
 
-.node-list-item {
+.nodes-list-item {
 
     &-color-cont{
         position:relative;
@@ -102,14 +102,14 @@
         overflow: hidden;
     }
 
-    .node-border{
-        position: absolute;
-        top:0; right:0; left:0;
-        height:4px;
-        background-color:#eaeaea;
-        .transition(0.5s background-color @easeOutExpo);
-        z-index:3;
-    }
+    // .node-border{
+    //     position: absolute;
+    //     top:0; right:0; left:0;
+    //     height:4px;
+    //     background-color:#eaeaea;
+    //     .transition(0.5s background-color @easeOutExpo);
+    //     z-index:3;
+    // }
 
     .node-image{
         width:128px; height:128px;
@@ -169,7 +169,7 @@
 .node-checkbox{
     position: absolute;
     top: 10px; right: 0px;
-    // display: none;
+    display: none;
     width: 14px; height: 14px;
     line-height:12px;
     border: 1px solid #aaa;
@@ -196,4 +196,20 @@
             color: darken(@contrast-color, 10%);
         }
     }
+}
+
+// Bulk delete
+.content-delete{
+
+    .node-item{
+        position: relative;
+        padding-left:4px;
+    }
+
+    .node-item-color{
+        position: absolute;
+        top:0; bottom:0; left:0;
+        width:4px;
+    }
+
 }

@@ -238,7 +238,7 @@
         color: darken(@contrast-color-darker, 10%);
     }
 
-    &:hover{
+    &:hover, &:focus{
         background:rgba(@contrast-color-darker-red, @contrast-color-darker-green, @contrast-color-darker-blue, 0.3);
         border-color:darken(@contrast-color-darker, 15%);
 
@@ -256,7 +256,7 @@
         color: @alert-color;
     }
 
-    &:hover{
+    &:hover, &:focus{
         background:rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 0.2);
         border-color:darken(@alert-color, 15%);
 
@@ -294,7 +294,7 @@
         }
     }
 
-    &:hover{
+    &:hover, &:focus{
         [class*=uk-icon-rz-] {
             border-color: #888888;
         }
@@ -303,5 +303,9 @@
 
 .uk-button-bulk-form{
     height:32px;
+}
+
+.rz-geotag-reset{
+    width:36px; height:36px;
 }
 

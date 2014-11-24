@@ -13,8 +13,7 @@
 	<div class="tagtree-element-inner uk-nestable-item uk-nestable-item-tag">
 		<div class="uk-nestable-handle uk-nestable-handle-tag"><i class="{% if tag.getChildren.count > 0 %}uk-icon-rz-tags{% else %}uk-icon-rz-tag-tree{% endif %}"></i></div>
 		<div data-nestable-action="toggle"></div>
-		<div class="tagtree-element-name">
-			<!-- <i class="uk-icon-single-tag-outline"></i> -->
+		<div class="tree-element-name tagtree-element-name">
 			{% if not tag.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %}
 
 			{% if tag.isHidingChildren %}
@@ -24,8 +23,8 @@
 			{% endif %}
 		</div>
 
-		<div class="tagtree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
-		    <button class="uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></button>
+		<div class="tree-contextualmenu tagtree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
+		    <button class="tree-contextualmenu-button uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></button>
 		    <nav class="uk-dropdown uk-dropdown-small uk-dropdown-flip">
 		        <div class="uk-nav uk-nav-dropdown uk-dropdown-flip">
 		            <p>

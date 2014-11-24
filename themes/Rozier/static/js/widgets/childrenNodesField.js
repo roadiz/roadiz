@@ -29,8 +29,9 @@ ChildrenNodesField.prototype.init = function() {
             _this.$switchLangButtons.on("click", proxiedChangeLang);
         }*/
 
-        _this.$fields.find('.nodetree-langs').remove();
     }
+    
+    _this.$fields.find('.nodetree-langs').remove();
 };
 
 /*ChildrenNodesField.prototype.onChangeLangClick = function(event) {

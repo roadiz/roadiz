@@ -18,8 +18,12 @@ Rozier.searchNodesSourcesDelay = null;
 Rozier.nodeTrees = [];
 Rozier.treeTrees = [];
 
+Rozier.$userPanelContainer = null;
 Rozier.$minifyTreePanelButton = null;
 Rozier.$mainTrees = null;
+Rozier.$mainTreesContainer = null;
+Rozier.$mainTreeElementName = null;
+Rozier.$treeContextualButton = null;
 Rozier.$nodesSourcesSearch = null;
 Rozier.nodesSourcesSearchHeight = null;
 Rozier.$nodeTreeHead = null;
@@ -52,9 +56,10 @@ Rozier.onDocumentReady = function(event) {
 
 
 	// --- Selectors --- //
-
+	Rozier.$userPanelContainer = $('#user-panel-container');
 	Rozier.$minifyTreePanelButton = $('#minify-tree-panel-button');
 	Rozier.$mainTrees = $('#main-trees');
+	Rozier.$mainTreesContainer = $('#main-trees-container');
 	Rozier.$nodesSourcesSearch = $('#nodes-sources-search');
 
 	Rozier.$mainContentScrollable = $('#main-content-scrollable');
@@ -125,8 +130,39 @@ Rozier.bindMainTrees = function () {
 
 	$('.foldertree-widget .root-tree').off('uk.nestable.change');
 	$('.foldertree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableFolderTreeChange );
+	
+	// Tree element name 
+	_this.$mainTreeElementName = _this.$mainTrees.find('.tree-element-name');	
+	_this.$mainTreeElementName.off('contextmenu', $.proxy(_this.maintreeElementNameRightClick, _this));
+	_this.$mainTreeElementName.on('contextmenu', $.proxy(_this.maintreeElementNameRightClick, _this));
+
 };
 
+
+/**
+ * Main tree element name right click
+ * @return {[type]} [description]
+ */
+Rozier.maintreeElementNameRightClick = function(e){
+	var _this = this;
+
+	var $contextualMenu = $(e.currentTarget).parent().find('.tree-contextualmenu');
+
+	if($contextualMenu[0].className.indexOf('uk-open') == -1) {
+		addClass($contextualMenu[0], 'uk-open');
+	}
+	else removeClass($contextualMenu[0], 'uk-open');
+
+
+	return false;
+
+};
+
+
+/**
+ * Bind main node tree langs
+ * @return {[type]} [description]
+ */
 Rozier.bindMainNodeTreeLangs = function () {
 	var _this = this;
 
@@ -592,6 +628,7 @@ Rozier.onNestableFolderTreeChange = function (event, element, status) {
 	});
 };
 
+
 /**
  * Back top click
  * @return {[type]} [description]
@@ -627,6 +664,11 @@ Rozier.resize = function(){
 	// Check if mobile
 	if(_this.windowWidth <= 768 && isMobile.any() !== null && _this.resizeFirst) _this.mobile = new RozierMobile();
 
+
+	// Set height to panels (fix for IE9,10)
+	_this.$userPanelContainer[0].style.height = _this.windowHeight+'px';
+	_this.$mainTreesContainer[0].style.height = _this.windowHeight+'px';
+	_this.$mainContentScrollable[0].style.height = _this.windowHeight+'px';  
 
 	// Tree scroll height
 	_this.$nodeTreeHead = _this.$mainTrees.find('.nodetree-head');

@@ -9,6 +9,7 @@ var GeotagField = function () {
         _this.init();
     }
 };
+
 GeotagField.prototype.geocoder = null;
 GeotagField.prototype.$fields = null;
 GeotagField.prototype.init = function() {
@@ -27,6 +28,7 @@ GeotagField.prototype.init = function() {
     }
 };
 
+
 GeotagField.prototype.bindFields = function() {
     var _this = this;
 
@@ -37,6 +39,7 @@ GeotagField.prototype.bindFields = function() {
         _this.bindSingleField(element);
     });
 };
+
 
 GeotagField.prototype.bindSingleField = function(element) {
     var _this = this;
@@ -60,7 +63,7 @@ GeotagField.prototype.bindSingleField = function(element) {
     $input.after('<div class="rz-geotag-canvas" id="'+fieldId+'" style="width: 100%; height: 400px;"></div>');
     // Geocode input text
     var metaDOM = '<nav class="rz-geotag-meta"><input class="rz-geotag-address" id="'+fieldAddressId+'" type="text" value="" />';
-    metaDOM += '<a id="'+resetButtonId+'" class="uk-button rz-geotag-reset"><i class="uk-icon-rz-trash-o"></i> '+Rozier.messages.geotag.resetMarker+'</a></nav>';
+    metaDOM += '<a id="'+resetButtonId+'" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="'+Rozier.messages.geotag.resetMarker+'" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a></nav>';
     $input.after(metaDOM);
 
     var $geocodeInput = $('#'+fieldAddressId);
