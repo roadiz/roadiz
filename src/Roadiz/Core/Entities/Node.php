@@ -512,8 +512,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ManyToMany(targetEntity="CustomForm", inversedBy="nodes", fetch="EXTRA_LAZY")
-     * @JoinTable(name="nodes_customforms")
+     * @OneToMany(targetEntity="NodesCustomForms", mappedBy="node", fetch="EXTRA_LAZY")
      * @var ArrayCollection
      */
     private $customForms = null;
@@ -523,32 +522,6 @@ class Node extends AbstractDateTimedPositioned
     public function getCustomForms()
     {
         return $this->customForms;
-    }
-    /**
-     * @param CustomForm $customForm
-     *
-     * @return $this
-     */
-    public function removeCustomForm(CustomForm $customForm)
-    {
-        if ($this->getCustomForms()->contains($customForm)) {
-            $this->getCustomForms()->removeElement($customForm);
-        }
-
-        return $this;
-    }
-    /**
-     * @param CustomForm $customForm
-     *
-     * @return $this
-     */
-    public function addCustomForm(CustomForm $customForm)
-    {
-        if (!$this->getCustomForms()->contains($customForm)) {
-            $this->getCustomForms()->add($customForm);
-        }
-
-        return $this;
     }
 
 

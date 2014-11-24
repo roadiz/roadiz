@@ -103,7 +103,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
      */
     const GEOTAG_T =        12;
     /**
-     * Nodes field helps linking NodesSources with other Nodes entities.
+     * Nodes field helps linking Nodes with other Nodes entities.
      */
     const NODES_T =         13;
     /**
@@ -120,9 +120,9 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
      */
     const CHILDREN_T =      16;
     /**
-     * Nodes field helps linking NodesSources with Surveys entities.
+     * Nodes field helps linking Nodes with CustomForms entities.
      */
-    const SURVEY_T =        17;
+    const CUSTOM_FORMS_T =   17;
     /**
      * Multiple field is a simple select box with multiple choices.
      */

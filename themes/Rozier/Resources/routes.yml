@@ -566,6 +566,10 @@ customFormsExportPage:
     path:     /rz-admin/custom-forms/export/{customFormId}
     requirements: { customFormId : "[0-9]+" }
     defaults: { _controller: Themes\Rozier\Controllers\CustomFormsUtilsController::exportAction }
+# Ajax
+customFormsAjaxExplorerPage:
+    path:     /rz-admin/ajax/custom-forms/explore
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormsExplorerController::indexAction }
 
 # Custom Form Answer
 customFormAnswersHomePage:

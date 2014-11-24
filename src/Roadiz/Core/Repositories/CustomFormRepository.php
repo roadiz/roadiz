@@ -54,4 +54,49 @@ class CustomFormRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\Node          $node
+     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     *
+     * @return array
+     */
+    public function findByNodeAndField($node, NodeTypeField $field)
+    {
+        $query = $this->_em->createQuery('
+            SELECT cf FROM RZ\Roadiz\Core\Entities\CustomForm cf
+            INNER JOIN cf.nodes ncf
+            WHERE ncf.field = :field AND ncf.node = :node
+            ORDER BY ncf.position ASC')
+                        ->setParameter('field', $field)
+                        ->setParameter('node', $node);
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param string                      $fieldName
+     *
+     * @return array
+     */
+    public function findByNodeAndFieldName($node, $fieldName)
+    {
+        $query = $this->_em->createQuery('
+            SELECT cf FROM RZ\Roadiz\Core\Entities\CustomForm cf
+            INNER JOIN cf.nodes ncf
+            INNER JOIN ncf.field f
+            WHERE f.name = :name AND ncf.node = :node
+            ORDER BY ncf.position ASC')
+                        ->setParameter('name', (string) $fieldName)
+                        ->setParameter('node', $node);
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
 }

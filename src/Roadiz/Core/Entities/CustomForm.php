@@ -342,7 +342,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @ManyToMany(targetEntity="Node", mappedBy="customForms", fetch="EXTRA_LAZY")
+     * @OneToMany(targetEntity="NodesCustomForms", mappedBy="customForm", fetch="EXTRA_LAZY")
      * @var ArrayCollection
      */
     private $nodes = null;

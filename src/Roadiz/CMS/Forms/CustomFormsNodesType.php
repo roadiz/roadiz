@@ -136,6 +136,6 @@ class CustomFormsNodesType extends AbstractType
      */
     public function getName()
     {
-        return 'customForms';
+        return 'custom_forms';
     }
 }

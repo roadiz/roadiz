@@ -33,6 +33,8 @@ namespace RZ\Roadiz\Core\Handlers;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Entities\NodesCustomForms;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -75,6 +77,64 @@ class NodeHandler
         $this->node = $node;
     }
 
+    /**
+     * Remove every node to custom-forms associations for a given field.
+     *
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     *
+     * @return $this
+     */
+    public function cleanCustomFormsFromField(NodeTypeField $field)
+    {
+        $nodesCustomForms = Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
+                ->findBy(array('node'=>$this->node, 'field'=>$field));
+
+        foreach ($nodesCustomForms as $ncf) {
+            Kernel::getService('em')->remove($ncf);
+            Kernel::getService('em')->flush();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a node to current custom-forms for a given node-type field.
+     *
+     * @param CustomForm $customForm
+     * @param NodeTypeField $field
+     *
+     * @return $this
+     */
+    public function addCustomFormForField(CustomForm $customForm, NodeTypeField $field)
+    {
+        $ncf = new NodesCustomForms($this->node, $customForm, $field);
+
+        $latestPosition = Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
+                ->getLatestPosition($this->node, $field);
+
+        $ncf->setPosition($latestPosition + 1);
+
+        Kernel::getService('em')->persist($ncf);
+        Kernel::getService('em')->flush();
+
+        return $this;
+    }
+
+    /**
+     * Get custom forms linked to current node for a given fieldname.
+     *
+     * @param string $fieldName Name of the node-type field
+     *
+     * @return ArrayCollection Collection of nodes
+     */
+    public function getCustomFormsFromFieldName($fieldName)
+    {
+        return Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
+                ->findByNodeAndFieldName($this->node, $fieldName);
+    }
 
     /**
      * Remove every node to node associations for a given field.
