@@ -10,7 +10,7 @@ FontFaceCSS:
     defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFacesAction }
     requirements: { token: "[a-zA-Z0-9\-_]+" }
 #
-# SLIR
+# SLIR is now hard coded in before run app
 #
 SLIRProcess:
     path:     /assets/{queryString}/{filename}
