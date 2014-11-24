@@ -108,7 +108,7 @@ class InstallApp extends AppController
     public function initializeTranslator()
     {
         $this->getKernel()->getRequest()->setLocale(
-            $this->getKernel()->getRequest()->getSession()->get('_locale', 'en')
+            $this->getService('session')->get('_locale', 'en')
         );
 
         return parent::initializeTranslator();
