@@ -84,6 +84,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
     final private function __construct()
     {
         $this->container = new Container();
+        $this->request = Request::createFromGlobals();
         /*
          * Get build number from txt file generated at each pre-commit
          */
@@ -97,8 +98,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $this->container->register($this);
 
         $this->container['stopwatch']->openSection();
-
-        $this->request = Request::createFromGlobals();
     }
 
     /**

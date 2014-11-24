@@ -35,5 +35,16 @@ require 'bootstrap.php';
 if (php_sapi_name() == 'cli') {
     echo 'Use "bin/roadiz" as an executable instead of calling index.php'.PHP_EOL;
 } else {
-    Kernel::getInstance()->runApp();
+
+    $request = Kernel::getInstance()->getRequest();
+
+    if (0 === strpos($request->getPathInfo(), '/assets') &&
+        preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
+    ) {
+        $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
+        $ctrl->slirAction($matches['queryString'], $matches['filename']);
+    } else {
+
+        Kernel::getInstance()->runApp();
+    }
 }
