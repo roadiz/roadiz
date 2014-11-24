@@ -556,10 +556,15 @@ class UsersController extends RozierApp
     private function updateProfileImage(User $user)
     {
         if ($user->getFacebookName() != '') {
-            $facebook = new FacebookPictureFinder($user->getFacebookName());
-            if (false !== $url = $facebook->getPictureUrl()) {
+            try {
+                $facebook = new FacebookPictureFinder($user->getFacebookName());
+                $url = $facebook->getPictureUrl();
                 $user->setPictureUrl($url);
-            } else {
+            } catch (\Exception $e) {
+                $url = "http://www.gravatar.com/avatar/".
+                        md5(strtolower(trim($user->getEmail()))).
+                        "?d=identicon&s=200";
+                $user->setPictureUrl($url);
                 throw new FacebookUsernameNotFoundException(
                     $this->getTranslator()->trans(
                         'user.facebook_name.%name%._does_not_exist',
@@ -567,7 +572,6 @@ class UsersController extends RozierApp
                     ),
                     1
                 );
-
             }
         } else {
             $url = "http://www.gravatar.com/avatar/".

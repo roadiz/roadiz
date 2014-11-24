@@ -54,14 +54,9 @@ class FacebookPictureFinder
      */
     public function getPictureUrl()
     {
-        try {
-            $client = new Client();
-            $this->response = $client->get('http://graph.facebook.com/'.$this->facebookUserAlias.'/picture?redirect=false&width=200&height=200');
-            $json = $this->response->json();
-
-            return $json['data']['url'];
-        } catch (ClientErrorResponseException $e) {
-            return false;
-        }
+        $client = new Client();
+        $this->response = $client->get('http://graph.facebook.com/'.$this->facebookUserAlias.'/picture?redirect=false&width=200&height=200');
+        $json = $this->response->json();
+        return $json['data']['url'];
     }
 }
