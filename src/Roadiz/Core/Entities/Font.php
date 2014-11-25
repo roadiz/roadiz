@@ -71,11 +71,11 @@ class Font extends AbstractDateTimed
      * @var array
      */
     protected static $variantToHuman = array(
-        Font::REGULAR => 'Regular',
-        Font::ITALIC => 'Italic',
-        Font::BOLD => 'Bold',
-        Font::BOLD_ITALIC => 'Bold italic',
-        Font::LIGHT => 'Light',
+        Font::REGULAR      => 'Regular',
+        Font::ITALIC       => 'Italic',
+        Font::BOLD         => 'Bold',
+        Font::BOLD_ITALIC  => 'Bold italic',
+        Font::LIGHT        => 'Light',
         Font::LIGHT_ITALIC => 'Light italic',
     );
 
@@ -205,6 +205,29 @@ class Font extends AbstractDateTimed
     public function setWOFFFilename($woffFilename)
     {
         $this->woffFilename = StringHandler::cleanForFilename($woffFilename);
+
+        return $this;
+    }
+
+    /**
+     * @Column(type="string", nullable=true, name="woff2_filename")
+     */
+    private $woff2Filename;
+    /**
+     * @return string
+     */
+    public function getWOFF2Filename()
+    {
+        return $this->woff2Filename;
+    }
+    /**
+     * @param string $woff2Filename
+     *
+     * @return $this
+     */
+    public function setWOFF2Filename($woff2Filename)
+    {
+        $this->woff2Filename = StringHandler::cleanForFilename($woff2Filename);
 
         return $this;
     }
@@ -341,6 +364,20 @@ class Font extends AbstractDateTimed
     public function getWOFFAbsolutePath()
     {
         return static::getFilesFolder().'/'.$this->getWOFFRelativeUrl();
+    }
+    /**
+     * @return string
+     */
+    public function getWOFF2RelativeUrl()
+    {
+        return $this->getFolder().'/'.$this->getWOFF2Filename();
+    }
+    /**
+     * @return string
+     */
+    public function getWOFF2AbsolutePath()
+    {
+        return static::getFilesFolder().'/'.$this->getWOFF2RelativeUrl();
     }
     /**
      * @return string

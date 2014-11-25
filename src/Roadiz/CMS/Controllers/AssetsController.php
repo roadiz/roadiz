@@ -122,6 +122,10 @@ class AssetsController extends AppController
                     $fontpath = $font->getWOFFAbsolutePath();
                     $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff'];
                     break;
+                case 'woff2':
+                    $fontpath = $font->getWOFF2AbsolutePath();
+                    $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff2'];
+                    break;
                 case 'svg':
                     $fontpath = $font->getSVGAbsolutePath();
                     $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['svg'];
