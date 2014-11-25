@@ -368,7 +368,7 @@ class AppController implements ViewableInterface
     public function getTwigLoader()
     {
         $this->getService()->extend('twig.loaderFileSystem', function ($loader, $c) {
-            $loader->addPath(static::getViewsFolder());
+            $loader->prependPath(static::getViewsFolder());
             return $loader;
         });
 

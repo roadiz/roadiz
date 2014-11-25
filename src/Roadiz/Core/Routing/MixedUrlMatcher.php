@@ -66,11 +66,12 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             if (false !== $ret = $this->matchNode($decodedUrl)) {
                 return $ret;
             } else {
-                //throw new ResourceNotFoundException();
                 return array(
                     '_controller' => $this->getThemeController().'::throw404',
                     'message' => 'Unable to find any matching route nor matching node.'.
-                                 ' Check your `Resources/routes.yml` file.'
+                                 ' Check your `Resources/routes.yml` file.',
+                    'node'        => null,
+                    'translation' => null
                 );
             }
         }
@@ -140,11 +141,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
          */
         $theme = Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                        ->findOneBy(array(
-                            'available'=>    true,
-                            'backendTheme'=> false,
-                            'hostname'=>     $host
-                        ));
+                        ->findAvailableFrontendWithHost($host);
 
         /*
          * If no theme for current host, we look for
@@ -153,10 +150,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
         if (null === $theme) {
             $theme = Kernel::getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                            ->findOneBy(array(
-                                'available'=>    true,
-                                'backendTheme'=> false
-                            ));
+                            ->findFirstAvailableFrontend();
         }
 
         if (null !== $theme) {

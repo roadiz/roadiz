@@ -73,12 +73,61 @@ class ThemeRepository extends EntityRepository {
     {
         $query = $this->_em->createQuery('
             SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
-            WHERE t.available = true AND t.backendTheme = false');
+            WHERE t.available = true
+            AND t.backendTheme = false');
 
         $query->useResultCache(true, 3600, 'RZTheme_frontends');
 
         try {
             return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get available frontend theme for host.
+     *
+     * This method use Result cache.
+     *
+     * @return RZ\Roadiz\Core\Entities\Theme
+     */
+    public function findFirstAvailableFrontend()
+    {
+        $query = $this->_em->createQuery('
+            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
+            WHERE t.available = true
+            AND t.backendTheme = false');
+
+        $query->useResultCache(true, 3600, 'RZTheme_first_frontend');
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get available frontend theme for host.
+     *
+     * This method use Result cache.
+     *
+     * @return RZ\Roadiz\Core\Entities\Theme
+     */
+    public function findAvailableFrontendWithHost($hostname="*")
+    {
+        $query = $this->_em->createQuery('
+            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
+            WHERE t.available = true
+            AND t.backendTheme = false
+            AND t.hostname = :hostname')
+                    ->setParameter('hostname', $hostname);
+
+        $query->useResultCache(true, 3600, 'RZTheme_frontend_'.$hostname);
+
+        try {
+            return $query->getSingleResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
             return null;
         }
