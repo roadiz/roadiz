@@ -260,6 +260,9 @@ class FontsController extends RozierApp
             if ("" != $font->getWOFFFilename()) {
                 $zip->addFile($font->getWOFFAbsolutePath(), $font->getWOFFFilename());
             }
+            if ("" != $font->getWOFF2Filename()) {
+                $zip->addFile($font->getWOFF2AbsolutePath(), $font->getWOFF2Filename());
+            }
             if ("" != $font->getOTFFilename()) {
                 $zip->addFile($font->getOTFAbsolutePath(), $font->getOTFFilename());
             }
@@ -312,6 +315,10 @@ class FontsController extends RozierApp
             ))
             ->add('woffFile', 'file', array(
                 'label' => $this->getTranslator()->trans('font.woffFile'),
+                'required' => false
+            ))
+            ->add('woff2File', 'file', array(
+                'label' => $this->getTranslator()->trans('font.woff2File'),
                 'required' => false
             ))
             ->add('variant', new \RZ\Roadiz\CMS\Forms\FontVariantsType(), array(
@@ -372,6 +379,10 @@ class FontsController extends RozierApp
             ))
             ->add('woffFile', 'file', array(
                 'label' => $this->getTranslator()->trans('font.woffFile'),
+                'required' => false
+            ))
+            ->add('woff2File', 'file', array(
+                'label' => $this->getTranslator()->trans('font.woff2File'),
                 'required' => false
             ))
             ->add(
@@ -470,6 +481,31 @@ class FontsController extends RozierApp
 
                     $font->setWOFFFilename($uploadedWOFFFile->getClientOriginalName());
                     $uploadedWOFFFile->move(Font::getFilesFolder().'/'.$font->getFolder(), $font->getWOFFFilename());
+                }
+            }
+        } catch (FileNotFoundException $e) {
+            // When empty file do nothing
+        }
+        try {
+            if (!empty($data['woff2File'])) {
+
+                $woff2File = $data['woff2File']->getData();
+                $uploadedWOFF2File = new \Symfony\Component\HttpFoundation\File\UploadedFile(
+                    $woff2File['tmp_name'],
+                    $woff2File['name'],
+                    $woff2File['type'],
+                    $woff2File['size'],
+                    $woff2File['error']
+                );
+                if ($uploadedWOFF2File !== null &&
+                    $uploadedWOFF2File->getError() == UPLOAD_ERR_OK &&
+                    $uploadedWOFF2File->isValid()) {
+
+                    $font->setWOFF2Filename($uploadedWOFF2File->getClientOriginalName());
+                    $uploadedWOFF2File->move(
+                        Font::getFilesFolder().'/'.$font->getFolder(),
+                        $font->getWOFF2Filename()
+                    );
                 }
             }
         } catch (FileNotFoundException $e) {
