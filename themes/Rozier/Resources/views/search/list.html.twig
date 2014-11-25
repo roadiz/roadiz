@@ -36,11 +36,6 @@
         {% form_theme form 'forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="get" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
-            {% spaceless %}
-            <button class="uk-button uk-button-primary" type="submit">
-                <i class="uk-icon-plus"></i> {% trans %}search.a.node{% endtrans %}
-            </button>
-            {% endspaceless %}
         </form>
         <div class="content-table-cont">
             <table class="nodes content-table uk-table">

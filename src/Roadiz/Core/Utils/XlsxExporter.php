@@ -56,7 +56,7 @@ class XlsxExporter
         }
         foreach ($data as $key => $answer) {
             foreach ($answer as $k => $value) {
-                if ($k == 1) {
+                if ($value instanceof \Datetime) {
                     $value = \PHPExcel_Shared_Date::PHPToExcel($value);
                     $objPHPExcel->getActiveSheet()
                         ->getStyle('B'.(2 + $key))
@@ -66,8 +66,6 @@ class XlsxExporter
             }
         }
 
-        // Rename worksheet
-        $objPHPExcel->getActiveSheet()->setTitle('answers');
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
 
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');

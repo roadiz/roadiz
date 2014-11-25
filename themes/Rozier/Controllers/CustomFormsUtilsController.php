@@ -55,7 +55,7 @@ class CustomFormsUtilsController extends RozierApp
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
                 $customForm->getName() . '.xlsx'
             )
-        ); // Rezo-Zero Type
+        );
 
         $response->prepare($request);
 

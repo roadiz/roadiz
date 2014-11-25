@@ -48,14 +48,17 @@ class CustomFormAnswersController extends RozierApp
         /*
          * Manage get request to filter list
          */
+
+        $customForm = $this->getService('em')->find('RZ\Roadiz\Core\Entities\CustomForm',
+                                                    $customFormId);
+
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
             'RZ\Roadiz\Core\Entities\CustomFormAnswer',
-            array("customForm" => $customFormId)
+            array("customForm" => $customForm)
         );
         $listManager->handle();
-
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['custom_form_answers'] = $listManager->getEntities();
 

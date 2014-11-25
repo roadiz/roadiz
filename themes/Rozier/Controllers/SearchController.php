@@ -36,12 +36,14 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Utils\XlsxExporter;
 
 use RZ\Roadiz\CMS\Forms\NodeStatesType;
 use RZ\Roadiz\CMS\Forms\CompareDatetimeType;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\GreaterThan;
@@ -110,12 +112,17 @@ class SearchController extends RozierApp
                         || $field->getType() === NodeTypeField::STRING_T
                         || $field->getType() === NodeTypeField::TEXT_T
                         || $field->getType() === NodeTypeField::EMAIL_T) {
-                        $data[$key] = array("LIKE", "%" . $data[$key] . "%");
+                        $data[$key] = array("LIKE", "%" . $value . "%");
+                    }
+                    if ($field->getType() === NodeTypeField::BOOLEAN_T) {
+                        $data[$key] = (bool) $value;
+                    }
+                    if ($field->getType() === NodeTypeField::MULTIPLE_T) {
+                        $data[$key] = implode(",", $value);
                     }
                 }
             }
         }
-
         return $data;
     }
 
@@ -169,7 +176,16 @@ class SearchController extends RozierApp
         $nodetype = $this->getService('em')->find('RZ\Roadiz\Core\Entities\NodeType', $nodetypeId);
 
         $builder = $this->buildSimpleForm("__node__");
-        $form = $this->extendForm($builder, $nodetype)->getForm();
+        $builder = $this->extendForm($builder, $nodetype);
+        $builder->add("searchANode", "submit", array(
+            "label" => $this->getTranslator()->trans("search.a.node"),
+            "attr" => array("class" => "uk-button uk-button-primary")
+        ));
+        $builder->add("exportNodesSources", "submit", array(
+            "label" => $this->getTranslator()->trans("export.all.nodesSource"),
+            "attr" => array("class" => "uk-button rz-no-ajax")
+        ));
+        $form = $builder->getForm();
         $form->handleRequest();
 
         if ($form->isValid()) {
@@ -180,7 +196,9 @@ class SearchController extends RozierApp
                 // if (is_array($value) && isset($value["compareDatetime"])) {
                 //     var_dump($value["compareDatetime"]);
                 // }
-                if ((!is_array($value) && $this->notBlank($value)) || (is_array($value) && isset($value["compareDatetime"]))) {
+                if ((!is_array($value) && $this->notBlank($value))
+                    || (is_array($value) && isset($value["compareDatetime"]))
+                    || (is_array($value) && $value != array() && !isset($value["compareOp"]))) {
                     if (strstr($key, "__node__") == 0) {
                         $data[str_replace("__node__", "node.", $key)] = $value;
                     } else {
@@ -188,6 +206,7 @@ class SearchController extends RozierApp
                     }
                 }
             }
+
             $data = $this->processCriteria($data);
             $data = $this->processCriteriaNodetype($data, $nodetype);
             $listManager = new EntityListManager(
@@ -210,6 +229,50 @@ class SearchController extends RozierApp
             }
             $this->assignation['nodes'] = $nodes;
 
+            if ($form->get('exportNodesSources')->isClicked()) {
+                $fields = $nodetype->getFields();
+                $keys = array();
+                $answers = array();
+                foreach ($fields as $field) {
+                    if (!$field->isVirtual()) {
+                        $keys[] = $field->getName();
+                    }
+                }
+                foreach ($listManager->getEntities() as $idx => $nodesSource) {
+                    $array = array();
+                    foreach ($keys as $key) {
+                        $getter = 'get'.ucwords($key);
+                        $tmp = $nodesSource->$getter();
+                        if (is_array($tmp)) {
+                            $tmp = implode(',', $tmp);
+                        }
+                        $array[] = $tmp;
+                        //var_dump($keys);
+                        //var_dump($array);
+
+                    }
+                    $answers[$idx] = $array;
+                }
+                $xlsx = XlsxExporter::exportXlsx($answers, $keys);
+
+                $response =  new Response(
+                    $xlsx,
+                    Response::HTTP_OK,
+                    array()
+                );
+
+                $response->headers->set(
+                    'Content-Disposition',
+                    $response->headers->makeDisposition(
+                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                        'search.xlsx'
+                    )
+                );
+
+                $response->prepare($request);
+
+                return $response;
+            }
         }
 
         $this->assignation['form'] = $form->createView();
@@ -313,6 +376,8 @@ class SearchController extends RozierApp
                     $choices = explode(',', $field->getDefaultValues());
                     $choices = array_combine(array_values($choices), array_values($choices));
                     $type = "choice";
+                    $option['empty_value'] = "ignore";
+                    $option['required'] = false;
                     $option["expanded"] = false;
                     if (count($choices) < 4) {
                         $option["expanded"] = true;
@@ -323,6 +388,8 @@ class SearchController extends RozierApp
                     $choices = array_combine(array_values($choices), array_values($choices));
                     $type = "choice";
                     $option["choices"] = $choices;
+                    $option['empty_value'] = "ignore";
+                    $option['required'] = false;
                     $option["multiple"] = true;
                     $option["expanded"] = false;
                     if (count($choices) < 4) {
