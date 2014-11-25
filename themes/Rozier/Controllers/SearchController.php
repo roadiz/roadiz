@@ -233,6 +233,7 @@ class SearchController extends RozierApp
                 $fields = $nodetype->getFields();
                 $keys = array();
                 $answers = array();
+                $keys[] = "title";
                 foreach ($fields as $field) {
                     if (!$field->isVirtual()) {
                         $keys[] = $field->getName();
@@ -247,9 +248,6 @@ class SearchController extends RozierApp
                             $tmp = implode(',', $tmp);
                         }
                         $array[] = $tmp;
-                        //var_dump($keys);
-                        //var_dump($array);
-
                     }
                     $answers[$idx] = $array;
                 }
