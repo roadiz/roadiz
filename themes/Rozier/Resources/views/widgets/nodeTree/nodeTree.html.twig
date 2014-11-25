@@ -14,7 +14,7 @@
     <div class="tree-scroll-cont">
         <div class="tree-scroll">
         {% endif %}
-            {% if nodeTree.availableTranslations %}
+            {% if nodeTree.availableTranslations and nodeTree.availableTranslations|length > 1 %}
             <ul class="nodetree-langs">
                 {% for lang in nodeTree.availableTranslations %}
                 <li class="{% if lang.id == nodeTree.translation.id %}active{% endif %}">
