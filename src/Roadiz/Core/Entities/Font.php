@@ -39,7 +39,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
  * Fonts are entities which store each webfont file for a
  * font-family and a font-variant.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FontRepository")
  * @Table(name="fonts",uniqueConstraints={
  *     @UniqueConstraint(name="name_variant_idx", columns={"name", "variant"})})
  */
@@ -58,11 +58,12 @@ class Font extends AbstractDateTimed
      * @var array
      */
     public static $extensionToMime = array(
-        'svg' => 'image/svg+xml',
-        'ttf' => 'application/x-font-truetype',
-        'otf' => 'application/x-font-opentype',
-        'woff' => 'application/font-woff',
-        'eot' => 'application/vnd.ms-fontobject',
+        'svg'   => 'image/svg+xml',
+        'ttf'   => 'application/x-font-truetype',
+        'otf'   => 'application/x-font-opentype',
+        'woff'  => 'application/font-woff',
+        'woff2' => 'application/font-woff2',
+        'eot'   => 'application/vnd.ms-fontobject',
     );
 
     /**

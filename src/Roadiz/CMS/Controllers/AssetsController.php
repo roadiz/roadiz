@@ -169,20 +169,41 @@ class AssetsController extends AppController
         if ($this->getService('csrfProvider')
                  ->isCsrfTokenValid(static::FONT_TOKEN_INTENTION, $token)) {
 
+            $lastMod = Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\Font')
+                ->getLatestUpdateDate();
+
+            $response = new Response(
+                '',
+                Response::HTTP_NOT_MODIFIED,
+                array('content-type' => 'text/css')
+            );
+            $response->setCache(array(
+                'last_modified' => new \DateTime($lastMod),
+                'max_age'       => 1800,
+                's_maxage'      => 600,
+                'public'        => true
+            ));
+
+            if ($response->isNotModified($request)) {
+                return $response;
+            }
+
             $fonts = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Font')
                 ->findAll();
+
+
             $fontOutput = array();
 
             foreach ($fonts as $font) {
                 $fontOutput[] = $font->getViewer()->getCSSFontFace($this->getService('csrfProvider'));
             }
 
-            return new Response(
-                implode(PHP_EOL, $fontOutput),
-                Response::HTTP_OK,
-                array('content-type' => 'text/css')
-            );
+            $response->setContent(implode(PHP_EOL, $fontOutput));
+            $response->setStatusCode(Response::HTTP_OK);
+
+            return $response;
         } else {
             return new Response(
                 "Font Fail",
