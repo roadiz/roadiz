@@ -42,7 +42,7 @@ use RZ\Roadiz\Core\Handlers\FolderHandler;
  *
  * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FolderRepository")
  * @Table(name="folders", indexes={
- *     @index(name="position_tag_idx", columns={"position"})
+ *     @index(name="position_folder_idx", columns={"position"})
  * })
  */
 class Folder extends AbstractDateTimedPositioned
