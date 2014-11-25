@@ -194,7 +194,6 @@ class SearchController extends RozierApp
                 $request,
                 $this->getService('em'),
                 NodeType::getGeneratedEntitiesNamespace().'\\'.$nodetype->getSourceEntityClassName(),
-                //'RZ\Roadiz\Core\Entities\NodesSources',
                 $data
             );
             if ($this->pagination == false) {
@@ -204,7 +203,12 @@ class SearchController extends RozierApp
             $listManager->handle();
             $this->assignation['filters'] = $listManager->getAssignation();
             $this->assignation['filters']['search'] = false;
-            $this->assignation['nodes'] = $listManager->getEntities();
+            $this->assignation['nodesSources'] = $listManager->getEntities();
+            $nodes = array();
+            foreach ($listManager->getEntities() as $nodesSource) {
+                $nodes[] = $nodesSource->getNode();
+            }
+            $this->assignation['nodes'] = $nodes;
 
         }
 
