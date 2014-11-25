@@ -108,8 +108,11 @@
 
     .nodes-widget-sortable-list-item{
         cursor: pointer;
+        background: #4C4C4C;
+        color:#888;
 
         &:hover{
+            background: darken(#4C4C4C, 3%);
             .link-button-inner{
                 right: 0px;
             }
@@ -125,7 +128,6 @@
             top:0; right:0; bottom:0; left:0;
             width:100%; height:100%;
             background:none;
-            .rounded(0);
         }
 
         .link-button-inner{
@@ -159,11 +161,9 @@
         display: block;
         overflow: hidden;
 
-
         color:@contrast-color;
         background:#4f4f4f;
         border-color:#4f4f4f;
-
 
         width: 50px;
         height: 50px;

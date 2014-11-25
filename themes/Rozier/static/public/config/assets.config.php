@@ -3,7 +3,7 @@ return array(
     'staticAssets' => array(
         'global' => array(
             'css' => array(
-                '/style.538f081e.css',
+                '/style.eab2309b.css',
             ),
             'js' => array(
                 '/rozier-backend-theme.ebfe5ac3.min.js',

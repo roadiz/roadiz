@@ -6,7 +6,7 @@
 
     <div class="node-border" style="background-color:{{ node.nodeType.color }};"></div>
 
-	<span class="node-name">{% if nodeSource.title %}{{ nodeSource.title }}{% else %}{{ node.nodeName }}{% endif %}</span>
+	<span class="node-name">{% if nodeSource.title %}{{ nodeSource.title|truncate(26, false, '[…]') }}{% else %}{{ node.nodeName|truncate(26, false, '[…]') }}{% endif %}</span>
 	<input type="hidden" name="{{ full_name }}" value="{{ node.getId }}" />
 
     <div class="node-links">
