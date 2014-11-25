@@ -132,6 +132,7 @@ class NodesUtilsController extends RozierApp
             $msg = $this->getTranslator()->trans("duplicated.node.%name%", array(
                 '%name%' => $existingNode->getNodeName()
             ));
+
             $request->getSession()->getFlashBag()->add('confirm', $msg);
             $this->getService('logger')->info($msg);
 

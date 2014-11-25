@@ -584,7 +584,7 @@ class NodeHandler
 
         $parent = $this->node->getParent();
         $node = clone $this->node;
-        Kernel::getService('em')->clear();
+        Kernel::getService('em')->clear($node);
 
         $newNode = $this->duplicateRec($node, 0);
         if ($parent !== null) {
