@@ -4,13 +4,13 @@
 
 	<div class="uk-sortable-handle"></div>
 
-    <div class="node-border"></div>
+    <div class="node-border" style="background-color:{{ node.nodeType.color }};"></div>
 
 	<span class="node-name">{% if nodeSource.title %}{{ nodeSource.title }}{% else %}{{ node.nodeName }}{% endif %}</span>
 	<input type="hidden" name="{{ full_name }}" value="{{ node.getId }}" />
 
     <div class="node-links">
-         <a href="{{ path('nodesEditPage', { nodeId: node.getId}) }}" class="uk-button node-link uk-button-mini">
+        <a href="{{ path('nodesEditPage', { nodeId: node.getId}) }}" class="uk-button node-link uk-button-mini">
             <i class="uk-icon-rz-pencil"></i>
             <span class="label">{% trans %}edit.node{% endtrans %}</span>
         </a>

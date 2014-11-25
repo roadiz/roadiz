@@ -1,5 +1,5 @@
 /*------------------------------------*\
-    DOCUMENTS EXPLORER
+    NODE WIDGET EXPLORER
 \*------------------------------------*/
 
 
@@ -107,11 +107,11 @@
     }
 
     .nodes-widget-sortable-list-item{
-        cursor: default;
+        cursor: pointer;
 
         &:hover{
             .link-button-inner{
-                bottom: 0px;
+                right: 0px;
             }
         }
 
@@ -122,27 +122,26 @@
         .link-button {
             position: absolute;
             display: block;
-            top:0; left:0;
-            width:80px; height:80px;
+            top:0; right:0; bottom:0; left:0;
+            width:100%; height:100%;
             background:none;
             .rounded(0);
         }
 
         .link-button-inner{
             position: absolute;
-            width:80px; height:30px;
-            bottom:-30px; left:0;
+            width:32px; height:32px;
+            top:0; right:-32px;
             background:#BBBBBB;
-            .transition(0.4s bottom @easeOutExpo);
+            text-align: center;
+            .transition(0.4s right @easeOutExpo);
             .transition-timing-function(@easeOutExpo);
             .opacity(0.95);
 
             i{
                 color:#333;
-                top: 6px;
-                position: absolute;
-                margin: 0;
-                left: 32px;
+                margin:0;
+                line-height:32px;
             }
             .label{
                 display: none;
