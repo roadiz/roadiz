@@ -369,9 +369,10 @@ class FrontendController extends AppController
 
         $this->assignation['_default_locale'] = $translation->getLocale();
         $this->assignation['meta'] = array(
-            'siteName' => SettingsBag::get('site_name'),
-            'siteCopyright' => SettingsBag::get('site_copyright'),
-            'siteDescription' => SettingsBag::get('seo_description')
+            'siteName' =>        SettingsBag::get('site_name'),
+            'siteCopyright' =>   SettingsBag::get('site_copyright'),
+            'siteDescription' => SettingsBag::get('seo_description'),
+            'analytics' =>       SettingsBag::get('universal_analytics_id')
         );
 
         return $this;
