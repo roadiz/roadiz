@@ -81,7 +81,7 @@
             color: #333;
         }
     }
-    
+
     // Radio
     input[type=radio] {
         background-color: @grey-form-submit;
@@ -93,13 +93,13 @@
 
     .uk-form-row > div input[type=radio]{
         margin-left:12px;
-        
+
         &:first-of-type{
             margin-left:0;
         }
 
     }
-    
+
     // File
     input[type=file]{
         font-size:12px;
@@ -107,7 +107,7 @@
 
     // Checkbox
     input[type=checkbox]{
-    
+
         &:focus{
             border-color: @grey-form-submit-border-hover;
         }
@@ -119,7 +119,7 @@
 
     .uk-form-row > div input[type=checkbox]{
         margin-left:12px;
-        
+
         &:first-of-type{
             margin-left:0;
         }
@@ -133,7 +133,7 @@
     .uk-form-icon > [class*=uk-icon-]{
         line-height:15px;
     }
-    
+
     // Select
     .rz-select {
         position: relative;
@@ -177,7 +177,7 @@
             }
         }
     }
-    
+
 
     // Select multiple
     select[multiple]{
@@ -198,9 +198,9 @@
         min-width: 100px;
         max-width: 600px;
     }
-    
+
     // Labels
-    .uk-form-row > .uk-form-label { 
+    .uk-form-row > .uk-form-label {
         font-size: 12px;
         color: @grey-form-label;
 
@@ -274,6 +274,9 @@
 
                 width: 100%;
             }
+            &.documents-widget, &.children-nodes-widget, &.nodes-widget {
+                margin-top: 40px !important;
+            }
         }
     }
 
@@ -325,7 +328,7 @@
 // Geotag
 .rz-geotag-meta{
     margin-bottom:10px;
-    
+
     input[type="text"]{
         width:280px;
     }

@@ -87,22 +87,22 @@
 }
 
 .nodes-widget-sortable-list-item, .nodes-widget-dragging{
-
     position: relative;
     display: inline-block;
-    width:205px; height:32px; 
+    width:205px; height:32px;
     margin:0 20px 8px 0;
     padding-left:15px;
-    background: @grey-verylight;
-    color:#333;
+    background: #E5E5E5;
+    color:#666;
     font-size:12px; line-height:32px;
+    font-weight: 600;
     overflow: hidden;
     cursor: default;
+    .border-radius(3px, 3px, 0, 0);
     .transition(0.4s background @easeOutExpo);
 
     &:hover{
-
-        background: darken(@grey-verylight, 5%);
+        background: darken(#DDD, 3%);
 
         .node-links{
             right:0px;
@@ -124,7 +124,6 @@
         width:4px;
         background:@contrast-color;
     }
-
 
     .node-links{
         position:absolute;

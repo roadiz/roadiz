@@ -12,7 +12,7 @@
     <header class="content-header header-node header-node-edit">
         {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
         <h1 class="content-title node-edit-title">
-            {{ "edit.node.%name%"|trans({'%name%': currentTitle}) }}
+            {{ "edit.node.%name%"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
             {% include 'nodes/nodeTypeCircle.html.twig' %}
         </h1>
         {% include 'nodes/navBack.html.twig' %}
