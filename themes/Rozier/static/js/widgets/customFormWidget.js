@@ -8,7 +8,7 @@ var CustomFormWidget = function () {
     _this.$sortables = $('.custom-forms-widget-sortable');
     _this.$toggleExplorerButtons = $('[data-custom-form-widget-toggle-explorer]');
     _this.$toggleUploaderButtons = $('[data-custom-form-widget-toggle-uploader]');
-    _this.$unlinkCustomFormButtons = $('[data-node-widget-unlink-custom-form]');
+    _this.$unlinkCustomFormButtons = $('[data-custom-form-widget-unlink-custom-form]');
 
     _this.init();
 };

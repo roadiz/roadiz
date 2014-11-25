@@ -1,5 +1,5 @@
 /*------------------------------------*\
-    NODES WIDGET
+    CUSTOM FORM WIDGET
 \*------------------------------------*/
 
 
@@ -76,7 +76,7 @@
 
 .custom-forms-widget-sortable{
     margin:0;
-    padding:13px 25px 20px;
+    padding:20px 25px 12px;
     background:#fff;
 
     .uk-sortable-placeholder{
@@ -87,22 +87,24 @@
 }
 
 .custom-forms-widget-sortable-list-item, .custom-forms-widget-dragging{
-
     position: relative;
     display: inline-block;
-    width:80px; height:80px;
-    margin-right:12px;
-    margin-top: 8px;
-    cursor: move;
+    width:205px; height:32px; 
+    margin:0 20px 8px 0;
+    padding-left:15px;
+    background: @grey-verylight;
+    color:#333;
+    font-size:12px; line-height:32px;
     overflow: hidden;
+    cursor: default;
+    .transition(0.4s background @easeOutExpo);
 
     &:hover{
 
+        background: darken(@grey-verylight, 5%);
+
         .custom-form-links{
-            bottom:0px;
-        }
-        .custom-form-platform-icon {
-            .opacity(0);
+            right:0px;
         }
     }
 
@@ -117,23 +119,21 @@
 
     .custom-form-border{
         position: absolute;
-        top:0; right:0; left:0;
-        height:4px;
+        top:0; bottom:0; left:0;
+        width:4px;
         background:@contrast-color;
     }
 
-
-
     .custom-form-links{
         position:absolute;
-        width:80px; height:30px;
-        bottom:-30px;
+        width:64px; height:32px;
+        top:0; right:-64px;
         overflow: hidden;
-        .transition(0.4s bottom @easeOutExpo);
+        .transition(0.4s right @easeOutExpo);
 
         .custom-form-link{ // a
             display: inline-block;
-            width:40px; height:30px;
+            width:32px; height:32px;
             .rounded(0);
             color:#333;
             .opacity(0.95);
@@ -164,23 +164,4 @@
         display: none;
     }
 
-    .custom-form-platform-icon{
-        width: 35px; height: 35px;
-        background-color: #EEE;
-        margin: -18px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        .rounded(4px);
-        text-align: center;
-        line-height: 37px;
-        .box-shadow(0px 0px 3px rgba(0, 0, 0, 0.1));
-        .opacity(0.95);
-        .transition(0.9s opacity @easeOutExpo);
-
-        i{
-            font-size: 28px;
-            color: #3C3C3C;
-        }
-    }
 }
