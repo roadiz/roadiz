@@ -321,7 +321,7 @@ class Font extends AbstractDateTimed
      */
     public function setHash($secret)
     {
-        $this->hash = substr(hash("crc32b", $this->name.$secret), 0, 12);
+        $this->hash = substr(hash("crc32b", $this->name.$this->getVariant().$secret), 0, 12);
 
         return $this;
     }

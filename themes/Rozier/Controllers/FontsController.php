@@ -359,7 +359,7 @@ class FontsController extends RozierApp
         );
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
-            ->add('font_id', 'hidden', array(
+            ->add('fontId', 'hidden', array(
                 'data'=>$font->getId()
             ))
             ->add('name', 'text', array(
@@ -570,7 +570,10 @@ class FontsController extends RozierApp
         if (isset($data['name'])) {
             $existing = $this->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Font')
-                    ->findOneBy(array('name' => $data['name'], 'variant' => $data['variant']));
+                    ->findOneBy(array(
+                        'name' => $data['name'],
+                        'variant' => $data['variant']
+                    ));
             if ($existing !== null &&
                 $existing->getId() != $font->getId()) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans("font.name.already_exists"), 1);
