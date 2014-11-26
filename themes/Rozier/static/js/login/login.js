@@ -11,7 +11,7 @@
 
         var myImage = new Image(window.width, window.height);
         myImage.src = splash.url;
-        console.log(myImage);
+        // console.log(myImage);
         myImage.onload = onLoad;
     }
 })();

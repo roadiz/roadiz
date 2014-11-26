@@ -1,4 +1,4 @@
-<nav>
+<nav id="admin-menu-nav">
 	<header>
 		<div id="frontend-home-area">
 			<a id="frontend-home-link"
@@ -35,11 +35,11 @@
 		<li class="uk-parent">
 			<p><i class="uk-icon-rz-global-nodes"></i><span class="info">{% trans %}nodes{% endtrans %}</span></p>
 			<ul class="uk-nav-sub">
-				<li><a href="{{ path('nodesHomePage') }}"><i class="uk-icon-rz-all-nodes"></i><span class="info">{% trans %}all.nodes{% endtrans %}</span></a></li>
-				<li><a href="{{ path('nodesHomeDraftPage') }}"><i class="uk-icon-rz-draft-nodes"></i><span class="info">{% trans %}draft.nodes{% endtrans %}</span></a></li>
-				<li><a href="{{ path('nodesHomePendingPage') }}"><i class="uk-icon-rz-pending-nodes"></i><span class="info">{% trans %}pending.nodes{% endtrans %}</span></a></li>
-				<li><a href="{{ path('nodesHomeArchivedPage') }}"><i class="uk-icon-rz-archives-nodes"></i><span class="info">{% trans %}archived.nodes{% endtrans %}</span></a></li>
-				<li><a href="{{ path('nodesHomeDeletedPage') }}"><i class="uk-icon-rz-deleted-nodes"></i><span class="info">{% trans %}deleted.nodes{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('nodesHomePage') }}"><i class="uk-icon-rz-all-nodes"></i><span class="info">{% trans %}all.nodes{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('nodesHomeDraftPage') }}"><i class="uk-icon-rz-draft-nodes"></i><span class="info">{% trans %}draft.nodes{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('nodesHomePendingPage') }}"><i class="uk-icon-rz-pending-nodes"></i><span class="info">{% trans %}pending.nodes{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('nodesHomeArchivedPage') }}"><i class="uk-icon-rz-archives-nodes"></i><span class="info">{% trans %}archived.nodes{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('nodesHomeDeletedPage') }}"><i class="uk-icon-rz-deleted-nodes"></i><span class="info">{% trans %}deleted.nodes{% endtrans %}</span></a></li>
 			</ul>
 		</li>
 		{% endif %}
@@ -73,24 +73,24 @@
 
 			{% if (securityContext.Granted('ROLE_ACCESS_NODETYPES')) %}
 
-				<li><a href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-rz-manage-nodes"></i><span class="info">{% trans %}manage.nodeTypes{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-rz-manage-nodes"></i><span class="info">{% trans %}manage.nodeTypes{% endtrans %}</span></a></li>
 
 			{% endif %}
 
 			{% if (securityContext.Granted('ROLE_ACCESS_TRANSLATIONS')) %}
 
-				<li><a href="{{ path('translationsHomePage') }}"><i class="uk-icon-rz-translate"></i><span class="info">{% trans %}manage.translations{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('translationsHomePage') }}"><i class="uk-icon-rz-translate"></i><span class="info">{% trans %}manage.translations{% endtrans %}</span></a></li>
 			{% endif %}
 
 			{% if (securityContext.Granted('ROLE_ACCESS_THEMES')) %}
 
-				<li><a href="{{ path('themesHomePage') }}"><i class="uk-icon-rz-themes"></i><span class="info">{% trans %}manage.themes{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('themesHomePage') }}"><i class="uk-icon-rz-themes"></i><span class="info">{% trans %}manage.themes{% endtrans %}</span></a></li>
 
 			{% endif %}
 
 			{% if (securityContext.Granted('ROLE_ACCESS_FONTS')) %}
 
-				<li><a href="{{ path('fontsHomePage') }}"><i class="uk-icon-rz-fontes"></i><span class="info">{% trans %}manage.fonts{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('fontsHomePage') }}"><i class="uk-icon-rz-fontes"></i><span class="info">{% trans %}manage.fonts{% endtrans %}</span></a></li>
 			{% endif %}
 			</ul>
 		</li>
@@ -108,19 +108,19 @@
 
 				{% if (securityContext.Granted('ROLE_ACCESS_USERS')) %}
 
-				<li><a href="{{ path('usersHomePage') }}"><i class="uk-icon-rz-user"></i><span class="info">{% trans %}manage.users{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('usersHomePage') }}"><i class="uk-icon-rz-user"></i><span class="info">{% trans %}manage.users{% endtrans %}</span></a></li>
 
 				{% endif %}
 
 				{% if (securityContext.Granted('ROLE_ACCESS_ROLES')) %}
 
-				<li><a href="{{ path('rolesHomePage') }}"><i class="uk-icon-rz-roles"></i><span class="info">{% trans %}manage.roles{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('rolesHomePage') }}"><i class="uk-icon-rz-roles"></i><span class="info">{% trans %}manage.roles{% endtrans %}</span></a></li>
 
 				{% endif %}
 
 				{% if (securityContext.Granted('ROLE_ACCESS_GROUPS')) %}
 
-				<li><a href="{{ path('groupsHomePage') }}"><i class="uk-icon-rz-groups"></i><span class="info">{% trans %}manage.groups{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('groupsHomePage') }}"><i class="uk-icon-rz-groups"></i><span class="info">{% trans %}manage.groups{% endtrans %}</span></a></li>
 
 				{% endif %}
 			</ul>
@@ -137,7 +137,7 @@
 
 			{% if (securityContext.Granted('ROLE_ACCESS_CUSTOMFORMS')) %}
 
-				<li><a href="{{ path('customFormsHomePage') }}">
+				<li class="uk-nav-sub-item"><a href="{{ path('customFormsHomePage') }}">
 					<i class="uk-icon-rz-surveys"></i>
 					<span class="info">{% trans %}manage.customForms{% endtrans %}</span>
 					</a>
@@ -147,7 +147,7 @@
 
 			{% if (securityContext.Granted('ROLE_ACCESS_NEWSLETTERS')) %}
 
-				<li class="uk-rz-coming-soon"><a href="#">
+				<li class="uk-nav-sub-item uk-rz-coming-soon"><a href="#">
 					<i class="uk-icon-rz-newsletters"></i>
 					<span class="info">{% trans %}manage.newsletters{% endtrans %}</span>
 					</a>
@@ -157,7 +157,7 @@
 
 			{% if (securityContext.Granted('ROLE_ACCESS_MANAGE_SUBSCRIBERS')) %}
 
-				<li class="uk-rz-coming-soon"><a href="#">
+				<li class="uk-nav-sub-item uk-rz-coming-soon"><a href="#">
 					<i class="uk-icon-rz-subscribers"></i>
 					<span class="info">{% trans %}manage.subscribers{% endtrans %}</span>
 					</a>
@@ -167,7 +167,7 @@
 
 			{% if (securityContext.Granted('ROLE_ACCESS_COMMENTS')) %}
 
-				<li class="uk-rz-coming-soon"><a href="#">
+				<li class="uk-nav-sub-item uk-rz-coming-soon"><a href="#">
 					<i class="uk-icon-rz-comments"></i><span class="info">{% trans %}manage.comments{% endtrans %}</span>
 					</a>
 				</li>
@@ -184,13 +184,13 @@
 		<li class="uk-parent">
 			<p><i class="uk-icon-rz-settings"></i><span class="info">{% trans %}settings{% endtrans %}</span></p>
 			<ul class="uk-nav-sub">
-				<li><a href="{{ path('settingsHomePage') }}"><i class="uk-icon-rz-settings-general"></i><span class="info">{% trans %}all.settings{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('settingsHomePage') }}"><i class="uk-icon-rz-settings-general"></i><span class="info">{% trans %}all.settings{% endtrans %}</span></a></li>
 
 				{% for group in settingGroups %}
-				<li><a href="{{ path('settingGroupsSettingsPage', {'settingGroupId': group.getId}) }}"><i class="uk-icon-rz-settings-group"></i><span class="info">{{ group.getName }}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('settingGroupsSettingsPage', {'settingGroupId': group.getId}) }}"><i class="uk-icon-rz-settings-group"></i><span class="info">{{ group.getName }}</span></a></li>
 				{% endfor %}
 
-				<li><a href="{{ path('settingGroupsHomePage') }}"><i class="uk-icon-rz-settings-groups"></i><span class="info">{% trans %}setting.groups{% endtrans %}</span></a></li>
+				<li class="uk-nav-sub-item"><a href="{{ path('settingGroupsHomePage') }}"><i class="uk-icon-rz-settings-groups"></i><span class="info">{% trans %}setting.groups{% endtrans %}</span></a></li>
 			</ul>
 		</li>
 

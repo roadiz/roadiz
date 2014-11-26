@@ -2066,7 +2066,8 @@ GeotagField.prototype.bindSingleField = function(element) {
 
     var mapOptions = {
         center: new google.maps.LatLng(jsonCode.lat, jsonCode.lng),
-        zoom: jsonCode.zoom
+        zoom: jsonCode.zoom,
+        styles: Rozier.mapsStyle
     };
 
     /*
@@ -2121,6 +2122,13 @@ GeotagField.prototype.bindSingleField = function(element) {
 
     setTimeout(function () {
         google.maps.event.trigger(map, "resize");
+
+        if (null !== marker) {
+            map.panTo(marker.getPosition());
+        } else {
+            map.panTo(mapOptions.center);
+        }
+
     }, 500);
 };
 
@@ -2439,7 +2447,7 @@ MarkdownEditor.prototype.fullscreenActive = [];
 MarkdownEditor.prototype.init = function(){
     var _this = this;
 
-    if(_this.$cont.length){
+    if(_this.$cont.length && _this.$textarea.length){
 
         for(var i = 0; i < _this.$cont.length; i++) {
 
@@ -2447,9 +2455,8 @@ MarkdownEditor.prototype.init = function(){
             $(_this.$cont[i]).find('.uk-htmleditor-button-code').attr('data-index',i);
             $(_this.$cont[i]).find('.uk-htmleditor-button-preview').attr('data-index',i);
             $(_this.$cont[i]).find('.uk-htmleditor-button-fullscreen').attr('data-index',i);
-            $(_this.$cont[i]).find('textarea').attr('data-index',i);
+            $(_this.$cont[i]).find('.markdown_textarea').attr('data-index',i);
             $(_this.$cont[i]).find('.CodeMirror').attr('data-index',i);
-
 
             // Check if a desc is defined
             if(_this.$textarea[i].getAttribute('data-desc') !== ''){
@@ -3245,6 +3252,9 @@ RozierMobile = function(){
     // Selectors
     _this.$menu = $('#menu-mobile');
     _this.$adminMenu = $('#admin-menu');
+    _this.$adminMenuLink = _this.$adminMenu.find('a');
+    _this.$adminMenuNavParent = _this.$adminMenu.find('.uk-parent');
+    _this.$mainContentOverlay = $('#main-content-overlay');
 
     // Methods
     _this.init();
@@ -3255,6 +3265,8 @@ RozierMobile = function(){
 RozierMobile.prototype.$menu = null;
 RozierMobile.prototype.menuOpen = false;
 RozierMobile.prototype.$adminMenu = null;
+RozierMobile.prototype.$adminMenuNavParent = null;
+RozierMobile.prototype.$mainContentOverlay = null;
 
 
 /**
@@ -3266,6 +3278,9 @@ RozierMobile.prototype.init = function(){
 
     // Events
     _this.$menu.on('click', $.proxy(_this.menuClick, _this));
+    _this.$adminMenuLink.on('click', $.proxy(_this.adminMenuLinkClick, _this));
+    _this.$adminMenuNavParent.on('click', $.proxy(_this.adminMenuNavParentClick, _this));
+    _this.$mainContentOverlay.on('click', $.proxy(_this.mainContentOverlayClick, _this));
 
 };
 
@@ -3277,13 +3292,8 @@ RozierMobile.prototype.init = function(){
 RozierMobile.prototype.menuClick = function(e){
     var _this = this;
 
-    
-    if(!_this.menuOpen){
-        _this.openMenu();
-    }
-    else{
-        _this.closeMenu();
-    }
+    if(!_this.menuOpen)_this.openMenu();
+    else _this.closeMenu();
 
 };
 
@@ -3295,9 +3305,12 @@ RozierMobile.prototype.menuClick = function(e){
 RozierMobile.prototype.openMenu = function(){
     var _this = this;
 
-    _this.$adminMenu[0].style.display = 'block';
-    _this.menuOpen = true;
+    TweenLite.to(_this.$adminMenu, 0.6, {x:0, ease:Expo.easeOut});
 
+    _this.$mainContentOverlay[0].style.display = 'block';
+    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0.5, ease:Expo.easeOut});
+     
+    _this.menuOpen = true;
 };
 
 
@@ -3308,8 +3321,72 @@ RozierMobile.prototype.openMenu = function(){
 RozierMobile.prototype.closeMenu = function(){
     var _this = this;
 
-    _this.$adminMenu[0].style.display = 'none';  
+    var adminMenuX = -Rozier.windowWidth*0.8;
+
+    TweenLite.to(_this.$adminMenu, 0.6, {x:adminMenuX, ease:Expo.easeOut});
+
+    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0, ease:Expo.easeOut, onComplete:function(){
+        _this.$mainContentOverlay[0].style.display = 'none';
+    }});
+    
     _this.menuOpen = false;  
+};
+
+/**
+ * Admin menu link click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.adminMenuLinkClick = function(e){
+    var _this = this;
+
+    _this.closeMenu();
+
+};
+
+
+/**
+ * Main content overlay click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.mainContentOverlayClick = function(e){
+    var _this = this;
+
+    console.log('main content overlay click');
+
+     _this.closeMenu();
+
+};
+
+
+/**
+ * Admin menu nav parent click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.adminMenuNavParentClick = function(e){
+    var _this = this;
+
+    var $ukNavSub = $(e.currentTarget).find('.uk-nav-sub');
+
+    // Open
+    if(e.currentTarget.className.indexOf('nav-open') == -1) {
+        // console.log('open');
+        var $ukNavSubItem = $ukNavSub.find('.uk-nav-sub-item'),
+            ukNavSubHeight = $ukNavSubItem.length * 44;
+
+        $ukNavSub[0].style.display = 'block';
+        TweenLite.to($ukNavSub, 0.6, {height:ukNavSubHeight, ease:Expo.easeOut, onComplete:function(){
+            addClass(e.currentTarget, 'nav-open');
+        }});        
+
+    }
+    // Close
+    else{
+        // console.log('close');
+        TweenLite.to($ukNavSub, 0.6, {height:0, ease:Expo.easeOut, onComplete:function(){
+            removeClass(e.currentTarget, 'nav-open');
+            $ukNavSub[0].style.display = 'none';
+        }});
+    }
 
 };
 
@@ -3479,7 +3556,7 @@ Lazyload.prototype.applyContent = function(data) {
         $old.remove();
 
         _this.generalBind();
-        Rozier.centerVerticalObjects('ajax');
+        if(isMobile.any() === null) Rozier.centerVerticalObjects('ajax');
         $tempData.fadeIn(200, function () {
 
             $tempData.removeClass('new-content-global');
@@ -3505,7 +3582,7 @@ Lazyload.prototype.generalBind = function() {
     new ChildrenNodesField();
     new GeotagField();
     new StackNodeTree();
-    new SaveButtons();
+    if(isMobile.any() === null) new SaveButtons();
     new TagAutocomplete();
     new FolderAutocomplete();
     new NodeTypeFieldsPosition();
@@ -3568,7 +3645,7 @@ Lazyload.prototype.generalBind = function() {
     }
 
     // Animate actions menu
-    if($('.actions-menu').length){
+    if($('.actions-menu').length && isMobile.any() === null){
         TweenLite.to('.actions-menu', 0.5, {right:0, delay:0.4, ease:Expo.easeOut});
     }
 
@@ -3818,7 +3895,7 @@ Rozier.onDocumentReady = function(event) {
 	Rozier.$window = $(window);
 	Rozier.$body = $('body');
 
-	Rozier.centerVerticalObjects(); // this must be done before generalBind!
+	if(isMobile.any() === null) Rozier.centerVerticalObjects(); // this must be done before generalBind!
 
 
 	// --- Selectors --- //
@@ -4428,11 +4505,11 @@ Rozier.resize = function(){
 	}
 
 	// Check if mobile
-	if(_this.windowWidth <= 768 && isMobile.any() !== null && _this.resizeFirst) _this.mobile = new RozierMobile();
+	if(_this.windowWidth <= 768 && _this.resizeFirst) _this.mobile = new RozierMobile(); // && isMobile.any() !== null 
 
 
 	// Set height to panels (fix for IE9,10)
-	_this.$userPanelContainer[0].style.height = _this.windowHeight+'px';
+	if(isMobile.any() === null) _this.$userPanelContainer[0].style.height = _this.windowHeight+'px';
 	_this.$mainTreesContainer[0].style.height = _this.windowHeight+'px';
 	_this.$mainContentScrollable[0].style.height = _this.windowHeight+'px';  
 

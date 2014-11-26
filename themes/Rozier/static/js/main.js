@@ -52,7 +52,7 @@ Rozier.onDocumentReady = function(event) {
 	Rozier.$window = $(window);
 	Rozier.$body = $('body');
 
-	Rozier.centerVerticalObjects(); // this must be done before generalBind!
+	if(isMobile.any() === null) Rozier.centerVerticalObjects(); // this must be done before generalBind!
 
 
 	// --- Selectors --- //
@@ -662,11 +662,11 @@ Rozier.resize = function(){
 	}
 
 	// Check if mobile
-	if(_this.windowWidth <= 768 && isMobile.any() !== null && _this.resizeFirst) _this.mobile = new RozierMobile();
+	if(_this.windowWidth <= 768 && _this.resizeFirst) _this.mobile = new RozierMobile(); // && isMobile.any() !== null 
 
 
 	// Set height to panels (fix for IE9,10)
-	_this.$userPanelContainer[0].style.height = _this.windowHeight+'px';
+	if(isMobile.any() === null) _this.$userPanelContainer[0].style.height = _this.windowHeight+'px';
 	_this.$mainTreesContainer[0].style.height = _this.windowHeight+'px';
 	_this.$mainContentScrollable[0].style.height = _this.windowHeight+'px';  
 

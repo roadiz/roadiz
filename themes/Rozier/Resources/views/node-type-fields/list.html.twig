@@ -20,8 +20,8 @@
 				<thead>
 			        <tr>
 			            <th>{% trans %}name{% endtrans %}</th>
-			            <th>{% trans %}label{% endtrans %}</th>
-			            <th>{% trans %}type{% endtrans %}</th>
+			            <th class="mobile-cell-hidden">{% trans %}label{% endtrans %}</th>
+			            <th class="mobile-cell-hidden">{% trans %}type{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -29,8 +29,8 @@
 					{% for field in fields %}
 					<tr class="node-type-field-row" data-position="{{ field.position }}" data-field-id="{{ field.getId }}" class="node-type-field-row">
 						<td class="node-type-field-col node-type-field-col-1"><i class="uk-icon-chevron-right"></i><a class="node-type-field-edit-button rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" data-index="{{ loop.index0 }}">{{ field.getName }}</a></td>
-						<td class="node-type-field-col">{{ field.getLabel }}</td>
-						<td class="node-type-field-col">{{ field.getTypeName|trans }}</td>
+						<td class="mobile-cell-hidden node-type-field-col">{{ field.getLabel }}</td>
+						<td class="mobile-cell-hidden node-type-field-col">{{ field.getTypeName|trans }}</td>
 						<td>
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small node-type-field-edit-button rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}" data-index="{{ loop.index0 }}"><i class="uk-icon-rz-pencil"></i></a>

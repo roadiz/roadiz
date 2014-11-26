@@ -109,7 +109,7 @@ GeotagField.prototype.bindSingleField = function(element) {
     setTimeout(function () {
         google.maps.event.trigger(map, "resize");
 
-        if (null !== marker) {
+        if (null !== marker) {
             map.panTo(marker.getPosition());
         } else {
             map.panTo(mapOptions.center);

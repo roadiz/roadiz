@@ -3,8 +3,8 @@
 {% block content %}
 <section class="content-global content-nav-and-filters">
 
-    <header class="content-header header-node-types header-node-types-list">
-        <h1 class="content-title nodes-node-types-title">{% trans %}customForm{% endtrans %}</h1>
+    <header class="content-header header-custom-forms header-custom-forms-list">
+        <h1 class="content-title custom-forms-title">{% trans %}customForm{% endtrans %}</h1>
         {% include 'widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <nav>
@@ -15,15 +15,15 @@
 
     {% include 'widgets/filtersBar.html.twig' %}
 
-    <article class="content content-no-action-menu content-node-types-list">
+    <article class="content content-no-action-menu content-custom-forms-list">
         <div class="content-table-cont">
             {% spaceless %}
-			<table class="node-types content-table uk-table">
+			<table class="custom-forms content-table uk-table">
 				<thead>
 			        <tr>
 			            <th>{% trans %}customForm.displayName{% endtrans %}</th>
 			            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
-			            <th></th>
+			            <th class="mobile-cell-hidden"></th>
 			            <th class="table-actions-row table-actions-row-6">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -33,7 +33,7 @@
 							<td class="name"><a href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}">
                                 <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getDisplayName }}</a></td>
 							{# <td>{{ type.getSourceEntityClassName }}</td> #}
-							<td><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
+							<td class="mobile-cell-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
 							<td>
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
