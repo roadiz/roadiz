@@ -30,6 +30,8 @@
  */
 namespace RZ\Roadiz\Core\ListManagers;
 
+use RZ\Roadiz\Core\Utils\Paginator;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -80,7 +82,7 @@ class EntityListManager
         $this->orderingArray = $preOrdering;
         $this->filteringArray = $preFilters;
         $this->assignation = array();
-        $this->queryArray = array();
+        $this->queryArray = $request->query->all();
 
         $this->itemPerPage = static::ITEM_PER_PAGE;
     }
@@ -120,7 +122,7 @@ class EntityListManager
      */
     public function handle($disabled = false)
     {
-        $this->paginator = new \RZ\Roadiz\Core\Utils\Paginator(
+        $this->paginator = new Paginator(
             $this->_em,
             $this->entityName,
             $this->itemPerPage,

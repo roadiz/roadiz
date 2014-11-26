@@ -33,35 +33,54 @@
     {% include 'widgets/filtersBar.html.twig' %}
 
     <article class="content content-no-action-menu">
+
+
+
+        {% form_theme nodeTypeForm 'forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="get" {{ form_enctype(nodeTypeForm) }}>
+            {{ form_widget(nodeTypeForm) }}
+        </form>
+
+
+
         {% form_theme form 'forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="get" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
         </form>
+
+
+
         <div class="content-table-cont">
             <table class="nodes content-table uk-table">
                 <thead>
                     <tr>
                         <th>{% trans %}nodeName{% endtrans %}
-                        {% if request.query.get("field") == 'nodeName' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=nodeName&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
-                        {% else %}
-                            <a href="?field=nodeName&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
-                        {% endif %}
+                            {% if request.query.get("field") == 'nodeName' and request.query.get("ordering") == "DESC" %}
+                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}nodeName&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
+                            {% else %}
+                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}nodeName&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+                            {% endif %}
                         </th>
                         <th>{% trans %}node.type{% endtrans %}
-                        {% if request.query.get("field") == 'nodeType' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=nodeType&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
-                        {% else %}
-                            <a href="?field=nodeType&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
-                        {% endif %}
+                            {% if request.query.get("field") == 'nodeType' and request.query.get("ordering") == "DESC" %}
+                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}nodeType&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
+                            {% else %}
+                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}nodeType&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+                            {% endif %}
                         </th>
                         <th>{% trans %}node.status{% endtrans %}</th>
                         <th>{% trans %}created.at{% endtrans %}
+                            {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
+                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}createdAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
+                            {% else %}
+                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}createdAt&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+                            {% endif %}
+                        </th>
                         <th>{% trans %}updated.at{% endtrans %}
                         {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=updatedAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
+                            <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}updatedAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
                         {% else %}
-                            <a href="?field=updatedAt&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
+                            <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}updatedAt&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
                         {% endif %}
                         </th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>

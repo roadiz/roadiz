@@ -43,6 +43,7 @@ use RZ\Roadiz\CMS\Forms\CompareDatetimeType;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -157,12 +158,12 @@ class SearchController extends RozierApp
             $listManager->handle();
 
             $this->assignation['filters'] = $listManager->getAssignation();
-            $this->assignation['filters']['search'] = false;
             $this->assignation['nodes'] = $listManager->getEntities();
 
         }
 
         $this->assignation['form'] = $form->createView();
+        $this->assignation['filters']['searchDisable'] = true;
 
         return new Response(
             $this->getTwig()->render('search/list.html.twig', $this->assignation),
@@ -174,6 +175,11 @@ class SearchController extends RozierApp
     public function searchNodeSourceAction(Request $request, $nodetypeId) {
 
         $nodetype = $this->getService('em')->find('RZ\Roadiz\Core\Entities\NodeType', $nodetypeId);
+
+
+
+
+
 
         $builder = $this->buildSimpleForm("__node__");
         $builder = $this->extendForm($builder, $nodetype);
@@ -187,6 +193,53 @@ class SearchController extends RozierApp
         ));
         $form = $builder->getForm();
         $form->handleRequest();
+
+
+
+
+
+
+
+        $builderNodeType = $this->getService('formFactory')
+                                ->createNamedBuilder('nodeTypeForm', "form", array(), array("method" => "get"));
+        $builderNodeType->add("nodetype", new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+                              array(
+                                  'empty_value' => "",
+                                  'required' => false
+                              ))
+                        ->add("nodetypeSubmit", "submit", array(
+                            "label" => $this->getTranslator()->trans("select.nodetype"),
+                            "attr" => array("class" => "uk-button uk-button-primary")
+                        ));
+
+        $nodeTypeForm = $builderNodeType->getForm();
+        $nodeTypeForm->handleRequest();
+
+
+
+
+
+
+
+
+        if ($nodeTypeForm->isValid()) {
+            $response = new RedirectResponse(
+                $this->getService('urlGenerator')->generate(
+                'searchNodeSourcePage', array("nodetypeId" => $nodeTypeForm->getData()['nodetype'])
+                )
+            );
+            $response->prepare($request);
+
+            return $response->send();
+        }
+
+
+
+
+
+
+
+
 
         if ($form->isValid()) {
 
@@ -221,7 +274,6 @@ class SearchController extends RozierApp
             }
             $listManager->handle();
             $this->assignation['filters'] = $listManager->getAssignation();
-            $this->assignation['filters']['search'] = false;
             $this->assignation['nodesSources'] = $listManager->getEntities();
             $nodes = array();
             foreach ($listManager->getEntities() as $nodesSource) {
@@ -273,7 +325,15 @@ class SearchController extends RozierApp
             }
         }
 
+
+
         $this->assignation['form'] = $form->createView();
+        $this->assignation['nodeTypeForm'] = $nodeTypeForm->createView();
+
+
+
+
+        $this->assignation['filters']['searchDisable'] = true;
 
         return new Response(
             $this->getTwig()->render('search/list.html.twig', $this->assignation),

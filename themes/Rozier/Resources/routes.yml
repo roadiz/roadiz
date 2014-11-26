@@ -610,11 +610,11 @@ customFormFieldAjaxEdit:
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormFieldsController::editAction }
     requirements: { customFormFieldId : "[0-9]+" }
 
-searchNodeAction:
+searchNodePage:
     path:     /rz-admin/search
     defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeAction }
 
-searchNodeSourceAction:
+searchNodeSourcePage:
     path:     /rz-admin/search/{nodetypeId}
     defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeSourceAction }
     requirements: { nodetypeId : "[0-9]+" }
