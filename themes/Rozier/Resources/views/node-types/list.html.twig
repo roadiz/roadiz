@@ -23,9 +23,9 @@
 				<thead>
 			        <tr>
 			            <th>{% trans %}name{% endtrans %}</th>
-			            <th>{% trans %}nodeType.displayName{% endtrans %}</th>
-			            <th>{% trans %}nodeType.entityName{% endtrans %}</th>
-			            <th>{% trans %}nodeType.numberFields{% endtrans %}</th>
+			            <th class="mobile-cell-hidden">{% trans %}nodeType.displayName{% endtrans %}</th>
+			            <th class="mobile-cell-hidden">{% trans %}nodeType.entityName{% endtrans %}</th>
+			            <th class="mobile-cell-hidden">{% trans %}nodeType.numberFields{% endtrans %}</th>
 			            <th class="table-actions-row table-actions-row-4">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -35,9 +35,9 @@
 							<td class="name"><a href="{{ path('nodeTypesEditPage', { nodeTypeId: type.getId }) }}">
                                 <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getName }}
                             </a></td>
-							<td>{{ type.getDisplayName }}</td>
-							<td>{{ type.getSourceEntityClassName }}</td>
-							<td><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields{% endtranschoice %}</div></td>
+							<td class="mobile-cell-hidden">{{ type.getDisplayName }}</td>
+							<td class="mobile-cell-hidden">{{ type.getSourceEntityClassName }}</td>
+							<td class="mobile-cell-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields{% endtranschoice %}</div></td>
 							<td>
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodeTypesEditPage', { nodeTypeId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>

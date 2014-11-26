@@ -156,7 +156,7 @@ Lazyload.prototype.applyContent = function(data) {
         $old.remove();
 
         _this.generalBind();
-        Rozier.centerVerticalObjects('ajax');
+        if(isMobile.any() === null) Rozier.centerVerticalObjects('ajax');
         $tempData.fadeIn(200, function () {
 
             $tempData.removeClass('new-content-global');
@@ -182,7 +182,7 @@ Lazyload.prototype.generalBind = function() {
     new ChildrenNodesField();
     new GeotagField();
     new StackNodeTree();
-    new SaveButtons();
+    if(isMobile.any() === null) new SaveButtons();
     new TagAutocomplete();
     new FolderAutocomplete();
     new NodeTypeFieldsPosition();
@@ -245,7 +245,7 @@ Lazyload.prototype.generalBind = function() {
     }
 
     // Animate actions menu
-    if($('.actions-menu').length){
+    if($('.actions-menu').length && isMobile.any() === null){
         TweenLite.to('.actions-menu', 0.5, {right:0, delay:0.4, ease:Expo.easeOut});
     }
 

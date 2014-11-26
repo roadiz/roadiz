@@ -39,7 +39,7 @@ MarkdownEditor.prototype.fullscreenActive = [];
 MarkdownEditor.prototype.init = function(){
     var _this = this;
 
-    if(_this.$cont.length){
+    if(_this.$cont.length && _this.$textarea.length){
 
         for(var i = 0; i < _this.$cont.length; i++) {
 
@@ -47,9 +47,8 @@ MarkdownEditor.prototype.init = function(){
             $(_this.$cont[i]).find('.uk-htmleditor-button-code').attr('data-index',i);
             $(_this.$cont[i]).find('.uk-htmleditor-button-preview').attr('data-index',i);
             $(_this.$cont[i]).find('.uk-htmleditor-button-fullscreen').attr('data-index',i);
-            $(_this.$cont[i]).find('textarea').attr('data-index',i);
+            $(_this.$cont[i]).find('.markdown_textarea').attr('data-index',i);
             $(_this.$cont[i]).find('.CodeMirror').attr('data-index',i);
-
 
             // Check if a desc is defined
             if(_this.$textarea[i].getAttribute('data-desc') !== ''){

@@ -20,8 +20,8 @@
 			        <tr>
 			            <th>{% trans %}name{% endtrans %}</th>
 			            <th>{% trans %}font.variant{% endtrans %}</th>
-			            <th>{% trans %}font.files{% endtrans %}</th>
-			            <th>{% trans %}font.cssfamily{% endtrans %}</th>
+			            <th class="mobile-cell-hidden">{% trans %}font.files{% endtrans %}</th>
+			            <th class="mobile-cell-hidden">{% trans %}font.cssfamily{% endtrans %}</th>
 			            <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -32,13 +32,13 @@
 							<a href="{{ path('fontsEditPage', { fontId: font.getId }) }}">{{ font.getName }}</a>
 						</td>
 						<td>{{ font.getReadableVariant }}</td>
-						<td>
+						<td class="mobile-cell-hidden">
 							{% if font.getEOTFilename %}<div class="uk-badge uk-badge-table">EOT</div>{% endif %}
 							{% if font.getWOFFFilename %}<div class="uk-badge uk-badge-table">WOFF</div>{% endif %}
 							{% if font.getSVGFilename %}<div class="uk-badge uk-badge-table">SVG</div>{% endif %}
 							{% if font.getOTFFilename %}<div class="uk-badge uk-badge-table">OTF</div>{% endif %}
 						</td>
-						<td><code>{{ font.getHash }}</code></td>
+						<td class="mobile-cell-hidden"><code>{{ font.getHash }}</code></td>
 						<td>
 						{% spaceless %}
 							<a class="uk-button uk-button-content uk-button-small" href="{{ path('fontsEditPage', { fontId: font.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>

@@ -182,7 +182,13 @@
                 vertical-align: top;
                 border-left: 1px solid @grey-form-border;
                 padding-left: 10px;
+                text-decoration: none;
                 color: @grey-form-submit-textsimple;
+                .transition(color ease 0.35s);
+
+                &:hover {
+                    color: @grey-form-text;
+                }       
             }
         }
     }
