@@ -21,9 +21,9 @@
 				<thead>
 			        <tr>
 			            <th class="informations">{% trans %}theme{% endtrans %}</th>
-			            <th class="mobile-cell-hidden">{% trans %}theme.classname{% endtrans %}</th>
-			            <th class="mobile-cell-hidden">{% trans %}theme.host{% endtrans %}</th>
-			            <th class="mobile-cell-hidden">{% trans %}status{% endtrans %}</th>
+			            <th class="mobile-hidden">{% trans %}theme.classname{% endtrans %}</th>
+			            <th class="mobile-hidden">{% trans %}theme.host{% endtrans %}</th>
+			            <th class="mobile-hidden">{% trans %}status{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -35,17 +35,17 @@
 								<p class="{{type}}">{{ info }}</p>
 							{% endfor %}
 						</td>
-						<td class="mobile-cell-hidden">
+						<td class="mobile-hidden">
 							<a href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{{ theme.getClassName }}</a>
 						</td>
-						<td class="mobile-cell-hidden">
+						<td class="mobile-hidden">
 							{% if theme.getHostname != "*" %}
 							{{ theme.getHostname }}
 							{% else %}
 							<div class="uk-badge uk-badge-table">{% trans %}all.hostnames{% endtrans %}</div> <!-- uk-badge-success -->
 							{% endif %}
 						</td>
-						<td class="mobile-cell-hidden">
+						<td class="mobile-hidden">
 						{% if not theme.isAvailable %}<div class="uk-badge uk-badge-table"><span class="uk-icon-eye-slash"></span> {% trans %}theme.disabled{% endtrans %}</div>{% endif %}
 						{% if theme.isBackendTheme %}<div class="uk-badge uk-badge-table"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
 						</td>

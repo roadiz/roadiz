@@ -21,7 +21,7 @@
 				<thead>
 			        <tr>
 			            <th>{% trans %}name{% endtrans %}</th>
-			            <th>{% trans %}settingGroup.in.menu{% endtrans %}</th>
+			            <th class="mobile-hidden">{% trans %}settingGroup.in.menu{% endtrans %}</th>
 			            <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -29,7 +29,7 @@
 					{% for settingGroup in settingGroups %}
 					<tr>
 						<td><a href="{{ path('settingGroupsEditPage', { settingGroupId: settingGroup.getId }) }}">{{ settingGroup.getName }}</a></td>
-						<td>{% if settingGroup.isInMenu %}<div class="uk-badge uk-badge-table uk-badge-notification"><i class="uk-icon-rz-statuses"></i></div>{% endif %}</td>
+						<td class="mobile-hidden">{% if settingGroup.isInMenu %}<div class="uk-badge uk-badge-table uk-badge-notification"><i class="uk-icon-rz-statuses"></i></div>{% endif %}</td>
 						<td>
 						{% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('settingGroupsEditPage', { settingGroupId: settingGroup.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>

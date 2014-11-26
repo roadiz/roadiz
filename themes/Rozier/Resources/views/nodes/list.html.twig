@@ -45,15 +45,15 @@
                             <a href="?field=nodeName&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
                         {% endif %}
                         </th>
-                        <th class="mobile-cell-hidden">{% trans %}node.type{% endtrans %}
+                        <th class="mobile-hidden">{% trans %}node.type{% endtrans %}
                         {% if request.query.get("field") == 'nodeType' and request.query.get("ordering") == "DESC" %}
                             <a href="?field=nodeType&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
                         {% else %}
                             <a href="?field=nodeType&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
                         {% endif %}
                         </th>
-                        <th class="mobile-cell-hidden">{% trans %}node.status{% endtrans %}</th>
-                        <th class="mobile-cell-hidden">{% trans %}last.modification{% endtrans %}
+                        <th class="mobile-hidden">{% trans %}node.status{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}last.modification{% endtrans %}
                         {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
                             <a href="?field=updatedAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
                         {% else %}
@@ -71,8 +71,8 @@
                         {% else %}
                         <td class="nodes-list-item-link"><span class="nodes-list-item-color" style="background-color:{{ node.nodeType.color }};"></span><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeName }}</a></td>
                         {% endif %}
-                        <td class="mobile-cell-hidden">{{ node.getNodeType.getDisplayName }}</td>
-                        <td class="mobile-cell-hidden">  <!-- style="text-align:center;" -->
+                        <td class="mobile-hidden">{{ node.getNodeType.getDisplayName }}</td>
+                        <td class="mobile-hidden">  <!-- style="text-align:center;" -->
                             {% spaceless %}
                                 {% if node.isDraft == true %} 
                                 <div class="uk-button-status uk-button-draft" title="{% trans %}node.draft{% endtrans %}" data-uk-tooltip="{animation:true}">
@@ -106,7 +106,7 @@
                                 {% endif %}                                
                             {% endspaceless %}
                         </td>
-                        <td class="mobile-cell-hidden">{{ node.getUpdatedAt|localizeddate('short', 'none') }}</td>
+                        <td class="mobile-hidden">{{ node.getUpdatedAt|localizeddate('short', 'none') }}</td>
                         <td>
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditPage', { nodeId: node.getId }) }}" title="{% trans %}edit.node{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
