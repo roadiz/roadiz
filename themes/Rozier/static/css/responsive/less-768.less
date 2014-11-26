@@ -10,6 +10,11 @@
 /* -------- STYLES -------- */
 
 
+.mobile-hidden{
+    display: none;
+}
+
+
 // Login
 #login {
     width:80%; height:80%; min-height:400px;
@@ -153,6 +158,7 @@
         top:50px; bottom:0; left:0;
         width:80%;
         .translate(-100%, 0);
+        z-index:8;
 
         header{
             display: none;
@@ -303,8 +309,17 @@
     padding-bottom:20px;
 }
 
+.content-header-nav-back{
+    top:15px; left:15px;
+}
+
 .content-title{
     font-size:24px; line-height:32px;
+    padding:25px 0 10px 0px;
+}
+
+#uk-navbar-filter-count{
+    display: none;
 }
 
 
@@ -326,7 +341,13 @@
 
 // Content header
 .content-header-action-menu{
-    right:0; left:0; text-align: center;
+    position: relative;
+    top:12px; right:0; left:0; 
+    text-align: center;
+
+    .uk-button{
+        margin-bottom:4px;
+    }
 }
 
 
@@ -345,12 +366,6 @@
             margin-right:10px;
         }
     }
-}
-
-
-// Tables
-.mobile-cell-hidden{
-    display: none;
 }
 
 
@@ -531,4 +546,14 @@
 
 #add-custom-form-form .form-col-datetime, #edit-custom-form-form .form-col-datetime, #add-custom-form-form .form-col-color, #edit-custom-form-form .form-col-color{
     margin-left:0;
+}
+
+
+// Settings
+#add-setting-form .form-col-type, #edit-setting-form .form-col-type{
+    margin:20px 0 0 0;
+}
+
+.settings .table-actions-row{
+    width:95px;
 }

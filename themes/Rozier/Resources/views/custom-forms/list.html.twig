@@ -23,7 +23,7 @@
 			        <tr>
 			            <th>{% trans %}customForm.displayName{% endtrans %}</th>
 			            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
-			            <th class="mobile-cell-hidden"></th>
+			            <th class="mobile-hidden"></th>
 			            <th class="table-actions-row table-actions-row-6">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -33,7 +33,7 @@
 							<td class="name"><a href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}">
                                 <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getDisplayName }}</a></td>
 							{# <td>{{ type.getSourceEntityClassName }}</td> #}
-							<td class="mobile-cell-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
+							<td class="mobile-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
 							<td>
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>

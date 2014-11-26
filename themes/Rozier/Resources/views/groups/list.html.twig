@@ -20,8 +20,8 @@
                 <thead>
                     <tr>
                         <th>{% trans %}name{% endtrans %}</th>
-                        <th class="mobile-cell-hidden">{% trans %}roles{% endtrans %}</th>
-                        <th class="mobile-cell-hidden">{% trans %}users{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}roles{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}users{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
                 </thead>
@@ -32,10 +32,10 @@
                             {% if not group.required %}<a href="{{ path('groupsEditPage', { groupId: group.getId }) }}">{{ group.getName }}</a>{% else %}
                             {{ group.getName }}{% endif %}
                         </td>
-                        <td class="mobile-cell-hidden">
+                        <td class="mobile-hidden">
                             {% transchoice group.getRolesEntities.count %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}
                         </td>
-                        <td class="mobile-cell-hidden">
+                        <td class="mobile-hidden">
                             {% transchoice group.getUsers.count %}{0} no.user|{1} 1.user|]1,Inf] %count%.users{% endtranschoice %}
                         </td>
                         <td>
