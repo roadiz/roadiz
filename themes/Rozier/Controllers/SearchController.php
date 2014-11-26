@@ -129,8 +129,44 @@ class SearchController extends RozierApp
 
     public function searchNodeAction(Request $request) {
 
-        $form = $this->buildSimpleForm("")->getForm();
+        $form = $this->buildSimpleForm("")->add("searchANode", "submit", array(
+            "label" => $this->getTranslator()->trans("search.a.node"),
+            "attr" => array("class" => "uk-button uk-button-primary")
+        ))->getForm();
         $form->handleRequest();
+
+        $builderNodeType = $this->getService('formFactory')
+        ->createNamedBuilder('nodeTypeForm', "form", array(), array("method" => "get"));
+        $builderNodeType->add("nodetype", new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+        array(
+            'empty_value' => "",
+            'required' => false
+        ))
+        ->add("nodetypeSubmit", "submit", array(
+            "label" => $this->getTranslator()->trans("select.nodetype"),
+            "attr" => array("class" => "uk-button uk-button-primary")
+        ));
+
+        $nodeTypeForm = $builderNodeType->getForm();
+        $nodeTypeForm->handleRequest();
+
+        if ($nodeTypeForm->isValid()) {
+            if (empty($nodeTypeForm->getData()['nodetype'])) {
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate('searchNodePage')
+                );
+                $response->prepare($request);
+            } else {
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate(
+                        'searchNodeSourcePage', array("nodetypeId" => $nodeTypeForm->getData()['nodetype'])
+                    )
+                );
+                $response->prepare($request);
+            }
+
+            return $response->send();
+        }
 
         if ($form->isValid()) {
 
@@ -163,6 +199,7 @@ class SearchController extends RozierApp
         }
 
         $this->assignation['form'] = $form->createView();
+        $this->assignation['nodeTypeForm'] = $nodeTypeForm->createView();
         $this->assignation['filters']['searchDisable'] = true;
 
         return new Response(
@@ -175,11 +212,6 @@ class SearchController extends RozierApp
     public function searchNodeSourceAction(Request $request, $nodetypeId) {
 
         $nodetype = $this->getService('em')->find('RZ\Roadiz\Core\Entities\NodeType', $nodetypeId);
-
-
-
-
-
 
         $builder = $this->buildSimpleForm("__node__");
         $builder = $this->extendForm($builder, $nodetype);
@@ -194,18 +226,13 @@ class SearchController extends RozierApp
         $form = $builder->getForm();
         $form->handleRequest();
 
-
-
-
-
-
-
         $builderNodeType = $this->getService('formFactory')
                                 ->createNamedBuilder('nodeTypeForm', "form", array(), array("method" => "get"));
         $builderNodeType->add("nodetype", new \RZ\Roadiz\CMS\Forms\NodeTypesType,
                               array(
                                   'empty_value' => "",
-                                  'required' => false
+                                  'required' => false,
+                                  'data' => $nodetypeId
                               ))
                         ->add("nodetypeSubmit", "submit", array(
                             "label" => $this->getTranslator()->trans("select.nodetype"),
@@ -215,31 +242,22 @@ class SearchController extends RozierApp
         $nodeTypeForm = $builderNodeType->getForm();
         $nodeTypeForm->handleRequest();
 
-
-
-
-
-
-
-
         if ($nodeTypeForm->isValid()) {
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate(
-                'searchNodeSourcePage', array("nodetypeId" => $nodeTypeForm->getData()['nodetype'])
-                )
-            );
-            $response->prepare($request);
-
+            if (empty($nodeTypeForm->getData()['nodetype'])) {
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate('searchNodePage')
+                );
+                $response->prepare($request);
+            } else {
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate(
+                    'searchNodeSourcePage', array("nodetypeId" => $nodeTypeForm->getData()['nodetype'])
+                    )
+                );
+                $response->prepare($request);
+            }
             return $response->send();
         }
-
-
-
-
-
-
-
-
 
         if ($form->isValid()) {
 
@@ -329,9 +347,6 @@ class SearchController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
         $this->assignation['nodeTypeForm'] = $nodeTypeForm->createView();
-
-
-
 
         $this->assignation['filters']['searchDisable'] = true;
 

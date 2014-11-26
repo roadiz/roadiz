@@ -18,8 +18,6 @@
 
                 {% if filters.search %}<input type="hidden" name="search" value="{{ filters.search }}" />{% endif %}
 
-                <!-- {{ dump(request.getUri())}} -->
-                <!-- {{ dump(filters.nextPageQuery|replace("page=([0-9]+)", "page=42", true)) }} -->
                 {% if filters.previousPageQuery %}<a class="uk-button uk-button-filter" href="?{{ filters.previousPageQuery }}"><i class="uk-icon-rz-prev-page"></i></a>{% endif %}
 
                 <span class="filter-form-text pageTitle">{% trans %}page{% endtrans %}</span>
