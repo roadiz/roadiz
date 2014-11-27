@@ -104,6 +104,12 @@ class InstallCommand extends Command
                 } else {
                     $text .= '<error>A default translation is already installed.</error>'.PHP_EOL;
                 }
+
+                $configuration = new Configuration();
+                $configuration->setInstall(false);
+                $configuration->writeConfiguration();
+
+                $text .= '<info>Install mode has been changed to false…</info>'.PHP_EOL;
             }
         }
 

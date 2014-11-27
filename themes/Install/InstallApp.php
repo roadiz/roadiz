@@ -31,7 +31,7 @@
 
 namespace Themes\Install;
 
-use Themes\Install\Controllers\Configuration;
+use RZ\Roadiz\Console\Tools\Configuration;
 use Themes\Install\Controllers\Fixtures;
 use Themes\Install\Controllers\Requirements;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;

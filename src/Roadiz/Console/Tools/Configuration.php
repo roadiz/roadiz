@@ -28,7 +28,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-namespace Themes\Install\Controllers;
+namespace RZ\Roadiz\Console\Tools;
 
 /**
 * Configuration class
@@ -92,6 +92,38 @@ class Configuration
                 "sources/GeneratedNodeSources"
             )
         );
+    }
+
+    /**
+     * Set devMode value.
+     *
+     * @param boolean $value
+     *
+     * @return $this
+     */
+    public function setDevMode($value=true)
+    {
+        if (null !== $this->configuration) {
+            $this->configuration["devMode"] = (boolean) $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set install value.
+     *
+     * @param boolean $value
+     *
+     * @return $this
+     */
+    public function setInstall($value=true)
+    {
+        if (null !== $this->configuration) {
+            $this->configuration["install"] = (boolean) $value;
+        }
+
+        return $this;
     }
 
     /**

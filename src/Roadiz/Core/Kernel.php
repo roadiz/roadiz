@@ -211,6 +211,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $application->add(new \RZ\Roadiz\Console\RequirementsCommand);
         $application->add(new \RZ\Roadiz\Console\SolrCommand);
         $application->add(new \RZ\Roadiz\Console\CacheCommand);
+        $application->add(new \RZ\Roadiz\Console\ConfigurationCommand);
 
         // Use default Doctrine commands
         ConsoleRunner::addCommands($application);
