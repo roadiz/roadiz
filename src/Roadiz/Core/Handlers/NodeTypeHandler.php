@@ -161,7 +161,8 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
         return $this;
     }
 
-    public function regenerateEntityClass() {
+    public function regenerateEntityClass()
+    {
         $this->removeSourceEntityClass();
         $this->generateSourceEntityClass();
 

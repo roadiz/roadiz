@@ -69,10 +69,19 @@ Add this to your `config.json` to link your Roadiz install to your Solr server:
 
 ### Run self tests
 
-* *PHPUnit tests*: `phpunit --bootstrap bootstrap.php ./tests`
-* *Code quality*, use PHP_CodeSniffer with *PSR2 standard*:
+* Install *dev* dependencies: `composer update --dev`
+* *PHPUnit tests*:
 ```
-phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/Tests/* -p ./
+./vendor/bin/phpunit -v --bootstrap=bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
+```
+* *Code quality*, use PHP_CodeSniffer with *PSR2 standard*:
+
+```
+./vendor/bin/phpcs --report=full --report-file=./report.txt \
+                --extensions=php --warning-severity=0 \
+                --standard=PSR2 \
+                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/Tests/*,*/InlineMarkdown.php \
+                -p ./
 ```
 
 ### Migrating with an existing database
@@ -149,4 +158,3 @@ bin/roadiz cache --clear-all;
 
 If you are using a *OPCode var cache* like *APC*, *XCache*, you should empty it as Roadiz store doctrine
 configuration there for better performances.
-

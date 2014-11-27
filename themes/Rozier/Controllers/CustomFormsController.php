@@ -276,7 +276,7 @@ class CustomFormsController extends RozierApp
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
             if ($key == "displayName") {
-              $customForm->setName($value);
+                $customForm->setName($value);
             }
             $customForm->$setter($value);
         }

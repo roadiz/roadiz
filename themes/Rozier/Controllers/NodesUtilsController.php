@@ -136,10 +136,15 @@ class NodesUtilsController extends RozierApp
             $request->getSession()->getFlashBag()->add('confirm', $msg);
             $this->getService('logger')->info($msg);
 
-            $response = new RedirectResponse($this->getService('urlGenerator')
-                                                  ->generate('nodesEditPage',
-                                                             array("nodeId" => $newNode->getId())));
-        } catch(\Exception $e) {
+            $response = new RedirectResponse(
+                $this->getService('urlGenerator')
+                    ->generate(
+                        'nodesEditPage',
+                        array("nodeId" => $newNode->getId())
+                    )
+            );
+
+        } catch (\Exception $e) {
 
             $request->getSession()->getFlashBag()->add(
                 'error',
@@ -147,11 +152,15 @@ class NodesUtilsController extends RozierApp
                     '%name%' => $existingNode->getNodeName()
                 ))
             );
-            $request->getSession()->getFlashBag()->add('error',  $e->getMessage());
+            $request->getSession()->getFlashBag()->add('error', $e->getMessage());
 
-            $response = new RedirectResponse($this->getService('urlGenerator')
-                                                      ->generate('nodesEditPage',
-                                                                 array("nodeId" => $existingNode->getId())));
+            $response = new RedirectResponse(
+                $this->getService('urlGenerator')
+                    ->generate(
+                        'nodesEditPage',
+                        array("nodeId" => $existingNode->getId())
+                    )
+            );
         } finally {
             $response->prepare($request);
             return $response->send();

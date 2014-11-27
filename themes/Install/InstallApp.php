@@ -869,28 +869,28 @@ class InstallApp extends AppController
                 'required' => true
             ));
 
-            $themesType = new \RZ\Roadiz\CMS\Forms\ThemesType();
+        $themesType = new \RZ\Roadiz\CMS\Forms\ThemesType();
 
-            if ($themesType->getSize() > 0) {
-                $builder->add('separator_1', new SeparatorType(), array(
-                    'label' => $this->getTranslator()->trans('themes.frontend.description')
-                ))
-                ->add('install_theme', 'checkbox', array(
-                    'required' => false
-                ))
-                ->add(
-                    'className',
-                    $themesType,
-                    array(
-                        'label' => $this->getTranslator()->trans('theme.selector'),
-                        'required' => true,
-                        'constraints' => array(
-                            new \Symfony\Component\Validator\Constraints\NotNull(),
-                            new \Symfony\Component\Validator\Constraints\Type('string'),
-                        )
+        if ($themesType->getSize() > 0) {
+            $builder->add('separator_1', new SeparatorType(), array(
+                'label' => $this->getTranslator()->trans('themes.frontend.description')
+            ))
+            ->add('install_theme', 'checkbox', array(
+                'required' => false
+            ))
+            ->add(
+                'className',
+                $themesType,
+                array(
+                    'label' => $this->getTranslator()->trans('theme.selector'),
+                    'required' => true,
+                    'constraints' => array(
+                        new \Symfony\Component\Validator\Constraints\NotNull(),
+                        new \Symfony\Component\Validator\Constraints\Type('string'),
                     )
-                );
-            }
+                )
+            );
+        }
 
         return $builder->getForm();
     }

@@ -61,5 +61,4 @@ abstract class AbstractEntity implements PersistableInterface
     {
         $this->id = $id;
     }
-
 }

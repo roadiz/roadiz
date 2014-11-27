@@ -159,5 +159,4 @@ class DocumentTranslation extends AbstractEntity
 
         return $this;
     }
-
 }

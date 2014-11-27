@@ -74,7 +74,8 @@ class CustomFormController extends AppController
 
     public function addAction(Request $request, $customFormId)
     {
-        $customForm = $this->getService('em')->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
+        $customForm = $this->getService('em')
+                        ->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
 
         if (null !== $customForm) {
             $closeDate = $customForm->getCloseDate();
@@ -116,7 +117,8 @@ class CustomFormController extends AppController
                      */
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
-                            'customFormSendAction', array("customFormId" => $customFormId)
+                            'customFormSendAction',
+                            array("customFormId" => $customFormId)
                         )
                     );
 
@@ -125,7 +127,8 @@ class CustomFormController extends AppController
                     $this->getService('logger')->warning($e->getMessage());
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
-                            'customFormSendAction', array("customFormId" => $customFormId)
+                            'customFormSendAction',
+                            array("customFormId" => $customFormId)
                         )
                     );
                 }
@@ -164,9 +167,11 @@ class CustomFormController extends AppController
         $htmldoc->applyStylesheet(file_get_contents(
             RENZO_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
         ));
-        if (empty($receiver))
+
+        if (empty($receiver)) {
             $receiver = SettingsBag::get('email_sender');
-        // Create the message
+        }
+        // Create the message}
         $message = \Swift_Message::newInstance()
             // Give the message a subject
             ->setSubject($this->assignation['title'])
@@ -245,7 +250,8 @@ class CustomFormController extends AppController
         $fields = $customForm->getFields();
 
         $defaults = $request->query->all();
-        $form = $this->getService('formFactory')->create(new CustomFormsType($customForm), $defaults);
+        $form = $this->getService('formFactory')
+                    ->create(new CustomFormsType($customForm), $defaults);
 
         return $form;
     }

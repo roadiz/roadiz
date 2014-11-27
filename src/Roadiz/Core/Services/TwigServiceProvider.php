@@ -157,16 +157,19 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
          */
         $container['twig.centralTruncateExtension'] = function ($c) {
 
-            return new \Twig_SimpleFilter('centralTruncate', function ($object, $length, $offset=0, $ellipsis="[…]") {
-                if (strlen($object) > $length + strlen($ellipsis)) {
-                    $str1 = substr($object, 0, floor($length/2)+ floor($offset/2));
-                    $str2 = substr($object, (floor($length/2)* -1)+ floor($offset/2));
+            return new \Twig_SimpleFilter(
+                'centralTruncate',
+                function ($object, $length, $offset = 0, $ellipsis = "[…]") {
+                    if (strlen($object) > $length + strlen($ellipsis)) {
+                        $str1 = substr($object, 0, floor($length/2)+ floor($offset/2));
+                        $str2 = substr($object, (floor($length/2)* -1)+ floor($offset/2));
 
-                    return $str1 . $ellipsis . $str2;
-                } else {
-                    return $object;
+                        return $str1 . $ellipsis . $str2;
+                    } else {
+                        return $object;
+                    }
                 }
-            });
+            );
         };
     }
 }

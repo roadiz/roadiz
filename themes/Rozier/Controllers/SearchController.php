@@ -54,15 +54,18 @@ class SearchController extends RozierApp
     protected $pagination = true;
     protected $itemPerPage = null;
 
-    public function isBlank($var) {
+    public function isBlank($var)
+    {
         return empty($var) && !is_numeric($var);
     }
 
-    public function notBlank($var) {
+    public function notBlank($var)
+    {
         return !$this->isBlank($var);
     }
 
-    public function processCriteria($data, $prefix = "") {
+    public function processCriteria($data, $prefix = "")
+    {
         if (!empty($data[$prefix."nodeName"])) {
             $data[$prefix."nodeName"] = array("LIKE", "%" . $data[$prefix."nodeName"] . "%");
         }
@@ -104,7 +107,8 @@ class SearchController extends RozierApp
         return $data;
     }
 
-    public function processCriteriaNodetype($data, $nodetype) {
+    public function processCriteriaNodetype($data, $nodetype)
+    {
         $fields = $nodetype->getFields();
         foreach ($data as $key => $value) {
             foreach ($fields as $field) {
@@ -127,7 +131,8 @@ class SearchController extends RozierApp
         return $data;
     }
 
-    public function searchNodeAction(Request $request) {
+    public function searchNodeAction(Request $request)
+    {
 
         $form = $this->buildSimpleForm("")->add("searchANode", "submit", array(
             "label" => $this->getTranslator()->trans("search.a.node"),
@@ -137,11 +142,14 @@ class SearchController extends RozierApp
 
         $builderNodeType = $this->getService('formFactory')
         ->createNamedBuilder('nodeTypeForm', "form", array(), array("method" => "get"));
-        $builderNodeType->add("nodetype", new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-        array(
-            'empty_value' => "",
-            'required' => false
-        ))
+        $builderNodeType->add(
+            "nodetype",
+            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+            array(
+                'empty_value' => "",
+                'required' => false
+            )
+        )
         ->add("nodetypeSubmit", "submit", array(
             "label" => $this->getTranslator()->trans("select.nodetype"),
             "attr" => array("class" => "uk-button uk-button-primary")
@@ -159,7 +167,8 @@ class SearchController extends RozierApp
             } else {
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
-                        'searchNodeSourcePage', array("nodetypeId" => $nodeTypeForm->getData()['nodetype'])
+                        'searchNodeSourcePage',
+                        array("nodetypeId" => $nodeTypeForm->getData()['nodetype'])
                     )
                 );
                 $response->prepare($request);
@@ -209,9 +218,11 @@ class SearchController extends RozierApp
         );
     }
 
-    public function searchNodeSourceAction(Request $request, $nodetypeId) {
+    public function searchNodeSourceAction(Request $request, $nodetypeId)
+    {
 
-        $nodetype = $this->getService('em')->find('RZ\Roadiz\Core\Entities\NodeType', $nodetypeId);
+        $nodetype = $this->getService('em')
+                         ->find('RZ\Roadiz\Core\Entities\NodeType', $nodetypeId);
 
         $builder = $this->buildSimpleForm("__node__");
         $builder = $this->extendForm($builder, $nodetype);
@@ -227,17 +238,26 @@ class SearchController extends RozierApp
         $form->handleRequest();
 
         $builderNodeType = $this->getService('formFactory')
-                                ->createNamedBuilder('nodeTypeForm', "form", array(), array("method" => "get"));
-        $builderNodeType->add("nodetype", new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-                              array(
-                                  'empty_value' => "",
-                                  'required' => false,
-                                  'data' => $nodetypeId
-                              ))
-                        ->add("nodetypeSubmit", "submit", array(
-                            "label" => $this->getTranslator()->trans("select.nodetype"),
-                            "attr" => array("class" => "uk-button uk-button-primary")
-                        ));
+                                ->createNamedBuilder(
+                                    'nodeTypeForm',
+                                    "form",
+                                    array(),
+                                    array("method" => "get")
+                                );
+
+        $builderNodeType->add(
+            "nodetype",
+            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+            array(
+                'empty_value' => "",
+                'required' => false,
+                'data' => $nodetypeId
+            )
+        )
+        ->add("nodetypeSubmit", "submit", array(
+            "label" => $this->getTranslator()->trans("select.nodetype"),
+            "attr" => array("class" => "uk-button uk-button-primary")
+        ));
 
         $nodeTypeForm = $builderNodeType->getForm();
         $nodeTypeForm->handleRequest();
@@ -251,7 +271,8 @@ class SearchController extends RozierApp
             } else {
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
-                    'searchNodeSourcePage', array("nodetypeId" => $nodeTypeForm->getData()['nodetype'])
+                        'searchNodeSourcePage',
+                        array("nodetypeId" => $nodeTypeForm->getData()['nodetype'])
                     )
                 );
                 $response->prepare($request);
@@ -357,7 +378,8 @@ class SearchController extends RozierApp
         );
     }
 
-    function buildSimpleForm($prefix) {
+    private function buildSimpleForm($prefix)
+    {
         $builder = $this->getService('formFactory')
             ->createBuilder('form', array(), array("method" => "get"))
             ->add($prefix.'status', new NodeStatesType(), array(
@@ -429,58 +451,62 @@ class SearchController extends RozierApp
         return $builder;
     }
 
-    private function extendForm($builder, $nodetype) {
+    private function extendForm($builder, $nodetype)
+    {
         $fields = $nodetype->getFields();
 
-        $builder->add("nodetypefield", new \RZ\Roadiz\CMS\Forms\SeparatorType(),
-                array(
-                    'label' => $this->getTranslator()->trans('nodetypefield'),
-                    'attr' => array("class" => "label-separator")
-                ));
+        $builder->add(
+            "nodetypefield",
+            new \RZ\Roadiz\CMS\Forms\SeparatorType(),
+            array(
+                'label' => $this->getTranslator()->trans('nodetypefield'),
+                'attr' => array("class" => "label-separator")
+            )
+        );
 
         foreach ($fields as $field) {
-                $option = array("label" => $field->getLabel());
-                $type = null;
-                $option['required'] = false;
-                if ($field->isVirtual()) {
-                    continue;
-                }
-                if (NodeTypeField::$typeToForm[$field->getType()] == "enumeration") {
-                    $choices = explode(',', $field->getDefaultValues());
-                    $choices = array_combine(array_values($choices), array_values($choices));
-                    $type = "choice";
-                    $option['empty_value'] = "ignore";
-                    $option['required'] = false;
-                    $option["expanded"] = false;
-                    if (count($choices) < 4) {
-                        $option["expanded"] = true;
-                    }
-                    $option["choices"] = $choices;
-                } elseif (NodeTypeField::$typeToForm[$field->getType()] == "multiple_enumeration") {
-                    $choices = explode(',', $field->getDefaultValues());
-                    $choices = array_combine(array_values($choices), array_values($choices));
-                    $type = "choice";
-                    $option["choices"] = $choices;
-                    $option['empty_value'] = "ignore";
-                    $option['required'] = false;
-                    $option["multiple"] = true;
-                    $option["expanded"] = false;
-                    if (count($choices) < 4) {
-                        $option["expanded"] = true;
-                    }
-                } else {
-                    $type = NodeTypeField::$typeToForm[$field->getType()];
-                }
-
-                if($field->getType() === NodeTypeField::MARKDOWN_T
-                    || $field->getType() === NodeTypeField::STRING_T
-                    || $field->getType() === NodeTypeField::TEXT_T
-                    || $field->getType() === NodeTypeField::EMAIL_T) {
-                    $type = "text";
-                }
-
-                $builder->add($field->getName(), $type, $option);
+            $option = array("label" => $field->getLabel());
+            $type = null;
+            $option['required'] = false;
+            if ($field->isVirtual()) {
+                continue;
             }
+            if (NodeTypeField::$typeToForm[$field->getType()] == "enumeration") {
+                $choices = explode(',', $field->getDefaultValues());
+                $choices = array_combine(array_values($choices), array_values($choices));
+                $type = "choice";
+                $option['empty_value'] = "ignore";
+                $option['required'] = false;
+                $option["expanded"] = false;
+                if (count($choices) < 4) {
+                    $option["expanded"] = true;
+                }
+                $option["choices"] = $choices;
+            } elseif (NodeTypeField::$typeToForm[$field->getType()] == "multiple_enumeration") {
+                $choices = explode(',', $field->getDefaultValues());
+                $choices = array_combine(array_values($choices), array_values($choices));
+                $type = "choice";
+                $option["choices"] = $choices;
+                $option['empty_value'] = "ignore";
+                $option['required'] = false;
+                $option["multiple"] = true;
+                $option["expanded"] = false;
+                if (count($choices) < 4) {
+                    $option["expanded"] = true;
+                }
+            } else {
+                $type = NodeTypeField::$typeToForm[$field->getType()];
+            }
+
+            if ($field->getType() === NodeTypeField::MARKDOWN_T
+                || $field->getType() === NodeTypeField::STRING_T
+                || $field->getType() === NodeTypeField::TEXT_T
+                || $field->getType() === NodeTypeField::EMAIL_T) {
+                $type = "text";
+            }
+
+            $builder->add($field->getName(), $type, $option);
+        }
         return $builder;
     }
 }

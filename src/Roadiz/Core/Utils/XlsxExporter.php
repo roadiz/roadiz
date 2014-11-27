@@ -32,8 +32,7 @@ namespace RZ\Roadiz\Core\Utils;
 
 class XlsxExporter
 {
-
-    static function exportXlsx($data, $keys)
+    public static function exportXlsx($data, $keys)
     {
         // Create new PHPExcel object
         $objPHPExcel = new \PHPExcel();
@@ -52,7 +51,7 @@ class XlsxExporter
         $objPHPExcel->setActiveSheetIndex(0);
 
         foreach ($keys as $key => $value) {
-           $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($key, 1, $value);
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($key, 1, $value);
         }
         foreach ($data as $key => $answer) {
             foreach ($answer as $k => $value) {

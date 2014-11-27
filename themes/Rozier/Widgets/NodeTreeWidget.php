@@ -63,14 +63,16 @@ class NodeTreeWidget extends AbstractWidget
     /**
      * @return boolean
      */
-    public function isStackTree() {
+    public function isStackTree()
+    {
         return $this->stackTree;
     }
 
     /**
      * @param boolean $newstackTree
      */
-    public function setStackTree($newstackTree) {
+    public function setStackTree($newstackTree)
+    {
         $this->stackTree = (boolean) $newstackTree;
 
         return $this;

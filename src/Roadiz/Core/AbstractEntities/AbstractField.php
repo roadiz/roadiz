@@ -378,5 +378,4 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     {
         return static::$typeToDoctrine[$this->getType()] === null ? true : false;
     }
-
 }

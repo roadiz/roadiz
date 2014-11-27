@@ -56,7 +56,7 @@ class FullTextSearchHandler
             $query->setQuery('collection_txt:'.trim($q));
 
             foreach ($args as $key => $value) {
-                if (is_array($value)){
+                if (is_array($value)) {
                     foreach ($value as $k => $v) {
                         $query->addFilterQuery(array("key" => "fq".$k, "query"=>$v));
                     }
@@ -72,7 +72,7 @@ class FullTextSearchHandler
             $reponse = json_decode($resultset->getResponse()->getBody(), true);
 
             $doc = array_map(
-                function($n) use ($reponse) {
+                function ($n) use ($reponse) {
                     if (isset($reponse["highlighting"])) {
                         return array(
                                 "nodeSource" => Kernel::getInstance()->getService('em')->find(

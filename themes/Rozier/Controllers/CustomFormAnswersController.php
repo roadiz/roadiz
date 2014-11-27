@@ -49,8 +49,10 @@ class CustomFormAnswersController extends RozierApp
          * Manage get request to filter list
          */
 
-        $customForm = $this->getService('em')->find('RZ\Roadiz\Core\Entities\CustomForm',
-                                                    $customFormId);
+        $customForm = $this->getService('em')->find(
+            'RZ\Roadiz\Core\Entities\CustomForm',
+            $customFormId
+        );
 
         $listManager = new EntityListManager(
             $request,
@@ -103,7 +105,8 @@ class CustomFormAnswersController extends RozierApp
                  */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
-                        'customFormAnswersHomePage', array("customFormId" => $customFormAnswer->getCustomForm()->getId())
+                        'customFormAnswersHomePage',
+                        array("customFormId" => $customFormAnswer->getCustomForm()->getId())
                     )
                 );
                 $response->prepare($request);

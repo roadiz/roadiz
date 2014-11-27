@@ -106,11 +106,10 @@ class SchemaCommand extends Command
                     } else {
                         $text .= '<info>Schema update aborted</info>'.PHP_EOL;
                     }
-                }
-                /*
-                 * If execute option = Perform changes
-                 */
-                elseif ($input->getOption('execute')) {
+                } elseif ($input->getOption('execute')) {
+                    /*
+                     * If execute option = Perform changes
+                     */
                     if ($this->dialog->askConfirmation(
                         $output,
                         '<question>Are you sure to update your database schema? [y / N]</question> : ',

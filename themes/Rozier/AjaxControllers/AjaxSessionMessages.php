@@ -54,5 +54,3 @@ class AjaxSessionMessages extends AbstractAjaxController
         );
     }
 }
-
-?>

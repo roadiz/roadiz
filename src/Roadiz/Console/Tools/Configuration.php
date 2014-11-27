@@ -101,7 +101,7 @@ class Configuration
      *
      * @return $this
      */
-    public function setDevMode($value=true)
+    public function setDevMode($value = true)
     {
         if (null !== $this->configuration) {
             $this->configuration["devMode"] = (boolean) $value;
@@ -117,7 +117,7 @@ class Configuration
      *
      * @return $this
      */
-    public function setInstall($value=true)
+    public function setInstall($value = true)
     {
         if (null !== $this->configuration) {
             $this->configuration["install"] = (boolean) $value;
