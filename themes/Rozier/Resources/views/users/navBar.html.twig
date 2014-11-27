@@ -1,4 +1,5 @@
 <nav class="user-edit-navigation navbar-navigation uk-navbar">
+	{% spaceless %}
 	<ul class="uk-navbar-nav">
 		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
 			<a href="{{ path('usersEditPage', { userId: user.getId }) }}">{% trans %}user.edit{% endtrans %}</a>
@@ -12,5 +13,6 @@
 		<li class="{% if current == 'history' %}uk-active{% endif %}">
 			<a href="{{ path('historyUserPage', { userId: user.getId }) }}">{% trans %}user.history{% endtrans %}</a>
 		</li>
-	</ul>
+	</ul>	    
+	{% endspaceless %}
 </nav>
