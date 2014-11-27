@@ -5430,6 +5430,83 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="NodeType">
+          <source>NodeType</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="select.nodetype">
+          <source>select.nodetype</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ignore">
+          <source>ignore</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="true">
+          <source>true</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="false">
+          <source>false</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.name">
+          <source>node.name</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.id.parent">
+          <source>node.id.parent</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.datetime.operator">
+          <source>node.datetime.operator</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.datetime.value">
+          <source>node.datetime.value</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.limit.result">
+          <source>node.limit.result</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.tags">
+          <source>node.tags</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.tag.exclusive">
+          <source>node.tag.exclusive</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodetypefield">
+          <source>nodetypefield</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="search.a.node">
+          <source>search.a.node</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.all.nodesSource">
+          <source>export.all.nodesSource</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="role.cannot.update.status">
+          <source>role.cannot.update.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.%field%.updated">
+          <source>node.%name%.%field%.updated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="added.node.%name%">
+          <source>added.node.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-forms.type">
+          <source>custom-forms.type</source>
+          <target></target>
+      </trans-unit>
+      
     </body>
   </file>
 </xliff>

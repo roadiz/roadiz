@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-27 08:55+0000
+PO-Revision-Date: 2014-11-27 14:22+0000
 Last-Translator: Maxime Bérard &lt;maxime@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n &gt; 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1417078548.710203
+X-POOTLE-MTIME: 1417098120.831510
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5433,8 +5433,85 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="edit.account" approved="yes">
           <source>edit.account</source>
           <target state="translated">Modifier votre profil</target>
-      </trans-unit>
+      <note/></trans-unit>
 
+      <trans-unit xml:space="preserve" id="NodeType" approved="yes">
+          <source>NodeType</source>
+          <target state="translated">Type de nœud</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="select.nodetype" approved="yes">
+          <source>select.nodetype</source>
+          <target state="translated">Filtrer</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="ignore" approved="yes">
+          <source>ignore</source>
+          <target state="translated">Indifférent</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="true" approved="yes">
+          <source>true</source>
+          <target state="translated">Oui</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="false" approved="yes">
+          <source>false</source>
+          <target state="translated">Non</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="node.name" approved="yes">
+          <source>node.name</source>
+          <target state="translated">Nom du nœud</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="node.id.parent" approved="yes">
+          <source>node.id.parent</source>
+          <target state="translated">Identifiant du nœud parent</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="node.datetime.operator" approved="yes">
+          <source>node.datetime.operator</source>
+          <target state="translated">Opérateur</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="node.datetime.value" approved="yes">
+          <source>node.datetime.value</source>
+          <target state="translated">Date de création</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="node.limit.result" approved="yes">
+          <source>node.limit.result</source>
+          <target state="translated">Limite de résultats</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="node.tags" approved="yes">
+          <source>node.tags</source>
+          <target state="translated">Étiquettes</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="node.tag.exclusive" approved="yes">
+          <source>node.tag.exclusive</source>
+          <target state="translated">Sélection d'étiquettes exclusive</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="nodetypefield" approved="yes">
+          <source>nodetypefield</source>
+          <target state="translated">Champs du type de nœud</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="search.a.node" approved="yes">
+          <source>search.a.node</source>
+          <target state="translated">Rechercher un nœud</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="export.all.nodesSource" approved="yes">
+          <source>export.all.nodesSource</source>
+          <target state="translated">Exporter les contenus des nœuds</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="role.cannot.update.status" approved="yes">
+          <source>role.cannot.update.status</source>
+          <target state="translated">Droits insuffisants pour appliquer ce statut</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.%field%.updated" approved="yes">
+          <source>node.%name%.%field%.updated</source>
+          <target state="translated">Le champ "%field%" du nœud %name% a été mis à jour.</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="added.node.%name%" approved="yes">
+          <source>added.node.%name%</source>
+          <target state="translated">Formulaire personnalisé</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="custom-forms.type" approved="no">
+          <source>custom-forms.type</source>
+          <target state="needs-translation">Formulaire personnalisé</target>
+      </trans-unit>
+      
     </body>
   </file>
 </xliff>

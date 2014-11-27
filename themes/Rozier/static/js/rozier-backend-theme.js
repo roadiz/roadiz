@@ -3255,12 +3255,16 @@ RozierMobile = function(){
     _this.$adminMenuLink = _this.$adminMenu.find('a');
     _this.$adminMenuNavParent = _this.$adminMenu.find('.uk-parent');
 
+    _this.$searchButton = $('#search-button');
+    _this.$searchPanel = $('#nodes-sources-search');
+
     _this.$treeButton = $('#tree-button');
     _this.$treeWrapper = $('#tree-wrapper');
     _this.$treeWrapperLink = _this.$treeWrapper.find('a');
 
     _this.$userPicture = $('#user-picture');
     _this.$userActions = $('.user-actions');
+    _this.$userActionsLink = _this.$userActions.find('a');
 
     _this.$mainContentOverlay = $('#main-content-overlay');
 
@@ -3271,14 +3275,24 @@ RozierMobile = function(){
 
 
 RozierMobile.prototype.$menu = null;
-RozierMobile.prototype.menuOpen = false;
 RozierMobile.prototype.$adminMenu = null;
 RozierMobile.prototype.$adminMenuNavParent = null;
+RozierMobile.prototype.menuOpen = false;
+
+RozierMobile.prototype.$searchButton = null;
+RozierMobile.prototype.$searchPanel = null;
+RozierMobile.prototype.searchOpen = false;
+
 RozierMobile.prototype.$treeButton = null;
 RozierMobile.prototype.$treeWrapper = null;
 RozierMobile.prototype.$treeWrapperLink = null;
+RozierMobile.prototype.treeOpen = false;
+
 RozierMobile.prototype.$userPicture = null;
 RozierMobile.prototype.$userActions = null;
+RozierMobile.prototype.$userActionsLink = null;
+RozierMobile.prototype.adminOpen = false;
+
 RozierMobile.prototype.$mainContentOverlay = null;
 
 
@@ -3297,11 +3311,14 @@ RozierMobile.prototype.init = function(){
     _this.$adminMenuLink.on('click', $.proxy(_this.adminMenuLinkClick, _this));
     _this.$adminMenuNavParent.on('click', $.proxy(_this.adminMenuNavParentClick, _this));
 
+    _this.$searchButton.on('click', $.proxy(_this.searchButtonClick, _this));
+    // _this.$treeWrapperLink.on('click', $.proxy(_this.treeWrapperLinkClick, _this));
+
     _this.$treeButton.on('click', $.proxy(_this.treeButtonClick, _this));
     _this.$treeWrapperLink.on('click', $.proxy(_this.treeWrapperLinkClick, _this));
     
     _this.$userPicture.on('click', $.proxy(_this.userPictureClick, _this));
-    // _this.$userActionsLink.on('click', $.proxy(_this.userActionsLinkClick, _this));
+    _this.$userActionsLink.on('click', $.proxy(_this.userActionsLinkClick, _this));
 
     _this.$mainContentOverlay.on('click', $.proxy(_this.mainContentOverlayClick, _this));
 
@@ -3317,6 +3334,39 @@ RozierMobile.prototype.menuClick = function(e){
 
     if(!_this.menuOpen)_this.openMenu();
     else _this.closeMenu();
+
+};
+
+
+/**
+ * Admin menu nav parent click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.adminMenuNavParentClick = function(e){
+    var _this = this;
+
+    var $ukNavSub = $(e.currentTarget).find('.uk-nav-sub');
+
+    // Open
+    if(e.currentTarget.className.indexOf('nav-open') == -1) {
+        var $ukNavSubItem = $ukNavSub.find('.uk-nav-sub-item'),
+            ukNavSubHeight = ($ukNavSubItem.length * 41) - 3;
+
+        $ukNavSub[0].style.display = 'block';
+        TweenLite.to($ukNavSub, 0.6, {height:ukNavSubHeight, ease:Expo.easeOut, onComplete:function(){
+        }}); 
+
+        addClass(e.currentTarget, 'nav-open');
+
+    }
+    // Close
+    else{
+        TweenLite.to($ukNavSub, 0.6, {height:0, ease:Expo.easeOut, onComplete:function(){
+            $ukNavSub[0].style.display = 'none';
+        }});
+        
+        removeClass(e.currentTarget, 'nav-open');
+    }
 
 };
 
@@ -3340,6 +3390,12 @@ RozierMobile.prototype.adminMenuLinkClick = function(e){
 RozierMobile.prototype.openMenu = function(){
     var _this = this;
 
+    // Close panel if open
+    if(_this.searchOpen) _this.closeSearch();
+    else if(_this.treeOpen) _this.closeTree();
+    else if(_this.userOpen) _this.closeUser();
+
+    // Translate menu panel
     TweenLite.to(_this.$adminMenu, 0.6, {x:0, ease:Expo.easeOut});
 
     _this.$mainContentOverlay[0].style.display = 'block';
@@ -3365,6 +3421,79 @@ RozierMobile.prototype.closeMenu = function(){
     }});
     
     _this.menuOpen = false;  
+};
+
+
+/**
+ * Search button click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.searchButtonClick = function(e){
+    var _this = this;
+
+    if(!_this.searchOpen)_this.openSearch();
+    else _this.closeSearch();
+
+};
+
+
+/**
+ * Search link click
+ * @return {[type]} [description]
+ */
+// RozierMobile.prototype.searchLinkClick = function(e){
+//     var _this = this;
+
+//     if_this.searchOpen){
+//         _this.closeSearch();
+//     }
+// };
+
+
+/**
+ * Open search
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.openSearch = function(){
+    var _this = this;
+    
+    // Close panel if open
+    if(_this.menuOpen) _this.closeMenu();
+    else if(_this.treeOpen) _this.closeTree();
+    else if(_this.userOpen) _this.closeUser();
+
+    // Translate search panel
+    TweenLite.to(_this.$searchPanel, 0.6, {x:0, ease:Expo.easeOut});
+
+    _this.$mainContentOverlay[0].style.display = 'block';
+    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0.5, ease:Expo.easeOut});
+
+    // Add active class
+    addClass(_this.$searchButton[0],'active');
+
+    _this.searchOpen = true;
+};
+
+
+/**
+ * Close search
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.closeSearch = function(){
+    var _this = this;
+
+    var searchPanelX = -Rozier.windowWidth*0.8;
+
+    TweenLite.to(_this.$searchPanel, 0.6, {x:searchPanelX, ease:Expo.easeOut});
+
+    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0, ease:Expo.easeOut, onComplete:function(){
+        _this.$mainContentOverlay[0].style.display = 'none';
+    }});
+
+    // Remove active class
+    removeClass(_this.$searchButton[0],'active');
+
+    _this.searchOpen = false;  
 };
 
 
@@ -3400,12 +3529,21 @@ RozierMobile.prototype.treeWrapperLinkClick = function(e){
  */
 RozierMobile.prototype.openTree = function(){
     var _this = this;
+    
+    // Close panel if open
+    if(_this.menuOpen) _this.closeMenu();
+    else if(_this.searchOpen) _this.closeSearch();
+    else if(_this.userOpen) _this.closeUser();
 
+    // Translate tree panel
     TweenLite.to(_this.$treeWrapper, 0.6, {x:0, ease:Expo.easeOut});
 
     _this.$mainContentOverlay[0].style.display = 'block';
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0.5, ease:Expo.easeOut});
-     
+    
+    // Add active class
+    addClass(_this.$treeButton[0],'active');
+
     _this.treeOpen = true;
 };
 
@@ -3417,13 +3555,16 @@ RozierMobile.prototype.openTree = function(){
 RozierMobile.prototype.closeTree = function(){
     var _this = this;
 
-    var treeWrapperX = Rozier.windowWidth*0.8;
+    var treeWrapperX = -Rozier.windowWidth*0.8;
 
     TweenLite.to(_this.$treeWrapper, 0.6, {x:treeWrapperX, ease:Expo.easeOut});
 
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0, ease:Expo.easeOut, onComplete:function(){
         _this.$mainContentOverlay[0].style.display = 'none';
     }});
+
+    // Remove active class
+    removeClass(_this.$treeButton[0],'active');
     
     _this.treeOpen = false;  
 };
@@ -3447,13 +3588,13 @@ RozierMobile.prototype.userPictureClick = function(e){
  * User actions link click
  * @return {[type]} [description]
  */
-// RozierMobile.prototype.userActionsLinkClick = function(e){
-//     var _this = this;
+RozierMobile.prototype.userActionsLinkClick = function(e){
+    var _this = this;
 
-//     if(e.currentTarget.className.indexOf('tab-link') == -1 && _this.userOpen){
-//         _this.closeUser();
-//     }
-// };
+    if(_this.userOpen){
+        _this.closeUser();
+    }
+};
 
 
 /**
@@ -3463,11 +3604,20 @@ RozierMobile.prototype.userPictureClick = function(e){
 RozierMobile.prototype.openUser = function(){
     var _this = this;
 
+    // Close panel if open
+    if(_this.menuOpen) _this.closeMenu();
+    else if(_this.searchOpen) _this.closeSearch();
+    else if(_this.treeOpen) _this.closeTree();
+
+    // Translate user panel
     TweenLite.to(_this.$userActions, 0.6, {x:0, ease:Expo.easeOut});
 
     _this.$mainContentOverlay[0].style.display = 'block';
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0.5, ease:Expo.easeOut});
-     
+        
+    // Add active class
+    addClass(_this.$userPicture[0],'active');
+
     _this.userOpen = true;
 };
 
@@ -3486,6 +3636,9 @@ RozierMobile.prototype.closeUser = function(){
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0, ease:Expo.easeOut, onComplete:function(){
         _this.$mainContentOverlay[0].style.display = 'none';
     }});
+
+    // Remove active class
+    removeClass(_this.$userPicture[0],'active');
     
     _this.userOpen = false;  
 };
@@ -3501,39 +3654,6 @@ RozierMobile.prototype.mainContentOverlayClick = function(e){
      if(_this.menuOpen) _this.closeMenu();
      else if(_this.treeOpen) _this.closeTree();
      else if(_this.userOpen) _this.closeUser();
-};
-
-
-/**
- * Admin menu nav parent click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.adminMenuNavParentClick = function(e){
-    var _this = this;
-
-    var $ukNavSub = $(e.currentTarget).find('.uk-nav-sub');
-
-    // Open
-    if(e.currentTarget.className.indexOf('nav-open') == -1) {
-        // console.log('open');
-        var $ukNavSubItem = $ukNavSub.find('.uk-nav-sub-item'),
-            ukNavSubHeight = $ukNavSubItem.length * 44;
-
-        $ukNavSub[0].style.display = 'block';
-        TweenLite.to($ukNavSub, 0.6, {height:ukNavSubHeight, ease:Expo.easeOut, onComplete:function(){
-            addClass(e.currentTarget, 'nav-open');
-        }});        
-
-    }
-    // Close
-    else{
-        // console.log('close');
-        TweenLite.to($ukNavSub, 0.6, {height:0, ease:Expo.easeOut, onComplete:function(){
-            removeClass(e.currentTarget, 'nav-open');
-            $ukNavSub[0].style.display = 'none';
-        }});
-    }
-
 };
 
 
@@ -4669,7 +4789,7 @@ Rozier.resize = function(){
 	_this.nodeTreeHeadHeight = _this.$nodeTreeHead.height();
 	_this.treeScrollHeight = _this.windowHeight - (_this.nodesSourcesSearchHeight + _this.nodeTreeHeadHeight);
 
-	if(isMobile.any() !== null) _this.treeScrollHeight = _this.windowHeight - (50 + 50 + 50 + _this.nodeTreeHeadHeight); // Menu + search + tree menu + tree head
+	if(isMobile.any() !== null) _this.treeScrollHeight = _this.windowHeight - (50 + 50 + _this.nodeTreeHeadHeight); // Menu + tree menu + tree head
 
 	// console.log('search height           : '+_this.nodesSourcesSearchHeight);
 	// console.log('node tree head height : '+_this.nodeTreeHeadHeight);
