@@ -48,7 +48,7 @@ class NodeTypesCommand extends Command
 
     protected function configure()
     {
-        $this->setName('core:node:types')
+        $this->setName('core:node-types')
             ->setDescription('Manage node-types')
             ->addArgument(
                 'name',

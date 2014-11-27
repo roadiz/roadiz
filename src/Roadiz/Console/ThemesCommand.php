@@ -47,7 +47,7 @@ class ThemesCommand extends Command
 
     protected function configure()
     {
-        $this->setName('themes')
+        $this->setName('core:themes')
             ->setDescription('Manage themes')
             ->addArgument(
                 'classname',

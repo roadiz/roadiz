@@ -59,6 +59,13 @@ use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Firewall;
 
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\ProgressHelper;
+use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+
 use Pimple\Container;
 
 /**
@@ -186,16 +193,27 @@ class Kernel implements \Pimple\ServiceProviderInterface
         }
 
         $application = new Application('Roadiz Console Application', '0.1');
+        $helperSet = new HelperSet(array(
+            'db' => new ConnectionHelper($this->container['em']->getConnection()),
+            'em' => new EntityManagerHelper($this->container['em']),
+            'dialog' => new DialogHelper(),
+            'progress' => new ProgressHelper()
+        ));
+        $application->setHelperSet($helperSet);
+
         $application->add(new \RZ\Roadiz\Console\TranslationsCommand);
         $application->add(new \RZ\Roadiz\Console\NodeTypesCommand);
         $application->add(new \RZ\Roadiz\Console\NodesCommand);
-        $application->add(new \RZ\Roadiz\Console\SchemaCommand);
+        //$application->add(new \RZ\Roadiz\Console\SchemaCommand);
         $application->add(new \RZ\Roadiz\Console\ThemesCommand);
         $application->add(new \RZ\Roadiz\Console\InstallCommand);
         $application->add(new \RZ\Roadiz\Console\UsersCommand);
         $application->add(new \RZ\Roadiz\Console\RequirementsCommand);
         $application->add(new \RZ\Roadiz\Console\SolrCommand);
         $application->add(new \RZ\Roadiz\Console\CacheCommand);
+
+        // Use default Doctrine commands
+        ConsoleRunner::addCommands($application);
 
         $application->run();
 

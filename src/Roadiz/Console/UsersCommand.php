@@ -51,7 +51,7 @@ class UsersCommand extends Command
 
     protected function configure()
     {
-        $this->setName('users')
+        $this->setName('core:users')
             ->setDescription('Manage users')
             ->addArgument(
                 'username',
