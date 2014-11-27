@@ -42,7 +42,7 @@ class XlsxExporter
                                      ->setLastModifiedBy("Roadiz CMS")
                                      ->setCategory("");
 
-        $cacheMethod = \PHPExcel_CachedObjectStorageFactory:: cache_to_phpTemp;
+        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
         $cacheSettings = array(
             'memoryCacheSize' => '8MB'
         );
@@ -55,10 +55,13 @@ class XlsxExporter
         }
         foreach ($data as $key => $answer) {
             foreach ($answer as $k => $value) {
-                if ($value instanceof \Datetime) {
+
+                $columnAlpha = \PHPExcel_Cell::stringFromColumnIndex($k);
+
+                if ($value instanceof \DateTime) {
                     $value = \PHPExcel_Shared_Date::PHPToExcel($value);
                     $objPHPExcel->getActiveSheet()
-                        ->getStyle('B'.(2 + $key))
+                        ->getStyle($columnAlpha.(2 + $key))
                         ->getNumberFormat()->setFormatCode('dd.mm.yyyy hh:MM:ss');
                 }
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($k, 2 + $key, $value);

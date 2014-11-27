@@ -355,7 +355,7 @@ class SearchController extends RozierApp
                 }
                 $xlsx = XlsxExporter::exportXlsx($answers, $keys);
 
-                $response =  new Response(
+                $response = new Response(
                     $xlsx,
                     Response::HTTP_OK,
                     array()
