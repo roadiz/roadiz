@@ -97,7 +97,8 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         return $array;
     }
 
-    private static function makeNodeRec($data) {
+    private static function makeNodeRec($data)
+    {
         $nodetype = Kernel::getInstance()->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                     ->findOneByName($data["node_type"]);
@@ -135,8 +136,10 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             foreach ($fields as $field) {
                 if (!$field->isVirtual()) {
                     if ($field->getType() == NodeTypeField::DATETIME_T) {
-                        $date = new \DateTime($source[$field->getName()]['date'],
-                                              new \DateTimeZone($source[$field->getName()]['timezone']));
+                        $date = new \DateTime(
+                            $source[$field->getName()]['date'],
+                            new \DateTimeZone($source[$field->getName()]['timezone'])
+                        );
                         $setter = $field->getSetterName();
                         $nodeSource->$setter($date);
                     } else {

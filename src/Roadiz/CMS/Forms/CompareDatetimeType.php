@@ -39,7 +39,8 @@ class CompareDatetimeType extends AbstractType
 {
     private $translator;
 
-    public function __construct($translator) {
+    public function __construct($translator)
+    {
         $this->translator = $translator;
     }
 

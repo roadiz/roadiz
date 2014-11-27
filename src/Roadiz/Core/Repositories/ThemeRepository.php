@@ -38,7 +38,8 @@ use RZ\Roadiz\Core\Kernel;
 /**
  * {@inheritdoc}
  */
-class ThemeRepository extends EntityRepository {
+class ThemeRepository extends EntityRepository
+{
 
     /**
      * Get available backend theme.
@@ -115,7 +116,7 @@ class ThemeRepository extends EntityRepository {
      *
      * @return RZ\Roadiz\Core\Entities\Theme
      */
-    public function findAvailableFrontendWithHost($hostname="*")
+    public function findAvailableFrontendWithHost($hostname = "*")
     {
         $query = $this->_em->createQuery('
             SELECT t FROM RZ\Roadiz\Core\Entities\Theme t

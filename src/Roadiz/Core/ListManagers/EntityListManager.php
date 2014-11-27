@@ -105,11 +105,13 @@ class EntityListManager
         return $this;
     }
 
-    public function enablePagination() {
+    public function enablePagination()
+    {
         $this->pagination = true;
     }
 
-    public function disablePagination() {
+    public function disablePagination()
+    {
         $this->pagination = false;
     }
 
@@ -169,46 +171,41 @@ class EntityListManager
      */
     public function getAssignation()
     {
-        // try {
-            $assign = array(
-                'description'       => '',
-                'search'            => $this->searchPattern,
-                'currentPage'       => $this->currentPage,
-                'pageCount'         => $this->paginator->getPageCount(),
-                'itemPerPage'       => $this->itemPerPage,
-                'itemCount'         => $this->_em->getRepository($this->entityName)->countBy($this->filteringArray),
-                'nextPageQuery'     => null,
-                'previousPageQuery' => null
-            );
+        $assign = array(
+            'description'       => '',
+            'search'            => $this->searchPattern,
+            'currentPage'       => $this->currentPage,
+            'pageCount'         => $this->paginator->getPageCount(),
+            'itemPerPage'       => $this->itemPerPage,
+            'itemCount'         => $this->_em
+                                        ->getRepository($this->entityName)
+                                        ->countBy($this->filteringArray),
+            'nextPageQuery'     => null,
+            'previousPageQuery' => null
+        );
 
-            // Edit item count after a search
-            //try {
-                if ($this->searchPattern != '') {
-                    $assign['itemCount'] = $this->_em
-                        ->getRepository($this->entityName)
-                        ->countSearchBy($this->searchPattern, $this->filteringArray);
-                }
-            // } catch (\Exception $e) {
+        // Edit item count after a search
+        if ($this->searchPattern != '') {
+            $assign['itemCount'] = $this->_em
+                ->getRepository($this->entityName)
+                ->countSearchBy($this->searchPattern, $this->filteringArray);
+        }
 
-            // }
 
-            // compute next and prev page URL
-            if ($this->currentPage > 1) {
-                $this->queryArray['page'] = $this->currentPage - 1;
-                $assign['previousPageQuery'] = http_build_query($this->queryArray);
-                $assign['previousPage'] = $this->currentPage - 1;
-            }
-            // compute next and prev page URL
-            if ($this->currentPage < $this->paginator->getPageCount()) {
-                $this->queryArray['page'] = $this->currentPage + 1;
-                $assign['nextPageQuery'] = http_build_query($this->queryArray);
-                $assign['nextPage'] = $this->currentPage + 1;
-            }
+        // compute next and prev page URL
+        if ($this->currentPage > 1) {
+            $this->queryArray['page'] = $this->currentPage - 1;
+            $assign['previousPageQuery'] = http_build_query($this->queryArray);
+            $assign['previousPage'] = $this->currentPage - 1;
+        }
+        // compute next and prev page URL
+        if ($this->currentPage < $this->paginator->getPageCount()) {
+            $this->queryArray['page'] = $this->currentPage + 1;
+            $assign['nextPageQuery'] = http_build_query($this->queryArray);
+            $assign['nextPage'] = $this->currentPage + 1;
+        }
 
-            return $assign;
-        // } catch (\Exception $e) {
-        //     return null;
-        // }
+        return $assign;
     }
 
     /**
@@ -218,17 +215,15 @@ class EntityListManager
      */
     public function getEntities()
     {
-        // try {
-            if ($this->pagination == true) {
-                return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
-            } else {
-                return $this->_em->getRepository($this->entityName)
-                                 ->findBy($this->filteringArray,
-                                          $this->orderingArray,
-                                          $this->itemPerPage);
-            }
-        // } catch (\Exception $e) {
-        //     return null;
-        // }
+        if ($this->pagination == true) {
+            return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
+        } else {
+            return $this->_em->getRepository($this->entityName)
+                            ->findBy(
+                                $this->filteringArray,
+                                $this->orderingArray,
+                                $this->itemPerPage
+                            );
+        }
     }
 }

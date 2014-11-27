@@ -186,14 +186,16 @@ class NodesController extends RozierApp
             if (null !== $stackTypesForm) {
                 $stackTypesForm->handleRequest();
 
-                if ($stackTypesForm->isValid())
-                {
+                if ($stackTypesForm->isValid()) {
                     try {
                         $type = $this->addStackType($stackTypesForm->getData(), $node);
-                        $msg = $this->getTranslator()->trans('stack_node.%name%.has_new_type.%type%', array(
-                            '%name%'=>$node->getNodeName(),
-                            '%type%'=>$type->getDisplayName()
-                        ));
+                        $msg = $this->getTranslator()->trans(
+                            'stack_node.%name%.has_new_type.%type%',
+                            array(
+                                '%name%'=>$node->getNodeName(),
+                                '%type%'=>$type->getDisplayName()
+                            )
+                        );
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
                         $this->getService('logger')->info($msg);
                     } catch (EntityAlreadyExistsException $e) {
@@ -213,6 +215,7 @@ class NodesController extends RozierApp
 
                     return $response->send();
                 }
+
                 $this->assignation['stackTypesForm'] = $stackTypesForm->createView();
             }
 
@@ -502,8 +505,9 @@ class NodesController extends RozierApp
         if ($nodeId > 0) {
             $parentNode = $this->getService('em')
                                ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        } else {
+            $parentNode = null;
         }
-        else $parentNode = null;
 
         if (null !== $translation) {
 
@@ -639,7 +643,7 @@ class NodesController extends RozierApp
         $form = $this->buildEmptyTrashForm();
         $form->handleRequest();
 
-        if ($form->isValid()){
+        if ($form->isValid()) {
             $nodes = $this->getService('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
                           ->findBy(array(
@@ -992,7 +996,7 @@ class NodesController extends RozierApp
         $source = clone $baseSource;
 
         foreach ($source->getDocumentsByFields() as $document) {
-           $this->getService('em')->persist($document);
+            $this->getService('em')->persist($document);
         }
         $source->setTranslation($newTranslation);
         $source->setNode($node);

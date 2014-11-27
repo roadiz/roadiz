@@ -82,7 +82,8 @@ class TagJsonSerializer extends AbstractJsonSerializer
         return $array;
     }
 
-    private static function makeTagRec($data) {
+    private static function makeTagRec($data)
+    {
         $tag = new Tag();
         $tag->setTagName($data['tag_name']);
         $tag->setVisible($data['visible']);

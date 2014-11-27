@@ -138,5 +138,4 @@ class CustomFormField extends AbstractField
     {
         return $this->getId()." — ".$this->getName()." — ".$this->getLabel().PHP_EOL;
     }
-
 }

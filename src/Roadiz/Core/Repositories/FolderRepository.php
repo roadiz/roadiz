@@ -36,7 +36,8 @@ use RZ\Roadiz\Core\Kernel;
 /**
  * {@inheritdoc}
  */
-class FolderRepository extends EntityRepository {
+class FolderRepository extends EntityRepository
+{
 
     /**
      * Find a folder according to the given path or create it.

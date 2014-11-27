@@ -34,6 +34,7 @@ use Pimple\Container;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler;
+
 /**
  * Register Solr services for dependency injection container.
  */

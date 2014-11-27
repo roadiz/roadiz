@@ -523,7 +523,8 @@ class NodeHandler
         return $this;
     }
 
-    private function duplicateRec($node, $level) {
+    private function duplicateRec($node, $level)
+    {
         $childrenArray = array();
         $sourceArray = array();
         $childs = new ArrayCollection($node->getChildren()->toArray());

@@ -104,5 +104,4 @@ class CustomFormFieldAttribute extends AbstractEntity
 
         return $this;
     }
-
 }

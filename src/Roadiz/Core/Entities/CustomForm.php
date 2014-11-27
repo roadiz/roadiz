@@ -289,22 +289,24 @@ class CustomForm extends AbstractDateTimed
         return $this;
     }
 
-   /**
-     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer",
-     *            mappedBy="customForm", cascade={"ALL"})
-     **/
+    /**
+     * @OneToMany(
+     *    targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer",
+     *    mappedBy="customForm",
+     *    cascade={"ALL"}
+     * )
+     */
+    private $customFormAnswers;
 
-   private $customFormAnswers;
-
-   public function getCustomFormAnswers()
-   {
+    public function getCustomFormAnswers()
+    {
         return $this->customFormAnswers;
-   }
+    }
 
-   public function getHandler()
-   {
+    public function getHandler()
+    {
         return new CustomFormHandler($this);
-   }
+    }
 
     /**
      * Create a new CustomForm.

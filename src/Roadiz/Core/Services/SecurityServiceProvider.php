@@ -188,7 +188,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
 
-        $container['firewall'] = function($c) {
+        $container['firewall'] = function ($c) {
 
             // Register back-end security scheme
             $beClass = $c['backendClass'];

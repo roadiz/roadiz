@@ -38,11 +38,11 @@ use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
 
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
 
-
 /**
  * {@inheritdoc}
  */
-class TagsImporter implements ImporterInterface {
+class TagsImporter implements ImporterInterface
+{
     /**
      * Import a Json file (.rzt) containing tag and tag translation.
      *
@@ -50,7 +50,8 @@ class TagsImporter implements ImporterInterface {
      *
      * @return bool
      */
-    public static function importJsonFile($serializedData) {
+    public static function importJsonFile($serializedData)
+    {
         $tags = TagJsonSerializer::deserialize($serializedData);
         $exist = Kernel::getInstance()->getService('em')
                       ->getRepository('RZ\Roadiz\Core\Entities\Tag')
@@ -60,10 +61,12 @@ class TagsImporter implements ImporterInterface {
                 static::browseTree($tag);
             }
         }
+
         return true;
     }
 
-    private static function browseTree($tag) {
+    private static function browseTree($tag)
+    {
         $childObj = array();
         $sourceObj = array();
         foreach ($tag->getChildren() as $child) {
@@ -94,6 +97,7 @@ class TagsImporter implements ImporterInterface {
             $tagTranslation->setTag($tag);
         }
         Kernel::getInstance()->getService('em')->flush();
+
         return $tag;
     }
 }

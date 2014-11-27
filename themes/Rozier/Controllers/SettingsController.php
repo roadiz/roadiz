@@ -404,14 +404,14 @@ class SettingsController extends RozierApp
 
         try {
             foreach ($data as $key => $value) {
-                    if ($key != 'settingGroup') {
-                        $setter = 'set'.ucwords($key);
-                        $setting->$setter( $value );
-                    } else {
-                        $group = $this->getService('em')
-                                 ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $value);
-                        $setting->setSettingGroup($group);
-                    }
+                if ($key != 'settingGroup') {
+                    $setter = 'set'.ucwords($key);
+                    $setting->$setter( $value );
+                } else {
+                    $group = $this->getService('em')
+                             ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $value);
+                    $setting->setSettingGroup($group);
+                }
             }
 
             $this->getService('em')->persist($setting);
@@ -570,7 +570,9 @@ class SettingsController extends RozierApp
                 'data'=>$setting->getId(),
                 'required' => true
             ))
-            ->add('value', NodeTypeField::$typeToForm[$setting->getType()],
+            ->add(
+                'value',
+                NodeTypeField::$typeToForm[$setting->getType()],
                 static::getFormOptionsForSetting($setting, $this->getTranslator(), true)
             );
 

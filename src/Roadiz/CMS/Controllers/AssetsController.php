@@ -51,12 +51,18 @@ class AssetsController extends AppController
    /**
      * Initialize controller with NO twig environment.
      */
-    public function __init() { }
+    public function __init()
+    {
+
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function prepareBaseAssignation() { }
+    public function prepareBaseAssignation()
+    {
+
+    }
 
     /**
      * {@inheritdoc}

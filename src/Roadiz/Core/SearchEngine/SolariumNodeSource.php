@@ -150,11 +150,11 @@ class SolariumNodeSource
         // Need a locale field
         $assoc['locale_s'] = $this->nodeSource->getTranslation()->getLocale();
         $out = array_map(
-                    function($x) {
-                        return $x->getTranslatedTags()->first()->getName();
-                    },
-                    $this->nodeSource->getHandler()->getTags()
-                );
+            function ($x) {
+                return $x->getTranslatedTags()->first()->getName();
+            },
+            $this->nodeSource->getHandler()->getTags()
+        );
         $assoc['tags_en'] = $out;
 
         $assoc['title'] = $this->nodeSource->getTitle();

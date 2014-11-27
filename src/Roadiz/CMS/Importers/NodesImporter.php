@@ -38,11 +38,11 @@ use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
 
-
 /**
  * {@inheritdoc}
  */
-class NodesImporter implements ImporterInterface {
+class NodesImporter implements ImporterInterface
+{
     /**
      * Import a Json file (.rzt) containing node and node source.
      *
@@ -50,7 +50,8 @@ class NodesImporter implements ImporterInterface {
      *
      * @return bool
      */
-    public static function importJsonFile($serializedData) {
+    public static function importJsonFile($serializedData)
+    {
         $nodes = NodeJsonSerializer::deserialize($serializedData);
         $exist = Kernel::getInstance()->getService('em')
                       ->getRepository('RZ\Roadiz\Core\Entities\Node')
@@ -60,10 +61,12 @@ class NodesImporter implements ImporterInterface {
                 static::browseTree($node);
             }
         }
+        
         return true;
     }
 
-    private static function browseTree($node) {
+    private static function browseTree($node)
+    {
         $childObj = array();
         $sourceObj = array();
         foreach ($node->getChildren() as $child) {
@@ -98,6 +101,7 @@ class NodesImporter implements ImporterInterface {
             $nodeSource->setNode($node);
         }
         Kernel::getInstance()->getService('em')->flush();
+
         return $node;
     }
 }
