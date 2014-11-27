@@ -40,6 +40,8 @@ use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 
+use RZ\Roadiz\Console\Tools\Configuration;
+
 /**
 * Fixtures class
 */

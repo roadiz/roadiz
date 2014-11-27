@@ -169,7 +169,7 @@ class SchemaCommand extends Command
         $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
 
-        $sql = $tool->getUpdateSchemaSql($meta);
+        $sql = $tool->getUpdateSchemaSql($meta, true);
         $deletions = array();
 
         foreach ($sql as $statement) {
@@ -198,7 +198,7 @@ class SchemaCommand extends Command
     {
         $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
-        $sql = $tool->getUpdateSchemaSql($meta);
+        $sql = $tool->getUpdateSchemaSql($meta, true);
 
         foreach ($sql as $statement) {
             Kernel::getService('em')->getConnection()->exec($statement);
@@ -217,6 +217,6 @@ class SchemaCommand extends Command
         $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
 
-        return $tool->getUpdateSchemaSql($meta);
+        return $tool->getUpdateSchemaSql($meta, true);
     }
 }
