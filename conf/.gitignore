@@ -4,3 +4,4 @@
 !.htaccess
 !.gitignore
 !*.default.json
+!*.travis.json

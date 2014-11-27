@@ -507,7 +507,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function isSolrAvailable()
     {
-        return isset($this->container['solr']);
+        return isset($this->container['solr']) && null !== $this->container['solr'];
     }
 
     /**

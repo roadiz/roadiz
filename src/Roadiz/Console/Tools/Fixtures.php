@@ -29,7 +29,7 @@
  * @author Ambroise Maupate
  */
 
-namespace Themes\Install\Controllers;
+namespace RZ\Roadiz\Console\Tools;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Theme;
@@ -269,9 +269,11 @@ class Fixtures
     }
 
     /**
-     * @return void
+     * Install theme and return its ID.
+     *
+     * @return integer
      */
-    protected function installFrontendTheme($classname)
+    public function installFrontendTheme($classname)
     {
         $existing = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
@@ -291,6 +293,10 @@ class Fixtures
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }
+
+            return $feTheme->getId();
         }
+
+        return $existing->getId();
     }
 }

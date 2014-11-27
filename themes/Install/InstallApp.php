@@ -32,8 +32,8 @@
 namespace Themes\Install;
 
 use RZ\Roadiz\Console\Tools\Configuration;
-use Themes\Install\Controllers\Fixtures;
-use Themes\Install\Controllers\Requirements;
+use RZ\Roadiz\Console\Tools\Fixtures;
+use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 

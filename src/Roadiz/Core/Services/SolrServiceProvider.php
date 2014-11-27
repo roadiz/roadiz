@@ -55,6 +55,9 @@ class SolrServiceProvider implements \Pimple\ServiceProviderInterface
                 $searchNodesource = new FullTextSearchHandler($c['solr']);
                 return $searchNodesource;
             };
+        } else {
+            $container['solr'] = null;
+            $container['solr.search.nodeSource'] = null;
         }
     }
 }

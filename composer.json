@@ -68,6 +68,10 @@
         "inlinestyle/inlinestyle": "1.2.*",
         "phpoffice/phpexcel":      "1.8.*"
     },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "satooshi/php-coveralls": "dev-master"
+    },
     "autoload": {
         "psr-4": {
         	"RZ\\":                   "src/",

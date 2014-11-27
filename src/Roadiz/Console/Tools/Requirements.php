@@ -29,7 +29,7 @@
  * @author Ambroise Maupate
  */
 
-namespace Themes\Install\Controllers;
+namespace RZ\Roadiz\Console\Tools;
 
 /**
 * Requirements class
