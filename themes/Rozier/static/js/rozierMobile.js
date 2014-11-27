@@ -68,7 +68,6 @@ RozierMobile.prototype.init = function(){
     _this.$adminMenuNavParent.on('click', $.proxy(_this.adminMenuNavParentClick, _this));
 
     _this.$searchButton.on('click', $.proxy(_this.searchButtonClick, _this));
-    // _this.$treeWrapperLink.on('click', $.proxy(_this.treeWrapperLinkClick, _this));
 
     _this.$treeButton.on('click', $.proxy(_this.treeButtonClick, _this));
     _this.$treeWrapperLink.on('click', $.proxy(_this.treeWrapperLinkClick, _this));
@@ -191,19 +190,6 @@ RozierMobile.prototype.searchButtonClick = function(e){
     else _this.closeSearch();
 
 };
-
-
-/**
- * Search link click
- * @return {[type]} [description]
- */
-// RozierMobile.prototype.searchLinkClick = function(e){
-//     var _this = this;
-
-//     if_this.searchOpen){
-//         _this.closeSearch();
-//     }
-// };
 
 
 /**
