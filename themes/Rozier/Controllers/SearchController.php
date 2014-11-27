@@ -81,12 +81,18 @@ class SearchController extends RozierApp
         }
 
         if (isset($data[$prefix.'createdAt'])) {
-            $data[$prefix."createdAt"] = array($data[$prefix.'createdAt']['compareOp'], $data[$prefix.'createdAt']['compareDatetime']);
+            $data[$prefix."createdAt"] = array(
+                $data[$prefix.'createdAt']['compareOp'],
+                $data[$prefix.'createdAt']['compareDatetime']
+            );
             unset($data[$prefix.'createdAt']);
         }
 
         if (isset($data[$prefix.'updatedAt'])) {
-            $data[$prefix."updatedAt"] = array($data[$prefix.'updatedAt']['compareOp'], $data[$prefix.'updatedAt']['compareDatetime']);
+            $data[$prefix."updatedAt"] = array(
+                $data[$prefix.'updatedAt']['compareOp'],
+                $data[$prefix.'updatedAt']['compareDatetime']
+            );
             unset($data[$prefix.'updatedAt']);
         }
 
@@ -96,12 +102,15 @@ class SearchController extends RozierApp
             unset($data[$prefix."limitResult"]);
         }
 
-        if (isset($data[$prefix."tags"])) {
-            $data[$prefix."tags"] = explode(',', $data[$prefix."tags"]);
-            foreach ($data[$prefix."tags"] as $key => $value) {
-                $data[$prefix."tags"][$key] = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Tag")->findByPath($value);
+        /*
+         * no need to prefix tags
+         */
+        if (isset($data["tags"])) {
+            $data["tags"] = explode(',', $data["tags"]);
+            foreach ($data["tags"] as $key => $value) {
+                $data["tags"][$key] = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Tag")->findByPath($value);
             }
-            array_filter($data[$prefix."tags"]);
+            array_filter($data["tags"]);
         }
 
         return $data;
@@ -286,12 +295,9 @@ class SearchController extends RozierApp
 
         if ($form->isValid()) {
 
-            // $data = array_filter($form->getData(), $this->isBlank);
             $data = array();
             foreach ($form->getData() as $key => $value) {
-                // if (is_array($value) && isset($value["compareDatetime"])) {
-                //     var_dump($value["compareDatetime"]);
-                // }
+
                 if ((!is_array($value) && $this->notBlank($value))
                     || (is_array($value) && isset($value["compareDatetime"]))
                     || (is_array($value) && $value != array() && !isset($value["compareOp"]))) {
@@ -385,73 +391,79 @@ class SearchController extends RozierApp
     public function buildSimpleForm($prefix)
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form', array(), array("method" => "get"))
+            ->createBuilder(
+                'form',
+                array(),
+                array("method" => "get")
+            )
             ->add($prefix.'status', new NodeStatesType(), array(
                 'label' => $this->getTranslator()->trans('node.status'),
                 'required' => false
-                ))
+            ))
             ->add($prefix.'visible', 'choice', array(
                 'label' => $this->getTranslator()->trans('visible'),
                 'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
                 'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
-                ))
+            ))
             ->add($prefix.'locked', 'choice', array(
                 'label' => $this->getTranslator()->trans('locked'),
                 'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
                 'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
-                ))
+            ))
             ->add($prefix.'sterile', 'choice', array(
                 'label' => $this->getTranslator()->trans('sterile-status'),
                 'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
                 'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
-                ))
+            ))
             ->add($prefix.'hideChildren', 'choice', array(
                 'label' => $this->getTranslator()->trans('hiding-children'),
                 'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
                 'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
-                ))
+            ))
             ->add($prefix.'nodeName', 'text', array(
                 'label' => $this->getTranslator()->trans('nodeName'),
                 'required' => false
-                ))
+            ))
             ->add($prefix.'parent', 'text', array(
                 'label' => $this->getTranslator()->trans('node.id.parent'),
                 'required' => false
-                ))
+            ))
             ->add($prefix."createdAt", new CompareDatetimeType($this->getTranslator()), array(
                 'label' => $this->getTranslator()->trans('created.at'),
                 'virtual' => false,
                 'required' => false
-                ))
+            ))
             ->add($prefix."updatedAt", new CompareDatetimeType($this->getTranslator()), array(
                 'label' => $this->getTranslator()->trans('updated.at'),
                 'virtual' => false,
                 'required' => false
-                ))
+            ))
             ->add($prefix."limitResult", "number", array(
                 'label' => $this->getTranslator()->trans('node.limit.result'),
                 'required' => false,
                 'constraints' => array(
                            new GreaterThan(0)
                        ),
-                ))
-            ->add($prefix.'tags', 'text', array(
+            ))
+            // No need to prefix tags
+            ->add('tags', 'text', array(
                 'label' => $this->getTranslator()->trans('node.tags'),
                 'required' => false,
                 'attr' => array ("class" => "rz-tag-autocomplete")
-                ))
-            ->add($prefix.'tagExclusive', 'checkbox', array(
+            ))
+            // No need to prefix tags
+            ->add('tagExclusive', 'checkbox', array(
                 'label' => $this->getTranslator()->trans('node.tag.exclusive'),
                 'required' => false
-                ));
+            ));
 
 
         return $builder;

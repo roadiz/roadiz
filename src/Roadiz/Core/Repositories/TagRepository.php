@@ -853,7 +853,10 @@ class TagRepository extends EntityRepository
         $tags = explode('/', $tagPath);
         $tags = array_filter($tags);
 
-        $tagName = $tags[count($tags) - 1];
+        $lastToken = count($tags) - 1;
+        
+        $tagName = count($tags) > 0 ? $tags[$lastToken] : $tagPath;
+
         $parentName = null;
         $parentTag = null;
 
