@@ -265,22 +265,6 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @return string
-     */
-    public function getGetterName()
-    {
-        return 'get'.str_replace('_', '', ucwords($this->getName()));
-    }
-
-    /**
-     * @return string
-     */
-    public function getSetterName()
-    {
-        return 'set'.str_replace('_', '', ucwords($this->getName()));
-    }
-
-    /**
      * @return RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler
      */
     public function getHandler()

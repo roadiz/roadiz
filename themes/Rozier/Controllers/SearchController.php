@@ -343,7 +343,8 @@ class SearchController extends RozierApp
                 foreach ($listManager->getEntities() as $idx => $nodesSource) {
                     $array = array();
                     foreach ($keys as $key) {
-                        $getter = 'get'.ucwords($key);
+                        //$getter = 'get'.ucwords($key);
+                        $getter = 'get'.str_replace('_', '', ucwords($key));
                         $tmp = $nodesSource->$getter();
                         if (is_array($tmp)) {
                             $tmp = implode(',', $tmp);
