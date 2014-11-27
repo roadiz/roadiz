@@ -89,7 +89,7 @@ Add this to your `config.json` to link your Roadiz install to your Solr server:
 When you import your existing database, you must regenerate all node-types sources classes.
 
 ```
-bin/roadiz core:node:types --regenerateAllEntities
+bin/roadiz core:node-types --regenerateAllEntities
 ```
 
 This will parse every node-types from your database and recreate PHP classes in your `gen-src/GeneratedNodeSources` folder.
@@ -98,11 +98,11 @@ This will parse every node-types from your database and recreate PHP classes in 
 
 If you just updated your *Roadiz* sources files, you shoud perform a database migration.
 First **be sure your node-types sources classes exist**.
-If you did’nt generate them just have a look at *Migrating with an existing database* section.
+If you did not generate them just have a look at *Migrating with an existing database* section.
 Then you can perform migration :
 
 ```
-bin/roadiz schema --update
+bin/roadiz orm:schema-tool:update --dump-sql
 ```
 
 Be careful, check the output to see if any node-source data will be deleted!
@@ -110,11 +110,12 @@ Doctrine will parse every node-type classes to see new and deprecated node-types
 Then when you are sure to perform migration, just do:
 
 ```
-bin/roadiz schema --update --execute
+bin/roadiz orm:schema-tool:update --force
 bin/roadiz cache --clear-all;
 ```
 
 The `cache --clear-all` command force Doctrine to purge its metadata cache.
+**Be careful, this won’t purge APC or XCache. You will need to do it manually.**
 
 ### Managing your own database entities
 
@@ -134,7 +135,7 @@ to the global configuration file.
 Verify if everything is OK by checking migrations:
 
 ```
-bin/roadiz schema --update;
+bin/roadiz orm:schema-tool:update --dump-sql;
 ```
 
 If you see your entities being created and no system database erased, just `--execute` your migration.
@@ -149,12 +150,11 @@ bin/roadiz cache --clear-all;
 After each Roadiz upgrade you should upgrade your node-sources entity classes and upgrade database schema.
 
 ```
-bin/roadiz core:node:types --regenerateAllEntities;
-bin/roadiz schema --update;
-bin/roadiz schema --update --execute;
+bin/roadiz core:node-types --regenerateAllEntities;
+bin/roadiz orm:schema-tool:update --force
 bin/roadiz cache --clear-all;
 
 ```
 
-If you are using a *OPCode var cache* like *APC*, *XCache*, you should empty it as Roadiz store doctrine
+If you are using a *OPCode var cache* like *APC*, *XCache*, you should purge it as Roadiz stores doctrine
 configuration there for better performances.
