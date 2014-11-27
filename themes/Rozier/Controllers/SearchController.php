@@ -365,35 +365,35 @@ class SearchController extends RozierApp
                 'required' => false
                 ))
             ->add($prefix.'visible', 'choice', array(
-                'label' => $this->getTranslator()->trans('node.visible'),
-                'choices' => array(true => 'true', false => 'false'),
-                'empty_value' => "ignore",
+                'label' => $this->getTranslator()->trans('visible'),
+                'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
+                'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
                 ))
             ->add($prefix.'locked', 'choice', array(
-                'label' => $this->getTranslator()->trans('node.locked'),
-                'choices' => array(true => 'true', false => 'false'),
-                'empty_value' => "ignore",
+                'label' => $this->getTranslator()->trans('locked'),
+                'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
+                'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
                 ))
             ->add($prefix.'sterile', 'choice', array(
-                'label' => $this->getTranslator()->trans('node.sterile'),
-                'choices' => array(true => 'true', false => 'false'),
-                'empty_value' => "ignore",
+                'label' => $this->getTranslator()->trans('sterile-status'),
+                'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
+                'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
                 ))
             ->add($prefix.'hideChildren', 'choice', array(
-                'label' => $this->getTranslator()->trans('node.container'),
-                'choices' => array(true => 'true', false => 'false'),
-                'empty_value' => "ignore",
+                'label' => $this->getTranslator()->trans('hiding-children'),
+                'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
+                'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
                 ))
             ->add($prefix.'nodeName', 'text', array(
-                'label' => $this->getTranslator()->trans('node.name'),
+                'label' => $this->getTranslator()->trans('nodeName'),
                 'required' => false
                 ))
             ->add($prefix.'parent', 'text', array(
@@ -401,10 +401,12 @@ class SearchController extends RozierApp
                 'required' => false
                 ))
             ->add($prefix."createdAt", new CompareDatetimeType($this->getTranslator()), array(
+                'label' => $this->getTranslator()->trans('created.at'),
                 'virtual' => false,
                 'required' => false
                 ))
             ->add($prefix."updatedAt", new CompareDatetimeType($this->getTranslator()), array(
+                'label' => $this->getTranslator()->trans('updated.at'),
                 'virtual' => false,
                 'required' => false
                 ))
@@ -449,7 +451,7 @@ class SearchController extends RozierApp
                     $choices = explode(',', $field->getDefaultValues());
                     $choices = array_combine(array_values($choices), array_values($choices));
                     $type = "choice";
-                    $option['empty_value'] = "ignore";
+                    $option['empty_value'] = $this->getTranslator()->trans('ignore');
                     $option['required'] = false;
                     $option["expanded"] = false;
                     if (count($choices) < 4) {
@@ -461,7 +463,7 @@ class SearchController extends RozierApp
                     $choices = array_combine(array_values($choices), array_values($choices));
                     $type = "choice";
                     $option["choices"] = $choices;
-                    $option['empty_value'] = "ignore";
+                    $option['empty_value'] = $this->getTranslator()->trans('ignore');
                     $option['required'] = false;
                     $option["multiple"] = true;
                     $option["expanded"] = false;

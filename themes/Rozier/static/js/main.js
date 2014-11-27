@@ -680,7 +680,7 @@ Rozier.resize = function(){
 	_this.nodeTreeHeadHeight = _this.$nodeTreeHead.height();
 	_this.treeScrollHeight = _this.windowHeight - (_this.nodesSourcesSearchHeight + _this.nodeTreeHeadHeight);
 
-	if(isMobile.any() !== null) _this.treeScrollHeight = _this.windowHeight - (50 + 50 + 50 + _this.nodeTreeHeadHeight); // Menu + search + tree menu + tree head
+	if(isMobile.any() !== null) _this.treeScrollHeight = _this.windowHeight - (50 + 50 + _this.nodeTreeHeadHeight); // Menu + tree menu + tree head
 
 	// console.log('search height           : '+_this.nodesSourcesSearchHeight);
 	// console.log('node tree head height : '+_this.nodeTreeHeadHeight);

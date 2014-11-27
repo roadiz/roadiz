@@ -1,6 +1,7 @@
 <div>
+    <div id="search-button" class="mobile-button"><i class="uk-icon-search"></i></div>
     {% include 'widgets/nodesSourcesSearch.html.twig' %}
-    <div id="tree-button"><i class="uk-icon-rz-node-tree"></i></div>
+    <div id="tree-button" class="mobile-button"><i class="uk-icon-rz-node-tree"></i></div>
     <div id="tree-wrapper">
          <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
             {% if securityContext.isGranted('ROLE_ACCESS_NODES')%}

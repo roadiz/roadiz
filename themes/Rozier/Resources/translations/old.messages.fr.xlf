@@ -18,8 +18,8 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-11-24 16:30+0000
-Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
+PO-Revision-Date: 2014-11-27 13:55+0000
+Last-Translator: Maxime Bérard &lt;maxime@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
 MIME-Version: 1.0
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n &gt; 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1416846602.303400
+X-POOTLE-MTIME: 1417096508.312499
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5399,37 +5399,115 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
 
       <trans-unit xml:space="preserve" id="purge.generated_images.cache" approved="yes">
           <source>purge.generated_images.cache</source>
-          <target state="translated">Purger le cache des images générées</target>
+          <target state="translated">Purger le cache des images</target>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.purge.generated_images.cache" approved="yes">
           <source>are_you_sure.purge.generated_images.cache</source>
-          <target state="translated">Êtes-vous sûr(e) de vouloir purger le cache des images générées ?</target>
+          <target state="translated">Êtes-vous sûr(e) de vouloir purger le cache des images ?</target>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="delete.generated_images.cache" approved="yes">
           <source>delete.generated_images.cache</source>
-          <target state="translated">Purger le cache des images générées</target>
+          <target state="translated">Purger le cache des images</target>
       <note/></trans-unit>
 
       <trans-unit xml:space="preserve" id="more.documents" approved="yes">
           <source>more.documents</source>
           <target state="translated">Plus de documents</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="more.nodes" approved="yes">
           <source>more.nodes</source>
           <target state="translated">Plus de nœuds</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms" approved="yes">
           <source>more.custom_forms</source>
           <target state="translated">Plus de formulaires</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="search.custom_forms" approved="yes">
           <source>search.custom_forms</source>
           <target state="translated">Rechercher un formulaire</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="custom-forms.toggle-explorer" approved="yes">
           <source>custom-forms.toggle-explorer</source>
           <target state="translated">Explorateur</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="edit.account" approved="yes">
+          <source>edit.account</source>
+          <target state="translated">Modifier votre profil</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="NodeType" approved="yes">
+          <source>NodeType</source>
+          <target state="translated">Type de nœud</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="select.nodetype" approved="yes">
+          <source>select.nodetype</source>
+          <target state="translated">Filtrer</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ignore" approved="yes">
+          <source>ignore</source>
+          <target state="translated">Indifférent</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="true" approved="yes">
+          <source>true</source>
+          <target state="translated">Oui</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="false" approved="yes">
+          <source>false</source>
+          <target state="translated">Non</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.name" approved="yes">
+          <source>node.name</source>
+          <target state="translated">Nom du nœud</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.id.parent" approved="yes">
+          <source>node.id.parent</source>
+          <target state="translated">Identifiant du nœud parent</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.datetime.operator" approved="yes">
+          <source>node.datetime.operator</source>
+          <target state="translated">Opérateur</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.datetime.value" approved="yes">
+          <source>node.datetime.value</source>
+          <target state="translated">Date de création</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.limit.result" approved="yes">
+          <source>node.limit.result</source>
+          <target state="translated">Limite de résultats</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.tags" approved="yes">
+          <source>node.tags</source>
+          <target state="translated">Étiquettes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.tag.exclusive" approved="yes">
+          <source>node.tag.exclusive</source>
+          <target state="translated">Sélection d'étiquettes exclusive</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodetypefield" approved="yes">
+          <source>nodetypefield</source>
+          <target state="translated">Champs du type de nœud</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="search.a.node" approved="yes">
+          <source>search.a.node</source>
+          <target state="translated">Rechercher un nœud</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.all.nodesSource" approved="yes">
+          <source>export.all.nodesSource</source>
+          <target state="translated">Exporter les contenus des nœuds</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="role.cannot.update.status" approved="yes">
+          <source>role.cannot.update.status</source>
+          <target state="translated">Droits insuffisants pour appliquer ce statut</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.%field%.updated" approved="yes">
+          <source>node.%name%.%field%.updated</source>
+          <target state="translated">Le champ "%field%" du nœud %name% a été mis à jour.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="added.node.%name%" approved="yes">
+          <source>added.node.%name%</source>
+          <target state="translated">Le nœud %name% a été ajouté.</target>
+      </trans-unit>
+      
 
     </body>
   </file>
