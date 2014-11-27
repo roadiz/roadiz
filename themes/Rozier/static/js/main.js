@@ -666,8 +666,10 @@ Rozier.resize = function(){
 
 
 	// Set height to panels (fix for IE9,10)
-	if(isMobile.any() === null) _this.$userPanelContainer[0].style.height = _this.windowHeight+'px';
-	_this.$mainTreesContainer[0].style.height = _this.windowHeight+'px';
+	if(isMobile.any() === null){
+		_this.$userPanelContainer[0].style.height = _this.windowHeight+'px';
+		_this.$mainTreesContainer[0].style.height = _this.windowHeight+'px';
+	}
 	_this.$mainContentScrollable[0].style.height = _this.windowHeight+'px';  
 
 	// Tree scroll height
@@ -677,6 +679,8 @@ Rozier.resize = function(){
 	_this.nodesSourcesSearchHeight = _this.$nodesSourcesSearch.height();
 	_this.nodeTreeHeadHeight = _this.$nodeTreeHead.height();
 	_this.treeScrollHeight = _this.windowHeight - (_this.nodesSourcesSearchHeight + _this.nodeTreeHeadHeight);
+
+	if(isMobile.any() !== null) _this.treeScrollHeight = _this.windowHeight - (50 + 50 + 50 + _this.nodeTreeHeadHeight); // Menu + search + tree menu + tree head
 
 	// console.log('search height           : '+_this.nodesSourcesSearchHeight);
 	// console.log('node tree head height : '+_this.nodeTreeHeadHeight);

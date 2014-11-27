@@ -68,7 +68,7 @@
             .opacity(0.8);
         }
 
-        &.uk-icon-rz-turn-off {
+        &.uk-icon-rz-turn-off, &.uk-icon-rz-user{
             margin-right: 0px;
             border-color: @contrast-color;
             .opacity(0.5);
@@ -76,6 +76,10 @@
             &:hover {
                 .opacity(0.8);
             }
+        }
+
+        &.uk-icon-rz-earth, &.uk-icon-rz-user{
+            display: none;
         }
 
         &.uk-icon-rz-help{
@@ -101,6 +105,10 @@
             padding: 10px;
             margin-top: 9px;
             border-top: 1px solid @user-panel-border-color;
+        }
+
+        .user-action-label{
+            display: none;
         }
     }
 
