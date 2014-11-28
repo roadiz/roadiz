@@ -21,6 +21,7 @@
         display: inline-block;
     }
 }
+
 #nodeTypeForm_nodetypeSubmit{
     display: inline-block;  vertical-align: top;
     margin:27px 0 0 10px;
@@ -28,14 +29,20 @@
 
 
 // Status
-.form-col-visible, .form-col-locked, .form-col-sterile, .form-col-hideChildren{
-    display: inline-block; vertical-align: top;
-    margin-right:20px;
+#search-node-form{
+
+    .form-col-visible, .form-col-locked, .form-col-sterile, .form-col-hideChildren,
+    .form-col-__node__visible, .form-col-__node__locked, .form-col-__node__sterile, .form-col-__node__hideChildren{
+        display: inline-block; vertical-align: top;
+        margin-right:20px;
+    }
+
 }
 
 
 // Date
-#form_createdAt, #form_updatedAt{
+#form_createdAt, #form_updatedAt, 
+#form___node__createdAt, #form___node__updatedAt{
     margin:0;
 
    .form-col-compareOp, .form-col-compareDatetime{

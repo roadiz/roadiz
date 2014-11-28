@@ -36,14 +36,14 @@
 
 
         {% form_theme nodeTypeForm 'forms.html.twig' %}
-        <form class="uk-form uk-form-stacked" action="#" method="get" {{ form_enctype(nodeTypeForm) }}>
+        <form class="uk-form uk-form-stacked" id="search-node-type-form" action="#" method="get" {{ form_enctype(nodeTypeForm) }}>
             {{ form_widget(nodeTypeForm) }}
         </form>
 
 
 
         {% form_theme form 'forms.html.twig' %}
-        <form class="uk-form uk-form-stacked" action="#" method="get" {{ form_enctype(form) }}>
+        <form class="uk-form uk-form-stacked" id="search-node-form" action="#" method="get" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
         </form>
 
