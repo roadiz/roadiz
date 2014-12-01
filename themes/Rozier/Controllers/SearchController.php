@@ -85,7 +85,7 @@ class SearchController extends RozierApp
                 $data[$prefix.'createdAt']['compareOp'],
                 $data[$prefix.'createdAt']['compareDatetime']
             );
-            unset($data[$prefix.'createdAt']);
+            //unset($data[$prefix.'createdAt']);
         }
 
         if (isset($data[$prefix.'updatedAt'])) {
@@ -93,7 +93,7 @@ class SearchController extends RozierApp
                 $data[$prefix.'updatedAt']['compareOp'],
                 $data[$prefix.'updatedAt']['compareDatetime']
             );
-            unset($data[$prefix.'updatedAt']);
+            //unset($data[$prefix.'updatedAt']);
         }
 
         if (isset($data[$prefix."limitResult"])) {
@@ -133,6 +133,13 @@ class SearchController extends RozierApp
                     }
                     if ($field->getType() === NodeTypeField::MULTIPLE_T) {
                         $data[$key] = implode(",", $value);
+                    }
+                    if ($field->getType() == NodeTypeField::DATETIME_T) {
+                        $data[$key] = array(
+                            $data[$key]['compareOp'],
+                            $data[$key]['compareDatetime']
+                        );
+                        //unset($data[$key]);
                     }
                 }
             }
@@ -309,8 +316,9 @@ class SearchController extends RozierApp
                 }
             }
 
-            $data = $this->processCriteria($data);
+            $data = $this->processCriteria($data, "node.");
             $data = $this->processCriteriaNodetype($data, $nodetype);
+
             $listManager = new EntityListManager(
                 $request,
                 $this->getService('em'),
@@ -490,6 +498,7 @@ class SearchController extends RozierApp
             if ($field->isVirtual()) {
                 continue;
             }
+
             if (NodeTypeField::$typeToForm[$field->getType()] == "enumeration") {
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_combine(array_values($choices), array_values($choices));
@@ -513,6 +522,8 @@ class SearchController extends RozierApp
                 if (count($choices) < 4) {
                     $option["expanded"] = true;
                 }
+            } elseif (NodeTypeField::$typeToForm[$field->getType()] == "datetime") {
+                $type = new CompareDatetimeType($this->getTranslator());
             } else {
                 $type = NodeTypeField::$typeToForm[$field->getType()];
             }
