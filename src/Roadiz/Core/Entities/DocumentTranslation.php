@@ -31,17 +31,18 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * DocumentTranslation.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="documents_translations", uniqueConstraints={@UniqueConstraint(columns={"document_id", "translation_id"})})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="documents_translations", uniqueConstraints={@ORM\UniqueConstraint(columns={"document_id", "translation_id"})})
  */
 class DocumentTranslation extends AbstractEntity
 {
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $name;
     /**
@@ -64,7 +65,7 @@ class DocumentTranslation extends AbstractEntity
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     /**
@@ -87,7 +88,7 @@ class DocumentTranslation extends AbstractEntity
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $copyright;
     /**
@@ -110,8 +111,8 @@ class DocumentTranslation extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
-     * @JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $translation;
 
@@ -133,8 +134,8 @@ class DocumentTranslation extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="Document", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
-     * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Document", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $document;
 

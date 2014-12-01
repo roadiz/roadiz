@@ -33,17 +33,18 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Handlers\GroupHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A group gather User and Roles.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="groups")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="groups")
  */
 class Group extends AbstractEntity
 {
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      * @var string
      */
     private $name;
@@ -67,7 +68,7 @@ class Group extends AbstractEntity
     }
 
     /**
-     * @ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\User", mappedBy="groups")
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\User", mappedBy="groups")
      * @var ArrayCollection
      */
     private $users;
@@ -81,10 +82,10 @@ class Group extends AbstractEntity
     }
 
     /**
-     * @ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role", inversedBy="groups")
-     * @JoinTable(name="groups_roles",
-     *      joinColumns={@JoinColumn(name="group_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")}
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role", inversedBy="groups")
+     * @ORM\JoinTable(name="groups_roles",
+     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      * )
      * @var ArrayCollection
      */

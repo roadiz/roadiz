@@ -33,12 +33,13 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Utils\StringHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Roles are persisted version of string Symfony's roles.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\RoleRepository")
- * @Table(name="roles")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\RoleRepository")
+ * @ORM\Table(name="roles")
  */
 class Role extends AbstractEntity implements \Symfony\Component\Security\Core\Role\RoleInterface
 {
@@ -47,7 +48,7 @@ class Role extends AbstractEntity implements \Symfony\Component\Security\Core\Ro
     const ROLE_BACKEND_USER = 'ROLE_BACKEND_USER';
 
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      * @var string
      */
     private $name;
@@ -98,7 +99,7 @@ class Role extends AbstractEntity implements \Symfony\Component\Security\Core\Ro
     }
 
     /**
-     * @ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", mappedBy="roles")
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", mappedBy="roles")
      *
      * @var ArrayCollection
      */

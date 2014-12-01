@@ -31,19 +31,20 @@
 namespace RZ\Roadiz\Core\AbstractEntities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Abstract entity for any Human-like objects.
  *
  * This class can be extended for *Users*, *Subscribers*, etc.
  *
- * @MappedSuperclass
- * @HasLifecycleCallbacks
+ * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
  */
 abstract class AbstractHuman extends AbstractDateTimed
 {
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     protected $email;
     /**
@@ -68,7 +69,7 @@ abstract class AbstractHuman extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $firstName;
     /**
@@ -91,7 +92,7 @@ abstract class AbstractHuman extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $lastName;
     /**
@@ -114,7 +115,7 @@ abstract class AbstractHuman extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $company;
     /**
@@ -137,7 +138,7 @@ abstract class AbstractHuman extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $job;
     /**
@@ -161,7 +162,7 @@ abstract class AbstractHuman extends AbstractDateTimed
 
     /**
      * @var \DateTime
-     * @Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $birthday;
     /**

@@ -34,22 +34,23 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Describes a complexe ManyToMany relation
  * between NodesSources, Documents and NodeTypeFields.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesDocumentsRepository")
- * @Table(name="nodes_sources_documents", indexes={
- *     @index(name="position_nodessourcesdocuments_idx", columns={"position"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesDocumentsRepository")
+ * @ORM\Table(name="nodes_sources_documents", indexes={
+ *     @ORM\Index(name="position_nodessourcesdocuments_idx", columns={"position"})
  * })
  */
 class NodesSourcesDocuments extends AbstractPositioned implements PersistableInterface
 {
     /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private $id;
     /**
@@ -61,8 +62,8 @@ class NodesSourcesDocuments extends AbstractPositioned implements PersistableInt
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="documentsByFields")
-     * @JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="documentsByFields")
+     * @ORM\JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Roadiz\Core\Entities\NodesSources
      */
     private $nodeSource;
@@ -81,8 +82,8 @@ class NodesSourcesDocuments extends AbstractPositioned implements PersistableInt
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="nodesSourcesByFields")
-     * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="nodesSourcesByFields")
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Roadiz\Core\Entities\Document
      */
     private $document;
@@ -102,8 +103,8 @@ class NodesSourcesDocuments extends AbstractPositioned implements PersistableInt
 
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
-     * @JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
+     * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Roadiz\Core\Entities\NodeTypeField
      */
     private $field;

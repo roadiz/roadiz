@@ -31,17 +31,18 @@
 namespace RZ\Roadiz\Core\AbstractEntities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * An AbstractEntity with datetime fields to keep track of time with your items.
  *
- * @MappedSuperclass
- * @HasLifecycleCallbacks
+ * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
  */
 abstract class AbstractDateTimed extends AbstractEntity
 {
     /**
-     * @Column(type="datetime", name="created_at")
+     * @ORM\Column(type="datetime", name="created_at")
      * @var \DateTime
      */
     private $createdAt;
@@ -66,7 +67,7 @@ abstract class AbstractDateTimed extends AbstractEntity
         return $this;
     }
     /**
-     * @Column(type="datetime", name="updated_at")
+     * @ORM\Column(type="datetime", name="updated_at")
      * @var \DateTime
      */
     private $updatedAt;
@@ -92,14 +93,14 @@ abstract class AbstractDateTimed extends AbstractEntity
     }
 
     /**
-     * @PreUpdate
+     * @ORM\PreUpdate
      */
     public function preUpdate()
     {
         $this->setUpdatedAt(new \DateTime("now"));
     }
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function prePersist()
     {

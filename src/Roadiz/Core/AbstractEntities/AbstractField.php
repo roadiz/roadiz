@@ -33,11 +33,12 @@ namespace RZ\Roadiz\Core\AbstractEntities;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
 use RZ\Roadiz\Core\Utils\StringHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  *
  *
- * @MappedSuperclass
+ * @ORM\MappedSuperclass
  */
 abstract class AbstractField extends AbstractPositioned implements PersistableInterface
 {
@@ -228,9 +229,9 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     );
 
     /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private $id;
     /**
@@ -242,7 +243,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $name;
 
@@ -265,7 +266,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
 
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -283,7 +284,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $label;
 
@@ -307,7 +308,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         return $this;
     }
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
@@ -331,7 +332,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         return $this;
     }
     /**
-     * @Column(name="default_values", type="text", nullable=true)
+     * @ORM\Column(name="default_values", type="text", nullable=true)
      */
     private $defaultValues;
 
@@ -356,7 +357,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     }
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     private $type = AbstractField::STRING_T;
 

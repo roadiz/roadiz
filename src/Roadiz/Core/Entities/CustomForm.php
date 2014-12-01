@@ -34,19 +34,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\CustomFormHandler;
 use RZ\Roadiz\Core\Utils\StringHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * CustomForms describe each node structure family,
  * They are mandatory before creating any Node.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\CustomFormRepository")
- * @Table(name="custom_forms")
- * @HasLifecycleCallbacks
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\CustomFormRepository")
+ * @ORM\Table(name="custom_forms")
+ * @ORM\HasLifecycleCallbacks
  */
 class CustomForm extends AbstractDateTimed
 {
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     private $name;
     /**
@@ -69,7 +70,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @Column(name="display_name", type="string")
+     * @ORM\Column(name="display_name", type="string")
      */
     private $displayName;
     /**
@@ -92,7 +93,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     /**
@@ -115,7 +116,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $email;
     /**
@@ -138,7 +139,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $open = true;
     /**
@@ -161,7 +162,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @Column(name="close_date", type="datetime")
+     * @ORM\Column(name="close_date", type="datetime")
      */
     private $closeDate = null;
     /**
@@ -184,7 +185,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", name="color", unique=false, nullable=true)
+     * @ORM\Column(type="string", name="color", unique=false, nullable=true)
      */
     protected $color = '#000000';
 
@@ -213,8 +214,8 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @OneToMany(targetEntity="CustomFormField", mappedBy="customForm", cascade={"ALL"})
-     * @OrderBy({"position" = "ASC"})
+     * @ORM\OneToMany(targetEntity="CustomFormField", mappedBy="customForm", cascade={"ALL"})
+     * @ORM\OrderBy({"position" = "ASC"})
      */
     private $fields;
 
@@ -289,7 +290,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *    targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer",
      *    mappedBy="customForm",
      *    cascade={"ALL"}
@@ -343,7 +344,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @OneToMany(targetEntity="NodesCustomForms", mappedBy="customForm", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="NodesCustomForms", mappedBy="customForm", fetch="EXTRA_LAZY")
      * @var ArrayCollection
      */
     private $nodes = null;

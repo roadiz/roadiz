@@ -31,23 +31,23 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
  * CustomFormAnswer entities
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="custom_form_answers",  indexes={
- *     @index(name="ip_customformanswer_idx", columns={"ip"}),
- *     @index(name="submitted_customformanswer_idx", columns={"submitted_at"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="custom_form_answers",  indexes={
+ *     @ORM\Index(name="ip_customformanswer_idx", columns={"ip"}),
+ *     @ORM\Index(name="submitted_customformanswer_idx", columns={"submitted_at"})
  * })
  */
 class CustomFormAnswer extends AbstractEntity
 {
 
     /**
-     * @Column(type="string", name="ip")
+     * @ORM\Column(type="string", name="ip")
      */
     private $ip;
     /**
@@ -70,7 +70,7 @@ class CustomFormAnswer extends AbstractEntity
     }
 
     /**
-     * @Column(type="datetime", name="submitted_at")
+     * @ORM\Column(type="datetime", name="submitted_at")
      */
     private $submittedAt = null;
     /**
@@ -93,7 +93,7 @@ class CustomFormAnswer extends AbstractEntity
     }
 
     /**
-     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute",
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute",
      *            mappedBy="customFormAnswer",
      *            fetch="EXTRA_LAZY",
      *            cascade={"ALL"})
@@ -136,9 +136,9 @@ class CustomFormAnswer extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm",
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm",
      *           inversedBy="customFormAnswers")
-     * @JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
      **/
     private $customForm;
 

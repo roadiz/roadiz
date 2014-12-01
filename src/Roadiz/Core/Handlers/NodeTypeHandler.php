@@ -122,12 +122,13 @@ class NodeTypeHandler
 namespace '.NodeType::getGeneratedEntitiesNamespace().';
 
 use RZ\Roadiz\Core\Entities\NodesSources;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Generated custom node-source type from RZ-CMS backoffice.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
- * @Table(name="'.$this->nodeType->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
+ * @ORM\Table(name="'.$this->nodeType->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
  */
 class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
 {

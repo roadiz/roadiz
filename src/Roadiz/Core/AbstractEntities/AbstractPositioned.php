@@ -30,15 +30,17 @@
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Abstract class which describe a positioned entity
  *
- * @MappedSuperclass
+ * @ORM\MappedSuperclass
  */
 abstract class AbstractPositioned
 {
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     private $position = 0.0;
 

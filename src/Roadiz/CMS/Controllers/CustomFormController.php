@@ -38,8 +38,11 @@ use RZ\Roadiz\Core\Entities\CustomFormField;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Config\FileLocator;
 
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use \InlineStyle\InlineStyle;
 
 class CustomFormController extends AppController

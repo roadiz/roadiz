@@ -31,18 +31,19 @@
 namespace RZ\Roadiz\Core\AbstractEntities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Combined AbstractDateTimed and AbstractPositioned.
  *
- * @MappedSuperclass
- * @HasLifecycleCallbacks
- * @Table(indexes={@Index(name="position_idx", columns={"position"})})
+ * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
+ * @ORM\Table(indexes={@ORM\Index(name="position_idx", columns={"position"})})
  */
 abstract class AbstractDateTimedPositioned extends AbstractDateTimed
 {
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     private $position = 0;
     /**

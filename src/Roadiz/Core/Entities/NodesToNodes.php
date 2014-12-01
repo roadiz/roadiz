@@ -34,22 +34,23 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Describes a complexe ManyToMany relation
  * between two Nodes and NodeTypeFields.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesToNodesRepository")
- * @Table(name="nodes_to_nodes", indexes={
- *     @index(name="position_nodestonodes_idx", columns={"position"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesToNodesRepository")
+ * @ORM\Table(name="nodes_to_nodes", indexes={
+ *     @ORM\Index(name="position_nodestonodes_idx", columns={"position"})
  * })
  */
 class NodesToNodes extends AbstractPositioned implements PersistableInterface
 {
     /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private $id;
     /**
@@ -61,22 +62,22 @@ class NodesToNodes extends AbstractPositioned implements PersistableInterface
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="bNodes")
-     * @JoinColumn(name="node_a_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="bNodes")
+     * @ORM\JoinColumn(name="node_a_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Roadiz\Core\Entities\Node
      */
     private $nodeA;
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="aNodes")
-     * @JoinColumn(name="node_b_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="aNodes")
+     * @ORM\JoinColumn(name="node_b_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Roadiz\Core\Entities\Node
      */
     private $nodeB;
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
-     * @JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
+     * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Roadiz\Core\Entities\NodeTypeField
      */
     private $field;

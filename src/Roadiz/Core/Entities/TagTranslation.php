@@ -31,19 +31,22 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Translated representation of Tags.
  *
  * It stores their name and description.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="tags_translations", uniqueConstraints={@UniqueConstraint(columns={"tag_id", "translation_id"})})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="tags_translations", uniqueConstraints={
+ *      @ORM\UniqueConstraint(columns={"tag_id", "translation_id"})
+ * })
  */
 class TagTranslation extends AbstractEntity
 {
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $name;
     /**
@@ -66,7 +69,7 @@ class TagTranslation extends AbstractEntity
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     /**
@@ -89,8 +92,8 @@ class TagTranslation extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="Tag", inversedBy="translatedTags")
-     * @JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Tag", inversedBy="translatedTags")
+     * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Tag
      */
     private $tag = null;
@@ -114,8 +117,8 @@ class TagTranslation extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="Translation", inversedBy="tagTranslations", fetch="EXTRA_LAZY")
-     * @JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Translation", inversedBy="tagTranslations", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Translation
      */
     private $translation = null;
