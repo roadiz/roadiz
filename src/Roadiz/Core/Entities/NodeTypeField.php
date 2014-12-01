@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * NodeTypeField entities are used to create NodeTypes with

@@ -31,7 +31,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Newsletters entities wrap a Node and are linked to

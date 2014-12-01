@@ -34,7 +34,7 @@ use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Tags are hierarchical entities used

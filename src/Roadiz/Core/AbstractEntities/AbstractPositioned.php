@@ -30,7 +30,7 @@
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
 
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Abstract class which describe a positioned entity

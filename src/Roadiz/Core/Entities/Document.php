@@ -35,7 +35,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Documents entity represent a file on server with datetime and naming.

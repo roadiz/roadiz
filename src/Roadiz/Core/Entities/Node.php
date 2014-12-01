@@ -36,7 +36,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Node entities are the central feature of RZ-CMS,

@@ -33,7 +33,7 @@ namespace RZ\Roadiz\Core\Entities;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * NodesSources store Node content according to a translation and a NodeType.

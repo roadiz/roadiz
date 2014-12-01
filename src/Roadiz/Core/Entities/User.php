@@ -38,7 +38,7 @@ use RZ\Roadiz\Core\Handlers\UserHandler;
 use RZ\Roadiz\Core\Viewers\UserViewer;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * User Entity.

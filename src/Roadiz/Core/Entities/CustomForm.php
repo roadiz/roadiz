@@ -34,7 +34,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\CustomFormHandler;
 use RZ\Roadiz\Core\Utils\StringHandler;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * CustomForms describe each node structure family,

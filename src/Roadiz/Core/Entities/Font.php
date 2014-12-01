@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Fonts are entities which store each webfont file for a
