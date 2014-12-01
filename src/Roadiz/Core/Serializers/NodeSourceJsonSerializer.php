@@ -109,8 +109,6 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
      * @param RZ\Roadiz\Core\Entities\NodeType $type
      *
      * @return RZ\Roadiz\Core\Entities\NodeSource
-     * @todo Need to deserialize from an array instead of Json string (too greedy).
-     * Then need to link to existing translation.
      */
     public static function deserializeWithNodeType($string, NodeType $type)
     {

@@ -214,7 +214,7 @@ class SearchController extends RozierApp
                 'RZ\Roadiz\Core\Entities\Node',
                 $data
             );
-            if ($this->pagination == false) {
+            if ($this->pagination === false) {
                 $listManager->setItemPerPage($this->itemPerPage);
                 $listManager->disablePagination();
             }
@@ -324,7 +324,7 @@ class SearchController extends RozierApp
                 NodeType::getGeneratedEntitiesNamespace().'\\'.$nodetype->getSourceEntityClassName(),
                 $data
             );
-            if ($this->pagination == false) {
+            if ($this->pagination === false) {
                 $listManager->setItemPerPage($this->itemPerPage);
                 $listManager->disablePagination();
             }

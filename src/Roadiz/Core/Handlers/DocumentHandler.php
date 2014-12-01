@@ -67,7 +67,7 @@ class DocumentHandler
 
                 return true;
             } else {
-                throw new Exception("document.cannot_delete", 1);
+                throw new \Exception("document.cannot_delete", 1);
             }
         } else {
             /*

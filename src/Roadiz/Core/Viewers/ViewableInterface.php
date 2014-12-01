@@ -47,8 +47,6 @@ interface ViewableInterface
      *
      * {{themeDir}}/Resources/translations/messages.{{lang}}.xlf
      *
-     * @todo [Cache] Need to write XLF catalog to PHP using \Symfony\Component\Translation\Writer\TranslationWriter
-     *
      * @return $this
      */
     public function initializeTranslator();

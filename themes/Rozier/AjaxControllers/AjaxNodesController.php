@@ -114,7 +114,7 @@ class AjaxNodesController extends AbstractAjaxController
             if ($parent !== null) {
                 $node->setParent($parent);
             }
-        } elseif ($parameters['newParent'] == null) {
+        } elseif ($parameters['newParent'] === null) {
             $node->setParent(null);
         }
 

@@ -213,7 +213,7 @@ class EntityListManager
      */
     public function getEntities()
     {
-        if ($this->pagination == true) {
+        if ($this->pagination === true) {
             return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
         } else {
             return $this->_em->getRepository($this->entityName)

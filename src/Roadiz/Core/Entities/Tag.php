@@ -241,7 +241,6 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @todo Move this method to a TagViewer
      * @return string
      */
     public function getOneLineSummary()

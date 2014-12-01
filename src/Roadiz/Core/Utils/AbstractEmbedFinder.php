@@ -145,10 +145,10 @@ abstract class AbstractEmbedFinder
             $attributes['id'] = $args['id'];
         }
 
-        if (isset($args['autoplay']) && $args['autoplay'] == true) {
+        if (isset($args['autoplay']) && $args['autoplay'] === true) {
             $attributes['src'] .= '&autoplay=1';
         }
-        if (isset($args['controls']) && $args['controls'] == false) {
+        if (isset($args['controls']) && $args['controls'] === false) {
             $attributes['src'] .= '&controls=0';
         }
 

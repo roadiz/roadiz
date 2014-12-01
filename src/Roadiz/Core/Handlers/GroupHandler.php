@@ -87,7 +87,7 @@ class GroupHandler
             $existingRolesNames = $this->group->getRoles();
 
             foreach ($newGroup->getRolesEntities() as $newRole) {
-                if (false == in_array($newRole->getName(), $existingRolesNames)) {
+                if (false === in_array($newRole->getName(), $existingRolesNames)) {
                     $role = Kernel::getService('em')
                                                  ->getRepository('RZ\Roadiz\Core\Entities\Role')
                                                  ->findOneByName($newRole->getName());

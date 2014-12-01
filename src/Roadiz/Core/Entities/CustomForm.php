@@ -320,7 +320,6 @@ class CustomForm extends AbstractDateTimed
 
 
     /**
-     * @todo Move this method to a CustomFormViewer
      * @return string
      */
     public function getOneLineSummary()
@@ -330,7 +329,6 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @todo Move this method to a CustomFormViewer
      * @return string $text
      */
     public function getFieldsSummary()

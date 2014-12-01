@@ -157,7 +157,7 @@ class AjaxFoldersController extends AbstractAjaxController
             if ($parent !== null) {
                 $folder->setParent($parent);
             }
-        } elseif ($parameters['newParent'] == null) {
+        } elseif ($parameters['newParent'] === null) {
             $folder->setParent(null);
         }
 

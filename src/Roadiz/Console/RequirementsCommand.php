@@ -86,12 +86,12 @@ class RequirementsCommand extends Command
 
     protected function methodExists($name, $mandatory = true)
     {
-        return '<info>Method '.$name.'()</info> — '.(function_exists($name) == true && $mandatory == true ? 'OK' : '<error>Fail</error>').''.PHP_EOL;
+        return '<info>Method '.$name.'()</info> — '.(function_exists($name) === true && $mandatory === true ? 'OK' : '<error>Fail</error>').''.PHP_EOL;
     }
 
     protected function folderWritable($filename)
     {
-        return '<info>Folder “'.$filename.'”</info> — '.(is_writable($filename) == true ? 'Writable' : '<error>Not writable</error>').''.PHP_EOL;
+        return '<info>Folder “'.$filename.'”</info> — '.(is_writable($filename) === true ? 'Writable' : '<error>Not writable</error>').''.PHP_EOL;
     }
 
     protected function testExtension($name)

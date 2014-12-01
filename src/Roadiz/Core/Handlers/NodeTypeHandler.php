@@ -250,7 +250,7 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
             $existingFieldsNames = $this->nodeType->getFieldsNames();
 
             foreach ($newNodeType->getFields() as $newField) {
-                if (false == in_array($newField->getName(), $existingFieldsNames)) {
+                if (false === in_array($newField->getName(), $existingFieldsNames)) {
                     /*
                      * Field does not exist in type,
                      * creating it.

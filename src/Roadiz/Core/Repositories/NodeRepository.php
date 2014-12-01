@@ -57,7 +57,7 @@ class NodeRepository extends EntityRepository
         if (in_array('tags', array_keys($criteria))) {
             if (is_array($criteria['tags'])) {
                 if (in_array("tagExclusive", array_keys($criteria))
-                    && $criteria["tagExclusive"] == true) {
+                    && $criteria["tagExclusive"] === true) {
                     $node = static::getNodeIdsByTagExcl($criteria['tags']);
                     $criteria["id"] = $node;
                     unset($criteria["tagExclusive"]);

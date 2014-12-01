@@ -402,7 +402,7 @@ class NodesController extends RozierApp
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findDefault();
 
-        if ($translationId != null) {
+        if ($translationId !== null) {
             $translation = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
@@ -878,7 +878,8 @@ class NodesController extends RozierApp
         }
         foreach ($data as $key => $value) {
 
-            if ($key == 'home' && $value == true) {
+            if ($key == 'home' &&
+                true === (boolean) $value) {
                 $node->getHandler()->makeHome();
             } else {
                 $setter = 'set'.ucwords($key);

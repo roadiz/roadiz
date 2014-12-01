@@ -163,7 +163,6 @@ class CustomFormAnswer extends AbstractEntity
         $this->children = new ArrayCollection();
     }
     /**
-     * @todo Move this method to a CustomFormAnswerViewer
      * @return string
      */
     public function getOneLineSummary()
@@ -172,7 +171,6 @@ class CustomFormAnswer extends AbstractEntity
             " — Sumitted : ".($this->getSummittedTime()).PHP_EOL;
     }
     /**
-     * @todo Move this method to a CustomFormAnswerViewer
      * @return string
      */
     public function getOneLineSourceSummary()

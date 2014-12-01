@@ -462,7 +462,7 @@ class InstallApp extends AppController
             }
         }
 
-        if ($exist == false) {
+        if ($exist === false) {
             $newTranslation = new Translation();
             $newTranslation->setLocale($data["supportedLocale"][0]);
             $newTranslation->setName(Translation::$availableLocales[$data["supportedLocale"][0]]);

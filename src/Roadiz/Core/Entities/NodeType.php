@@ -304,7 +304,6 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @todo Move this method to a NodeTypeViewer
      * @return string
      */
     public function getOneLineSummary()
@@ -314,7 +313,6 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @todo Move this method to a NodeTypeViewer
      * @return string $text
      */
     public function getFieldsSummary()

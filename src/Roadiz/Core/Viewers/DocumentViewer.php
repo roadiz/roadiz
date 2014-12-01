@@ -284,7 +284,7 @@ class DocumentViewer implements ViewableInterface
     public function getDocumentUrlByArray($args = null)
     {
         if ($args === null ||
-            (isset($args['noProcess']) && $args['noProcess'] == true) ||
+            (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
 
             return Kernel::getInstance()->getRequest()
@@ -301,8 +301,8 @@ class DocumentViewer implements ViewableInterface
             if (!empty($args['crop'])) {
                 $slirArgs['c'] = 'c'.strip_tags($args['crop']);
             }
-            if ((!empty($args['grayscale']) && $args['grayscale'] == true) ||
-                (!empty($args['greyscale']) && $args['greyscale'] == true)) {
+            if ((!empty($args['grayscale']) && $args['grayscale'] === true) ||
+                (!empty($args['greyscale']) && $args['greyscale'] === true)) {
                 $slirArgs['g'] = 'g1';
             }
             if (!empty($args['quality'])) {
@@ -311,7 +311,7 @@ class DocumentViewer implements ViewableInterface
             if (!empty($args['background'])) {
                 $slirArgs['b'] = 'b'.strip_tags($args['background']);
             }
-            if (!empty($args['progressive']) && $args['progressive'] == true) {
+            if (!empty($args['progressive']) && $args['progressive'] === true) {
                 $slirArgs['p'] = 'p1';
             }
 

@@ -293,7 +293,6 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @todo Move this method to a NodeTypeFieldViewer
      * @return string
      */
     public function getOneLineSummary()

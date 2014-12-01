@@ -226,7 +226,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
     {
         if ($this->container['config'] === null ||
             (isset($this->container['config']['install']) &&
-             $this->container['config']['install'] == true)) {
+            true === (boolean) $this->container['config']['install'])) {
 
             return true;
         } else {
@@ -258,9 +258,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
             date_default_timezone_set("Europe/Paris");
         }
 
-        if ($this->container['config'] === null ||
-            (isset($this->container['config']['install']) &&
-             $this->container['config']['install'] == true)) {
+        if ($this->isInstallMode()) {
 
             // nothing to prepare
 
@@ -386,7 +384,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         /*
          * If debug, alter HTML responses to append Debug panel to view
          */
-        if (true == SettingsBag::get('display_debug_panel')) {
+        if (true === (boolean) SettingsBag::get('display_debug_panel')) {
             $this->container['dispatcher']->addSubscriber(new \RZ\Roadiz\Core\Utils\DebugPanel());
         }
     }
