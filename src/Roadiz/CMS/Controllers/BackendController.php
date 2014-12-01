@@ -134,7 +134,7 @@ class BackendController extends AppController
                         'failure_forward'        => false,
                         'login_path'             => '/login',
                         'failure_path_parameter' => '_failure_path'
-                    )),
+                    ), $c['logger']),
                     array(
                         'check_path' => '/rz-admin/login_check',
                     ),
