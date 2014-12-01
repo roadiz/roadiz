@@ -6,7 +6,7 @@
 
     "supportedLocale": ["en", "fr"],
 
-    "versionRequire": "1.0.1",
+    "versionRequire": "0.1.0",
 
     "importFiles": {
         "roles": ["Resources/import/roles.rzt"],

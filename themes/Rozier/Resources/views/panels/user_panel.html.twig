@@ -42,7 +42,7 @@
     <footer id="cms-version">
         <a target="_blank" title="{% trans %}help{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-help" href="http://docs.roadiz.io"></a>
         <p class="cms-version"><i class="uk-icon-rz-rezozero"></i></p>
-        <p>{{ head.cmsVersion }} - build {{ head.cmsBuild }}</p>
+        <p>{{ head.cmsVersion }}{% if head.cmsBuild %} - build {{ head.cmsBuild }}{% endif %}</p>
     </footer>
 </div>
  {%  endspaceless %}

@@ -73,12 +73,12 @@ use Pimple\Container;
  */
 class Kernel implements \Pimple\ServiceProviderInterface
 {
-    const CMS_VERSION =         'alpha';
+    const CMS_VERSION =         'pre-alpha';
     const SECURITY_DOMAIN =     'roadiz_domain';
     const INSTALL_CLASSNAME =   '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild =   null;
-    public static $cmsVersion = "1.0.1";
+    public static $cmsVersion = "0.1.0";
     private static $instance =  null;
 
     public $container =         null;
@@ -95,9 +95,9 @@ class Kernel implements \Pimple\ServiceProviderInterface
         /*
          * Get build number from txt file generated at each pre-commit
          */
-        if (file_exists(RENZO_ROOT.'/BUILD.txt')) {
-            static::$cmsBuild = intval(trim(file_get_contents(RENZO_ROOT.'/BUILD.txt')));
-        }
+        //if (file_exists(RENZO_ROOT.'/BUILD.txt')) {
+        //    static::$cmsBuild = intval(trim(file_get_contents(RENZO_ROOT.'/BUILD.txt')));
+        //}
 
         /*
          * Register current Kernel as a service provider.
