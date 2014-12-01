@@ -59,22 +59,13 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
         if ($container['config'] !== null &&
             isset($container['config']["doctrine"])) {
 
-            $container['em.config'] = function ($c){
-                $config = Setup::createConfiguration((boolean) $c['config']['devMode']);
-                $driver = new AnnotationDriver(new AnnotationReader(), $c['entitiesPaths']);
-                // registering noop annotation autoloader - allow all annotations by default
-                AnnotationRegistry::registerLoader('class_exists');
-                $config->setMetadataDriverImpl($driver);
-                $config->setProxyDir(RENZO_ROOT . '/gen-src/Proxies');
-                $config->setProxyNamespace('Proxies');
-
-                return $config;
-            };
-
-            $container['em.simpleconfig'] = function ($c) {
+            $container['em.config'] = function ($c) {
                 $config = Setup::createAnnotationMetadataConfiguration(
                     $c['entitiesPaths'],
-                    (boolean) $c['config']['devMode']
+                    (boolean) $c['config']['devMode'],
+                    RENZO_ROOT . '/gen-src/Proxies',
+                    null,
+                    false
                 );
 
                 $config->setProxyDir(RENZO_ROOT . '/gen-src/Proxies');
