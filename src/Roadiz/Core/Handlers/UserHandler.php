@@ -110,22 +110,24 @@ class UserHandler
         mt_srand(crc32(microtime()));
         $max = strlen($lowercase) - 1;
 
-        for ($x = 0; $x < abs($length/3); $x++) {
+        $absLength = abs($length/3);
+
+        for ($x = 0; $x < $absLength; $x++) {
             $randomCode .= $lowercase{mt_rand(0, $max)};
         }
         $max = strlen($uppercase) - 1;
 
-        for ($x = 0; $x < abs($length/3); $x++) {
+        for ($x = 0; $x < $absLength; $x++) {
             $randomCode .= $uppercase{mt_rand(0, $max)};
         }
         $max = strlen($specialcharacters) - 1;
 
-        for ($x = 0; $x < abs($length/3); $x++) {
+        for ($x = 0; $x < $absLength; $x++) {
             $randomCode .= $specialcharacters{mt_rand(0, $max)};
         }
         $max = strlen($numbers) - 1;
 
-        for ($x = 0; $x < abs($length/3); $x++) {
+        for ($x = 0; $x < $absLength; $x++) {
             $randomCode .= $numbers{mt_rand(0, $max)};
         }
 
