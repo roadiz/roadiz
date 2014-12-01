@@ -29,6 +29,7 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Repositories;
+
 /**
  * {@inheritdoc}
  */

@@ -34,7 +34,6 @@ use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
 
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
 
-
 /**
  * {@inheritdoc}
  */

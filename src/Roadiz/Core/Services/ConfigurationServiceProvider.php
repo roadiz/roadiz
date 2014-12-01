@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 
-
 /**
  * Register configuration services for dependency injection container.
  */
