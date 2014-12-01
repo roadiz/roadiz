@@ -67,15 +67,6 @@ class DefaultThemeApp extends FrontendController
          */
         $translation = $this->bindLocaleFromRoute($request, $_locale);
 
-        $node = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findOneBy(
-                    array('home'=>true),
-                    null,
-                    $translation,
-                    $this->getSecurityContext()
-                );
-
         $this->prepareThemeAssignation(null, $translation);
 
         /*

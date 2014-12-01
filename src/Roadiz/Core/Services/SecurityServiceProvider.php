@@ -210,5 +210,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         $container['accessDeniedHandler'] = function ($c) {
             return new \RZ\Roadiz\Core\Authorization\AccessDeniedHandler();
         };
+
+        return $container;
     }
 }

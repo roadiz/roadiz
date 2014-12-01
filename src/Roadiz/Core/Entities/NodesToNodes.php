@@ -67,6 +67,18 @@ class NodesToNodes extends AbstractPositioned implements PersistableInterface
      * @var RZ\Roadiz\Core\Entities\Node
      */
     private $nodeA;
+    /**
+     * @return RZ\Roadiz\Core\Entities\Node
+     */
+    public function getNodeA()
+    {
+        return $this->nodeA;
+    }
+
+    public function setNodeA($nodeA)
+    {
+        $this->nodeA = $nodeA;
+    }
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="aNodes")
@@ -74,6 +86,18 @@ class NodesToNodes extends AbstractPositioned implements PersistableInterface
      * @var RZ\Roadiz\Core\Entities\Node
      */
     private $nodeB;
+    /**
+     * @return RZ\Roadiz\Core\Entities\Node
+     */
+    public function getNodeB()
+    {
+        return $this->nodeB;
+    }
+
+    public function setNodeB($nodeB)
+    {
+        $this->nodeB = $nodeB;
+    }
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")

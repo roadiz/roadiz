@@ -72,5 +72,7 @@ class FormServiceProvider implements \Pimple\ServiceProviderInterface
                 ->addExtension(new ValidatorExtension($c['formValidator']))
                 ->getFormFactory();
         };
+
+        return $container;
     }
 }

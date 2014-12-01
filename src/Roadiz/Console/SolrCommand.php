@@ -87,7 +87,7 @@ class SolrCommand extends Command
                         $update = $solr->createUpdate();
                         $update->addDeleteQuery('*:*');
                         $update->addCommit();
-                        $result = $solr->update($update);
+                        $solr->update($update);
 
                         $text = '<info>Solr index resetted…</info>'.PHP_EOL;
                     }

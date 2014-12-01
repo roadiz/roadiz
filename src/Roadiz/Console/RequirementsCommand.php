@@ -39,8 +39,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class RequirementsCommand extends Command
 {
-    private $dialog;
-
     protected function configure()
     {
         $this

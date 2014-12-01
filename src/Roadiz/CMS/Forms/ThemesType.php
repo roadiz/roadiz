@@ -64,9 +64,7 @@ class ThemesType extends AbstractType
         foreach ($iterator as $file) {
             $data = json_decode(file_get_contents($file->getPathname()), true);
 
-            $classPath = RENZO_ROOT.'/themes/'.$file->getRelativePathname();
-
-            $classname = '\Themes\\'.$data['themeDir']."\\".$data['themeDir']."App";//str_replace('.php', '', $namespace);
+            $classname = '\Themes\\'.$data['themeDir']."\\".$data['themeDir']."App";
 
             /*
              * Parsed file is not or does not contain any PHP Class

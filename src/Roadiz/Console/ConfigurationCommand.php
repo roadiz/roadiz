@@ -42,8 +42,6 @@ use RZ\Roadiz\Console\Tools\Configuration;
  */
 class ConfigurationCommand extends Command
 {
-    private $dialog;
-
     protected function configure()
     {
         $this
@@ -77,7 +75,6 @@ class ConfigurationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
         $text="";
 
         $configuration = new Configuration();

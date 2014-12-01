@@ -224,9 +224,6 @@ class CustomFormFieldsController extends RozierApp
                 /*
                  * Update Database
                  */
-                $customForm = $this->getService('em')
-                    ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
-
                 $msg = $this->getTranslator()->trans(
                     'customFormField.%name%.deleted',
                     array('%name%'=>$field->getName())

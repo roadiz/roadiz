@@ -415,7 +415,6 @@ class DocumentsController extends RozierApp
             $folder = $this->getService('em')
                            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
-            $prefilters['folders'] = array($folder);
             $this->assignation['folder'] = $folder;
         }
 
@@ -511,7 +510,6 @@ class DocumentsController extends RozierApp
             $folder = $this->getService('em')
                            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
-            $prefilters['folders'] = array($folder);
             $this->assignation['folder'] = $folder;
         }
 

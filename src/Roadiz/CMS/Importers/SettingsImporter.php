@@ -62,9 +62,6 @@ class SettingsImporter implements ImporterInterface
 
         $newSettings = array();
 
-        $newSettingGroups = new ArrayCollection();
-
-
         foreach ($settingGroups as $index => $settingGroup) {
 
             /*

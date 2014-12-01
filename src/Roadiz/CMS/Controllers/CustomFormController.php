@@ -250,8 +250,6 @@ class CustomFormController extends AppController
      */
     private function buildForm(Request $request, CustomForm $customForm)
     {
-        $fields = $customForm->getFields();
-
         $defaults = $request->query->all();
         $form = $this->getService('formFactory')
                     ->create(new CustomFormsType($customForm), $defaults);

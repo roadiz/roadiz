@@ -130,7 +130,7 @@ class InstallCommand extends Command
                     if (file_exists($themeFile)) {
 
                         $fixtures = new Fixtures();
-                        $themeId = $fixtures->installFrontendTheme($input->getOption('with-theme'));
+                        $fixtures->installFrontendTheme($input->getOption('with-theme'));
                         $text .= '<info>Theme class “'.$themeFile.'” has been installed…</info>'.PHP_EOL;
 
                         // install fixtures

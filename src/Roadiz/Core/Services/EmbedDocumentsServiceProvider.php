@@ -55,5 +55,7 @@ class EmbedDocumentsServiceProvider implements \Pimple\ServiceProviderInterface
                 'soundcloud' =>  '\RZ\Roadiz\Core\Utils\SoundcloudEmbedFinder'
             );
         };
+
+        return $container;
     }
 }

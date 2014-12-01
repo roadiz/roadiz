@@ -58,5 +58,7 @@ class EntityApiServiceProvider implements \Pimple\ServiceProviderInterface
         $container['tagApi'] = function ($c) {
             return new TagApi($c);
         };
+
+        return $container;
     }
 }

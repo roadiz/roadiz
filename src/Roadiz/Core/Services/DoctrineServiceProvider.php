@@ -116,5 +116,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                 }
             };
         }
+        
+        return $container;
     }
 }

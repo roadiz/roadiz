@@ -169,5 +169,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 }
             );
         };
+
+        return $container;
     }
 }

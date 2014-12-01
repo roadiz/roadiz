@@ -68,5 +68,7 @@ class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
                 );
             }
         };
+
+        return $container;
     }
 }

@@ -85,7 +85,6 @@ class DataInheritanceEvent
     public static function getNodesSourcesMetadata()
     {
         $metadata = new ClassMetadata('RZ\Roadiz\Core\Entities\NodesSources');
-        $class = $metadata->getReflectionClass();
 
         try {
             /**
