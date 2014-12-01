@@ -32,21 +32,23 @@ namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * CustomFormField entities are used to create CustomForms with
  * custom data structure.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="custom_form_fields",
- * uniqueConstraints={@UniqueConstraint(columns={"name", "custom_form_id"})})
- * @HasLifecycleCallbacks
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="custom_form_fields", uniqueConstraints={
+ *      @ORM\UniqueConstraint(columns={"name", "custom_form_id"})
+ * })
+ * @ORM\HasLifecycleCallbacks
  */
 class CustomFormField extends AbstractField
 {
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="fields")
-     * @JoinColumn(name="custom_form_id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="fields")
+     * @ORM\JoinColumn(name="custom_form_id", onDelete="CASCADE")
      */
     private $customForm;
 
@@ -71,7 +73,7 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
      */
     private $customFormFieldAttribute;
 
@@ -86,7 +88,7 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @Column(name="field_required", type="boolean")
+     * @ORM\Column(name="field_required", type="boolean")
      */
     private $required = false;
 
@@ -119,7 +121,7 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function prePersist()
     {

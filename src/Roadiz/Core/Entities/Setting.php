@@ -34,17 +34,18 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\SettingGroup;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * Settings entity are a simple key-value configuration system.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\SettingRepository")
- * @Table(name="settings")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\SettingRepository")
+ * @ORM\Table(name="settings")
  */
 class Setting extends AbstractEntity
 {
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     private $name;
     /**
@@ -69,7 +70,7 @@ class Setting extends AbstractEntity
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $value;
     /**
@@ -103,7 +104,7 @@ class Setting extends AbstractEntity
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $visible = true;
     /**
@@ -126,8 +127,8 @@ class Setting extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="SettingGroup", inversedBy="settings")
-     * @JoinColumn(name="setting_group_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="SettingGroup", inversedBy="settings")
+     * @ORM\JoinColumn(name="setting_group_id", referencedColumnName="id")
      * @var SettingGroup
      */
     private $settingGroup;
@@ -154,7 +155,7 @@ class Setting extends AbstractEntity
      * Value types.
      * Use NodeTypeField types constants.
      *
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     private $type = NodeTypeField::STRING_T;
     /**

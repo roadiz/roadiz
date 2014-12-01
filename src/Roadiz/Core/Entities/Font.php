@@ -32,14 +32,15 @@ namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * Fonts are entities which store each webfont file for a
  * font-family and a font-variant.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FontRepository")
- * @Table(name="fonts",uniqueConstraints={
- *     @UniqueConstraint(name="name_variant_idx", columns={"name", "variant"})})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FontRepository")
+ * @ORM\Table(name="fonts",uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="name_variant_idx", columns={"name", "variant"})})
  */
 class Font extends AbstractDateTimed
 {
@@ -89,7 +90,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="integer", name="variant", unique=false, nullable=false)
+     * @ORM\Column(type="integer", name="variant", unique=false, nullable=false)
      */
     protected $variant = Font::REGULAR;
     /**
@@ -163,7 +164,7 @@ class Font extends AbstractDateTimed
 
 
     /**
-     * @Column(type="string", nullable=true, name="eot_filename")
+     * @ORM\Column(type="string", nullable=true, name="eot_filename")
      */
     private $eotFilename;
     /**
@@ -186,7 +187,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true, name="woff_filename")
+     * @ORM\Column(type="string", nullable=true, name="woff_filename")
      */
     private $woffFilename;
     /**
@@ -209,7 +210,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true, name="woff2_filename")
+     * @ORM\Column(type="string", nullable=true, name="woff2_filename")
      */
     private $woff2Filename;
     /**
@@ -232,7 +233,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true, name="otf_filename")
+     * @ORM\Column(type="string", nullable=true, name="otf_filename")
      */
     private $otfFilename;
     /**
@@ -255,7 +256,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true, name="svg_filename")
+     * @ORM\Column(type="string", nullable=true, name="svg_filename")
      */
     private $svgFilename;
     /**
@@ -279,7 +280,7 @@ class Font extends AbstractDateTimed
 
 
     /**
-     * @Column(type="string", nullable=false, unique=false)
+     * @ORM\Column(type="string", nullable=false, unique=false)
      */
     private $name;
     /**
@@ -302,7 +303,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=false, unique=false)
+     * @ORM\Column(type="string", nullable=false, unique=false)
      */
     private $hash;
     /**
@@ -325,7 +326,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $folder;
     /**
@@ -408,7 +409,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     /**

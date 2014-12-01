@@ -31,13 +31,14 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * Log Entity
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="log")
- * @HasLifecycleCallbacks
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="log")
+ * @ORM\HasLifecycleCallbacks
  */
 class Log extends AbstractEntity
 {
@@ -63,8 +64,8 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\User")
-     * @JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
      */
     protected $user = null;
 
@@ -89,7 +90,7 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @Column(type="text", name="message")
+     * @ORM\Column(type="text", name="message")
      */
     protected $message = '';
 
@@ -102,7 +103,7 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @Column(type="integer", name="level", nullable=false)
+     * @ORM\Column(type="integer", name="level", nullable=false)
      */
     protected $level = null;
 
@@ -115,7 +116,7 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @Column(type="datetime", name="datetime", nullable=false)
+     * @ORM\Column(type="datetime", name="datetime", nullable=false)
      */
     protected $datetime = null;
 
@@ -128,7 +129,7 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @Column(type="string", name="client_ip", unique=false, nullable=true)
+     * @ORM\Column(type="string", name="client_ip", unique=false, nullable=true)
      */
     protected $clientIp = null;
 
@@ -153,7 +154,7 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function prePersist()
     {

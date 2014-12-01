@@ -31,18 +31,19 @@
 namespace RZ\Roadiz\Core\AbstractEntities;
 
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * Base entity implementing PersistableInterface to offer a unique Id.
  *
- * @MappedSuperclass
+ * @ORM\MappedSuperclass
  */
 abstract class AbstractEntity implements PersistableInterface
 {
     /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private $id;
 

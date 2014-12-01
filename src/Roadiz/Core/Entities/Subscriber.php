@@ -32,18 +32,19 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * A Subscriber is a light User which only can subscribe
  * to newsletter feeds and can be tagged.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="subscribers")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="subscribers")
  */
 class Subscriber extends AbstractHuman
 {
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $hardBounced = false;
     /**
@@ -66,7 +67,7 @@ class Subscriber extends AbstractHuman
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $softBounced = false;
     /**
@@ -89,8 +90,8 @@ class Subscriber extends AbstractHuman
     }
 
     /**
-     * @ManyToMany(targetEntity="Tag", inversedBy="subscribers")
-     * @JoinTable(name="subscribers_tags")
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="subscribers")
+     * @ORM\JoinTable(name="subscribers_tags")
      * @var ArrayCollection
      */
     private $tags = null;

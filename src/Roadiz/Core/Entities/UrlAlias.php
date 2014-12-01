@@ -32,17 +32,18 @@ namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Utils\StringHandler;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * UrlAliases are used to translate Nodes URLs.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\UrlAliasRepository")
- * @Table(name="url_aliases")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\UrlAliasRepository")
+ * @ORM\Table(name="url_aliases")
  */
 class UrlAlias extends AbstractEntity
 {
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      * @var string
      */
     private $alias;
@@ -66,8 +67,8 @@ class UrlAlias extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="urlAliases")
-     * @JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="urlAliases")
+     * @ORM\JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $nodeSource;
     /**

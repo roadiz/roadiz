@@ -31,21 +31,22 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * Themes describe a database entity to store
  * front-end and back-end controllers.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\ThemeRepository")
- * @Table(name="themes", indexes={
- *      @index(name="backend_theme_idx", columns={"backend"}),
- *      @index(name="available_theme_idx", columns={"available"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\ThemeRepository")
+ * @ORM\Table(name="themes", indexes={
+ *      @ORM\Index(name="backend_theme_idx", columns={"backend"}),
+ *      @ORM\Index(name="available_theme_idx", columns={"available"})
  * })
  */
 class Theme extends AbstractEntity
 {
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      * @var boolean
      */
     private $available = false;
@@ -70,7 +71,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @Column(name="classname", type="string", unique=true)
+     * @ORM\Column(name="classname", type="string", unique=true)
      * @var string
      */
     private $className;
@@ -117,7 +118,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @Column(name="hostname",type="string")
+     * @ORM\Column(name="hostname",type="string")
      * @var string
      */
     private $hostname = '*';
@@ -143,7 +144,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @Column(name="backend", type="boolean")
+     * @ORM\Column(name="backend", type="boolean")
      * @var boolean
      */
     private $backendTheme = false;

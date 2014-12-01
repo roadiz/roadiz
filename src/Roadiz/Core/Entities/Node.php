@@ -36,23 +36,24 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * Node entities are the central feature of RZ-CMS,
  * it describes a document-like object which can be inherited
  * with *NodesSources* to create complex data structures.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodeRepository")
- * @Table(name="nodes", indexes={
- *     @index(name="visible_node_idx",       columns={"visible"}),
- *     @index(name="status_node_idx",        columns={"status"}),
- *     @index(name="locked_node_idx",        columns={"locked"}),
- *     @index(name="sterile_node_idx",       columns={"sterile"}),
- *     @index(name="position_node_idx",      columns={"position"}),
- *     @index(name="hide_children_node_idx", columns={"hide_children"}),
- *     @index(name="home_node_idx",          columns={"home"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodeRepository")
+ * @ORM\Table(name="nodes", indexes={
+ *     @ORM\Index(name="visible_node_idx",       columns={"visible"}),
+ *     @ORM\Index(name="status_node_idx",        columns={"status"}),
+ *     @ORM\Index(name="locked_node_idx",        columns={"locked"}),
+ *     @ORM\Index(name="sterile_node_idx",       columns={"sterile"}),
+ *     @ORM\Index(name="position_node_idx",      columns={"position"}),
+ *     @ORM\Index(name="hide_children_node_idx", columns={"hide_children"}),
+ *     @ORM\Index(name="home_node_idx",          columns={"home"})
  * })
- * @HasLifecycleCallbacks
+ * @ORM\HasLifecycleCallbacks
  */
 class Node extends AbstractDateTimedPositioned
 {
@@ -63,7 +64,7 @@ class Node extends AbstractDateTimedPositioned
     const DELETED =     50;
 
     /**
-     * @Column(type="string", name="node_name", unique=true)
+     * @ORM\Column(type="string", name="node_name", unique=true)
      */
     private $nodeName;
     /**
@@ -86,7 +87,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @Column(type="boolean", name="home")
+     * @ORM\Column(type="boolean", name="home")
      */
     private $home = false;
     /**
@@ -108,7 +109,7 @@ class Node extends AbstractDateTimedPositioned
         return $this;
     }
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $visible = true;
     /**
@@ -131,7 +132,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     private $status = Node::DRAFT;
 
@@ -205,7 +206,7 @@ class Node extends AbstractDateTimedPositioned
         return $this;
     }
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $locked = false;
 
@@ -230,7 +231,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @Column(type="decimal", precision=2, scale=1)
+     * @ORM\Column(type="decimal", precision=2, scale=1)
      */
     private $priority = 0.8;
 
@@ -255,7 +256,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @Column(type="boolean", name="hide_children", nullable=false)
+     * @ORM\Column(type="boolean", name="hide_children", nullable=false)
      */
     protected $hideChildren = false;
 
@@ -299,7 +300,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $sterile = false;
     /**
@@ -322,7 +323,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @Column(type="string", name="children_order")
+     * @ORM\Column(type="string", name="children_order")
      */
     private $childrenOrder = 'order';
 
@@ -346,7 +347,7 @@ class Node extends AbstractDateTimedPositioned
         return $this;
     }
     /**
-     * @Column(type="string", name="children_order_direction", length=4)
+     * @ORM\Column(type="string", name="children_order_direction", length=4)
      */
     private $childrenOrderDirection = 'ASC';
 
@@ -371,7 +372,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ManyToOne(targetEntity="NodeType")
+     * @ORM\ManyToOne(targetEntity="NodeType")
      * @var NodeType
      */
     private $nodeType;
@@ -397,8 +398,8 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="children", fetch="EXTRA_LAZY")
-     * @JoinColumn(name="parent_node_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="children", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="parent_node_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Node
      */
     private $parent;
@@ -424,8 +425,8 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="parent", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @OrderBy({"position" = "ASC"})
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="parent", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
      */
     private $children;
@@ -467,8 +468,8 @@ class Node extends AbstractDateTimedPositioned
 
 
     /**
-     * @ManyToMany(targetEntity="Tag", inversedBy="nodes", fetch="EXTRA_LAZY")
-     * @JoinTable(name="nodes_tags")
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="nodes_tags")
      * @var ArrayCollection
      */
     private $tags = null;
@@ -507,7 +508,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @OneToMany(targetEntity="NodesCustomForms", mappedBy="node", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="NodesCustomForms", mappedBy="node", fetch="EXTRA_LAZY")
      * @var ArrayCollection
      */
     private $customForms = null;
@@ -521,8 +522,8 @@ class Node extends AbstractDateTimedPositioned
 
 
     /**
-     * @ManyToMany(targetEntity="NodeType", fetch="EXTRA_LAZY")
-     * @JoinTable(name="stack_types")
+     * @ORM\ManyToMany(targetEntity="NodeType", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="stack_types")
      * @var ArrayCollection
      */
     private $stackTypes = null;
@@ -561,7 +562,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")
      */
     private $nodeSources;
 
@@ -575,7 +576,7 @@ class Node extends AbstractDateTimedPositioned
 
 
     /**
-     * @OneToMany(targetEntity="NodesToNodes", mappedBy="nodeA")
+     * @ORM\OneToMany(targetEntity="NodesToNodes", mappedBy="nodeA")
      * @var ArrayCollection
      */
     protected $bNodes;
@@ -585,7 +586,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @OneToMany(targetEntity="NodesToNodes", mappedBy="nodeB")
+     * @ORM\OneToMany(targetEntity="NodesToNodes", mappedBy="nodeB")
      * @var ArrayCollection
      */
     protected $aNodes;
@@ -635,7 +636,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function prePersist()
     {

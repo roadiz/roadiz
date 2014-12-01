@@ -34,22 +34,23 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Core\Utils\StringHandler;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * NodeTypes describe each node structure family,
  * They are mandatory before creating any Node.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodeTypeRepository")
- * @Table(name="node_types", indexes={
- *     @index(name="visible_nodetype_idx",         columns={"visible"}),
- *     @index(name="newsletter_type_nodetype_idx", columns={"newsletter_type"}),
- *     @index(name="hiding_nodes_nodetype_idx",    columns={"hiding_nodes"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodeTypeRepository")
+ * @ORM\Table(name="node_types", indexes={
+ *     @ORM\Index(name="visible_nodetype_idx",         columns={"visible"}),
+ *     @ORM\Index(name="newsletter_type_nodetype_idx", columns={"newsletter_type"}),
+ *     @ORM\Index(name="hiding_nodes_nodetype_idx",    columns={"hiding_nodes"})
  * })
  */
 class NodeType extends AbstractEntity
 {
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     private $name;
     /**
@@ -72,7 +73,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @Column(name="display_name", type="string")
+     * @ORM\Column(name="display_name", type="string")
      */
     private $displayName;
     /**
@@ -95,7 +96,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     /**
@@ -118,7 +119,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $visible = true;
     /**
@@ -140,7 +141,7 @@ class NodeType extends AbstractEntity
         return $this;
     }
     /**
-     * @Column(name="newsletter_type", type="boolean")
+     * @ORM\Column(name="newsletter_type", type="boolean")
      */
     private $newsletterType = false;
     /**
@@ -162,7 +163,7 @@ class NodeType extends AbstractEntity
         return $this;
     }
     /**
-     * @Column(name="hiding_nodes",type="boolean")
+     * @ORM\Column(name="hiding_nodes",type="boolean")
      */
     private $hidingNodes = false;
     /**
@@ -184,7 +185,7 @@ class NodeType extends AbstractEntity
         return $this;
     }
     /**
-     * @Column(type="string", name="color", unique=false, nullable=true)
+     * @ORM\Column(type="string", name="color", unique=false, nullable=true)
      */
     protected $color = '#000000';
 
@@ -213,8 +214,8 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"ALL"})
-     * @OrderBy({"position" = "ASC"})
+     * @ORM\OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"ALL"})
+     * @ORM\OrderBy({"position" = "ASC"})
      */
     private $fields;
 

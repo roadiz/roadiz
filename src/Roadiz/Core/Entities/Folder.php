@@ -33,19 +33,20 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\Handlers\FolderHandler;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * Folders entity represent a directory on server with datetime and naming.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FolderRepository")
- * @Table(name="folders", indexes={
- *     @index(name="position_folder_idx", columns={"position"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FolderRepository")
+ * @ORM\Table(name="folders", indexes={
+ *     @ORM\Index(name="position_folder_idx", columns={"position"})
  * })
  */
 class Folder extends AbstractDateTimedPositioned
 {
     /**
-     * @Column(type="string", unique=true, nullable=false)
+     * @ORM\Column(type="string", unique=true, nullable=false)
      */
     private $name;
     /**
@@ -68,8 +69,8 @@ class Folder extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Folder", inversedBy="children")
-     * @JoinColumn(name="parent_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Folder", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
     protected $parent = null;
 
@@ -91,7 +92,7 @@ class Folder extends AbstractDateTimedPositioned
     }
 
     /**
-     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="parent")
      */
     protected $children;
 
@@ -116,8 +117,8 @@ class Folder extends AbstractDateTimedPositioned
 
 
     /**
-     * @ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="folders", fetch="EXTRA_LAZY")
-     * @JoinTable(name="documents_folders")
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="folders", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="documents_folders")
      */
     protected $documents;
 

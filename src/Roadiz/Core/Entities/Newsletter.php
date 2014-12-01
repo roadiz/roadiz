@@ -31,14 +31,15 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * Newsletters entities wrap a Node and are linked to
  * Subscribers in order to render a HTML Email and send it over
  * MailTransportAgent.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="newsletters")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="newsletters")
  */
 class Newsletter extends AbstractEntity
 {

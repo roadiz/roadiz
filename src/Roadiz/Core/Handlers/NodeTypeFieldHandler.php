@@ -68,7 +68,7 @@ class NodeTypeFieldHandler
     public function generateSourceFieldIndex()
     {
         if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
-            return '@Index(name="'.$this->nodeTypeField->getName().'_idx", columns={"'.$this->nodeTypeField->getName().'"})';
+            return '@ORM\Index(name="'.$this->nodeTypeField->getName().'_idx", columns={"'.$this->nodeTypeField->getName().'"})';
         } else {
             return '';
         }
@@ -92,7 +92,7 @@ class NodeTypeFieldHandler
 
             return '
                 /**
-                 * @Column(type="'.
+                 * @ORM\Column(type="'.
                     NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].
                     '", '.
                     $this->getDecimalPrecision().
