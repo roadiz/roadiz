@@ -426,7 +426,7 @@ class SettingGroupsController extends RozierApp
      */
     public static function getSettingGroups()
     {
-        return $this->getService('em')
+        return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
             ->findAll();
     }

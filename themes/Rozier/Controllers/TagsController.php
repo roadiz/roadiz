@@ -861,7 +861,7 @@ class TagsController extends RozierApp
      */
     public static function getTags()
     {
-        return $this->getService('em')
+        return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
             ->findAll();
     }

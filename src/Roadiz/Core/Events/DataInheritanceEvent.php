@@ -108,7 +108,7 @@ class DataInheritanceEvent
              * Database tables don't exist yet
              * Need Install
              */
-            $this->getSession()->getFlashBag()->add('error', 'Impossible to create discriminator map, make sure your database is fully installed.');
+            // Kernel::getService("session")->getFlashBag()->add('error', 'Impossible to create discriminator map, make sure your database is fully installed.');
 
             return null;
         }

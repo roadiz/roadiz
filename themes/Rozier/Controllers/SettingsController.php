@@ -600,7 +600,7 @@ class SettingsController extends RozierApp
      */
     public static function getSettings()
     {
-        return $this->getService('em')
+        return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Setting')
             ->findAll();
     }

@@ -24,6 +24,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+use RZ\Roadiz\Core\Kernel;
+
 /**
 * NodeType controller
 */
@@ -420,7 +422,7 @@ class NodeTypesController extends RozierApp
      */
     public static function getNewsletterNodeTypes()
     {
-        return $this->getService('em')
+        return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findBy(array('newsletterType' => true));
     }
