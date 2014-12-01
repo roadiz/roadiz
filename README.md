@@ -8,6 +8,11 @@ It’s based on Symfony components and Doctrine ORM for maximum performances and
 * *RZ Icons* font-icon is released under **MIT** licence too
 * *Rezo-Zero Sans* font is released under **GPL+FE** licence and is edited by *Nonpareille* type foundry
 
+### Documentation
+
+* *API* documentation can be found at http://api.roadiz.io
+* *Read the Docs* complete documentation can be found at http://docs.roadiz.io
+
 ### Installation
 
 * Clone current repository to your web root
@@ -80,7 +85,7 @@ Add this to your `config.json` to link your Roadiz install to your Solr server:
 ./vendor/bin/phpcs --report=full --report-file=./report.txt \
                 --extensions=php --warning-severity=0 \
                 --standard=PSR2 \
-                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/Tests/*,*/InlineMarkdown.php \
+                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/Tests/* \
                 -p ./
 ```
 

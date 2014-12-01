@@ -5506,7 +5506,28 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>custom-forms.type</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="Bad credentials">
+          <source>Bad credentials</source>
+          <target></target>
+      </trans-unit>
       
+      <trans-unit xml:space="preserve" id="User account has expired.">
+          <source>User account has expired.</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="User account is locked.">
+          <source>User account is locked.</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="User credentials have expired.">
+          <source>User credentials have expired.</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="User account is disabled.">
+          <source>User account is disabled.</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

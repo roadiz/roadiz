@@ -18,7 +18,7 @@
     <div id="login-formGlobal">
     	<h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
     	{% if error %}
-    	    <div data-uk-alert class="uk-alert uk-alert-danger">{{ error.message }}</div>
+    	    <div data-uk-alert class="uk-alert uk-alert-danger">{{ error.message|trans }}</div>
         {% endif %}
        	{% form_theme form 'forms.html.twig' %}
         <form id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" action="{{ path('loginCheckPage') }}" method="post" {{ form_enctype(form) }}>
