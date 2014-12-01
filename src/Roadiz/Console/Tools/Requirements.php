@@ -238,7 +238,7 @@ class Requirements
      */
     protected function methodExists($name)
     {
-        return (function_exists($name) == true) ? (true) : (false);
+        return (function_exists($name) === true) ? (true) : (false);
     }
 
     /**
@@ -248,7 +248,7 @@ class Requirements
      */
     protected function folderWritable($filename)
     {
-        return is_writable($filename) == true ? true : false;
+        return is_writable($filename) === true ? true : false;
     }
 
     /**

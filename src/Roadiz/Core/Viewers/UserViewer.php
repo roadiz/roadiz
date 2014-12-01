@@ -61,8 +61,6 @@ class UserViewer implements ViewableInterface
      *
      * src/Roadiz/CMS/Resources/translations/messages.{{lang}}.xlf
      *
-     * @todo  [Cache] Need to write XLF catalog to PHP using \Symfony\Component\Translation\Writer\TranslationWriter
-     *
      * @return Symfony\Component\Translation\Translator
      */
     public function initializeTranslator()

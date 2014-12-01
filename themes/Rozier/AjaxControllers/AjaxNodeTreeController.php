@@ -73,7 +73,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
                     );
                     $this->assignation['mainNodeTree'] = false;
 
-                    if (true == $request->get('stackTree')) {
+                    if (true === (boolean) $request->get('stackTree')) {
                         $this->assignation['nodeTree']->setStackTree(true);
                     }
 

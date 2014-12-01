@@ -77,7 +77,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
          */
         $container['twig.environment'] = function ($c) {
 
-            $devMode = (isset($c['config']['devMode']) && $c['config']['devMode'] == true) ?
+            $devMode = (isset($c['config']['devMode']) && true === (boolean) $c['config']['devMode']) ?
                         true :
                         false;
 

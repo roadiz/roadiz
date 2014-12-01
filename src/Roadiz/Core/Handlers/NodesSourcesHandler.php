@@ -176,7 +176,7 @@ class NodesSourcesHandler
     public function getIdentifier()
     {
         $urlalias = $this->nodeSource->getUrlAliases()->first();
-        if ($urlalias != null) {
+        if ($urlalias !== null) {
             return $urlalias->getAlias();
         } else {
             return $this->nodeSource->getNode()->getNodeName();

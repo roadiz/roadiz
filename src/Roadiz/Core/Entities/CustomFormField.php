@@ -133,7 +133,6 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @todo Move this method to a CustomFormFieldViewer
      * @return string
      */
     public function getOneLineSummary()

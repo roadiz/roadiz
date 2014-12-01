@@ -611,7 +611,6 @@ class Node extends AbstractDateTimedPositioned
         $this->setNodeType($nodeType);
     }
     /**
-     * @todo Move this method to a NodeViewer
      * @return string
      */
     public function getOneLineSummary()
@@ -620,7 +619,6 @@ class Node extends AbstractDateTimedPositioned
             " — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
     }
     /**
-     * @todo Move this method to a NodeViewer
      * @return string
      */
     public function getOneLineSourceSummary()

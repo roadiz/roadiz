@@ -210,7 +210,6 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @todo Move this method to a TranslationViewer
      * @return string
      */
     public function getOneLineSummary()

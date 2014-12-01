@@ -37,14 +37,14 @@ abstract class AbstractWidget
 
     /**
      * @param Symfony\Component\HttpFoundation\Request $request           Current kernel request
-     * @param RZ\Roadiz\CMS\Controller\AppController    $refereeController Referee controller to get Twig, security context from.
+     * @param RZ\Roadiz\CMS\Controller\AppController   $refereeController Referee controller to get Twig, security context from.
      */
     public function __construct(Request $request, $refereeController)
     {
-        if ($refereeController == null) {
+        if ($refereeController === null) {
             throw new \RuntimeException("Referee AppController cannot be null to instanciate a new Widget", 1);
         }
-        if ($request == null) {
+        if ($request === null) {
             throw new \RuntimeException("Request cannot be null to instanciate a new Widget", 1);
         }
 

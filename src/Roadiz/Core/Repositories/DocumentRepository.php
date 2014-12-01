@@ -52,7 +52,7 @@ class DocumentRepository extends EntityRepository
         if (in_array('folders', array_keys($criteria))) {
             if (is_array($criteria['folders'])) {
                 if (in_array("folderExclusive", array_keys($criteria))
-                    && $criteria["folderExclusive"] == true) {
+                    && $criteria["folderExclusive"] === true) {
                     $documents = static::getDocumentIdsByFolderExcl($criteria['folders']);
                     $criteria["id"] = $documents;
                     unset($criteria["folderExclusive"]);
