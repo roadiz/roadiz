@@ -31,7 +31,6 @@
 namespace RZ\Roadiz\Core\Utils;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientErrorResponseException;
 
 /**
  * Util to grab a facebook profile picture from userAlias.

@@ -35,9 +35,6 @@ use Pimple\Container;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 

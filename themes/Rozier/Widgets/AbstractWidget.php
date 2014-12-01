@@ -9,10 +9,7 @@
  */
 namespace Themes\Rozier\Widgets;
 
-use RZ\Roadiz\CMS\Controller\AppController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * A widget always has to be created and called from a valid AppController

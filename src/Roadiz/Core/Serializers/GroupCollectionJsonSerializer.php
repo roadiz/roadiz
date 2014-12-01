@@ -31,7 +31,6 @@
 namespace RZ\Roadiz\Core\Serializers;
 
 use RZ\Roadiz\Core\Entities\Group;
-use RZ\Roadiz\Core\Entities\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Kernel;
 

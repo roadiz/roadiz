@@ -10,7 +10,6 @@
 namespace Themes\Rozier\Widgets;
 
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Kernel;
 use Themes\Rozier\Widgets\AbstractWidget;
 
 use Symfony\Component\HttpFoundation\Request;

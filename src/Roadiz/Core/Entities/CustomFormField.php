@@ -30,6 +30,7 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
 use Doctrine\ORM\Mapping as ORM;
