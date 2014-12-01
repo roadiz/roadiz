@@ -29,7 +29,7 @@ NodeEditSource.prototype.init = function(){
 
     for(var i = 0; i < _this.$input.length; i++) {
         
-        if(_this.$input[i].getAttribute('data-desc') !== null){
+        if(_this.$input[i].getAttribute('data-desc') !== ''){
             $(_this.$input[i]).after('<div class="form-help uk-alert uk-alert-large">'+_this.$input[i].getAttribute('data-desc')+'</div>');
         }   
 
