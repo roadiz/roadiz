@@ -40,8 +40,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Validation;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Handlers\UserProvider;
-use RZ\Roadiz\Core\Handlers\UserHandler;
 
 /**
  * Register form services for dependency injection container.

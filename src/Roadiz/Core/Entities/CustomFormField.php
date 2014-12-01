@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
-use RZ\Roadiz\Core\Utils\StringHandler;
 
 /**
  * CustomFormField entities are used to create CustomForms with

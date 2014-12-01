@@ -33,7 +33,6 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\CustomFormHandler;
-use RZ\Roadiz\Core\Serializers\CustomFormSerializer;
 use RZ\Roadiz\Core\Utils\StringHandler;
 
 /**

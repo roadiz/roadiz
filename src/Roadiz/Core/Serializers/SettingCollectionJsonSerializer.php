@@ -34,13 +34,6 @@ use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Serializers\EntitySerializer;
-use RZ\Roadiz\Core\Kernel;
-
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
 /**
  * Serialization class for Setting.

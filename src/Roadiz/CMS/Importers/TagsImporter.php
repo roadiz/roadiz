@@ -31,9 +31,7 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
 
 use RZ\Roadiz\CMS\Importers\ImporterInterface;

@@ -32,8 +32,6 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 
 class CompareDatetimeType extends AbstractType
 {

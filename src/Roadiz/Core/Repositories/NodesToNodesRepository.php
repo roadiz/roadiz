@@ -31,9 +31,7 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * {@inheritdoc}

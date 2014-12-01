@@ -37,7 +37,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Register Doctrine services for dependency injection container.

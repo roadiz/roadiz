@@ -32,9 +32,6 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Entities\FolderType;
-use RZ\Roadiz\Core\Entities\FolderTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
 
 /**
  * Handle operations with folders entities.

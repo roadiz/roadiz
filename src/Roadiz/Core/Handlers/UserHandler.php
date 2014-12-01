@@ -32,8 +32,6 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Log\Logger;
-use Symfony\Component\Security\Core\Util\SecureRandom;
 
 /**
  * Handle operations with users entities.

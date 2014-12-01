@@ -33,7 +33,6 @@ namespace RZ\Roadiz\Core\Repositories;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\TagTranslation;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * {@inheritdoc}
@@ -854,7 +853,7 @@ class TagRepository extends EntityRepository
         $tags = array_filter($tags);
 
         $lastToken = count($tags) - 1;
-        
+
         $tagName = count($tags) > 0 ? $tags[$lastToken] : $tagPath;
 
         $parentName = null;

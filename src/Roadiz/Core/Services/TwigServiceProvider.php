@@ -40,8 +40,6 @@ use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use \Michelf\Markdown;
 use RZ\Roadiz\Core\Utils\InlineMarkdown;
 
-use RZ\Roadiz\Core\Kernel;
-
 /**
  * Register Twig services for dependency injection container.
  */

@@ -31,9 +31,7 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
@@ -61,7 +59,7 @@ class NodesImporter implements ImporterInterface
                 static::browseTree($node);
             }
         }
-        
+
         return true;
     }
 

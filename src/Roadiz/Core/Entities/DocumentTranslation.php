@@ -30,11 +30,7 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Viewers\DocumentViewer;
-use RZ\Roadiz\Core\Handlers\DocumentHandler;
 
 /**
  * DocumentTranslation.

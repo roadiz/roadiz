@@ -32,13 +32,6 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 
-use Doctrine\ORM\Events;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
-
-use RZ\Roadiz\Core\Events\DataInheritanceEvent;
-use RZ\Roadiz\Core\Kernel;
-
 /**
  * Register Embed documents services for dependency injection container.
  */

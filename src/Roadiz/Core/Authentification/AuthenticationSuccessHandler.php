@@ -33,7 +33,6 @@ namespace RZ\Roadiz\Core\Authentification;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 use RZ\Roadiz\Core\Kernel;
 

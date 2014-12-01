@@ -33,9 +33,6 @@ namespace RZ\Roadiz\Core\Handlers;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
-use Doctrine\DBAL\Schema\Column;
 
 /**
  * Handle operations with node-type entities.

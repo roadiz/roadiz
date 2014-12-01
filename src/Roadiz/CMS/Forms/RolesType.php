@@ -30,9 +30,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 

@@ -30,27 +30,10 @@
  */
 namespace RZ\Roadiz\CMS\Importers;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Entities\SettingGroup;
-use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Serializers\RoleJsonSerializer;
 use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
 
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
 
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * {@inheritdoc}

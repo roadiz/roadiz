@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**

@@ -30,11 +30,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Kernel;
-
 /**
  * {@inheritdoc}
  */

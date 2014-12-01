@@ -32,9 +32,6 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\TagType;
-use RZ\Roadiz\Core\Entities\TagTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
 
 /**
  * Handle operations with tags entities.

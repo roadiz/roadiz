@@ -31,16 +31,11 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
-
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Node entities are the central feature of RZ-CMS,

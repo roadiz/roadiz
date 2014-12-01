@@ -31,13 +31,8 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
+
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
-
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * CustomFormAnswer entities

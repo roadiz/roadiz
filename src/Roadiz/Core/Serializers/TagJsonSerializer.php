@@ -33,14 +33,7 @@ namespace RZ\Roadiz\Core\Serializers;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Serializers\EntitySerializer;
 use RZ\Roadiz\Core\Serializers\TagTranslationJsonSerializer;
-use RZ\Roadiz\Core\Kernel;
-
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
 /**
  * Json Serialization handler for Node.

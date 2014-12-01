@@ -31,7 +31,6 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * {@inheritdoc}

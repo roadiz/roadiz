@@ -30,10 +30,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Exceptions\ThemeClassNotValidException;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Finder\Finder;

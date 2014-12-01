@@ -30,7 +30,6 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**

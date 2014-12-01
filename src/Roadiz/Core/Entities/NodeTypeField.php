@@ -31,9 +31,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
-use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
-use RZ\Roadiz\Core\Serializers\NodeTypeFieldSerializer;
 
 /**
  * NodeTypeField entities are used to create NodeTypes with

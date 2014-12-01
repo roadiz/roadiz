@@ -31,9 +31,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Group;
-use RZ\Roadiz\Core\Entities\Translation;
 
 /**
  * Handle operations with Group entities.

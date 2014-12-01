@@ -38,7 +38,6 @@ use RZ\Roadiz\Core\Kernel;
 
 use Symfony\Component\Security\Core\SecurityContext;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query\Expr;
 
 /**

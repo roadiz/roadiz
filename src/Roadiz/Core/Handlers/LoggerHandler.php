@@ -31,7 +31,6 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\Logger;
-use Doctrine\ORM\EntityManager;
 
 /**
  * Handle operations with logs entities.

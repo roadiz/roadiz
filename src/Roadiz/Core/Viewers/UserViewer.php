@@ -16,14 +16,9 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
-use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 use \InlineStyle\InlineStyle;
 

@@ -31,14 +31,7 @@
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
-use Symfony\Component\HttpFoundation\Request;
-
-use Solarium\QueryType\Update\Query\Query;
-use Solarium\QueryType\Update\Query\Document\DocumentInterface;
 
 class FullTextSearchHandler
 {

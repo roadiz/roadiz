@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Handle operations with fonts entities..

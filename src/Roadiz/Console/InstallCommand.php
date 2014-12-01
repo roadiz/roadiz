@@ -45,8 +45,6 @@ use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Console\Tools\Configuration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 
-use RZ\Roadiz\CMS\Controllers\ImportController;
-
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
  */

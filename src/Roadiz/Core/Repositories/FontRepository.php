@@ -30,9 +30,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Kernel;
-
 class FontRepository extends EntityRepository
 {
 
