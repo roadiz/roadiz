@@ -1,6 +1,9 @@
 # Roadiz
 ## REZO ZERO CMS
 
+[![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=develop)](https://travis-ci.org/roadiz/roadiz)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d/mini.png)](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d)
+
 Roadiz is a polymorphic CMS based on a node system which can handle many type of services.
 It’s based on Symfony components and Doctrine ORM for maximum performances and security.
 
