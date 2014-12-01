@@ -31,11 +31,7 @@
 namespace RZ\Roadiz\Core\Utils;
 
 use GuzzleHttp\Client;
-use RZ\Roadiz\Core\Entities\Document;
-
 use GuzzleHttp\Exception\ClientErrorResponseException;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use Pimple\Container;
 
 /**
  * Util to grab a facebook profile picture from userAlias.

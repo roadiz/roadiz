@@ -32,18 +32,6 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Exceptions\EmbedPlatformNotSupportedException;
-
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
-use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\Loader\XliffFileLoader;
-
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * DocumentViewer
@@ -207,9 +195,6 @@ class DocumentViewer implements ViewableInterface
                 $this->embedFinder = new $class($this->document->getEmbedId());
             } else {
                 $this->embedFinder = false;
-                /*throw new EmbedPlatformNotSupportedException(
-                    "“".$this->document->getEmbedPlatform()."” is not a supported platform."
-                );*/
             }
         }
 

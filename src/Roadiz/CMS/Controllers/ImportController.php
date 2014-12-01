@@ -172,7 +172,7 @@ class ImportController extends InstallApp
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);
-                $ret = $classImporter::importJsonFile($file);
+                $classImporter::importJsonFile($file);
             } else {
                 throw new \Exception('File: ' . $path . ' don\'t exist');
             }

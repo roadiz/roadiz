@@ -10,25 +10,15 @@
 namespace Themes\Rozier;
 
 use RZ\Roadiz\CMS\Controllers\BackendController;
-use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
-use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
-use Symfony\Component\Validator\Validation;
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Rozier main theme application

@@ -73,7 +73,7 @@ class UserHandler
             );
             $this->user->setPassword($encodedPassword);
         } else {
-            throw new Exception("User plain password is empty", 1);
+            throw new \Exception("User plain password is empty", 1);
         }
 
         return $this;

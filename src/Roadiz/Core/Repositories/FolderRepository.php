@@ -103,16 +103,6 @@ class FolderRepository extends EntityRepository
         $folders = array_filter($folders);
 
         $folderName = $folders[count($folders) - 1];
-        $parentName = null;
-        $parentFolder = null;
-
-        if (count($folders) > 1) {
-            $parentName = $folders[count($folders) - 2];
-
-            $parentFolder = $this->_em
-                        ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                        ->findOneByName($parentName);
-        }
 
         return $this->_em
                     ->getRepository('RZ\Roadiz\Core\Entities\Folder')

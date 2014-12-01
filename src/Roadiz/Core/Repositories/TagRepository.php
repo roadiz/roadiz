@@ -33,6 +33,8 @@ namespace RZ\Roadiz\Core\Repositories;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\TagTranslation;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * {@inheritdoc}

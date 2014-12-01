@@ -34,38 +34,19 @@ namespace Themes\Install;
 use RZ\Roadiz\Console\Tools\Configuration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
-use RZ\Roadiz\Core\Events\DataInheritanceEvent;
-use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
 
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
-use Symfony\Component\Validator\Validation;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\Loader\XliffFileLoader;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
-
-use Doctrine\ORM\Events;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
 
 /**
  * Installation application

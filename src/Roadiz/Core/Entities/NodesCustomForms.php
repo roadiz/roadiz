@@ -68,6 +68,18 @@ class NodesCustomForms extends AbstractPositioned implements PersistableInterfac
      * @var RZ\Roadiz\Core\Entities\Node
      */
     private $node;
+    /**
+     * @return RZ\Roadiz\Core\Entities\Node
+     */
+    public function getNode()
+    {
+        return $this->node;
+    }
+
+    public function setNode($node)
+    {
+        $this->node = $node;
+    }
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="nodes")
@@ -75,6 +87,18 @@ class NodesCustomForms extends AbstractPositioned implements PersistableInterfac
      * @var RZ\Roadiz\Core\Entities\CustomForm
      */
     private $customForm;
+    /**
+     * @return RZ\Roadiz\Core\Entities\CustomForm
+     */
+    public function getCustomForm()
+    {
+        return $this->customForm;
+    }
+
+    public function setCustomForm($customForm)
+    {
+        $this->customForm = $customForm;
+    }
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")

@@ -10,10 +10,8 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Themes\DefaultTheme\DefaultThemeApp;
 
@@ -21,7 +19,6 @@ use RZ\Roadiz\CMS\Controllers\EntryPointsController;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * Contact form page.

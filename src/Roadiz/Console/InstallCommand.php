@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Console\SchemaCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -131,7 +130,7 @@ class InstallCommand extends Command
                     if (file_exists($themeFile)) {
 
                         $fixtures = new Fixtures();
-                        $themeId = $fixtures->installFrontendTheme($input->getOption('with-theme'));
+                        $fixtures->installFrontendTheme($input->getOption('with-theme'));
                         $text .= '<info>Theme class “'.$themeFile.'” has been installed…</info>'.PHP_EOL;
 
                         // install fixtures

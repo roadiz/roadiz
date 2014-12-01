@@ -12,23 +12,15 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\CustomForm;
-use RZ\Roadiz\Core\Entities\CustomFormField;
-use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
 * CustomForm controller

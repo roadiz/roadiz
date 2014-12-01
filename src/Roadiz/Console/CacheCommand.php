@@ -44,8 +44,6 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class CacheCommand extends Command
 {
-    private $dialog;
-
     protected function configure()
     {
         $this->setName('cache')
@@ -91,7 +89,6 @@ class CacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
         $text="";
 
         if ($input->getOption('infos')) {

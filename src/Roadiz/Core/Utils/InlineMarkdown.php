@@ -652,7 +652,6 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
     }
     protected function doAnchorsInlineCallback($matches)
     {
-        $whole_match    =  $matches[1];
         $link_text      =  $this->runSpanGamut($matches[2]);
         $url            =  $matches[3] == '' ? $matches[4] : $matches[3];
         $title          =& $matches[7];
@@ -771,7 +770,6 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
     }
     protected function doImagesInlineCallback($matches)
     {
-        $whole_match    = $matches[1];
         $alt_text       = $matches[2];
         $url            = $matches[3] == '' ? $matches[4] : $matches[3];
         $title          =& $matches[7];
@@ -1158,12 +1156,18 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
                     # Other closing marker: close one em or strong and
                     # change current token state to match the other
                     $token_stack[0] = str_repeat($token{0}, 3-$token_len);
-                    $tag = $token_len == 2 ? "strong" : "em";
+
+                    if (strlen($token_len) == 2) {
+                        $tag = 'strong';
+                        $strong = '';
+                    } else {
+                        $tag = 'em';
+                        $em = '';
+                    }
                     $span = $text_stack[0];
                     $span = $this->runSpanGamut($span);
                     $span = "<$tag>$span</$tag>";
                     $text_stack[0] = $this->hashPart($span);
-                    $$tag = ''; # $$tag stands for $em or $strong
                 }
                 $tree_char_em = false;
             } elseif ($token_len == 3) {
@@ -1172,12 +1176,17 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
                     # Closing strong marker:
                     for ($i = 0; $i < 2; ++$i) {
                         $shifted_token = array_shift($token_stack);
-                        $tag = strlen($shifted_token) == 2 ? "strong" : "em";
+                        if (strlen($shifted_token) == 2) {
+                            $tag = 'strong';
+                            $strong = '';
+                        } else {
+                            $tag = 'em';
+                            $em = '';
+                        }
                         $span = array_shift($text_stack);
                         $span = $this->runSpanGamut($span);
                         $span = "<$tag>$span</$tag>";
                         $text_stack[0] .= $this->hashPart($span);
-                        $$tag = ''; # $$tag stands for $em or $strong
                     }
                 } else {
                     # Reached opening three-char emphasis marker. Push on token

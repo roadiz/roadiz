@@ -100,7 +100,7 @@ class DocumentHandler
             if (rmdir($dir)) {
                 return true;
             } else {
-                throw new Exception("document.cannot_delete.parent_folder", 1);
+                throw new \Exception("document.cannot_delete.parent_folder", 1);
             }
         }
 

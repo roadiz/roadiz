@@ -12,14 +12,11 @@
 namespace Themes\DefaultTheme;
 
 use RZ\Roadiz\CMS\Controllers\FrontendController;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
 * DefaultThemeApp class
@@ -69,15 +66,6 @@ class DefaultThemeApp extends FrontendController
          * Get language from static route
          */
         $translation = $this->bindLocaleFromRoute($request, $_locale);
-
-        $node = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findOneBy(
-                    array('home'=>true),
-                    null,
-                    $translation,
-                    $this->getSecurityContext()
-                );
 
         $this->prepareThemeAssignation(null, $translation);
 

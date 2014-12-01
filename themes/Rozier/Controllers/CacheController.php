@@ -9,23 +9,12 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Console\SchemaCommand;
 use RZ\Roadiz\Console\CacheCommand;
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\TagTranslation;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * {@inheritdoc}

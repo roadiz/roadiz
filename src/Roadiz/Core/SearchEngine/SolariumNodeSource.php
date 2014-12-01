@@ -292,7 +292,7 @@ class SolariumNodeSource
 
         if (true === $this->remove($update)) {
             $update->addCommit();
-            $result = $this->client->update($update);
+            $this->client->update($update);
         }
     }
     /**
@@ -306,7 +306,7 @@ class SolariumNodeSource
 
         if (true === $this->clean($update)) {
             $update->addCommit();
-            $result = $this->client->update($update);
+            $this->client->update($update);
         }
     }
 

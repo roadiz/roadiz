@@ -970,10 +970,6 @@ class NodesController extends RozierApp
      */
     private function translateNode($data, Node $node)
     {
-        $sourceClass = "GeneratedNodeSources\\".$node
-                                ->getNodeType()
-                                ->getSourceEntityClassName();
-
         $newTranslation = $this->getService('em')
                 ->find(
                     'RZ\Roadiz\Core\Entities\Translation',
@@ -1095,8 +1091,6 @@ class NodesController extends RozierApp
      */
     private function buildEditForm(Node $node)
     {
-        $fields = $node->getNodeType()->getFields();
-
         $defaults = array(
             'nodeName' => $node->getNodeName(),
             'home' => $node->isHome(),

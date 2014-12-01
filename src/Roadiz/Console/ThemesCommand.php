@@ -42,8 +42,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ThemesCommand extends Command
 {
-    private $dialog;
-
     protected function configure()
     {
         $this->setName('core:themes')
@@ -81,8 +79,6 @@ class ThemesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
-        $this->dialog = $this->getHelperSet()->get('dialog');
         $text="";
         $name = $input->getArgument('classname');
 

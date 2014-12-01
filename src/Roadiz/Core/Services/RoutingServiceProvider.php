@@ -148,5 +148,7 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                 return $rCollection;
             };
         }
+
+        return $container;
     }
 }

@@ -33,7 +33,6 @@ namespace RZ\Roadiz\Core\Utils;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
 use Symfony\Component\HttpFoundation\Response;
 use Pimple\Container;
 

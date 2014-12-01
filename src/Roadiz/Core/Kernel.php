@@ -429,7 +429,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
             $ping = $this->container['solr']->createPing();
             // execute the ping query
             try {
-                $result = $this->container['solr']->ping($ping);
+                $this->container['solr']->ping($ping);
 
                 return true;
             } catch (\Exception $e) {

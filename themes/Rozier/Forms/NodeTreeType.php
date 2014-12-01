@@ -10,7 +10,6 @@
  */
 namespace Themes\Rozier\Forms;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -18,7 +17,6 @@ use Themes\Rozier\Widgets\NodeTreeWidget;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Node tree embedded type in a node source form.

@@ -30,6 +30,8 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+
 /**
  * {@inheritdoc}
  */

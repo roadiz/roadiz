@@ -10,8 +10,6 @@
 namespace Themes\Rozier\Widgets;
 
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
 use Themes\Rozier\Widgets\AbstractWidget;
 
 use Symfony\Component\HttpFoundation\Request;

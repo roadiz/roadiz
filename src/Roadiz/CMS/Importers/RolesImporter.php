@@ -48,9 +48,8 @@ class RolesImporter implements ImporterInterface
      */
     public static function importJsonFile($serializedData)
     {
-        $return = false;
-        $roles = RoleCollectionJsonSerializer::deserialize($serializedData);
-        $return = true;
-        return $return;
+        RoleCollectionJsonSerializer::deserialize($serializedData);
+        
+        return true;
     }
 }
