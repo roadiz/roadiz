@@ -1,0 +1,18 @@
+#
+# Fonts serving
+#
+FontFile:
+    path:     /fonts/files/{filename}/{token}.{extension}
+    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFileAction }
+    requirements: { filename: "[a-zA-Z0-9\-_]+", extension: "[a-z0-9]+", token: "[a-zA-Z0-9\-_]+" }
+FontFaceCSS:
+    path:     /fonts/faces/{token}.css
+    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFacesAction }
+    requirements: { token: "[a-zA-Z0-9\-_]+" }
+#
+# SLIR is now hard coded in before run app
+#
+SLIRProcess:
+    path:     /assets/{queryString}/{filename}
+    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::slirAction }
+    requirements: { queryString : "[a-zA-Z:0-9\-]+", filename : "[a-zA-Z0-9\-_\.\/]+" }

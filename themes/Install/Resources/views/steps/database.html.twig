@@ -1,32 +1,59 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="uk-panel-title">{% trans %}install.database{% endtrans %}</h1>
-    <p>{% trans %}database.message{% endtrans %}</p>
 
-    {% if error %}
-    <div class="uk-alert uk-alert-danger">
-    	<a href="#" class="uk-alert-close uk-close"></a>
-    	<p>{% trans %}cannot.connect.database{% endtrans %}</p>
-   		<p>{{ errorMessage }}</p>
-    </div>
-    {% endif %}
+    <article id="content-database" class="content">
 
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(databaseForm) }}>
-   		{{ form_errors(databaseForm) }}
+        <div class="content-title-cont">
+            <h1 class="content-title">{% trans %}database.title{% endtrans %}</h1>
+        </div>
 
-	    {% for item in databaseForm %}
-	    	{% if item.vars.name != "_token" %}
-			    <div class="uk-form-row">
-			    	<label class="uk-form-label" for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
-			        {{ form_errors(item) }}
-			        {{ form_widget(item) }}
-			    </div>
-	    	{% endif %}
-	    {% endfor %}
-	    {{ form_rest(databaseForm) }}
-  		<p><button class="uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}build.database{% endtrans %}</button></p>
-	</form>
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item last"></div>
+        </div>
 
-    <p><a class="uk-button uk-button-success" href="{{ path('installCheckPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.requirements{% endtrans %}</a></p>
+        <div class="content-text-cont">
+
+            <div class="content-intro">
+                {% trans %}database.message{% endtrans %}
+            </div>
+
+            {% if error %}
+            <div class="uk-alert uk-alert-danger">
+                <a href="#" class="uk-alert-close uk-close"></a>
+                <p>{% trans %}database.cannot_connect{% endtrans %}</p>
+                <p>{{ errorMessage }}</p>
+            </div>
+            {% endif %}
+
+            {% form_theme databaseForm 'forms.html.twig' %}
+            <form id="databaseForm" class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(databaseForm) }}>
+
+                <div class="content-text content-text-form">
+                    {{ form_widget(databaseForm) }}
+                </div>
+
+                {% spaceless %}
+                <div class="content-buttons">
+
+                    <a class="content-button uk-button uk-button-success" href="{{ path('installCheckPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.requirements{% endtrans %}</a>
+                    <a class="content-button uk-button" href="{{ path('installThemesPage') }}"><i class="uk-icon-share"></i> {% trans %}skip.database.goto.theme{% endtrans %}</a>
+                    <button class="content-button form-save-button uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}database.build{% endtrans %}</button>
+
+                </div>
+                {% endspaceless %}
+
+            </form>
+
+        </div>
+
+    </article>
+
 {% endblock %}

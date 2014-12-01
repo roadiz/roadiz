@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <!-- welcome.user.email -->
+            <trans-unit id="welcome.user.email">
+                <source>welcome.user.email.%site%</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="your.user.account">
+                <source>your.user.account</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="username">
+                <source>username</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="email">
+                <source>email</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="password">
+                <source>password</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="for.questions.email">
+                <source>for.questions.email</source>
+                <target/>
+            </trans-unit>
+
+            <!-- Contact forms -->
+            <trans-unit id="contact.form">
+                <source>contact.form</source>
+                <target/>
+            </trans-unit>
+
+            <trans-unit id="new.contact.form.%site%">
+                <source>new.contact.form.%site%</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="form.successfully.sent">
+                <source>form.successfully.sent</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="%field%.is.mandatory">
+                <source>%field%.is.mandatory</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="email.not.valid">
+                <source>email.not.valid</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="date">
+                <source>date</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="ip.address">
+                <source>ip.address</source>
+                <target/>
+            </trans-unit>
+
+            <trans-unit id="form.submit">
+                <source>form.submit</source>
+                <target/>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="answer.form">
+                <source>answer.form</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="customForm.%name%.send">
+                <source>customForm.%name%.send</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="new.answer.form.%site%">
+                <source>new.answer.form.%site%</source>
+                <target></target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

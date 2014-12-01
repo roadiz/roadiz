@@ -1,16 +1,25 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-theme">
-	<h1 id="theme-title">{% trans %}edit.theme{% endtrans %} {{ theme.getClassName }}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('themesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.themes{% endtrans %}</a></nav>
+<section class="content-global edit-tag">
 
-	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+    <header class="content-header header-themes header-themes-edit">
+        <h1 class="content-title tag-themes-title">{% trans %}edit.theme{% endtrans %} {{ theme.getClassName }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('themesHomePage') }}" title="{% trans %}back_to.themes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </header>
+
+    <article class="content content-themes-edit">
+        {% form_theme form 'forms.html.twig' %}
+        <form id="edit-theme-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <button data-action-save="#edit-theme-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class='uk-icon-rz-save-mini'></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+            </fieldset>
+        </form>
+    </article>
+    {% include 'themes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

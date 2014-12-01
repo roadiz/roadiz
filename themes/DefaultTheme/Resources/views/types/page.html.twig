@@ -16,9 +16,16 @@
 <div>{{ nodeSource.getContent|markdown }}</div>
 <div class="image">
 	{% for document in nodeSource.getHandler.getDocumentsFromFieldName('images') %}
+
+		{% set imageMetas = document.documentTranslations.first %}
 		<figure class="uk-thumbnail">
-			{{ document.getViewer.getDocumentByArray({"width":200,"crop":"16x9", "controls":true})|raw }}
-			{# <img alt="{{ document.getName }}" src="{{ document.getViewer.getDocumentUrlByArray({"width":200,"crop":"16x9"}) }}" /> #}
+			{{ document.getViewer.getDocumentByArray({
+				"width":600,
+				"crop":"16x9",
+				"controls":true,
+				"embed":true
+			})|raw }}
+			<figcaption>{{ imageMetas.name }} — {{ imageMetas.copyright }}</figcaption>
 		</figure>
 	{% endfor %}
 </div>

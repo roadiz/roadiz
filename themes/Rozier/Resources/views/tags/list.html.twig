@@ -1,35 +1,68 @@
-{% extends 'base.html.twig' %}
-
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-tags">
-	<h1 id="title">{% trans %}Tags{% endtrans %}</h1>
-	<nav><a class="uk-button" href="{{ path('tagsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a tag{% endtrans %}</a></nav>
+<section class="content-global content-nav-and-filters">
 
-	{% include 'widgets/filtersBar.html.twig' %}
+    <header class="content-header header-tags header-nodes-list">
+        <h1 class="content-title tags-list-title">{% trans %}tags{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
+        <div class="content-header-action-menu">
+            <nav><a class="uk-button" href="{{ path('tagsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.tag{% endtrans %}</a></nav>
+        </div>
+    </header>
 
-	<table class="tags uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}Id{% endtrans %}</th>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for tag in tags %}
-				{% set ttag = tag.getTranslatedTags.first %}
-				{% if ttag %}
-				<tr>
-					<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
-					<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
-					<td>
-						<a class="uk-button uk-button-small uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}">{% trans %}Delete{% endtrans %}</a>
-					</td>
-				</tr>
-				{% endif %}
-			{% endfor %}
-		</tbody>
-	</table>
+    {% include 'widgets/filtersBar.html.twig' %}
+
+    <article class="content content-no-action-menu content-tags-list">
+        <div class="content-table-cont">
+            <table class="tags content-table uk-table">
+                <thead>
+                    <tr>
+                        <th class="table-id-row">{% trans %}id{% endtrans %}</th>
+                        <th>{% trans %}name{% endtrans %}</th>
+                        <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tag in tags %}
+                        {% set ttag = tag.getTranslatedTags.first %}
+                        {% if ttag %}
+                        <tr>
+                            <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
+                            <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
+                            <td>
+                                {% spaceless %}                                
+                                    <a class="uk-button uk-button-content uk-button-small" href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}" title="{% trans %}edit.tag{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>                            
+                                    {% if securityContext.Granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
+                                        <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}" title="{% trans %}delete.tag{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                            <i class="uk-icon-rz-trash-o"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endspaceless %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">{{ tag.getId }}</a></td>
+                            <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">tag_{{ tag.getId }} <span class="uk-badge uk-badge-warning">{% trans %}notranslation_available.tag{% endtrans %}</span></a></td>
+                            <td>
+                            {% spaceless %}                                
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('tagsEditPage', { tagId: tag.getId }) }}" title="{% trans %}edit.tag{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>                            
+
+                                {% if securityContext.Granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
+                                    <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}" title="{% trans %}delete.tag{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                        <i class="uk-icon-rz-trash-o"></i>
+                                    </a>
+                                {% endif %}
+                            {% endspaceless %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
 </section>
 {% endblock %}

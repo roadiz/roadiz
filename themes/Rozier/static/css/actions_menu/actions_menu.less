@@ -1,20 +1,35 @@
-@open-action-menu-W:163px + 4;
-@action-menu-W:55px;
+/*------------------------------------*\
+   ACTIONS MENU
+\*------------------------------------*/
 
+
+/* -------- VARS -------- */
+
+@action-menu-H: 52px;
+@separation-border-color: #DDDDDD;
+@item-global-color: #808080;
+@item-global-label-color: #999999;
+@item-global-border-color: #cecece;
+@item-global-background: #f9f9f9;
+@subnav-W: 240px;
+
+
+/* -------- STYLES -------- */
 
 .action-menu-icon(){
     .rounded(100%);
-    background: #f9f9f9;
-    vertical-align: middle;
-    border: 1px solid #cecece;
-    color: #808080;
+    position: relative;
     display: inline-block;
-    width: 33px;
-    height: 33px;
-    margin-right: 9px;
+    background: @item-global-background;
+    vertical-align: middle;
+    border: 1px solid @item-global-border-color;
+    color: @item-global-color;
+    width: 32px;
+    height: 32px;
+    margin: 0;
     text-align: center;
     z-index: 2;
-    position: relative;
+    font-size: 16px;
 
     &:before {
         position: relative;
@@ -24,49 +39,48 @@
 }
 
 .actions-menu {
-
     position: fixed;
     right: 0px;
-
     z-index: 9999;
-    width:@open-action-menu-W;
+    width:56px;
     .box-sizing();
+    background:white;
+    .drop-shadow(3px, 5px, 30px, 0.1);
 
-    .transform-transition(ease 0.5s);
-    .transform(translate3D(@open-action-menu-W - @action-menu-W, 0, 0));
-
-    header,
-    .uk-button {
+    header, .uk-button {
         position: relative;
         .rounded(0);
         .box-sizing();
         border: 0 none;
-        height: @action-menu-W;
+        height: @action-menu-H;
         width: 100%;
         white-space: nowrap;
         text-align: left;
-        padding: 9px 9px 9px 9px + 4;
-        border-top: 1px solid rgba(0,0,0,0.1);
+        padding: 9px 9px 9px 13px;
+        border-top: 1px solid @separation-border-color;
         background-image: none;
         background-color: white;
+        z-index: 999;
 
-        &:first-child {
+        &.uk-button:first-child, &.uk-button:first-child .label {
             border-top: 0 none;
         }
 
         i {
             .action-menu-icon();
+            .transition(~'border-color ease 0.3s, color ease 0.3s');
         }
 
-        .label {
-            display: none; display: inline-block;
-            font-size: 12px;
-            position: relative;
-            z-index: 2;
-            color: #444;
-
-            .transition(color 0.3s linear);
-            text-shadow: none;
+        &:hover {
+            &.uk-button-danger,
+            &.uk-button-primary {
+                border-color: @separation-border-color;
+                background: white;
+            }
+            i {
+                border-color: darken(@item-global-border-color, 10%);
+                color: darken(@item-global-color, 20%)
+            }
         }
 
         &:before {
@@ -76,104 +90,221 @@
             bottom: 0px;
             left: 0px;
             width: 4px;
-            background-color: #808080;
-            z-index: 0;
-
-            .transition(width 0.5s ease);
+            background-color: @item-global-label-color;
+            z-index: 99999;
         }
+        &.uk-button-primary:before {
+            background-color: @contrast-color-darker;
+        }
+        &.uk-button-danger:before {
+            background-color: @alert-color;
+        }
+    }
 
+    // for Save button  and other too !
+    .uk-button {
+        .icon-container {
+            position: absolute;
+            z-index: 9999;
+            background-color: white;
+            // width: 100%;
+            top: 0; right:0; bottom:0; left: 0;
+            text-align: center;
+            padding: 9px 9px 9px 13px;
+            .box-sizing();
+            display: block;
 
-        &.uk-button-danger {
+            z-index: 2;
+        }
+        .label {
+            z-index: 0;
+        }
+        .label-text {
+            background-color: #999999;
+        }
+        &:hover {
+            border-color:transparent;
+            border-color:#ddd;
 
-            &:before {
-                background-color: #d32c46;
+            .label-text {
+                left: -100%;
             }
         }
+
 
         &.uk-button-primary {
-
-            &:before {
-                background-color: #32cd9b;
+            .label-text {
+                background-color: @contrast-color-darker;
             }
         }
-
-        &:hover {
-
-            &.uk-button-danger,
-            &.uk-button-primary {
-                i { border-color: transparent; }
-            }
-
-
-            .label {
-                color: white;
-            }
-
-            &:before {
-                width: 100%;
+        &.uk-button-danger {
+            .label-text {
+                background-color: @alert-color;
             }
         }
     }
 
-    .node-actions,
-    .node-statuses {
+    // for Classic button
+    .no-subnav {
         position: relative;
-        border-top: 1px solid rgba(0,0,0,0.1);
+        &.trash .label-text {
+            background-color: @alert-color;
+        }
+        &:hover {
+            .label-text {
+                left: -100%;
+            }
+        }
+    }
+    .label {
+        position: absolute;
+        display: block;
+        font-size: 12px;
+        line-height: 52px;
+        font-weight: bold;
+        color: #444;
+        text-shadow: none;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border:none;
+        // border-top: 1px solid transparent;
+        .box-sizing();
 
-        header {
+        .label-text {
+            position: relative;
+            display: block;
+            color: white;
+            height: 100%;
+            padding: 0 20px;
+            z-index: 999;
+            left: 0;
+            .transition(left 0.3s ease);
+            -webkit-font-smoothing: antialiased;
+        }
+    }
 
+    // for Subnav button
+    .with-subnav {
+        position: relative;
+        height:52px;
+        border-top:none;
+        // border-top: 1px solid @separation-border-color;
+        .box-sizing();
+
+        &.node-status header {
+            background-color: #676767;
+            &:before, .label {
+                background-color: darken(@item-global-label-color, 20%);
+            }
         }
 
-        nav,
-        ul {
-            display: none;
-            position: absolute;
-            margin: 0px;
+        header {
+            .label {
+                display: none;
+                width: @subnav-W;
+                left: -@subnav-W;
+                background-color: @item-global-label-color;
 
-            width: 215px;
-            right: @open-action-menu-W;
-            top: 0;
-
-            .uk-button,
-            li {
-                .box-sizing();
-                border: 0 none;
-                height: @action-menu-W;
-                white-space: nowrap;
-                text-align: left;
-                padding: 9px;
-                border-top: 1px solid rgba(0,0,0,0.1);
-                background-color: #f5f5f5;
-                border-left: 4px solid #808080;
-
-                &:first-child {
-                    border-top: 0 none;
-                }
-
-                i {
-                    .action-menu-icon();
-                }
-
-                .label {
-                    font-size: 12px;
+                &:after {
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    width: 0;
+                    height: 0;
+                    border-left: 5px solid transparent;
+                    border-right: 5px solid transparent;
+                    border-top: 5px solid #DADADA;
+                    right: 18px;
+                    top: 24px;
                 }
             }
         }
+        &:nth-child(even) {
+            header {
+                &:before, .label {
+                    background-color: lighten(@item-global-label-color, 10%);
+                }
+            }
+            nav,ul {
+                border-left-color: lighten(@item-global-label-color, 10%)
+            }
+        }
+        nav,ul {
+            display: none;
+            position: absolute;
+            margin: 0px;
+            padding: 0px;
+            width: @subnav-W + 1px;
+            right: 55px;
+            top: 52px;
+            border-right: 1px dashed @item-global-border-color;
+            border-left: 4px solid @item-global-label-color;
+            .box-sizing();
+            .drop-shadow(3px, 5px, 20px, 0.12);
+
+            .uk-button, li {
+                position: relative;
+                border: 0 none;
+                height: @action-menu-H - 4px;
+                white-space: nowrap;
+                text-align: left;
+                padding: 0 9px;
+                border-top: 1px solid @separation-border-color;
+                background-color: @item-global-background;
+                .box-sizing();
+                line-height: @action-menu-H - 4px;
+
+                &:before {
+                    display: none;
+                }
+                &:first-child {
+                    border-top: 0 none;
+                }
+                i {
+                    .action-menu-icon();
+                    .transition(~'border-color ease 0.3s, color ease 0.3s');
+                }
+
+                .label {
+                    position: relative;
+                    display: inline-block;
+                    vertical-align: middle;
+                    font-size: 11px;
+                    font-weight: bold;
+                    line-height:48px;
+                    padding-left: 9px;
+                    &:before {
+                        display: none;
+                    }
+                }
+                .bootstrap-switch {
+                    position: absolute;
+                    right: 13px;
+                    top: 10px;
+                }
+                &:hover {
+                    background: white;
+                    i {
+                        border-color: darken(@item-global-border-color, 10%);
+                        color: darken(@item-global-color, 20%)
+                    }
+                }
+            }
+           input[type=radio] {
+                position: absolute;
+                right: 16px;
+                top:13px; // top: 21px;
+            }
+        }
         &:hover {
-            nav,
-            ul  {
+            nav,ul, header .label  {
                 display: block;
             }
         }
     }
+}
 
-
-    &:hover {
-        .transform(translate3D(0, 0, 0));
-        .uk-button {
-            .label {
-                display: inline-block;
-            }
-        }
-    }
+.node-statuses-item{
+    cursor:pointer;
 }

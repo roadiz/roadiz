@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext" target-language="en">
+        <body>
+            <!-- welcome.user.email -->
+            <trans-unit id="welcome.user.email" approved="yes">
+                <source>welcome.user.email.%site%</source>
+                <target state="translated">A user account have been created for you on %site%.</target>
+            </trans-unit>
+            <trans-unit id="your.user.account" approved="yes">
+                <source>your.user.account</source>
+                <target state="translated">Your user account</target>
+            </trans-unit>
+            <trans-unit id="username" approved="yes">
+                <source>username</source>
+                <target state="translated">Username</target>
+            </trans-unit>
+            <trans-unit id="email" approved="yes">
+                <source>email</source>
+                <target state="translated">Email</target>
+            </trans-unit>
+            <trans-unit id="password" approved="yes">
+                <source>password</source>
+                <target state="translated">Password</target>
+            </trans-unit>
+            <trans-unit id="for.questions.email" approved="yes">
+                <source>for.questions.email</source>
+                <target state="translated">Any questions? Email us at:</target>
+            </trans-unit>
+
+            <!-- Contact forms -->
+            <trans-unit id="contact.form" approved="yes">
+                <source>contact.form</source>
+                <target state="translated">Contact form</target>
+            </trans-unit>
+
+            <trans-unit id="new.contact.form.%site%" approved="yes">
+                <source>new.contact.form.%site%</source>
+                <target state="translated">New contact request for %site%</target>
+            </trans-unit>
+            <trans-unit id="form.successfully.sent" approved="yes">
+                <source>form.successfully.sent</source>
+                <target state="translated">Your form has been successfully sent</target>
+            </trans-unit>
+            <trans-unit id="%field%.is.mandatory" approved="yes">
+                <source>%field%.is.mandatory</source>
+                <target state="translated">Field %field% is mandatory</target>
+            </trans-unit>
+            <trans-unit id="email.not.valid" approved="yes">
+                <source>email.not.valid</source>
+                <target state="translated">Your email is not valid</target>
+            </trans-unit>
+            <trans-unit id="date" approved="yes">
+                <source>date</source>
+                <target state="translated">Date</target>
+            </trans-unit>
+            <trans-unit id="ip.address" approved="yes">
+                <source>ip.address</source>
+                <target state="translated">IP address</target>
+            </trans-unit>
+
+            <trans-unit id="form.submit" approved="yes">
+                <source>form.submit</source>
+                <target state="translated">Submit</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="answer.form" approved="yes">
+                <source>answer.form</source>
+                <target state="translated">Answer form.</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="customForm.%name%.send" approved="yes">
+                <source>customForm.%name%.send</source>
+                <target state="translated">The answer "%name%" sent.</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="new.answer.form.%site%" approved="yes">
+                <source>new.answer.form.%site%</source>
+                <target state="translated">New answer from "%site%" form.</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

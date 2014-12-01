@@ -9,26 +9,28 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Document;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-
 use Themes\Rozier\RozierApp;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+
 /**
  * {@inheritdoc}
  */
 class AjaxDocumentsExplorerController extends AbstractAjaxController
 {
+    public static $thumbnailArray = null;
     /**
      * @param Request $request
      *
@@ -47,16 +49,29 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             );
         }
 
-        $documents = $this->getKernel()->em()
-            ->getRepository('RZ\Renzo\Core\Entities\Document')
-            ->findBy(array(), array('createdAt' => 'DESC'));
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        $arrayFilter = array();
+        /*
+         * Manage get request to filter list
+         */
+        $listManager = new EntityListManager(
+            $request,
+            $this->getService('em'),
+            'RZ\Roadiz\Core\Entities\Document',
+            $arrayFilter
+        );
+        $listManager->setItemPerPage(30);
+        $listManager->handle();
+
+        $documents = $listManager->getEntities();
 
         $documentsArray = array();
         foreach ($documents as $doc) {
             $documentsArray[] = array(
                 'id' => $doc->getId(),
                 'filename'=>$doc->getFilename(),
-                'thumbnail' => $doc->getViewer()->getDocumentUrlByArray(array("width"=>40, "crop"=>"1x1", "quality"=>50)),
+                'thumbnail' => $doc->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
                 'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', array('document'=>$doc)),
             );
         }
@@ -65,7 +80,8 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             'status' => 'confirm',
             'statusCode' => 200,
             'documents' => $documentsArray,
-            'documentsCount' => count($documents)
+            'documentsCount' => count($documents),
+            'filters' => $listManager->getAssignation()
         );
 
         return new Response(
@@ -75,3 +91,8 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         );
     }
 }
+AjaxDocumentsExplorerController::$thumbnailArray = array(
+    "width"=>40,
+    "crop"=>"1x1",
+    "quality"=>50
+);

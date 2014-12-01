@@ -1,0 +1,89 @@
+[
+    {
+        "name": "ROLE_SUPERADMIN"
+    },
+    {
+        "name": "ROLE_ACCESS_NEWSLETTERS"
+    },
+    {
+        "name": "ROLE_ACCESS_MANAGE_SUBSCRIBERS"
+    },
+    {
+        "name": "ROLE_ACCESS_COMMENTS"
+    },
+    {
+        "name": "ROLE_ACCESS_TAGS"
+    },
+    {
+        "name": "ROLE_ACCESS_TAGS_DELETE"
+    },
+    {
+        "name": "ROLE_ACCESS_DOCUMENTS"
+    },
+    {
+        "name": "ROLE_ACCESS_DOCUMENTS_DELETE"
+    },
+    {
+        "name": "ROLE_ACCESS_NODETYPES"
+    },
+    {
+        "name": "ROLE_ACCESS_NODETYPES_DELETE"
+    },
+    {
+        "name": "ROLE_ACCESS_NODEFIELDS_DELETE"
+    },
+    {
+        "name": "ROLE_ACCESS_TRANSLATIONS"
+    },
+    {
+        "name": "ROLE_ACCESS_THEMES"
+    },
+    {
+        "name": "ROLE_ACCESS_FONTS"
+    },
+    {
+        "name": "ROLE_ACCESS_USERS"
+    },
+    {
+        "name": "ROLE_ACCESS_USERS_DELETE"
+    },
+    {
+        "name": "ROLE_ACCESS_ROLES"
+    },
+    {
+        "name": "ROLE_ACCESS_GROUPS"
+    },
+    {
+        "name": "ROLE_ACCESS_SETTINGS"
+    },
+    {
+        "name": "ROLE_ACCESS_NODES"
+    },
+    {
+        "name": "ROLE_ACCESS_NODES_SETTING"
+    },
+    {
+        "name": "ROLE_ACCESS_NODES_DELETE"
+    },
+    {
+        "name": "ROLE_ACCESS_NODES_STATUS"
+    },
+    {
+        "name": "ROLE_ACCESS_NEWSLETTERS_SEND"
+    },
+    {
+        "name": "ROLE_USER"
+    },
+    {
+        "name": "ROLE_BACKEND_USER"
+    },
+    {
+        "name": "ROLE_ACCESS_DOCTRINE_CACHE_DELETE"
+    },
+    {
+        "name": "ROLE_ACCESS_CUSTOMFORMS"
+    },
+    {
+        "name": "ROLE_ACCESS_CUSTOMFORMS_DELETE"
+    }
+]

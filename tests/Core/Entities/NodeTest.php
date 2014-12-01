@@ -7,7 +7,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-use RZ\Renzo\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Node;
 /**
  * Test Node features
  */
@@ -34,6 +34,8 @@ class NodeTest extends PHPUnit_Framework_TestCase
             array("Ligula  $* _--Egestas Mattis Nullam", "ligula-egestas-mattis-nullam"),
             array("Véèsti_buœlum Rïsus", "veesti-buoelum-risus"),
             array("J'aime les sushis", "j-aime-les-sushis"),
+            array("Éditeur", "editeur"),
+            array("À propos", "a-propos"),
         );
     }
 }

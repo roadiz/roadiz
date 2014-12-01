@@ -1,25 +1,30 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 
 {% block content %}
-<section id="manage-document">
-	<h1 id="title">{% trans %}Document:{% endtrans %} {{ document.getFilename }}</h1>
-	<nav>
-		<a class="uk-button" href="{{ path('documentsHomePage') }}"><i class="uk-icon-chevron-left"></i> {% trans %}Back to documents{% endtrans %}</a>
-	</nav>
+<section class="content-global manage-document">
 
-	<div class="uk-thumbnail uk-thumbnail-large">
-		{% if document.isImage %}
-		<img  alt="" src="{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}" />
-		{% endif %}
-	</div>
+    <header class="content-header header-document header-document-edit">
+        <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.getFilename}) }}</h1>
+        {% include 'documents/navBar.html.twig' with {'document':document, current:'edit'} %}
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('documentsHomePage') }}" title="{% trans %}back_to.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </header>
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+    <article class="content content-document-edit">
+    	{% form_theme form 'forms.html.twig' %}
+    	<form id="edit-document-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    	    {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	{% spaceless %}
+                <button data-action-save="#edit-document-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+       		</fieldset>
+    	</form>
+    </article>
+
+	{% include 'documents/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

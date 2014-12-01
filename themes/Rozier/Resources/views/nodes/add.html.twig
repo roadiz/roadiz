@@ -1,16 +1,26 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="add-node" class="">
-	<h1 id="node-title">{% trans %}Add.a.new.node{% endtrans %}</h1>
-	{% if type %}<h2><em>{{ type.getDisplayName }}</em></h2>{% endif %}
-	{% if parentNode %}<h2><em>{% trans %}In{% endtrans %}</em> {{ parentNode.getNodeName }}</h2>{% endif %}
-	<nav><a class="uk-button uk-button-small" href="{{ path('nodesHomePage') }}"><span class="uk-icon-chevron-left"></span>{% trans %}Back.to.nodes{% endtrans %}</a></nav>
+<section class="content-global">
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <input class="uk-button uk-button-primary" type="submit" />
-	</form>
+    <header class="content-header header-node header-node-add">
+    	<h1 class="content-title">{% trans %}add.node{% endtrans %}</h1>
+    	{% if type %}<h2><em>{{ type.getDisplayName }}</em></h2>{% endif %}
+    	{% if parentNode %}<h2><em>{% trans %}In{% endtrans %}</em> {{ parentNode.getNodeName }}</h2>{% endif %}
+        {% include 'nodes/navBack.html.twig' %}
+    </header>
+
+    <article class="content content-no-action-menu">
+    	{% form_theme form 'forms.html.twig' %}
+    	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    	    {{ form_widget(form) }}
+            {% spaceless %}
+            <button class="uk-button uk-button-primary" type="submit">
+                <i class="uk-icon-plus"></i> {% trans %}add.a.node{% endtrans %}
+            </button>
+            {% endspaceless %}
+    	</form>
+    </article>
+
 </section>
 {% endblock %}

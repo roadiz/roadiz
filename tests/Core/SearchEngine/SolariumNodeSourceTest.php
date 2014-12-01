@@ -1,12 +1,12 @@
 <?php
 
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodesSources;
-use RZ\Renzo\Core\SearchEngine\SolariumNodeSource;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
+use RZ\Roadiz\Core\Kernel;
 
-
-use RZ\Renzo\Core\Exceptions\SolrServerNotAvailableException;
+use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
+use Solarium\Exception\HttpException;
 /**
  * SolariumNodeSourceTest.
  */
@@ -18,58 +18,66 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
     public function testIndex() {
         $testTitle = "Ipsum Lorem Vehicula";
 
-        $nodeSource = Kernel::getInstance()->em()
+        $nodeSource = Kernel::getService('em')
                         ->getRepository('GeneratedNodeSources\NSPage')
                         ->findOneBy(array('title'=>$testTitle));
 
-        try {
+        if (null !== $nodeSource) {
+            try {
 
-            $solrDoc = new SolariumNodeSource(
-                $nodeSource,
-                Kernel::getInstance()->getSolrService()
-            );
+                $solrDoc = new SolariumNodeSource(
+                    $nodeSource,
+                    Kernel::getService('solr')
+                );
 
-            $result = $solrDoc->indexAndCommit();
-            static::$documentCollection[] = $solrDoc;
+                $result = $solrDoc->indexAndCommit();
+                static::$documentCollection[] = $solrDoc;
 
-            /*
-             * ==============================
-             *
-             * Now query the database
-             */
-            // get a select query instance
-            $query = Kernel::getInstance()->getSolrService()->createSelect();
-            $query->setQuery('title:"'.$testTitle.'"');
+                /*
+                 * ==============================
+                 *
+                 * Now query the database
+                 */
+                // get a select query instance
+                $query = Kernel::getService('solr')->createSelect();
+                $query->setQuery('title:"'.$testTitle.'"');
 
-            // this executes the query and returns the result
-            $resultset = Kernel::getInstance()->getSolrService()->select($query);
+                // this executes the query and returns the result
+                $resultset = Kernel::getService('solr')->select($query);
 
-            foreach ($resultset as $document) {
-                // Assert
-                $this->assertEquals($document->node_source_id_i, $nodeSource->getId());
+                foreach ($resultset as $document) {
+                    // Assert
+                    $this->assertEquals($document->node_source_id_i, $nodeSource->getId());
+                }
+            } catch (SolrServerNotAvailableException $e){
+                echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
+                return;
             }
-        } catch (SolrServerNotAvailableException $e){
-
         }
+
     }
 
     public function testGetDocumentFromIndex()
     {
         $testTitle = "Ipsum Lorem Vehicula";
 
-        $nodeSource = Kernel::getInstance()->em()
+        $nodeSource = Kernel::getService('em')
                         ->getRepository('GeneratedNodeSources\NSPage')
                         ->findOneBy(array('title'=>$testTitle));
-        try {
-            $solrDoc = new SolariumNodeSource(
-                $nodeSource,
-                Kernel::getInstance()->getSolrService()
-            );
 
-            $this->assertTrue($solrDoc->getDocumentFromIndex());
+        if (null !== $nodeSource) {
+            try {
+                $solrDoc = new SolariumNodeSource(
+                    $nodeSource,
+                    Kernel::getService('solr')
+                );
 
-        } catch (SolrServerNotAvailableException $e){
+                $this->assertTrue($solrDoc->getDocumentFromIndex());
 
+            } catch (SolrServerNotAvailableException $e){
+                echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
+                return;
+            }
         }
     }
 
@@ -77,22 +85,28 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
     {
         $testTitle = "Ipsum Lorem Vehicula";
 
-        $nodeSource = Kernel::getInstance()->em()
+        $nodeSource = Kernel::getService('em')
                         ->getRepository('GeneratedNodeSources\NSPage')
                         ->findOneBy(array('title'=>$testTitle));
 
-        try {
+        if (null !== $nodeSource) {
+            try {
 
-            $solrDoc = new SolariumNodeSource(
-                $nodeSource,
-                Kernel::getInstance()->getSolrService()
-            );
+                $solrDoc = new SolariumNodeSource(
+                    $nodeSource,
+                    Kernel::getService('solr')
+                );
 
-            $solrDoc->cleanAndCommit();
+                $solrDoc->cleanAndCommit();
 
-            $this->assertFalse($solrDoc->getDocumentFromIndex());
-        } catch (SolrServerNotAvailableException $e){
+                $this->assertFalse($solrDoc->getDocumentFromIndex());
 
+            } catch (SolrServerNotAvailableException $e){
+
+            } catch(HttpException $e) {
+                echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
+                return;
+            }
         }
     }
 
@@ -111,22 +125,28 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        $solr = Kernel::getInstance()->getSolrService();
+        try {
 
-        if (null !== $solr) {
+            $solr = Kernel::getService('solr');
 
-            // get an update query instance
-            $update = $solr->createUpdate();
+            if (null !== $solr) {
 
-            // add the delete query and a commit command to the update query
-            foreach (static::$documentCollection as $document) {
-                $document->remove($update);
+                // get an update query instance
+                $update = $solr->createUpdate();
+
+                // add the delete query and a commit command to the update query
+                foreach (static::$documentCollection as $document) {
+                    $document->remove($update);
+                }
+
+                $update->addCommit();
+
+                // this executes the query and returns the result
+                $result = $solr->update($update);
             }
-
-            $update->addCommit();
-
-            // this executes the query and returns the result
-            $result = $solr->update($update);
+        } catch(HttpException $e) {
+            echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
+            return;
         }
     }
 }

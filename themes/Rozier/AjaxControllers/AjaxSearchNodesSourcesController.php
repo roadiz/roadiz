@@ -9,21 +9,21 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-
 use Themes\Rozier\RozierApp;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+
 /**
  * {@inheritdoc}
  */
@@ -50,15 +50,17 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             );
         }
 
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
         if ("" != $request->get('searchTerms')) {
 
-            $nodesSources = $this->getKernel()->em()
-                ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+            $nodesSources = $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                 ->findBySearchQuery(strip_tags($request->get('searchTerms')));
 
             if (null === $nodesSources) {
-                $nodesSources = $this->getKernel()->em()
-                    ->getRepository('RZ\Renzo\Core\Entities\NodesSources')
+                $nodesSources = $this->getService('em')
+                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                     ->searchBy(strip_tags($request->get('searchTerms')));
             }
 
@@ -78,7 +80,8 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
                         'nodeId' => $source->getNode()->getId(),
                         'translationId' => $source->getTranslation()->getId(),
                         'typeName' => $source->getNode()->getNodeType()->getDisplayName(),
-                        'url' => $this->getKernel()->getUrlGenerator()->generate(
+                        'typeColor' => $source->getNode()->getNodeType()->getColor(),
+                        'url' => $this->getService('urlGenerator')->generate(
                             'nodesEditSourcePage',
                             array(
                                 'nodeId' => $source->getNode()->getId(),

@@ -1,8 +1,8 @@
 <?php
 
-use RZ\Renzo\Core\Entities\Setting;
-use RZ\Renzo\Core\Serializers\SettingCollectionJsonSerializer;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
+use RZ\Roadiz\Core\Kernel;
 /**
  * Description.
  */
@@ -82,10 +82,10 @@ class SettingCollectionJsonSerializerTest extends PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         foreach (static::$entityCollection as $setting) {
-            Kernel::getInstance()->em()->remove($setting);
+            Kernel::getService('em')->remove($setting);
         }
 
-        Kernel::getInstance()->em()->flush();
-        Kernel::getInstance()->em()->clear(); // Detaches all objects from Doctrine!
+        Kernel::getService('em')->flush();
+        Kernel::getService('em')->clear(); // Detaches all objects from Doctrine!
     }
 }

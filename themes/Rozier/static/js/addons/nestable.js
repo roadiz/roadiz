@@ -1,5 +1,4 @@
-/*! UIkit 2.8.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
-
+/*! UIkit 2.11.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 /*
  * Based on Nestable jQuery Plugin - Copyright (c) 2012 David Bushell - http://dbushell.com/
  */
@@ -22,7 +21,8 @@
     var hasTouch     = 'ontouchstart' in window,
         html         = $("html"),
         touchedlists = [],
-        $win         = $(window);
+        $win         = UI.$win,
+        draggingElement;
 
     /**
      * Detect CSS pointer-events property
@@ -145,14 +145,14 @@
                 }
                 e.preventDefault();
                 $this.dragStart(hasTouch ? e.touches[0] : e);
-                $this.trigger('nestable-start', [$this]);
+                $this.trigger('uk.nestable.start', [$this]);
             };
 
             var onMoveEvent = function(e) {
                 if ($this.dragEl) {
                     e.preventDefault();
                     $this.dragMove(hasTouch ? e.touches[0] : e);
-                    $this.trigger('nestable-move', [$this]);
+                    $this.trigger('uk.nestable.move', [$this]);
                 }
             };
 
@@ -160,8 +160,10 @@
                 if ($this.dragEl) {
                     e.preventDefault();
                     $this.dragStop(hasTouch ? e.touches[0] : e);
-                    $this.trigger('nestable-stop', [$this]);
+                    $this.trigger('uk.nestable.stop', [$this]);
                 }
+
+                draggingElement = false;
             };
 
             if (hasTouch) {
@@ -314,6 +316,7 @@
             var mouse    = this.mouse,
                 target   = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName),
+                dragItemList = target.closest(this.options.listNodeName),
                 offset   = dragItem.offset();
 
             this.placeEl.css('height', dragItem.height());
@@ -326,10 +329,13 @@
 
             this.dragRootEl = this.element;
 
-            this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
+            this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(dragItemList[0].className + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
 
+            draggingElement = this.dragEl;
+
             this.tmpDragOnSiblings = [dragItem[0].previousSibling, dragItem[0].nextSibling];
+
 
             // fix for zepto.js
             //dragItem.after(this.placeEl).detach().appendTo(this.dragEl);
@@ -343,6 +349,8 @@
                 left : offset.left,
                 top  : offset.top
             });
+
+            // console.log(this.dragEl[0].innerHTML);
 
             // total depth of dragging item
             var i, depth,
@@ -366,12 +374,12 @@
 
             this.dragEl.remove();
 
-            if (this.tmpDragOnSiblings[0]!=el[0].previousSibling || this.tmpDragOnSiblings[0]!=el[0].previousSibling) {
+            if (this.tmpDragOnSiblings[0]!=el[0].previousSibling || this.tmpDragOnSiblings[1]!=el[0].nextSibling) {
 
-                this.element.trigger('nestable-change',[el, this.hasNewRoot ? "added":"moved"]);
+                this.element.trigger('uk.nestable.change',[el, this.hasNewRoot ? "added":"moved"]);
 
                 if (this.hasNewRoot) {
-                    this.dragRootEl.trigger('nestable-change', [el, "removed"]);
+                    this.dragRootEl.trigger('uk.nestable.change', [el, "removed"]);
                 }
             }
 
@@ -558,15 +566,32 @@
 
     });
 
-    $(document).on("uk-domready", function(e) {
+    // adjust document scrolling
+    $('html').on('mousemove touchmove', function(e) {
 
-        $("[data-uk-nestable]").each(function(){
+        if (draggingElement) {
 
-          var ele = $(this);
 
-          if(!ele.data("nestable")) {
-              var plugin = UI.nestable(ele, UI.Utils.options(ele.attr("data-uk-nestable")));
-          }
+            var top = draggingElement.offset().top;
+
+            if (top < UI.$win.scrollTop()) {
+                UI.$win.scrollTop(UI.$win.scrollTop() - Math.ceil(draggingElement.height()/2));
+            } else if ( (top + draggingElement.height()) > (window.innerHeight + UI.$win.scrollTop()) ) {
+                UI.$win.scrollTop(UI.$win.scrollTop() + Math.ceil(draggingElement.height()/2));
+            }
+        }
+    });
+
+    // init code
+    UI.ready(function(context) {
+
+        $("[data-uk-nestable]", context).each(function(){
+
+            var ele = $(this);
+
+            if(!ele.data("nestable")) {
+                 var plugin = UI.nestable(ele, UI.Utils.options(ele.attr("data-uk-nestable")));
+            }
         });
     });
 

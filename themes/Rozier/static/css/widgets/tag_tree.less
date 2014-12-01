@@ -1,0 +1,151 @@
+.root-tree {
+	margin: 0px;
+	padding: 0px;
+}
+
+.tagtree {
+
+	&-element {
+
+		&-inner {
+			position: relative;
+		}
+
+		&-name {
+			vertical-align: middle;
+			font-size: 12px;
+			display: inline-block;
+			position: relative;
+			max-width: 80%;
+
+			a {
+				white-space: nowrap;
+				max-width: 100%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: inline-block;
+				vertical-align: middle;
+			}
+		}
+	}
+
+	&-contextualmenu {
+		position: absolute;
+		top: 3px; right: 5px;
+
+		.uk-icon-caret-down {
+			font-size: 10px;
+			margin: 0 0 0 1px;
+		}
+
+		.uk-dropdown-small{
+			padding:0;
+
+			.uk-nav{
+
+				&> p{
+					padding:0;
+					height:40px; line-height:40px;
+
+					&:hover{
+						background: #ebebeb;
+					}
+
+					&> a{
+						display: block;
+		                border-bottom: 1px dashed @contextualdropdown-border-color;
+		                padding-left: 16px;
+		                padding-right: 11px;
+		                font-weight: bold;
+
+		                &> i{
+		                	line-height:40px;
+		                }
+					}
+				}
+			}
+		}
+	}
+}
+
+#tagtree-widget{
+
+	.uk-nestable{
+		margin: 5px 10px 0 17px;
+
+		&.root-tree{
+
+			&> .uk-nestable-list-item{
+
+				&> .uk-nestable-item{
+					margin-bottom:2px;
+				}
+			}
+		}
+
+		.uk-nestable-list-tag{
+	        padding-left:13px;
+
+	        &> .uk-nestable-list-item-tag{
+
+				.uk-nestable-item-tag{
+		        	padding-left:17px;
+		        }
+
+		        .uk-nestable-list-tag{
+
+				 	.uk-nestable-list-item-tag{
+						margin-left:11px;
+				 	}
+		        }
+
+	        }
+
+	        // &> .uk-nestable-list-item-tag{
+
+	        // 	&> .uk-nestable-list-tag{
+	        // 		padding-left:17px;
+
+	        // 		&> .uk-nestable-list-item-tag{
+
+			      //   	&> .uk-nestable-list-tag{
+			      //   		// display: none;
+			      //   		// margin-left:10px;
+			      //   	}
+			      //   }
+	        // 	}
+	        // }
+	    }
+
+	    .uk-nestable-handle-tag{
+	        vertical-align: middle;
+	        color: darken(@maintree-global-bg, 30%);
+
+	        &:after{
+	            display: none;
+	        }
+	    }
+	}
+}
+
+.uk-nestable-moving body{
+
+	 &> .uk-nestable-tag, &> .uk-nestable-list-tag{
+
+		&.uk-nestable-tag .uk-nestable-list-tag, &.uk-nestable-list-tag{
+        	padding-left:13px;
+
+        	.uk-nestable-item-tag{
+        		padding-left:17px;
+	        }
+		}
+
+		.uk-nestable-handle-tag{
+			color:darken(@maintree-global-bg, 30%);
+
+			&:after{
+				display: none;
+			}
+		}
+	}
+}

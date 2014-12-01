@@ -1,8 +1,50 @@
+{% if navigation|length %}
 <nav class="uk-navbar uk-navbar-attached" id="main-navigation" data-active-node="{{ node.getId }}">
+
+    {#
+     #  Home with a node
+     #}
+   {#  {% if home %}
+        {% if home.getNodeSources.first.getTitle %}
+            {% set hometitle = home.getNodeSources.first.getTitle %}
+        {% else %}
+            {% set hometitle = home.getNodeName %}
+        {% endif %}
+
+        <a href="{{ home.getHandler.getUrl }}" class="uk-navbar-brand">{{ hometitle }}</a>
+    {% endif %} #}
+
+    {#
+     # Get home page with no node
+     # STATIC MODE
+     #}
+    {% if request.locale != _default_locale %}
+    <a href="{{ path('homePageLocale', {"_locale":request.locale}) }}" class="uk-navbar-brand">{% trans %}home{% endtrans %}</a>
+    {% else %}
+    <a href="{{ path('homePage') }}" class="uk-navbar-brand">{% trans %}home{% endtrans %}</a>
+    {% endif %}
+
+    {#
+     # Main navigation
+     #}
 	<ul class="uk-navbar-nav ">
 		{% for cnode in navigation %}
 			{% set source = cnode.getNodeSources.first %}
-			{% include 'modules/navigationElement.html.twig' with { "source" : source, "activeId" : node.getId } %}
+			{% include 'modules/navigationElement.html.twig' with {
+                "source" : source,
+                "activeId" : node.getId,
+                'securityContext':securityContext
+            } only %}
 		{% endfor %}
+
+        {#
+         # Page contact
+         #}
+        {% if request.locale != _default_locale %}
+        <li><a href="{{ path('contactPageLocale', {"_locale":request.locale}) }}">{% trans %}contact{% endtrans %}</a></li>
+        {% else %}
+        <li><a href="{{ path('contactPage') }}">{% trans %}contact{% endtrans %}</a></li>
+        {% endif %}
 	</ul>
 </nav>
+{% endif %}

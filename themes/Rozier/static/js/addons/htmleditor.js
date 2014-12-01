@@ -1,5 +1,3 @@
-/*! UIkit 2.8.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
-
 (function(addon) {
 
     var component;
@@ -21,17 +19,56 @@
     UI.component('htmleditor', {
 
         defaults: {
+            iframe       : false,
             mode         : 'split',
             markdown     : false,
             autocomplete : true,
             height       : 500,
             maxsplitsize : 1000,
             markedOptions: { gfm: true, tables: true, breaks: true, pedantic: true, sanitize: false, smartLists: true, smartypants: false, langPrefix: 'lang-'},
-            codemirror   : { mode: 'htmlmixed', tabMode: 'indent', tabsize: 4, lineWrapping: true, dragDrop: false, autoCloseTags: true, matchTags: true, autoCloseBrackets: true, matchBrackets: true, indentUnit: 4, hintOptions: {completionSingle:false} },
-            toolbar      : [ 'bold', 'italic', 'strike', 'link', 'image', 'blockquote', 'listUl', 'listOl' ],
+            codemirror   : { mode: 'htmlmixed', lineWrapping: true, dragDrop: false, autoCloseTags: true, matchTags: true, autoCloseBrackets: true, matchBrackets: true, indentUnit: 4, indentWithTabs: false, tabSize: 4, hintOptions: {completionSingle:false} },
+            toolbar      : [ 'h2', 'h3', 'h4', 'h5', 'h6', 'bold', 'italic', 'listUl', 'listOl', 'back', 'nbsp', 'hr', 'blockquote', 'link' ], // 'image', 'strike',
             lblPreview   : 'Preview',
             lblCodeview  : 'HTML',
-            lblMarkedview: 'Markdown'
+            lblMarkedview: 'Markdown',
+            labels       : {
+                h2:          'Headline 2',
+                h3:          'Headline 3',
+                h4:          'Headline 4',
+                h5:          'Headline 5',
+                h6:          'Headline 6',
+                fullscreen:  'Fullscreen',
+                bold :       'Bold',
+                italic :     'Italic',
+                strike :     'Strikethrough',
+                blockquote : 'Blockquote',
+                link :       'Link',
+                image :      'Image',
+                listUl :     'Unordered List',
+                listOl :     'Ordered List',
+                back :       'Back',
+                hr :         'Separator',
+                nbsp :       'Non-breaking space'
+            },
+            icons:{
+                h2:          '<i class="uk-icon-rz-h2"></i>',
+                h3:          '<i class="uk-icon-rz-h3"></i>',
+                h4:          '<i class="uk-icon-rz-h4"></i>',
+                h5:          '<i class="uk-icon-rz-h5"></i>',
+                h6:          '<i class="uk-icon-rz-h6"></i>',
+                fullscreen:  '<i class="uk-icon-rz-fullscreen"></i>',
+                bold :       '<i class="uk-icon-rz-bold"></i>',
+                italic :     '<i class="uk-icon-rz-italic"></i>',
+                strike :     '<i class="uk-icon-rz-strikethrough"></i>',
+                blockquote : '<i class="uk-icon-rz-quote"></i>',
+                link :       '<i class="uk-icon-rz-link"></i>',
+                image :      '<i class="uk-icon-rz-documents"></i>',
+                listUl :     '<i class="uk-icon-rz-unordered-list"></i>',
+                listOl :     '<i class="uk-icon-rz-ordered-list"></i>',
+                back :       '<i class="uk-icon-rz-back"></i>',
+                hr :         '<i class="uk-icon-rz-hr"></i>',
+                nbsp :       '<i class="uk-icon-rz-space-forced"></i>'
+            }
         },
 
         init: function() {
@@ -57,9 +94,30 @@
             this.editor.on('change', function() { $this.editor.save(); });
             this.code.find('.CodeMirror').css('height', this.options.height);
 
-            $(window).on('resize', UI.Utils.debounce(function() { $this.fit(); }, 200));
+            // iframe mode?
+            if (this.options.iframe) {
 
-            var previewContainer = $this.preview.parent(),
+                this.iframe = $('<iframe class="uk-htmleditor-iframe" frameborder="0" scrolling="auto" height="100" width="100%"></iframe>');
+                this.preview.append(this.iframe);
+
+                // must open and close document object to start using it!
+                this.iframe[0].contentWindow.document.open();
+                this.iframe[0].contentWindow.document.close();
+
+                this.preview.container = $(this.iframe[0].contentWindow.document).find('body');
+
+                // append custom stylesheet
+                if (typeof(this.options.iframe) === 'string') {
+                   this.preview.container.parent().append('<link rel="stylesheet" href="'+this.options.iframe+'">');
+                }
+
+            } else {
+                this.preview.container = this.preview;
+            }
+
+            UI.$win.on('resize', UI.Utils.debounce(function() { $this.fit(); }, 200));
+
+            var previewContainer = this.iframe ? this.preview.container:$this.preview.parent(),
                 codeContent      = this.code.find('.CodeMirror-sizer'),
                 codeScroll       = this.code.find('.CodeMirror-scroll').on('scroll', UI.Utils.debounce(function() {
 
@@ -67,7 +125,7 @@
 
                     // calc position
                     var codeHeight       = codeContent.height() - codeScroll.height(),
-                        previewHeight    = previewContainer[0].scrollHeight - previewContainer.height(),
+                        previewHeight    = previewContainer[0].scrollHeight - ($this.iframe ? $this.iframe.height() : previewContainer.height()),
                         ratio            = previewHeight / codeHeight,
                         previewPostition = codeScroll.scrollTop() * ratio;
 
@@ -122,6 +180,10 @@
             this.on('init', function() {
                 $this.redraw();
             });
+
+            this.element.attr('data-uk-check-display', 1).on('uk.check.display', function(e) {
+                if(this.htmleditor.is(":visible")) this.fit();
+            }.bind(this));
 
             editors.push(this);
         },
@@ -192,7 +254,7 @@
 
                 var title = $this.buttons[button].title ? $this.buttons[button].title : button;
 
-                bar.push('<li><a data-htmleditor-button="'+button+'" title="'+title+'" data-uk-tooltip>'+$this.buttons[button].label+'</a></li>');
+                bar.push('<li class="uk-htmleditor-button-cont-'+button+'"><a class="uk-htmleditor-button-'+button+'" data-htmleditor-button="'+button+'" title="'+title+'" data-uk-tooltip="{animation:true}">'+$this.buttons[button].label+'</a></li>');
             });
 
             this.toolbar.html(bar.join('\n'));
@@ -247,7 +309,7 @@
             if (!this.currentvalue) {
 
                 this.element.val('');
-                this.preview.html('');
+                this.preview.container.html('');
 
                 return;
             }
@@ -255,7 +317,7 @@
             this.trigger('render', [this]);
             this.trigger('renderLate', [this]);
 
-            this.preview.html(this.currentvalue);
+            this.preview.container.html(this.currentvalue);
         },
 
         addShortcut: function(name, callback) {
@@ -330,10 +392,13 @@
                 '<ul class="uk-htmleditor-navbar-nav uk-htmleditor-toolbar"></ul>',
                 '<div class="uk-htmleditor-navbar-flip">',
                     '<ul class="uk-htmleditor-navbar-nav">',
-                        '<li class="uk-htmleditor-button-code"><a>{:lblCodeview}</a></li>',
-                        '<li class="uk-htmleditor-button-preview"><a>{:lblPreview}</a></li>',
-                        '<li><a data-htmleditor-button="fullscreen"><i class="uk-icon-expand"></i></a></li>',
+                        '<li class="uk-htmleditor-button-code"><a class="uk-htmleditor-button-link-code-preview uk-htmleditor-button-link-code" title="Markdown" data-uk-tooltip="{animation:true}">{:lblCodeview}</a></li>',
+                        '<li class="uk-htmleditor-button-preview"><a class="uk-htmleditor-button-link-code-preview uk-htmleditor-button-link-preview" title="Preview" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility-mini"></i></a></li>', // {:lblPreview}
+                        '<li class="uk-htmleditor-button-fullscreen"><a class="uk-htmleditor-button-link-fullscreen" data-htmleditor-button="fullscreen" title="Fullscreen"  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-fullscreen"></i></a></li>',
                     '</ul>',
+                    '<div class="uk-htmleditor-count">',
+                        '<span class="count-current"></span> / <span class="count-limit"></span>',
+                    '</div>',
                 '</div>',
             '</div>',
             '<div class="uk-htmleditor-content">',
@@ -350,44 +415,87 @@
 
             editor.addButtons({
 
+                h2: {
+                    title  : editor.options.labels.h2,
+                    label  : editor.options.icons.h2
+                },
+                h3: {
+                    title  : editor.options.labels.h3,
+                    label  : editor.options.icons.h3
+                },
+                h4: {
+                    title  : editor.options.labels.h4,
+                    label  : editor.options.icons.h4
+                },
+                h5: {
+                    title  : editor.options.labels.h5,
+                    label  : editor.options.icons.h5
+                },
+                h6: {
+                    title  : editor.options.labels.h6,
+                    label  : editor.options.icons.h6
+                },
                 fullscreen: {
-                    title  : 'Fullscreen',
-                    label  : '<i class="uk-icon-expand"></i>'
+                    title  : editor.options.labels.fullscreen,
+                    label  : editor.options.icons.fullscreen
                 },
                 bold : {
-                    title  : 'Bold',
-                    label  : '<i class="uk-icon-bold"></i>'
+                    title  : editor.options.labels.bold,
+                    label  : editor.options.icons.bold
                 },
                 italic : {
-                    title  : 'Italic',
-                    label  : '<i class="uk-icon-italic"></i>'
+                    title  : editor.options.labels.italic,
+                    label  : editor.options.icons.italic
                 },
                 strike : {
-                    title  : 'Strikethrough',
-                    label  : '<i class="uk-icon-strikethrough"></i>'
+                    title  : editor.options.labels.strike,
+                    label  : editor.options.icons.strike
                 },
                 blockquote : {
-                    title  : 'Blockquote',
-                    label  : '<i class="uk-icon-quote-right"></i>'
+                    title  : editor.options.labels.blockquote,
+                    label  : editor.options.icons.blockquote
                 },
                 link : {
-                    title  : 'Link',
-                    label  : '<i class="uk-icon-link"></i>'
+                    title  : editor.options.labels.link,
+                    label  : editor.options.icons.link
                 },
                 image : {
-                    title  : 'Image',
-                    label  : '<i class="uk-icon-picture-o"></i>'
+                    title  : editor.options.labels.image,
+                    label  : editor.options.icons.image
                 },
                 listUl : {
-                    title  : 'Unordered List',
-                    label  : '<i class="uk-icon-list-ul"></i>'
+                    title  : editor.options.labels.listUl,
+                    label  : editor.options.icons.listUl
                 },
                 listOl : {
-                    title  : 'Ordered List',
-                    label  : '<i class="uk-icon-list-ol"></i>'
+                    title  : editor.options.labels.listOl,
+                    label  : editor.options.icons.listOl
+                },
+                back : {
+                    title  : editor.options.labels.back,
+                    label  : editor.options.icons.back
+                },
+                hr : {
+                    title  : editor.options.labels.hr,
+                    label  : editor.options.icons.hr
+                },
+                nbsp : {
+                    title  : editor.options.labels.nbsp,
+                    label  : editor.options.icons.nbsp
                 }
 
             });
+
+            addAction('h2', '<h2>$1</h2>');
+            addAction('h3', '<h3>$1</h3>');
+            addAction('h4', '<h4>$1</h4>');
+            addAction('h5', '<h5>$1</h5>');
+            addAction('h6', '<h6>$1</h6>');
+
+            addAction('back', '$1<br/>');
+            addAction('paragraph', '$1<br/>');
+            addAction('hr', '$1 <hr />');
+            addAction('nbsp', '$1&nbsp;');
 
             addAction('bold', '<strong>$1</strong>');
             addAction('italic', '<em>$1</em>');
@@ -442,10 +550,10 @@
 
                 setTimeout(function() {
                     editor.fit();
-                }, 10);
+                    UI.$win.trigger('resize');
+                }, 50);
             });
 
-            editor.addShortcut(['Ctrl-S', 'Cmd-S'], function() { editor.element.trigger('htmleditor-save', [editor]); });
             editor.addShortcutAction('bold', ['Ctrl-B', 'Cmd-B']);
 
             function addAction(name, replace, mode) {
@@ -471,6 +579,16 @@
             if (editor.options.markdown) {
                 enableMarkdown()
             }
+
+            addAction('h2', '##$1');
+            addAction('h3', '###$1');
+            addAction('h4', '####$1');
+            addAction('h5', '#####$1');
+            addAction('h6', '######$1');
+
+            addAction('back', '$1   \n');
+            addAction('hr', '$1 \n\n---\n\n');
+            addAction('nbsp', '$1 ');
 
             addAction('bold', '**$1**');
             addAction('italic', '*$1*');
@@ -560,7 +678,7 @@
 
             function enableMarkdown() {
                 editor.editor.setOption('mode', 'gfm');
-                editor.htmleditor.find('.uk-htmleditor-button-code a').html(editor.options.lblMarkedview);
+                editor.htmleditor.find('.uk-htmleditor-button-code a').html('<i class="uk-icon-rz-visibility-mini"></i>');
             }
 
             function addAction(name, replace, mode) {
@@ -581,12 +699,6 @@
             if (!editor.data('htmleditor')) {
                 obj = UI.htmleditor(editor, UI.Utils.options(editor.attr('data-uk-htmleditor')));
             }
-        });
-    });
-
-    $(document).on("uk-check-display", function(e) {
-        editors.forEach(function(item) {
-            if(item.htmleditor.is(":visible")) item.fit();
         });
     });
 

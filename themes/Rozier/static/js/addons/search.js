@@ -1,5 +1,4 @@
-/*! UIkit 2.8.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
-
+/*! UIkit 2.11.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
@@ -67,11 +66,11 @@
                 $this.element.removeClass("uk-active");
             });
 
-            this.on('autocomplete-select', function(e, data) {
+            this.on('uk.autocomplete.select', function(e, data) {
                 if (data.url) {
                   location.href = data.url;
                 } else if(data.moreresults) {
-                  this.autocomplete.input.closest('form').submit();
+                  $this.autocomplete.input.closest('form').submit();
                 }
             });
 
@@ -80,7 +79,7 @@
     });
 
     // init code
-    $(document).on("focus.search.uikit", "[data-uk-search]", function(e) {
+    UI.$html.on("focus.search.uikit", "[data-uk-search]", function(e) {
         var ele = $(this);
 
         if (!ele.data("search")) {

@@ -1,20 +1,68 @@
 [
     {
-        "name": "un super setting",
-        "value": "value",
-        "visible": 1,
-        "type": 0
+        "name": "Development",
+        "inMenu": true,
+        "settings": [
+            {
+                "name": "display_debug_panel",
+                "value": false,
+                "type": 5,
+                "visible": true
+            }
+        ]
     },
     {
-        "name": "un autre setting",
-        "value": "value2",
-        "visible": 1,
-        "type": 0
+        "name": "Emailings",
+        "inMenu": true,
+        "settings": [
+            {
+                "name": "email_sender",
+                "value": "",
+                "type": 8,
+                "visible": true
+            },
+            {
+                "name": "email_sender_name",
+                "value": "",
+                "type": 0,
+                "visible": true
+            }
+        ]
     },
     {
-        "name": "un setting",
-        "value": "value4",
-        "visible": 1,
-        "type": 0
+        "name": "APIs",
+        "inMenu": true,
+        "settings": [
+            {
+                "name": "soundcloud_client_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "google_client_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "twitter_client_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "facebook_client_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "universal_analytics_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            }
+        ]
     }
 ]

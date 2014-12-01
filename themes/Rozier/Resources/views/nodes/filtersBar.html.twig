@@ -1,0 +1,62 @@
+<nav class="uk-navbar" id="uk-navbar-filter">
+    <div class="uk-navbar-content-cont">
+
+        {% if filters.description %}<a class="uk-navbar-brand">{{ filters.description }}</a>{% endif %}
+
+        <div class="uk-navbar-content uk-hidden-small" id="uk-navbar-filter-search">
+            <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
+                <div class="uk-form-icon">
+                    <i class="uk-icon-search"></i>
+                    <input id="uk-form-filter-input-search" type="text" name="search" placeholder="{% trans %}search{% endtrans %}" value="{{ filters.search }}">
+                </div>
+            </form>
+        </div>
+
+        {% if filters.itemCount > filters.itemPerPage %}
+        <div class="uk-navbar-content uk-hidden-small" id="uk-navbar-filter-pagination">
+            <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
+
+                {% if filters.search %}<input type="hidden" name="search" value="{{ filters.search }}" />{% endif %}
+
+                {% if filters.previousPageQuery %}<a class="uk-button uk-button-filter" href="?{{ filters.previousPageQuery }}"><i class="uk-icon-rz-prev-page"></i></a>{% endif %}
+
+                <span class="filter-form-text pageTitle">{% trans %}page{% endtrans %}</span>
+                <input class="uk-form-width-mini" id="uk-form-filter-input-page" type="text" name="page"  value="{{ filters.currentPage }}" />
+                <span class="filter-form-text pageCount">/ {{ filters.pageCount }}</span>
+
+                {% if filters.nextPageQuery %}<a class="uk-button uk-button-filter" href="?{{ filters.nextPageQuery }}"><i class="uk-icon-rz-next-page"></i></a>{% endif %}
+
+            </form>
+        </div>
+        {% endif %}
+
+        <nav class="bulk-actions nodes-bulk-actions">
+
+            <div class="bulk-actions-title-cont">
+                <h3 class="bulk-actions-title nodes-bulk-actions-title">{% trans %}bulk.actions{% endtrans %}</h3>
+            </div>
+
+            {% spaceless %}    
+                {% if deleteNodesForm %}
+                    {% form_theme deleteNodesForm 'forms.html.twig' %}
+                    <form class="uk-form uk-form-horizontal node-bulk-delete-form" action="{{ path('nodesBulkDeletePage') }}" method="get" {{ form_enctype(deleteNodesForm) }}>
+                        {{ form_widget(deleteNodesForm) }}
+
+                        <button type="submit" class="uk-button uk-button-bulk uk-button-danger uk-button-bulk-delete uk-button-bulk-delete-nodes" title="{% trans %}bulk.delete.nodes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i> </button>
+                    </form>
+                {% endif %}
+
+                <a class="uk-button uk-button-bulk uk-button-bulk-folder uk-button-bulk-folder-nodes" href="#" title="{% trans %}link.tags{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-folder-tree-mini"></i></a>
+                
+                <div class="bulk-folder-cont nodes-bulk-folder-cont">
+                    {% form_theme tagNodesForm 'forms.html.twig' %}
+                    <form class="uk-form uk-form-horizontal node-bulk-tag-form" action="#" method="post" {{ form_enctype(tagNodesForm) }}>
+                        {{ form_widget(tagNodesForm) }}
+                    </form>
+                </div>
+            {% endspaceless %}
+
+        </nav>
+
+    </div>
+</nav>

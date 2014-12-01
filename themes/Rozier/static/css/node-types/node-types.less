@@ -1,0 +1,50 @@
+/*------------------------------------*\
+   NODE TYPES
+\*------------------------------------*/
+
+
+/*
+ * Styles for node-type pages
+ */
+
+
+/* -------- STYLES -------- */
+
+.uk-table.node-types {
+
+    .name {
+        position: relative;
+
+        a {
+            > .color {
+                background-color: attr(data-color);
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width:  4px;
+
+                border-left: 1px solid rgba(0,0,0,0.15);
+                .box-sizing();
+            }
+        }
+    }
+}
+
+#add-node-type-form, #edit-node-type-form{
+
+    .form-col-checkbox{
+        display: inline-block;
+        
+        &+ .form-col-checkbox{
+            margin-left:30px;
+        }
+    }
+
+    .form-col-color{        
+        display: inline-block;
+        margin-left:30px;
+    }
+
+}

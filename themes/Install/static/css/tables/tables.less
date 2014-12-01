@@ -1,0 +1,39 @@
+/*------------------------------------*\
+   TABLES
+\*------------------------------------*/
+
+
+/*
+ * Styles for <table> elements
+ */
+
+
+/* -------- STYLES -------- */
+
+.install-table{
+    margin:0;
+    
+    .install-table-item{
+        background:white;
+        border-left:solid 1px #ddd;
+        border-right:solid 1px #ddd;
+
+        &:nth-child(2n){
+            background:@grey-verylight;
+        }
+    }
+
+    td{
+        vertical-align: middle;
+    }
+
+    .status{
+        text-align: center;
+    }
+
+    .uk-badge-notification{
+        width:22px; height:22px;
+        line-height:22px;
+    }
+
+}

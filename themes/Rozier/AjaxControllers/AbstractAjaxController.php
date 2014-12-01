@@ -9,11 +9,12 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Kernel;
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
  * Extends common back-office controller, but add a request validation
  * to secure Ajax connexions.
@@ -28,16 +29,28 @@ abstract class AbstractAjaxController extends RozierApp
      */
     protected function validateRequest(Request $request, $method = 'POST')
     {
-        if ($request->get('_action') == "" ||
-            $request->getMethod() != $method ||
-            !$this->getKernel()
-                ->getCsrfProvider()
+        if ($request->get('_action') == "") {
+            return array(
+                'statusCode'   => Response::HTTP_FORBIDDEN,
+                'status'       => 'danger',
+                'responseText' => 'Wrong request'
+            );
+        }
+        if (!$this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::AJAX_TOKEN_INTENTION, $request->get('_token'))) {
 
             return array(
-                'statusCode'   => '403',
+                'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
-                'responseText' => 'Wrong request'
+                'responseText' => 'Bad token'
+            );
+        }
+        if ($request->getMethod() != $method) {
+
+            return array(
+                'statusCode'   => Response::HTTP_FORBIDDEN,
+                'status'       => 'danger',
+                'responseText' => 'Bad method'
             );
         }
 

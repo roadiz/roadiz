@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+
+<h1>{% trans %}contact.us{% endtrans %}</h1>
+
+<article>
+    {#
+     # Display contact errors
+     #}
+    {% if session.messages|length %}
+        {% for type, msgs in session.messages %}
+            {% for msg in msgs %}
+                <div data-uk-alert class="uk-alert uk-alert-{% if type == "confirm" %}success{% elseif type == "warning" %}warning{% else %}danger{% endif %}">
+                    <a href="" class="uk-alert-close uk-close"></a>
+                    <p>{{ msg }}</p>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+    {#
+     # Display contact form
+     #}
+    {% form_theme contactForm 'forms.html.twig' %}
+    {{ form(contactForm) }}
+</article>
+
+{% endblock %}

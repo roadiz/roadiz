@@ -1,35 +1,208 @@
+/*------------------------------------*\
+   LESS BASE
+\*------------------------------------*/
+
+
 /*
- *
+ * Entry point, import of all less files
  */
+
+/* -------- VARS -------- */
+
 @import "vars.less";
 
+
+/* -------- VENDORS -------- */
+
+@import "vendor/jquery-ui.less";
+@import "vendor/dropzone.less";
+
+
+/* -------- BASE -------- */
+
+@import "base/elements.less";
+@import "base/normalize.less";
+@import "base/boilerplate.less";
+@import "base/easing.less";
+
+
+/* -------- DROPZONE -------- */
+
+@import "dropzone/dropzone.less";
+
+
+/* -------- ICONS -------- */
+
 @import "icons/icons.less";
-@import "bootstrap3/custom_switch.less";
-@import "elements.less";
-@import "normalize.less";
-@import "main.less";
-@import "dropzone.less";
 
-@import "fontfaces.less";
 
-@import "widgets/alerts.less";
-@import "widgets/debugpanel.less";
-@import "widgets/nodetree.less";
-@import "widgets/tagtree.less";
-@import "widgets/documentexplorer.less";
-@import "users/users.less";
-@import "login/login.less";
+/* -------- COMMON (styles for all pages : font face, etc.) -------- */
 
+@import "common.less";
+
+
+/* -------- GRID -------- */
 
 @import "grid/grid_layout.less";
-@import "form/form.less";
 
-@import "entries_panel/admin_entries.less";
-@import "user_panel/user_panel.less";
-@import "trees_panel/trees_panel.less";
-@import "trees_panel/nestable.less";
 
-@import "main_content_panel/main_content.less";
+/* -------- PANELS -------- */
 
-@import "navbars/edit_bar.less";
+@import "panels/entries_panel/admin_entries.less";
+@import "panels/user_panel/user_panel.less";
+@import "panels/trees_panel/trees_panel.less";
+@import "panels/trees_panel/nestable.less";
+@import "panels/main_content_panel/main_content.less";
+
+
+/* -------- MENU -------- */
+@import "navbars/common.less";
+@import "navbars/navigation.less";
+@import "navbars/filterbar.less";
+@import "navbars/translationbar.less";
 @import "actions_menu/actions_menu.less";
+
+
+/* -------- FORMS -------- */
+
+@import "forms/forms.less";
+@import "forms/markdown_editor.less";
+@import "forms/custom_switch.less";
+
+
+/* -------- AUTOCOMPLETE -------- */
+
+@import "autocomplete/autocomplete.less";
+
+
+/* -------- BUTTONS -------- */
+
+@import "buttons/buttons.less";
+@import "dropdown/dropdown.less";
+
+
+/* -------- ALERTS -------- */
+
+@import "alerts/alerts.less";
+
+
+/* -------- BADGES -------- */
+
+@import "badges/badges.less";
+
+
+/* -------- TABLES -------- */
+
+@import "tables/tables.less";
+
+
+/* -------- WIDGETS -------- */
+
+@import "widgets/debugpanel.less";
+@import "widgets/node_tree.less";
+@import "widgets/tag_tree.less";
+@import "widgets/folder_tree.less";
+@import "widgets/stack_tree.less";
+@import "widgets/document_explorer.less";
+@import "widgets/node_explorer.less";
+@import "widgets/customform_explorer.less";
+@import "widgets/children_nodes_widget.less";
+@import "widgets/documents_widget.less";
+@import "widgets/nodes_widget.less";
+@import "widgets/customform_widget.less";
+
+
+/* -------- PAGES -------- */
+
+@import "users/users.less";
+@import "login/login.less";
+@import "history/history.less";
+
+
+/* -------- BREADCRUMB -------- */
+
+@import "breadcrumb/breadcrumb.less";
+
+
+/* -------- BULK -------- */
+
+@import "bulk/bulk.less";
+
+
+/* -------- NODES -------- */
+
+@import "nodes/global.less";
+@import "nodes/edit.less";
+
+
+/* -------- DOCUMENTS -------- */
+
+@import "documents/documents.less";
+
+
+/* -------- TAGS -------- */
+
+@import "tags/global.less";
+
+
+/* -------- NODE TYPE FIELDS -------- */
+
+@import "node-type-fields/fields.less";
+
+
+/* -------- NODE TYPE  -------- */
+
+@import "node-types/node-types.less";
+
+
+/* -------- TRANSLATIONS  -------- */
+
+@import "translations/global.less";
+
+
+/* -------- FONTS  -------- */
+
+@import "fonts/global.less";
+
+
+/* -------- CUSTOM FORMS  -------- */
+
+@import "custom-forms/custom-forms.less";
+
+
+/* -------- CUSTOM FORMS FIELDS  -------- */
+
+@import "custom-forms-fields/custom-forms-fields.less";
+
+
+/* -------- SETTINGS  -------- */
+
+@import "settings/global.less";
+
+
+/* -------- SEARCH  -------- */
+
+@import "search/search.less";
+
+
+/* -------- RESPONSIVE  -------- */
+
+/* Width < 1280 */
+@media screen and (max-width: 1280px) {
+    @import "responsive/less-1280.less";
+}
+
+/* Width < 1024 */
+@media screen and (max-width: 1024px) {
+    @import "responsive/less-1024.less";
+}
+
+/* Width < 768 */
+@media screen and (max-width: 768px) {
+    @import "responsive/less-768.less";
+}
+
+/* Width < 500 */
+@media screen and (max-width: 500px) {
+    @import "responsive/less-500.less";
+}

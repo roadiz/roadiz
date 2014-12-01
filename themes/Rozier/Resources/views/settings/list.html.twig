@@ -1,42 +1,63 @@
-{% extends 'base.html.twig' %}
-
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-settings">
-	<h1 id="title">{% trans %}Settings{% endtrans %}</h1>
-	<nav>
-		<a class="uk-button" href="{{ path('settingsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Add a new setting{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('settingsImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}Import{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('settingsExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}Export{% endtrans %}</a>
-	</nav>
+<section class="content-global content-nav-and-filters">
+
+    {% if settingGroup %}
+    <header class="content-header header-setting header-setting-add">
+	   <h1 class="content-title setting-list-title">{{ "%group%.settings"|trans({'%group%':settingGroup.getName}) }}</h1>
+	   {% include 'widgets/countFiltersBar.html.twig' %}
+    </header>
+    {% else %}
+    <header class="content-header header-setting header-setting-add">
+	   <h1 class="content-title setting-list-title">{% trans %}settings{% endtrans %}</h1>
+	   <div class="content-header-action-menu">
+	        <nav>
+	        	<a class="uk-button" href="{{ path('settingsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.setting{% endtrans %}</a>
+	        	<a class="uk-button" href="{{ path('settingsImportPage') }}"><i class="uk-icon-rz-upload"></i> {% trans %}import{% endtrans %}</a>
+	        	<a class="uk-button rz-no-ajax-link" href="{{ path('settingsExportAllPage') }}"><i class="uk-icon-rz-download"></i> {% trans %}export{% endtrans %}</a>
+	        </nav>
+	   </div>
+	   {% include 'widgets/countFiltersBar.html.twig' %}
+    </header>
+    {% endif %}
 
 	{% include 'widgets/filtersBar.html.twig' %}
 
-	<table class="settings uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Value{% endtrans %}</th>
-	            <th>{% trans %}actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for setting in settings %}
-			<tr>
-				<td><a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">{{ setting.setting.getName }}</a></td>
-				<td>
-					{% form_theme setting.form 'forms.html.twig' %}
-					<form class="uk-form " action="#" method="post" {{ form_enctype(setting.form) }}>
-					    {{ form_widget(setting.form) }}
-						<button class="uk-button uk-button-primary uk-button-small" type="submit"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</button>
-					</form>
-				</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('settingsDeletePage', { settingId: setting.setting.getId }) }}">{% trans %}Delete{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	<article class="content content-no-action-menu content-settings-list">
+        <div class="content-table-cont">
+			<table class="content-table settings uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}name{% endtrans %}</th>
+			            <th class="mobile-hidden">{% trans %}value{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for setting in settings %}
+					<tr>
+						<td><a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">{{ setting.setting.getName|trans() }}</a></td>
+						<td class="mobile-hidden">
+							{% form_theme setting.form 'horizontalForms.html.twig' %}
+							<form class="uk-form uk-form-settings uk-form-horizontal" action="#" method="post" {{ form_enctype(setting.form) }}>
+							    {{ form_widget(setting.form) }}
+                                <button class="uk-button uk-button-settings-submit uk-button-small" type="submit"><i class="uk-icon-rz-save-mini"></i></button>
+                            </form>
+						</td>
+						<td>
+						{% spaceless %}
+                            <a class="uk-button uk-button-content uk-button-small uk-button-settings-save no-ajax-link uk-button-table-save mobile-hidden" href="#" title="{% trans %}save{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-save-mini"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('settingsDeletePage', { settingId: setting.setting.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                        {% endspaceless %}
+
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</article>
 </section>
 {% endblock %}

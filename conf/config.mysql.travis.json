@@ -1,0 +1,21 @@
+{
+	"appNamespace": "chooseAnUniqueNameForYourApp",
+	"install": true,
+	"devMode": true,
+	"timezone": "Europe/Paris",
+	"doctrine": {
+		"driver":   "pdo_mysql",
+		"host":     "localhost",
+		"user":     "root",
+		"password": "",
+		"dbname":   "roadiz_tests"
+	},
+	"security": {
+		"secret": "change#this#secret#very#important"
+	},
+    "entities": [
+        "src/Roadiz/Core/Entities",
+        "src/Roadiz/Core/AbstractEntities",
+        "gen-src/GeneratedNodeSources"
+    ]
+}

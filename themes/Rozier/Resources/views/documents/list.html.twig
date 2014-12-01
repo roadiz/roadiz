@@ -1,47 +1,59 @@
-{% extends 'base.html.twig' %}
-
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-documents">
-	<h1 id="title">{% trans %}Documents{% endtrans %}</h1>
-	<nav>
-		<a class="uk-button" href="{{ path('documentsUploadPage') }}"><i class="uk-icon-plus"></i> {% trans %}Upload a document{% endtrans %}</a>
-	</nav>
-	{% include 'widgets/filtersBar.html.twig' %}
-	<table class="documents uk-table">
-		<thead>
-	        <tr>
-	            <th class="uk-text-center">{% trans %}document.thumbnail{% endtrans %}</th>
-	            <th>{% trans %}document.filename{% endtrans %}</th>
-	            <th>{% trans %}document.createdAt{% endtrans %}</th>
-	            <th>{% trans %}actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for document in documents %}
-			<tr>
-				{% if document.isImage %}
-				<td class="uk-text-center">
-					<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}">
-						{# <img width="100" alt="" src="{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}" /> #}
-						{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
-					</a>
-				</td>
-				{% else %}
-				<td class="uk-text-center">
-					<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}"><i class='uk-icon-large uk-icon-file-{{ document.getShortType }}-o'></i></a>
-				</td>
-				{% endif %}
-				<td>
-					<p>{{ document.getFilename }}</p>
-				</td>
-				<td>{{ document.getCreatedAt|localizeddate('full', 'none') }}</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}">{% trans %}Delete{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+<section class="content-global content-nav-and-filters">
+	<header class="content-header header-document header-document-list">
+        {% if folder %}
+        <h1 class="content-title">{{ folder.name }}</h1>
+        {% else %}
+        <h1 class="content-title">{% trans %}documents{% endtrans %}</h1>
+        {% endif %}
+        {% include 'widgets/countFiltersBar.html.twig' %}
+        <div class="content-header-action-menu">
+
+            <a class="uk-button" href="{{ path('documentsUploadPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-upload"></i> {% trans %}upload.document{% endtrans %}</a>
+           	<a class="uk-button" href="{{ path('documentsEmbedPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-embed"></i> {% trans %}embed.document{% endtrans %}</a>
+           	<a class="uk-button rz-no-ajax-link" href="{{ path('documentsRandomPage', {folderId: folder.id}) }}"><i class="uk-icon-magic"></i> {% trans %}random.document{% endtrans %}</a>
+        </div>
+    </header>
+
+    {% include 'documents/filtersBar.html.twig' %}
+
+    <article class="content content-no-action-menu">
+
+        {% spaceless %}
+        <ul class="documents-list">
+        {% for document in documents %}
+
+            <li class="document-item">
+                <div class="document-border"></div>
+                <figure class="document-image">
+                    {% if document.isImage %}
+                        {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
+                    {% else %}
+                        <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>
+                    {% endif %}
+                </figure>
+                <div class="document-name">{{ document.getFilename|centralTruncate(18, -4)}}</div>
+                <div class="document-overflow">
+                    <input class="document-checkbox" type="checkbox" name="documents[]" value="{{ document.getId }}" />
+                    <div class="document-links">
+                        <a class="uk-button uk-button-small document-link" href="{{ path('documentsEditPage', { documentId: document.getId }) }}"><i class="uk-icon-rz-pencil"></i></a>
+                        <a class="uk-button uk-button-small uk-button-danger document-link" href="{{ path('documentsDeletePage', { documentId: document.getId }) }}"><i class="uk-icon-rz-trash-mini-o"></i></a>
+                    </div>
+                    {% if document.isEmbed %}
+                        <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
+                        <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
+                    {% else %}
+                        <div class="document-mime-type">{{ document.getShortMimeType }}</div>
+                    {% endif %}
+                </div>
+            </li>
+
+        {% endfor %}
+        </ul>
+        {% endspaceless %}
+
+	</article>
 </section>
 {% endblock %}

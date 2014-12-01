@@ -1,0 +1,37 @@
+#requirements-table{
+
+    .uk-badge{
+        height:22px;
+        line-height:22px;
+    }
+
+    [class*=uk-icon-]{
+        line-height:22px;
+    }
+
+}
+.requirement-name{
+    padding-left:15px;
+}
+
+.uk-badge-folder{
+    position: relative;
+
+    &:hover{
+        .uk-badge-folder-content{
+            .opacity(1);
+        }
+    }
+    
+}
+
+.uk-badge-notification-infos{
+    padding:0 2px;
+}
+
+.uk-badge-folder-content{
+    position: absolute;
+    top:0; left:25px;
+    .opacity(0);
+    .transition(0.4s opacity ease);
+}

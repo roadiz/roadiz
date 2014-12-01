@@ -1,8 +1,8 @@
 <?php
 
-use RZ\Renzo\Core\Entities\Setting;
-use RZ\Renzo\Core\Serializers\SettingJsonSerializer;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
+use RZ\Roadiz\Core\Kernel;
 /**
  * Description.
  */
@@ -18,8 +18,8 @@ class SettingJsonSerializerTest extends PHPUnit_Framework_TestCase
         $setting = SettingJsonSerializer::deserialize($json);
 
         static::$entityCollection[] = $setting;
-        Kernel::getInstance()->em()->persist($setting);
-        Kernel::getInstance()->em()->flush();
+        Kernel::getService('em')->persist($setting);
+        Kernel::getService('em')->flush();
 
 
         // Assert
@@ -67,7 +67,7 @@ class SettingJsonSerializerTest extends PHPUnit_Framework_TestCase
         return array(
             array(
                 file_get_contents(RENZO_ROOT.'/tests/Fixtures/Serializers/settingJsonSerializer01.json'),
-                "RZ\Renzo\Core\Entities\Setting"
+                "RZ\Roadiz\Core\Entities\Setting"
             ),
         );
     }
@@ -86,10 +86,10 @@ class SettingJsonSerializerTest extends PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         foreach (static::$entityCollection as $setting) {
-            Kernel::getInstance()->em()->remove($setting);
+            Kernel::getService('em')->remove($setting);
         }
 
-        Kernel::getInstance()->em()->flush();
-        Kernel::getInstance()->em()->clear(); // Detaches all objects from Doctrine!
+        Kernel::getService('em')->flush();
+        Kernel::getService('em')->clear(); // Detaches all objects from Doctrine!
     }
 }

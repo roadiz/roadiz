@@ -1,18 +1,22 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 
 {% block content %}
-<section id="manage-user">
-	<h1 id="user-title">{% trans %}Unlink user:{% endtrans %} {{ user.getUserName }}</h1>
+<section class="content-global unlink-user-group">
+	<header class="content-header header-group header-group-edit">
+        <h1 class="content-title group-add-title">{{ "unlink.user.%name%"|trans({'%name%': user.getUserName}) }}</h1>
+    </header>
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to remove this user from group?{% endtrans %}</legend>
-	    	<a href="{{ path('groupsEditUsersPage', { groupId: group.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
-	    	<input class="uk-button uk-button-danger" type="submit" />
-   		</fieldset>
-	</form>
+    <article class="content content-delete content-no-action-menu">
+		{% form_theme form 'forms.html.twig' %}
+		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<legend>{% trans %}are_you_sure.remove.user.from.group{% endtrans %}</legend>
+		    	<a href="{{ path('groupsEditUsersPage', { groupId: group.getId }) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}unlink{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+	</article>
 </section>
 {% endblock %}

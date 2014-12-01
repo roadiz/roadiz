@@ -1,6 +1,37 @@
-<ul class="node-breadcrumb uk-breadcrumb">
+{% if node.getNodeSources.first.getTitle %}
+{% set currentTitle = node.getNodeSources.first.getTitle %}
+{% else %}
+{% set currentTitle = node.getNodeName %}
+{% endif %}
+
+{% spaceless %}
+<ul class="uk-breadcrumb content-breadcrumb node-breadcrumb">
     {% for parent in node.getHandler.getParents %}
-    <li class=""><a href="{{ path('nodesEditPage', { nodeId: parent.getId }) }}">{{ parent.getNodeSources.first.getTitle }}</a></li>
+        {% if parent.getNodeSources.first.getTitle %}
+            {% set title = parent.getNodeSources.first.getTitle %}
+        {% else %}
+            {% set title = parent.getNodeName %}
+        {% endif %}
+
+        {% if parent.isHidingChildren %}
+            {% set url = path('nodesTreePage', { nodeId: parent.getId }) %}
+        {% else %}
+            {% set url = path('nodesEditSourcePage', {
+                nodeId: parent.getId,
+                translationId: parent.getNodeSources.first.translation.id
+            }) %}
+        {% endif %}
+        <li class="node-breadcrumb-item">
+            <a class="node-breadcrumb-link" href="{{ url }}">
+                {% if parent.isHome %}
+                    <i class="uk-icon-rz-breadcrumb-home"></i>
+                {% else %}
+                    {{ title }}
+                {% endif %}
+            </a>
+        </li>
+
     {% endfor %}
-    <li class="uk-active"><span>{{ node.getNodeSources.first.getTitle }}</span></li>
+    <li class="node-breadcrumb-item uk-active"><span>{{ currentTitle }}</span></li>
 </ul>
+{% endspaceless %}

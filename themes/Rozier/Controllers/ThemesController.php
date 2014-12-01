@@ -9,14 +9,14 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Theme;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\CMS\Controllers\FrontendController;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\CMS\Controllers\FrontendController;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,10 +41,12 @@ class ThemesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+
         $listManager = new EntityListManager(
             $request,
-            $this->getKernel()->em(),
-            'RZ\Renzo\Core\Entities\Theme'
+            $this->getService('em'),
+            'RZ\Roadiz\Core\Entities\Theme'
         );
         $listManager->handle();
 
@@ -67,24 +69,28 @@ class ThemesController extends RozierApp
      */
     public function addAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+
         $theme = new Theme();
 
         $form = $this->buildAddForm($theme);
+
         $form->handleRequest();
+
         if ($form->isValid()) {
             try {
                 $this->addTheme($form->getData(), $theme);
-                $msg = $this->getTranslator()->trans('theme.created', array('%name%'=>$theme->getClassName()));
+                $msg = $this->getTranslator()->trans('theme.%name%.created', array('%name%'=>$theme->getClassName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
             } catch (EntityAlreadyExistsException $e) {
                 $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getLogger()->warning($e->getMessage());
+                $this->getService('logger')->warning($e->getMessage());
             }
 
             $response = new RedirectResponse(
-                $this->getKernel()->getUrlGenerator()->generate('themesHomePage')
+                $this->getService('urlGenerator')->generate('themesHomePage')
             );
             $response->prepare($request);
 
@@ -111,8 +117,10 @@ class ThemesController extends RozierApp
      */
     public function editAction(Request $request, $themeId)
     {
-        $theme = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+
+        $theme = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
 
@@ -123,22 +131,22 @@ class ThemesController extends RozierApp
 
                 try {
                     $this->editTheme($form->getData(), $theme);
-                    $msg = $this->getTranslator()->trans('theme.updated', array('%name%'=>$theme->getClassName()));
+                    $msg = $this->getTranslator()->trans('theme.%name%.updated', array('%name%'=>$theme->getClassName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 } catch (\RuntimeException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('themesHomePage')
+                    $this->getService('urlGenerator')->generate('themesHomePage')
                 );
                 $response->prepare($request);
 
@@ -146,6 +154,7 @@ class ThemesController extends RozierApp
             }
 
             $this->assignation['form'] = $form->createView();
+            $this->assignation['theme'] = $theme;
 
             return new Response(
                 $this->getTwig()->render('themes/edit.html.twig', $this->assignation),
@@ -167,8 +176,10 @@ class ThemesController extends RozierApp
      */
     public function deleteAction(Request $request, $themeId)
     {
-        $theme = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\Theme', (int) $themeId);
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+
+        $theme = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
             $form = $this->buildDeleteForm($theme);
@@ -179,23 +190,23 @@ class ThemesController extends RozierApp
 
                 try {
                     $this->deleteTheme($form->getData(), $theme);
-                    $msg = $this->getTranslator()->trans('theme.deleted', array('%name%'=>$theme->getClassName()));
+                    $msg = $this->getTranslator()->trans('theme.%name%.deleted', array('%name%'=>$theme->getClassName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
 
                 } catch (EntityRequiredException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 } catch (\RuntimeException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('themesHomePage')
+                    $this->getService('urlGenerator')->generate('themesHomePage')
                 );
                 $response->prepare($request);
 
@@ -203,6 +214,7 @@ class ThemesController extends RozierApp
             }
 
             $this->assignation['form'] = $form->createView();
+            $this->assignation['theme'] = $theme;
 
             return new Response(
                 $this->getTwig()->render('themes/delete.html.twig', $this->assignation),
@@ -217,27 +229,52 @@ class ThemesController extends RozierApp
     /**
      * Build add theme form with classname constraint.
      *
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      *
      * @return \Symfony\Component\Form\Form
      */
     protected function buildAddForm(Theme $theme)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('className', new \RZ\Renzo\CMS\Forms\ThemesType(),
-                array('label' => 'Theme'))
-            ->add('available', 'checkbox', array(
-                'data' => $theme->isAvailable(),
-                'required' => false
-            ))
-            ->add('hostname', 'text', array(
-                'data' => $theme->getHostname()
-            ))
-            ->add('backendTheme', 'checkbox', array(
-                'data' => $theme->isBackendTheme(),
-                'required' => false
-            ));
+            ->add(
+                'className',
+                new \RZ\Roadiz\CMS\Forms\ThemesType(),
+                array(
+                    'label' => $this->getTranslator()->trans('themeClass'),
+                    'required' => true,
+                    'constraints' => array(
+                        new \Symfony\Component\Validator\Constraints\NotNull(),
+                        new \Symfony\Component\Validator\Constraints\Type('string'),
+                    )
+                )
+            )
+            ->add(
+                'available',
+                'checkbox',
+                array(
+                    'label' => $this->getTranslator()->trans('available'),
+                    'data' => $theme->isAvailable(),
+                    'required' => false
+                )
+            )
+            ->add(
+                'hostname',
+                'text',
+                array(
+                    'label' => $this->getTranslator()->trans('hostname'),
+                    'data' => $theme->getHostname()
+                )
+            )
+            ->add(
+                'backendTheme',
+                'checkbox',
+                array(
+                    'label' => $this->getTranslator()->trans('backendTheme'),
+                    'data' => $theme->isBackendTheme(),
+                    'required' => false
+                )
+            );
 
         return $builder->getForm();
     }
@@ -245,7 +282,7 @@ class ThemesController extends RozierApp
     /**
      * Build edit theme form with classname constraint.
      *
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -258,16 +295,19 @@ class ThemesController extends RozierApp
             'backendTheme' => $theme->isBackendTheme()
         );
 
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('available', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('available'),
                 'data' => $theme->isAvailable(),
                 'required' => false
             ))
             ->add('hostname', 'text', array(
+                'label' => $this->getTranslator()->trans('hostname'),
                 'data' => $theme->getHostname()
             ))
             ->add('backendTheme', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('backendTheme'),
                 'data' => $theme->isBackendTheme(),
                 'required' => false
             ));
@@ -278,13 +318,13 @@ class ThemesController extends RozierApp
     /**
      * Build delete theme form with classname constraint.
      *
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      *
      * @return \Symfony\Component\Form\Form
      */
     protected function buildDeleteForm(Theme $theme)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('themeId', 'hidden', array(
                 'data'=>$theme->getId()
@@ -295,7 +335,7 @@ class ThemesController extends RozierApp
 
     /**
      * @param array                        $data
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      */
     private function addTheme(array $data, Theme $theme)
     {
@@ -304,27 +344,33 @@ class ThemesController extends RozierApp
             $theme->$setter($value);
         }
 
-        $existing = $this->getKernel()->em()
-            ->getRepository('RZ\Renzo\Core\Entities\Theme')
+        $existing = $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
             ->findOneBy(array('className'=>$theme->getClassName()));
 
         if ($existing !== null) {
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
-                    'theme.no_creation.already_exists',
+                    'theme.%name%.no_creation.already_exists',
                     array('%name%'=>$theme->getClassName())
                 ),
                 1
             );
         }
 
-        $this->getKernel()->em()->persist($theme);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->persist($theme);
+        $this->getService('em')->flush();
+
+        // Clear result cache
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        if ($cacheDriver !== null) {
+            $cacheDriver->deleteAll();
+        }
     }
 
     /**
      * @param array                        $data
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      *
      * @return boolean
      */
@@ -335,18 +381,30 @@ class ThemesController extends RozierApp
             $theme->$setter($value);
         }
 
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->flush();
+
+        // Clear result cache
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        if ($cacheDriver !== null) {
+            $cacheDriver->deleteAll();
+        }
 
         return true;
     }
 
     /**
      * @param array                        $data
-     * @param RZ\Renzo\Core\Entities\Theme $theme
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
      */
     protected function deleteTheme(array $data, Theme $theme)
     {
-        $this->getKernel()->em()->remove($theme);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->remove($theme);
+        $this->getService('em')->flush();
+
+        // Clear result cache
+        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        if ($cacheDriver !== null) {
+            $cacheDriver->deleteAll();
+        }
     }
 }

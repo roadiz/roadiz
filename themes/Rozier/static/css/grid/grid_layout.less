@@ -7,9 +7,9 @@
     position: fixed;
 
     top: 0;
+    right: 0;
     bottom: 0;
     left: 0;
-    right: 0;
 
     width: 100%;
     height: 100%;
@@ -26,13 +26,12 @@
         position: relative;
 
         & > div {
-            overflow-x: visible;
-            overflow-y: scroll;
+            overflow: hidden;
             position:absolute;
             top:0;
+            right:0;
             bottom:0;
             left:0;
-            right:0;
 
             padding-bottom: 50px;
             -webkit-overflow-scrolling: touch;
@@ -43,24 +42,77 @@
             }
         }
     }
-}
 
-
-#user-panel {
-    width: @user-panel-width;
-}
-#admin-menu {
-    width: @entries-panel-width;
-}
-#main-trees {
-    width: @trees-panel-width;
-
-    & > div {
+    #user-panel {
+        width: @user-panel-width;
+    }
+    #admin-menu {
+        width: @entries-panel-width;
+    }
+    #main-trees {
         width: @trees-panel-width;
+
+        #main-trees-container{
+
+            width: @trees-panel-width;
+
+            & > div {
+                width: @trees-panel-width;
+                height:100%;
+            }
+        }
+
+        &.minified {
+            width:1px;
+
+            #main-trees-overlay{
+                .opacity(0.7);
+            }
+
+            #main-trees-container{
+                left:-@trees-panel-width/4;
+            }
+        }
     }
 
-    &.minified {
-        .transform(scale3D(0,1,1));
-        width: 1px;
+    #main-content {
+        & > div {
+            overflow-y: auto;
+        }
+
+        #main-content-overlay{
+            display: none;
+            position: absolute;
+            top:0; right:0; bottom:0; left:0;
+            background: #000;
+            .opacity(0);
+            z-index:4;
+        }
+
+        #canvasloader-container{
+            position: fixed;
+            top:50%; left:50%;
+            margin:-20px 0 0 -20px;
+            z-index:12;
+        }
+
+        #back-top-button{
+            position: fixed;
+            right:15px; bottom:15px;
+            width:36px; height:36px;
+            line-height:36px;
+            text-align: center;
+            background: #fff;
+            border:1px solid #cbcbcb;
+            color:@grey-medium;
+            cursor: pointer;
+            z-index:3;
+
+            &:hover{
+                background: darken(#fff, 10%);
+                border-color: darken(#cbcbcb, 10%);
+            }
+        }
     }
 }
+

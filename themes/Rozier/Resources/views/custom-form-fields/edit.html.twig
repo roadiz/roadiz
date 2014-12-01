@@ -1,0 +1,20 @@
+{% if not head.ajax %}{% set baseTemplate = 'custom-form-fields/editBase.html.twig' %}{% else %}{% set baseTemplate = 'custom-form-fields/ajaxEditBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block subcontent %}
+
+    <article class="content content-node-type-field-edit">
+       {% form_theme form 'forms.html.twig' %}
+        <form id="edit-custom-form-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-custom-form-field-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+    </article>
+
+{% endblock %}

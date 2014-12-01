@@ -1,37 +1,49 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-group-roles">
-	<h1 id="group-title">Edit {{ group.getName }} roles</h1>
+<section class="content-global edit-group">
 
-	{% include 'groups/navBar.html.twig' with {'group':group, current:'roles'} %}
+	<header class="content-header header-group header-group-roles">
+        <h1 class="content-title group-add-title">{{ "edit.group.%name%.roles"|trans({'%name%': group.getName}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>    
+		{% include 'groups/navBar.html.twig' with {'group':group, current:'roles'} %}
+    </header>
 
-	<table class="groups-roles uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}Role{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for role in group.getRolesEntities %}
-			<tr>
-				<td>{{ role.getName }}</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsRemoveRolesPage', { groupId: group.getId, roleId: role.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	<h2>{% trans %}Add a role{% endtrans %}</h2>
+    <article class="content content-edit">
+    	<div class="content-table-cont">
+			<table class="content-table groups-roles uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}role{% endtrans %}</th>
+			            <th class="table-actions-row">{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for role in group.getRolesEntities %}
+					<tr>
+						<td>{{ role.getName }}</td>
+						<td>
+						{% spaceless %}
+                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('groupsRemoveRolesPage', { groupId: group.getId, roleId: role.getId }) }}" title="{% trans %}unlink.role{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                        {% endspaceless %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<hr />
+		<h2>{% trans %}add.a.role{% endtrans %}</h2>
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+		{% form_theme form 'forms.html.twig' %}
+		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.role{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+	</article>
+
+	{% include 'groups/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

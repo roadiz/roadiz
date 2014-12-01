@@ -1,0 +1,75 @@
+[
+{
+    "node_name": "home",
+    "node_type": "Page",
+    "home": true,
+    "visible": true,
+    "status": 30,
+    "locked": false,
+    "priority": 0.8,
+    "hiding_children": false,
+    "archived": false,
+    "sterile": false,
+    "children_order": "order",
+    "children_order_direction": "ASC",
+    "children": [
+        {
+            "node_name": "about",
+            "node_type": "Page",
+            "home": false,
+            "visible": true,
+            "status": 30,
+            "locked": false,
+            "priority": 0.8,
+            "hiding_children": false,
+            "archived": false,
+            "sterile": false,
+            "children_order": "order",
+            "children_order_direction": "ASC",
+            "children": [],
+            "nodes_sources": [
+                {
+                    "translation": "en",
+                    "title": "About",
+                    "meta_title": "",
+                    "meta_keywords": "",
+                    "meta_description": "",
+                    "content": "This is a about example page.",
+                    "url_aliases": []
+                },
+                {
+                    "translation": "fr",
+                    "title": "A propo",
+                    "meta_title": "",
+                    "meta_keywords": "",
+                    "meta_description": "",
+                    "content": "Ceci est une page d'exemple (\"A propo\").",
+                    "url_aliases": []
+                }
+            ],
+            "tags": []
+        }
+    ],
+    "nodes_sources": [
+        {
+            "translation": "en",
+            "title": "Home",
+            "meta_title": "",
+            "meta_keywords": "",
+            "meta_description": "",
+            "content": "This is my home!",
+            "url_aliases": []
+        },
+        {
+            "translation": "fr",
+            "title": "Acceuil",
+            "meta_title": "",
+            "meta_keywords": "",
+            "meta_description": "",
+            "content": "Ceci est mon acceuil!",
+            "url_aliases": []
+        }
+    ],
+    "tags": []
+}
+]

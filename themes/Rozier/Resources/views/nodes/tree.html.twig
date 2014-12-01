@@ -1,12 +1,36 @@
-{% extends 'base.html.twig' %}
-{% block content %}
-<section id="manage-node">
-	<h1 id="node-title">Tree {{ source.getTitle }}</h1>
-	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-	{% include 'nodes/navBar.html.twig' with {"current": 'tree'} %}
-	{% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
+{% block content %}
+<section class="content-global stack-tree">
+
+    <header class="content-header header-node header-nodes-tree">
+        {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+        <h1 class="content-title node-edit-title">{{ source.getTitle }}</h1>
+
+        {% include 'widgets/countFiltersBar.html.twig' with {filters: specificNodeTree.filters} only %}
+        {% include 'nodes/navBack.html.twig' %}
+        {% include 'nodes/navBar.html.twig' with {"current": 'tree'} %}
+
+        {% if node.stackTypes|length %}
+        <div class="content-header-action-menu stack-tree-quick-creation">
+            {% for stackType in node.stackTypes %}
+            <a data-children-node-type="{{ stackType.id }}"
+               data-children-parent-node="{{ node.id }}"
+               class="uk-button rz-no-ajax-link rz-add-child-node"
+               href="#"><i class="uk-icon-rz-plus-simple"></i> {{ "add.a.%nodeType%"|trans({'%nodeType%': stackType.getDisplayName}) }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </header>
+
+    {% include 'nodes/filtersBar.html.twig' with {filters: specificNodeTree.filters,deleteNodesForm:deleteNodesForm, tagNodesForm:tagNodesForm} only %}
+
+    <article class="content content-no-action-menu">
+        {% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
+    </article>
 
     {% include 'nodes/actionsMenu.html.twig' %}
+
 </section>
 {% endblock %}
+

@@ -1,10 +1,40 @@
-<li class="uk-nestable-item" data-document-id="{{ document.getId }}">
-	<div class="uk-nestable-handle"></div>&nbsp;
+{% spaceless %}
+<li class="uk-sortable-list-item documents-widget-sortable-list-item" data-document-id="{{ document.getId }}">
+
+	<div class="uk-sortable-handle"></div>
+
+    <div class="document-border" style="background-color:{{ head.mainColor }};"></div>
+
 	{% if document.isImage %}
-	<img src="{{ document.getViewer.getDocumentUrlByArray({"width":40, "crop":"1x1", "quality":50}) }}" />
+	   <img class="document-image" src="{{ document.getViewer.getDocumentUrlByArray({"width":80, "crop":"1x1", "quality":50}) }}" />
 	{% endif %}
-	<span class="document-name">{{ document.getFilename }}</span>
+
 	<input type="hidden" name="{{ full_name }}" value="{{ document.getId }}" />
-	<a href="{{ path('documentsEditPage', { documentId: document.getId}) }}" class="uk-button uk-button-mini"><i class="uk-icon-pencil"></i> {% trans %}edit.document{% endtrans %}</a>
-	<a data-document-widget-unlink-document href="#" class="uk-button uk-button-mini uk-button-danger"><i class="uk-icon-trash-o"></i> {% trans %}unlink.document{% endtrans %}</a>
+    <div class="document-overflow">
+        <div class="document-links">
+             <a href="{{ path('documentsEditPage', { documentId: document.getId}) }}" class="uk-button document-link uk-button-mini">
+                <i class="uk-icon-rz-pencil"></i>
+                <span class="label">{% trans %}edit.document{% endtrans %}</span>
+            </a>
+            <a data-document-widget-unlink-document href="#" class="uk-button uk-button-mini document-link uk-button-danger rz-no-ajax-link">
+                <i class="uk-icon-rz-minus"></i>
+                <span class="label">{% trans %}unlink.document{% endtrans %}</span>
+            </a>
+        </div>
+        {% if document.isEmbed %}
+            <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
+            <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
+        {% else %}
+            <div class="document-mime-type">{{ document.getShortMimeType }}</div>
+        {% endif %}
+
+        <a data-document-widget-link-document href="#" class="uk-button uk-button-mini link-button">
+            <div class="link-button-inner">
+                <i class="uk-icon-rz-plus"></i>
+                <span class="label">{% trans %}link.document{% endtrans %}</span>
+            </div>
+        </a>
+    </div>
+    <div class="document-name">{{ document.getFilename|centralTruncate(12, -4)}}</div>
 </li>
+{% endspaceless %}

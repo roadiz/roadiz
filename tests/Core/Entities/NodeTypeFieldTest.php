@@ -7,7 +7,7 @@
  * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
-use RZ\Renzo\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 /**
  * Test node-type field features
  */

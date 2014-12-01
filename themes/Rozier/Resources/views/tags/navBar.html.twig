@@ -1,20 +1,19 @@
 {% set tTag = tag.getTranslatedTags.first %}
-<nav class="tag-edit-navigation uk-navbar">
+<nav class="tag-edit-navigation navbar-navigation uk-navbar">
 	<ul class="uk-navbar-nav">
+		{% if tag.getChildren|length %}
 		<li class="{% if current == 'tree' %}uk-active{% endif %}">
 			<a href="{{ path('tagsTreePage', { tagId: tag.getId }) }}">{% trans %}tag.tree{% endtrans %}</a>
 		</li>
+		{% endif %}
 		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
-			<a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: tTag.getTranslation.getId }) }}">{% trans %}tag.parameters{% endtrans %}</a>
+			<a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: tTag.getTranslation.getId }) }}">{% trans %}tag.content{% endtrans %}</a>
+		</li>
+		<li class="{% if current == 'settings' %}uk-active{% endif %}" >
+			<a href="{{ path('tagsSettingsPage', { tagId: tag.getId }) }}">{% trans %}tag.settings{% endtrans %}</a>
 		</li>
 		<li class="{% if current == 'nodes' %}uk-active{% endif %}" >
 			<a href="{{ path('tagsEditNodesPage', { tagId: tag.getId }) }}">{% trans %}tag.nodes{% endtrans %}</a>
 		</li>
 	</ul>
-	<div class="uk-navbar-content">
-		<a class="uk-button" href="{{ path('tagsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.tags{% endtrans %}</a>
-	</div>
-	<div class="uk-navbar-content uk-navbar-flip">
-		<a class="uk-button uk-button-danger" href="{{ path('tagsDeletePage', { tagId: tag.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
-	</div>
 </nav>

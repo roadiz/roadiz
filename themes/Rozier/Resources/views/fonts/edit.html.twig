@@ -1,17 +1,27 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-font">
-	<h1 id="font-title">Edit {{ font.getName }}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('fontsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to fonts{% endtrans %}</a></nav>
+<section class="content-global edit-font">
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
+    <header class="content-header header-font header-font-add">
+        <h1 class="content-title font-add-title">{{ "edit.font.%name%"|trans({'%name%': font.getName}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('fontsHomePage') }}" title="{% trans %}back_to.fonts{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </header>
 
-	    <fieldset data-uk-margin>
-		    <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-check"></i> edit.font</button>
-	   	</fieldset>
-	</form>
+    <article class="content content-edit">
+    	{% form_theme form 'forms.html.twig' %}
+    	<form id="edit-font-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    	    {{ form_widget(form) }}
+
+    	    <fieldset data-uk-margin>
+    		    <button data-action-save="#edit-font-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+    	   	</fieldset>
+    	</form>
+    </article>
+
+    {% include 'fonts/actionsMenu.html.twig' with {"font": font} only %}
 </section>
 {% endblock %}

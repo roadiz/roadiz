@@ -1,50 +1,60 @@
-{% extends 'base.html.twig' %}
-
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-users">
-	<h1 id="title">{% trans %}Users{% endtrans %}</h1>
-	<nav><a class="uk-button" href="{{ path('usersAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a user{% endtrans %}</a></nav>
+<section class="content-global content-nav-and-filters">
+
+	<header class="content-header header-user header-user-list">
+        <h1 class="content-title user-add-title">{% trans %}users{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
+        <div class="content-header-action-menu">
+	    	<a class="uk-button" href="{{ path('usersAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.user{% endtrans %}</a>
+	    </div>
+    </header>
 
 	{% include 'widgets/filtersBar.html.twig' %}
 
-	<table class="users uk-table">
-		<thead>
-	        <tr>
-	            <th></th>
-	            <th>{% trans %}user.username{% endtrans %}
-	            	{% if request.query.get("field") == 'username' and request.query.get("ordering") == "DESC" %}
-	            		<a href="?field=username&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
-	            	{% else %}
-	            		<a href="?field=username&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
-	            	{% endif %}
-	            </th>
-	            <th>{% trans %}user.email{% endtrans %}
-	            	{% if request.query.get("field") == 'email' and request.query.get("ordering") == "DESC" %}
-	            		<a href="?field=email&amp;ordering=ASC"><i class="uk-icon-sort-down"></i></a>
-	            	{% else %}
-	            		<a href="?field=email&amp;ordering=DESC"><i class="uk-icon-sort-up"></i></a>
-	            	{% endif %}
-	            </th>
-	            <th>{% trans %}user.roles{% endtrans %}</th>
-	            <th>{% trans %}actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for user in users %}
-			<tr>
-				<td><img width="50" height="50" class="uk-thumbnail" src="{{ user.getPictureUrl }}" alt="{{ user.getUsername }}" /></td>
-				<td><a href="{{ path('usersEditPage', { userId: user.getId }) }}">{{ user.getUsername }}</a></td>
-				<td>{{ user.getEmail }}</td>
-				<td>
-					<i class="uk-icon-star"></i> {% transchoice user.getRoles|length %}{0} No roles|{1} 1 role|]1,Inf] %count% roles{% endtranschoice %}
-				</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersDeletePage', { userId: user.getId }) }}">{% trans %}Delete{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	<article class="content content-no-action-menu">
+        <div class="content-table-cont">
+			<table class="content-table users uk-table">
+				<thead>
+			        <tr>
+			            <th class="table-actions-userpicture-row mobile-hidden"></th>
+			            <th>{% trans %}user.username{% endtrans %}
+			            	{% if request.query.get("field") == 'username' and request.query.get("ordering") == "DESC" %}
+			            		<a href="?field=username&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
+			            	{% else %}
+			            		<a href="?field=username&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+			            	{% endif %}
+			            </th>
+			            <th>{% trans %}user.email{% endtrans %}
+			            	{% if request.query.get("field") == 'email' and request.query.get("ordering") == "DESC" %}
+			            		<a href="?field=email&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
+			            	{% else %}
+			            		<a href="?field=email&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+			            	{% endif %}
+			            </th>
+			            <th class="mobile-hidden">{% trans %}user.roles{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for user in users %}
+					<tr>
+						<td class="mobile-hidden"><img width="45" height="45" class="uk-thumbnail" src="{{ user.getPictureUrl }}" alt="{{ user.getUsername }}" /></td>
+						<td><a href="{{ path('usersEditPage', { userId: user.getId }) }}">{{ user.getUsername }}</a></td>
+						<td>{{ user.getEmail }}</td>
+						<td class="mobile-hidden">{% transchoice user.getRoles|length %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}</td>
+						<td>
+						{% spaceless %}
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('usersEditPage', { userId: user.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('usersDeletePage', { userId: user.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                        {% endspaceless %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</article>
 </section>
 {% endblock %}

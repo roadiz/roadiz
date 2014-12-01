@@ -9,10 +9,10 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
-use Themes\DefaultTheme\DefaultApp;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Utils\StringHandler;
+use Themes\DefaultTheme\DefaultThemeApp;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,15 +20,15 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Frontend controller to handle Page node-type request.
  */
-class PageController extends DefaultApp
+class PageController extends DefaultThemeApp
 {
 
     /**
      * Default action for any Page node.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Renzo\Core\Entities\Node              $node
-     * @param RZ\Renzo\Core\Entities\Translation       $translation
+     * @param RZ\Roadiz\Core\Entities\Node              $node
+     * @param RZ\Roadiz\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -36,9 +36,10 @@ class PageController extends DefaultApp
         Request $request,
         Node $node = null,
         Translation $translation = null
-    )
-    {
+    ) {
         $this->prepareThemeAssignation($node, $translation);
+
+        $this->getService('stopwatch')->start('twigRender');
 
         return new Response(
             $this->getTwig()->render('types/page.html.twig', $this->assignation),

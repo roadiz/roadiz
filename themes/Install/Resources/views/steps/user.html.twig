@@ -1,32 +1,59 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="uk-panel-title">{% trans %}install.user{% endtrans %}</h1>
-    <p>{% trans %}user.message{% endtrans %}</p>
 
-    {% if error %}
-    <div class="uk-alert uk-alert-danger">
-    	<a href="#" class="uk-alert-close uk-close"></a>
-    	<p>{% trans %}cannot.create.user{% endtrans %}</p>
-   		<p>{{ errorMessage }}</p>
-    </div>
-    {% endif %}
+    <article id="content-user" class="content">
 
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(userForm) }}>
-   		{{ form_errors(userForm) }}
+        <div class="content-title-cont">
+            <h1 class="content-title">{% trans %}user.title{% endtrans %}</h1>
+        </div>
 
-	    {% for item in userForm %}
-	    	{% if item.vars.name != "_token" %}
-			    <div class="uk-form-row">
-			    	<label class="uk-form-label" for="{{ item.vars.id }}">{% if item.vars.label %}{{ item.vars.label|trans }}{% else %}{{ item.vars.name|trans }}{% endif %}</label>
-			        {{ form_errors(item) }}
-			        {{ form_widget(item) }}
-			    </div>
-	    	{% endif %}
-	    {% endfor %}
-	    {{ form_rest(userForm) }}
-  		<p><button class="uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}create.user{% endtrans %}</button></p>
-	</form>
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item last"></div>
+        </div>
 
-    <p><a class="uk-button uk-button-success" href="{{ path('installDatabasePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a></p>
+        <div class="content-text-cont">
+
+            <div class="content-intro">
+                {% trans %}user.message{% endtrans %}
+            </div>
+
+            {% if error %}
+            <div class="uk-alert uk-alert-danger">
+                <a href="#" class="uk-alert-close uk-close"></a>
+                <p>{% trans %}cannot.create.user{% endtrans %}</p>
+                <p>{{ errorMessage }}</p>
+            </div>
+            {% endif %}
+
+            {% form_theme userForm 'forms.html.twig' %}
+            <form id="formUser" class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(userForm) }}>
+
+                <div class="content-text content-text-form">
+                    {{ form_widget(userForm) }}
+                </div>
+
+                {% spaceless %}
+                    <div class="content-buttons">
+
+                        <a class="content-button uk-button uk-button-success" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.theme{% endtrans %}</a>
+                        <a class="content-button uk-button" href="{{ path('installDonePage') }}"><i class="uk-icon-share"></i> {% trans %}skip.user.goto.done{% endtrans %}</a>
+                        <button class="content-button form-save-button uk-button uk-button-primary"><i class="uk-icon-magic"></i> {% trans %}user.create{% endtrans %}</button>
+
+                    </div>
+                {% endspaceless %}
+
+            </form>
+
+        </div>
+
+    </article>
+
 {% endblock %}

@@ -1,0 +1,15 @@
+<nav class="navbar-navigation dashboard-navigation uk-navbar">
+    {% spaceless %}
+    <ul class="uk-navbar-nav">
+        <li class="uk-navbar-item{% if current == 'dashboard' %} uk-active{% endif %}">
+            <a class="uk-navbar-link" href="{{ path('adminHomePage') }}">{% trans %}dashboard{% endtrans %}</a>
+        </li>
+        <li class="uk-navbar-item{% if current == 'history' %} uk-active{% endif %}" >
+            <a class="uk-navbar-link" href="{{ path('historyHomePage') }}">{% trans %}history{% endtrans %}</a>
+        </li>
+        <li class="uk-navbar-item{% if current == 'comments' %} uk-active{% endif %}">
+            <a class="uk-navbar-link" href="#">{% trans %}comments{% endtrans %}</a>
+        </li>
+    </ul>        
+    {% endspaceless %}
+</nav>

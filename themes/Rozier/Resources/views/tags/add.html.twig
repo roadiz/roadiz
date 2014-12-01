@@ -1,17 +1,28 @@
-{% extends 'base.html.twig' %}
-
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-tag">
-	<h1 id="tag-title">{% trans %}Add a new tag{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('tagsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to tags{% endtrans %}</a></nav>
+<section class="content-global">
 
-	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+    <header class="content-header header-tags header-tags-add">
+        <h1 class="content-title nodes-list-title">{% trans %}add.a.tag{% endtrans %}</h1>
+        {% include 'tags/navBack.html.twig' with {} only %}
+    </header>
+
+    <article class="content content-tags-add">
+    	{% form_theme form 'forms.html.twig' %}
+        <form id="add-tag-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	{% spaceless %}
+                <button data-action-save="#add-tag-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+       		</fieldset>
+    	</form>
+    </article>
+
+    {% include 'tags/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

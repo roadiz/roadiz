@@ -10,16 +10,16 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodeType;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\NodeTypeHandler;
-use RZ\Renzo\Core\Serializers\NodeTypeJsonSerializer;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
+use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,18 +47,24 @@ class NodeTypesUtilsController extends RozierApp
      */
     public function exportJsonFileAction(Request $request, $nodeTypeId)
     {
-        $nodeType = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+
+        $nodeType = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         $response =  new Response(
-            NodeTypeJsonSerializer::serialize($noteType),
+            NodeTypeJsonSerializer::serialize($nodeType),
             Response::HTTP_OK,
             array()
         );
 
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $nodeType->getName() . '.rzt')); // Rezo-Zero Type
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $nodeType->getName() . '.rzt'
+            )
+        ); // Rezo-Zero Type
 
         $response->prepare($request);
 
@@ -74,6 +80,8 @@ class NodeTypesUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+
         $form = $this->buildImportJsonFileForm();
 
         $form->handleRequest();
@@ -90,8 +98,8 @@ class NodeTypesUtilsController extends RozierApp
                 if (null !== json_decode($serializedData)) {
 
                     $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
-                    $existingNT = $this->getKernel()->em()
-                        ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+                    $existingNT = $this->getService('em')
+                        ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                         ->findOneBy(array('name'=>$nodeType->getName()));
 
                     if (null === $existingNT) {
@@ -100,22 +108,22 @@ class NodeTypesUtilsController extends RozierApp
                          *
                          * First persist node-type
                          */
-                        $this->getKernel()->em()->persist($nodeType);
+                        $this->getService('em')->persist($nodeType);
 
                         // Flush before creating node-type fields.
-                        $this->getKernel()->em()->flush();
+                        $this->getService('em')->flush();
 
                         foreach ($nodeType->getFields() as $field) {
                             /*
                              * then persist each field
                              */
                             $field->setNodeType($nodeType);
-                            $this->getKernel()->em()->persist($field);
+                            $this->getService('em')->persist($field);
                         }
 
                         $msg = $this->getTranslator()->trans('nodeType.imported.created');
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getLogger()->info($msg);
+                        $this->getService('logger')->info($msg);
 
                     } else {
                         /*
@@ -126,20 +134,20 @@ class NodeTypesUtilsController extends RozierApp
 
                         $msg = $this->getTranslator()->trans('nodeType.imported.updated');
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getLogger()->info($msg);
+                        $this->getService('logger')->info($msg);
                     }
 
-                    $this->getKernel()->em()->flush();
+                    $this->getService('em')->flush();
                     $nodeType->getHandler()->updateSchema();
 
                     /*
                      * Redirect to update schema page
                      */
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'nodeTypesSchemaUpdate',
                             array(
-                                '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                                '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
                             )
                         )
                     );
@@ -149,11 +157,11 @@ class NodeTypesUtilsController extends RozierApp
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getLogger()->error($msg);
+                    $this->getService('logger')->error($msg);
 
                     // redirect even if its null
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'nodeTypesImportPage'
                         )
                     );
@@ -164,11 +172,11 @@ class NodeTypesUtilsController extends RozierApp
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');
                 $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->getLogger()->error($msg);
+                $this->getService('logger')->error($msg);
 
                 // redirect even if its null
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'nodeTypesImportPage'
                     )
                 );
@@ -193,9 +201,11 @@ class NodeTypesUtilsController extends RozierApp
      */
     private function buildImportJsonFileForm()
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('node_type_file', 'file');
+            ->add('node_type_file', 'file', array(
+                'label' => $this->getTranslator()->trans('nodeType.file'),
+            ));
 
         return $builder->getForm();
     }

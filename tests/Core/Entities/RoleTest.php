@@ -8,7 +8,7 @@
  * @author Thomas Aufresne
  */
 
-use RZ\Renzo\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Role;
 
 /**
  * Test Role features
@@ -33,7 +33,7 @@ class RoleTest extends PHPUnit_Framework_TestCase
     public function roleNameProvider()
     {
         return array(
-            array("role___asdfasdf", "ROLE_ASDFASDF"),
+            array("role___àsdfasdf", "ROLE_ASDFASDF"),
             array("asdf ààsdf", "ROLE_ASDF_AASDF"),
             array("asdfasdf", "ROLE_ASDFASDF"),
         );

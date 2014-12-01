@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+    <article id="content-hello" class="content">
+
+        <div class="content-title-cont">
+            <h1 class="content-title">{% trans %}import.title{% endtrans %}</h1>
+        </div>
+
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item last"></div>
+        </div>
+
+        <div class="content-text-cont">
+
+            <div class="content-text">
+
+                <div class="content-intro">
+                    {% trans %}import.message{% endtrans %}
+                </div>
+
+                <table id="import-table" class="install-table uk-table">
+                    <tr>
+                        <th></th>
+                        <th>{% trans %}import.step_name{% endtrans %}</th>
+                        <th class="status">{% trans %}status{% endtrans %}</th>
+                    </tr>
+                    {% for name in names %}
+                        <tr class="install-table-item">
+                            <td></td>
+                            <td>{{ name|trans }}</td>
+                            <td class="status">
+                                <div class="uk-badge uk-badge-notification" id="{{ name }}"><i class="uk-icon-circle-o"></i></div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+            </div>
+
+            {% spaceless %}
+            <div class="content-buttons">  
+
+                <a class="content-button uk-button" href="{{ path('installDatabasePage')  }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a>
+                <a id="next-step-button" class="content-button uk-button uk-button-primary" href="{{ path('installUserPage')  }}">{% trans %}goto.user{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+                
+            </div>                    
+            {% endspaceless %} 
+
+        </div>
+
+    </article>
+
+{% endblock %}
+
+{% block customScripts %}
+<script type="text/javascript">
+    (function() {
+        Install.importRoutes = [];
+        {% for name in names %}
+        Install.importRoutes.push({'url': '{{ path(name) }}', 'id':'{{ name }}'});
+        {% endfor %}
+    })();
+</script>
+{% endblock %}

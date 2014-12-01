@@ -1,0 +1,17 @@
+{% spaceless %}
+<nav data-action-menu class="actions-menu uk-navbar rz-vertical-align">
+    {# Delete current node #}
+    {% if (securityContext.Granted('ROLE_ACCESS_CUSTOMFORMS_DELETE')) %}
+    {% if customForm.getId %}
+{#     <a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: nodeType.getId }) }}">
+        <span class="icon-container"><i class="uk-icon-node-type-fields"></i></span>
+        <span class="label"><span class="label-text">{% trans %}manage.nodeTypeFields{% endtrans %}</span></span>
+    </a> #}
+    <a class="uk-button uk-button-danger" href="{{ path('customFormsDeletePage', { customFormId: customForm.getId}) }}">
+        <span class="icon-container"><i class="uk-icon-rz-trash-o"></i></span>
+        <span class="label"><span class="label-text">{% trans %}delete{% endtrans %}</span></span>
+    </a>
+    {% endif %}
+    {% endif %}
+</nav>
+{% endspaceless %}

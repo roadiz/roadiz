@@ -1,44 +1,59 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 
 {% block content %}
-<section id="manage-translations">
-	<h1 id="title">{% trans %}Translations{% endtrans %}</h1>
-	<nav><a class="uk-button" href="{{ path('translationsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a translation{% endtrans %}</a></nav>
+<section class="content-global edit-translation content-nav-and-filters">
+
+	<header class="content-header header-translation header-translation-list">
+        <h1 class="content-title translation-add-title">{% trans %}translations{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
+        <div class="content-header-action-menu">
+			<a class="uk-button" href="{{ path('translationsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.translation{% endtrans %}</a>
+		</div>
+    </header>
+
 	{% include 'widgets/filtersBar.html.twig' %}
-	<table class="translations uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Locale{% endtrans %}</th>
-	            <th>{% trans %}Status{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for t in translations %}
-			<tr>
-				<td><a href="{{ path('translationsEditPage', { translationId: t.translation.getId }) }}">{{ t.translation.getName }}</a></td>
-				<td>{{ t.translation.getLocale }}</td>
-				<td>
-				{% if t.translation.isAvailable == false %}<div class="uk-badge uk-badge-warning">{% trans %}Not available{% endtrans %}</div>{% endif %}
-				{% if t.translation.isDefaultTranslation == true %}
-				<div class="uk-badge uk-badge-notification"><i class="uk-icon-star"></i></div>
-				{% endif %}
-				</td>
-				<td>
-				{% if t.translation.isDefaultTranslation == false %}
-					{% form_theme t.defaultForm 'forms.html.twig' %}
-					<form action="#" method="post" {{ form_enctype(t.defaultForm) }}>
-						{{ form_widget(t.defaultForm) }}
-						<button class="uk-button uk-button-small" type="submit"><i class="uk-icon-star"></i> {% trans %}Set as default{% endtrans %}</button>
-					</form>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}Delete{% endtrans %}</a>
-				{% endif %}
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+
+	<article class="content content-no-action-menu">
+        <div class="content-table-cont">
+			<table class="translations content-table uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}name{% endtrans %}</th>
+			            <th>{% trans %}translation.locale{% endtrans %}</th>
+			            <th>{% trans %}status{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for t in translations %}
+					<tr>
+						<td><a href="{{ path('translationsEditPage', { translationId: t.translation.getId }) }}">{{ t.translation.getName }}</a></td>
+						<td>{{ t.translation.getLocale }}</td>
+						<td>
+						{% if t.translation.isAvailable == false %}<div class="uk-badge uk-badge-warning">{% trans %}not_available{% endtrans %}</div>{% endif %}
+						{% if t.translation.isDefaultTranslation == true %}
+						<div class="uk-badge uk-badge-table uk-badge-notification" title="{% trans %}default.translation{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-star"></i></div>
+						{% endif %}
+						</td>
+						<td>
+						{% spaceless %}
+							<a class="uk-button uk-button-content uk-button-small" title="{% trans %}edit{% endtrans %}" href="{{ path('translationsEditPage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+							{% if t.translation.isDefaultTranslation == false %}
+								{% form_theme t.defaultForm 'forms.html.twig' %}
+								<form class="uk-form-translation-default" action="#" method="post" {{ form_enctype(t.defaultForm) }}>
+									{{ form_widget(t.defaultForm) }}
+									<button class="uk-button uk-button-content uk-button-small" title="{% trans %}set.default{% endtrans %}" type="submit" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-star"></i></button>
+								</form>
+								<a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" title="{% trans %}delete{% endtrans %}" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+							{% endif %}
+                        {% endspaceless %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</article>
 </section>
 {% endblock %}

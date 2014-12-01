@@ -10,15 +10,17 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Setting;
-use RZ\Renzo\Core\Entities\SettingGroup;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Entities\SettingGroup;
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\Serializers\SettingJsonSerializer;
-use RZ\Renzo\Core\Serializers\SettingCollectionJsonSerializer;
+use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
+use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+
+use RZ\Roadiz\CMS\Importers\SettingsImporter;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,12 +47,16 @@ class SettingsUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
 
-        $groups = $this->getKernel()->em()
-                  ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
+        $groups = $this->getService('em')
+                  ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                   ->findAll();
-        $lonelySettings = $this->getKernel()->em()
-                          ->getRepository('RZ\Renzo\Core\Entities\Setting')
+        $lonelySettings = $this->getService('em')
+                          ->getRepository('RZ\Roadiz\Core\Entities\Setting')
                           ->findBy(array('settingGroup' => null));
         //\Doctrine\Common\Util\Debug::dump($lonelySettings);
         $tmpGroup = new SettingGroup();
@@ -65,9 +71,13 @@ class SettingsUtilsController extends RozierApp
             array()
         );
 
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'setting-all-' . date("YmdHis")  . '.rzt')); // Rezo-Zero Type
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'setting-all-' . date("YmdHis")  . '.rzt'
+            )
+        ); // Rezo-Zero Type
 
         $response->prepare($request);
 
@@ -85,6 +95,11 @@ class SettingsUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
+        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
+        //     return $this->throw404();
+
         $form = $this->buildImportJsonFileForm();
 
         $form->handleRequest();
@@ -99,83 +114,44 @@ class SettingsUtilsController extends RozierApp
                 $serializedData = file_get_contents($file['tmp_name']);
 
                 if (null !== json_decode($serializedData)) {
-                    $settingGroups = SettingCollectionJsonSerializer::deserialize($serializedData);
-                    $groups = $this->getKernel()->em()
-                              ->getRepository('RZ\Renzo\Core\Entities\SettingGroup')
-                              ->findAll();
-                    $settings = $this->getKernel()->em()
-                              ->getRepository('RZ\Renzo\Core\Entities\Setting')
-                              ->findAll();
+                    if (SettingsImporter::importJsonFile($serializedData)) {
+                        $msg = $this->getTranslator()->trans('setting.imported');
+                        $request->getSession()->getFlashBag()->add('confirm', $msg);
+                        $this->getService('logger')->info($msg);
 
+                        $this->getService('em')->flush();
 
-                    $groups = new ArrayCollection($groups);
-                    foreach ($settingGroups as $group) {
-                        if ($group->getName() != "__default__") {
-                            $baseGroup = null;
-                            foreach ($groups as $existingGroup) {
-                                if ($group->getName() == $existingGroup->getName()) {
-                                    $baseGroup = $existingGroup;
-                                    break ;
-                                }
-                            }
-                            if ($baseGroup === null) {
-                                $this->getKernel()->em()->persist($group);
-                                $this->getKernel()->em()->flush();
-                                $baseGroup = $group;
-                            }
-                        } else {
-                            $baseGroup = null;
-                        }
-                        foreach ($group->getSettings() as $setting) {
-                            $baseEntry = null;
-                            foreach ($settings as $existingSetting) {
-                                if ($setting->getName() == $existingSetting->getName()) {
-                                    $baseEntry = $existingSetting;
-                                    break ;
-                                }
-                            } if ($baseEntry === null) {
-                                $this->getKernel()->em()->persist($setting);
-                                $this->getKernel()->em()->flush();
-                                if ($baseGroup != null) {
-                                    $baseGroup->addSetting($baseEntry);
-                                }
-                            } else {
-                                $baseEntry->setType($setting->getType());
-                                $baseEntry->setValue($setting->getValue());
-                                $baseEntry->setVisible($setting->isVisible());
-                                if ($baseGroup !== null) {
-                                    $baseEntry->setSettingGroup($baseGroup);
-                                } else {
-                                    $baseEntry->setSettingGroup(null);
-                                }
-                            }
-                        }
-                        $this->getKernel()->em()->flush();
+                        // redirect even if its null
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate(
+                                'settingsHomePage'
+                            )
+                        );
+                        $response->prepare($request);
+                        return $response->send();
+                    } else {
+                        $msg = $this->getTranslator()->trans('file.format.not_valid');
+                        $request->getSession()->getFlashBag()->add('error', $msg);
+                        $this->getService('logger')->error($msg);
+
+                        // redirect even if its null
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate(
+                                'settingsImportPage'
+                            )
+                        );
+                        $response->prepare($request);
+
+                        return $response->send();
                     }
-
-                    $msg = $this->getTranslator()->trans('setting.imported');
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
-
-                    $this->getKernel()->em()->flush();
-
-                     // redirect even if its null
-                    $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
-                            'settingsHomePage'
-                        )
-                    );
-                    $response->prepare($request);
-                    return $response->send();
-
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getLogger()->error($msg);
+                    $this->getService('logger')->error($msg);
 
                     // redirect even if its null
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'settingsImportPage'
                         )
                     );
@@ -186,7 +162,7 @@ class SettingsUtilsController extends RozierApp
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');
                 $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->getLogger()->error($msg);
+                $this->getService('logger')->error($msg);
             }
         }
 
@@ -204,9 +180,11 @@ class SettingsUtilsController extends RozierApp
      */
     private function buildImportJsonFileForm()
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('setting_file', 'file');
+            ->add('setting_file', 'file', array(
+                'label' => $this->getTranslator()->trans('settingFile')
+            ));
 
         return $builder->getForm();
     }

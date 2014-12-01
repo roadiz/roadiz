@@ -13,19 +13,27 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         {# <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.min.css" /> #}
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.gradient.min.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/addons/uikit.addons.min.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/codemirror.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/uikit.gradient.min.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/addons/uikit.addons.min.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/codemirror.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/style.min.css" />
+        <style>
+            /* Login */
+            #login #login-infos #login-logo{
+                background-color:{{ head.mainColor }};
+            }
+        </style>
+
         <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
-    <body>
+    <body id="simple-body">
         {% include 'includes/messages.html.twig' %}
         <div id="main-container">
             <!-- Add your site or application content here -->
+            <div id="splash-container"></div>
             <div id="main_content">
             {% block content %}
-                <h1>{% trans %}Welcome{% endtrans %}</h1>
+                <h1>{% trans %}welcome{% endtrans %}</h1>
             {% endblock %}
             </div>
         </div>
@@ -33,7 +41,12 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
         <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
-
+        {% if splash %}
+        <script>
+            var splash = {'url' : '{{ splash.url }}'};
+        </script>
+        <script src="{{ head.resourcesUrl }}js/login/login.js"></script>
+        {% endif %}
         {% block customScripts %}{% endblock %}
     </body>
 </html>

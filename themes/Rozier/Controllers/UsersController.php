@@ -9,17 +9,15 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\User;
-use RZ\Renzo\Core\Entities\Role;
-use RZ\Renzo\Core\Entities\Group;
-
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Group;
+use RZ\Roadiz\Core\Utils\FacebookPictureFinder;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\FacebookUsernameNotFoundException;
 use Themes\Rozier\RozierApp;
-use RZ\Renzo\Core\Utils\FacebookPictureFinder;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
-
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Renzo\Core\Exceptions\FacebookUsernameNotFoundException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +26,7 @@ use \Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+
 /**
  * {@inheritdoc}
  */
@@ -42,13 +41,15 @@ class UsersController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+
         /*
          * Manage get request to filter list
          */
         $listManager = new EntityListManager(
             $request,
-            $this->getKernel()->em(),
-            'RZ\Renzo\Core\Entities\User'
+            $this->getService('em'),
+            'RZ\Roadiz\Core\Entities\User'
         );
         $listManager->handle();
 
@@ -72,8 +73,13 @@ class UsersController extends RozierApp
      */
     public function editAction(Request $request, $userId)
     {
-        $user = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
+            || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
+            throw AccessDeniedException("You don't have access to this page:" . $role);
+        }
+
+        $user = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -85,21 +91,21 @@ class UsersController extends RozierApp
 
                 try {
                     $this->editUser($form->getData(), $user);
-                    $msg = $this->getTranslator()->trans('user.updated', array('%name%'=>$user->getUsername()));
+                    $msg = $this->getTranslator()->trans('user.%name%.updated', array('%name%'=>$user->getUsername()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (FacebookUsernameNotFoundException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'usersEditPage',
                         array('userId' => $user->getId())
                     )
@@ -131,8 +137,10 @@ class UsersController extends RozierApp
      */
     public function editRolesAction(Request $request, $userId)
     {
-        $user = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+
+        $user = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
 
@@ -143,18 +151,18 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
                 $role = $this->addUserRole($form->getData(), $user);
 
-                $msg = $this->getTranslator()->trans('user.role_linked', array(
+                $msg = $this->getTranslator()->trans('user.%user%.role.%role%.linked', array(
                             '%user%'=>$user->getUserName(),
                             '%role%'=>$role->getName()
                         ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                 * Force redirect to avoid resending form when refreshing page
                 */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'usersEditRolesPage',
                         array('userId' => $user->getId())
                     )
@@ -187,12 +195,14 @@ class UsersController extends RozierApp
      */
     public function removeRoleAction(Request $request, $userId, $roleId)
     {
-        $user = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
-        $role = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
-        if ($user !== null && $role !== null ) {
+        $user = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+        $role = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
+
+        if ($user !== null && $role !== null) {
             $this->assignation['user'] = $user;
             $this->assignation['role'] = $role;
 
@@ -202,15 +212,15 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
 
                 $this->removeUserRole($form->getData(), $user);
-                $msg = $this->getTranslator()->trans('user.role_removed', array('%name%'=>$role->getName()));
+                $msg = $this->getTranslator()->trans('user.%name%.role_removed', array('%name%'=>$role->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'usersEditRolesPage',
                         array('userId' => $user->getId())
                     )
@@ -240,8 +250,10 @@ class UsersController extends RozierApp
      */
     public function editGroupsAction(Request $request, $userId)
     {
-        $user = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+
+        $user = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -252,18 +264,18 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
                 $group = $this->addUserGroup($form->getData(), $user);
 
-                $msg = $this->getTranslator()->trans('user.group_linked', array(
+                $msg = $this->getTranslator()->trans('user.%user%.group.%group%.linked', array(
                             '%user%'=>$user->getUserName(),
                             '%group%'=>$group->getName()
                         ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                 * Force redirect to avoid resending form when refreshing page
                 */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'usersEditGroupsPage',
                         array('userId' => $user->getId())
                     )
@@ -296,10 +308,12 @@ class UsersController extends RozierApp
      */
     public function removeGroupAction(Request $request, $userId, $groupId)
     {
-        $user = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
-        $group = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\Group', (int) $groupId);
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+
+        $user = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+        $group = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -311,18 +325,18 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
                 $group = $this->removeUserGroup($form->getData(), $user);
 
-                $msg = $this->getTranslator()->trans('user.group_removed', array(
+                $msg = $this->getTranslator()->trans('user.%user%.group.%group%.removed', array(
                             '%user%'=>$user->getUserName(),
                             '%group%'=>$group->getName()
                         ));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
 
                 /*
                 * Force redirect to avoid resending form when refreshing page
                 */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'usersEditGroupsPage',
                         array('userId' => $user->getId())
                     )
@@ -353,6 +367,8 @@ class UsersController extends RozierApp
      */
     public function addAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+
         $user = new User();
 
         if ($user !== null) {
@@ -368,21 +384,22 @@ class UsersController extends RozierApp
                     $this->addUser($form->getData(), $user);
                     $user->getViewer()->sendSignInConfirmation();
 
-                    $msg = $this->getTranslator()->trans('user.created', array('%name%'=>$user->getUsername()));
+                    $msg = $this->getTranslator()->trans('user.%name%.created', array('%name%'=>$user->getUsername()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
+
                 } catch (FacebookUsernameNotFoundException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('usersHomePage')
+                    $this->getService('urlGenerator')->generate('usersHomePage')
                 );
                 $response->prepare($request);
 
@@ -411,8 +428,10 @@ class UsersController extends RozierApp
      */
     public function deleteAction(Request $request, $userId)
     {
-        $user = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\User', (int) $userId);
+        $this->validateAccessForRole('ROLE_ACCESS_USERS_DELETE');
+
+        $user = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -427,18 +446,18 @@ class UsersController extends RozierApp
                 try {
                     $this->deleteUser($form->getData(), $user);
 
-                    $msg = $this->getTranslator()->trans('user.deleted', array('%name%'=>$user->getUsername()));
+                    $msg = $this->getTranslator()->trans('user.%name%.deleted', array('%name%'=>$user->getUsername()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('usersHomePage')
+                    $this->getService('urlGenerator')->generate('usersHomePage')
                 );
                 $response->prepare($request);
 
@@ -458,32 +477,32 @@ class UsersController extends RozierApp
     }
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      */
     private function editUser($data, User $user)
     {
         if ($data['username'] != $user->getUsername() &&
-                $this->getKernel()->em()
-                ->getRepository('RZ\Renzo\Core\Entities\User')
+                $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->usernameExists($data['username'])
             ) {
 
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
-                    'user.cannot_update.name_already_exists',
+                    'user.%name%.cannot_update.name_already_exists',
                     array('%name%'=>$data['username'])
                 ),
                 1
             );
         }
         if ($data['email'] != $user->getEmail() &&
-            $this->getKernel()->em()
-                ->getRepository('RZ\Renzo\Core\Entities\User')
+            $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->emailExists($data['email'])) {
 
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
-                    'user.cannot_update.email_already_exists',
+                    'user.%name%.cannot_update.email_already_exists',
                     array('%email%'=>$data['email'])
                 ),
                 1
@@ -496,25 +515,25 @@ class UsersController extends RozierApp
         }
 
         $this->updateProfileImage($user);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->flush();
     }
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      */
     private function addUser($data, User $user)
     {
-        if ($this->getKernel()->em()
-                ->getRepository('RZ\Renzo\Core\Entities\User')
+        if ($this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->usernameExists($data['username']) ||
-            $this->getKernel()->em()
-                ->getRepository('RZ\Renzo\Core\Entities\User')
+            $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->emailExists($data['email'])) {
 
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
-                    'user.cannot_create_already_exists',
+                    'user.%name%.cannot_create_already_exists',
                     array('%name%'=>$data['username'])
                 ),
                 1
@@ -527,56 +546,65 @@ class UsersController extends RozierApp
         }
 
         $this->updateProfileImage($user);
-        $this->getKernel()->em()->persist($user);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->persist($user);
+        $this->getService('em')->flush();
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      */
     private function updateProfileImage(User $user)
     {
         if ($user->getFacebookName() != '') {
-            $facebook = new FacebookPictureFinder($user->getFacebookName());
-            if (false !== $url = $facebook->getPictureUrl()) {
+            try {
+                $facebook = new FacebookPictureFinder($user->getFacebookName());
+                $url = $facebook->getPictureUrl();
                 $user->setPictureUrl($url);
-            } else {
+            } catch (\Exception $e) {
+                $url = "http://www.gravatar.com/avatar/".
+                        md5(strtolower(trim($user->getEmail()))).
+                        "?d=identicon&s=200";
+                $user->setPictureUrl($url);
                 throw new FacebookUsernameNotFoundException(
                     $this->getTranslator()->trans(
-                        'user.facebook_name_does_not_exist',
+                        'user.facebook_name.%name%._does_not_exist',
                         array('%name%'=>$user->getFacebookName())
                     ),
                     1
                 );
-
             }
+        } else {
+            $url = "http://www.gravatar.com/avatar/".
+                    md5(strtolower(trim($user->getEmail()))).
+                    "?d=identicon&s=200";
+            $user->setPictureUrl($url);
         }
     }
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      */
     private function deleteUser($data, User $user)
     {
-        $this->getKernel()->em()->remove($user);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->remove($user);
+        $this->getService('em')->flush();
     }
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
-     * @return RZ\Renzo\Core\Entities\Role
+     * @return RZ\Roadiz\Core\Entities\Role
      */
     private function addUserRole($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $role = $this->getKernel()->em()
-                ->find('RZ\Renzo\Core\Entities\Role', $data['roleId']);
+            $role = $this->getService('em')
+                ->find('RZ\Roadiz\Core\Entities\Role', $data['roleId']);
 
             $user->addRole($role);
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->flush();
 
             return $role;
         }
@@ -586,19 +614,19 @@ class UsersController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
-     * @return RZ\Renzo\Core\Entities\Role
+     * @return RZ\Roadiz\Core\Entities\Role
      */
     private function removeUserRole($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $role = $this->getKernel()->em()
-                ->find('RZ\Renzo\Core\Entities\Role', $data['roleId']);
+            $role = $this->getService('em')
+                ->find('RZ\Roadiz\Core\Entities\Role', $data['roleId']);
 
             if ($role !== null) {
                 $user->removeRole($role);
-                $this->getKernel()->em()->flush();
+                $this->getService('em')->flush();
             }
 
             return $role;
@@ -609,19 +637,19 @@ class UsersController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
-     * @return RZ\Renzo\Core\Entities\Group
+     * @return RZ\Roadiz\Core\Entities\Group
      */
     private function addUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $group = $this->getKernel()->em()
-                ->find('RZ\Renzo\Core\Entities\Group', $data['group']);
+            $group = $this->getService('em')
+                ->find('RZ\Roadiz\Core\Entities\Group', $data['group']);
 
             if ($group !== null) {
                 $user->addGroup($group);
-                $this->getKernel()->em()->flush();
+                $this->getService('em')->flush();
             }
 
             return $group;
@@ -632,19 +660,19 @@ class UsersController extends RozierApp
 
     /**
      * @param array                       $data
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
-     * @return RZ\Renzo\Core\Entities\Group
+     * @return RZ\Roadiz\Core\Entities\Group
      */
     private function removeUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $group = $this->getKernel()->em()
-                ->find('RZ\Renzo\Core\Entities\Group', $data['groupId']);
+            $group = $this->getService('em')
+                ->find('RZ\Roadiz\Core\Entities\Group', $data['groupId']);
 
             if ($group !== null) {
                 $user->removeGroup($group);
-                $this->getKernel()->em()->flush();
+                $this->getService('em')->flush();
             }
 
             return $group;
@@ -654,45 +682,68 @@ class UsersController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
      * @return \Symfony\Component\Form\Form
      */
     private function buildAddForm(User $user)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                         ->createBuilder('form')
                         ->add('email', 'email', array(
+                            'label'=>$this->getTranslator()->trans('email'),
                             'constraints' => array(
                                 new NotBlank()
                             )
                         ))
                         ->add('username', 'text', array(
+                            'label'=>$this->getTranslator()->trans('username'),
                             'constraints' => array(
                                 new NotBlank()
                             )
                         ))
                         ->add('plainPassword', 'repeated', array(
                             'type' => 'password',
-                            'invalid_message' => 'Passwords must match',
-                            'first_options'  => array('label' => 'password'),
-                            'second_options' => array('label' => 'passwordVerify'),
-                            'constraints' => array(
-                                new NotBlank()
-                            )
+                            'invalid_message' => $this->getTranslator()->trans('password.must.match'),
+                            'first_options'  => array(
+                                'label'=>$this->getTranslator()->trans('password'),
+                            ),
+                            'second_options' => array(
+                                'label'=>$this->getTranslator()->trans('passwordVerify'),
+                            ),
+                            'required' => false
                         ))
-                        ->add('firstName', 'text', array('required' => false))
-                        ->add('lastName', 'text', array('required' => false))
-                        ->add('company', 'text', array('required' => false))
-                        ->add('job', 'text', array('required' => false))
-                        ->add('birthday', 'date', array('required' => false))
-                        ->add('facebookName', 'text', array('required' => false));
+                        ->add('firstName', 'text', array(
+                            'label'=>$this->getTranslator()->trans('firstName'),
+                            'required' => false
+                        ))
+                        ->add('lastName', 'text', array(
+                            'label'=>$this->getTranslator()->trans('lastName'),
+                            'required' => false
+                        ))
+                        ->add('company', 'text', array(
+                            'label'=>$this->getTranslator()->trans('company'),
+                            'required' => false
+                        ))
+                        ->add('job', 'text', array(
+                            'label'=>$this->getTranslator()->trans('job'),
+                            'required' => false
+                        ))
+                        ->add('birthday', 'date', array(
+                            'label'=>$this->getTranslator()->trans('birthday'),
+                            'required' => false,
+                            'years'=> range(1920, date('Y')-6)
+                        ))
+                        ->add('facebookName', 'text', array(
+                            'label'=>$this->getTranslator()->trans('facebookName'),
+                            'required' => false
+                        ));
 
         return $builder->getForm();
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -701,22 +752,29 @@ class UsersController extends RozierApp
         $defaults = array(
             'userId' =>  $user->getId()
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
-            ->add('userId', 'hidden', array(
-                'data' => $user->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'userId',
+                'hidden',
+                array(
+                    'data' => $user->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ))
-            ->add('roleId', new \RZ\Renzo\CMS\Forms\RolesType($user->getRolesEntities()),
-                array('label' => 'Role'));
+            )
+            ->add(
+                'roleId',
+                new \RZ\Roadiz\CMS\Forms\RolesType($user->getRolesEntities()),
+                array('label' => 'Role')
+            );
 
         return $builder->getForm();
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -733,94 +791,150 @@ class UsersController extends RozierApp
             'facebookName' => $user->getFacebookName(),
         );
 
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                         ->createBuilder('form', $defaults)
-                        ->add('email', 'email', array(
-                            'constraints' => array(
-                                new NotBlank()
+                        ->add(
+                            'email',
+                            'email',
+                            array(
+                                'label'=>$this->getTranslator()->trans('email'),
+                                'constraints' => array(
+                                    new NotBlank()
+                                )
                             )
-                        ))
-                        ->add('username', 'text', array(
-                            'constraints' => array(
-                                new NotBlank()
+                        )
+                        ->add(
+                            'username',
+                            'text',
+                            array(
+                                'label'=>$this->getTranslator()->trans('username'),
+                                'constraints' => array(
+                                    new NotBlank()
+                                )
                             )
-                        ))
-                        ->add('plainPassword', 'repeated', array(
-                            'type' => 'password',
-                            'invalid_message' => 'Passwords must match',
-                            'first_options'  => array('label' => 'password'),
-                            'second_options' => array('label' => 'passwordVerify'),
-                            'required' => false
-                        ))
-                        ->add('firstName', 'text', array(
-                            'required' => false
-                        ))
-                        ->add('lastName', 'text', array(
-                            'required' => false
-                        ))
-                        ->add('company', 'text', array(
-                            'required' => false
-                        ))
-                        ->add('job', 'text', array(
-                            'required' => false
-                        ))
-                        ->add('birthday', 'date', array(
-                            'required' => false
-                        ))
-                        ->add('facebookName', 'text', array(
-                            'required' => false
-                        ));
+                        )
+                        ->add(
+                            'plainPassword',
+                            'repeated',
+                            array(
+                                'type' => 'password',
+                                'invalid_message' => 'Passwords must match',
+                                'first_options'  => array('label' => 'password'),
+                                'second_options' => array('label' => 'passwordVerify'),
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'firstName',
+                            'text',
+                            array(
+                                'label'=>$this->getTranslator()->trans('firstName'),
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'lastName',
+                            'text',
+                            array(
+                                'label'=>$this->getTranslator()->trans('lastName'),
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'company',
+                            'text',
+                            array(
+                                'label'=>$this->getTranslator()->trans('company'),
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'job',
+                            'text',
+                            array(
+                                'label'=>$this->getTranslator()->trans('job'),
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'birthday',
+                            'date',
+                            array(
+                                'label'=>$this->getTranslator()->trans('birthday'),
+                                'required' => false
+                            )
+                        )
+                        ->add(
+                            'facebookName',
+                            'text',
+                            array(
+                                'label'=>$this->getTranslator()->trans('facebookName'),
+                                'required' => false
+                            )
+                        );
 
         return $builder->getForm();
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
      * @return \Symfony\Component\Form\Form
      */
     private function buildDeleteForm(User $user)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('userId', 'hidden', array(
-                'data' => $user->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'userId',
+                'hidden',
+                array(
+                    'data' => $user->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ));
+            );
 
         return $builder->getForm();
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
-     * @param RZ\Renzo\Core\Entities\Role $role
+     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\Role $role
      *
      * @return \Symfony\Component\Form\Form
      */
     private function buildRemoveRoleForm(User $user, Role $role)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('userId', 'hidden', array(
-                'data' => $user->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'userId',
+                'hidden',
+                array(
+                    'data' => $user->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ))
-            ->add('roleId', 'hidden', array(
-                'data' => $role->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            )
+            ->add(
+                'roleId',
+                'hidden',
+                array(
+                    'data' => $role->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ));
+            );
 
         return $builder->getForm();
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User $user
+     * @param RZ\Roadiz\Core\Entities\User $user
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -829,42 +943,57 @@ class UsersController extends RozierApp
         $defaults = array(
             'userId' =>  $user->getId()
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
-                    ->add('userId', 'hidden', array(
-                        'data' => $user->getId(),
-                        'constraints' => array(
-                            new NotBlank()
+                    ->add(
+                        'userId',
+                        'hidden',
+                        array(
+                            'data' => $user->getId(),
+                            'constraints' => array(
+                                new NotBlank()
+                            )
                         )
-                    ))
-                    ->add('group', new \RZ\Renzo\CMS\Forms\GroupsType($user->getGroups()),
-                        array('label' => 'Group'));
+                    )
+                    ->add(
+                        'group',
+                        new \RZ\Roadiz\CMS\Forms\GroupsType($user->getGroups()),
+                        array('label' => 'Group')
+                    );
 
         return $builder->getForm();
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\User  $user
-     * @param RZ\Renzo\Core\Entities\Group $group
+     * @param RZ\Roadiz\Core\Entities\User  $user
+     * @param RZ\Roadiz\Core\Entities\Group $group
      *
      * @return \Symfony\Component\Form\Form
      */
     private function buildRemoveGroupForm(User $user, Group $group)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('userId', 'hidden', array(
-                'data' => $user->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'userId',
+                'hidden',
+                array(
+                    'data' => $user->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ))
-            ->add('groupId', 'hidden', array(
-                'data' => $group->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            )
+            ->add(
+                'groupId',
+                'hidden',
+                array(
+                    'data' => $group->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ));
+            );
 
         return $builder->getForm();
     }

@@ -1,38 +1,44 @@
 {% set tTag = tag.getTranslatedTags.first %}
+{% if tTag %}
 {% set name = tTag.getName %}
-<li data-tag-id="{{ tag.getId }}"
-	class="tagtree-element">
+{% set editUrl = path('tagsEditTranslatedPage', { tagId:tag.getId, translationId:tTag.getTranslation.getId }) %}
+{% else %}
+{% set name = "tag_" ~ tag.getId %}
+{% set editUrl = path('tagsEditPage', { tagId:tag.getId }) %}
+{% endif %}
 
-	<div class="tagtree-element-inner uk-nestable-item">
-		<div class="uk-nestable-handle"></div>
+<li data-tag-id="{{ tag.getId }}"
+	class="uk-nestable-list-item uk-nestable-list-item-tag tagtree-element{% if tag.getChildren.count > 0 %} has-children{% endif %}">
+
+	<div class="tagtree-element-inner uk-nestable-item uk-nestable-item-tag">
+		<div class="uk-nestable-handle uk-nestable-handle-tag"><i class="{% if tag.getChildren.count > 0 %}uk-icon-rz-tags{% else %}uk-icon-rz-tag-tree{% endif %}"></i></div>
 		<div data-nestable-action="toggle"></div>
-		<div class="tagtree-element-name">
-			<i class="uk-icon-single-tag-outline"></i>
+		<div class="tree-element-name tagtree-element-name">
 			{% if not tag.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %}
 
 			{% if tag.isHidingChildren %}
 				<a href="{{ path('tagsTreePage', { tagId:tag.getId }) }}">{{ name }}</a>
 			{% else %}
-				<a href="{{ path('tagsEditTranslatedPage', { tagId:tag.getId, translationId:tTag.getTranslation.getId }) }}">{{ name }}</a>
+				<a href="{{ editUrl }}">{{ name }}</a>
 			{% endif %}
 		</div>
 
-		<div class="tagtree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
-		    <button class="uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></button>
-		    <nav class="uk-dropdown uk-dropdown-small">
-		        <div class="uk-nav uk-nav-dropdown">
+		<div class="tree-contextualmenu tagtree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
+		    <button class="tree-contextualmenu-button uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></button>
+		    <nav class="uk-dropdown uk-dropdown-small uk-dropdown-flip">
+		        <div class="uk-nav uk-nav-dropdown uk-dropdown-flip">
 		            <p>
-		            	<a title="{% trans %}edit.tag.%name%{% endtrans %}" href="{{ path('tagsEditTranslatedPage', { tagId:tag.getId, translationId:tTag.getTranslation.getId }) }}">
+		            	<a title="{{ "edit.tag.%name%"|trans({'%name%': tag.getTagName}) }}" href="{{ editUrl }}">
 		            		<i class="uk-icon-pencil"></i> {% trans %}edit.tag{% endtrans %}
 		            	</a>
 		            </p>
 		            <p>
-		            	<a title="{% trans %}add.child.tag.%name%{% endtrans %}" href="{{ path('tagsAddChildPage', { tagId:tag.getId }) }}">
-		            		<i class="uk-icon-plus"></i> {% trans %}add.child.tag{% endtrans %}
+		            	<a title="{{ "add.tag.%name%.child"|trans({'%name%': tag.getTagName}) }}" href="{{ path('tagsAddChildPage', { tagId:tag.getId }) }}">
+		            		<i class="uk-icon-plus"></i> {% trans %}add.a.child.tag{% endtrans %}
 		            	</a>
 		            </p>
 		            <p>
-		            	<a title="{% trans %}delete.tag.%name%{% endtrans %}" href="{{ path('tagsDeletePage', { tagId:tag.getId }) }}">
+		            	<a title="{{ "delete.tag.%name%"|trans({'%name%': tag.getTagName}) }}" href="{{ path('tagsDeletePage', { tagId:tag.getId }) }}">
 		            		<i class="uk-icon-trash-o"></i> {% trans %}delete.tag{% endtrans %}
 		            	</a>
 		            </p>
@@ -40,7 +46,7 @@
 		    </nav>
 		</div>
 	</div>
-	<ul class="uk-nestable-list" data-parent-tag-id="{{ tag.getId }}">
+	<ul class="uk-nestable-list uk-nestable-list-tag" data-parent-tag-id="{{ tag.getId }}">
 	{#
 	 # For drag&drop ease, we don't create nested lists
 	 # We will have to check after OR inside drag status

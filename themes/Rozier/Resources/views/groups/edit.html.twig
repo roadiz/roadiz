@@ -1,18 +1,30 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 
 {% block content %}
-<section id="manage-group">
-    <h1 id="group-title">Edit {{ group.getName }}</h1>
+<section class="content-global edit-group">
 
-    {% include 'groups/navBar.html.twig' with {'group':group, current:'edit'} %}
+    <header class="content-header header-group header-group-edit">
+        <h1 class="content-title group-add-title">{{ "edit.group.%name%"|trans({'%name%': group.getName}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>    
+        {% include 'groups/navBar.html.twig' with {'group':group, current:'edit'} %}
+    </header>
 
-    {% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <fieldset data-uk-margin>
-            <input class="uk-button uk-button-primary" type="submit" />
-        </fieldset>
-    </form>
+    <article class="content content-edit">
+        {% form_theme form 'forms.html.twig' %}
+        <form id="edit-group-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-group-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+    </article>
+
+    {% include 'groups/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

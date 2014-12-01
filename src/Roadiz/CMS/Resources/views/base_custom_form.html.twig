@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>{{ head.siteTitle }}</title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        {# <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.min.css" /> #}
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/uikit.gradient.min.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/addons/uikit.addons.min.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/jquery.minicolors.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/codemirror.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/custom-forms-front.min.css" />
+        <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body id="custom-form-front">
+                
+        <!-- Add your site or application content here -->
+        <section id="main-content">
+            {% block content %}
+                <h1>{% trans %}Welcome{% endtrans %}</h1>
+            {% endblock %}
+        </section>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.1.1.min.js"><\/script>')</script>
+
+        {% if head.devMode %}
+        <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
+
+        <script src="{{ head.resourcesUrl }}js/addons/htmleditor.js"></script>
+
+        <script src="{{ head.resourcesUrl }}js/vendor/jquery-ui.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/TweenMax.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/ScrollToPlugin.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/mousetrap.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/jquery.minicolors.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/codemirror.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/mode/markdown/markdown.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/mode/overlay.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/mode/xml/xml.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/mode/gfm/gfm.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/marked.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/dropzone.js"></script>
+        {% else %}
+            <!-- <script src="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.js[0] }}"></script> -->
+        {% endif %}
+        
+    </body>
+</html>

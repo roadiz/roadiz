@@ -1,17 +1,27 @@
-{% extends 'base.html.twig' %}
-
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-translation">
-	<h1 id="translation-title">{% trans %}Add a new translation{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('translationsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to translations{% endtrans %}</a></nav>
+<section class="content-global add-translation">
 
-	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+    <header class="content-header header-translation header-translation-add">
+        <h1 class="content-title translation-add-title">{% trans %}add.a.translation{% endtrans %}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('translationsHomePage') }}" title="{% trans %}back_to.translations{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </header>
+
+    <article class="content content-add-translation">
+    	{% form_theme form 'forms.html.twig' %}
+        <form id="add-translation-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	{% spaceless %}
+                <button data-action-save="#add-translation-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+       		</fieldset>
+    	</form>
+    </article>
+    {% include 'translations/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

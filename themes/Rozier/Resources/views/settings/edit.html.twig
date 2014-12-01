@@ -1,16 +1,26 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-setting">
-	<h1 id="setting-title">{% trans %}Edit{% endtrans %} {{ setting.getDisplayName }}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('settingsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to settings{% endtrans %}</a></nav>
+<section class="content-global">
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+    <header class="content-header header-setting header-setting-add">
+       <h1 class="content-title setting-list-title">{{ "edit.setting.%name%"|trans({'%name%': setting.getName }) }}</h1>
+       <a class="content-header-nav-back uk-navbar-content" href="{{ path('settingsHomePage') }}" title="{% trans %}back_to.settings{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </header>
+
+    <article class="content content-setting-edit">
+    	{% form_theme form 'forms.html.twig' %}
+    	<form id="edit-setting-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    	    {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    	    	<button data-action-save="#edit-setting-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+       		</fieldset>
+    	</form>
+    </article>
+
+    {% include 'settings/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

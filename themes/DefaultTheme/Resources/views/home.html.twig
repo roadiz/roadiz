@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    
-<h1>Hello World !</h1>
+
+<h1>{% trans %}hello.world{% endtrans %}</h1>
 {% if node %}
-<p>This is node : {{ node.getNodeName }}</p>
+<p>{{ "node.name.is.%name%"|trans({'%name%':node.nodeSources.first.title }) }}</p>
 {% endif %}
 {% if translation %}
-<p>This is translation : {{ translation.getName }}</p>
+<p>{{ "translation.is.%name%"|trans({'%name%':translation.getName }) }}</p>
 {% endif %}
 
 {% endblock %}

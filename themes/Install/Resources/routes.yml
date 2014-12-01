@@ -2,24 +2,89 @@
 installHomePage:
     path:     /
     defaults: { _controller: Themes\Install\InstallApp::indexAction }
+installHomePageRedirect:
+    path:     /install
+    defaults: { _controller: Themes\Install\InstallApp::redirectIndexAction }
 installCheckPage:
     path:     /install/check-requirements
     defaults: { _controller: Themes\Install\InstallApp::requirementsAction }
 installDatabasePage:
     path:     /install/database
     defaults: { _controller: Themes\Install\InstallApp::databaseAction }
-installDatabaseDonePage:
-    path:     /install/database/done
-    defaults: { _controller: Themes\Install\InstallApp::databaseDoneAction }
+installDatabaseSchemaPage:
+    path:     /install/database/schema
+    defaults: { _controller: Themes\Install\InstallApp::databaseSchemaAction }
+# installImportPage:
+#     path:     /install/import
+#     defaults: { _controller: Themes\Install\InstallApp::importAction }
+installImportSettings:
+    path:     /install/import/settings/{filename}/{themeId}
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importSettingsAction, themeId: null }
+    requirements:
+        filename: "^[a-zA-Z_/\.-]+$"
+        themeId: "[0-9]+"
+installImportGroups:
+    path:     /install/import/groups/{filename}/{themeId}
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importGroupsAction, themeId: null }
+    requirements:
+        filename: "^[a-zA-Z_/\.-]+$"
+        themeId: "[0-9]+"
+installImportRoles:
+    path:     /install/import/roles/{filename}/{themeId}
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importRolesAction, themeId: null }
+    requirements:
+        filename: "^[a-zA-Z_/\.-]+$"
+        themeId: "[0-9]+"
+installImportNodes:
+    path:     /install/import/nodes/{filename}/{themeId}
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodesAction, themeId: null }
+    requirements:
+        filename: "^[a-zA-Z_/.-]+$"
+        id: "[0-9]+"
+installImportNodeTypes:
+    path:     /install/import/nodetypes/{filename}/{themeId}
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodeTypesAction }
+    requirements:
+        filename: "^[a-zA-Z_/.-]+$"
+        themeId: "[0-9]+"
+installImportTags:
+    path:     /install/import/tags/{filename}/{themeId}
+    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importTagsAction }
+    requirements:
+        filename: "^[a-zA-Z_/.-]+$"
+        themeId: "[0-9]+"
+installImportThemePage:
+    path:     /install/import/theme/{id}
+    defaults: { _controller: Themes\Install\InstallApp::importThemeAction }
+    requirements: { id : "[0-9]+" }
 installUserPage:
     path:     /install/user
     defaults: { _controller: Themes\Install\InstallApp::userAction }
+installUserSummaryPage:
+    path:     /install/user/summary/{userId}
+    defaults: { _controller: Themes\Install\InstallApp::userSummaryAction }
+    requirements: { userId : "[0-9]+" }
 installThemesPage:
     path:     /install/themes
     defaults: { _controller: Themes\Install\InstallApp::themesAction }
+installThemeSummaryPage:
+    path:     /install/themes/summary
+    defaults: { _controller: Themes\Install\InstallApp::themeSummaryAction }
+installThemeBasePage:
+    path:     /install/themes/base
+    defaults: { _controller: Themes\Install\InstallApp::themeInstallAction }
 installDonePage:
     path:     /install/done
     defaults: { _controller: Themes\Install\InstallApp::doneAction }
 installFailedPage:
     path:     /install/failed
     defaults: { _controller: Themes\Install\InstallApp::failedAction }
+installUpdateSchema:
+    path:     /install/update
+    defaults: { _controller: Themes\Install\InstallApp::updateSchemaAction }
+removeTrailingSlash:
+    path:     /{url}
+    defaults: { _controller:  Themes\Install\InstallApp::removeTrailingSlashAction }
+    requirements:
+        url: .*/$
+    methods: [GET]

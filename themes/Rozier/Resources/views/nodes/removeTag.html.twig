@@ -1,18 +1,23 @@
-{% extends 'base.html.twig' %}
-
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-tag">
-	<h1 id="tag-title">{% trans %}Remove tag:{% endtrans %} {{ tag.getDefaultTranslatedTag.getName }}</h1>
+<section class="content-global content-node-remove-tag">
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to remove this tag?{% endtrans %}</legend>
-	    	<a href="{{ path('nodesEditTagsPage', { nodeId: node.getId }) }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
-	    	<input class="uk-button uk-button-danger" type="submit" />
-   		</fieldset>
-	</form>
+    <header class="content-header header-node header-node-remove-tag">
+         <h1 class="content-title node-remove-tag-title">{{ "unlink.tag.%name%"|trans({'%name%': tag.getTranslatedTags.first.getName}) }}</h1>
+    </header>
+
+    <article class="content content-delete content-remove-tag">
+		{% form_theme form 'forms.html.twig' %}
+		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<legend class="delete-legend">{% trans %}are_you_sure.unlink.tag{% endtrans %}</legend>
+		    	<a href="{{ path('nodesEditTagsPage', { nodeId: node.getId }) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+		    	<input class="uk-button uk-button-danger" type="submit" />
+	   		</fieldset>
+		</form>
+	</article>
+
 </section>
 {% endblock %}

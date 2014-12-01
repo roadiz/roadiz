@@ -12,15 +12,15 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Node;
-use RZ\Renzo\Core\Entities\NodeType;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,13 +43,14 @@ class NodeTypesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
         /*
          * Manage get request to filter list
          */
         $listManager = new EntityListManager(
             $request,
-            $this->getKernel()->em(),
-            'RZ\Renzo\Core\Entities\NodeType'
+            $this->getService('em'),
+            'RZ\Roadiz\Core\Entities\NodeType'
         );
         $listManager->handle();
 
@@ -72,8 +73,10 @@ class NodeTypesController extends RozierApp
      */
     public function editAction(Request $request, $nodeTypeId)
     {
-        $nodeType = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+
+        $nodeType = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if (null !== $nodeType) {
             $this->assignation['nodeType'] = $nodeType;
@@ -86,21 +89,21 @@ class NodeTypesController extends RozierApp
                 try {
                     $this->editNodeType($form->getData(), $nodeType);
 
-                    $msg = $this->getTranslator()->trans('nodeType.updated', array('%name%'=>$nodeType->getName()));
+                    $msg = $this->getTranslator()->trans('nodeType.%name%.updated', array('%name%'=>$nodeType->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Redirect to update schema page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'nodeTypesSchemaUpdate',
                         array(
-                            '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
                         )
                     )
                 );
@@ -129,6 +132,8 @@ class NodeTypesController extends RozierApp
      */
     public function addAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+
         $nodeType = new NodeType();
 
         if (null !== $nodeType) {
@@ -145,27 +150,27 @@ class NodeTypesController extends RozierApp
                     $this->addNodeType($form->getData(), $nodeType);
                     //echo "After add node type";
 
-                    $msg = $this->getTranslator()->trans('nodeType.created', array('%name%'=>$nodeType->getName()));
+                    $msg = $this->getTranslator()->trans('nodeType.%name%.created', array('%name%'=>$nodeType->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
 
                     /*
                      * Redirect to update schema page
                      */
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'nodeTypesSchemaUpdate',
                             array(
-                                '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                                '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
                             )
                         )
                     );
 
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'nodeTypesAddPage'
                         )
                     );
@@ -196,8 +201,10 @@ class NodeTypesController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeTypeId)
     {
-        $nodeType = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\NodeType', (int) $nodeTypeId);
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES_DELETE');
+
+        $nodeType = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if (null !== $nodeType) {
             $this->assignation['nodeType'] = $nodeType;
@@ -214,17 +221,17 @@ class NodeTypesController extends RozierApp
                  */
                 $nodeType->getHandler()->deleteWithAssociations();
 
-                $msg = $this->getTranslator()->trans('nodeType.deleted', array('%name%'=>$nodeType->getName()));
+                $msg = $this->getTranslator()->trans('nodeType.%name%.deleted', array('%name%'=>$nodeType->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
                 /*
                  * Redirect to update schema page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'nodeTypesSchemaUpdate',
                         array(
-                            '_token' => $this->getKernel()->getCsrfProvider()->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
                         )
                     )
                 );
@@ -247,7 +254,7 @@ class NodeTypesController extends RozierApp
 
     /**
      * @param array                           $data
-     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return boolean
      */
@@ -255,13 +262,13 @@ class NodeTypesController extends RozierApp
     {
         foreach ($data as $key => $value) {
             if (isset($data['name'])) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans('nodeType.cannot_rename_already_exists', array('%name%'=>$nodeType->getName())), 1);
+                throw new EntityAlreadyExistsException($this->getTranslator()->trans('nodeType.%name%.cannot_rename_already_exists', array('%name%'=>$nodeType->getName())), 1);
             }
             $setter = 'set'.ucwords($key);
             $nodeType->$setter( $value );
         }
 
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->flush();
         $nodeType->getHandler()->updateSchema();
 
         return true;
@@ -269,7 +276,7 @@ class NodeTypesController extends RozierApp
 
     /**
      * @param array                           $data
-     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return boolean
      */
@@ -280,15 +287,15 @@ class NodeTypesController extends RozierApp
             $nodeType->$setter( $value );
         }
 
-        $existing = $this->getKernel()->em()
-            ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+        $existing = $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findOneBy(array('name'=>$nodeType->getName()));
         if ($existing !== null) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans('nodeType.already_exists', array('%name%'=>$nodeType->getName())), 1);
+            throw new EntityAlreadyExistsException($this->getTranslator()->trans('nodeType.%name%.already_exists', array('%name%'=>$nodeType->getName())), 1);
         }
 
-        $this->getKernel()->em()->persist($nodeType);
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->persist($nodeType);
+        $this->getService('em')->flush();
 
         $nodeType->getHandler()->updateSchema();
 
@@ -296,7 +303,7 @@ class NodeTypesController extends RozierApp
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -309,27 +316,47 @@ class NodeTypesController extends RozierApp
             'visible' =>        $nodeType->isVisible(),
             'newsletterType' => $nodeType->isNewsletterType(),
             'hidingNodes' =>    $nodeType->isHidingNodes(),
+            'color' =>          $nodeType->getColor(),
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('name', 'text', array(
+                'label' => $this->getTranslator()->trans('name'),
                 'constraints' => array(
                     new NotBlank()
                 )))
             ->add('displayName', 'text', array(
+                'label' => $this->getTranslator()->trans('nodeType.displayName'),
                 'constraints' => array(
                     new NotBlank()
                 )))
-            ->add('description', 'text', array('required' => false))
-            ->add('visible', 'checkbox', array('required' => false))
-            ->add('newsletterType', 'checkbox', array('required' => false))
-            ->add('hidingNodes', 'checkbox', array('required' => false));
+            ->add('description', 'text', array(
+                'label' => $this->getTranslator()->trans('description'),
+                'required' => false
+            ))
+            ->add('visible', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('visible'),
+                'required' => false
+            ))
+            ->add('newsletterType', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('nodeType.newsletterType'),
+                'required' => false
+            ))
+            ->add('hidingNodes', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('nodeType.hidingNodes'),
+                'required' => false
+            ))
+            ->add('color', 'text', array(
+                'label' => $this->getTranslator()->trans('nodeType.color'),
+                'required' => false,
+                'attr' => array('class'=>'colorpicker-input')
+            ));
 
         return $builder->getForm();
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -341,29 +368,48 @@ class NodeTypesController extends RozierApp
             'visible' =>        $nodeType->isVisible(),
             'newsletterType' => $nodeType->isNewsletterType(),
             'hidingNodes' =>    $nodeType->isHidingNodes(),
+            'color' =>          $nodeType->getColor(),
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('displayName', 'text', array(
+                'label' => $this->getTranslator()->trans('nodeType.displayName'),
                 'constraints' => array(
                     new NotBlank()
                 )))
-            ->add('description', 'text', array('required' => false))
-            ->add('visible', 'checkbox', array('required' => false))
-            ->add('newsletterType', 'checkbox', array('required' => false))
-            ->add('hidingNodes', 'checkbox', array('required' => false));
+            ->add('description', 'text', array(
+                'label' => $this->getTranslator()->trans('description'),
+                'required' => false
+            ))
+            ->add('visible', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('visible'),
+                'required' => false
+            ))
+            ->add('newsletterType', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('nodeType.newsletterType'),
+                'required' => false
+            ))
+            ->add('hidingNodes', 'checkbox', array(
+                'label' => $this->getTranslator()->trans('nodeType.hidingNodes'),
+                'required' => false
+            ))
+            ->add('color', 'text', array(
+                'label' => $this->getTranslator()->trans('nodeType.color'),
+                'required' => false,
+                'attr' => array('class'=>'colorpicker-input')
+            ));
 
         return $builder->getForm();
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\NodeType $nodeType
+     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return \Symfony\Component\Form\Form
      */
     private function buildDeleteForm(NodeType $nodeType)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('nodeTypeId', 'hidden', array(
                 'data' => $nodeType->getId(),
@@ -380,8 +426,8 @@ class NodeTypesController extends RozierApp
      */
     public static function getNewsletterNodeTypes()
     {
-        return $this->getKernel()->em()
-            ->getRepository('RZ\Renzo\Core\Entities\NodeType')
+        return $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findBy(array('newsletterType' => true));
     }
 }

@@ -1,36 +1,100 @@
-{% extends 'base.html.twig' %}
+{% if node.getNodeSources.first.getTitle %}
+{% set currentTitle = node.getNodeSources.first.getTitle %}
+{% else %}
+{% set currentTitle = node.getNodeName %}
+{% endif %}
+
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
 {% block content %}
-<section id="manage-node">
-	<h1 id="node-title">{% trans %}edit.node{% endtrans %} "{{ source.getTitle }}"</h1>
+<section class="content-global manage-node">
 
-	{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-	{% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}
+    <header class="content-header header-node header-node-edit">
+        {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+        <h1 class="content-title node-edit-title">
+            {{ "edit.node.%name%"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
+            {% include 'nodes/nodeTypeCircle.html.twig' %}
+        </h1>
+        {% include 'nodes/navBack.html.twig' %}
+        {% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}
+    </header>
 
-	{% form_theme form 'forms.html.twig' %}
-	<form id="edit-node-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	{% spaceless %}
-	    	<button data-action-save="#edit-node-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-	    		<i class="uk-icon-save"></i>
-	    		<span class="label">{% trans %}save{% endtrans %}</span>
-	    	</button>
-	    	{% endspaceless %}
-   		</fieldset>
-	</form>
+    <article class="content content-node-edit">
+        {% form_theme form 'forms.html.twig' %}
+        <form id="edit-node-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-node-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
 
-	{% if translationForm %}
-	<h2 id="add-node-translation">Translate node</h2>
-	{% form_theme translationForm 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(translationForm) }}>
-	    {{ form_widget(translationForm) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" value="{% trans %}Translate{% endtrans %}" />
-   		</fieldset>
-	</form>
-	{% endif %}
+        <div class="content-table-cont">
+            <table class="uk-table content-table">
+                <tr>
+                    <td>{% trans %}created.at{% endtrans %}</td>
+                    <td>{{ node.createdAt|date("Y-m-d H:i") }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans %}updated.at{% endtrans %}</td>
+                    <td>{{ node.updatedAt|date("Y-m-d H:i") }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans %}position{% endtrans %}</td>
+                    <td>{{ node.position }}</td>
+                </tr>
+            </table>
+        </div>
 
+        {% if node.isHidingChildren %}
+        <hr />
+        <h2 id="add-node-translation">{% trans %}add.stack.type{% endtrans %}</h2>
 
-	{% include 'nodes/actionsMenu.html.twig' %}
+        {% form_theme stackTypesForm 'forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(stackTypesForm) }}>
+            {{ form_widget(stackTypesForm) }}
+            <fieldset data-uk-margin>
+                <button class="uk-button uk-button-primary" type="submit">
+                    <i class="uk-icon-plus"></i> {% trans %}add.stack.type{% endtrans %}
+                </button>
+            </fieldset>
+        </form>
+        <h2 id="add-node-translation">{% trans %}stack.types{% endtrans %}</h2>
+        <div class="content-table-cont">
+            <table class="uk-table content-table">
+                <tr>
+                    <th>{% trans %}nodeType{% endtrans %}</th>
+                    <th>{% trans %}actions{% endtrans %}</th>
+                </tr>
+                {% for type in node.stackTypes %}
+                <tr>
+                    <td>{{ type.displayName }}</td>
+                    <td><a class="uk-button"><i class="uk-icon-trash-o"></i> {% trans %}remove{% endtrans %}</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endif %}
+
+        {% if translationForm %}
+        <hr />
+        <h2 id="add-node-translation">{% trans %}translate.node{% endtrans %}</h2>
+        {% form_theme translationForm 'forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(translationForm) }}>
+            {{ form_widget(translationForm) }}
+            <fieldset data-uk-margin>
+                <button class="uk-button uk-button-primary" type="submit">
+                    <i class="uk-icon-flag"></i> {% trans %}translate{% endtrans %}
+                </button>
+            </fieldset>
+        </form>
+        {% endif %}
+    </article>
+
+    {% include 'nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

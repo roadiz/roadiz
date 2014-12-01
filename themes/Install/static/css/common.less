@@ -1,0 +1,220 @@
+/*------------------------------------*\
+   COMMON
+\*------------------------------------*/
+
+
+/*
+ * Styles for basic elements and common elements (visible on every page)
+ */
+
+
+/* -------- STYLES -------- */
+
+html,
+body,
+h1, h2, h3, h4, h5, h6,
+p, li, a, input, button, textarea {
+    font-family: @main-font;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    position: absolute;
+    width:100%; height:100%;
+    -webkit-font-smoothing: antialiased;
+    font:bold 12px/18px @main-font;
+    color: @grey-interface;
+    background:@bg-color;
+}
+
+
+#main-container{
+    width: @inner-width;
+    min-height:300px;
+
+    &.relative{
+        position: relative;
+        margin:50px auto;
+    }
+
+    &.absolute{
+        position: absolute;
+        top: 50%; left: 50%;
+        margin: 0 auto 0 -@inner-width/2;
+    }
+}
+
+#inner-container{
+    position: relative;
+    display: inline-block;
+}
+
+.infos{
+    position: absolute;
+    width: @infos-width; height:100%;
+    text-align:center;
+}
+
+.logo{
+    position: relative;
+    display: table-row;
+    width: 128px; height: 116px;
+    background-color: @contrast-color;
+    top: 0px; left: 0;
+
+    .uk-icon-rz-rezozero {
+        display: table-cell;
+        width: 128px; height: 116px;
+        font-size: 65px;
+        vertical-align: middle;
+        padding-left: 5px;
+        -webkit-font-smoothing: subpixel-antialiased;
+    }
+}
+
+.credits{
+    position: absolute;
+    width: @infos-width; 
+    top:116px; bottom:0;
+    background: @grey-interface;
+}
+
+.credits-content{
+    position: absolute;
+    width: @infos-width; height:116px;
+    bottom:0;
+
+    .uk-icon-rz-rezozero{
+        position: absolute;
+        color: @grey-medium;
+        bottom: 50px;
+        font-size: 22px;
+        width: 100%;
+        left: 0px;
+    }
+}
+
+.version {
+    position: absolute;
+    color: @grey-medium;
+    font-size: 10px;
+    font-weight: bold;
+    bottom: 26px;
+    width: 100%;
+    left: 0px;
+}
+
+.content{
+    position: relative;
+    float: left;
+    left:@infos-width;
+    width:@content-width;
+}
+
+.content-title-cont{
+    display: table-row;    
+    width:@content-width; height:117px;
+    background:white;
+    text-align: center;
+}
+
+.content-title{
+    display: table-cell;
+    width:@content-width;
+    margin:0;
+    border-bottom:1px solid @grey-border;
+    vertical-align: middle;
+    font-size:36px;
+    font-weight:400;
+}
+
+.content-progress{
+    position: absolute;
+    top:109px; right:0; left:0;
+    height:9px;
+    text-align: center;
+    cursor: default;
+}
+
+.content-progress-item{
+    display: inline-block;
+    width:9px; height:9px;
+    .rounded(6px);
+    margin:0 16px;
+    border:1px solid @grey-medium;
+    background: white;
+
+    &.first{
+        margin-left:0;
+    }
+
+    &.last{
+        margin-right:0;
+    }
+
+    &.active{
+        background: @grey-medium;
+    }
+}
+
+.content-text-cont{
+    padding: 40px 50px;
+    background:@grey-verylight;
+
+    p{
+        margin:0 15px 5px 15px;
+
+        + p{
+            margin-top:5px;
+        }
+    }
+
+    h3{
+        font-weight: bold;
+        margin:0 15px 5px 15px;
+    }
+}
+
+.content-text{
+    margin-bottom:20px;
+    padding-bottom:20px;
+    border-bottom:1px dashed @grey-border;
+
+    &.content-text-form{
+        padding-bottom:3px;
+    }
+}
+
+.content-intro{
+    
+    margin-bottom:20px;
+
+    &.content-intro-only{
+        margin-bottom:0;
+    }
+
+    &.content-intro-big{
+        margin-bottom:0;
+
+        p{
+            font-size:14px; line-height:18px;
+        }
+
+    }
+
+}
+
+.content-buttons{
+    text-align: right;
+}
+
+.content-button{
+    margin-right:10px;
+
+    &:last-child{
+        margin-right:0;
+    }
+}

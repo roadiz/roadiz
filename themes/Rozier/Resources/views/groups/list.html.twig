@@ -1,49 +1,59 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-groups">
-    <h1 id="title">{% trans %}Groups{% endtrans %}</h1>
-    <nav>
-        <a class="uk-button" href="{{ path('groupsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a group{% endtrans %}</a>
-        <a class="uk-button" href="{{ path('groupsImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}Import a group (.rzt){% endtrans %}</a>
-        <a class="uk-button" href="{{ path('groupsExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}Export all group (.rzt){% endtrans %}</a>
-    </nav>
+<section class="content-global content-nav-and-filters">
+
+    <header class="content-header header-group header-group-list">
+        <h1 class="content-title group-list-title">{% trans %}groups{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
+        <div class="content-header-action-menu">
+            <a class="uk-button" href="{{ path('groupsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.group{% endtrans %}</a>
+            <a class="uk-button" href="{{ path('groupsImportPage') }}"><i class="uk-icon-rz-upload"></i> {% trans %}import.group{% endtrans %}</a>
+            <a class="uk-button rz-no-ajax-link" href="{{ path('groupsExportAllPage') }}"><i class="uk-icon-rz-download"></i> {% trans %}export.all.groups{% endtrans %}</a>
+        </div>
+    </header>
 
     {% include 'widgets/filtersBar.html.twig' %}
-
-    <table class="groups uk-table">
-        <thead>
-            <tr>
-                <th>{% trans %}Name{% endtrans %}</th>
-                <th>{% trans %}Roles{% endtrans %}</th>
-                <th>{% trans %}Users{% endtrans %}</th>
-                <th>{% trans %}Actions{% endtrans %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for group in groups %}
-            <tr>
-                <td>
-                    {% if not group.required %}<a href="{{ path('groupsEditPage', { groupId: group.getId }) }}">{{ group.getName }}</a>{% else %}
-                    {{ group.getName }}{% endif %}
-                </td>
-                <td>
-                    <i class="uk-icon-star"></i> {% transchoice group.getRolesEntities.count %}{0} No roles|{1} 1 role|]1,Inf] %count% roles{% endtranschoice %}
-                </td>
-                <td>
-                    <i class="uk-icon-user"></i> {% transchoice group.getUsers.count %}{0} No users|{1} 1 user|]1,Inf] %count% user{% endtranschoice %}
-                </td>
-                <td>
-                    {% if not group.required %}
-                    <a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsDeletePage', { groupId: group.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}Delete{% endtrans %}</a>
-                    <a class="uk-button uk-button-small uk-button-success" href="{{ path('groupsExportPage', { groupId: group.getId }) }}"><i class="uk-icon-download"></i> {% trans %}Export{% endtrans %}</a>
-                    {% else %}
-                    <div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}group.required{% endtrans %}</div>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <article class="content content-no-action-menu">
+        <div class="content-table-cont">
+            <table class="groups content-table uk-table">
+                <thead>
+                    <tr>
+                        <th>{% trans %}name{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}roles{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}users{% endtrans %}</th>
+                        <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in groups %}
+                    <tr>
+                        <td>
+                            {% if not group.required %}<a href="{{ path('groupsEditPage', { groupId: group.getId }) }}">{{ group.getName }}</a>{% else %}
+                            {{ group.getName }}{% endif %}
+                        </td>
+                        <td class="mobile-hidden">
+                            {% transchoice group.getRolesEntities.count %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}
+                        </td>
+                        <td class="mobile-hidden">
+                            {% transchoice group.getUsers.count %}{0} no.user|{1} 1.user|]1,Inf] %count%.users{% endtranschoice %}
+                        </td>
+                        <td>
+                        {% spaceless %}
+                            {% if not group.required %}
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('groupsEditPage', { groupId: group.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('groupsExportPage', { groupId: group.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('groupsDeletePage', { groupId: group.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                            {% else %}
+                                <div class="uk-badge uk-badge-table"><span class="uk-icon-rz-lock"></span> {% trans %}group.required{% endtrans %}</div>
+                            {% endif %}
+                        {% endspaceless %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
 </section>
 {% endblock %}

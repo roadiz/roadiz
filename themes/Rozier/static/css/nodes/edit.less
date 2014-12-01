@@ -1,0 +1,47 @@
+/*------------------------------------*\
+   NODES - EDIT
+\*------------------------------------*/
+
+
+/*
+ * Nodes edit page
+ */
+
+
+/* -------- VARS -------- */
+
+
+
+/* -------- STYLES -------- */
+
+.node-edit-node-type-circle{
+    display:inline-block;
+    position: relative;
+    .box-sizing();
+    width:24px; height:24px;
+    // padding:3px 0 0 1px;
+    .rounded(20px);
+    line-height:20px;
+    background-color:#E0E0E0;
+    .transition(background-color ease 0.35s);
+    cursor: pointer;
+
+    .uk-icon-rz-infos{
+        -webkit-font-smoothing: none;
+    }
+    &:hover {
+        background-color: darken(#E0E0E0, 10%);
+    }
+}
+
+#edit-node-form{
+
+    .form-col-number{
+        display: inline-block;
+    }
+
+    .form-col-checkbox{
+        display: inline-block;
+        margin-left:30px;
+    }
+}

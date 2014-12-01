@@ -1,0 +1,32 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+
+{% block content %}
+<section class="content-global manage-custom-forms">
+
+    <header class="content-header header-custom-forms header-custom-forms-edit">
+        <h1 class="content-title custom-forms-edit-title">{{ "edit.customForm.%name%"|trans({'%name%': customForm.getDisplayName}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormsHomePage') }}" title="{% trans %}back_to.customForms{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
+    </header>
+
+
+    <article class="content content-custom-forms-edit">
+        {% form_theme form 'forms.html.twig' %}
+        <form id="edit-custom-form-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-custom-form-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+    </article>
+
+    {% include 'custom-forms/actionsMenu.html.twig' %}
+</section>
+
+{% endblock %}

@@ -1,37 +1,47 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-group-users">
-	<h1 id="group-title">Edit {{ group.getName }} users</h1>
+<section class="content-global edit-group">
 
-	{% include 'groups/navBar.html.twig' with {'group':group, current:'users'} %}
+	<header class="content-header header-group header-group-users">
+        <h1 class="content-title group-add-title">{{ "edit.group.%name%.users"|trans({'%name%': group.getName}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>    
+		{% include 'groups/navBar.html.twig' with {'group':group, current:'users'} %}
+    </header>
 
-	<table class="groups-users uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}User{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for user in group.getUsers %}
-			<tr>
-				<td>{{ user.getUserName }}</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsRemoveUsersPage', { groupId: group.getId, userId: user.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	<h2>{% trans %}Add a user{% endtrans %}</h2>
+    <article class="content content-edit">
+    	<div class="content-table-cont">
+			<table class="content-table groups-users uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}user{% endtrans %}</th>
+			            <th>{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for user in group.getUsers %}
+					<tr>
+						<td>{{ user.getUserName }}</td>
+						<td>
+							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsRemoveUsersPage', { groupId: group.getId, userId: user.getId }) }}"><i class='uk-icon-trash-o'></i> {% trans %}unlink.user{% endtrans %}</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+		<hr />
+		<h2>{% trans %}add.a.user{% endtrans %}</h2>
+
+		{% form_theme form 'forms.html.twig' %}
+		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.user{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+
+	{% include 'groups/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

@@ -1,42 +1,88 @@
 {
-    "name": "rezozero/renzo",
-    "version": "0.0.1",
+    "name": "roadiz/roadiz",
+    "description":"Roadiz is a polymorphic CMS based on a node system which can handle many type of services. It’s based on Symfony component and Doctrine ORM for maximum performances and security.",
+    "license":"MIT",
+    "type": "project",
+    "keywords": [
+        "cms",
+        "backoffice",
+        "rezo zero"
+    ],
+    "authors": [
+        {
+            "name": "Ambroise Maupate",
+            "email": "ambroise@rezo-zero.com",
+            "homepage": "http://www.rezo-zero.com",
+            "role": "Lead developer"
+        },
+        {
+            "name": "Julien Blanchet",
+            "email": "julien@rezo-zero.com",
+            "homepage": "http://www.rezo-zero.com",
+            "role": "AD, integrator"
+        },
+        {
+            "name": "Maxime Bérard",
+            "email": "maxime@rezo-zero.com",
+            "homepage": "http://www.rezo-zero.com",
+            "role": "Frontend developer, Integrator"
+        },
+        {
+            "name": "Maxime Constantinian",
+            "email": "azokal@rezo-zero.com",
+            "homepage": "http://www.rezo-zero.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Thomas Aufresne",
+            "email": "thomas@rezo-zero.com",
+            "homepage": "http://www.rezo-zero.com",
+            "role": "Developer"
+        }
+    ],
     "require": {
-        "rezozero/slir": "2.1.*",
-        "doctrine/orm": "2.4.*",
-        "symfony/yaml": "2.*",
-        "symfony/console": "2.5.0",
+        "rezozero/slir":           "2.1.*",
+        "doctrine/orm":            "2.4.*",
+        "symfony/yaml":            "2.5.*",
+        "symfony/console":         "2.5.*",
         "symfony/http-foundation": "2.5.*",
-        "symfony/routing": "2.5.*",
-        "symfony/config": "2.5.*",
-        "symfony/http-kernel": "2.5.*",
-        "symfony/stopwatch": "2.5.*",
-        "symfony/form": "2.5.*",
-        "symfony/validator": "2.5.*",
-        "symfony/security-csrf": "2.5.*",
-        "symfony/twig-bridge": "2.5.*",
-        "symfony/security": "2.5.*",
-        "twig/twig":"1.*",
-        "guzzle/http":"3.9.*",
-        "swiftmailer/swiftmailer": "@stable",
-        "symfony/finder": "@stable",
-        "symfony/intl": "@stable",
-        "twig/extensions": "@stable",
-        "michelf/php-markdown": "@stable",
-        "symfony/serializer": "@stable",
-        "symfony/filesystem": "@stable",
-        "solarium/solarium": "@stable"
+        "symfony/routing":         "2.5.*",
+        "symfony/config":          "2.5.*",
+        "symfony/http-kernel":     "2.5.*",
+        "symfony/stopwatch":       "2.5.*",
+        "symfony/form":            "2.5.*",
+        "symfony/validator":       "2.5.*",
+        "symfony/security-csrf":   "2.5.*",
+        "symfony/twig-bridge":     "2.5.*",
+        "symfony/finder":          "2.5.*",
+        "symfony/serializer":      "2.5.*",
+        "symfony/filesystem":      "2.5.*",
+        "symfony/security":        "2.3.*",
+        "twig/twig":               "1.16.*",
+        "twig/extensions":         "1.2.*",
+        "guzzlehttp/guzzle":       "5.0.*",
+        "swiftmailer/swiftmailer": "5.3.*",
+        "michelf/php-markdown":    "1.4.*",
+        "solarium/solarium":       "3.2.*",
+        "pimple/pimple":           "3.0.*",
+        "inlinestyle/inlinestyle": "1.2.*",
+        "phpoffice/phpexcel":      "1.8.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "satooshi/php-coveralls": "dev-master",
+        "squizlabs/php_codesniffer": "1.*"
     },
     "autoload": {
         "psr-4": {
-        	"RZ\\": "src/",
-            "Themes\\": "themes/",
-        	"GeneratedNodeSources\\": "sources/GeneratedNodeSources",
-            "Proxies\\": "sources/Proxies"
+        	"RZ\\":                   "src/",
+            "Themes\\":               "themes/",
+        	"GeneratedNodeSources\\": "gen-src/GeneratedNodeSources",
+            "Proxies\\":              "gen-src/Proxies"
         },
         "psr-0": {
-            "GlobalUrlMatcher": "sources/Compiled/",
-            "GlobalUrlGenerator": "sources/Compiled/"
+            "GlobalUrlMatcher":   "gen-src/Compiled/",
+            "GlobalUrlGenerator": "gen-src/Compiled/"
         }
     }
 }

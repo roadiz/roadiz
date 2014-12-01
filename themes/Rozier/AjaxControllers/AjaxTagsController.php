@@ -9,21 +9,21 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Tag;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Handlers\TagHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\TagHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-
 use Themes\Rozier\RozierApp;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+
 /**
  * {@inheritdoc}
  */
@@ -51,8 +51,10 @@ class AjaxTagsController extends AbstractAjaxController
             );
         }
 
-        $tag = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\Tag', (int) $tagId);
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        $tag = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
 
@@ -96,6 +98,52 @@ class AjaxTagsController extends AbstractAjaxController
         );
     }
 
+    public function searchAction(Request $request)
+    {
+        /*
+         * Validate
+         */
+        if (true !== $notValid = $this->validateRequest($request, 'GET')) {
+            return new Response(
+                json_encode($notValid),
+                Response::HTTP_OK,
+                array('content-type' => 'application/javascript')
+            );
+        }
+
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        $responseArray = array(
+            'statusCode' => Response::HTTP_NOT_FOUND,
+            'status'    => 'danger',
+            'responseText' => 'No tags found'
+        );
+
+        if (!empty($request->get('search'))) {
+
+            $responseArray = array();
+
+            $pattern = strip_tags($request->get('search'));
+            $tags = $this->getService('em')
+                        ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                        ->findBy(
+                            array('translatedTag.name' => array('LIKE', '%'.$pattern.'%')),
+                            null,
+                            10
+                        );
+
+            foreach ($tags as $tag) {
+                $responseArray[] = $tag->getHandler()->getFullPath();
+            }
+        }
+
+        return new Response(
+            json_encode($responseArray),
+            Response::HTTP_OK,
+            array('content-type' => 'application/javascript')
+        );
+    }
+
     /**
      * @param array $parameters
      * @param Tag   $tag
@@ -110,8 +158,8 @@ class AjaxTagsController extends AbstractAjaxController
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
 
-            $parent = $this->getKernel()->em()
-                ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['newParent']);
+            $parent = $this->getService('em')
+                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $tag->setParent($parent);
@@ -125,22 +173,22 @@ class AjaxTagsController extends AbstractAjaxController
          */
         if (!empty($parameters['nextTagId']) &&
             $parameters['nextTagId'] > 0) {
-            $nextTag = $this->getKernel()->em()
-                ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['nextTagId']);
+            $nextTag = $this->getService('em')
+                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['nextTagId']);
             if ($nextTag !== null) {
                 $tag->setPosition($nextTag->getPosition() - 0.5);
             }
         } elseif (!empty($parameters['prevTagId']) &&
             $parameters['prevTagId'] > 0) {
 
-            $prevTag = $this->getKernel()->em()
-                ->find('RZ\Renzo\Core\Entities\Tag', (int) $parameters['prevTagId']);
+            $prevTag = $this->getService('em')
+                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['prevTagId']);
             if ($prevTag !== null) {
                 $tag->setPosition($prevTag->getPosition() + 0.5);
             }
         }
         // Apply position update before cleaning
-        $this->getKernel()->em()->flush();
+        $this->getService('em')->flush();
 
         if ($parent !== null) {
             $parent->getHandler()->cleanChildrenPositions();

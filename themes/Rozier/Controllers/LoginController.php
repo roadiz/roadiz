@@ -11,9 +11,10 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Document;
-use RZ\Renzo\Core\Entities\Translation;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Utils\SplashbasePictureFinder;
 
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,7 +44,10 @@ class LoginController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        $session = $request->getSession();
+        $splash = new SplashbasePictureFinder();
+        $this->assignation['splash'] = $splash->getRandom();
+
+        $session = $this->getService('session');
         // get the login error if there is one
         if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
             $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
@@ -96,14 +100,20 @@ class LoginController extends RozierApp
     {
         $defaults = array();
 
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createNamedBuilder(null, 'form', $defaults, array())
-            ->add('_username', 'text', array('constraints' => array(
-                new NotBlank()
-            )))
-            ->add('_password', 'password', array('constraints' => array(
-                new NotBlank()
-            )));
+            ->add('_username', 'text', array(
+                'label' => $this->getTranslator()->trans('username'),
+                'constraints' => array(
+                    new NotBlank()
+                )
+            ))
+            ->add('_password', 'password', array(
+                'label' => $this->getTranslator()->trans('password'),
+                'constraints' => array(
+                    new NotBlank()
+                )
+            ));
 
         return $builder->getForm();
     }

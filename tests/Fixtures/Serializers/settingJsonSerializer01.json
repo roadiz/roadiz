@@ -2,5 +2,6 @@
     "name": "un super setting",
     "value": "value",
     "visible": 1,
+    "inMenu": 1,
     "type": 0
 }

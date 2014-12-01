@@ -1,0 +1,167 @@
+/*------------------------------------*\
+    NODES WIDGET
+\*------------------------------------*/
+
+
+/* -------- VARS -------- */
+@nodes-widget-border :         #cbcbcb;
+@nodes-widget-btn-bg :         #ededed;
+@nodes-widget-btn-border :     #bfbfbf;
+@nodes-widget-btn-color :      #2d2d2d;
+
+
+/* -------- STYLES -------- */
+
+.nodes-widget{
+    position: relative;
+    border:1px solid @nodes-widget-border;
+
+    .nodes-widget-uploader.dropzone {
+        height: 200px;
+        display: none;
+    }
+
+    .uk-form-label{
+        position: absolute;
+        left:70px;
+        height:55px;
+        line-height:59px;
+
+        &:before{
+            display: none;
+        }
+    }
+}
+
+.nodes-widget-nav{
+    height:55px;
+    border-bottom:1px dashed @nodes-widget-border;
+
+    .uk-navbar-brand{
+        padding:0 10px 0 28px;
+        color:#666;
+        line-height:55px;
+    }
+
+    .uk-icon-rz-global-nodes{
+        font-size: 30px;
+        line-height: 58px;
+    }
+
+    .nodes-widget-quick-creation{
+        margin:11px 0;
+    }
+
+    .uk-navbar-content {
+        padding: 0 10px;
+    }
+
+    .uk-button{
+        background: @nodes-widget-btn-bg;
+        margin-right:6px;
+        border: 1px solid @nodes-widget-btn-border;
+        color: @nodes-widget-btn-color;
+
+        &:last-child{
+            margin-right:0;
+        }
+
+        &:hover{
+            border-color:darken(@nodes-widget-btn-border, 15%);
+            background-color:darken(@nodes-widget-btn-bg, 10%);
+            color: darken(@nodes-widget-btn-color, 15%);
+        }
+    }
+}
+
+.nodes-widget-sortable{
+    margin:0;
+    padding:20px 25px 12px;
+    background:#fff;
+
+    .uk-sortable-placeholder{
+        position: relative;
+        width:80px; height:80px;
+        margin-right:16px;
+    }
+}
+
+.nodes-widget-sortable-list-item, .nodes-widget-dragging{
+    position: relative;
+    display: inline-block;
+    width:205px; height:32px;
+    margin:0 20px 8px 0;
+    padding-left:15px;
+    background: #E5E5E5;
+    color:#666;
+    font-size:12px; line-height:32px;
+    font-weight: 600;
+    overflow: hidden;
+    cursor: default;
+    .border-radius(3px, 3px, 0, 0);
+    .transition(0.4s background @easeOutExpo);
+
+    &:hover{
+        background: darken(#DDD, 3%);
+
+        .node-links{
+            right:0px;
+        }
+    }
+
+    .uk-sortable-handle{
+        position: absolute;
+        width:80px; height:80px;
+
+        &:after{
+            display: none;
+        }
+    }
+
+    .node-border{
+        position: absolute;
+        top:0; bottom:0; left:0;
+        width:4px;
+        background:@contrast-color;
+    }
+
+    .node-links{
+        position:absolute;
+        width:64px; height:32px;
+        top:0; right:-64px;
+        overflow: hidden;
+        .transition(0.4s right @easeOutExpo);
+
+        .node-link{ // a
+            display: inline-block;
+            width:32px; height:32px;
+            .rounded(0);
+            color:#333;
+            .opacity(0.95);
+
+            &:hover{
+                color:darken(#333, 10%);
+            }
+            &:first-child{
+                background: #aaa;
+
+                &:hover{
+                    background: darken(#aaa, 10%);
+                }
+            }
+
+            i{
+                margin:0;
+                line-height:32px;
+            }
+
+            .label{
+                display: none;
+            }
+        }
+    }
+
+    .link-button{
+        display: none;
+    }
+}

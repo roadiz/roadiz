@@ -13,82 +13,190 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         {# <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.min.css" /> #}
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.gradient.min.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/addons/uikit.addons.min.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/bootstrap3/bootstrap-switch.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/codemirror.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/style.min.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/uikit.gradient.min.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/addons/uikit.addons.min.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/bootstrap3/bootstrap-switch.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/jquery.minicolors.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/codemirror.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.css[0] }}" />
+        <link rel="stylesheet" href="{{ path('cssMainColor') }}" />
         <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
-        {% include 'includes/messages.html.twig' %}
         <div id="main-container" >
             <div id="main-container-inner">
-                <section class="main-container-section minified" id="user-panel">
-                    {% include 'includes/user_panel.html.twig' %}
+                <section class="main-container-section" id="user-panel">
+                    {% include 'panels/user_panel.html.twig' with {
+                        'session' : session,
+                        'securityContext' : securityContext,
+                        'head' : head,
+                        'adminImage':adminImage
+                    } only %}
                 </section>
                 <section class="main-container-section" id="admin-menu">
-                    {% include 'includes/admin_menu.html.twig' %}
+                    {% include 'panels/admin_menu.html.twig' with {
+                        'settingGroups' : settingGroups,
+                        'securityContext' : securityContext
+                    } only %}
                 </section>
-
+                {% if (securityContext.isGranted('ROLE_ACCESS_NODES') or securityContext.isGranted('ROLE_ACCESS_TAGS')) %}
                 <section id="main-trees" class="main-container-section">
-                    <div>
-                        {% include 'widgets/nodesSourcesSearch.html.twig' %}
-                        <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
-                            <li class="tabs"><a href=""><i class="uk-icon-node-tree"></i><span class="label">{% trans %}nodes{% endtrans %}</span></a></li>
-                            <li class="tabs"><a href=""><i class="uk-icon-tags"></i><span class="label">{% trans %}tags{% endtrans %}</span></a></li>
-                        </ul>
-                        <!-- This is the container of the content items -->
-                        <ul id="tree-container" class="uk-switcher uk-margin">
-                            <li>{% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':true} only %}</li>
-                            <li>{% include 'widgets/tagTree/tagTree.html.twig' with {"tagTree":tagTree, "tag":tagTree.getRootTag, 'mainTagTree':true} only %}</li>
-                        </ul>
+                    <div id="main-trees-overlay"></div>
+                    <div id="main-trees-container">
+                        {% include 'panels/tree_panel.html.twig' with {
+                            'securityContext': securityContext,
+                            'nodeTree': nodeTree,
+                            'tagTree': tagTree,
+                            'folderTree':folderTree
+                        } only %}
                     </div>
                 </section>
+                {% endif %}
                 <!-- Add your site or application content here -->
-                <section id="main-content" class="main-container-section">
-                    <div>
-                    {% block content %}
-                        <h1>{% trans %}Welcome{% endtrans %}</h1>
-                    {% endblock %}
+                <section id="main-content" class="main-container-section" data-uk-observe>
+                    <div id="main-content-overlay"></div>
+                    <div id="main-content-scrollable">
+                        {% block content %}
+                            <h1>{% trans %}Welcome{% endtrans %}</h1>
+                        {% endblock %}
+                        <div id="canvasloader-container"></div>
+                        <div id="back-top-button" title="{% trans %}back_to.top{% endtrans %}" data-uk-tooltip="{animation:true,pos:'top'}"><i class="uk-icon-rz-backtop"></i></div>
                     </div>
                 </section>
                 {# This is a debug panel placeholder… do not remove it. #}
                 <!-- ##debug_panel## -->
             </div>
         </div>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.1.1.min.js"><\/script>')</script>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
+        {% if head.devMode %}
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/sortable.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/nestable.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/pagination.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/notify.min.js"></script>
+
+        <script src="{{ head.resourcesUrl }}js/addons/sortable.js"></script>
+        <script src="{{ head.resourcesUrl }}js/addons/nestable.js"></script>
+        <script src="{{ head.resourcesUrl }}js/addons/pagination.js"></script>
+        <script src="{{ head.resourcesUrl }}js/addons/notify.js"></script>
+        <script src="{{ head.resourcesUrl }}js/addons/htmleditor.js"></script>
+
+        <script src="{{ head.resourcesUrl }}js/vendor/jquery-ui.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/TweenMax.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/ScrollToPlugin.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/mousetrap.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/jquery.minicolors.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/codemirror.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/mode/markdown/markdown.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/mode/overlay.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/mode/xml/xml.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/mode/gfm/gfm.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/marked.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/htmleditor.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/dropzone.js"></script>
 
-        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="{{ head.resourcesUrl }}js/bulk-edits/documentsBulk.js"></script>
+        <script src="{{ head.resourcesUrl }}js/bulk-edits/nodesBulk.js"></script>
 
-        <script src="{{ head.resourcesUrl }}js/vendor/dropzone.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/documentwidget.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/documentsList.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/documentWidget.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/nodeWidget.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/customFormWidget.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/documentUploader.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/saveButtons.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/settingsSaveButtons.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/nodeEditSource.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/nodeStatuses.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/nodeTypeFieldEdit.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/childrenNodesField.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/geotagField.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/markdownEditor.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/tagAutocomplete.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/folderAutocomplete.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/stackNodeTree.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/nodeTypeFieldsPosition.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/customFormFieldsPosition.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/customFormFieldEdit.js"></script>
+        <script src="{{ head.resourcesUrl }}js/rozierMobile.js"></script>
+        <script src="{{ head.resourcesUrl }}js/lazyload.js"></script>
         <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
         <script src="{{ head.resourcesUrl }}js/main.js"></script>
+        {% else %}
+        <script src="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.js[0] }}"></script>
+        <script src="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.js[1] }}"></script>
+        {% endif %}
+
         <script type="text/javascript">
             var temp = {
-                'baseUrl':      '{{ head.baseUrl }}',
-                'resourcesUrl': '{{ head.resourcesUrl }}',
-                'ajaxToken':    '{{ head.ajaxToken }}',
+                'baseUrl':        '{{ head.baseUrl }}',
+                'resourcesUrl':   '{{ head.resourcesUrl }}',
+                'ajaxToken':      '{{ head.ajaxToken }}',
+                'mainColor':      '{{ head.mainColor }}',
+                'mapsStyle':      {% if head.mapsStyle %}{{ head.mapsStyle|raw }}{% else %}[]{% endif %},
+                'googleClientId': '{{ head.googleClientId }}',
+                'messages': {
+                    'forbiddenPage':     '{{ 'forbidden.page'|trans() }}',
+                    'see_all':           '{{ 'see_all'|trans() }}',
+                    'searchDocuments':   '{{ 'search.documents'|trans() }}',
+                    'searchNodes':       '{{ 'search.nodes'|trans() }}',
+                    'searchCustomForms': '{{ 'search.custom_forms'|trans() }}',
+                    'moreDocuments':     '{{ 'more.documents'|trans() }}',
+                    'moreNodes':         '{{ 'more.nodes'|trans() }}',
+                    'moreCustomForms':   '{{ 'more.custom_forms'|trans() }}',
+                    'dropzone' : {
+                        'dictDefaultMessage':           "{{ 'drop.files.here.to.upload.or.click.to.open.your.explorer'|trans() }}",
+                        'dictFallbackMessage':          "{{ 'your.browser.does.not.support.dragndrop.file.uploads'|trans() }}",
+                        'dictFallbackText':             "{{ 'please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days'|trans() }}",
+                        'dictFileTooBig':               "{{ 'file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib'|trans() }}",
+                        'dictInvalidFileType':          "{{ 'you.cant.upload.files.of.this.type'|trans() }}",
+                        'dictResponseError':            "{{ 'server.responded.with.{{statuscode}}.code'|trans() }}",
+                        'dictCancelUpload':             "{{ 'cancel.upload'|trans() }}",
+                        'dictCancelUploadConfirmation': "{{ 'are.you.sure.you.want.to.cancel.this.upload'|trans() }}",
+                        'dictRemoveFile':               "{{ 'remove.file'|trans() }}",
+                        'dictRemoveFileConfirmation':   null,
+                        'dictMaxFilesExceeded':         "{{ 'you.can.not.upload.any.more.files'|trans() }}"
+                    },
+                    'htmleditor': {
+                        'h2':          '{{'headline.2'|trans() }}',
+                        'h3':          '{{'headline.3'|trans() }}',
+                        'h4':          '{{'headline.4'|trans() }}',
+                        'h5':          '{{'headline.5'|trans() }}',
+                        'h6':          '{{'headline.6'|trans() }}',
+                        'fullscreen':  '{{'fullscreen'|trans() }}',
+                        'bold' :       '{{'bold'|trans() }}',
+                        'italic' :     '{{'italic'|trans() }}',
+                        'strike' :     '{{'strikethrough'|trans() }}',
+                        'blockquote' : '{{'blockquote'|trans() }}',
+                        'link' :       '{{'link'|trans() }}',
+                        'image' :      '{{'image'|trans() }}',
+                        'listUl' :     '{{'unordered.list'|trans() }}',
+                        'listOl' :     '{{'ordered.list'|trans() }}',
+                        'back' :       '{{'back'|trans() }}',
+                        'hr' :         '{{'separator'|trans() }}',
+                        'nbsp' :       '{{'non_breaking.space'|trans() }}'
+                    },
+                    'geotag': {
+                        'resetMarker':   '{{'reset.marker'|trans() }}',
+                        'typeAnAddress': '{{'geotag.type_an_address.then_type_enter'|trans() }}'
+                    }
+                },
                 'routes': {
-                    'nodeAjaxEdit' :          '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',
-                    'tagAjaxEdit' :           '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
-                    'documentsAjaxExplorer' : '{{ path('documentsAjaxExplorerPage') }}',
-                    'searchNodesSourcesAjax' : '{{ path('searchNodesSourcesAjax') }}'
+                    'nodeAjaxEdit' :              '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',
+                    'tagAjaxEdit' :               '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
+                    'folderAjaxEdit' :            '{{ head.baseUrl }}/rz-admin/ajax/folder/edit/%folderId%',
+                    'nodeTypesFieldAjaxEdit':     '{{ head.baseUrl }}/rz-admin/ajax/node-types/fields/edit/%nodeTypeFieldId%',
+                    'customFormsFieldAjaxEdit':   '{{ head.baseUrl }}/rz-admin/ajax/custom-forms/fields/edit/%customFormFieldId%',
+                    'documentsBulkDeletePage' :   '{{ path('documentsBulkDeletePage') }}',
+                    'documentsBulkDownloadPage' : '{{ path('documentsBulkDownloadPage') }}',
+                    'documentsAjaxExplorer' :     '{{ path('documentsAjaxExplorerPage') }}',
+                    'nodesAjaxExplorer' :         '{{ path('nodesAjaxExplorerPage') }}',
+                    'customFormsAjaxExplorer' :   '{{ path('customFormsAjaxExplorerPage') }}',
+                    'documentsUploadPage' :       '{{ path('documentsUploadPage') }}',
+                    'searchNodesSourcesAjax':     '{{ path('searchNodesSourcesAjax') }}',
+                    'nodesStatusesAjax' :         '{{ path('nodesStatusesAjax') }}',
+                    'nodesTreeAjax' :             '{{ path('nodesTreeAjax') }}',
+                    'nodesQuickAddAjax' :         '{{ path('nodesQuickAddAjax')}}',
+                    'tagAjaxSearch':              '{{ path('tagAjaxSearch') }}',
+                    'foldersAjaxSearch':          '{{ path('foldersAjaxSearch') }}',
+                    'ajaxSessionMessages':        '{{ path('ajaxSessionMessages') }}'
                 }
             };
         </script>

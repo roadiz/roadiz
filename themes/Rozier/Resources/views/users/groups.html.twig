@@ -1,37 +1,48 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-user-groups">
-	<h1 id="user-title">Edit {{ user.getDefaultTranslatedTag.getName }} groups</h1>
+<section class="content-global edit-user">
 
-	{% include 'users/navBar.html.twig' with {'user':user, current:'groups'} %}
+	<header class="content-header header-user header-user-edit">
+        <h1 class="content-title user-add-title">{{ "edit.user.%name%.groups"|trans({'%name%': user.getUserName }) }}</h1>
+	    {% include 'users/navBar.html.twig' with {'user':user, current:'groups'} %}
+    </header>
 
-	<table class="users-groups uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}Group{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for group in user.getGroups %}
-			<tr>
-				<td>{{ group.getName }}</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveGroupsPage', { userId: user.getId, groupId: group.getId }) }}">{% trans %}Unlink{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	<h2>{% trans %}Add a group{% endtrans %}</h2>
+    <article class="content content-user-groups">
+        <div class="content-table-cont">
+			<table class="content-table users-groups uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}group{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for group in user.getGroups %}
+					<tr>
+						<td><a href="{{ path('groupsEditPage', {'groupId':group.getId}) }}">{{ group.getName }}</a></td>
+						<td>
+						{% spaceless %}
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('groupsEditRolesPage', { groupId: group.getId }) }}" title="{% trans %}roles{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-star"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('usersRemoveGroupsPage', { userId: user.getId, groupId: group.getId }) }}" title="{% trans %}unlink{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                        {% endspaceless %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<hr />
+		<h2>{% trans %}add.a.group{% endtrans %}</h2>
 
-	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+		{% form_theme form 'forms.html.twig' %}
+	    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+	        {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.group{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+	</article>
+	{% include 'users/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

@@ -1,19 +1,28 @@
-{% extends 'base.html.twig' %}
-
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-node-type">
-	<h1 id="node-type-title">Edit {{ node_type.getDisplayName }}</h1>
-	<nav>
-		<a class="uk-button uk-button-small" href="{{ path('nodeTypesHomePage') }}"><span class="uk-icon-reply"></span>{% trans %}Back to node-types{% endtrans %}</a>
-	</nav>
+<section class="content-global manage-node-types">
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
+    <header class="content-header header-node-types header-node-types-edit">
+        <h1 class="content-title node-types-edit-title">{{ "edit.nodeType.%name%"|trans({'%name%': nodeType.getDisplayName}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('nodeTypesHomePage') }}" title="{% trans %}back_to.nodeTypes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
+    </header>
+
+    <article class="content content-node-types-edit">
+        {% form_theme form 'forms.html.twig' %}
+        <form id="edit-node-type-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-node-type-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+    </article>
+
+    {% include 'node-types/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

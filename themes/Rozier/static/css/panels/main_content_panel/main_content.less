@@ -1,0 +1,141 @@
+/*------------------------------------*\
+   PANEL - MAIN CONTENT
+\*------------------------------------*/
+
+
+/*
+ * Main content section
+ */
+
+
+/* -------- VARS -------- */
+
+
+@main-content-padding-top:          40px;
+@main-content-padding-right:        100px;
+@main-content-padding-bottom:       40px;
+@main-content-padding-left:         50px;
+
+
+/* -------- STYLES -------- */
+
+#simple-body {
+    background-color: @global-background;
+}
+
+#main-content-scrollable{
+    padding: 0px;
+    background-color: @maincontent-bg;
+    overflow-y: auto;
+
+    .container{
+        padding: 0px 60px;
+    }
+}
+
+.content-global{
+
+    &.new-content-global{
+        display: none;
+    }
+}
+
+.content-header{ // header
+    position: relative;
+    height: 220px;
+    padding: 0px 60px;
+    background-color: @maincontent-header-bg;
+    text-align: center;
+    .box-sizing();
+    border-bottom: 1px solid @navbars-bg;
+
+    .navbar-navigation{
+        position: absolute;
+        right:0; bottom:0; left:0;
+
+        .uk-navbar-nav{
+            width:100%;
+        }
+    }
+
+    .count-filters-bar{
+        position: absolute;
+        right:0; bottom:66px; left:0;
+        background: 0 none;
+    }
+}
+
+.content-title { // h1
+    padding: 3em 0 0;
+    margin: 0px;
+    text-align: center;
+    color:@black-title;
+
+    &:after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 16px;
+        height: 1px;
+        background-color: #808080;
+        left: 50%;
+        margin-left: -8px;
+        margin-top: 3px;
+    }
+}
+
+.content-header-nav-back{
+    position: absolute;
+    top:46px; left:50px;
+    width:16px; height:16px;
+    padding:0;
+    color:@icon-simple;
+    .transition(0.4s color ease);
+
+    &:hover{
+        color:@icon-simple-hover;
+    }
+}
+
+.content-header-action-menu{
+    position: absolute;
+    top:36px; right:50px;
+
+    .uk-button{
+
+        i{
+            margin-top:-2px;
+        }
+    }
+}
+
+
+.content{
+    padding:@main-content-padding-top 0 @main-content-padding-bottom;
+
+    & > *{
+        padding:0 @main-content-padding-right 0 @main-content-padding-left;
+    }
+
+    &.content-upload{
+        padding:0;
+
+        & > *{
+            padding:0;
+        }
+    }
+
+    &.content-no-action-menu{
+        & > *{
+            padding:0 @main-content-padding-left 0 @main-content-padding-left;
+        }
+    }
+
+    &.content-delete{
+        text-align: center;
+    }
+}
+
+.content-subtitle{ // h2
+    margin:0px 0px 20px;
+}

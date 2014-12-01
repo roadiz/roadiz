@@ -1,0 +1,9 @@
+{
+    "name": "Neutral",
+    "displayName": "Neutral",
+    "description": "Neutral Node-type.",
+    "visible": true,
+    "newsletterType": false,
+    "hidingNodes": false,
+    "fields": []
+}

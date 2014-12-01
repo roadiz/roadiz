@@ -1,0 +1,5 @@
+<nav class="count-filters-bar uk-navbar">
+    <div class="uk-navbar-content" id="uk-navbar-filter-count">
+        {% transchoice filters.itemCount %}{0} no.item|{1} 1.item|]1,Inf] %count%.items{% endtranschoice %}
+    </div>
+</nav>

@@ -1,18 +1,23 @@
-{% extends 'base.html.twig' %}
-
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-tag">
-	<h1 id="tag-title">{% trans %}Delete tag:{% endtrans %} {{ tag.getTranslatedTags.first.getName }}</h1>
+<section class="content-global">
 
-	{% form_theme form 'forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<legend>{% trans %}Are you sure you want to delete this tag?{% endtrans %}</legend>
-	    	<a href="{{ path('tagsHomePage') }}" class="uk-button"><i class="uk-icon-reply"></i> {% trans %}Cancel{% endtrans %}</a>
-	    	<input class="uk-button uk-button-danger" type="submit" />
-   		</fieldset>
-	</form>
+    <header class="content-header header-node header-node-delete">
+        <h1 class="content-title tag-delete-title">{{ "delete.tag.%name%"|trans({'%name%': tag.getTagName }) }}</h1>
+    </header>
+
+    <article class="content content-delete content-tag-delete content-no-action-menu">
+        {% form_theme form 'forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <legend>{% trans %}are_you_sure.delete.tag{% endtrans %}</legend>
+                <a href="{{ path('tagsHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
+            </fieldset>
+        </form>
+    </article>
+
 </section>
 {% endblock %}

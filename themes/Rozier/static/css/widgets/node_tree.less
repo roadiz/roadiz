@@ -1,0 +1,132 @@
+/*------------------------------------*\
+   NODE TREE
+\*------------------------------------*/
+
+
+/* -------- STYLES -------- */
+
+.root-tree {
+    margin: 0px;
+    padding: 0px;
+}
+
+.nodetree {
+
+    &-bulk-selection {
+        position: absolute;
+        display: inline-block;
+        vertical-align: middle;
+        left: -24px;
+        padding: 10px;
+        top: -4px;
+
+        input[type="checkbox"] {
+            // display: none;
+
+
+            &:checked {
+                display: block;
+            }
+        }
+    }
+    &-element {
+        &-inner {
+            position: relative;
+        }
+        &-name {
+            vertical-align: middle;
+            font-size: 12px;
+            display: inline-block;
+            position: relative;
+            max-width: 80%;
+
+            a {
+                white-space: nowrap;
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: inline-block;
+                vertical-align: middle;
+            }
+        }
+        &:hover {
+            .nodetree-contextualmenu {
+                .opacity(1);
+            }
+
+
+            .nodetree-bulk-selection {
+                input[type="checkbox"] {
+                    display: block;
+                }
+            }
+        }
+    }
+    &-tags {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        padding:0 20px;
+
+        .uk-badge {
+            background: #CCC;
+            border:0 none;
+            text-shadow: none;
+            display: inline-block;
+        }
+
+        & > a {
+            display: inline-block !important;
+            color: white !important;
+            margin:0 3px 3px 3px;
+        }
+    }
+    &-contextualmenu {
+        position: absolute;
+        right: 22px;
+        top: 2px;
+        .opacity(0);
+
+        .uk-icon-caret-down {
+            font-size: 10px;
+            margin: 0 0 0 1px;
+        }
+        &.uk-open {
+            .uk-button-mini {
+                background: @contextualdropdown-p-bg-color;
+            }
+        }
+    }
+
+}
+
+
+.uk-nestable {
+
+    &-item {
+        margin-bottom: 1px;
+    }
+    &-placeholder {
+        margin-bottom: 1px;
+    }
+    &-list {
+        padding-left: 30px;
+    }
+    &-handle {
+        font-size: 15px;
+        vertical-align: middle;
+    }
+}
+
+.nodetree-widget{
+
+    .nodetree-widget .root-tree>li:first-child{
+
+        &:before{
+            position: absolute;
+            content:'';
+            top: 0px; bottom:0; left: 0px;
+            width:1px;
+        }
+    }
+}

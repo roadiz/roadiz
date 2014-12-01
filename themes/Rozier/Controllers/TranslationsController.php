@@ -12,13 +12,13 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Translation;
-use RZ\Renzo\Core\Entities\NodeTypeField;
-use RZ\Renzo\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,16 +43,18 @@ class TranslationsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $translations = $this->getKernel()->em()
-            ->getRepository('RZ\Renzo\Core\Entities\Translation')
+        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+
+        $translations = $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findAll();
 
         $this->assignation['translations'] = array();
 
         $listManager = new EntityListManager(
             $request,
-            $this->getKernel()->em(),
-            'RZ\Renzo\Core\Entities\Translation'
+            $this->getService('em'),
+            'RZ\Roadiz\Core\Entities\Translation'
         );
         $listManager->handle();
 
@@ -64,18 +66,18 @@ class TranslationsController extends RozierApp
             $form = $this->buildMakeDefaultForm($translation);
             $form->handleRequest();
             if ($form->isValid() &&
-                $form->getData()['translation_id'] == $translation->getId()) {
+                $form->getData()['translationId'] == $translation->getId()) {
 
                 $translation->getHandler()->makeDefault();
 
-                $msg = $this->getTranslator()->trans('translation.made_default', array('%name%'=>$translation->getName()));
+                $msg = $this->getTranslator()->trans('translation.%name%.made_default', array('%name%'=>$translation->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getLogger()->info($msg);
+                $this->getService('logger')->info($msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'translationsHomePage'
                     )
                 );
@@ -106,8 +108,10 @@ class TranslationsController extends RozierApp
      */
     public function editAction(Request $request, $translationId)
     {
-        $translation = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
+        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+
+        $translation = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
             $this->assignation['translation'] = $translation;
@@ -120,21 +124,21 @@ class TranslationsController extends RozierApp
                 try {
                     $this->editTranslation($form->getData(), $translation);
 
-                    $msg = $this->getTranslator()->trans('translation.updated', array('%name%'=>$translation->getName()));
+                    $msg = $this->getTranslator()->trans('translation.%name%.updated', array('%name%'=>$translation->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate(
+                    $this->getService('urlGenerator')->generate(
                         'translationsEditPage',
-                        array('translation_id' => $translation->getId())
+                        array('translationId' => $translation->getId())
                     )
                 );
                 $response->prepare($request);
@@ -162,6 +166,8 @@ class TranslationsController extends RozierApp
      */
     public function addAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+
         $translation = new Translation();
 
         if (null !== $translation) {
@@ -176,18 +182,18 @@ class TranslationsController extends RozierApp
                 try {
                     $this->addTranslation($form->getData(), $translation);
 
-                    $msg = $this->getTranslator()->trans('translation.created', array('%name%'=>$translation->getName()));
+                    $msg = $this->getTranslator()->trans('translation.%name%.created', array('%name%'=>$translation->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('translationsHomePage')
+                    $this->getService('urlGenerator')->generate('translationsHomePage')
                 );
                 $response->prepare($request);
 
@@ -215,8 +221,10 @@ class TranslationsController extends RozierApp
      */
     public function deleteAction(Request $request, $translationId)
     {
-        $translation = $this->getKernel()->em()
-            ->find('RZ\Renzo\Core\Entities\Translation', (int) $translationId);
+        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+
+        $translation = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if (null !== $translation) {
             $this->assignation['translation'] = $translation;
@@ -231,18 +239,18 @@ class TranslationsController extends RozierApp
                 try {
                     $this->deleteTranslation($form->getData(), $translation);
 
-                    $msg = $this->getTranslator()->trans('translation.deleted', array('%name%'=>$translation->getName()));
+                    $msg = $this->getTranslator()->trans('translation.%name%.deleted', array('%name%'=>$translation->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                    $this->getService('logger')->info($msg);
                 } catch (\Exception $e) {
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getLogger()->warning($e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getKernel()->getUrlGenerator()->generate('translationsHomePage')
+                    $this->getService('urlGenerator')->generate('translationsHomePage')
                 );
                 $response->prepare($request);
 
@@ -263,7 +271,7 @@ class TranslationsController extends RozierApp
 
     /**
      * @param array                              $data
-     * @param RZ\Renzo\Core\Entities\Translation $translation
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
      *
      * @return void
      */
@@ -275,16 +283,21 @@ class TranslationsController extends RozierApp
                 $translation->$setter( $value );
             }
 
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->flush();
         } catch (\Exception $e) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans('translation.cannot_update_already_exists',
-                array('%locale%'=>$translation->getLocale())), 1);
+            throw new EntityAlreadyExistsException(
+                $this->getTranslator()->trans(
+                    'translation.%locale%.cannot_update_already_exists',
+                    array('%locale%'=>$translation->getLocale())
+                ),
+                1
+            );
         }
     }
 
     /**
      * @param array                              $data
-     * @param RZ\Renzo\Core\Entities\Translation $translation
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
      *
      * @return void
      */
@@ -295,35 +308,46 @@ class TranslationsController extends RozierApp
                 $setter = 'set'.ucwords($key);
                 $translation->$setter( $value );
             }
-            $this->getKernel()->em()->persist($translation);
-            $this->getKernel()->em()->flush();
+            $this->getService('em')->persist($translation);
+            $this->getService('em')->flush();
         } catch (\Exception $e) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans('translation.cannot_create_already_exists',
-                array('%locale%'=>$translation->getLocale())), 1);
+            throw new EntityAlreadyExistsException(
+                $this->getTranslator()->trans(
+                    'translation.%locale%.cannot_create_already_exists',
+                    array('%locale%'=>$translation->getLocale())
+                ),
+                1
+            );
         }
     }
 
     /**
      * @param array                              $data
-     * @param RZ\Renzo\Core\Entities\Translation $translation
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
      *
      * @return void
      */
     private function deleteTranslation($data, Translation $translation)
     {
-        if ($data['translation_id'] == $translation->getId()) {
+        if ($data['translationId'] == $translation->getId()) {
 
             if (false === $translation->isDefaultTranslation()) {
-                $this->getKernel()->em()->remove($translation);
-                $this->getKernel()->em()->flush();
+                $this->getService('em')->remove($translation);
+                $this->getService('em')->flush();
             } else {
-                throw new \Exception($this->getTranslator()->trans('translation.cannot_delete_default_translation', array('%name%'=>$translation->getName())), 1);
+                throw new \Exception(
+                    $this->getTranslator()->trans(
+                        'translation.%name%.cannot_delete_default_translation',
+                        array('%name%'=>$translation->getName())
+                    ),
+                    1
+                );
             }
         }
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Translation $translation
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -334,56 +358,81 @@ class TranslationsController extends RozierApp
             'locale' =>         $translation->getLocale(),
             'available' =>      $translation->isAvailable(),
         );
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
-            ->add('name', 'text', array(
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'name',
+                'text',
+                array(
+                    'label'=>$this->getTranslator()->trans('name'),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ))
-            ->add('locale', 'choice', array(
-                'required' => true,
-                'choices' => Translation::$availableLocales
-            ))
-            ->add('available', 'checkbox', array('required' => false));
+            )
+            ->add(
+                'locale',
+                'choice',
+                array(
+                    'label'=>$this->getTranslator()->trans('locale'),
+                    'required' => true,
+                    'choices' => Translation::$availableLocales
+                )
+            )
+            ->add(
+                'available',
+                'checkbox',
+                array(
+                    'label'=>$this->getTranslator()->trans('available'),
+                    'required' => false
+                )
+            );
 
         return $builder->getForm();
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Translation $translation
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
      *
      * @return \Symfony\Component\Form\Form
      */
     private function buildDeleteForm(Translation $translation)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('translation_id', 'hidden', array(
-                'data' => $translation->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'translationId',
+                'hidden',
+                array(
+                    'data' => $translation->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ));
+            );
 
         return $builder->getForm();
     }
 
     /**
-     * @param RZ\Renzo\Core\Entities\Translation $translation
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
      *
      * @return \Symfony\Component\Form\Form
      */
     private function buildMakeDefaultForm(Translation $translation)
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('translation_id', 'hidden', array(
-                'data' => $translation->getId(),
-                'constraints' => array(
-                    new NotBlank()
+            ->add(
+                'translationId',
+                'hidden',
+                array(
+                    'data' => $translation->getId(),
+                    'constraints' => array(
+                        new NotBlank()
+                    )
                 )
-            ));
+            );
 
         return $builder->getForm();
     }

@@ -1,20 +1,18 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'node-type-fields/editBase.html.twig' %}{% else %}{% set baseTemplate = 'node-type-fields/ajaxEditBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
-
-{% block content %}
-<section id="manage-node-type-field">
-	<h1 id="node-type-field-title">Edit {{ field.getName }}</h1>
-
-	<nav>
-		<a class="uk-button uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: field.getNodeType.getId }) }}"><span class="uk-icon-reply"></span>{% trans %}Back to node-types fields{% endtrans %}</a>
-	</nav>
-
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-	    	<input class="uk-button uk-button-primary" type="submit" />
-   		</fieldset>
-	</form>
-</section>
+{% block subcontent %}
+    <article class="content content-node-type-field-edit">
+       {% form_theme form 'forms.html.twig' %}
+        <form id="edit-node-type-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-node-type-field-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+    </article>
 {% endblock %}

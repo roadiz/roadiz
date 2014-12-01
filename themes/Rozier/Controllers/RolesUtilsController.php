@@ -10,14 +10,16 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Renzo\Core\Kernel;
-use RZ\Renzo\Core\Entities\Role;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Role;
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Renzo\Core\Serializers\RoleJsonSerializer;
-use RZ\Renzo\Core\Serializers\RoleCollectionJsonSerializer;
+use RZ\Roadiz\Core\Serializers\RoleJsonSerializer;
+use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
 use Themes\Rozier\RozierApp;
 
-use RZ\Renzo\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\CMS\Importers\RolesImporter;
+
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,8 +46,10 @@ class RolesUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        $existingRole = $this->getKernel()->em()
-                              ->getRepository('RZ\Renzo\Core\Entities\Role')
+        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
+
+        $existingRole = $this->getService('em')
+                              ->getRepository('RZ\Roadiz\Core\Entities\Role')
                               ->findAll();
         $role = RoleCollectionJsonSerializer::serialize($existingRole);
 
@@ -55,9 +59,13 @@ class RolesUtilsController extends RozierApp
             array()
         );
 
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'role-all-' . date("YmdHis")  . '.rzt')); // Rezo-Zero Type
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'role-all-' . date("YmdHis")  . '.rzt'
+            )
+        ); // Rezo-Zero Type
 
         $response->prepare($request);
 
@@ -74,8 +82,10 @@ class RolesUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $roleId)
     {
-        $existingRole= $this->getKernel()->em()
-                              ->find('RZ\Renzo\Core\Entities\Role', (int) $roleId);
+        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
+
+        $existingRole= $this->getService('em')
+                            ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
 
         $role = RoleCollectionJsonSerializer::serialize(array($existingRole));
 
@@ -85,9 +95,13 @@ class RolesUtilsController extends RozierApp
             array()
         );
 
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'role-' . $existingRole->getName() . '-' . date("YmdHis")  . '.rzt')); // Rezo-Zero Type
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'role-' . $existingRole->getName() . '-' . date("YmdHis")  . '.rzt'
+            )
+        ); // Rezo-Zero Type
 
         $response->prepare($request);
 
@@ -103,6 +117,8 @@ class RolesUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
+
         $form = $this->buildImportJsonFileForm();
 
         $form->handleRequest();
@@ -117,32 +133,53 @@ class RolesUtilsController extends RozierApp
                 $serializedData = file_get_contents($file['tmp_name']);
 
                 if (null !== json_decode($serializedData)) {
-                    $roles = RoleCollectionJsonSerializer::deserialize($serializedData);
+                    if (RolesImporter::importJsonFile($serializedData)) {
+                        $msg = $this->getTranslator()->trans('role.imported');
+                        $request->getSession()->getFlashBag()->add('confirm', $msg);
+                        $this->getService('logger')->info($msg);
 
-                    $msg = $this->getTranslator()->trans('role.imported');
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getLogger()->info($msg);
+                        $this->getService('em')->flush();
 
-                    $this->getKernel()->em()->flush();
+                        // Clear result cache
+                        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+                        if ($cacheDriver !== null) {
+                            $cacheDriver->deleteAll();
+                        }
 
-                     // redirect even if its null
-                    $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
-                            'rolesHomePage'
-                        )
-                    );
-                    $response->prepare($request);
+                         // redirect even if its null
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate(
+                                'rolesHomePage'
+                            )
+                        );
+                        $response->prepare($request);
 
-                    return $response->send();
+                        return $response->send();
+                    } else {
+                        $msg = $this->getTranslator()->trans('file.format.not_valid');
+                        $request->getSession()->getFlashBag()->add('error', $msg);
+                        $this->getService('logger')->error($msg);
+
+                        // redirect even if its null
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate(
+                                'rolesImportPage'
+                            )
+                        );
+                        $response->prepare($request);
+
+                        return $response->send();
+                    }
+
 
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getLogger()->error($msg);
+                    $this->getService('logger')->error($msg);
 
                     // redirect even if its null
                     $response = new RedirectResponse(
-                        $this->getKernel()->getUrlGenerator()->generate(
+                        $this->getService('urlGenerator')->generate(
                             'rolesImportPage'
                         )
                     );
@@ -153,7 +190,7 @@ class RolesUtilsController extends RozierApp
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');
                 $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->getLogger()->error($msg);
+                $this->getService('logger')->error($msg);
             }
         }
 
@@ -171,9 +208,11 @@ class RolesUtilsController extends RozierApp
      */
     private function buildImportJsonFileForm()
     {
-        $builder = $this->getFormFactory()
+        $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('role_file', 'file');
+            ->add('role_file', 'file', array(
+                 'label' => $this->getTranslator()->trans('role.file')
+            ));
 
         return $builder->getForm();
     }

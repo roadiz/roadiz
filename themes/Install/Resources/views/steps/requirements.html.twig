@@ -1,47 +1,87 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="uk-panel-title">{% trans %}install.requirements{% endtrans %}</h1>
-    <p>{% trans %}requirements.message{% endtrans %}</p>
 
-    <table class="uk-table">
-    	<tr>
-    		<th></th>
-    		<th>{% trans %}requirement{% endtrans %}</th>
-    		<th>{% trans %}actual.value{% endtrans %}</th>
-    		<th>{% trans %}status{% endtrans %}</th>
-    	</tr>
-    	{% for name, require in requirements %}
-    		<tr>
-    			<td>{{ name|trans }}</td>
-    			<td>
-    				{% if require.value_minimum %}<div class="uk-badge">{{ require.value_minimum }}</div>{% endif %}
-    				{% if require.version_minimum %}<div class="uk-badge">{{ require.version_minimum }}</div>{% endif %}
-    			</td>
-    			<td>
-    				{% if require.found %}<div class="uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.found }}</div>{% endif %}
-    				{% if require.folder %}<div class="uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.folder }}</div>{% endif %}
-    			</td>
-    			<td>
-    			{% if require.status %}
-    				<div class="uk-badge uk-badge-notification uk-badge-success"><i class="uk-icon-check"></i></div>
-    			{% else %}
-    				<div class="uk-badge uk-badge-notification uk-badge-danger"><i class="uk-icon-ban"></i></div>
-    			{% endif %}
-    			</td>
+    <article id="content-requirements" class="content">
 
-    			{% if not require.status and require.message %}
-    		</tr>
-    		<tr>
-    			<td colspan="4" class="message uk-alert uk-alert-danger">{{ require.message }}</td>
-    			{% endif %}
-    		</tr>
-    	{% endfor %}
-    </table>
-    <p>
-    	<a class="uk-button uk-button-success" href="{{ path('installHomePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.welcome{% endtrans %}</a>
-    	{% if totalSuccess %}
-    	<a class="uk-button uk-button-success" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
-    	{% endif %}
-    </p>
+        <div class="content-title-cont">
+            <h1 class="content-title">{% trans %}requirements.title{% endtrans %}</h1>   
+        </div>
+
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item last"></div>
+        </div>
+
+        <div class="content-text-cont">
+            
+            <div class="content-text">
+
+                <div class="content-intro content-intro-only">
+                    {% trans %}requirements.message{% endtrans %}
+                </div>
+
+                <table id="requirements-table" class="install-table uk-table">
+                    <tr>
+                        <th>{% trans %}requirements.spec{% endtrans %}</th>
+                        <th>{% trans %}requirements.requirement{% endtrans %}</th>
+                        <th>{% trans %}requirements.actual_value{% endtrans %}</th>
+                        <th>{% trans %}status{% endtrans %}</th>
+                    </tr>
+                    {% for name, require in requirements %}
+                        <tr class="install-table-item requirement-item">
+                            <td class="requirement-name">{{ name|trans }}</td>
+                            <td>
+                                {% if require.value_minimum %}<div class="uk-badge">{{ require.value_minimum }}</div>{% endif %}
+                                {% if require.version_minimum %}<div class="uk-badge">{{ require.version_minimum }}</div>{% endif %}
+                            </td>
+                            <td>
+                                {% if require.found %}
+                                    <div class="uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.found }}</div>
+                                {% endif %}
+                                {% if require.folder %}
+                                    <div class="uk-badge-folder uk-badge uk-badge-notification uk-badge-notification-infos">
+                                        <i class="uk-icon-rz-infos"></i>
+                                         <div class="uk-badge-folder-content uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.folder }}</div>
+                                    </div>                                   
+                                {% endif %}
+                            </td>
+                            <td class="status">
+                            {% if require.status %}
+                                <div class="uk-badge uk-badge-notification uk-badge-success"><i class="uk-icon-check"></i></div>
+                            {% else %}
+                                <div class="uk-badge uk-badge-notification uk-badge-danger"><i class="uk-icon-ban"></i></div>
+                            {% endif %}
+                            </td>
+
+                            {% if not require.status and require.message %}
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="message uk-alert uk-alert-danger">{{ require.message }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+
+            </div>
+
+            {% spaceless %}
+            <div class="content-buttons">          
+                <a class="content-button uk-button" href="{{ path('installHomePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.welcome{% endtrans %}</a>
+                {% if totalSuccess %}
+                <a class="content-button uk-button uk-button-primary" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+                {% endif %}
+            </div>
+            {% endspaceless %}            
+
+        </div>
+        
+    </article>
+
 {% endblock %}

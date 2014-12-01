@@ -1,4 +1,5 @@
-<nav class="user-edit-navigation uk-navbar">
+<nav class="user-edit-navigation navbar-navigation uk-navbar">
+	{% spaceless %}
 	<ul class="uk-navbar-nav">
 		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
 			<a href="{{ path('usersEditPage', { userId: user.getId }) }}">{% trans %}user.edit{% endtrans %}</a>
@@ -9,11 +10,9 @@
 		<li class="{% if current == 'groups' %}uk-active{% endif %}">
 			<a href="{{ path('usersEditGroupsPage', { userId: user.getId }) }}">{% trans %}user.groups{% endtrans %}</a>
 		</li>
-	</ul>
-	<div class="uk-navbar-content">
-		<a class="uk-button" href="{{ path('usersHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}back.to.users{% endtrans %}</a>
-	</div>
-	<div class="uk-navbar-content uk-navbar-flip">
-		<a class="uk-button uk-button-danger" href="{{ path('usersDeletePage', { userId: user.getId}) }}"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</a>
-	</div>
+		<li class="{% if current == 'history' %}uk-active{% endif %}">
+			<a href="{{ path('historyUserPage', { userId: user.getId }) }}">{% trans %}user.history{% endtrans %}</a>
+		</li>
+	</ul>	    
+	{% endspaceless %}
 </nav>

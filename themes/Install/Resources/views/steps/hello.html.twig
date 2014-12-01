@@ -1,7 +1,60 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="uk-panel-title">{% trans %}welcome.title{% endtrans %}</h1>
-    <p>{% trans %}welcome.message{% endtrans %}</p>
-    <p><a class="uk-button uk-button-success" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a></p>
+
+    <article id="content-hello" class="content">
+
+        <div class="content-title-cont">
+            <h1 class="content-title">{% trans %}welcome.title{% endtrans %}</h1>
+        </div>
+
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item last"></div>
+        </div>
+
+        <div class="content-text-cont">
+
+            <div class="content-text">
+
+                <div class="content-intro content-intro-only">
+                    <h3>{% trans %}welcome.subtitle{% endtrans %}</h3>
+                    {% trans %}welcome.message{% endtrans %}
+                </div>
+
+                {% if error %}
+                <div class="uk-alert uk-alert-danger">
+                    <a href="#" class="uk-alert-close uk-close"></a>
+                    <p>{% trans %}database.cannot_connect{% endtrans %}</p>
+                    <p>{{ errorMessage }}</p>
+                </div>
+                {% endif %}
+
+                {% form_theme form 'horizontalForms.html.twig' %}
+                <form id="language-form" class="uk-form uk-form-horizontal" action="#" method="post" {{ form_enctype(form) }}>
+                    <div class="content-text content-text-form">
+                        {{ form_widget(form) }}
+                        <button class="content-button form-save-button uk-button"><i class="uk-icon-magic"></i> {% trans %}choose.language{% endtrans %}</button>
+                    </div>
+                </form>
+            </div>
+
+            {% spaceless %}
+            <div class="content-buttons">
+
+                <a class="content-button uk-button uk-button-primary" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+
+            </div>
+            {% endspaceless %}
+
+        </div>
+
+    </article>
+
 {% endblock %}

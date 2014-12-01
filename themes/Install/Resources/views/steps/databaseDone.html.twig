@@ -1,10 +1,127 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="uk-panel-title">{% trans %}install.database.done{% endtrans %}</h1>
-    <p>{% trans %}database.done.message{% endtrans %}</p>
-    <p>
-    	<a class="uk-button uk-button-success" href="{{ path('installDatabasePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a>
-    	<a class="uk-button uk-button-success" href="{{ path('installUserPage') }}"><i class="uk-icon-arrow-circle-right"></i> {% trans %}goto.user{% endtrans %}</a>
+
+    <article id="content-database-done" class="content">
+
+        <div class="content-title-cont">
+            <h1 class="content-title">
+            {% if error %}
+            {% trans %}database_fail.title{% endtrans %}
+            {% else %}
+            {% trans %}database_done.title{% endtrans %}
+            {% endif %}
+            </h1>
+        </div>
+
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item last"></div>
+        </div>
+
+        <div class="content-text-cont">
+
+            <div class="content-text">
+
+                {% if error %}
+                    <div class="content-intro content-intro-only">
+                        {% trans %}database_fail.message{% endtrans %}
+                        <div class="uk-alert uk-alert-danger">
+                            <a href="#" class="uk-alert-close uk-close"></a>
+                            <p>{% trans %}database.cannot_connect{% endtrans %}</p>
+                            <p>{{ errorMessage }}</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="content-intro content-intro-big">
+                        {% trans %}database_done.message{% endtrans %}
+                    </div>
+
+                    {% if imports.roles|length > 0 %}
+                    <h4 class="import-nodetypes-part">{% trans %}import_roles{% endtrans %}</h4>
+                    <table class="install-table import-nodetypes-part1-table uk-table">
+                        {% for role in imports.roles %}
+                            <tr>
+                                <td></td>
+                                <td>{{ role|trans }}</td>
+                                <td>
+                                    <div class="uk-badge uk-badge-notification" id="{{ role|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {% endif %}
+                    {% if imports.groups|length > 0 %}
+                    <h4 class="import-nodetypes-part">{% trans %}import_groups{% endtrans %}</h4>
+                    <table class="install-table import-nodetypes-part1-table uk-table">
+                        {% for group in imports.groups %}
+                            <tr>
+                                <td></td>
+                                <td>{{ group|trans }}</td>
+                                <td>
+                                    <div class="uk-badge uk-badge-notification" id="{{ group|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {% endif %}
+                    {% if imports.settings|length > 0 %}
+                    <h4 class="import-nodetypes-part">{% trans %}import_settings{% endtrans %}</h4>
+                    <table class="install-table import-nodetypes-part1-table uk-table">
+                        {% for setting in imports.settings %}
+                            <tr>
+                                <td></td>
+                                <td>{{ setting|trans }}</td>
+                                <td>
+                                    <div class="uk-badge uk-badge-notification" id="{{ setting|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {% endif %}
+                {% endif %}
+
+            </div>
+
+            {% spaceless %}
+            <div class="content-buttons">
+
+                {% if error %}
+                    <a class="content-button uk-button" href="{{ path('installDatabasePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a>
+                {% else %}
+                    <a class="content-button uk-button" href="{{ path('installDatabasePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a>
+                    <a class="content-button uk-button uk-button-primary" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-right"></i> {% trans %}goto.theme{% endtrans %}</a>
+                {% endif %}
+
+            </div>
+            {% endspaceless %}
+
+        </div>
+
+    </article>
+
     </p>
+{% endblock %}
+
+{% block customScripts %}
+<script type="text/javascript">
+    (function() {
+        Install.importNodeTypeRoutes = [];
+        {% for role in imports.roles %}
+        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportRoles', {'filename': role}) }}",'id':'{{ role|replace({'/': '_', '.': '_'}) }}'});
+        {% endfor %}
+        {% for group in imports.groups %}
+        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportGroups', {'filename': group}) }}",'id':'{{ group|replace({'/': '_', '.': '_'}) }}'});
+        {% endfor %}
+        {% for setting in imports.settings %}
+        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportSettings', {'filename': setting}) }}",'id':'{{ setting|replace({'/': '_', '.': '_'}) }}'});
+        {% endfor %}
+    })();
+</script>
 {% endblock %}

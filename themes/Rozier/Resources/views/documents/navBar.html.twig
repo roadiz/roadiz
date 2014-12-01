@@ -1,0 +1,16 @@
+<nav class="document-navbar-navigation navbar-navigation uk-navbar">
+	<ul class="uk-navbar-nav">
+		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
+			<a href="{{ path('documentsEditPage', { documentId: document.getId }) }}">{% trans %}document.edit{% endtrans %}</a>
+		</li>
+		<li class="{% if current == 'metas' %}uk-active{% endif %}" >
+			<a href="{{ path('documentsMetaPage', { documentId: document.getId }) }}">{% trans %}document.metas{% endtrans %}</a>
+		</li>
+		<li class="{% if current == 'preview' %}uk-active{% endif %}">
+			<a href="{{ path('documentsPreviewPage', { documentId: document.getId }) }}">{% trans %}document.preview{% endtrans %}</a>
+		</li>
+		<li class="{% if current == 'usage' %}uk-active{% endif %}">
+			<a href="{{ path('documentsUsagePage', { documentId: document.getId }) }}">{% trans %}document.usage{% endtrans %}</a>
+		</li>
+	</ul>
+</nav>

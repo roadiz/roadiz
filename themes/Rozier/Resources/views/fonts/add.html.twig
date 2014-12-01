@@ -1,17 +1,26 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
+<section class="content-global add-font">
 
-<section id="manage-font">
-	<h1 id="font-title">{% trans %}Add a new font{% endtrans %}</h1>
-	<nav><a class="uk-button uk-button-small" href="{{ path('fontsHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to font{% endtrans %}</a></nav>
+    <header class="content-header header-font header-font-add">
+        <h1 class="content-title font-add-title">{% trans %}add.a.font{% endtrans %}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('fontsHomePage') }}" title="{% trans %}back_to.fonts{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </header>
 
-	{% form_theme form 'forms.html.twig' %}
-	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
-	    <fieldset data-uk-margin>
-		    <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> add.font</button>
-	   	</fieldset>
-	</form>
+    <article class="content content-add">
+    	{% form_theme form 'forms.html.twig' %}
+    	<form id="add-font-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+    	    {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+    		    <button data-action-save="#add-font-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+    	   	</fieldset>
+    	</form>
+    </article>
+
+    {% include 'fonts/actionsMenu.html.twig' with {"font": font} only %}
 </section>
 {% endblock %}

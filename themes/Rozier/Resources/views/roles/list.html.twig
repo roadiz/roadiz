@@ -1,39 +1,53 @@
-{% extends 'base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-roles">
-	<h1 id="title">{% trans %}Roles{% endtrans %}</h1>
-	<nav>
-		<a class="uk-button" href="{{ path('rolesAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}Create a role{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('rolesImportPage') }}"><i class="uk-icon-upload"></i> {% trans %}Import a roles (.rzt){% endtrans %}</a>
-        <a class="uk-button" href="{{ path('rolesExportAllPage') }}"><i class="uk-icon-download"></i> {% trans %}Export all roles (.rzt){% endtrans %}</a>
-    </nav>
+<section class="content-global  content-nav-and-filters">
+
+    <header class="content-header header-role header-role-list">
+        <h1 class="content-title role-title">{% trans %}roles{% endtrans %}</h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
+        <div class="content-header-action-menu">
+            <nav>
+        		<a class="uk-button" href="{{ path('rolesAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.role{% endtrans %}</a>
+        		<a class="uk-button" href="{{ path('rolesImportPage') }}"><i class="uk-icon-rz-upload"></i> {% trans %}import.role{% endtrans %}</a>
+                <a class="uk-button rz-no-ajax-link" href="{{ path('rolesExportAllPage') }}"><i class="uk-icon-rz-download"></i> {% trans %}export.all.roles{% endtrans %}</a>
+            </nav>
+        </div>
+    </header>
+
 	{% include 'widgets/filtersBar.html.twig' %}
-	<table class="roles uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for role in roles %}
-			<tr>
-				<td>
-					{% if not role.required %}<a href="{{ path('rolesEditPage', { roleId: role.getId }) }}">{{ role.getName }}</a>{% else %}
-					{{ role.getName }}{% endif %}
-				</td>
-				<td>
-					{% if not role.required %}
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('rolesDeletePage', { roleId: role.getId }) }}"><span class="uk-icon-trash-o"></span> {% trans %}Delete{% endtrans %}</a>
-					<a class="uk-button uk-button-small uk-button-success" href="{{ path('rolesExportPage', { roleId: role.getId }) }}"><i class="uk-icon-download"></i> {% trans %}Export{% endtrans %}</a>
-					{% else %}
-					<div class="uk-badge uk-badge-success"><span class="uk-icon-lock"></span> {% trans %}role.required{% endtrans %}</div>
-					{% endif %}
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	<article class="content content-no-action-menu content-node-types-list">
+        <div class="content-table-cont">
+			<table class="content-table roles uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}name{% endtrans %}</th>
+			            <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					{% for role in roles %}
+					<tr>
+						<td>
+							{% if not role.required %}<a href="{{ path('rolesEditPage', { roleId: role.getId }) }}">{{ role.getName }}</a>{% else %}
+							{{ role.getName }}{% endif %}
+						</td>
+						<td>
+                        {% spaceless %}
+                            {% if not role.required %}
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('rolesEditPage', { roleId: role.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small uk-button-success rz-no-ajax-link" href="{{ path('rolesExportPage', { roleId: role.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('rolesDeletePage', { roleId: role.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                            {% else %}
+                            <div class="uk-badge uk-badge-table"><span class="uk-icon-rz-lock"></span> {% trans %}role.required{% endtrans %}</div> <!-- uk-badge-success -->
+                            {% endif %}
+                        {% endspaceless %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</article>
 </section>
 {% endblock %}

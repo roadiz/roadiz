@@ -1,34 +1,48 @@
-{% extends 'base.html.twig' %}
-
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section id="manage-node-type-fields">
-	<h1 id="title">{% trans %}Fields: {% endtrans %}{{ nodeType.getDisplayName }}</h1>
-	<nav>
-		<a class="uk-button" href="{{ path('nodeTypesHomePage') }}"><i class="uk-icon-reply"></i> {% trans %}Back to node-types{% endtrans %}</a>
-		<a class="uk-button" href="{{ path('nodeTypeFieldsAddPage', { nodeTypeId: nodeType.getId }) }}"><i class="uk-icon-plus"></i> {% trans %}Add a field{% endtrans %}</a>
-	</nav>
-	<table class="node-type-fields uk-table">
-		<thead>
-	        <tr>
-	            <th>{% trans %}Name{% endtrans %}</th>
-	            <th>{% trans %}Label{% endtrans %}</th>
-	            <th>{% trans %}Type{% endtrans %}</th>
-	            <th>{% trans %}Actions{% endtrans %}</th>
-	        </tr>
-	    </thead>
-		<tbody>
-			{% for field in fields %}
-			<tr>
-				<td><a href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}">{{ field.getName }}</a></td>
-				<td>{{ field.getLabel }}</td>
-				<td>{{ field.getTypeName }}</td>
-				<td>
-					<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}">{% trans %}Delete{% endtrans %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+<section class="content-global content-nav-and-filters">
+
+    <header class="content-header header-node-type-fields header-node-type-fields-list">
+        <h1 class="content-title">{{ "edit.nodeTypeFields.for.nodeType.%name%"|trans({'%name%': nodeType.getDisplayName}) }}</h1>
+
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('nodeTypesHomePage') }}" title="{% trans %}back_to.nodeTypes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
+        <div class="content-header-action-menu">
+	        <nav>
+				<a class="uk-button" href="{{ path('nodeTypeFieldsAddPage', { nodeTypeId: nodeType.getId }) }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.nodeTypeField{% endtrans %}</a>
+			</nav>
+		</div>
+    </header>
+
+    <article class="content content-no-action-menu">
+        <div class="content-table-cont">
+        	<table class="node-type-fields content-table uk-table">
+				<thead>
+			        <tr>
+			            <th>{% trans %}name{% endtrans %}</th>
+			            <th class="mobile-hidden">{% trans %}label{% endtrans %}</th>
+			            <th class="mobile-hidden">{% trans %}type{% endtrans %}</th>
+                        <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
+			        </tr>
+			    </thead>
+				<tbody class="uk-sortable" data-uk-sortable="{animation:0, dragCustomClass:'rz-node-type-field-dragged', handleClass:'node-type-field-col'}">
+					{% for field in fields %}
+					<tr class="node-type-field-row" data-position="{{ field.position }}" data-field-id="{{ field.getId }}" class="node-type-field-row">
+						<td class="node-type-field-col node-type-field-col-1"><i class="uk-icon-chevron-right"></i><a class="node-type-field-edit-button rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" data-index="{{ loop.index0 }}">{{ field.getName }}</a></td>
+						<td class="mobile-hidden node-type-field-col">{{ field.getLabel }}</td>
+						<td class="mobile-hidden node-type-field-col">{{ field.getTypeName|trans }}</td>
+						<td>
+                            {% spaceless %}
+                                <a class="uk-button uk-button-content uk-button-small node-type-field-edit-button rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}" data-index="{{ loop.index0 }}"><i class="uk-icon-rz-pencil"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                            {% endspaceless %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+        </div>
+    </article>
+
 </section>
 {% endblock %}

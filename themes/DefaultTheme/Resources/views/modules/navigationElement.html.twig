@@ -3,8 +3,8 @@
 {% else %}
 	{% set title = source.getNode.getNodeName %}
 {% endif %}
-{% set children = source.getHandler.getChildren %}
-<li data-node-id="{{ source.getNode.getId }}" 
+{% set children = source.getHandler.getChildren(null, null, securityContext) %}
+<li data-node-id="{{ source.getNode.getId }}"
 	class="{% if source.getNode.getId == activeId %}active uk-active{% endif %} {% if children|length %}uk-parent{% endif %}"
 	{% if children|length %}data-uk-dropdown{% endif %}>
 	<a href="{{ source.getHandler.getUrl }}">{{ title }}</a>
@@ -12,9 +12,13 @@
 	<div class="uk-dropdown uk-dropdown-navbar">
 		<ul class="uk-nav uk-nav-navbar">
 			{% for subsource in children %}
-			{% include 'modules/navigationElement.html.twig' with { "source" : subsource, "activeId" : activeId } %}
+			{% include 'modules/navigationElement.html.twig' with {
+				"source" : subsource,
+				"activeId" : activeId,
+                'securityContext':securityContext
+			} only %}
 			{% endfor %}
 		</ul>
 	</div>
 	{% endif %}
-</li>	
+</li>

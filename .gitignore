@@ -1,14 +1,11 @@
 /vendor
-/files/*
-cache
 .AppleDouble
 node_modules
 npm-debug.log
 **/.DS_Store
 **/._*
 ._*
-conf/config.json
-conf/*.config.json
 composer.lock
 report.txt
-TestTheme
+/build
+.htpasswd

@@ -1,8 +1,8 @@
 <?php
 
-use RZ\Renzo\Core\Entities\RoleRepository;
-use RZ\Renzo\Core\Entities\Role;
-use RZ\Renzo\Core\Kernel;
+use RZ\Roadiz\Core\Entities\RoleRepository;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Kernel;
 
 class RoleRepositoryTest extends PHPUnit_Framework_TestCase
 {
@@ -13,12 +13,12 @@ class RoleRepositoryTest extends PHPUnit_Framework_TestCase
      */
     public function testRoleValue($name, $expected)
     {
-        echo Kernel::getInstance()->em()
-            ->getRepository('RZ\Renzo\Core\Entities\Role')
+        echo Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Role')
             ->countByName($name);
 
-        $role = Kernel::getInstance()->em()
-            ->getRepository('RZ\Renzo\Core\Entities\Role')
+        $role = Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Role')
             ->findOneByName($name);
 
         static::$entityCollection[] = $role;
@@ -39,6 +39,27 @@ class RoleRepositoryTest extends PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         static::$entityCollection = array();
+
+        $roles = array(
+            array("role___test", "ROLE_TEST"),
+            array("role___test", "ROLE_TEST"),
+            array("tèst tèst", "ROLE_TEST_TEST"),
+        );
+
+        foreach ($roles as $value) {
+            $role = Kernel::getService('em')
+                        ->getRepository('RZ\Roadiz\Core\Entities\Role')
+                        ->findOneByName($value[1]);
+
+            if (null === $role) {
+                $a = new Role();
+                $a->setName($value[0]);
+
+                Kernel::getService('em')->persist($a);
+            }
+        }
+
+        Kernel::getService('em')->flush();
     }
 
     /**
@@ -47,10 +68,9 @@ class RoleRepositoryTest extends PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         foreach (static::$entityCollection as $role) {
-            Kernel::getInstance()->em()->remove($role);
+            Kernel::getService('em')->remove($role);
         }
 
-        Kernel::getInstance()->em()->flush();
-        Kernel::getInstance()->em()->clear(); // Detaches all objects from Doctrine!
+        Kernel::getService('em')->flush();
     }
 }
