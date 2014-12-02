@@ -222,6 +222,7 @@ class InstallCommand extends Command
 
     public static function rebuildEntityManager()
     {
+        unset(Kernel::getInstance()->container["em.config"]);
         unset(Kernel::getInstance()->container["em"]);
         Kernel::getInstance()->container->register(new DoctrineServiceProvider());
     }
