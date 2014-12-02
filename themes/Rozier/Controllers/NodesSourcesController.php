@@ -180,7 +180,10 @@ class NodesSourcesController extends RozierApp
                 'text',
                 array(
                     'label' => $this->getTranslator()->trans('title'),
-                    'required' => false
+                    'required' => false,
+                    'attr' => array(
+                        'data-desc' => ''
+                    )
                 )
             );
         foreach ($fields as $field) {
