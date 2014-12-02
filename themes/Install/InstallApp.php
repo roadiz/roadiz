@@ -210,7 +210,7 @@ class InstallApp extends AppController
         $result = $this->getService('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
 
         $array = explode('\\', $result->getClassName());
-        $data = json_decode(file_get_contents(RENZO_ROOT . "/themes/". $array[2] . "/config.json"), true);
+        $data = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/". $array[2] . "/config.json"), true);
 
         $this->assignation = array_merge($this->assignation, $data["importFiles"]);
         $this->assignation["themeId"] = $id;
@@ -321,7 +321,7 @@ class InstallApp extends AppController
                 /*
                  * files to import
                  */
-                $installData = json_decode(file_get_contents(RENZO_ROOT . "/themes/Install/config.json"), true);
+                $installData = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/Install/config.json"), true);
                 $this->assignation['imports'] = $installData['importFiles'];
 
             } catch (\PDOException $e) {
@@ -441,7 +441,7 @@ class InstallApp extends AppController
     public function themeInstallAction(Request $request)
     {
         $array = explode('\\', $request->get("classname"));
-        $data = json_decode(file_get_contents(RENZO_ROOT . "/themes/". $array[2] . "/config.json"), true);
+        $data = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/". $array[2] . "/config.json"), true);
         $fix = new Fixtures();
         $data["className"] = $request->get("classname");
         $fix->installTheme($data);
@@ -492,7 +492,7 @@ class InstallApp extends AppController
     public function themeSummaryAction(Request $request)
     {
         $array = explode('\\', $request->get("classname"));
-        $data = json_decode(file_get_contents(RENZO_ROOT . "/themes/". $array[2] . "/config.json"), true);
+        $data = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/". $array[2] . "/config.json"), true);
 
         $this->assignation["theme"] = array(
             "name" => $data["name"],
@@ -513,7 +513,7 @@ class InstallApp extends AppController
 
         foreach ($data["importFiles"] as $name => $filenames) {
             foreach ($filenames as $filename) {
-                $this->assignation["status"]["import"][$filename] = file_exists(RENZO_ROOT . "/themes/". $array[2] . "/" . $filename);
+                $this->assignation["status"]["import"][$filename] = file_exists(ROADIZ_ROOT . "/themes/". $array[2] . "/" . $filename);
             }
         }
 

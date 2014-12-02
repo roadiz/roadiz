@@ -70,6 +70,12 @@ class ConfigurationCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Disable the install assistant'
+            )
+            ->addOption(
+                'generateHtaccess',
+                null,
+                InputOption::VALUE_NONE,
+                'Generate .htaccess files to protect critical directories'
             );
     }
 
@@ -109,6 +115,78 @@ class ConfigurationCommand extends Command
 
             $text .= '<info>Install mode has been changed to false</info>'.PHP_EOL;
             $text .= 'Do not forget to empty all cache and purge XCache/APC caches manually.'.PHP_EOL;
+        }
+
+        if ($input->getOption('generateHtaccess')) {
+
+            $text .= '<info>Generating .htaccess files…</info>'.PHP_EOL;
+            // Simple deny access files
+            $paths = array(
+                "/conf",
+                "/src",
+                "/samples",
+                "/gen-src",
+                "/files/fonts",
+                "/bin",
+                "/tests",
+                "/cache",
+            );
+
+            foreach ($paths as $path) {
+                $filePath = ROADIZ_ROOT . $path . "/.htaccess";
+                if (file_exists(ROADIZ_ROOT . $path) &&
+                    !file_exists($filePath)) {
+
+                    file_put_contents($filePath, "deny from all".PHP_EOL);
+                    $text .= '    — '.$filePath.PHP_EOL;
+                } else {
+                    $text .= '    — Can’t write '.$filePath.", file already exists or folder is absent.".PHP_EOL;
+                }
+            }
+
+            $mainHtaccess = 'IndexIgnore *
+
+            # ------------------------------------
+            # EXPIRES CACHING
+            # ------------------------------------
+            <IfModule mod_expires.c>
+                ExpiresActive On
+                ExpiresByType image/jpg "access plus 1 year"
+                ExpiresByType image/jpeg "access plus 1 year"
+                ExpiresByType image/gif "access plus 1 year"
+                ExpiresByType image/png "access plus 1 year"
+                ExpiresByType text/css "access plus 1 month"
+                ExpiresByType application/pdf "access plus 1 month"
+                ExpiresByType text/x-javascript "access plus 1 month"
+                ExpiresByType text/javascript "access plus 1 month"
+                ExpiresByType application/x-shockwave-flash "access plus 1 month"
+                ExpiresByType image/x-icon "access plus 1 year"
+                ExpiresDefault "access plus 2 days"
+            </IfModule>
+
+            # --------------------
+            # REWRITE ENGINE
+            # --------------------
+            RewriteEngine On
+
+            # Redirect to www
+            #RewriteCond %{HTTP_HOST} !^www\.
+            #RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteRule ^(.*)$ index.php [QSA,L]';
+
+            $filePath = ROADIZ_ROOT . "/.htaccess";
+
+            if (file_exists(ROADIZ_ROOT) &&
+                !file_exists($filePath)) {
+
+                file_put_contents($filePath, $mainHtaccess.PHP_EOL);
+                $text .= '    — '.$filePath.PHP_EOL;
+            } else {
+                $text .= '    — Can’t write '.$filePath.", file already exists or folder is absent.".PHP_EOL;
+            }
         }
 
 

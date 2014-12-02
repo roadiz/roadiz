@@ -52,7 +52,7 @@ class ImportController extends InstallApp
     public static function importSettingsAction(Request $request, $filename, $themeId = null)
     {
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\SettingsImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -68,7 +68,7 @@ class ImportController extends InstallApp
     public static function importRolesAction(Request $request, $filename, $themeId = null)
     {
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\RolesImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -84,7 +84,7 @@ class ImportController extends InstallApp
     public static function importGroupsAction(Request $request, $filename, $themeId = null)
     {
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\GroupsImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -100,7 +100,7 @@ class ImportController extends InstallApp
     public static function importNodeTypesAction(Request $request, $filename, $themeId = null)
     {
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\NodeTypesImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -116,7 +116,7 @@ class ImportController extends InstallApp
     public static function importTagsAction(Request $request, $filename, $themeId = null)
     {
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\TagsImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -131,7 +131,7 @@ class ImportController extends InstallApp
     public static function importNodesAction(Request $request, $filename, $themeId = null)
     {
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\NodesImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -162,7 +162,7 @@ class ImportController extends InstallApp
                 }
 
                 $dir = explode('\\', $theme->getClassName());
-                $path = RENZO_ROOT . "/themes/" . $dir[2] . '/' . $pathFile;
+                $path = ROADIZ_ROOT . "/themes/" . $dir[2] . '/' . $pathFile;
 
             }
             if (file_exists($path)) {

@@ -66,7 +66,7 @@ class UserViewer implements ViewableInterface
     public function initializeTranslator()
     {
         $lang = Kernel::getInstance()->getRequest()->getLocale();
-        $msgPath = RENZO_ROOT.'/src/Roadiz/CMS/Resources/translations/messages.'.$lang.'.xlf';
+        $msgPath = ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/translations/messages.'.$lang.'.xlf';
 
         /*
          * fallback to english, if message catalog absent
@@ -80,7 +80,7 @@ class UserViewer implements ViewableInterface
         $this->translator->addLoader('xlf', new XliffFileLoader());
         $this->translator->addResource(
             'xlf',
-            RENZO_ROOT.'/src/Roadiz/CMS/Resources/translations/messages.'.$lang.'.xlf',
+            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/translations/messages.'.$lang.'.xlf',
             $lang
         );
         // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
@@ -108,7 +108,7 @@ class UserViewer implements ViewableInterface
          */
         $htmldoc = new InlineStyle($emailBody);
         $htmldoc->applyStylesheet(file_get_contents(
-            RENZO_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
+            ROADIZ_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
         ));
 
         // Create the message

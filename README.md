@@ -25,6 +25,10 @@ It’s based on Symfony components and Doctrine ORM for maximum performances and
 * Install dependencies: `composer install`, if you don’t have *Composer* installed on your machine
 follow official doc at https://getcomposer.org/doc/00-intro.md#globally
 * Generate an optimized autoloader: `composer dumpautoload -o`
+* Create an *Apache* or *Nginx* virtual host based on samples in `samples/` folder.
+**If you don’t have any permission to create a virtual host,
+execute `bin/roadiz config --generateHtaccess` to create `.htaccess` files to protect critical informations
+from bad requests.**  
 * Go to your web-browser to launch Install wizard.
 
 #### Database connexion

@@ -36,9 +36,9 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
         $nt2->addField($ntf1);
 
         return array(
-            array(new NodeType(), RENZO_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler01.json'),
-            array($nt1, RENZO_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler02.json'),
-            array($nt2, RENZO_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler03.json')
+            array(new NodeType(), ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler01.json'),
+            array($nt1, ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler02.json'),
+            array($nt2, ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler03.json')
         );
     }
 }

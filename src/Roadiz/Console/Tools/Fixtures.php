@@ -71,10 +71,10 @@ class Fixtures
     public function createFolders()
     {
         $folders = array(
-            RENZO_ROOT . '/cache',
-            RENZO_ROOT . '/sources/Compiled',
-            RENZO_ROOT . '/sources/Proxies',
-            RENZO_ROOT . '/sources/GeneratedNodeSources',
+            ROADIZ_ROOT . '/cache',
+            ROADIZ_ROOT . '/sources/Compiled',
+            ROADIZ_ROOT . '/sources/Proxies',
+            ROADIZ_ROOT . '/sources/GeneratedNodeSources',
         );
 
         foreach ($folders as $folder) {
