@@ -9,3 +9,4 @@ composer.lock
 report.txt
 /build
 .htpasswd
+.htaccess
