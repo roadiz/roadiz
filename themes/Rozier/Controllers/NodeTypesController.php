@@ -318,33 +318,9 @@ class NodeTypesController extends RozierApp
                 'label' => $this->getTranslator()->trans('name'),
                 'constraints' => array(
                     new NotBlank()
-                )))
-            ->add('displayName', 'text', array(
-                'label' => $this->getTranslator()->trans('nodeType.displayName'),
-                'constraints' => array(
-                    new NotBlank()
-                )))
-            ->add('description', 'text', array(
-                'label' => $this->getTranslator()->trans('description'),
-                'required' => false
-            ))
-            ->add('visible', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('visible'),
-                'required' => false
-            ))
-            ->add('newsletterType', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('nodeType.newsletterType'),
-                'required' => false
-            ))
-            ->add('hidingNodes', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('nodeType.hidingNodes'),
-                'required' => false
-            ))
-            ->add('color', 'text', array(
-                'label' => $this->getTranslator()->trans('nodeType.color'),
-                'required' => false,
-                'attr' => array('class'=>'colorpicker-input')
-            ));
+                )));
+
+        $this->buildCommonFormFields($builder);
 
         return $builder->getForm();
     }
@@ -365,35 +341,48 @@ class NodeTypesController extends RozierApp
             'color' =>          $nodeType->getColor(),
         );
         $builder = $this->getService('formFactory')
-            ->createBuilder('form', $defaults)
-            ->add('displayName', 'text', array(
-                'label' => $this->getTranslator()->trans('nodeType.displayName'),
-                'constraints' => array(
-                    new NotBlank()
-                )))
-            ->add('description', 'text', array(
-                'label' => $this->getTranslator()->trans('description'),
-                'required' => false
-            ))
-            ->add('visible', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('visible'),
-                'required' => false
-            ))
-            ->add('newsletterType', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('nodeType.newsletterType'),
-                'required' => false
-            ))
-            ->add('hidingNodes', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('nodeType.hidingNodes'),
-                'required' => false
-            ))
-            ->add('color', 'text', array(
-                'label' => $this->getTranslator()->trans('nodeType.color'),
-                'required' => false,
-                'attr' => array('class'=>'colorpicker-input')
-            ));
+            ->createBuilder('form', $defaults);
+
+        $this->buildCommonFormFields($builder);
 
         return $builder->getForm();
+    }
+
+    /**
+     * Build common fields between add and edit node-type forms.
+     *
+     * @param FormBuilder $builder
+     */
+    private function buildCommonFormFields(&$builder)
+    {
+        $builder->add('displayName', 'text', array(
+            'label' => $this->getTranslator()->trans('nodeType.displayName'),
+            'constraints' => array(
+                new NotBlank()
+            )))
+        ->add('description', 'text', array(
+            'label' => $this->getTranslator()->trans('description'),
+            'required' => false
+        ))
+        ->add('visible', 'checkbox', array(
+            'label' => $this->getTranslator()->trans('visible'),
+            'required' => false
+        ))
+        ->add('newsletterType', 'checkbox', array(
+            'label' => $this->getTranslator()->trans('nodeType.newsletterType'),
+            'required' => false
+        ))
+        ->add('hidingNodes', 'checkbox', array(
+            'label' => $this->getTranslator()->trans('nodeType.hidingNodes'),
+            'required' => false
+        ))
+        ->add('color', 'text', array(
+            'label' => $this->getTranslator()->trans('nodeType.color'),
+            'required' => false,
+            'attr' => array('class'=>'colorpicker-input')
+        ));
+
+        return $builder;
     }
 
     /**
