@@ -84,7 +84,6 @@ class SearchController extends RozierApp
                 $data[$prefix.'createdAt']['compareOp'],
                 $data[$prefix.'createdAt']['compareDatetime']
             );
-            //unset($data[$prefix.'createdAt']);
         }
 
         if (isset($data[$prefix.'updatedAt'])) {
@@ -92,7 +91,6 @@ class SearchController extends RozierApp
                 $data[$prefix.'updatedAt']['compareOp'],
                 $data[$prefix.'updatedAt']['compareDatetime']
             );
-            //unset($data[$prefix.'updatedAt']);
         }
 
         if (isset($data[$prefix."limitResult"])) {
@@ -138,7 +136,6 @@ class SearchController extends RozierApp
                             $data[$key]['compareOp'],
                             $data[$key]['compareDatetime']
                         );
-                        //unset($data[$key]);
                     }
                 }
             }
@@ -199,7 +196,6 @@ class SearchController extends RozierApp
 
         if ($form->isValid()) {
 
-            // $data = array_filter($form->getData(), $this->isBlank);
             $data = array();
             foreach ($form->getData() as $key => $value) {
                 if ((!is_array($value) && $this->notBlank($value)) ||
@@ -350,7 +346,6 @@ class SearchController extends RozierApp
                 foreach ($listManager->getEntities() as $idx => $nodesSource) {
                     $array = array();
                     foreach ($keys as $key) {
-                        //$getter = 'get'.ucwords($key);
                         $getter = 'get'.str_replace('_', '', ucwords($key));
                         $tmp = $nodesSource->$getter();
                         if (is_array($tmp)) {

@@ -70,12 +70,7 @@ class DefaultThemeApp extends FrontendController
         $this->prepareThemeAssignation(null, $translation);
 
         /*
-         * First choice, render Homepage as any other nodes
-         */
-        //return $this->handle($request);
-
-        /*
-         * Second choice, render Homepage manually
+         * Render Homepage manually
          */
         return new Response(
             $this->getTwig()->render('home.html.twig', $this->assignation),

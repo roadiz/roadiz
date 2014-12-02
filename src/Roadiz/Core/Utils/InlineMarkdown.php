@@ -92,7 +92,6 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
 
         # Sort document, block, and span gamut in ascendent priority order.
         asort($this->document_gamut);
-        //asort($this->block_gamut);
         asort($this->span_gamut);
     }
 
@@ -1290,10 +1289,10 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
 
     protected function formParagraphs($text)
     {
-    #
-    #   Params:
-    #       $text - string to process with html <p> tags
-    #
+        #
+        #   Params:
+        #       $text - string to process with html <p> tags
+        #
         # Strip leading and trailing lines:
         $text = preg_replace('/\A\n+|\n+\z/', '', $text);
 
@@ -1306,8 +1305,6 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
             if (!preg_match('/^B\x1A[0-9]+B$/', $value)) {
                 # Is a paragraph.
                 $value = $this->runSpanGamut($value);
-                //$value = preg_replace('/^([ ]*)/', "<p>", $value);
-                //$value .= "</p>";
                 $grafs[$key] = trim($this->unhash($value));
             } else {
                 # Is a block.

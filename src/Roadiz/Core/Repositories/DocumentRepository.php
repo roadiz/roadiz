@@ -474,8 +474,6 @@ class DocumentRepository extends EntityRepository
         $qb->add('select', 'd')
            ->add('from', $this->getEntityName() . ' d');
 
-        //$this->filterByTranslation($criteria, $qb, $translation);
-
         /*
          * Filtering by tag
          */
@@ -519,7 +517,6 @@ class DocumentRepository extends EntityRepository
         $qb->add('select', 'count(d.id)')
            ->add('from', $this->getEntityName() . ' d');
 
-        //$this->filterByTranslation($criteria, $qb, $translation);
         /*
          * Filtering by tag
          */
@@ -557,11 +554,8 @@ class DocumentRepository extends EntityRepository
 
         $finalQuery = $query->getQuery();
 
-        //var_dump($finalQuery->getDql()); exit();
-
         $this->applyFilterByFolder($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
-        //$this->applyTranslationByFolder($criteria, $finalQuery, $translation);
 
         try {
             return $finalQuery->getResult();
@@ -597,7 +591,6 @@ class DocumentRepository extends EntityRepository
 
         $this->applyFilterByFolder($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
-        //$this->applyTranslationByFolder($criteria, $finalQuery, $translation);
 
         try {
             return $finalQuery->getSingleResult();
@@ -626,7 +619,6 @@ class DocumentRepository extends EntityRepository
         $finalQuery = $query->getQuery();
         $this->applyFilterByFolder($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
-        //$this->applyTranslationByFolder($criteria, $finalQuery, $translation);
 
         try {
             return $finalQuery->getSingleScalarResult();

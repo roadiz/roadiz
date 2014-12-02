@@ -44,7 +44,6 @@ class CompareDatetimeType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //$encoderFactory = $this->encoderFactory;
         $builder->add('compareOp', 'choice', array(
             'label' => $this->translator->trans('node.datetime.operator'),
             'choices' => array('<' => '<', '>' => '>', '<=' => '<=', '>=' => '>=', '=' => '=')

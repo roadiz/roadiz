@@ -49,8 +49,6 @@ class RozierApp extends BackendController
         $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' back-office';
         $this->assignation['head']['mapsStyle'] = SettingsBag::get('maps_style');
 
-        //[{"featureType":"water","elementType":"all","stylers":[{"color":"#636363"}]},{"featureType":"landscape.natural","elementType":"all","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative.land_parcel","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#c7c7c7"}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"color":"#a6a6a6"}]},{"featureType":"road","elementType":"labels.text.stroke","stylers":[{"visibility":"simplified"},{"color":"#ffffff"},{"weight":3.04}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"landscape.man_made","elementType":"all","stylers":[{"visibility":"simplified"},{"color":"#e6e6e6"}]}]
-        //
         $this->assignation['head']['mainColor'] = SettingsBag::get('main_color');
         $this->assignation['head']['googleClientId'] = SettingsBag::get('google_client_id') ? SettingsBag::get('google_client_id') : "";
 
@@ -106,8 +104,6 @@ class RozierApp extends BackendController
     {
 
         $this->assignation['mainColor'] = SettingsBag::get('main_color');
-
-        // var_dump(SettingsBag::get('main_color'));
 
         return new Response(
             $this->getTwig()->render('css/mainColor.css.twig', $this->assignation),

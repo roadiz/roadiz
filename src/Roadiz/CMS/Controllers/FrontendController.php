@@ -43,6 +43,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 
 use Symfony\Component\Security\Http\Firewall;
+use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 
 /**
@@ -395,13 +396,11 @@ class FrontendController extends AppController
      */
     public static function setupDependencyInjection(Container $container)
     {
-        $container->extend('firewallMap', function ($map, $c) {
+        $container->extend('firewallMap', function (FirewallMap $map, Container $c) {
             /*
              * Prepare app firewall
              */
             $requestMatcher = new RequestMatcher('^/');
-            // allows configuration of different access control rules for specific parts of the website.
-            //$accessMap = new AccessMap($requestMatcher, array());
 
             $listeners = array(
                 // manages the SecurityContext persistence through a session

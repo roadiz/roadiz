@@ -140,9 +140,7 @@ class CustomFormsController extends RozierApp
             $form->handleRequest();
             if ($form->isValid()) {
                 try {
-                    //echo "Before add node type";
                     $this->addCustomForm($form->getData(), $customForm);
-                    //echo "After add node type";
 
                     $msg = $this->getTranslator()->trans('customForm.%name%.created', array('%name%'=>$customForm->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);

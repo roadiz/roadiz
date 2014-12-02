@@ -24,17 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 class HistoryController extends RozierApp
 {
 
-    /*
-     * const EMERGENCY = 0;
-     * const CRITICAL =  1;
-     * const ALERT =     2;
-     * const ERROR =     3;
-     * const WARNING =   4;
-     * const NOTICE =    5;
-     * const INFO =      6;
-     * const DEBUG =     7;
-     * const LOG =       8;
-     */
     public static $levelToHuman = array(
         Log::EMERGENCY => "emergency",
         Log::CRITICAL => "critical",

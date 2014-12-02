@@ -39,10 +39,6 @@ class UrlAliasesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
-
         if (null === $translationId && $translationId < 1) {
             $translation = $this->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Translation')

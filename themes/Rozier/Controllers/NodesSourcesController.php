@@ -99,7 +99,6 @@ class NodesSourcesController extends RozierApp
                 }
 
                 $this->assignation['form'] = $form->createView();
-                //$this->getService('em')->detach($node);
 
                 return new Response(
                     $this->getTwig()->render('nodes/editSource.html.twig', $this->assignation),

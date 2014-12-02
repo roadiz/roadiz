@@ -37,9 +37,6 @@ class SettingsUtilsController extends RozierApp
     public function exportAllAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
         $groups = $this->getService('em')
                   ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
@@ -47,7 +44,7 @@ class SettingsUtilsController extends RozierApp
         $lonelySettings = $this->getService('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Setting')
                           ->findBy(array('settingGroup' => null));
-        //\Doctrine\Common\Util\Debug::dump($lonelySettings);
+
         $tmpGroup = new SettingGroup();
         $tmpGroup->setName('__default__');
         $tmpGroup->addSettings($lonelySettings);
@@ -70,8 +67,6 @@ class SettingsUtilsController extends RozierApp
 
         $response->prepare($request);
 
-        //echo('toto');
-
         return $response;
     }
 
@@ -85,9 +80,6 @@ class SettingsUtilsController extends RozierApp
     public function importJsonFileAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
         $form = $this->buildImportJsonFileForm();
 

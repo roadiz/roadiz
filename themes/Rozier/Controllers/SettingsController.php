@@ -238,9 +238,6 @@ class SettingsController extends RozierApp
     public function addAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
         $setting = new Setting();
 

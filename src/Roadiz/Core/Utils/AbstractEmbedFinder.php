@@ -73,8 +73,6 @@ abstract class AbstractEmbedFinder
                 $this->feed = json_decode($this->feed, true);
             }
         }
-        // var_dump($this->feed);
-        // exit();
         return $this->feed;
     }
 

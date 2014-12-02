@@ -72,7 +72,6 @@ class DataInheritanceEvent
                  * Database tables don't exist yet
                  * Need Install
                  */
-                //$this->getSession()->getFlashBag()->add('error', 'Impossible to create discriminator map, make sure your database is fully installed.');
             }
         }
     }
@@ -107,35 +106,8 @@ class DataInheritanceEvent
              * Database tables don't exist yet
              * Need Install
              */
-            // Kernel::getService("session")->getFlashBag()->add('error', 'Impossible to create discriminator map, make sure your database is fully installed.');
 
             return null;
         }
-    }
-
-
-    /**
-     * Check if given table exists.
-     *
-     * This method must be used at installation not to throw error when
-     * creating discriminator map with node-types
-     *
-     * @param string  $table
-     *
-     * @return boolean
-     */
-    public function checkTable($table)
-    {
-        $conn = Kernel::getService('em')->getConnection();
-        $sm = $conn->getSchemaManager();
-        $tables = $sm->listTables();
-
-        foreach ($tables as $table) {
-            if ($table->getName() == $table) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

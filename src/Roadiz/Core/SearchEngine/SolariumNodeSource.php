@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\SearchEngine;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
@@ -150,7 +151,7 @@ class SolariumNodeSource
         // Need a locale field
         $assoc['locale_s'] = $this->nodeSource->getTranslation()->getLocale();
         $out = array_map(
-            function ($x) {
+            function (Tag $x) {
                 return $x->getTranslatedTags()->first()->getName();
             },
             $this->nodeSource->getHandler()->getTags()

@@ -51,7 +51,6 @@ class ImportController extends InstallApp
      */
     public static function importSettingsAction(Request $request, $filename, $themeId = null)
     {
-        #$pathFile = '/Resources/import/settings.rzt';
         if (null === $themeId) {
             $filename = RENZO_ROOT . '/themes/Install/' . $filename;
         }
@@ -68,7 +67,6 @@ class ImportController extends InstallApp
      */
     public static function importRolesAction(Request $request, $filename, $themeId = null)
     {
-        #$pathFile = '/Resources/import/roles.rzt';
         if (null === $themeId) {
             $filename = RENZO_ROOT . '/themes/Install/' . $filename;
         }
@@ -85,7 +83,6 @@ class ImportController extends InstallApp
      */
     public static function importGroupsAction(Request $request, $filename, $themeId = null)
     {
-        #$pathFile = '/Resources/import/groups.rzt';
         if (null === $themeId) {
             $filename = RENZO_ROOT . '/themes/Install/' . $filename;
         }
@@ -102,7 +99,6 @@ class ImportController extends InstallApp
      */
     public static function importNodeTypesAction(Request $request, $filename, $themeId = null)
     {
-        #$pathFile = '/Resources/import/nodetype/' . basename($filename) . '.rzt';
         if (null === $themeId) {
             $filename = RENZO_ROOT . '/themes/Install/' . $filename;
         }
@@ -119,7 +115,6 @@ class ImportController extends InstallApp
      */
     public static function importTagsAction(Request $request, $filename, $themeId = null)
     {
-        #$pathFile = '/Resources/import/nodetype/' . basename($filename) . '.rzt';
         if (null === $themeId) {
             $filename = RENZO_ROOT . '/themes/Install/' . $filename;
         }

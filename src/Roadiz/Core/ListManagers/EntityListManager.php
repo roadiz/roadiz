@@ -156,7 +156,7 @@ class EntityListManager
     /**
      * Get Twig assignation to render list details.
      *
-     * ## Fields:
+     * ** Fields:
      *
      * * description
      * * search

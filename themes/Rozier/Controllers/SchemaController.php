@@ -77,9 +77,6 @@ class SchemaController extends RozierApp
     public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $nodeTypeId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
         if ($this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {

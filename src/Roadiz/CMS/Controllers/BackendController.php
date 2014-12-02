@@ -38,6 +38,7 @@ use Pimple\Container;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 
 use Symfony\Component\Security\Http\Firewall;
+use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
@@ -62,7 +63,7 @@ class BackendController extends AppController
      */
     public static function setupDependencyInjection(Container $container)
     {
-        $container->extend('firewallMap', function ($map, $c) {
+        $container->extend('firewallMap', function (FirewallMap $map, $c) {
 
             /*
              * Prepare app firewall

@@ -522,7 +522,7 @@ class NodeHandler
         return $this;
     }
 
-    private function duplicateRec($node, $level)
+    private function duplicateRec(Node $node, $level)
     {
         $childrenArray = array();
         $sourceArray = array();
@@ -558,14 +558,12 @@ class NodeHandler
             Kernel::getService('em')->flush();
             $sourceArray[] = $nodeSource;
         }
-            //exit();
+        
         $nodetype = Kernel::getService('em')->merge($node->getNodeType());
 
         $node->setNodeType($nodetype);
 
         $node->setParent(null);
-
-        //$node->setNodeName($node->getNodeName()."-".uniqid());
 
         Kernel::getService('em')->persist($node);
         foreach ($childrenArray as $child) {

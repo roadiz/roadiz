@@ -64,9 +64,6 @@ class FontsController extends RozierApp
     public function addAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_FONTS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
         $form = $this->buildAddForm();
         $form->handleRequest();

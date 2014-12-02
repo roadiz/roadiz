@@ -31,7 +31,6 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use RZ\Roadiz\Core\Kernel;
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 
 use RZ\Roadiz\CMS\Importers\ImporterInterface;

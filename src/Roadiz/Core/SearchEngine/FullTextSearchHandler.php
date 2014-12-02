@@ -59,8 +59,6 @@ class FullTextSearchHandler
             }
             $query->addSort('score', $query::SORT_DESC);
 
-            //var_dump($query); exit();
-
             $resultset = $this->client->select($query);
             $reponse = json_decode($resultset->getResponse()->getBody(), true);
 

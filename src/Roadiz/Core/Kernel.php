@@ -88,12 +88,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
     {
         $this->container = new Container();
         $this->request = Request::createFromGlobals();
-        /*
-         * Get build number from txt file generated at each pre-commit
-         */
-        //if (file_exists(RENZO_ROOT.'/BUILD.txt')) {
-        //    static::$cmsBuild = intval(trim(file_get_contents(RENZO_ROOT.'/BUILD.txt')));
-        //}
 
         /*
          * Register current Kernel as a service provider.
@@ -200,7 +194,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $application->add(new \RZ\Roadiz\Console\TranslationsCommand);
         $application->add(new \RZ\Roadiz\Console\NodeTypesCommand);
         $application->add(new \RZ\Roadiz\Console\NodesCommand);
-        //$application->add(new \RZ\Roadiz\Console\SchemaCommand);
         $application->add(new \RZ\Roadiz\Console\ThemesCommand);
         $application->add(new \RZ\Roadiz\Console\InstallCommand);
         $application->add(new \RZ\Roadiz\Console\UsersCommand);

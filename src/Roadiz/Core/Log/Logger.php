@@ -159,7 +159,7 @@ class Logger implements LoggerInterface
      */
     public function debug($message, array $context = array())
     {
-        //$this->log(Log::DEBUG, $message, $context);
+        $this->log(Log::DEBUG, $message, $context);
     }
 
     /**

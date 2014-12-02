@@ -757,7 +757,6 @@ class GroupsController extends RozierApp
                 ->find('RZ\Roadiz\Core\Entities\User', (int) $data['userId']);
 
             if ($user !== null) {
-                //$group->addUser($user);
                 $user->addGroup($group);
                 $this->getService('em')->flush();
 
