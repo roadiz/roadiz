@@ -96,6 +96,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             );
 
             $twig->addFilter($c['twig.markdownExtension']);
+            $twig->addFilter($c['twig.inlineMarkdownExtension']);
             $twig->addFilter($c['twig.centralTruncateExtension']);
 
             /*
