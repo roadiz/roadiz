@@ -1289,10 +1289,6 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
 
     protected function formParagraphs($text)
     {
-        #
-        #   Params:
-        #       $text - string to process with html <p> tags
-        #
         # Strip leading and trailing lines:
         $text = preg_replace('/\A\n+|\n+\z/', '', $text);
 
