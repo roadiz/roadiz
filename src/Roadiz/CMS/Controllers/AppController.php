@@ -316,7 +316,7 @@ class AppController implements ViewableInterface
      */
     public static function getResourcesFolder()
     {
-        return RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources';
+        return ROADIZ_ROOT.'/themes/'.static::$themeDir.'/Resources';
     }
     /**
      * @return string
@@ -393,7 +393,7 @@ class AppController implements ViewableInterface
              * Common templates
              */
             $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(RENZO_ROOT.'/src/Roadiz/CMS/Resources/views/forms'),
+                new \RecursiveDirectoryIterator(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/views/forms'),
                 \RecursiveIteratorIterator::LEAVES_ONLY
             );
             foreach ($iterator as $file) {
@@ -401,7 +401,7 @@ class AppController implements ViewableInterface
                 if ($file->isFile() &&
                     $file->getExtension() == 'twig') {
                     $ctrl->getTwig()->loadTemplate(str_replace(
-                        RENZO_ROOT.'/src/Roadiz/CMS/Resources/views/forms/',
+                        ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/views/forms/',
                         '',
                         $file
                     ));

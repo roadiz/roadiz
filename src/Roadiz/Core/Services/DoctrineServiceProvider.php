@@ -60,12 +60,12 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                 $config = Setup::createAnnotationMetadataConfiguration(
                     $c['entitiesPaths'],
                     (boolean) $c['config']['devMode'],
-                    RENZO_ROOT . '/gen-src/Proxies',
+                    ROADIZ_ROOT . '/gen-src/Proxies',
                     null,
                     false
                 );
 
-                $config->setProxyDir(RENZO_ROOT . '/gen-src/Proxies');
+                $config->setProxyDir(ROADIZ_ROOT . '/gen-src/Proxies');
                 $config->setProxyNamespace('Proxies');
 
                 return $config;

@@ -58,7 +58,7 @@ class ThemesType extends AbstractType
             ->files()
             ->name('config.json')
             ->depth(1)
-            ->in(RENZO_ROOT.'/themes');
+            ->in(ROADIZ_ROOT.'/themes');
 
         // And storing it into an array, used in the form
         foreach ($iterator as $file) {

@@ -67,7 +67,7 @@ class RequirementsCommand extends Command
         $text .= $this->testPHPIntValue('upload_max_filesize', '16');
 
         $text .= $this->methodExists('gettext');
-        $text .= $this->folderWritable(RENZO_ROOT);
+        $text .= $this->folderWritable(ROADIZ_ROOT);
 
         $output->writeln($text);
     }

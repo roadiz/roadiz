@@ -78,7 +78,7 @@ class NodeTypeHandler
      */
     public function removeSourceEntityClass()
     {
-        $folder = RENZO_ROOT.'/gen-src/'.NodeType::getGeneratedEntitiesNamespace();
+        $folder = ROADIZ_ROOT.'/gen-src/'.NodeType::getGeneratedEntitiesNamespace();
         $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
 
         if (file_exists($file)) {
@@ -95,7 +95,7 @@ class NodeTypeHandler
      */
     public function generateSourceEntityClass()
     {
-        $folder = RENZO_ROOT.'/gen-src/'.NodeType::getGeneratedEntitiesNamespace();
+        $folder = ROADIZ_ROOT.'/gen-src/'.NodeType::getGeneratedEntitiesNamespace();
         $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
 
         if (!file_exists($folder)) {

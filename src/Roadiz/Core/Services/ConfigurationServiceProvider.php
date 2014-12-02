@@ -46,7 +46,7 @@ class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
          * Inject app config
          */
         $container['config'] = function ($c) {
-            $configFile = RENZO_ROOT.'/conf/config.json';
+            $configFile = ROADIZ_ROOT.'/conf/config.json';
             if (file_exists($configFile)) {
                 return json_decode(file_get_contents($configFile), true);
             } else {

@@ -65,10 +65,10 @@ class AssetsController extends AppController
     public static function getRoutes()
     {
         $locator = new FileLocator(array(
-            RENZO_ROOT.'/src/Roadiz/CMS/Resources'
+            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources'
         ));
 
-        if (file_exists(RENZO_ROOT.'/src/Roadiz/CMS/Resources/assetsRoutes.yml')) {
+        if (file_exists(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/assetsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
 
             return $loader->load('assetsRoutes.yml');

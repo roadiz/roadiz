@@ -152,14 +152,14 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Detailed debug information.
+     * Detailed debug information is desactivated not to flood Log table.
      *
      * @param string $message
      * @param array  $context
      */
     public function debug($message, array $context = array())
     {
-        $this->log(Log::DEBUG, $message, $context);
+        return;
     }
 
     /**
@@ -177,7 +177,7 @@ class Logger implements LoggerInterface
 
             if (null !== $this->getSecurityContext() &&
                 null !== $this->getSecurityContext()->getToken() &&
-                null !== $this->getSecurityContext()->getToken()->getUser() &&
+                is_object($this->getSecurityContext()->getToken()->getUser()) &&
                 null !== $this->getSecurityContext()->getToken()->getUser()->getId()) {
 
                 $log->setUser($this->getSecurityContext()->getToken()->getUser());

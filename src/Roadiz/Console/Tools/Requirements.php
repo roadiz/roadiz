@@ -188,9 +188,9 @@ class Requirements
         $this->totalChecks++;
 
         $checks['project_folder_writable'] = array(
-            'status'=>$this->folderWritable(RENZO_ROOT),
-            'folder' => RENZO_ROOT,
-            'mod' => fileperms(RENZO_ROOT),
+            'status'=>$this->folderWritable(ROADIZ_ROOT),
+            'folder' => ROADIZ_ROOT,
+            'mod' => fileperms(ROADIZ_ROOT),
             'message' => 'Project folder is not writable by PHP, you must change its permissions.'
         );
 
@@ -200,9 +200,9 @@ class Requirements
         $this->totalChecks++;
 
         $checks['files_folder_writable'] = array(
-            'status'=>$this->folderWritable(RENZO_ROOT.'/files'),
-            'folder' => RENZO_ROOT.'/files',
-            'mod' => fileperms(RENZO_ROOT.'/files'),
+            'status'=>$this->folderWritable(ROADIZ_ROOT.'/files'),
+            'folder' => ROADIZ_ROOT.'/files',
+            'mod' => fileperms(ROADIZ_ROOT.'/files'),
             'message' => 'Storage folder is not writable by PHP, you must change its permissions.'
         );
 

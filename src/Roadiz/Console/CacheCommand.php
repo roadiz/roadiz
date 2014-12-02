@@ -186,12 +186,12 @@ class CacheCommand extends Command
          */
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->files()->in(RENZO_ROOT . '/gen-src/Proxies');
+        $finder->files()->in(ROADIZ_ROOT . '/gen-src/Proxies');
         $fs->remove($finder);
 
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
         $proxyFactory = Kernel::getService('em')->getProxyFactory();
-        $proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/gen-src/Proxies');
+        $proxyFactory->generateProxyClasses($meta, ROADIZ_ROOT . '/gen-src/Proxies');
         $text .= '<info>Doctrine proxy classes has been purged…</info>'.PHP_EOL;
 
         return $text;
@@ -208,7 +208,7 @@ class CacheCommand extends Command
 
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->files()->in(RENZO_ROOT . '/gen-src/Compiled');
+        $finder->files()->in(ROADIZ_ROOT . '/gen-src/Compiled');
         $fs->remove($finder);
 
         $text .= '<info>Compiled route collections have been purged…</info>'.PHP_EOL;
@@ -228,11 +228,11 @@ class CacheCommand extends Command
         $fs = new Filesystem();
         $finder = new Finder();
 
-        if (file_exists(RENZO_ROOT . '/cache/request') &&
-            file_exists(RENZO_ROOT . '/cache/rendered')) {
+        if (file_exists(ROADIZ_ROOT . '/cache/request') &&
+            file_exists(ROADIZ_ROOT . '/cache/rendered')) {
 
-            $finder->in(RENZO_ROOT . '/cache/request')
-                   ->in(RENZO_ROOT . '/cache/rendered');
+            $finder->in(ROADIZ_ROOT . '/cache/request')
+                   ->in(ROADIZ_ROOT . '/cache/rendered');
             $fs->remove($finder);
 
             $text .= '<info>Assets cache has been purged…</info>'.PHP_EOL;
@@ -252,7 +252,7 @@ class CacheCommand extends Command
 
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->in(RENZO_ROOT . '/cache/twig_cache');
+        $finder->in(ROADIZ_ROOT . '/cache/twig_cache');
         $fs->remove($finder);
 
         $text .= '<info>Compiled Twig templates have been purged…</info>'.PHP_EOL;

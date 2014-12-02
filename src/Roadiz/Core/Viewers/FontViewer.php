@@ -67,7 +67,7 @@ class FontViewer implements ViewableInterface
      */
     public function getCacheDirectory()
     {
-        return RENZO_ROOT.'/cache/twig_cache';
+        return ROADIZ_ROOT.'/cache/twig_cache';
     }
 
     /**

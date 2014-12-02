@@ -235,8 +235,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
     public function runApp()
     {
         if ($this->isDebug() ||
-            !file_exists(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php') ||
-            !file_exists(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php')) {
+            !file_exists(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php') ||
+            !file_exists(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php')) {
 
             $this->container['stopwatch']->start('dumpUrlUtils');
             $this->dumpUrlUtils();
@@ -285,8 +285,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     protected function dumpUrlUtils()
     {
-        if (!file_exists(RENZO_ROOT.'/gen-src/Compiled')) {
-            mkdir(RENZO_ROOT.'/gen-src/Compiled', 0755, true);
+        if (!file_exists(ROADIZ_ROOT.'/gen-src/Compiled')) {
+            mkdir(ROADIZ_ROOT.'/gen-src/Compiled', 0755, true);
         }
 
         /*
@@ -296,7 +296,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $class = $dumper->dump(array(
             'class' => 'GlobalUrlMatcher'
         ));
-        file_put_contents(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php', $class);
+        file_put_contents(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php', $class);
 
         /*
          * Generate custom UrlGenerator
@@ -305,7 +305,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $class = $dumper->dump(array(
             'class' => 'GlobalUrlGenerator'
         ));
-        file_put_contents(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php', $class);
+        file_put_contents(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php', $class);
     }
 
     /**

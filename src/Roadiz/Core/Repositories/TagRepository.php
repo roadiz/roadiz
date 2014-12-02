@@ -598,7 +598,7 @@ class TagRepository extends EntityRepository
         foreach ($cols as $col) {
             $field = $metadatas->getFieldName($col);
             $type = $metadatas->getTypeOfField($field);
-            if (in_array($type, $types)) {
+            if (in_array($type, $this->searchableTypes)) {
                 $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
             }
         }
@@ -606,19 +606,7 @@ class TagRepository extends EntityRepository
             $qb->orWhere($qb->expr()->like('tt.' .$key, $qb->expr()->literal($value)));
         }
 
-        foreach ($criteria as $key => $value) {
-            if (is_object($value) && $value instanceof PersistableInterface) {
-                $res = $qb->expr()->eq($alias . '.' .$key, $value->getId());
-            } elseif (is_array($value)) {
-                $res = $qb->expr()->in($alias . '.' .$key, $value);
-            } elseif (is_bool($value)) {
-                $res = $qb->expr()->eq($alias . '.' .$key, (int) $value);
-            } else {
-                $res = $qb->expr()->eq($alias . '.' .$key, $value);
-            }
-
-            $qb->andWhere($res);
-        }
+        $qb = $this->directComparison($criteria, $qb, $alias);
 
         return $qb;
     }

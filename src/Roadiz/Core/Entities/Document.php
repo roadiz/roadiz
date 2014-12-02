@@ -422,7 +422,7 @@ class Document extends AbstractDateTimed
      */
     public static function getFilesFolder()
     {
-        return RENZO_ROOT.'/'.static::getFilesFolderName();
+        return ROADIZ_ROOT.'/'.static::getFilesFolderName();
     }
     /**
      * @return string

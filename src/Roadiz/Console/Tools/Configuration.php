@@ -43,8 +43,8 @@ class Configuration
     public function __construct()
     {
         // Try to load existant configuration
-        if (false === $this->loadFromFile(RENZO_ROOT . '/conf/config.json')) {
-            if (false === $this->loadFromFile(RENZO_ROOT . '/conf/config.default.json')) {
+        if (false === $this->loadFromFile(ROADIZ_ROOT . '/conf/config.json')) {
+            if (false === $this->loadFromFile(ROADIZ_ROOT . '/conf/config.default.json')) {
                 $this->setConfiguration($this->getDefaultConfiguration());
             }
         }
@@ -151,7 +151,7 @@ class Configuration
      */
     public function writeConfiguration()
     {
-        $writePath = RENZO_ROOT . '/conf/config.json';
+        $writePath = ROADIZ_ROOT . '/conf/config.json';
 
         if (file_exists($writePath)) {
             unlink($writePath);

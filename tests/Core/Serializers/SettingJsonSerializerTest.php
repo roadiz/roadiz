@@ -38,7 +38,7 @@ class SettingJsonSerializerTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array(
-                file_get_contents(RENZO_ROOT.'/tests/Fixtures/Serializers/settingJsonSerializer01.json'),
+                file_get_contents(ROADIZ_ROOT.'/tests/Fixtures/Serializers/settingJsonSerializer01.json'),
             ),
         );
     }
@@ -66,7 +66,7 @@ class SettingJsonSerializerTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array(
-                file_get_contents(RENZO_ROOT.'/tests/Fixtures/Serializers/settingJsonSerializer01.json'),
+                file_get_contents(ROADIZ_ROOT.'/tests/Fixtures/Serializers/settingJsonSerializer01.json'),
                 "RZ\Roadiz\Core\Entities\Setting"
             ),
         );

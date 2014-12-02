@@ -51,14 +51,14 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
     public function register(Container $container)
     {
         $container['twig.cacheFolder'] = function ($c) {
-            return RENZO_ROOT.'/cache/twig_cache';
+            return ROADIZ_ROOT.'/cache/twig_cache';
         };
 
         /*
          * Return every paths to search for twig templates.
          */
         $container['twig.loaderFileSystem'] = function ($c) {
-            $vendorDir = realpath(RENZO_ROOT . '/vendor');
+            $vendorDir = realpath(ROADIZ_ROOT . '/vendor');
 
             // le chemin vers TwigBridge pour que Twig puisse localiser
             // le fichier form_div_layout.html.twig
@@ -68,7 +68,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             return new \Twig_Loader_Filesystem(array(
                 // Default Form extension templates
                 $vendorTwigBridgeDir.'/Resources/views/Form',
-                RENZO_ROOT.'/src/Roadiz/CMS/Resources/views',
+                ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/views',
             ));
         };
 

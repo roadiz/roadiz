@@ -69,7 +69,7 @@ class EntryPointsController extends AppController
      */
     public static function getResourcesFolder()
     {
-        return RENZO_ROOT.'/src/Roadiz/CMS/Resources';
+        return ROADIZ_ROOT.'/src/Roadiz/CMS/Resources';
     }
 
     /**
@@ -78,10 +78,10 @@ class EntryPointsController extends AppController
     public static function getRoutes()
     {
         $locator = new FileLocator(array(
-            RENZO_ROOT.'/src/Roadiz/CMS/Resources'
+            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources'
         ));
 
-        if (file_exists(RENZO_ROOT.'/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
+        if (file_exists(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
 
             return $loader->load('entryPointsRoutes.yml');
@@ -363,7 +363,7 @@ class EntryPointsController extends AppController
          */
         $htmldoc = new InlineStyle($emailBody);
         $htmldoc->applyStylesheet(file_get_contents(
-            RENZO_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
+            ROADIZ_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
         ));
 
         // Create the message

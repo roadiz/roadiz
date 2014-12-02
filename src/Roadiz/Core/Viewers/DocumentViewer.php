@@ -122,8 +122,8 @@ class DocumentViewer implements ViewableInterface
         if (!empty($args['width'])) {
             $assignation['width'] = (int) $args['width'];
         }
-        if (!empty($args['heigth'])) {
-            $assignation['heigth'] = (int) $args['heigth'];
+        if (!empty($args['height'])) {
+            $assignation['height'] = (int) $args['height'];
         }
         if (!empty($args['identifier'])) {
             $assignation['identifier'] = $args['identifier'];

@@ -135,7 +135,7 @@ class InstallCommand extends Command
 
                         // install fixtures
                         $array = explode('\\', $input->getOption('with-theme'));
-                        $themeRoot = RENZO_ROOT . "/themes/". $array[count($array) - 2];
+                        $themeRoot = ROADIZ_ROOT . "/themes/". $array[count($array) - 2];
                         $data = json_decode(file_get_contents($themeRoot . "/config.json"), true);
 
                         if (false !== $data && isset($data["importFiles"])) {
