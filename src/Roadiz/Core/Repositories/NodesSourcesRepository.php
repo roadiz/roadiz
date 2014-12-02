@@ -182,46 +182,7 @@ class NodesSourcesRepository extends EntityRepository
                 continue;
             }
 
-            // Dots are forbidden in field definitions
-            $key = str_replace('.', '_', $key);
-
-            if (is_object($value) && $value instanceof PersistableInterface) {
-                $finalQuery->setParameter($key, $value->getId());
-            } elseif (is_array($value)) {
-
-                if (count($value) > 1) {
-                    switch ($value[0]) {
-                        case '<=':
-                        case '<':
-                        case '>=':
-                        case '>':
-                        case 'NOT IN':
-                            $finalQuery->setParameter($key, $value[1]);
-                            break;
-                        case 'BETWEEN':
-                            $finalQuery->setParameter($key.'_1', $value[1]);
-                            $finalQuery->setParameter($key.'_2', $value[2]);
-                            break;
-                        case 'LIKE':
-                            // no need to bind a parameter here
-                            break;
-                        default:
-                            $finalQuery->setParameter($key, $value);
-                            break;
-                    }
-                } else {
-                    $finalQuery->setParameter($key, $value);
-                }
-
-            } elseif (is_bool($value)) {
-                $finalQuery->setParameter($key, $value);
-            } elseif ($value == 'NOT NULL') {
-                // no need to bind a parameter here
-            } elseif (isset($value)) {
-                $finalQuery->setParameter($key, $value);
-            } elseif (null === $value) {
-                // no need to bind a parameter here
-            }
+            $this->applyComparison($key, $value, $finalQuery);
         }
     }
 
