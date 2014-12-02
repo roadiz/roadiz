@@ -188,28 +188,8 @@ class DocumentRepository extends EntityRepository
         array $criteria = array(),
         $alias = "obj"
     ) {
-        /*
-         * get fields needed for a search
-         * query
-         */
-        $types = array('string', 'text');
 
-        /*
-         * Search in document fields
-         */
-        $criteriaFields = array();
-        $metadatas = $this->_em->getClassMetadata($this->getEntityName());
-        $cols = $metadatas->getColumnNames();
-        foreach ($cols as $col) {
-            $field = $metadatas->getFieldName($col);
-            $type = $metadatas->getTypeOfField($field);
-            if (in_array($type, $types)) {
-                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
-            }
-        }
-        foreach ($criteriaFields as $key => $value) {
-            $qb->orWhere($qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value)));
-        }
+        $this->classicLikeComparison($pattern, $qb, $alias);
 
         /*
          * Search in translations
@@ -263,46 +243,7 @@ class DocumentRepository extends EntityRepository
                 continue;
             }
 
-            // Dots are forbidden in field definitions
-            $key = str_replace('.', '_', $key);
-
-            if (is_object($value) && $value instanceof PersistableInterface) {
-                $finalQuery->setParameter($key, $value->getId());
-            } elseif (is_array($value)) {
-
-                if (count($value) > 1) {
-                    switch ($value[0]) {
-                        case '<=':
-                        case '<':
-                        case '>=':
-                        case '>':
-                        case 'NOT IN':
-                            $finalQuery->setParameter($key, $value[1]);
-                            break;
-                        case 'BETWEEN':
-                            $finalQuery->setParameter($key.'_1', $value[1]);
-                            $finalQuery->setParameter($key.'_2', $value[2]);
-                            break;
-                        case 'LIKE':
-                            // param is setted in filterBy
-                            break;
-                        default:
-                            $finalQuery->setParameter($key, $value);
-                            break;
-                    }
-                } else {
-                    $finalQuery->setParameter($key, $value);
-                }
-
-            } elseif (is_bool($value)) {
-                $finalQuery->setParameter($key, $value);
-            } elseif ('NOT NULL' == $value) {
-                // param is not needed
-            } elseif (isset($value)) {
-                $finalQuery->setParameter($key, $value);
-            } elseif (null === $value) {
-                // param is not needed
-            }
+            $this->applyComparison($key, $value, $finalQuery);
         }
     }
 

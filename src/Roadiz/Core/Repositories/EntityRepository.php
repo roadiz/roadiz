@@ -117,6 +117,57 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
         return $res;
     }
+
+    /**
+     * Bind classic parameters to your query.
+     *
+     * @param string $key
+     * @param mixed  $value
+     * @param mixed  $finalQuery
+     */
+    protected function applyComparison($key, $value, &$finalQuery)
+    {
+        $key = str_replace('.', '_', $key);
+
+        if (is_object($value) && $value instanceof PersistableInterface) {
+            $finalQuery->setParameter($key, $value->getId());
+        } elseif (is_array($value)) {
+
+            if (count($value) > 1) {
+                switch ($value[0]) {
+                    case '<=':
+                    case '<':
+                    case '>=':
+                    case '>':
+                    case 'NOT IN':
+                        $finalQuery->setParameter($key, $value[1]);
+                        break;
+                    case 'BETWEEN':
+                        $finalQuery->setParameter($key.'_1', $value[1]);
+                        $finalQuery->setParameter($key.'_2', $value[2]);
+                        break;
+                    case 'LIKE':
+                        // param is setted in filterBy
+                        break;
+                    default:
+                        $finalQuery->setParameter($key, $value);
+                        break;
+                }
+            } else {
+                $finalQuery->setParameter($key, $value);
+            }
+
+        } elseif (is_bool($value)) {
+            $finalQuery->setParameter($key, $value);
+        } elseif ('NOT NULL' == $value) {
+            // param is not needed
+        } elseif (isset($value)) {
+            $finalQuery->setParameter($key, $value);
+        } elseif (null === $value) {
+            // param is not needed
+        }
+    }
+
     /**
      * Count entities using a Criteria object or a simple filter array.
      *
@@ -158,6 +209,40 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         }
     }
 
+    /**
+     * Create a LIKE comparison with entity texts colunms.
+     *
+     * @param string                  $pattern
+     * @param DoctrineORMQueryBuilder $qb
+     * @param string                  $alias
+     */
+    protected function classicLikeComparison(
+        $pattern,
+        \Doctrine\ORM\QueryBuilder &$qb,
+        $alias = "obj"
+    ) {
+        /*
+         * get fields needed for a search
+         * query
+         */
+        $types = array('string', 'text');
+        $metadatas = $this->_em->getClassMetadata($this->getEntityName());
+        $criteriaFields = array();
+        $cols = $metadatas->getColumnNames();
+        foreach ($cols as $col) {
+            $field = $metadatas->getFieldName($col);
+            $type = $metadatas->getTypeOfField($field);
+            if (in_array($type, $types) &&
+                $field != 'childrenOrder' &&
+                $field != 'childrenOrderDirection') {
+                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
+            }
+        }
+
+        foreach ($criteriaFields as $key => $value) {
+            $qb->orWhere($qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value)));
+        }
+    }
    /**
     * Create a Criteria object from a search pattern and additionnal fields.
     *
@@ -174,25 +259,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         array $criteria = array(),
         $alias = "obj"
     ) {
-        /*
-         * get fields needed for a search
-         * query
-         */
-        $types = array('string', 'text');
-        $metadatas = $this->_em->getClassMetadata($this->getEntityName());
-        $criteriaFields = array();
-        $cols = $metadatas->getColumnNames();
-        foreach ($cols as $col) {
-            $field = $metadatas->getFieldName($col);
-            $type = $metadatas->getTypeOfField($field);
-            if (in_array($type, $types)) {
-                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
-            }
-        }
 
-        foreach ($criteriaFields as $key => $value) {
-            $qb->orWhere($qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value)));
-        }
+        $this->classicLikeComparison($pattern, $qb, $alias);
 
         foreach ($criteria as $key => $value) {
             if (is_object($value) && $value instanceof PersistableInterface) {

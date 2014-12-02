@@ -291,33 +291,9 @@ class FontsController extends RozierApp
     protected function buildAddForm()
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add('name', 'text', array(
-                'label' => $this->getTranslator()->trans('font.name'),
-            ))
-            ->add('eotFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.eotFile'),
-                'required' => false
-            ))
-            ->add('svgFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.svgFile'),
-                'required' => false
-            ))
-            ->add('otfFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.otfFile'),
-                'required' => false
-            ))
-            ->add('woffFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.woffFile'),
-                'required' => false
-            ))
-            ->add('woff2File', 'file', array(
-                'label' => $this->getTranslator()->trans('font.woff2File'),
-                'required' => false
-            ))
-            ->add('variant', new \RZ\Roadiz\CMS\Forms\FontVariantsType(), array(
-                'label' => $this->getTranslator()->trans('font.variant')
-            ));
+            ->createBuilder('form');
+
+        $this->buildCommonFormFields($builder);
 
         return $builder->getForm();
     }
@@ -355,39 +331,52 @@ class FontsController extends RozierApp
             ->createBuilder('form', $defaults)
             ->add('fontId', 'hidden', array(
                 'data'=>$font->getId()
-            ))
-            ->add('name', 'text', array(
-                'label' => $this->getTranslator()->trans('font.name'),
-            ))
-            ->add('eotFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.eotFile'),
-                'required' => false
-            ))
-            ->add('svgFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.svgFile'),
-                'required' => false
-            ))
-            ->add('otfFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.otfFile'),
-                'required' => false
-            ))
-            ->add('woffFile', 'file', array(
-                'label' => $this->getTranslator()->trans('font.woffFile'),
-                'required' => false
-            ))
-            ->add('woff2File', 'file', array(
-                'label' => $this->getTranslator()->trans('font.woff2File'),
-                'required' => false
-            ))
-            ->add(
-                'variant',
-                new \RZ\Roadiz\CMS\Forms\FontVariantsType(),
-                array(
-                    'label' => $this->getTranslator()->trans('font.variant')
-                )
-            );
+            ));
+
+        $this->buildCommonFormFields($builder);
 
         return $builder->getForm();
+    }
+
+    /**
+     * Build common fields between add and edit font forms.
+     *
+     * @param FormBuilder $builder
+     */
+    private function buildCommonFormFields(&$builder)
+    {
+        $builder->add('name', 'text', array(
+            'label' => $this->getTranslator()->trans('font.name'),
+        ))
+        ->add('eotFile', 'file', array(
+            'label' => $this->getTranslator()->trans('font.eotFile'),
+            'required' => false
+        ))
+        ->add('svgFile', 'file', array(
+            'label' => $this->getTranslator()->trans('font.svgFile'),
+            'required' => false
+        ))
+        ->add('otfFile', 'file', array(
+            'label' => $this->getTranslator()->trans('font.otfFile'),
+            'required' => false
+        ))
+        ->add('woffFile', 'file', array(
+            'label' => $this->getTranslator()->trans('font.woffFile'),
+            'required' => false
+        ))
+        ->add('woff2File', 'file', array(
+            'label' => $this->getTranslator()->trans('font.woff2File'),
+            'required' => false
+        ))
+        ->add(
+            'variant',
+            new \RZ\Roadiz\CMS\Forms\FontVariantsType(),
+            array(
+                'label' => $this->getTranslator()->trans('font.variant')
+            )
+        );
+
+        return $builder;
     }
 
     /**
