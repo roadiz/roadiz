@@ -37,7 +37,6 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\SecurityContext;
-use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 
 /**
  * EntityRepository that implements search engine query with Solr.
