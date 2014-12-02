@@ -337,6 +337,21 @@
                 }
             }
         }
+        &.hidden-tag {
+            & > .tagtree-element-name {
+                a {
+                    text-decoration: line-through;
+                    .opacity(0.8);
+                }
+            }
+            &:hover {
+                & > .tagtree-element-name {
+                    a {
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
         &.unpublished-node {
            & > .uk-nestable-handle:after {
                 width: 9px;
