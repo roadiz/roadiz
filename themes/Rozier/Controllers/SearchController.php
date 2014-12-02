@@ -152,45 +152,13 @@ class SearchController extends RozierApp
         ))->getForm();
         $form->handleRequest();
 
-        $builderNodeType = $this->getService('formFactory')
-                                ->createNamedBuilder(
-                                    'nodeTypeForm',
-                                    "form",
-                                    array(),
-                                    array("method" => "get")
-                                );
-        $builderNodeType->add(
-            "nodetype",
-            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-            array(
-                'empty_value' => "",
-                'required' => false
-            )
-        )
-        ->add("nodetypeSubmit", "submit", array(
-            "label" => $this->getTranslator()->trans("select.nodetype"),
-            "attr" => array("class" => "uk-button uk-button-primary")
-        ));
+        $builderNodeType = $this->buildNodeTypeForm();
 
         $nodeTypeForm = $builderNodeType->getForm();
         $nodeTypeForm->handleRequest();
 
-        if ($nodeTypeForm->isValid()) {
-            if (empty($nodeTypeForm->getData()['nodetype'])) {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('searchNodePage')
-                );
-                $response->prepare($request);
-            } else {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'searchNodeSourcePage',
-                        array("nodetypeId" => $nodeTypeForm->getData()['nodetype'])
-                    )
-                );
-                $response->prepare($request);
-            }
-
+        if (null !== $response = $this->handleNodeTypeForm($nodeTypeForm)) {
+            $response->prepare($request);
             return $response->send();
         }
 
@@ -251,47 +219,13 @@ class SearchController extends RozierApp
         $form = $builder->getForm();
         $form->handleRequest();
 
-        $builderNodeType = $this->getService('formFactory')
-                                ->createNamedBuilder(
-                                    'nodeTypeForm',
-                                    "form",
-                                    array(),
-                                    array("method" => "get")
-                                );
-        $builderNodeType->add(
-            "nodetype",
-            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-            array(
-                  'empty_value' => "",
-                  'required' => false,
-                  'data' => $nodetypeId
-            )
-        )
-        ->add("nodetypeSubmit", "submit", array(
-            "label" => $this->getTranslator()->trans("select.nodetype"),
-            "attr" => array("class" => "uk-button uk-button-primary")
-        ));
+        $builderNodeType = $this->buildNodeTypeForm($nodetypeId);
 
         $nodeTypeForm = $builderNodeType->getForm();
         $nodeTypeForm->handleRequest();
 
-        if ($nodeTypeForm->isValid()) {
-            if (empty($nodeTypeForm->getData()['nodetype'])) {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('searchNodePage')
-                );
-                $response->prepare($request);
-            } else {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'searchNodeSourcePage',
-                        array(
-                            "nodetypeId" => $nodeTypeForm->getData()['nodetype']
-                        )
-                    )
-                );
-                $response->prepare($request);
-            }
+        if (null !== $response = $this->handleNodeTypeForm($nodeTypeForm)) {
+            $response->prepare($request);
             return $response->send();
         }
 
@@ -389,6 +323,61 @@ class SearchController extends RozierApp
             Response::HTTP_OK,
             array('content-type' => 'text/html')
         );
+    }
+
+    /**
+     * Build node-type selection form.
+     *
+     * @param int|null $nodetypeId
+     */
+    protected function buildNodeTypeForm($nodetypeId = null)
+    {
+        $builderNodeType = $this->getService('formFactory')
+                                ->createNamedBuilder(
+                                    'nodeTypeForm',
+                                    "form",
+                                    array(),
+                                    array("method" => "get")
+                                );
+        $builderNodeType->add(
+            "nodetype",
+            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+            array(
+                  'empty_value' => "",
+                  'required' => false,
+                  'data' => $nodetypeId
+            )
+        )
+        ->add("nodetypeSubmit", "submit", array(
+            "label" => $this->getTranslator()->trans("select.nodetype"),
+            "attr" => array("class" => "uk-button uk-button-primary")
+        ));
+
+        return $builderNodeType;
+    }
+
+    protected function handleNodeTypeForm($nodeTypeForm)
+    {
+        if ($nodeTypeForm->isValid()) {
+            if (empty($nodeTypeForm->getData()['nodetype'])) {
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate('searchNodePage')
+                );
+            } else {
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate(
+                        'searchNodeSourcePage',
+                        array(
+                            "nodetypeId" => $nodeTypeForm->getData()['nodetype']
+                        )
+                    )
+                );
+            }
+
+            return $response;
+        }
+
+        return null;
     }
 
     public function buildSimpleForm($prefix)

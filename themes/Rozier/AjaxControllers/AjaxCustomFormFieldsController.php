@@ -9,8 +9,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Roadiz\Core\Entities\CustomFormField;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
+use Themes\Rozier\AjaxControllers\AjaxAbstractFieldsController;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * {@inheritdoc}
  */
-class AjaxCustomFormFieldsController extends AbstractAjaxController
+class AjaxCustomFormFieldsController extends AjaxAbstractFieldsController
 {
     /**
      * Handle AJAX edition requests for CustomFormFields
@@ -47,43 +46,19 @@ class AjaxCustomFormFieldsController extends AbstractAjaxController
         $field = $this->getService('em')
                       ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
 
-        if ($field !== null) {
-
-            $responseArray = null;
-
-            /*
-             * Get the right update method against "_action" parameter
-             */
-            switch ($request->get('_action')) {
-                case 'updatePosition':
-                    $responseArray = $this->updatePosition($request->request->all(), $field);
-                    break;
-            }
-
-            if ($responseArray === null) {
-                $responseArray = array(
-                    'statusCode' => '200',
-                    'status' => 'success',
-                    'responseText' => $this->getTranslator()->trans('field.%name%.updated', array(
-                        '%name%' => $field->getName()
-                    ))
-                );
-            }
-
-            return new Response(
-                json_encode($responseArray),
-                Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
-            );
+        if (null !== $response = $this->handleFieldActions($request, $field)) {
+            return $response;
         }
-
 
         $responseArray = array(
             'statusCode' => '403',
             'status'    => 'danger',
-            'responseText' => $this->getTranslator()->trans('field.%customFormFieldId%.not_exists', array(
-                '%customFormFieldId%' => $customFormFieldId
-            ))
+            'responseText' => $this->getTranslator()->trans(
+                'field.%customFormFieldId%.not_exists',
+                array(
+                    '%customFormFieldId%' => $customFormFieldId
+                )
+            )
         );
 
         return new Response(
@@ -91,25 +66,5 @@ class AjaxCustomFormFieldsController extends AbstractAjaxController
             Response::HTTP_OK,
             array('content-type' => 'application/javascript')
         );
-    }
-
-    /**
-     * @param array         $parameters
-     * @param CustomFormField $field
-     */
-    protected function updatePosition($parameters, CustomFormField $field)
-    {
-        /*
-         * First, we set the new parent
-         */
-        if (!empty($parameters['newPosition']) &&
-            null !== $field) {
-
-            $field->setPosition($parameters['newPosition']);
-            // Apply position update before cleaning
-            $this->getService('em')->flush();
-
-            $field->getHandler()->cleanPositions();
-        }
     }
 }

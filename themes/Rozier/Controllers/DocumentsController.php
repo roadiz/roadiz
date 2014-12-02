@@ -26,6 +26,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class DocumentsController extends RozierApp
 {
+    protected $thumbnailFormat = array(
+        'width' =>   128,
+        'quality' => 50,
+        'crop' =>    '1x1'
+    );
+
     /**
      * @param Symfony\Component\HttpFoundation\Request $request
      *
@@ -64,8 +70,7 @@ class DocumentsController extends RozierApp
                 $msg = $this->getTranslator()->trans('wrong.request');
             }
 
-            $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getService('logger')->info($msg);
+            $this->publishConfirmMessage($request, $msg);
 
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')->generate(
@@ -94,12 +99,7 @@ class DocumentsController extends RozierApp
 
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['documents'] = $listManager->getEntities();
-
-        $this->assignation['thumbnailFormat'] = array(
-            'width' =>   128,
-            'quality' => 50,
-            'crop' =>    '1x1'
-        );
+        $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
         return new Response(
             $this->getTwig()->render('documents/list.html.twig', $this->assignation),
@@ -137,8 +137,7 @@ class DocumentsController extends RozierApp
                 $msg = $this->getTranslator()->trans('document.%name%.updated', array(
                     '%name%'=>$document->getFilename()
                 ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -222,14 +221,12 @@ class DocumentsController extends RozierApp
                 try {
                     $document->getHandler()->removeWithAssets();
                     $msg = $this->getTranslator()->trans('document.%name%.deleted', array('%name%'=>$document->getFilename()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (\Exception $e) {
 
                     $msg = $this->getTranslator()->trans('document.%name%.cannot_delete', array('%name%'=>$document->getFilename()));
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->warning($msg);
+                    $this->publishErrorMessage($request, $msg);
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -288,20 +285,19 @@ class DocumentsController extends RozierApp
 
                     foreach ($documents as $document) {
                         $document->getHandler()->removeWithAssets();
-                        $msg = $this->getTranslator()->trans('document.%name%.deleted', array('%name%'=>$document->getFilename()));
-                        $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getService('logger')->info($msg);
+                        $msg = $this->getTranslator()->trans(
+                            'document.%name%.deleted',
+                            array('%name%'=>$document->getFilename())
+                        );
+                        $this->publishConfirmMessage($request, $msg);
                     }
 
                 } catch (\Exception $e) {
 
                     $msg = $this->getTranslator()->trans('documents.cannot_delete');
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->warning($msg);
+                    $this->publishErrorMessage($request, $msg);
                 }
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
+
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('documentsHomePage')
                 );
@@ -312,11 +308,7 @@ class DocumentsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
             $this->assignation['action'] = '?'. http_build_query(array('documents'=>$documentsIds));
-            $this->assignation['thumbnailFormat'] = array(
-                'width' =>   128,
-                'quality' => 50,
-                'crop' =>    '1x1'
-            );
+            $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
             return new Response(
                 $this->getTwig()->render('documents/bulkDelete.html.twig', $this->assignation),
@@ -365,28 +357,20 @@ class DocumentsController extends RozierApp
                 } catch (\Exception $e) {
 
                     $msg = $this->getTranslator()->trans('documents.cannot_download');
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->warning($msg);
-
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate('documentsHomePage')
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    $this->publishErrorMessage($request, $msg);
                 }
+
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate('documentsHomePage')
+                );
+                $response->prepare($request);
+
+                return $response->send();
             }
 
             $this->assignation['form'] = $form->createView();
             $this->assignation['action'] = '?'. http_build_query(array('documents'=>$documentsIds));
-            $this->assignation['thumbnailFormat'] = array(
-                'width' =>   128,
-                'quality' => 50,
-                'crop' =>    '1x1'
-            );
+            $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
             return new Response(
                 $this->getTwig()->render('documents/bulkDownload.html.twig', $this->assignation),
@@ -432,12 +416,10 @@ class DocumentsController extends RozierApp
                 $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
                     '%name%'=>$document->getFilename()
                 ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
             } catch (\Exception $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->error($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             }
             /*
              * Force redirect to avoid resending form when refreshing page
@@ -477,12 +459,13 @@ class DocumentsController extends RozierApp
             $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
                 '%name%'=>$document->getFilename()
             ));
-            $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getService('logger')->info($msg);
+            $this->publishConfirmMessage($request, $msg);
 
         } catch (\Exception $e) {
-            $request->getSession()->getFlashBag()->add('error', $this->getTranslator()->trans($e->getMessage()));
-            $this->getService('logger')->error($this->getTranslator()->trans($e->getMessage()));
+            $this->publishErrorMessage(
+                $request,
+                $this->getTranslator()->trans($e->getMessage())
+            );
         }
         /*
          * Force redirect to avoid resending form when refreshing page
@@ -528,8 +511,7 @@ class DocumentsController extends RozierApp
                 $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
                     '%name%'=>$document->getFilename()
                 ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 return new Response(
                     json_encode(array(
@@ -548,8 +530,7 @@ class DocumentsController extends RozierApp
 
             } else {
                 $msg = $this->getTranslator()->trans('document.cannot_persist');
-                $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->getService('logger')->error($msg);
+                $this->publishErrorMessage($request, $msg);
 
                 return new Response(
                     json_encode(array(

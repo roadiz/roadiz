@@ -73,13 +73,14 @@ class ThemesController extends RozierApp
         if ($form->isValid()) {
             try {
                 $this->addTheme($form->getData(), $theme);
-                $msg = $this->getTranslator()->trans('theme.%name%.created', array('%name%'=>$theme->getClassName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $msg = $this->getTranslator()->trans(
+                    'theme.%name%.created',
+                    array('%name%'=>$theme->getClassName())
+                );
+                $this->publishConfirmMessage($request, $msg);
 
             } catch (EntityAlreadyExistsException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             }
 
             $response = new RedirectResponse(
@@ -124,20 +125,17 @@ class ThemesController extends RozierApp
 
                 try {
                     $this->editTheme($form->getData(), $theme);
-                    $msg = $this->getTranslator()->trans('theme.%name%.updated', array('%name%'=>$theme->getClassName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'theme.%name%.updated',
+                        array('%name%'=>$theme->getClassName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('themesHomePage')
                 );
@@ -183,21 +181,18 @@ class ThemesController extends RozierApp
 
                 try {
                     $this->deleteTheme($form->getData(), $theme);
-                    $msg = $this->getTranslator()->trans('theme.%name%.deleted', array('%name%'=>$theme->getClassName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'theme.%name%.deleted',
+                        array('%name%'=>$theme->getClassName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityRequiredException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('themesHomePage')
                 );

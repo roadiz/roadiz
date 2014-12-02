@@ -72,21 +72,18 @@ class FoldersController extends RozierApp
             try {
                 $folder = $this->addFolder($form); // only pass form for file handling
 
-                $msg = $this->getTranslator()->trans('folder.%name%.created', array('%name%'=>$folder->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $msg = $this->getTranslator()->trans(
+                    'folder.%name%.created',
+                    array('%name%'=>$folder->getName())
+                );
+                $this->publishConfirmMessage($request, $msg);
 
             } catch (EntityAlreadyExistsException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             } catch (\RuntimeException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             }
 
-            /*
-             * Force redirect to avoid resending form when refreshing page
-             */
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')->generate('foldersHomePage')
             );
@@ -127,21 +124,18 @@ class FoldersController extends RozierApp
 
                 try {
                     $this->deleteFolder($form->getData(), $folder);
-                    $msg = $this->getTranslator()->trans('folder.%name%.deleted', array('%name%'=>$folder->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'folder.%name%.deleted',
+                        array('%name%'=>$folder->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityRequiredException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('foldersHomePage')
                 );
@@ -187,21 +181,18 @@ class FoldersController extends RozierApp
 
                 try {
                     $this->editFolder($form, $folder); // only pass form for file handling
-                    $msg = $this->getTranslator()->trans('folder.%name%.updated', array('%name%'=>$folder->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'folder.%name%.updated',
+                        array('%name%'=>$folder->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('foldersHomePage')
                 );

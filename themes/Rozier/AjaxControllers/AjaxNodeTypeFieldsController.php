@@ -9,16 +9,14 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
+use Themes\Rozier\AjaxControllers\AjaxAbstractFieldsController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * {@inheritdoc}
  */
-class AjaxNodeTypeFieldsController extends AbstractAjaxController
+class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
 {
     /**
      * Handle AJAX edition requests for NodeTypeFields
@@ -47,43 +45,19 @@ class AjaxNodeTypeFieldsController extends AbstractAjaxController
         $field = $this->getService('em')
                       ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
-        if ($field !== null) {
-
-            $responseArray = null;
-
-            /*
-             * Get the right update method against "_action" parameter
-             */
-            switch ($request->get('_action')) {
-                case 'updatePosition':
-                    $responseArray = $this->updatePosition($request->request->all(), $field);
-                    break;
-            }
-
-            if ($responseArray === null) {
-                $responseArray = array(
-                    'statusCode' => '200',
-                    'status' => 'success',
-                    'responseText' => $this->getTranslator()->trans('field.%name%.updated', array(
-                        '%name%' => $field->getName()
-                    ))
-                );
-            }
-
-            return new Response(
-                json_encode($responseArray),
-                Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
-            );
+        if (null !== $response = $this->handleFieldActions($request, $field)) {
+            return $response;
         }
-
 
         $responseArray = array(
             'statusCode' => '403',
             'status'    => 'danger',
-            'responseText' => $this->getTranslator()->trans('field.%nodeTypeFieldId%.not_exists', array(
-                '%nodeTypeFieldId%' => $nodeTypeFieldId
-            ))
+            'responseText' => $this->getTranslator()->trans(
+                'field.%nodeTypeFieldId%.not_exists',
+                array(
+                    '%nodeTypeFieldId%' => $nodeTypeFieldId
+                )
+            )
         );
 
         return new Response(
@@ -91,25 +65,5 @@ class AjaxNodeTypeFieldsController extends AbstractAjaxController
             Response::HTTP_OK,
             array('content-type' => 'application/javascript')
         );
-    }
-
-    /**
-     * @param array         $parameters
-     * @param NodeTypeField $field
-     */
-    protected function updatePosition($parameters, NodeTypeField $field)
-    {
-        /*
-         * First, we set the new parent
-         */
-        if (!empty($parameters['newPosition']) &&
-            null !== $field) {
-
-            $field->setPosition($parameters['newPosition']);
-            // Apply position update before cleaning
-            $this->getService('em')->flush();
-
-            $field->getHandler()->cleanPositions();
-        }
     }
 }

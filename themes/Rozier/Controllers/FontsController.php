@@ -74,15 +74,12 @@ class FontsController extends RozierApp
                 $font = $this->addFont($form); // only pass form for file handling
 
                 $msg = $this->getTranslator()->trans('font.%name%.created', array('%name%'=>$font->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
             } catch (EntityAlreadyExistsException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             } catch (\RuntimeException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             }
 
             /*
@@ -128,21 +125,18 @@ class FontsController extends RozierApp
 
                 try {
                     $this->deleteFont($form->getData(), $font);
-                    $msg = $this->getTranslator()->trans('font.%name%.deleted', array('%name%'=>$font->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'font.%name%.deleted',
+                        array('%name%'=>$font->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityRequiredException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('fontsHomePage')
                 );
@@ -188,21 +182,18 @@ class FontsController extends RozierApp
 
                 try {
                     $this->editFont($form, $font); // only pass form for file handling
-                    $msg = $this->getTranslator()->trans('font.%name%.updated', array('%name%'=>$font->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'font.%name%.updated',
+                        array('%name%'=>$font->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('fontsHomePage')
                 );
