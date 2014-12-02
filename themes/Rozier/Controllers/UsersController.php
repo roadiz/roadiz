@@ -87,15 +87,15 @@ class UsersController extends RozierApp
 
                 try {
                     $this->editUser($form->getData(), $user);
-                    $msg = $this->getTranslator()->trans('user.%name%.updated', array('%name%'=>$user->getUsername()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'user.%name%.updated',
+                        array('%name%'=>$user->getUsername())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
                 } catch (FacebookUsernameNotFoundException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -151,9 +151,8 @@ class UsersController extends RozierApp
                             '%user%'=>$user->getUserName(),
                             '%role%'=>$role->getName()
                         ));
-                        
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                 * Force redirect to avoid resending form when refreshing page
@@ -209,9 +208,11 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
 
                 $this->removeUserRole($form->getData(), $user);
-                $msg = $this->getTranslator()->trans('user.%name%.role_removed', array('%name%'=>$role->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $msg = $this->getTranslator()->trans(
+                    'user.%name%.role_removed',
+                    array('%name%'=>$role->getName())
+                );
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -265,8 +266,7 @@ class UsersController extends RozierApp
                             '%user%'=>$user->getUserName(),
                             '%group%'=>$group->getName()
                         ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                 * Force redirect to avoid resending form when refreshing page
@@ -326,8 +326,7 @@ class UsersController extends RozierApp
                             '%user%'=>$user->getUserName(),
                             '%group%'=>$group->getName()
                         ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                 * Force redirect to avoid resending form when refreshing page
@@ -382,19 +381,14 @@ class UsersController extends RozierApp
                     $user->getViewer()->sendSignInConfirmation();
 
                     $msg = $this->getTranslator()->trans('user.%name%.created', array('%name%'=>$user->getUsername()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (FacebookUsernameNotFoundException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
+
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('usersHomePage')
                 );
@@ -443,12 +437,13 @@ class UsersController extends RozierApp
                 try {
                     $this->deleteUser($form->getData(), $user);
 
-                    $msg = $this->getTranslator()->trans('user.%name%.deleted', array('%name%'=>$user->getUsername()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'user.%name%.deleted',
+                        array('%name%'=>$user->getUsername())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
