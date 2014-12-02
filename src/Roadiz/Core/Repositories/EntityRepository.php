@@ -39,6 +39,85 @@ use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 class EntityRepository extends \Doctrine\ORM\EntityRepository
 {
     /**
+     * Build a query comparison.
+     *
+     * @param mixed $value
+     * @param string $prefix
+     * @param string $key
+     * @param string $baseKey
+     * @param QueryBuilder $qb
+     *
+     * @return string
+     */
+    protected function buildComparison($value, $prefix, $key, $baseKey, &$qb)
+    {
+        if (is_object($value) && $value instanceof PersistableInterface) {
+            $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
+        } elseif (is_array($value)) {
+            /*
+             * array
+             *
+             * ['<=', $value]
+             * ['<', $value]
+             * ['>=', $value]
+             * ['>', $value]
+             * ['BETWEEN', $value, $value]
+             * ['LIKE', $value]
+             * ['NOT IN', $value]
+             * in [$value, $value]
+             */
+            if (count($value) > 1) {
+                switch ($value[0]) {
+                    case '<=':
+                        # lte
+                        $res = $qb->expr()->lte($prefix.$key, ':'.$baseKey);
+                        break;
+                    case '<':
+                        # lt
+                        $res = $qb->expr()->lt($prefix.$key, ':'.$baseKey);
+                        break;
+                    case '>=':
+                        # gte
+                        $res = $qb->expr()->gte($prefix.$key, ':'.$baseKey);
+                        break;
+                    case '>':
+                        # gt
+                        $res = $qb->expr()->gt($prefix.$key, ':'.$baseKey);
+                        break;
+                    case 'BETWEEN':
+                        $res = $qb->expr()->between(
+                            $prefix.$key,
+                            ':'.$baseKey.'_1',
+                            ':'.$baseKey.'_2'
+                        );
+                        break;
+                    case 'LIKE':
+                        $res = $qb->expr()->like($prefix.$key, $qb->expr()->literal($value[1]));
+                        break;
+                    case 'NOT IN':
+                        $res = $qb->expr()->notIn($prefix.$key, ':'.$baseKey);
+                        break;
+                    default:
+                        $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
+                        break;
+                }
+            } else {
+                $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
+            }
+
+        } elseif (is_bool($value)) {
+            $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
+        } elseif ('NOT NULL' == $value) {
+            $res = $qb->expr()->isNotNull($prefix.$key);
+        } elseif (isset($value)) {
+            $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
+        } elseif (null === $value) {
+            $res = $qb->expr()->isNull($prefix.$key);
+        }
+
+        return $res;
+    }
+    /**
      * Count entities using a Criteria object or a simple filter array.
      *
      * @param mixed $criteria Doctrine\Common\Collections\Criteria or array

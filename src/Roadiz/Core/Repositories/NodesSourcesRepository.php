@@ -161,73 +161,7 @@ class NodesSourcesRepository extends EntityRepository
             }
 
 
-            if (is_object($value) && $value instanceof PersistableInterface) {
-                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
-            } elseif (is_array($value)) {
-                /*
-                 * array
-                 *
-                 * ['<=', $value]
-                 * ['<', $value]
-                 * ['>=', $value]
-                 * ['>', $value]
-                 * ['BETWEEN', $value, $value]
-                 * ['LIKE', $value]
-                 * in [$value, $value]
-                 */
-                if (count($value) > 1) {
-                    switch ($value[0]) {
-                        case '<=':
-                            # lte -> $value[1]
-                            $res = $qb->expr()->lte($prefix.$key, ':'.$baseKey);
-                            break;
-                        case '<':
-                            # lt -> $value[1]
-                            $res = $qb->expr()->lt($prefix.$key, ':'.$baseKey);
-                            break;
-                        case '>=':
-                            # gte -> $value[1]
-                            $res = $qb->expr()->gte($prefix.$key, ':'.$baseKey);
-                            break;
-                        case '>':
-                            # gt -> $value[1]
-                            $res = $qb->expr()->gt($prefix.$key, ':'.$baseKey);
-                            break;
-                        case 'BETWEEN':
-                            $res = $qb->expr()->between(
-                                $prefix.$key,
-                                ':'.$baseKey.'_1',
-                                ':'.$baseKey.'_2'
-                            );
-                            break;
-                        case 'LIKE':
-                            $res = $qb->expr()->like(
-                                $prefix.$key,
-                                $qb->expr()->literal($value[1])
-                            );
-                            break;
-                        case 'NOT IN':
-                            $res = $qb->expr()->notIn($prefix.$key, ':'.$baseKey);
-                            break;
-                        default:
-                            $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
-                            break;
-                    }
-                } else {
-                    $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
-                }
-
-            } elseif (is_bool($value)) {
-                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
-            } elseif ($value == 'NOT NULL') {
-                $res = $qb->expr()->isNotNull($prefix.$key);
-            } elseif (isset($value)) {
-                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
-            } elseif (null === $value) {
-                $res = $qb->expr()->isNull($prefix.$key);
-            }
-
-            $qb->andWhere($res);
+            $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
         }
     }
 
