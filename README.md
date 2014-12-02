@@ -2,7 +2,7 @@
 ## REZO ZERO CMS
 
 [![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=develop)](https://travis-ci.org/roadiz/roadiz)
-[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png)](https://coveralls.io/r/roadiz/roadiz)
+[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=develop)](https://coveralls.io/r/roadiz/roadiz?branch=develop)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d/mini.png)](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d)
 
 Roadiz is a polymorphic CMS based on a node system which can handle many type of services.
