@@ -41,22 +41,8 @@ class SchemaController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
-        if ($this->getService('csrfProvider')
-                ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
+        $this->updateSchema($request, $_token);
 
-            \RZ\Roadiz\Console\SchemaCommand::updateSchema();
-
-            $msg = $this->getTranslator()->trans('database.schema.updated');
-            $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getService('logger')->info($msg);
-        } else {
-            $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
-            $request->getSession()->getFlashBag()->add('error', $msg);
-            $this->getService('logger')->error($msg);
-        }
-        /*
-         * Redirect to update schema page
-         */
         $response = new RedirectResponse(
             $this->getService('urlGenerator')->generate(
                 'nodeTypesHomePage'
@@ -78,21 +64,8 @@ class SchemaController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
-        if ($this->getService('csrfProvider')
-                ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
-            \RZ\Roadiz\Console\SchemaCommand::updateSchema();
+        $this->updateSchema($request, $_token);
 
-            $msg = $this->getTranslator()->trans('database.schema.updated');
-            $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getService('logger')->info($msg);
-        } else {
-            $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
-            $request->getSession()->getFlashBag()->add('error', $msg);
-            $this->getService('logger')->error($msg);
-        }
-        /*
-         * Redirect to update schema page
-         */
         $response = new RedirectResponse(
             $this->getService('urlGenerator')->generate(
                 'nodeTypeFieldsListPage',
@@ -104,5 +77,21 @@ class SchemaController extends RozierApp
         $response->prepare($request);
 
         return $response->send();
+    }
+
+    protected function updateSchema(Request $request, $_token)
+    {
+
+        if ($this->getService('csrfProvider')
+                ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
+
+            \RZ\Roadiz\Console\SchemaCommand::updateSchema();
+
+            $msg = $this->getTranslator()->trans('database.schema.updated');
+            $this->publishConfirmMessage($request, $msg);
+        } else {
+            $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
+            $this->publishErrorMessage($request, $e->getMessage());
+        }
     }
 }

@@ -580,6 +580,50 @@ class AppController implements ViewableInterface
     }
 
     /**
+     * Publish a message in Session flash bag and
+     * logger interface.
+     *
+     * @param Request $request
+     * @param string  $msg
+     * @param string  $level
+     */
+    protected function publishMessage(Request $request, $msg, $level = "confirm")
+    {
+        $request->getSession()->getFlashBag()->add($level, $msg);
+
+        switch ($level) {
+            case 'error':
+                $this->getService('logger')->error($msg);
+                break;
+            default:
+                $this->getService('logger')->info($msg);
+                break;
+        }
+    }
+    /**
+     * Publish a confirm message in Session flash bag and
+     * logger interface.
+     *
+     * @param Request $request
+     * @param string  $msg
+     */
+    public function publishConfirmMessage(Request $request, $msg)
+    {
+        $this->publishMessage($request, $msg, 'confirm');
+    }
+    /**
+     * Publish an error message in Session flash bag and
+     * logger interface.
+     *
+     * @param Request $request
+     * @param string  $msg
+     */
+    public function publishErrorMessage(Request $request, $msg)
+    {
+        $this->publishMessage($request, $msg, 'error');
+    }
+
+    /**
      * Custom route for redirecting routes with a trailing slash.
      *
      * @param  Request $request [description]

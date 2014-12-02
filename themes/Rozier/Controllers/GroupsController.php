@@ -74,21 +74,18 @@ class GroupsController extends RozierApp
 
             try {
                 $group = $this->addGroup($form->getData());
-                $msg = $this->getTranslator()->trans('group.%name%.created', array('%name%'=>$group->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $msg = $this->getTranslator()->trans(
+                    'group.%name%.created',
+                    array('%name%'=>$group->getName())
+                );
+                $this->publishConfirmMessage($request, $msg);
 
             } catch (EntityAlreadyExistsException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             } catch (\RuntimeException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             }
 
-            /*
-             * Force redirect to avoid resending form when refreshing page
-             */
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')->generate('groupsHomePage')
             );
@@ -128,18 +125,16 @@ class GroupsController extends RozierApp
 
                 try {
                     $this->deleteGroup($form->getData(), $group);
-                    $msg = $this->getTranslator()->trans('group.%name%.deleted', array('%name%' => $group->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'group.%name%.deleted',
+                        array('%name%' => $group->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('groupsHomePage')
                 );
@@ -185,21 +180,18 @@ class GroupsController extends RozierApp
 
                 try {
                     $this->editGroup($form->getData(), $group);
-                    $msg = $this->getTranslator()->trans('group.%name%.updated', array('%name%'=>$group->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'group.%name%.updated',
+                        array('%name%'=>$group->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('groupsHomePage')
                 );
@@ -248,12 +240,8 @@ class GroupsController extends RozierApp
                             '%group%'=>$group->getName(),
                             '%role%'=>$role->getName()
                         ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
-                /*
-                * Force redirect to avoid resending form when refreshing page
-                */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'groupsEditRolesPage',
@@ -308,12 +296,8 @@ class GroupsController extends RozierApp
                     '%role%'=>$role->getName(),
                     '%group%'=>$group->getName()
                 ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'groupsEditRolesPage',
@@ -363,12 +347,8 @@ class GroupsController extends RozierApp
                             '%group%'=>$group->getName(),
                             '%user%'=>$user->getUserName()
                         ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
-                /*
-                * Force redirect to avoid resending form when refreshing page
-                */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'groupsEditUsersPage',
@@ -423,12 +403,8 @@ class GroupsController extends RozierApp
                     '%user%'=>$user->getUserName(),
                     '%group%'=>$group->getName()
                 ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'groupsEditUsersPage',
