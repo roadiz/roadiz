@@ -30,7 +30,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use \RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\NodeTypeField;

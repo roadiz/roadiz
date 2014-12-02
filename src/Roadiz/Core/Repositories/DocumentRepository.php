@@ -33,7 +33,6 @@ namespace RZ\Roadiz\Core\Repositories;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
