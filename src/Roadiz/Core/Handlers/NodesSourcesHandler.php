@@ -130,7 +130,7 @@ class NodesSourcesHandler
         if ($this->nodeSource->getNode()->isHome()) {
 
             if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
-                return $host;
+                return $host.'/';
             } else {
                 return $host .
                         '/' . $this->nodeSource->getTranslation()->getLocale();
@@ -145,8 +145,10 @@ class NodesSourcesHandler
             !$parent->getNode()->isHome()) {
 
             do {
-                $handler = $parent->getHandler();
-                $urlTokens[] = $handler->getIdentifier();
+                if ($parent->isVisible()) {
+                    $handler = $parent->getHandler();
+                    $urlTokens[] = $handler->getIdentifier();
+                }
                 $parent = $parent->getHandler()->getParent();
             } while ($parent !== null && !$parent->getNode()->isHome());
         }

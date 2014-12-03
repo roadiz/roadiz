@@ -156,7 +156,7 @@ class AjaxTagsController extends AbstractAjaxController
             if ($parent !== null) {
                 $tag->setParent($parent);
             }
-        } elseif ($parameters['newParent'] === null) {
+        } else {
             $tag->setParent(null);
         }
 
