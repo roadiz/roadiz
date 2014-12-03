@@ -145,7 +145,7 @@ class NodesSourcesHandler
             !$parent->getNode()->isHome()) {
 
             do {
-                if ($parent->isVisible()) {
+                if ($parent->getNode()->isVisible()) {
                     $handler = $parent->getHandler();
                     $urlTokens[] = $handler->getIdentifier();
                 }
