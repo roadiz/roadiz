@@ -232,6 +232,7 @@ class FrontendController extends AppController
      */
     protected function handle(Request $request)
     {
+        Kernel::getService('stopwatch')->start('handleNodeController');
         $currentClass = get_class($this);
         $refl = new \ReflectionClass($currentClass);
         $namespace = $refl->getNamespaceName() . '\\Controllers';

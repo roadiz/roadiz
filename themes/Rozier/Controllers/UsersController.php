@@ -72,7 +72,7 @@ class UsersController extends RozierApp
     {
         if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
             || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
-            throw new AccessDeniedException("You don't have access to this page:" . $role);
+            throw new AccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
 
         $user = $this->getService('em')
