@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * {@inheritdoc}
@@ -71,7 +72,7 @@ class UsersController extends RozierApp
     {
         if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
             || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
-            throw AccessDeniedException("You don't have access to this page:" . $role);
+            throw new AccessDeniedException("You don't have access to this page:" . $role);
         }
 
         $user = $this->getService('em')
