@@ -164,6 +164,10 @@
             padding-left: @node-icon-offset;
         }
 
+        &.home-node{
+            padding-left:10px !important;
+        }
+
         &:hover {
             .uk-nestable-handle:after {
                 color: @nestable-handle-border-color-hover;
@@ -247,7 +251,11 @@
             }
 
             & > .uk-nestable-handle:after {
-                display: none;
+                position: absolute; 
+                top:6px; margin-left:2px;
+                .opacity(0);
+                z-index:4;
+                // display: none;
             }
             &:hover {
                 .nodetree-element-name a{
