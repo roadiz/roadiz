@@ -49,6 +49,23 @@ class DataInheritanceEvent
         // the $metadata is all the mapping info for this class
         $metadata = $eventArgs->getClassMetadata();
 
+        /*
+         * Prefix tables
+         */
+        if (!empty(Kernel::getService('config')['doctrine']['prefix'])) {
+            $metadata->table['name'] = Kernel::getService('config')['doctrine']['prefix'].'_'.$metadata->table['name'];
+
+            /*
+             * Prefix join tables
+             */
+            foreach ($metadata->associationMappings as $key => $association) {
+                if (!empty($association['joinTable']['name'])) {
+                    $metadata->associationMappings[$key]['joinTable']['name'] =
+                        Kernel::getService('config')['doctrine']['prefix'].'_'.$association['joinTable']['name'];
+                }
+            }
+        }
+
         // the annotation reader accepts a ReflectionClass, which can be
         // obtained from the $metadata
         $class = $metadata->getReflectionClass();

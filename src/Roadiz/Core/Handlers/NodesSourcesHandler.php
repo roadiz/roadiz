@@ -44,6 +44,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 class NodesSourcesHandler
 {
     protected $nodeSource;
+    protected $parentNodeSource = null;
 
     /**
      * Create a new node-source handler with node-source to handle.
@@ -55,6 +56,24 @@ class NodesSourcesHandler
         $this->nodeSource = $nodeSource;
     }
 
+
+    /**
+     * @return RZ\Roadiz\Core\Entities\NodesSources
+     */
+    public function getParentNodeSource()
+    {
+        return $this->parentNodeSource;
+    }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\NodesSources $newparentNodeSource
+     */
+    public function setParentNodeSource($newparentNodeSource)
+    {
+        $this->parentNodeSource = $newparentNodeSource;
+
+        return $this;
+    }
 
     /**
      * Remove every node-source documents associations for a given field.
@@ -195,23 +214,28 @@ class NodesSourcesHandler
      */
     public function getParent()
     {
-        $parent = $this->nodeSource->getNode()->getParent();
-        if ($parent !== null) {
-            $query = Kernel::getService('em')
-                            ->createQuery('SELECT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
-                                           WHERE ns.node = :node
-                                           AND ns.translation = :translation')
-                            ->setParameter('node', $parent)
-                            ->setParameter('translation', $this->nodeSource->getTranslation());
+        if (null === $this->parentNodeSource) {
 
-            try {
-                return $query->getSingleResult();
-            } catch (\Doctrine\ORM\NoResultException $e) {
-                return null;
+            $parent = $this->nodeSource->getNode()->getParent();
+            if ($parent !== null) {
+                $query = Kernel::getService('em')
+                                ->createQuery('SELECT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
+                                               WHERE ns.node = :node
+                                               AND ns.translation = :translation')
+                                ->setParameter('node', $parent)
+                                ->setParameter('translation', $this->nodeSource->getTranslation());
+
+                try {
+                    $this->parentNodeSource = $query->getSingleResult();
+                } catch (\Doctrine\ORM\NoResultException $e) {
+                    $this->parentNodeSource = null;
+                }
+            } else {
+                $this->parentNodeSource = null;
             }
-        } else {
-            return null;
         }
+
+        return $this->parentNodeSource;
     }
 
     /**

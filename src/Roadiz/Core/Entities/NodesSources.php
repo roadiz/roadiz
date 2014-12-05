@@ -46,6 +46,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NodesSources extends AbstractEntity
 {
+
+    private $handler = null;
+
     /**
      * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
@@ -234,7 +237,10 @@ class NodesSources extends AbstractEntity
      */
     public function getHandler()
     {
-        return new NodesSourcesHandler($this);
+        if (null === $this->handler) {
+            $this->handler = new NodesSourcesHandler($this);
+        }
+        return $this->handler;
     }
 
     /**
