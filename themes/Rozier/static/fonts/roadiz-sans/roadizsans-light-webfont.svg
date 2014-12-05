@@ -3,7 +3,7 @@
 <svg xmlns="http://www.w3.org/2000/svg">
 <metadata></metadata>
 <defs>
-<font id="rezo_zero_sanslight" horiz-adv-x="1171" >
+<font id="roadiz_sanslight" horiz-adv-x="1171" >
 <font-face units-per-em="2048" ascent="1638" descent="-410" />
 <missing-glyph horiz-adv-x="532" />
 <glyph unicode="&#xfb01;" horiz-adv-x="1216" d="M31 1038v92h235v70q0 169 90.5 265t251.5 96q76 0 158 -21l-10 -102q-74 20 -148 20q-239 0 -239 -258v-70h383l-15 -92h-368v-1038h-103v1038h-235zM889 1440q0 39 22.5 59.5t57.5 20.5q33 0 56.5 -20.5t23.5 -59.5q0 -37 -23.5 -58.5t-56.5 -21.5q-34 0 -57 21.5 t-23 58.5zM920 0v1130h102v-1130h-102z" />
