@@ -1,4 +1,4 @@
-REZO-ZERO SANS font-family, a dedicated font for Rezo Zero CMS,
+ROADIZ SANS font-family, a dedicated font for Roadiz CMS,
 presentation and documentation websites
 
 Copyright (C) 2014 Nonpareille <http://www.nonpareille.net>

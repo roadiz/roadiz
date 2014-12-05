@@ -10,7 +10,7 @@ It’s based on Symfony components and Doctrine ORM for maximum performances and
 
 * *Roadiz* is released under **MIT** licence
 * *RZ Icons* font-icon is released under **MIT** licence too
-* *Rezo-Zero Sans* font is released under **GPL+FE** licence and is edited by *Nonpareille* type foundry
+* *Roadiz Sans* font family is released under **GPL+FE** licence and is edited by *Nonpareille* type foundry
 
 ### Documentation
 
@@ -28,7 +28,7 @@ follow official doc at https://getcomposer.org/doc/00-intro.md#globally
 * Create an *Apache* or *Nginx* virtual host based on samples in `samples/` folder.
 **If you don’t have any permission to create a virtual host,
 execute `bin/roadiz config --generateHtaccess` to create `.htaccess` files to protect critical informations
-from bad requests.**  
+from bad requests.**
 * Go to your web-browser to launch Install wizard.
 
 #### Database connexion
