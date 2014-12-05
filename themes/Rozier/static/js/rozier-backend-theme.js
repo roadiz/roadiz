@@ -172,9 +172,14 @@ var NodesBulk = function () {
 
     _this.$nodesCheckboxes = $('input.node-checkbox');
     _this.$nodesIdBulkTags = $('input.nodes-id-bulk-tags');
+    _this.$nodesIdBulkStatus = $('input.nodes-id-bulk-status');
     _this.$actionsMenu = $('.nodes-bulk-actions');
+
     _this.$nodesFolderButton = $('.uk-button-bulk-folder-nodes');
     _this.$nodesFolderCont = $('.nodes-bulk-folder-cont');
+
+    _this.$nodesStatusButton = $('.uk-button-bulk-status-nodes');
+    _this.$nodesStatusCont = $('.nodes-bulk-status-cont');
 
     if (_this.$nodesCheckboxes.length) {
         _this.init();
@@ -184,10 +189,14 @@ var NodesBulk = function () {
 
 NodesBulk.prototype.$nodesCheckboxes = null;
 NodesBulk.prototype.$nodesIdBulkTags = null;
+NodesBulk.prototype.$nodesIdBulkStatus = null;
 NodesBulk.prototype.$actionsMenu = null;
 NodesBulk.prototype.$nodesFolderButton = null;
 NodesBulk.prototype.$nodesFolderCont = null;
 NodesBulk.prototype.nodesFolderOpen = false;
+NodesBulk.prototype.$nodesStatusButton = null;
+NodesBulk.prototype.$nodesStatusCont = null;
+NodesBulk.prototype.nodesStatusOpen = false;
 NodesBulk.prototype.nodesIds = null;
 
 /**
@@ -202,6 +211,7 @@ NodesBulk.prototype.init = function() {
     _this.$nodesCheckboxes.on('change', proxy);
 
     _this.$nodesFolderButton.on('click', $.proxy(_this.nodesFolderButtonClick, _this));
+    _this.$nodesStatusButton.on('click', $.proxy(_this.nodesStatusButtonClick, _this));
 
     //var $bulkDeleteButton = _this.$actionsMenu.find('.node-bulk-delete');
     //var deleteProxy = $.proxy(_this.onBulkDelete, _this);
@@ -225,6 +235,9 @@ NodesBulk.prototype.onCheckboxChange = function(event) {
 
     if(_this.$nodesIdBulkTags.length){
         _this.$nodesIdBulkTags.val(_this.nodesIds.join(','));
+    }
+    if(_this.$nodesIdBulkStatus.length){
+        _this.$nodesIdBulkStatus.val(_this.nodesIds.join(','));
     }
 
     console.log(_this.nodesIds);
@@ -292,14 +305,35 @@ NodesBulk.prototype.nodesFolderButtonClick = function(e){
     var _this = this;
 
     if(!_this.nodesFolderOpen){
+        _this.$nodesStatusCont.slideUp();
+        _this.nodesStatusOpen = false;
+
         _this.$nodesFolderCont.slideDown();
         _this.nodesFolderOpen = true;
     }
-    else{        
+    else{
         _this.$nodesFolderCont.slideUp();
         _this.nodesFolderOpen = false;
     }
+};
+/**
+ * Nodes status button click
+ * @return {[type]} [description]
+ */
+NodesBulk.prototype.nodesStatusButtonClick = function(e){
+    var _this = this;
 
+    if(!_this.nodesStatusOpen){
+        _this.$nodesFolderCont.slideUp();
+        _this.nodesFolderOpen = false;
+
+        _this.$nodesStatusCont.slideDown();
+        _this.nodesStatusOpen = true;
+    }
+    else{
+        _this.$nodesStatusCont.slideUp();
+        _this.nodesStatusOpen = false;
+    }
 };
 ;/**
  * Documents list

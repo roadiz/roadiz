@@ -5510,7 +5510,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>Bad credentials</source>
           <target></target>
       </trans-unit>
-      
+
       <trans-unit xml:space="preserve" id="User account has expired.">
           <source>User account has expired.</source>
           <target></target>
@@ -5526,6 +5526,32 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="User account is disabled.">
           <source>User account is disabled.</source>
+          <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="change.status.nodes">
+          <source>change.status.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="change.nodes.status">
+          <source>change.nodes.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="change.nodes.status.all">
+          <source>change.nodes.status.all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.change-status.these.nodes">
+          <source>are_you_sure.change-status.these.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.status">
+          <source>nodes.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.status.changed">
+          <source>nodes.bulk.status.changed</source>
           <target></target>
       </trans-unit>
     </body>

@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-12-01 10:14+0000
+PO-Revision-Date: 2014-12-05 10:43+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1417428854.834088
+X-POOTLE-MTIME: 1417776217.155580
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5515,23 +5515,49 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>Bad credentials</source>
           <target state="translated">Bad credentials</target>
       <note/></trans-unit>
-      
+
       <trans-unit xml:space="preserve" id="User account has expired." approved="yes">
           <source>User account has expired.</source>
           <target state="translated">User account has expired.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="User account is locked." approved="yes">
           <source>User account is locked.</source>
           <target state="translated">User account is locked.</target>
-      </trans-unit>
+      <note/></trans-unit>
 
       <trans-unit xml:space="preserve" id="User credentials have expired." approved="yes">
           <source>User credentials have expired.</source>
           <target state="translated">User credentials have expired.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="User account is disabled." approved="yes">
           <source>User account is disabled.</source>
           <target state="translated">User account is disabled.</target>
+      <note/></trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="change.status.nodes" approved="yes">
+          <source>change.status.nodes</source>
+          <target state="translated">Change selected nodes status</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="change.nodes.status" approved="yes">
+          <source>change.nodes.status</source>
+          <target state="translated">Change selected nodes status</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="change.nodes.status.all" approved="yes">
+          <source>change.nodes.status.all</source>
+          <target state="translated">Change all selected nodes status</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.change-status.these.nodes" approved="yes">
+          <source>are_you_sure.change-status.these.nodes</source>
+          <target state="translated">Are you sure you want to change every selected nodes status?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.status" approved="yes">
+          <source>nodes.status</source>
+          <target state="translated">Selection status</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.status.changed" approved="yes">
+          <source>nodes.bulk.status.changed</source>
+          <target state="translated">Node selection status has been changed.</target>
       </trans-unit>
     </body>
   </file>

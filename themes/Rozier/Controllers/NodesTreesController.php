@@ -9,6 +9,7 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Entities\Node;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\RozierApp;
 
@@ -92,11 +93,20 @@ class NodesTreesController extends RozierApp
             $this->assignation['tagNodesForm'] = $tagNodesForm->createView();
 
 
+            /*
+             * Handle bulk status
+             */
+            if ($this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_STATUS')) {
+
+                $statusBulkNodes = $this->buildBulkStatusForm($request->getRequestUri());
+                $this->assignation['statusNodesForm'] = $statusBulkNodes->createView();
+            }
+
             if ($this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_DELETE')) {
                 /*
                  * Handle bulk delete form
                  */
-                $deleteNodesForm = $this->buildBulkDeleteForm();
+                $deleteNodesForm = $this->buildBulkDeleteForm($request->getRequestUri());
                 $this->assignation['deleteNodesForm'] = $deleteNodesForm->createView();
             }
 
@@ -134,7 +144,10 @@ class NodesTreesController extends RozierApp
 
             if (count($nodes) > 0) {
 
-                $form = $this->buildBulkDeleteForm($nodesIds);
+                $form = $this->buildBulkDeleteForm(
+                    $request->get('deleteForm')['referer'],
+                    $nodesIds
+                );
                 $form->handleRequest();
 
                 if ($form->isValid()) {
@@ -143,12 +156,13 @@ class NodesTreesController extends RozierApp
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
                     $this->getService('logger')->info($msg);
 
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate('nodesHomePage')
-                    );
+                    if (!empty($form->getData()['referer'])) {
+                        $response = new RedirectResponse($form->getData()['referer']);
+                    } else {
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate('nodesHomePage')
+                        );
+                    }
                     $response->prepare($request);
 
                     return $response->send();
@@ -156,6 +170,10 @@ class NodesTreesController extends RozierApp
 
                 $this->assignation['nodes'] = $nodes;
                 $this->assignation['form'] = $form->createView();
+
+                if (!empty($request->get('deleteForm')['referer'])) {
+                    $this->assignation['referer'] = $request->get('deleteForm')['referer'];
+                }
 
                 return new Response(
                     $this->getTwig()->render('nodes/bulkDelete.html.twig', $this->assignation),
@@ -169,10 +187,82 @@ class NodesTreesController extends RozierApp
     }
 
     /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function bulkStatusAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES_STATUS');
+
+        if (!empty($request->get('statusForm')['nodesIds'])) {
+
+            $nodesIds = trim($request->get('statusForm')['nodesIds']);
+            $nodesIds = explode(',', $nodesIds);
+            array_filter($nodesIds);
+
+            $nodes = $this->getService('em')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                            ->findBy(array(
+                                'id' => $nodesIds
+                            ));
+
+            if (count($nodes) > 0) {
+
+                $form = $this->buildBulkStatusForm(
+                    $request->get('statusForm')['referer'],
+                    $nodesIds,
+                    (int) $request->get('statusForm')['status'],
+                    false
+                );
+
+                $form->handleRequest();
+
+                if ($form->isValid()) {
+                    $msg = $this->bulkStatusNodes($form->getData());
+
+                    $request->getSession()->getFlashBag()->add('confirm', $msg);
+                    $this->getService('logger')->info($msg);
+
+
+                    if (!empty($form->getData()['referer'])) {
+                        $response = new RedirectResponse($form->getData()['referer']);
+                    } else {
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate('nodesHomePage')
+                        );
+                    }
+                    $response->prepare($request);
+
+                    return $response->send();
+                }
+
+                $this->assignation['nodes'] = $nodes;
+                $this->assignation['form'] = $form->createView();
+
+                if (!empty($request->get('statusForm')['referer'])) {
+                    $this->assignation['referer'] = $request->get('statusForm')['referer'];
+                }
+
+                return new Response(
+                    $this->getTwig()->render('nodes/bulkStatus.html.twig', $this->assignation),
+                    Response::HTTP_OK,
+                    array('content-type' => 'text/html')
+                );
+            }
+        }
+
+        return $this->throw404();
+    }
+
+
+    /**
      * @return \Symfony\Component\Form\Form
      */
-    private function buildBulkDeleteForm($nodesIds = array())
-    {
+    private function buildBulkDeleteForm(
+        $referer = false,
+        $nodesIds = array()
+    ) {
         $builder = $this->getService('formFactory')
                     ->createNamedBuilder('deleteForm')
                     ->add('nodesIds', 'hidden', array(
@@ -182,6 +272,12 @@ class NodesTreesController extends RozierApp
                             new NotBlank()
                         )
                     ));
+
+        if (false !== $referer) {
+            $builder->add('referer', 'hidden', array(
+                'data' => $referer,
+            ));
+        }
 
         return $builder->getForm();
     }
@@ -210,6 +306,36 @@ class NodesTreesController extends RozierApp
             $this->getService('em')->flush();
 
             return $this->getTranslator()->trans('nodes.bulk.deleted');
+        }
+
+        return $this->getTranslator()->trans('wrong.request');
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return string
+     */
+    private function bulkStatusNodes($data)
+    {
+        if (!empty($data['nodesIds'])) {
+            $nodesIds = trim($data['nodesIds']);
+            $nodesIds = explode(',', $nodesIds);
+            array_filter($nodesIds);
+
+            $nodes = $this->getService('em')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                            ->findBy(array(
+                                'id' => $nodesIds
+                            ));
+
+            foreach ($nodes as $node) {
+                $node->setStatus($data['status']);
+            }
+
+            $this->getService('em')->flush();
+
+            return $this->getTranslator()->trans('nodes.bulk.status.changed');
         }
 
         return $this->getTranslator()->trans('wrong.request');
@@ -343,5 +469,58 @@ class NodesTreesController extends RozierApp
         $this->getService('em')->flush();
 
         return $msg;
+    }
+
+
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildBulkStatusForm(
+        $referer = false,
+        $nodesIds = array(),
+        $status = Node::DRAFT,
+        $submit = true
+    ) {
+        $builder = $this->getService('formFactory')
+                    ->createNamedBuilder('statusForm')
+                    ->add('nodesIds', 'hidden', array(
+                        'attr' => array('class' => 'nodes-id-bulk-status'),
+                        'data' => implode(',', $nodesIds),
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ))
+                    ->add('status', 'choice', array(
+                        'label' => false,
+                        'data' => $status,
+                        'choices' => array(
+                            Node::DRAFT => $this->getTranslator()->trans('draft'),
+                            Node::PENDING => $this->getTranslator()->trans('pending'),
+                            Node::PUBLISHED => $this->getTranslator()->trans('published'),
+                            Node::ARCHIVED => $this->getTranslator()->trans('archived')
+                        ),
+                        'constraints' => array(
+                            new NotBlank()
+                        )
+                    ));
+
+        if (false !== $referer) {
+            $builder->add('referer', 'hidden', array(
+                'data' => $referer,
+            ));
+        }
+        if (true === $submit) {
+
+            $builder->add('submitStatus', 'submit', array(
+                'label' => $this->getTranslator()->trans('change.nodes.status'),
+                'attr' => array(
+                    'class' => 'uk-button uk-button-primary',
+                    'title' => $this->getTranslator()->trans('change.nodes.status'),
+                    'data-uk-tooltip' => "{animation:true}"
+                )
+            ));
+        }
+
+        return $builder->getForm();
     }
 }

@@ -23,7 +23,12 @@
         {% endif %}
     </header>
 
-    {% include 'nodes/filtersBar.html.twig' with {filters: specificNodeTree.filters,deleteNodesForm:deleteNodesForm, tagNodesForm:tagNodesForm} only %}
+    {% include 'nodes/filtersBar.html.twig' with {
+        filters:         specificNodeTree.filters,
+        deleteNodesForm: deleteNodesForm,
+        tagNodesForm:    tagNodesForm,
+        statusNodesForm: statusNodesForm
+    } only %}
 
     <article class="content content-no-action-menu">
         {% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}

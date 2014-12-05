@@ -20,7 +20,8 @@
         input[type="password"],
         input[type="search"],
         input[type="email"],
-        input[type="number"] {
+        input[type="number"],
+        select {
             min-width: 230px;
             height: 32px;
             padding: 9px 8px 5px 8px;
@@ -32,6 +33,11 @@
             }
         }
 
+
+        .rz-select {
+            vertical-align: middle;
+            margin-right: 4px;
+        }
     }
 }
 
@@ -53,7 +59,7 @@
         position: absolute;
         content:'';
         width:1px;
-        top: 5px; right: 0;  bottom:-5px; 
+        top: 5px; right: 0;  bottom:-5px;
         background:  #cbcbcb;
     }
 
@@ -68,7 +74,9 @@
     background: #EFEFEF;
 }
 
-.documents-bulk-folder-cont, .nodes-bulk-folder-cont{
+.documents-bulk-folder-cont,
+.nodes-bulk-status-cont,
+.nodes-bulk-folder-cont {
     display: none;
     margin:10px 100px 0;
     padding:10px 0 0 0;
@@ -81,8 +89,12 @@
 }
 
 
-#tagForm_submitTag, #tagForm_submitUntag, #folderForm_submitFolder, #folderForm_submitUnfolder{    
-    position: relative; 
+#tagForm_submitTag,
+#statusForm_submitStatus,
+#tagForm_submitUntag,
+#folderForm_submitFolder,
+#folderForm_submitUnfolder {
+    position: relative;
     width:32px; height:32px;
     padding:0;
     overflow: hidden;
@@ -93,19 +105,28 @@
         width:32px; height:32px;
         content:@plus;
         font-size:16px; line-height:32px;
-        font-family: 'rz-icons';       
+        font-family: 'rz-icons';
         text-align: center;
     }
 
 }
 
-#tagForm_submitTag, #folderForm_submitFolder{
+#tagForm_submitTag,
+#folderForm_submitFolder{
     margin-left:4px;
 }
 
-#tagForm_submitUntag, #folderForm_submitUnfolder{
+#tagForm_submitUntag,
+#folderForm_submitUnfolder{
 
     &:before{
         content:@minus;
+    }
+}
+
+
+#statusForm_submitStatus {
+    &:before{
+        content:@save;
     }
 }
