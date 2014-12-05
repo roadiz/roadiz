@@ -32,5 +32,4 @@ class NodesSourcesTest extends PHPUnit_Framework_TestCase
         // Assert
         $this->assertNotNull($a);
     }
-
 }
