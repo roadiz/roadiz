@@ -82,11 +82,9 @@ class NodesSourcesController extends RozierApp
                         '%node_source%'=>$source->getNode()->getNodeName(),
                         '%translation%'=>$source->getTranslation()->getName()
                     ));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
+
+                    $this->publishConfirmMessage($request, $msg);
+
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesEditSourcePage',
@@ -165,7 +163,12 @@ class NodesSourcesController extends RozierApp
         foreach ($fields as $field) {
             if (!$field->isVirtual()) {
                 $getter = $field->getGetterName();
-                $sourceDefaults[$field->getName()] = $source->$getter();
+
+                if (method_exists($source, $getter)) {
+                    $sourceDefaults[$field->getName()] = $source->$getter();
+                } else {
+                    throw new \Exception($getter.' method does not exist in '.$node->getNodeType()->getName());
+                }
             }
         }
 
@@ -382,7 +385,8 @@ class NodesSourcesController extends RozierApp
                 break;
             default:
                 $setter = $field->getSetterName();
-                $nodeSource->$setter( $dataValue );
+                $nodeSource->$setter($dataValue);
+
                 break;
         }
     }
