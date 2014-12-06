@@ -272,7 +272,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
      */
     public function getGetterName()
     {
-        return 'get'.str_replace('_', '', ucwords($this->getName()));
+        return StringHandler::camelCase('get '.$this->getName());
     }
 
     /**
@@ -280,7 +280,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
      */
     public function getSetterName()
     {
-        return 'set'.str_replace('_', '', ucwords($this->getName()));
+        return StringHandler::camelCase('set '.$this->getName());
     }
 
     /**
