@@ -33,6 +33,7 @@ namespace RZ\Roadiz\Core\Handlers;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 
 /**
  * Handle operations with node-type fields entities.
@@ -98,7 +99,10 @@ class NodeTypeFieldHandler
                     $this->getDecimalPrecision().
                     'nullable=true )
                  */
-                '.$var.PHP_EOL.$this->generateSourceGetter().PHP_EOL.$this->generateSourceSetter().PHP_EOL;
+                '.$var.PHP_EOL.$this->generateSourceGetter().$this->generateSourceSetter();
+
+        } elseif (AbstractField::DOCUMENTS_T === $this->nodeTypeField->getType()) {
+            return $this->generateSourceGetter();
         }
 
         return '';
@@ -172,6 +176,16 @@ class NodeTypeFieldHandler
         return '.$assignation.';
     }'.PHP_EOL;
 
+        } elseif (AbstractField::DOCUMENTS_T === $this->nodeTypeField->getType()) {
+
+            return '
+    /**
+     * @return array Documents array
+     */
+    public function '.$this->nodeTypeField->getGetterName().'()
+    {
+        return $this->getHandler()->getDocumentsFromFieldName("'.$this->nodeTypeField->getName().'");
+    }'.PHP_EOL;
         }
 
         return '';

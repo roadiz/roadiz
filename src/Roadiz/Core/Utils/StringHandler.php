@@ -114,4 +114,22 @@ class StringHandler
 
         return $string;
     }
+
+    /**
+     * Transform to camelcase.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function camelCase($string)
+    {
+        $string = static::removeDiacritics($string);
+        $string = preg_replace('#([-_=\.,;:]+)#', ' ', $string);
+        $string = preg_replace('#([^a-zA-Z0-9]+)#', '', ucwords($string));
+        $string = trim($string);
+        $string[0] = strtolower($string[0]);
+
+        return $string;
+    }
 }

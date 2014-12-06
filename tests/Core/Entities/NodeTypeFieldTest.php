@@ -61,17 +61,17 @@ class NodeTypeFieldTest extends PHPUnit_Framework_TestCase
     public function getGetterNameProvider()
     {
         return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "getLigulaegestasmattisnullam"),
-            array("Véèsti buœlum Rïsus", "getVeestibuoelumrisus"),
-            array("J'aime les sushis", "getJaimelessushis"),
+            array("Ligula  $* _--Egestas Mattis Nullam", "getLigulaEgestasMattisNullam"),
+            array("Véèsti buœlum Rïsus", "getVeestiBuoelumRisus"),
+            array("J'aime les sushis", "getJAimeLesSushis"),
         );
     }
     public function getSetterNameProvider()
     {
         return array(
-             array("Ligula  $* _--Egestas Mattis Nullam", "setLigulaegestasmattisnullam"),
-            array("Véèsti buœlum Rïsus", "setVeestibuoelumrisus"),
-            array("J'aime les sushis", "setJaimelessushis"),
+             array("Ligula  $* _--Egestas Mattis Nullam", "setLigulaEgestasMattisNullam"),
+            array("Véèsti buœlum Rïsus", "setVeestiBuoelumRisus"),
+            array("J'aime les sushis", "setJAimeLesSushis"),
         );
     }
 }

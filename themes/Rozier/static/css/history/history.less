@@ -33,31 +33,36 @@
 
     .history-log-date{
         display: inline-block; vertical-align: top;
-        width:115px; height:80px;
+        width:20%; height:80px;
         padding:0 40px 0 15px;
         background: #eee;
         color:#232323;
         font-size:14px;
+
+        .box-sizing();
     }
 
     .history-log-user{
         position: relative; vertical-align: top;
         display: inline-block;
         margin-left:-30px;
-        width:60px; height:80px;
+        width:10%; height:80px;
+
+
+        .box-sizing();
 
         &:before{
             position: absolute;
             content:'';
             top: 40px; left: -13px;
-            width:15px; height:1px; 
-            background:#909090;   
+            width:15px; height:1px;
+            background:#909090;
         }
-        
+
         .user-image{
             position: relative; vertical-align: top;
             top:10px;
-            width:60px; height:60px;
+            width:60px; height:auto;
             box-shadow: none;
         }
 
@@ -79,6 +84,10 @@
         padding-left:20px;
         font-size:13px;
         color:#4c4c4c;
+        width: 70%;
+
+
+        .box-sizing();
     }
 
     &:nth-child(2n){

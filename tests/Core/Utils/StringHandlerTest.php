@@ -39,7 +39,7 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider removeVariablizeProvider
+     * @dataProvider variablizeProvider
      */
     public function testVariablize($input, $expected)
     {
@@ -47,7 +47,7 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, StringHandler::variablize($input));
     }
 
-    public function removeVariablizeProvider()
+    public function variablizeProvider()
     {
         return array(
             array("à", "a"),
@@ -58,6 +58,26 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
             array("ç", "c"),
             array("__à", "_a"),
             array("--é", "_e")
+        );
+    }
+
+    /**
+     * @dataProvider camelCaseProvider
+     */
+    public function testCamelCase($input, $expected)
+    {
+        // Assert
+        $this->assertEquals($expected, StringHandler::camelcase($input));
+    }
+
+    public function camelCaseProvider()
+    {
+        return array(
+            array("Ligula  $* _--Egestas Mattis Nullam", "ligulaEgestasMattisNullam"),
+            array("Véèsti buœlum Rïsus", "veestiBuoelumRisus"),
+            array("J'aime les sushis", "jAimeLesSushis"),
+            array("header_image", "headerImage"),
+            array("JAime les_sushis", "jAimeLesSushis"),
         );
     }
 }
