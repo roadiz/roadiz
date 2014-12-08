@@ -61,7 +61,7 @@
             top: 0px; left: 0;
             text-align: center;
 
-            .uk-icon-rz-rezozero {
+            .uk-icon-rz-roadiz-icon {
                 display: table-cell;
                 width: 128px; height: 116px;
                 font-size: 55px;
@@ -100,7 +100,6 @@
                 position: absolute;
                 color: @grey-medium;
                 font-size: 10px;
-                font-weight: bold;
                 bottom: 26px;
                 width: 100%;
                 left: 0px;
@@ -119,6 +118,7 @@
         h1 {
             margin: 0px 0px 25px;
             font-size: 36px;
+            font-weight: lighter;
         }
         #login-form {
             text-align: left;
@@ -130,8 +130,12 @@
             input[type="password"] {
                 width: 100%;
             }
-            .data-uk-margin>div {
+            .data-uk-margin{
                 margin-bottom: 15px;
+            }
+            .data-uk-margin>div {
+                margin-bottom: 11px;
+                margin-top: 11px;
             }
         }
         #login-link {
@@ -164,7 +168,6 @@
                     height: 38px;
                     line-height: 41px;
                     font-size: 12px;
-                    font-weight: bold;
                     vertical-align: top;
                     color: @grey-form-submit-textsimple;
                     .transition(color ease 0.35s);
@@ -195,7 +198,7 @@
 
                 &:hover {
                     color: @grey-form-text;
-                }       
+                }
             }
         }
     }

@@ -18,8 +18,8 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-12-05 10:43+0000
-Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
+PO-Revision-Date: 2014-12-08 11:55+0000
+Last-Translator: Julien Blanchet &lt;julien@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
 MIME-Version: 1.0
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1417776217.155580
+X-POOTLE-MTIME: 1418039754.662389
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -3817,7 +3817,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="360" approved="yes">
         <source>back_office</source>
-        <target state="translated">Back office</target>
+        <target state="translated">Backstage</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/e8/c7/7ba41fc783c4aa8b6168d51eb8f8e9b9ce3863413078537a8a6468617306.php</context>
           <context context-type="linenumber">59</context>
