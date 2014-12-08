@@ -1,12 +1,12 @@
-{% if navigation|length %}
-<nav class="uk-navbar uk-navbar-attached" id="main-navigation" data-active-node="{{ node.getId }}">
+{% if themeServices.navigation|length %}
+<nav class="uk-navbar uk-navbar-attached" id="main-navigation" data-active-node="{{ node.id }}">
 
     {#
      #  Home with a node
      #}
    {#  {% if home %}
-        {% if home.getNodeSources.first.getTitle %}
-            {% set hometitle = home.getNodeSources.first.getTitle %}
+        {% if home.nodeSources.first.title %}
+            {% set hometitle = home.nodeSources.first.title %}
         {% else %}
             {% set hometitle = home.getNodeName %}
         {% endif %}
@@ -28,11 +28,11 @@
      # Main navigation
      #}
 	<ul class="uk-navbar-nav ">
-		{% for cnode in navigation %}
-			{% set source = cnode.getNodeSources.first %}
+		{% for cnode in themeServices.navigation %}
+			{% set source = cnode.nodeSources.first %}
 			{% include 'modules/navigationElement.html.twig' with {
                 "source" : source,
-                "activeId" : node.getId,
+                "activeId" : node.id,
                 'securityContext':securityContext
             } only %}
 		{% endfor %}

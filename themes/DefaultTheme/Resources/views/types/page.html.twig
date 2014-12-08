@@ -1,31 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% set headerImages = nodeSource.getHandler.getDocumentsFromFieldName('header_image') %}
+{% set headerImages = nodeSource.headerImage %}
 {% block header %}
 <header>
 	{% for headerImage in headerImages %}
 	<figure>
-		<img alt="{{ nodeSource.getTitle }}" src="{{ headerImage.getViewer.getDocumentUrlByArray(headerImageFilter) }}" />
+		<img alt="{{ nodeSource.title }}" src="{{ headerImage.viewer.getDocumentUrlByArray(themeServices.imageFormats.headerImage) }}" />
 	</figure>
 	{% endfor %}
 </header>
 {% endblock %}
 
 {% block content %}
-<h1>{{ nodeSource.getTitle }}</h1>
-<div>{{ nodeSource.getContent|markdown }}</div>
+<h1>{{ nodeSource.title }}</h1>
+<div>{{ nodeSource.content|markdown }}</div>
 <div class="image">
-	{% for document in nodeSource.getHandler.getDocumentsFromFieldName('images') %}
-
+	{% for document in nodeSource.images %}
 		{% set imageMetas = document.documentTranslations.first %}
 		<figure class="uk-thumbnail">
-			{{ document.getViewer.getDocumentByArray({
-				"width":600,
-				"crop":"16x9",
-				"controls":true,
-				"embed":true
-			})|raw }}
+			{{ document.viewer.documentByArray(themeServices.imageFormats.thumbnail)|raw }}
+			{% if imageMetas.name or imageMetas.copyright %}
 			<figcaption>{{ imageMetas.name }} — {{ imageMetas.copyright }}</figcaption>
+			{% endif %}
 		</figure>
 	{% endfor %}
 </div>
