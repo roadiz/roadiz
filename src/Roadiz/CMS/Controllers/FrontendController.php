@@ -86,7 +86,7 @@ class FrontendController extends AppController
 
     protected $node = null;
     protected $translation = null;
-
+    protected $themeContainer = null;
 
     /**
      * Make translation variable with the good localization
@@ -182,7 +182,7 @@ class FrontendController extends AppController
                     $this->getSecurityContext()
                 );
 
-        $this->storeNodeAndTranslation($node, $translation);
+        $this->prepareThemeAssignation($node, $translation);
 
         return new Response(
             $this->getTwig()->render('home.html.twig', $this->assignation),
@@ -349,6 +349,29 @@ class FrontendController extends AppController
 
         return $this;
     }
+
+    /**
+     * Store basic informations for your theme.
+     *
+     * @param RZ\Roadiz\Core\Entities\Node        $node
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     *
+     * @return void
+     */
+    protected function prepareThemeAssignation(Node $node = null, Translation $translation = null)
+    {
+        $this->storeNodeAndTranslation($node, $translation);
+
+        $this->assignation['home'] = $this->getService('em')
+                                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                          ->findHomeWithTranslation($translation);
+
+        /*
+         * Use a DI container to delay API requuests
+         */
+        $this->themeContainer = new Container();
+    }
+
     /**
      * Get SEO informations for current node.
      *
