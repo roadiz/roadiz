@@ -39,11 +39,11 @@
                 },
                 {
                     "translation": "fr",
-                    "title": "A propo",
+                    "title": "À propos",
                     "meta_title": "",
                     "meta_keywords": "",
                     "meta_description": "",
-                    "content": "Ceci est une page d'exemple (\"A propo\").",
+                    "content": "Ceci est une page d'exemple (\"À propos\").",
                     "url_aliases": []
                 }
             ],
@@ -62,11 +62,11 @@
         },
         {
             "translation": "fr",
-            "title": "Acceuil",
+            "title": "Accueil",
             "meta_title": "",
             "meta_keywords": "",
             "meta_description": "",
-            "content": "Ceci est mon acceuil!",
+            "content": "Ceci est ma page d’accueil !",
             "url_aliases": []
         }
     ],
