@@ -77,8 +77,7 @@ class DefaultThemeApp extends FrontendController
     {
         parent::prepareThemeAssignation($node, $translation);
 
-        $this->themeContainer['imageFormats'] = function ($c)
-        {
+        $this->themeContainer['imageFormats'] = function ($c) {
             $array = array();
 
             /*
