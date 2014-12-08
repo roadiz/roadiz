@@ -255,7 +255,7 @@ class UsersCommand extends Command
             false
         )) {
 
-            $user->addRole($this->getRole(Role::ROLE_SUPER_ADMIN));
+            $user->addRole($this->getRole(Role::ROLE_SUPERADMIN));
         }
 
         $user->setPlainPassword(UserHandler::generatePassword());
@@ -278,7 +278,7 @@ class UsersCommand extends Command
      *
      * @return Role
      */
-    public function getRole($roleName = Role::ROLE_SUPER_ADMIN)
+    public function getRole($roleName = Role::ROLE_SUPERADMIN)
     {
         $role = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Role')
