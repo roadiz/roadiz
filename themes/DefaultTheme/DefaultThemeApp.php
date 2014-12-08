@@ -97,8 +97,7 @@ class DefaultThemeApp extends FrontendController
             return $array;
         };
 
-        $this->themeContainer['navigation'] = function ($c)
-        {
+        $this->themeContainer['navigation'] = function ($c) {
             return $this->assignMainNavigation();
         };
 
