@@ -33,10 +33,8 @@ namespace Themes\DefaultTheme\Controllers;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-
-use Themes\DefaultTheme\DefaultThemeApp;
-
 use RZ\Roadiz\CMS\Controllers\EntryPointsController;
+use Themes\DefaultTheme\DefaultThemeApp;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -81,8 +79,13 @@ class ContactController extends DefaultThemeApp
                         'label'=>$this->getTranslator()->trans('send.contact.form')
                     ));
         $form = $formBuilder->getForm();
+
         $this->assignation['contactForm'] = $form->createView();
 
+        /*
+         * Assign route to check current menu entry in navigation.html.twig
+         */
+        $this->assignation['route'] = $_route;
 
         return new Response(
             $this->getTwig()->render('contact.html.twig', $this->assignation),

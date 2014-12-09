@@ -14,6 +14,35 @@
     <source>translation.is.%name%</source>
     <target>On est en « %name% »</target>
    </trans-unit>
+
+   <trans-unit id="contact">
+    <source>contact</source>
+    <target>Contact</target>
+   </trans-unit>
+   <trans-unit id="contact.us">
+    <source>contact.us</source>
+    <target>Contactez-nous</target>
+   </trans-unit>
+   <trans-unit id="your.email">
+    <source>your.email</source>
+    <target>Votre email</target>
+   </trans-unit>
+   <trans-unit id="your.name">
+    <source>your.name</source>
+    <target>Votre nom</target>
+   </trans-unit>
+   <trans-unit id="your.message">
+    <source>your.message</source>
+    <target>Votre message</target>
+   </trans-unit>
+   <trans-unit id="call.me.back">
+    <source>call.me.back</source>
+    <target>Rappelez-moi</target>
+   </trans-unit>
+   <trans-unit id="send.contact.form">
+    <source>send.contact.form</source>
+    <target>Envoyer le formulaire</target>
+   </trans-unit>
   </body>
  </file>
 </xliff>

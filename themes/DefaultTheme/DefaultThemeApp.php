@@ -50,26 +50,16 @@ class DefaultThemeApp extends FrontendController
     protected static $themeDir =       'DefaultTheme';
     protected static $backendTheme =    false;
 
-    /**
-     * {@inheritdoc}
-     */
     protected static $specificNodesControllers = array(
         // Put here your nodes which need a specific controller
         // instead of a node-type controller
     );
 
-    /**
-     * {@inheritdoc}
-     */
     public function homeAction(
         Request $request,
         $_locale = null
     ) {
-        /*
-         * We need to manually grab language.
-         *
-         * Get language from static route
-         */
+
         $translation = $this->bindLocaleFromRoute($request, $_locale);
 
         $home = $this->getService('em')
@@ -78,14 +68,7 @@ class DefaultThemeApp extends FrontendController
 
         $this->prepareThemeAssignation($home, $translation);
 
-        /*
-         * Render Homepage manually
-         */
-        return new Response(
-            $this->getTwig()->render('home.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
+        return $this->handle($request);
     }
 
     /**
@@ -109,8 +92,8 @@ class DefaultThemeApp extends FrontendController
                 'crop'=>'1024x200'
             );
             $array['thumbnail'] = array(
-                "width"=>600,
-                "crop"=>"16x9",
+                "width"=>300,
+                "crop"=>"1:1",
                 "controls"=>true,
                 "embed"=>true
             );
@@ -155,7 +138,10 @@ class DefaultThemeApp extends FrontendController
         if ($parent !== null) {
             return $this->getService('nodeApi')
                         ->getBy(
-                            array('parent' => $parent)
+                            array(
+                                'parent' => $parent,
+                                'translation' => $this->translation
+                            )
                         );
         }
 

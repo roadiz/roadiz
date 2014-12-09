@@ -53,20 +53,20 @@
     "nodes_sources": [
         {
             "translation": "en",
-            "title": "Home",
-            "meta_title": "",
+            "title": "Hello Roadiz!",
+            "meta_title": "Hello Roadiz!",
             "meta_keywords": "",
             "meta_description": "",
-            "content": "This is my home!",
+            "content": "This is Roadiz default theme. It’s made for you to create your own theme from a simple base.",
             "url_aliases": []
         },
         {
             "translation": "fr",
-            "title": "Accueil",
-            "meta_title": "",
+            "title": "Bonjour Roadiz !",
+            "meta_title": "Bonjour Roadiz !",
             "meta_keywords": "",
             "meta_description": "",
-            "content": "Ceci est ma page d’accueil !",
+            "content": "Bienvenue sur le thème par défaut de Roadiz. Il a été fait pour vous permettre de créer votre propre thème à partir d’une base existante.",
             "url_aliases": []
         }
     ],

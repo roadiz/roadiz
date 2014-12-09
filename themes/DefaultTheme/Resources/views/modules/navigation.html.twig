@@ -1,28 +1,30 @@
 {% if themeServices.navigation|length %}
 <nav class="uk-navbar uk-navbar-attached" id="main-navigation" data-active-node="{{ node.id }}">
 
-    {#
-     #  Home with a node
-     #}
-   {#  {% if home %}
+    {% if home %}
         {% if home.nodeSources.first.title %}
             {% set hometitle = home.nodeSources.first.title %}
         {% else %}
             {% set hometitle = home.getNodeName %}
         {% endif %}
+    {% else %}
+        {% set hometitle = "home"|trans %}
+    {% endif %}
 
-        <a href="{{ home.getHandler.getUrl }}" class="uk-navbar-brand">{{ hometitle }}</a>
-    {% endif %} #}
+    {#
+     #  Home with a node
+     #}
+    <a href="{{ home.getHandler.getUrl }}" class="uk-navbar-brand"><i class="uk-icon-home"></i></a>
 
     {#
      # Get home page with no node
      # STATIC MODE
      #}
-    {% if request.locale != _default_locale %}
-    <a href="{{ path('homePageLocale', {"_locale":request.locale}) }}" class="uk-navbar-brand">{% trans %}home{% endtrans %}</a>
+    {# {% if request.locale != _default_locale %}
+    <a href="{{ path('homePageLocale', {"_locale":request.locale}) }}" class="uk-navbar-brand"><i class="uk-icon-home"></i> {{ hometitle }}</a>
     {% else %}
-    <a href="{{ path('homePage') }}" class="uk-navbar-brand">{% trans %}home{% endtrans %}</a>
-    {% endif %}
+    <a href="{{ path('homePage') }}" class="uk-navbar-brand"><i class="uk-icon-home"></i> {{ hometitle }}</a>
+    {% endif %} #}
 
     {#
      # Main navigation
@@ -41,9 +43,9 @@
          # Page contact
          #}
         {% if request.locale != _default_locale %}
-        <li><a href="{{ path('contactPageLocale', {"_locale":request.locale}) }}">{% trans %}contact{% endtrans %}</a></li>
+        <li class="{% if route == 'contactPageLocale' %}uk-active{% endif %}"><a href="{{ path('contactPageLocale', {"_locale":request.locale}) }}">{% trans %}contact{% endtrans %}</a></li>
         {% else %}
-        <li><a href="{{ path('contactPage') }}">{% trans %}contact{% endtrans %}</a></li>
+        <li class="{% if route == 'contactPage' %}uk-active{% endif %}"><a href="{{ path('contactPage') }}">{% trans %}contact{% endtrans %}</a></li>
         {% endif %}
 	</ul>
 </nav>

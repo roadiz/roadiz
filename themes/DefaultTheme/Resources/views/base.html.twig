@@ -6,28 +6,29 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{{ pageMetas.title }}</title>
-        <meta name="description" content="{{ pageMetas.description }}">
+        <title>{{ pageMeta.title }}</title>
+        <meta name="description" content="{{ pageMeta.description }}">
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.gradient.min.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/addons/uikit.addons.min.css" />
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.almost-flat.min.css" />
         <link rel="stylesheet" href="{{ path('FontFaceCSS', {"token": head.fontToken}) }}" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ themeServices.grunt.staticAssets.global.css[0] }}" />
 
         <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
-    <body>
+    <body class="{{ node.nodeType.name|lower }} {{ node.nodeName|lower }}">
         <!--[if lt IE 8]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        {% block header %}{% endblock %}
+        {% block header %}
+        <header class="no-image"><i class="uk-icon-image"></i></header>
+        {% endblock %}
 
         {% include 'modules/navigation.html.twig' %}
 
         <!-- Add your site or application content here -->
-        {% block content %}{% endblock %}
+        <div id="main-content">{% block content %}{% endblock %}</div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>

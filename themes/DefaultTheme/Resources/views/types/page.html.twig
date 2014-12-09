@@ -1,19 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% set headerImages = nodeSource.headerImage %}
+
 {% block header %}
-<header>
-	{% for headerImage in headerImages %}
-	<figure>
-		<img alt="{{ nodeSource.title }}" src="{{ headerImage.viewer.getDocumentUrlByArray(themeServices.imageFormats.headerImage) }}" />
-	</figure>
-	{% endfor %}
-</header>
+	{% if nodeSource.headerImage|length > 0 %}
+	{% set headerImage = nodeSource.headerImage[0] %}
+	<header>
+		<figure>
+			<img alt="{{ nodeSource.title }}" src="{{ headerImage.viewer.getDocumentUrlByArray(themeServices.imageFormats.headerImage) }}" />
+		</figure>
+	</header>
+	{% else %}
+	{{ parent() }}
+	{% endif %}
 {% endblock %}
 
 {% block content %}
 <h1>{{ nodeSource.title }}</h1>
-<div>{{ nodeSource.content|markdown }}</div>
+<div class="content">{{ nodeSource.content|markdown }}</div>
 <div class="image">
 	{% for document in nodeSource.images %}
 		{% set imageMetas = document.documentTranslations.first %}
