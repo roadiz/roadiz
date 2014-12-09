@@ -104,56 +104,65 @@ class AssetsController extends AppController
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function fontFileAction(Request $request, $filename, $extension, $token)
+    public function fontFileAction(Request $request, $filename, $variant, $extension, $token)
     {
         $font = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Font')
-            ->findOneBy(array('hash'=>$filename));
+            ->findOneBy(array('hash'=>$filename, 'variant'=>$variant));
 
-        if (null !== $font &&
-            $this->getService('csrfProvider')->isCsrfTokenValid($font->getHash().$font->getVariant().$extension, $token)) {
+        if (null !== $font) {
 
-            switch ($extension) {
-                case 'eot':
-                    $fontpath = $font->getEOTAbsolutePath();
-                    $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['eot'];
-                    break;
-                case 'woff':
-                    $fontpath = $font->getWOFFAbsolutePath();
-                    $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff'];
-                    break;
-                case 'woff2':
-                    $fontpath = $font->getWOFF2AbsolutePath();
-                    $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff2'];
-                    break;
-                case 'svg':
-                    $fontpath = $font->getSVGAbsolutePath();
-                    $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['svg'];
-                    break;
-                case 'otf':
-                case 'ttf':
-                    $fontpath = $font->getOTFAbsolutePath();
-                    $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['otf'];
-                    break;
-                default:
-                    $fontpath = "";
-                    break;
-            }
+            if ($this->getService('csrfProvider')->isCsrfTokenValid($font->getHash().$font->getVariant(), $token)) {
 
-            if ("" != $fontpath) {
+                switch ($extension) {
+                    case 'eot':
+                        $fontpath = $font->getEOTAbsolutePath();
+                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['eot'];
+                        break;
+                    case 'woff':
+                        $fontpath = $font->getWOFFAbsolutePath();
+                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff'];
+                        break;
+                    case 'woff2':
+                        $fontpath = $font->getWOFF2AbsolutePath();
+                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff2'];
+                        break;
+                    case 'svg':
+                        $fontpath = $font->getSVGAbsolutePath();
+                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['svg'];
+                        break;
+                    case 'otf':
+                    case 'ttf':
+                        $fontpath = $font->getOTFAbsolutePath();
+                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['otf'];
+                        break;
+                    default:
+                        $fontpath = "";
+                        break;
+                }
+
+                if ("" != $fontpath) {
+                    return new Response(
+                        file_get_contents($fontpath),
+                        Response::HTTP_OK,
+                        array('content-type' => $mime)
+                    );
+                }
+            } else {
                 return new Response(
-                    file_get_contents($fontpath),
-                    Response::HTTP_OK,
-                    array('content-type' => $mime)
+                    "Font Fail ".$token,
+                    Response::HTTP_NOT_FOUND,
+                    array('content-type' => 'text/html')
                 );
             }
-        }
 
-        return new Response(
-            "Font Fail",
-            Response::HTTP_NOT_FOUND,
-            array('content-type' => 'text/html')
-        );
+        } else {
+            return new Response(
+                "Font doesn't exist ".$filename,
+                Response::HTTP_NOT_FOUND,
+                array('content-type' => 'text/html')
+            );
+        }
     }
 
     /**
