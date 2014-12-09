@@ -1,5 +1,4 @@
-# Roadiz
-## REZO ZERO CMS
+# Roadiz CMS
 
 [![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=develop)](https://travis-ci.org/roadiz/roadiz)
 [![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=develop)](https://coveralls.io/r/roadiz/roadiz?branch=develop)
@@ -14,8 +13,9 @@ It’s based on Symfony components and Doctrine ORM for maximum performances and
 
 ### Documentation
 
-* *API* documentation can be found at http://api.roadiz.io
+* *Roadiz* website: http://www.roadiz.io
 * *Read the Docs* complete documentation can be found at http://docs.roadiz.io
+* *API* documentation can be found at http://api.roadiz.io
 
 ### Installation
 
@@ -56,6 +56,10 @@ If you prefer socket:
     "dbname": ""
 }
 ```
+
+You can specify a table prefix adding `"prefix":"myprefix"` if you can’t create a dedicated database for your project
+and you need to use Roadiz side by side with other tables.
+But we strongly recommend you to respect the 1 app = 1 database motto.
 
 For more options you can visit *Doctrine* website: http://doctrine-dbal.readthedocs.org/en/latest/reference/configuration.html
 
