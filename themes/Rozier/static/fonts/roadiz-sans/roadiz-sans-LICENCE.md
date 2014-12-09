@@ -1,4 +1,4 @@
-ROADIZ SANS font-family, a dedicated font for Roadiz CMS,
+ROADIZ SANS font-family, a dedicated font for ROADIZ CMS,
 presentation and documentation websites
 
 Copyright (C) 2014 Nonpareille <http://www.nonpareille.net>
