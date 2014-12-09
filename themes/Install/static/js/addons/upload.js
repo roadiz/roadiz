@@ -1,23 +1,23 @@
-/*! UIkit 2.8.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
-
+/*! UIkit 2.13.1 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
 
-    if (jQuery && jQuery.UIkit) {
-        component = addon(jQuery, jQuery.UIkit);
+    if (jQuery && UIkit) {
+        component = addon(jQuery, UIkit);
     }
 
     if (typeof define == "function" && define.amd) {
         define("uikit-upload", ["uikit"], function(){
-            return component || addon(jQuery, jQuery.UIkit);
+            return component || addon(jQuery, UIkit);
         });
     }
 
 })(function($, UI){
 
-    UI.component('uploadSelect', {
+    "use strict";
 
+    UI.component('uploadSelect', {
 
         init: function() {
 
@@ -25,6 +25,9 @@
 
             this.on("change", function() {
                 xhrupload($this.element[0].files, $this.options);
+                var twin = $this.element.clone(true).data('uploadSelect', $this);
+                $this.element.replaceWith(twin);
+                $this.element = twin;
             });
         }
     });
@@ -32,7 +35,7 @@
     UI.component('uploadDrop', {
 
         defaults: {
-            'dragoverClass': 'uk-dragover'
+            'dragoverClass': '@-dragover'
         },
 
         init: function() {
@@ -47,6 +50,7 @@
                     e.preventDefault();
 
                     $this.element.removeClass($this.options.dragoverClass);
+                    $this.element.trigger('dropped.uk.upload', [e.dataTransfer.files]);
 
                     xhrupload(e.dataTransfer.files, $this.options);
                 }
@@ -126,12 +130,22 @@
         if (settings.single){
 
             var count    = files.length,
-                uploaded = 0;
+                uploaded = 0,
+                allow    = true;
+
+                settings.beforeAll(files);
 
                 settings.complete = function(response, xhr){
-                    uploaded = uploaded+1;
+
+                    uploaded = uploaded + 1;
+
                     complete(response, xhr);
-                    if (uploaded<count){
+
+                    if (settings.filelimit && uploaded >= settings.filelimit){
+                        allow = false;
+                    }
+
+                    if (allow && uploaded<count){
                         upload([files[uploaded]], settings);
                     } else {
                         settings.allcomplete(response, xhr);
@@ -193,7 +207,7 @@
                     settings.complete(response, xhr);
                 }
             };
-
+            settings.beforeSend(xhr);
             xhr.send(formData);
         }
     }
@@ -206,9 +220,12 @@
         'params': {},
         'allow' : '*.*',
         'type'  : 'text',
+        'filelimit': false,
 
         // events
         'before'          : function(o){},
+        'beforeSend'      : function(xhr){},
+        'beforeAll'       : function(){},
         'loadstart'       : function(){},
         'load'            : function(){},
         'loadend'         : function(){},
