@@ -47,11 +47,6 @@ NodesBulk.prototype.init = function() {
 
     _this.$nodesFolderButton.on('click', $.proxy(_this.nodesFolderButtonClick, _this));
     _this.$nodesStatusButton.on('click', $.proxy(_this.nodesStatusButtonClick, _this));
-
-    //var $bulkDeleteButton = _this.$actionsMenu.find('.node-bulk-delete');
-    //var deleteProxy = $.proxy(_this.onBulkDelete, _this);
-    //$bulkDeleteButton.off('click', deleteProxy);
-    //$bulkDeleteButton.on('click', deleteProxy);
 };
 
 

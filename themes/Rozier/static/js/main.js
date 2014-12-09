@@ -109,7 +109,7 @@ Rozier.initNestables = function  () {
 	var _this = this;
 
 	$('.uk-nestable').each(function (index, element) {
-        $.UIkit.nestable(element);
+        UIkit.nestable(element);
     });
 };
 
@@ -122,17 +122,17 @@ Rozier.bindMainTrees = function () {
 	var _this = this;
 
 	// TREES
-	$('.nodetree-widget .root-tree').off('uk.nestable.change');
-	$('.nodetree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableNodeTreeChange );
+	$('.nodetree-widget .root-tree').off('change.uk.nestable');
+	$('.nodetree-widget .root-tree').on('change.uk.nestable', Rozier.onNestableNodeTreeChange );
 
-	$('.tagtree-widget .root-tree').off('uk.nestable.change');
-	$('.tagtree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableTagTreeChange );
+	$('.tagtree-widget .root-tree').off('change.uk.nestable');
+	$('.tagtree-widget .root-tree').on('change.uk.nestable', Rozier.onNestableTagTreeChange );
 
-	$('.foldertree-widget .root-tree').off('uk.nestable.change');
-	$('.foldertree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableFolderTreeChange );
-	
-	// Tree element name 
-	_this.$mainTreeElementName = _this.$mainTrees.find('.tree-element-name');	
+	$('.foldertree-widget .root-tree').off('change.uk.nestable');
+	$('.foldertree-widget .root-tree').on('change.uk.nestable', Rozier.onNestableFolderTreeChange );
+
+	// Tree element name
+	_this.$mainTreeElementName = _this.$mainTrees.find('.tree-element-name');
 	_this.$mainTreeElementName.off('contextmenu', $.proxy(_this.maintreeElementNameRightClick, _this));
 	_this.$mainTreeElementName.on('contextmenu', $.proxy(_this.maintreeElementNameRightClick, _this));
 
@@ -200,7 +200,7 @@ Rozier.getMessages = function () {
 
 				for (var i = data.messages.confirm.length - 1; i >= 0; i--) {
 
-					$.UIkit.notify({
+					UIkit.notify({
 						message : data.messages.confirm[i],
 						status  : 'success',
 						timeout : 2000,
@@ -214,7 +214,7 @@ Rozier.getMessages = function () {
 
 				for (var j = data.messages.error.length - 1; j >= 0; j--) {
 
-					$.UIkit.notify({
+					UIkit.notify({
 						message : data.messages.error[j],
 						status  : 'error',
 						timeout : 2000,
@@ -399,7 +399,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 	console.log("Node: "+element.data('node-id')+ " status : "+status);
 
 	/*
-	 * If node removed, do not do anything, the otheuk.nestable.changer nodeTree will be triggered
+	 * If node removed, do not do anything, the othechange.uk.nestabler nodeTree will be triggered
 	 */
 	if (status == 'removed') {
 		return false;
@@ -454,7 +454,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 	})
 	.done(function( data ) {
 		console.log(data);
-		$.UIkit.notify({
+		UIkit.notify({
 			message : data.responseText,
 			status  : data.status,
 			timeout : 3000,
@@ -535,7 +535,7 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 	})
 	.done(function( data ) {
 		console.log(data);
-		$.UIkit.notify({
+		UIkit.notify({
 			message : data.responseText,
 			status  : data.status,
 			timeout : 3000,
@@ -615,7 +615,7 @@ Rozier.onNestableFolderTreeChange = function (event, element, status) {
 	})
 	.done(function( data ) {
 		console.log(data);
-		$.UIkit.notify({
+		UIkit.notify({
 			message : data.responseText,
 			status  : data.status,
 			timeout : 3000,
@@ -662,7 +662,7 @@ Rozier.resize = function(){
 	}
 
 	// Check if mobile
-	if(_this.windowWidth <= 768 && _this.resizeFirst) _this.mobile = new RozierMobile(); // && isMobile.any() !== null 
+	if(_this.windowWidth <= 768 && _this.resizeFirst) _this.mobile = new RozierMobile(); // && isMobile.any() !== null
 
 
 	// Set height to panels (fix for IE9,10)
@@ -670,7 +670,7 @@ Rozier.resize = function(){
 		_this.$userPanelContainer[0].style.height = _this.windowHeight+'px';
 		_this.$mainTreesContainer[0].style.height = _this.windowHeight+'px';
 	}
-	_this.$mainContentScrollable[0].style.height = _this.windowHeight+'px';  
+	_this.$mainContentScrollable[0].style.height = _this.windowHeight+'px';
 
 	// Tree scroll height
 	_this.$nodeTreeHead = _this.$mainTrees.find('.nodetree-head');
@@ -681,12 +681,6 @@ Rozier.resize = function(){
 	_this.treeScrollHeight = _this.windowHeight - (_this.nodesSourcesSearchHeight + _this.nodeTreeHeadHeight);
 
 	if(isMobile.any() !== null) _this.treeScrollHeight = _this.windowHeight - (50 + 50 + _this.nodeTreeHeadHeight); // Menu + tree menu + tree head
-
-	// console.log('search height           : '+_this.nodesSourcesSearchHeight);
-	// console.log('node tree head height : '+_this.nodeTreeHeadHeight);
-	// console.log('windows height          : '+_this.windowHeight);
-	// console.log('tree scroll height     : '+_this.treeScrollHeight);
-	// console.log('----------------');
 
 	for(var i = 0; i < _this.$treeScrollCont.length; i++) {
 		_this.$treeScrollCont[i].style.height = _this.treeScrollHeight + 'px';

@@ -48,7 +48,7 @@ CustomFormFieldEdit.prototype.btnClick = function(e){
     if(_this.indexOpen !== null){
         _this.closeForm();
         _this.openFormDelay = 500;
-    } 
+    }
     else _this.openFormDelay = 0;
 
     if(_this.indexOpen !==  parseInt(e.currentTarget.getAttribute('data-index')) ){
@@ -67,7 +67,7 @@ CustomFormFieldEdit.prototype.btnClick = function(e){
             })
             .fail(function() {
                 console.log("error");
-                $.UIkit.notify({
+                UIkit.notify({
                     message : Rozier.messages.forbiddenPage,
                     status  : 'danger',
                     timeout : 3000,
@@ -100,7 +100,7 @@ CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
         '</tr>'
     ].join('');
 
-    $(target).parent().parent().after(dataWrapped);  
+    $(target).parent().parent().after(dataWrapped);
 
     setTimeout(function(){
         _this.$formCont = $('.custom-form-field-edit-form-cont');
@@ -116,7 +116,7 @@ CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
         _this.$formCont[0].style.display = 'block';
         TweenLite.to(_this.$form, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
         TweenLite.to(_this.$formCont, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
-    }, 200);       
+    }, 200);
 
 };
 

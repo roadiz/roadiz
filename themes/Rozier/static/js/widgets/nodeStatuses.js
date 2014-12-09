@@ -29,7 +29,7 @@ NodeStatuses.prototype.init = function() {
 
 NodeStatuses.prototype.itemClick = function(event) {
     var _this = this;
-    
+
     $input = $(event.currentTarget).find('input[type="radio"]');
 
     if($input.length){
@@ -73,7 +73,7 @@ NodeStatuses.prototype.onChange = function(event) {
         .done(function(data) {
             console.log(data);
             Rozier.refreshMainNodeTree();
-            $.UIkit.notify({
+            UIkit.notify({
                 message : data.responseText,
                 status  : data.status,
                 timeout : 3000,
@@ -85,7 +85,7 @@ NodeStatuses.prototype.onChange = function(event) {
 
             data = JSON.parse(data.responseText);
 
-            $.UIkit.notify({
+            UIkit.notify({
                 message : data.responseText,
                 status  : data.status,
                 timeout : 3000,

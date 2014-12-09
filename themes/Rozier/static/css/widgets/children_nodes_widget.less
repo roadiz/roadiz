@@ -88,8 +88,14 @@
         }
     }
 
-    .nodetree-contextualmenu{
+    .nodetree-contextualmenu {
 
+        top: 0px;
+
+        .tree-contextualmenu-button {
+            display: inline-block;
+
+        }
         .uk-button-mini{
             background:#ddd;
         }
@@ -109,10 +115,11 @@
             border-top: 1px solid #E2E2E2;
         }
     }
-
 }
 
-.children-nodes-tree .uk-nestable, .uk-nestable-moving body > .children-node-widget, .uk-nestable-moving body > .children-node-widget-list{
+.children-nodes-tree .uk-nestable,
+.uk-nestable-moving body > .children-node-widget,
+.uk-nestable-moving body > .children-node-widget-list {
 
     // 1st level
     &> .uk-nestable-list-item{

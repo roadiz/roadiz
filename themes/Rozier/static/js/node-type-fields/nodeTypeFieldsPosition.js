@@ -1,27 +1,27 @@
-var CustomFormFieldsPosition = function () {
+var NodeTypeFieldsPosition = function () {
     var _this = this;
 
-    _this.$list = $(".custom-form-fields > .uk-sortable");
+    _this.$list = $(".node-type-fields > .uk-sortable");
 
     _this.init();
 };
-CustomFormFieldsPosition.prototype.$list = null;
-CustomFormFieldsPosition.prototype.init = function() {
+NodeTypeFieldsPosition.prototype.$list = null;
+NodeTypeFieldsPosition.prototype.init = function() {
     var _this = this;
 
     if (_this.$list.length &&
         _this.$list.children().length > 1) {
         var onChange = $.proxy(_this.onSortableChange, _this);
-        _this.$list.off('uk.sortable.change', onChange);
-        _this.$list.on('uk.sortable.change', onChange);
+        _this.$list.off('change.uk.sortable', onChange);
+        _this.$list.on('change.uk.sortable', onChange);
     }
 };
 
-CustomFormFieldsPosition.prototype.onSortableChange = function(event, list, element) {
+NodeTypeFieldsPosition.prototype.onSortableChange = function(event, list, element) {
     var _this = this;
 
     var $element = $(element);
-    var customFormFieldId = parseInt($element.data('field-id'));
+    var nodeTypeFieldId = parseInt($element.data('field-id'));
     var $sibling = $element.prev();
     var newPosition = 0.0;
 
@@ -32,18 +32,18 @@ CustomFormFieldsPosition.prototype.onSortableChange = function(event, list, elem
         newPosition = parseInt($sibling.data('position')) + 0.5;
     }
 
-    console.log("customFormFieldId="+customFormFieldId+"; newPosition="+newPosition);
+    console.log("nodeTypeFieldId="+nodeTypeFieldId+"; newPosition="+newPosition);
 
 
     var postData = {
         '_token':          Rozier.ajaxToken,
         '_action':         'updatePosition',
-        'customFormFieldId': customFormFieldId,
+        'nodeTypeFieldId': nodeTypeFieldId,
         'newPosition':     newPosition
     };
 
     $.ajax({
-        url: Rozier.routes.customFormsFieldAjaxEdit.replace("%customFormFieldId%", customFormFieldId),
+        url: Rozier.routes.nodeTypesFieldAjaxEdit.replace("%nodeTypeFieldId%", nodeTypeFieldId),
         type: 'POST',
         dataType: 'json',
         data: postData,
@@ -51,7 +51,7 @@ CustomFormFieldsPosition.prototype.onSortableChange = function(event, list, elem
     .done(function(data) {
         console.log(data);
         $element.attr('data-position', newPosition);
-        $.UIkit.notify({
+        UIkit.notify({
             message : data.responseText,
             status  : data.status,
             timeout : 3000,

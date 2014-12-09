@@ -73,7 +73,7 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
             Rozier.refreshMainNodeTree();
             _this.refreshNodeTree(parentNodeId);
 
-            $.UIkit.notify({
+            UIkit.notify({
                 message : data.responseText,
                 status  : data.status,
                 timeout : 3000,
@@ -86,7 +86,7 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
 
             data = JSON.parse(data.responseText);
 
-            $.UIkit.notify({
+            UIkit.notify({
                 message : data.responseText,
                 status  : data.status,
                 timeout : 3000,

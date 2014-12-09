@@ -1,15 +1,15 @@
-/*! UIkit 2.11.0 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
+/*! UIkit 2.13.1 | http://www.getuikit.com | (c) 2014 YOOtheme | MIT License */
 (function(addon) {
 
     var component;
 
-    if (jQuery && jQuery.UIkit) {
-        component = addon(jQuery, jQuery.UIkit);
+    if (jQuery && UIkit) {
+        component = addon(jQuery, UIkit);
     }
 
     if (typeof define == "function" && define.amd) {
         define("uikit-cover", ["uikit"], function(){
-            return component || addon(jQuery, jQuery.UIkit);
+            return component || addon(jQuery, UIkit);
         });
     }
 
@@ -21,6 +21,22 @@
 
         defaults: {
             automute : true
+        },
+
+        boot: function() {
+
+            // auto init
+            UI.ready(function(context) {
+
+                UI.$("[data-@-cover]", context).each(function(){
+
+                    var ele = UI.$(this);
+
+                    if(!ele.data("cover")) {
+                        var plugin = UI.cover(ele, UI.Utils.options(ele.attr("data-@-cover")));
+                    }
+                });
+            });
         },
 
         init: function() {
@@ -74,16 +90,4 @@
         }
     });
 
-    // auto init
-    UI.ready(function(context) {
-
-        $("[data-uk-cover]", context).each(function(){
-
-            var ele = $(this);
-
-            if(!ele.data("cover")) {
-                var plugin = UI.cover(ele, UI.Utils.options(ele.attr("data-uk-cover")));
-            }
-        });
-    });
 });
