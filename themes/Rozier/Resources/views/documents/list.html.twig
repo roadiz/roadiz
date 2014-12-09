@@ -4,7 +4,7 @@
 <section class="content-global content-nav-and-filters">
 	<header class="content-header header-document header-document-list">
         {% if folder %}
-        <h1 class="content-title">{{ folder.name }}</h1>
+        <h1 class="content-title">{{ folder.name|truncate(25, true, '[…]') }}</h1>
         {% else %}
         <h1 class="content-title">{% trans %}documents{% endtrans %}</h1>
         {% endif %}

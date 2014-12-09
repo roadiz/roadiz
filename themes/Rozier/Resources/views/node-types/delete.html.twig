@@ -4,7 +4,7 @@
 <section class="content-global">
 
     <header class="content-header header-node-types header-node-types-delete">
-        <h1 class="content-title node-delete-title">{{ "delete.nodeType.%name%"|trans({'%name%': nodeType.getDisplayName}) }}</h1>
+        <h1 class="content-title node-delete-title">{{ "delete.nodeType.%name%"|trans({'%name%': nodeType.getDisplayName})|truncate(25, true, '[…]') }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('nodeTypesHomePage') }}" title="{% trans %}back_to.nodeTypes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
     </header>
 

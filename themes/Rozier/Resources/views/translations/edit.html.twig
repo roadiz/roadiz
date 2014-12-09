@@ -4,8 +4,8 @@
 <section class="content-global edit-translation">
 
     <header class="content-header header-translation header-translation-list">
-        <h1 class="content-title translation-add-title">{{ "edit.translation.%name%"|trans({'%name%': translation.getName }) }}</h1>
-        <a class="content-header-nav-back uk-navbar-content" href="{{ path('translationsHomePage') }}" title="{% trans %}back_to.translations{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>  
+        <h1 class="content-title translation-add-title">{{ "edit.translation.%name%"|trans({'%name%': translation.getName })|truncate(25, true, '[…]') }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('translationsHomePage') }}" title="{% trans %}back_to.translations{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-edit-translation">

@@ -5,7 +5,7 @@
 <section class="content-global manage-custom-forms">
 
     <header class="content-header header-custom-forms header-custom-forms-edit">
-        <h1 class="content-title custom-forms-edit-title">{{ "edit.customForm.%name%"|trans({'%name%': customForm.getDisplayName}) }}</h1>
+        <h1 class="content-title custom-forms-edit-title">{{ "edit.customForm.%name%"|trans({'%name%': customForm.getDisplayName})|truncate(25, true, '[…]') }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormsHomePage') }}" title="{% trans %}back_to.customForms{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
     </header>
 

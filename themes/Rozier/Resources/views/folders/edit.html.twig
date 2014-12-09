@@ -4,7 +4,7 @@
 <section class="content-global edit-folder">
 
     <header class="content-header header-folder header-folder-add">
-        <h1 class="content-title folder-add-title">{{ "edit.folder.%name%"|trans({'%name%': folder.getName}) }}</h1>
+        <h1 class="content-title folder-add-title">{{ "edit.folder.%name%"|trans({'%name%': folder.getName})|truncate(25, true, '[…]') }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('foldersHomePage') }}" title="{% trans %}back_to.folders{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 

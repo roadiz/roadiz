@@ -5,7 +5,7 @@
 <section class="content-global delete-user">
 
     <header class="content-header header-user header-user-edit">
-        <h1 class="content-title user-add-title">{{ "delete.user.%name%"|trans({'%name%': user.getUserName }) }}</h1>
+        <h1 class="content-title user-add-title">{{ "delete.user.%name%"|trans({'%name%': user.getUserName })|truncate(25, true, '[…]') }}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">

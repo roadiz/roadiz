@@ -26,12 +26,12 @@
                 {% if parent.isHome %}
                     <i class="uk-icon-rz-breadcrumb-home"></i>
                 {% else %}
-                    {{ title }}
+                    {{ title|truncate(25, true, '[…]') }}
                 {% endif %}
             </a>
         </li>
 
     {% endfor %}
-    <li class="node-breadcrumb-item uk-active"><span>{{ currentTitle }}</span></li>
+    <li class="node-breadcrumb-item uk-active"><span>{{ currentTitle|truncate(25, true, '[…]') }}</span></li>
 </ul>
 {% endspaceless %}
