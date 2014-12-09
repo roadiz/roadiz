@@ -6,7 +6,7 @@
     <header class="content-header header-node header-nodes-list">
         <h1 class="content-title">
             {% set mainTitle = mainFilter ~ '.nodes' %}
-            {{ mainTitle|trans() }}
+            {{ mainTitle|trans()|truncate(25, true, '[…]') }}
         </h1>
         {% include 'widgets/countFiltersBar.html.twig' %}
         {# Add node control #}
@@ -74,15 +74,15 @@
                         <td class="mobile-hidden">{{ node.getNodeType.getDisplayName }}</td>
                         <td class="mobile-hidden">  <!-- style="text-align:center;" -->
                             {% spaceless %}
-                                {% if node.isDraft == true %} 
+                                {% if node.isDraft == true %}
                                 <div class="uk-button-status uk-button-draft" title="{% trans %}node.draft{% endtrans %}" data-uk-tooltip="{animation:true}">
                                     <i class="uk-icon-rz-draft-nodes"></i>
-                                </div><!-- uk-badge-warning --> 
-                                {% endif %} 
+                                </div><!-- uk-badge-warning -->
+                                {% endif %}
                                 {% if node.isPending == true %}
                                 <div class="uk-button-status uk-button-pending" title="{% trans %}node.pending.validation{% endtrans %}" data-uk-tooltip="{animation:true}">
                                     <i class="uk-icon-rz-pending-nodes"></i>
-                                </div><!-- uk-badge-warning --> 
+                                </div><!-- uk-badge-warning -->
                                 {% endif %}
                                 {% if node.isDeleted == true %}
                                 <div class="uk-button-status uk-button-deleted" title="{% trans %}node.deleted{% endtrans %}" data-uk-tooltip="{animation:true}">
@@ -103,7 +103,7 @@
                                 <div class="uk-button-status uk-button-archived" title="{% trans %}node.archived{% endtrans %}" data-uk-tooltip="{animation:true}">
                                     <i class="uk-icon-rz-archive-mini"></i>
                                 </div><!-- uk-badge-notification -->
-                                {% endif %}                                
+                                {% endif %}
                             {% endspaceless %}
                         </td>
                         <td class="mobile-hidden">{{ node.getUpdatedAt|localizeddate('short', 'none') }}</td>
@@ -117,7 +117,7 @@
                                 {% else %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesUndeletePage', { nodeId: node.getId }) }}" data-uk-tooltip="{animation:true}" title="{% trans %}undelete{% endtrans %}"><i class="uk-icon-rz-untrash"></i></a>
                                 {% endif %}
-                            {% endif %}                                
+                            {% endif %}
                         {% endspaceless %}
                         </td>
                     </tr>

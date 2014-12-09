@@ -4,7 +4,7 @@
 <section class="content-global">
 
 	<header class="content-header header-node header-node-delete">
-        <h1 class="content-title node-delete-title">{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}</h1>
+        <h1 class="content-title node-delete-title">{{ "delete.node.%name%"|trans({'%name%': node.getNodeName})|truncate(25, true, '[…]') }}</h1>
 		{% include 'nodes/navBack.html.twig' %}
     </header>
 

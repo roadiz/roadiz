@@ -4,7 +4,7 @@
 <section class="content-global">
 
     <header class="content-header header-role header-role-add">
-        <h1 class="content-title">{{ "edit.role.%name%"|trans({'%name%': role.getName }) }}</h1>
+        <h1 class="content-title">{{ "edit.role.%name%"|trans({'%name%': role.getName })|truncate(25, true, '[…]') }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('rolesHomePage') }}" title="{% trans %}back_to.roles{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 

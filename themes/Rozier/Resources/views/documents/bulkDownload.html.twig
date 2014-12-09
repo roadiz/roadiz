@@ -4,7 +4,7 @@
 {% block content %}
 <section class="content-global download-document">
 	<header class="content-header header-document header-document-preview">
-        <h1 class="content-title document-download-title">{{ "download.documents"|trans() }}</h1>
+        <h1 class="content-title document-download-title">{{ "download.documents"|trans()|truncate(25, true, '[…]') }}</h1>
     </header>
 
     <article class="content content-download content-no-action-menu">

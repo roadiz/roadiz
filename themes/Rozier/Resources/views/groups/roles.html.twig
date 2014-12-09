@@ -4,8 +4,8 @@
 <section class="content-global edit-group">
 
 	<header class="content-header header-group header-group-roles">
-        <h1 class="content-title group-add-title">{{ "edit.group.%name%.roles"|trans({'%name%': group.getName}) }}</h1>
-        <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>    
+        <h1 class="content-title group-add-title">{{ "edit.group.%name%.roles"|trans({'%name%': group.getName})|truncate(25, true, '[…]') }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
 		{% include 'groups/navBar.html.twig' with {'group':group, current:'roles'} %}
     </header>
 
