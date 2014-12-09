@@ -549,7 +549,7 @@ class InstallApp extends AppController
                     $fixtures = new Fixtures();
                     $fixtures->saveInformations($infosForm->getData());
 
-                    if (isset($infosForm->getData()["install_theme"])) {
+                    if (!empty($infosForm->getData()["install_theme"])) {
                         /*
                          * Force redirect to avoid resending form when refreshing page
                          */
