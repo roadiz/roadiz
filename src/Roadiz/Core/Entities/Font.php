@@ -126,12 +126,12 @@ class Font extends AbstractDateTimed
             case static::LIGHT_ITALIC:
                 return array(
                     'style' => 'italic',
-                    'weight' => 'lighter'
+                    'weight' => 300
                 );
             case static::LIGHT:
                 return array(
                     'style' => 'normal',
-                    'weight' => 'lighter'
+                    'weight' => 300
                 );
 
             case static::BOLD_ITALIC:

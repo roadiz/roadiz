@@ -68,6 +68,7 @@ class FontHandler
             'FontFile',
             array(
                 'filename'  => $this->font->getHash(),
+                'variant'   => $this->font->getVariant(),
                 'extension' => $extension,
                 'token'     => $token
             )
