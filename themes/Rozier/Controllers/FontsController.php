@@ -320,7 +320,7 @@ class FontsController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('font_id', 'hidden', array(
+            ->add('fontId', 'hidden', array(
                 'data'=>$font->getId()
             ));
 

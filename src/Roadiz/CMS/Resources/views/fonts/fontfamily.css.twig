@@ -1,14 +1,15 @@
+{% set variantHash = font.hash ~ font.variant %}
 @font-face {
-    font-family: "{{ font.getHash }}";
+    font-family: "{{ font.hash }}";
 
-    src: url('{{ font.getHandler.getDownloadUrl("eot", csrfProvider.generateCsrfToken(font.getHash ~ 'eot')) }}');
-    src: url('{{ font.getHandler.getDownloadUrl("eot", csrfProvider.generateCsrfToken(font.getHash ~ 'eot')) }}?#iefix') format('embedded-opentype'),
-        {% if font.getWOFF2Filename %}url('{{ font.getHandler.getDownloadUrl("woff2", csrfProvider.generateCsrfToken(font.getHash ~ 'woff2')) }}') format('woff2'),{% endif %}
-        {% if font.getWOFFFilename %}url('{{ font.getHandler.getDownloadUrl("woff", csrfProvider.generateCsrfToken(font.getHash ~ 'woff')) }}') format('woff'),{% endif %}
-        {% if font.getOTFFilename %}url('{{ font.getHandler.getDownloadUrl("otf", csrfProvider.generateCsrfToken(font.getHash ~ 'otf')) }}') format('opentype'),{% endif %}
-        {% if font.getSVGFilename %}url('{{ font.getHandler.getDownloadUrl("svg", csrfProvider.generateCsrfToken(font.getHash ~ 'svg')) }}') format('svg'){% endif %};
+    src: url('{{ font.handler.downloadUrl("eot", csrfProvider.generateCsrfToken(variantHash ~ 'eot')) }}');
+    src: url('{{ font.handler.downloadUrl("eot", csrfProvider.generateCsrfToken(variantHash ~ 'eot')) }}?#iefix') format('embedded-opentype'),
+        {% if font.getWOFF2Filename %}url('{{ font.handler.downloadUrl("woff2", csrfProvider.generateCsrfToken(variantHash ~ 'woff2')) }}') format('woff2'),{% endif %}
+        {% if font.getWOFFFilename %}url('{{ font.handler.downloadUrl("woff", csrfProvider.generateCsrfToken(variantHash ~ 'woff')) }}') format('woff'),{% endif %}
+        {% if font.getOTFFilename %}url('{{ font.handler.downloadUrl("otf", csrfProvider.generateCsrfToken(variantHash ~ 'otf')) }}') format('opentype'),{% endif %}
+        {% if font.getSVGFilename %}url('{{ font.handler.downloadUrl("svg", csrfProvider.generateCsrfToken(variantHash ~ 'svg')) }}') format('svg'){% endif %};
 
-    {% for key, value in font.getFontVariantInfos %}
+    {% for key, value in font.fontVariantInfos %}
     font-{{ key }}: {{ value }};
     {% endfor %}
 }

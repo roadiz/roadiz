@@ -111,7 +111,7 @@ class AssetsController extends AppController
             ->findOneBy(array('hash'=>$filename));
 
         if (null !== $font &&
-            $this->getService('csrfProvider')->isCsrfTokenValid($font->getHash().$extension, $token)) {
+            $this->getService('csrfProvider')->isCsrfTokenValid($font->getHash().$font->getVariant().$extension, $token)) {
 
             switch ($extension) {
                 case 'eot':
