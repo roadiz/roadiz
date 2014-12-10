@@ -19,6 +19,10 @@ contactPageLocale:
         # Use every 2 letter codes (quick and dirty)
         _locale: "[a-z]{2}"
 
+adminTestPage:
+    path:     /rz-admin/test
+    defaults: { _controller: Themes\DefaultTheme\Controllers\AdminController::listAction }
+
 feedRSS:
     path:     /feed
     defaults: { _controller: Themes\DefaultTheme\Controllers\FeedController::indexAction }

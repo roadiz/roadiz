@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Services\SolrServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
+use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -165,6 +166,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $container->register(new EmbedDocumentsServiceProvider());
         $container->register(new TwigServiceProvider());
         $container->register(new EntityApiServiceProvider());
+        $container->register(new BackofficeServiceProvider());
     }
 
     /**

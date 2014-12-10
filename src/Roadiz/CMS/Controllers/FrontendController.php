@@ -439,5 +439,14 @@ class FrontendController extends AppController
 
             return $map;
         });
+
+        /*
+         * Enable frontend theme to extends backoffice and using FrontendTheme twig templates.
+         */
+        $container->extend('twig.loaderFileSystem', function (\Twig_Loader_Filesystem $loader, $c) {
+            $loader->addPath(static::getViewsFolder());
+
+            return $loader;
+        });
     }
 }

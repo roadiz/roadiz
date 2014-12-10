@@ -1,0 +1,17 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block customStyles %}
+<style>
+
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content-global add-user">
+
+    <header class="content-header header-user header-user-edit">
+        <h1 class="content-title user-add-title">{% trans %}Test admin{% endtrans %}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('usersHomePage') }}" title="{% trans %}back_to.users{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </header>
+</section>
+{% endblock %}
