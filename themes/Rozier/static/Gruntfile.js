@@ -13,11 +13,11 @@ module.exports = function(grunt) {
 				'src': [
 					'js/vendor/uikit.min.js',
 
-					'js/addons/sortable.js',
-					'js/addons/nestable.js',
-					'js/addons/pagination.js',
-					'js/addons/notify.js',
-					'js/addons/htmleditor.js',
+					'js/vendor/addons/sortable.js',
+					'js/vendor/addons/nestable.js',
+					'js/vendor/addons/pagination.js',
+					'js/vendor/addons/notify.js',
+					'js/vendor/addons/htmleditor.js',
 
 					'js/vendor/jquery-ui.js',
 					'js/vendor/TweenMax.min.js',
