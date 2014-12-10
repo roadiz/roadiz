@@ -24,25 +24,43 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ViewableInterface.php
+ * @file BackofficeServiceProvider.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Viewers;
+namespace RZ\Roadiz\Core\Services;
+
+use Pimple\Container;
 
 /**
- * ViewableInterface.
+ * Register Embed documents services for dependency injection container.
  */
-interface ViewableInterface
+class BackofficeServiceProvider implements \Pimple\ServiceProviderInterface
 {
     /**
-     * Return current viewable twig engine instance.
+     * Initialize backoffice admin entries.
      *
-     * @return \Twig_Environment
+     * You can extend Roadiz backoffice menu adding entries in
+     * `backoffice.entries` service. Each entry must follow this structure:
+     *
+     *     'name' => 'my.new.feature',
+     *     'path' => $c['urlGenerator']->generate('myNewFeaturePage'),
+     *     'icon' => 'uk-icon-new-feature',
+     *     'roles' => array('ROLE_ACCESS_MYNEWFEATURE'),
+     *     'subentries' => null
+     *
+     *
+     * @param Pimple\Container $container
+     *
+     * @return Pimple\Container
      */
-    public function getTwig();
+    public function register(Container $container)
+    {
+        $container['backoffice.entries'] = function ($c) {
+            return array(
 
-    /**
-     * @return Symfony\Component\Translation\Translator
-     */
-    public function getTranslator();
+            );
+        };
+
+        return $container;
+    }
 }

@@ -73,14 +73,6 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function initializeTranslator()
-    {
-        return $this;
-    }
-
-    /**
      * Output a document HTML tag according to its Mime type and
      * the arguments array.
      *

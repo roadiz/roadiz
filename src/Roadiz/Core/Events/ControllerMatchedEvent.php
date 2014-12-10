@@ -67,6 +67,8 @@ class ControllerMatchedEvent extends Event
             $this->kernel->getRequest()->setLocale($routeParams["_locale"]);
         }
 
+
+
         /*
          * Inject current Kernel to the matched Controller
          */

@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Pimple\Container;
 
 /**
 * DefaultThemeApp class
@@ -166,5 +167,31 @@ class DefaultThemeApp extends FrontendController
             Response::HTTP_NOT_FOUND,
             array('content-type' => 'text/html')
         );
+    }
+
+    /**
+     * Append objects to global container.
+     *
+     * @param Pimple\Container $container
+     */
+    public static function setupDependencyInjection(Container $container)
+    {
+        FrontendController::setupDependencyInjection($container);
+
+        $container->extend('backoffice.entries', function (array $entries, $c) {
+
+            /*
+             * Add a test entry in your Backoffice
+             */
+            $entries['test'] = array(
+                'name' => 'test',
+                'path' => $c['urlGenerator']->generate('adminTestPage'),
+                'icon' => 'uk-icon-cube',
+                'roles' => null,
+                'subentries' => null
+            );
+
+            return $entries;
+        });
     }
 }

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,25 +24,32 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ViewableInterface.php
+ *
+ * @file AdminController.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Viewers;
+namespace Themes\DefaultTheme\Controllers;
 
-/**
- * ViewableInterface.
- */
-interface ViewableInterface
+use Themes\Rozier\RozierApp;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class AdminController extends RozierApp
 {
-    /**
-     * Return current viewable twig engine instance.
-     *
-     * @return \Twig_Environment
-     */
-    public function getTwig();
 
-    /**
-     * @return Symfony\Component\Translation\Translator
-     */
-    public function getTranslator();
+    public function listAction(
+        Request $request
+    ) {
+
+        $this->getService('stopwatch')->start('twigRender');
+
+        return new Response(
+            $this->getTwig()->render('admin/test.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+    }
 }

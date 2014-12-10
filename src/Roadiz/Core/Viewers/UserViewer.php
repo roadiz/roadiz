@@ -50,15 +50,16 @@ class UserViewer implements ViewableInterface
 {
     protected $user = null;
     protected $twig = null;
-    protected $translator = null;
 
     /**
      * @param RZ\Roadiz\Core\Entities\User $user
      */
     public function __construct(User $user)
     {
-        $this->initializeTranslator();
         $this->user = $user;
+
+        Kernel::getService('twig.environment')->addExtension(new TranslationExtension(Kernel::getService('translator')));
+        Kernel::getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
     }
 
     /**
@@ -66,7 +67,7 @@ class UserViewer implements ViewableInterface
      */
     public function getTranslator()
     {
-        return $this->translator;
+        return Kernel::getService('translator');
     }
 
     /**
@@ -75,39 +76,6 @@ class UserViewer implements ViewableInterface
     public function getTwig()
     {
         return Kernel::getService('twig.environment');
-    }
-
-    /**
-     * Create a translator instance and load theme messages
-     *
-     * src/Roadiz/CMS/Resources/translations/messages.{{lang}}.xlf
-     *
-     * @return Symfony\Component\Translation\Translator
-     */
-    public function initializeTranslator()
-    {
-        $lang = Kernel::getInstance()->getRequest()->getLocale();
-        $msgPath = ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/translations/messages.'.$lang.'.xlf';
-
-        /*
-         * fallback to english, if message catalog absent
-         */
-        if (!file_exists($msgPath)) {
-            $lang = 'en';
-        }
-        // instancier un objet de la classe Translator
-        $this->translator = new Translator($lang);
-        // charger, en quelque sorte, des traductions dans ce translator
-        $this->translator->addLoader('xlf', new XliffFileLoader());
-        $this->translator->addResource(
-            'xlf',
-            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/translations/messages.'.$lang.'.xlf',
-            $lang
-        );
-        // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
-        Kernel::getService('twig.environment')->addExtension(new TranslationExtension($this->translator));
-
-        return $this;
     }
 
     /**

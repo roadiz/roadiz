@@ -87,13 +87,14 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
          * Try with URL Aliases
          */
         $node = $this->parseFromUrlAlias($tokens);
+
         if ($node !== null) {
 
             $translation = $node->getNodeSources()->first()->getTranslation();
-            Kernel::getInstance()->getRequest()->setLocale($translation->getLocale());
 
             return array(
                 '_controller' => $this->getThemeController().'::indexAction',
+                '_locale'     => $translation->getLocale(), //pass request locale to init translator
                 'node'        => $node,
                 'translation' => $translation
             );
@@ -103,20 +104,22 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
              */
             $translation = $this->parseTranslation($tokens);
 
-            if (null !== $translation) {
-                Kernel::getInstance()->getRequest()->setLocale($translation->getLocale());
-            }
-
             $node = $this->parseNode($tokens, $translation);
             if ($node !== null) {
                 /*
                  * Try with nodeName
                  */
-                return array(
+                $match = array(
                     '_controller' => $this->getThemeController().'::indexAction',
                     'node'        => $node,
                     'translation' => $translation
                 );
+
+                if (null !== $translation) {
+                    $match['_locale'] = $translation->getLocale(); //pass request locale to init translator
+                }
+
+                return $match;
             } else {
                 return false;
             }

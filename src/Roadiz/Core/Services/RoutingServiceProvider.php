@@ -57,39 +57,6 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
             };
         } else {
             /*
-             * Parse existing themes
-             */
-            $container['backendClass'] = function ($c) {
-                $theme = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                                 ->findAvailableBackend();
-
-                if ($theme !== null) {
-                    return $theme->getClassName();
-                }
-
-                return 'RZ\Roadiz\CMS\Controllers\BackendController';
-            };
-
-            $container['frontendThemes'] = function ($c) {
-                $themes = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                                  ->findAvailableFrontends();
-
-
-
-                if (count($themes) < 1) {
-
-                    $defaultTheme = new Theme();
-                    $defaultTheme->setClassName('RZ\Roadiz\CMS\Controllers\FrontendController');
-                    $defaultTheme->setAvailable(true);
-
-                    return array(
-                        $defaultTheme
-                    );
-                } else {
-                    return $themes;
-                }
-            };
-            /*
              * Get App routes
              */
             $container['routeCollection'] = function ($c) {

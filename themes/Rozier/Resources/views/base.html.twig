@@ -34,6 +34,7 @@
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/codemirror.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.css[0] }}" />
         <link rel="stylesheet" href="{{ path('cssMainColor') }}" />
+        {% block customStyles %}{% endblock %}
         <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
@@ -50,7 +51,8 @@
                 <section class="main-container-section" id="admin-menu">
                     {% include 'panels/admin_menu.html.twig' with {
                         'settingGroups' : settingGroups,
-                        'securityContext' : securityContext
+                        'securityContext' : securityContext,
+                        'backofficeEntries':backofficeEntries
                     } only %}
                 </section>
                 {% if (securityContext.isGranted('ROLE_ACCESS_NODES') or securityContext.isGranted('ROLE_ACCESS_TAGS')) %}

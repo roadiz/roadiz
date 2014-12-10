@@ -1,0 +1,19 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block customStyles %}
+<style>
+    /* Custom styles here */
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content-global add-test">
+    <header class="content-header header-test header-test-edit">
+        <h1 class="content-title test-add-title">{% trans %}Test admin{% endtrans %}</h1>
+    </header>
+
+    <article class="content content-test">
+        <p>This page is created from DefaultTheme to show you how to extend backoffice features.</p>
+    </article>
+</section>
+{% endblock %}

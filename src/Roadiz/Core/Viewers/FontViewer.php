@@ -56,27 +56,8 @@ class FontViewer implements ViewableInterface
      */
     public function getTranslator()
     {
-        return $this->translator;
+        return null;
     }
-
-    /**
-     * Get twig cache folder for current Viewer
-     *
-     * @return string
-     */
-    public function getCacheDirectory()
-    {
-        return ROADIZ_ROOT.'/cache/twig_cache';
-    }
-
-    /**
-     * @{inheritdoc}
-     */
-    public function initializeTranslator()
-    {
-
-    }
-
 
     /**
      * @return \Twig_Environment
