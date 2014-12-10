@@ -667,10 +667,10 @@ Rozier.resize = function(){
 
 	// Set height to panels (fix for IE9,10)
 	if(isMobile.any() === null){
-		_this.$userPanelContainer[0].style.height = _this.windowHeight+'px';
-		_this.$mainTreesContainer[0].style.height = _this.windowHeight+'px';
+		_this.$userPanelContainer.height(_this.windowHeight);
+		_this.$mainTreesContainer.height(_this.windowHeight);
 	}
-	_this.$mainContentScrollable[0].style.height = _this.windowHeight+'px';
+	_this.$mainContentScrollable.height(_this.windowHeight);
 
 	// Tree scroll height
 	_this.$nodeTreeHead = _this.$mainTrees.find('.nodetree-head');
