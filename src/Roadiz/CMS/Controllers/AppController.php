@@ -34,6 +34,8 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Document;
 
+use RZ\Roadiz\Core\Bags\SettingsBag;
+
 use Pimple\Container;
 
 use RZ\Roadiz\Core\Viewers\ViewableInterface;
@@ -453,6 +455,7 @@ class AppController implements ViewableInterface
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => (boolean) $this->kernel->container['config']['devMode'],
+                'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'baseUrl' => $this->kernel->getResolvedBaseUrl(),//$this->kernel->getRequest()->getBaseUrl(),
                 'filesUrl' => $this->kernel
                                    ->getRequest()
