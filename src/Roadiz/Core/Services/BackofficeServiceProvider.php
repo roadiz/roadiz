@@ -37,9 +37,21 @@ use Pimple\Container;
 class BackofficeServiceProvider implements \Pimple\ServiceProviderInterface
 {
     /**
-     * Initialize admin entries
+     * Initialize backoffice admin entries.
+     *
+     * You can extend Roadiz backoffice menu adding entries in
+     * `backoffice.entries` service. Each entry must follow this structure:
+     *
+     *     'name' => 'my.new.feature',
+     *     'path' => $c['urlGenerator']->generate('myNewFeaturePage'),
+     *     'icon' => 'uk-icon-new-feature',
+     *     'roles' => array('ROLE_ACCESS_MYNEWFEATURE'),
+     *     'subentries' => null
+     *
      *
      * @param Pimple\Container $container
+     *
+     * @return Pimple\Container
      */
     public function register(Container $container)
     {
