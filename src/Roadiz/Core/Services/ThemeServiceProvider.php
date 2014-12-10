@@ -24,25 +24,57 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ViewableInterface.php
+ * @file ThemeServiceProvider.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Viewers;
+namespace RZ\Roadiz\Core\Services;
+
+use Pimple\Container;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Theme;
 
 /**
- * ViewableInterface.
+ * Register Theme services for dependency injection container.
  */
-interface ViewableInterface
+class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
 {
-    /**
-     * Return current viewable twig engine instance.
-     *
-     * @return \Twig_Environment
-     */
-    public function getTwig();
+    public function register(Container $container)
+    {
+        $container['backendClass'] = function ($c) {
+            $theme = $c['backendTheme'];
 
-    /**
-     * @return Symfony\Component\Translation\Translator
-     */
-    public function getTranslator();
+            if ($theme !== null) {
+                return $theme->getClassName();
+            }
+
+            return 'RZ\Roadiz\CMS\Controllers\BackendController';
+        };
+
+        $container['backendTheme'] = function ($c) {
+
+            return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                             ->findAvailableBackend();
+        };
+
+        $container['frontendThemes'] = function ($c) {
+            $themes = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                              ->findAvailableFrontends();
+
+
+            if (count($themes) < 1) {
+
+                $defaultTheme = new Theme();
+                $defaultTheme->setClassName('RZ\Roadiz\CMS\Controllers\FrontendController');
+                $defaultTheme->setAvailable(true);
+
+                return array(
+                    $defaultTheme
+                );
+            } else {
+                return $themes;
+            }
+        };
+
+        return $container;
+    }
 }

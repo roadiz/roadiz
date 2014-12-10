@@ -186,7 +186,7 @@ class DefaultThemeApp extends FrontendController
             $entries['test'] = array(
                 'name' => 'test',
                 'path' => $c['urlGenerator']->generate('adminTestPage'),
-                'icon' => 'uk-icon-rz-dashboard',
+                'icon' => 'uk-icon-cube',
                 'roles' => null,
                 'subentries' => null
             );

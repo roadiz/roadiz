@@ -115,7 +115,7 @@ class AppController implements ViewableInterface
         return $this->kernel->container['securityContext'];
     }
     /**
-     * Alias for `$this->kernel->getEntityManager()`.
+     * Alias for `$this->kernel->container['em']`.
      *
      * @return Doctrine\ORM\EntityManager
      */
@@ -228,7 +228,7 @@ class AppController implements ViewableInterface
      */
     public function getTranslator()
     {
-        return $this->translator;
+        return $this->kernel->container['translator'];
     }
 
     /**
@@ -239,7 +239,6 @@ class AppController implements ViewableInterface
     public function __init()
     {
         $this->getTwigLoader()
-             ->initializeTranslator()
              ->prepareBaseAssignation();
     }
 
@@ -274,40 +273,6 @@ class AppController implements ViewableInterface
         }
 
         return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function initializeTranslator()
-    {
-        $this->getService('stopwatch')->start('initTranslations');
-        $lang = $this->kernel->getRequest()->getLocale();
-
-        $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
-        /*
-         * fallback to english, if message catalog absent
-         */
-        if (!file_exists($msgPath)) {
-            $lang = 'en';
-            $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
-        }
-
-        $this->translator = new Translator($lang);
-
-        if (file_exists($msgPath)) {
-            $this->translator->addLoader('xlf', new XliffFileLoader());
-            $this->translator->addResource(
-                'xlf',
-                $msgPath,
-                $lang
-            );
-        }
-        $this->getService('twig.environment')->addExtension(new TranslationExtension($this->translator));
-        $this->getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
-        $this->getService('stopwatch')->stop('initTranslations');
-
-        return $this;
     }
 
     /**
@@ -351,6 +316,9 @@ class AppController implements ViewableInterface
             }
         );
 
+        $this->getService('twig.environment')->addExtension(new TranslationExtension($this->getService('translator')));
+        $this->getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
+
         return $this;
     }
 
@@ -365,7 +333,7 @@ class AppController implements ViewableInterface
 
             $ctrl = new static();
             $ctrl->setKernel(Kernel::getInstance());
-            $ctrl->initializeTranslator();
+            $ctrl->getTwigLoader();
 
             try {
                 $fs = new Filesystem();
@@ -386,24 +354,6 @@ class AppController implements ViewableInterface
                 if ($file->isFile() &&
                     $file->getExtension() == 'twig') {
                     $ctrl->getTwig()->loadTemplate(str_replace(static::getViewsFolder().'/', '', $file));
-                }
-            }
-            /*
-             * Common templates
-             */
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/views/forms'),
-                \RecursiveIteratorIterator::LEAVES_ONLY
-            );
-            foreach ($iterator as $file) {
-                // force compilation
-                if ($file->isFile() &&
-                    $file->getExtension() == 'twig') {
-                    $ctrl->getTwig()->loadTemplate(str_replace(
-                        ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/views/forms/',
-                        '',
-                        $file
-                    ));
                 }
             }
 

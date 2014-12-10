@@ -41,6 +41,8 @@ use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
+use RZ\Roadiz\Core\Services\ThemeServiceProvider;
+use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -167,6 +169,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $container->register(new TwigServiceProvider());
         $container->register(new EntityApiServiceProvider());
         $container->register(new BackofficeServiceProvider());
+        $container->register(new ThemeServiceProvider());
+        $container->register(new TranslationServiceProvider());
     }
 
     /**
