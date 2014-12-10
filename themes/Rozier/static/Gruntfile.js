@@ -84,7 +84,8 @@ module.exports = function(grunt) {
 			options: {
 				compress: true,
 				yuicompress: true,
-				optimization: 3
+				optimization: 3,
+				sourceMap: true
 			},
 			rozier:
 			{

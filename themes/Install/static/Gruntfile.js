@@ -36,7 +36,8 @@ module.exports = function(grunt) {
 			options: {
 				compress: true,
 				yuicompress: true,
-				optimization: 3
+				optimization: 3,
+				sourceMap: true
 			},
 			files: {
 				src : "css/style.less",
@@ -82,12 +83,6 @@ module.exports = function(grunt) {
 				}]
 			}
 		},
-		// phplint: {
-		// 	core: [
-		// 		"../*.php",
-		// 		"../*/*.php"
-		// 	]
-		// },
 		versioning: {
 			options: {
 				cwd: 'public',
