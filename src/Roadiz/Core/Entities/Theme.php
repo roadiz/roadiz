@@ -81,14 +81,16 @@ class Theme extends AbstractEntity
      *
      * @return boolean
      */
-    public function isStaticTheme() {
+    public function isStaticTheme()
+    {
         return (boolean) $this->staticTheme;
     }
 
     /**
      * @param boolean $newstaticTheme
      */
-    public function setStaticTheme($newstaticTheme) {
+    public function setStaticTheme($newstaticTheme)
+    {
         $this->staticTheme = (boolean) $newstaticTheme;
 
         return $this;
