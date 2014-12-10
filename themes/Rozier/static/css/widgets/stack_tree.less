@@ -7,31 +7,12 @@
 
 .stack-tree-widget{
 
-    &> .uk-nestable-list-item{
-        
-        // 1st level
-        &> .nodetree-element-inner > .nodetree-bulk-selection{
-            left:-24px;
-        }
+    .nodetree-bulk-selection{
+        right:48px;
+    }
 
-        &> .uk-nestable-list > .uk-nestable-list-item{
-            
-            // 2nd level
-            &> .nodetree-element-inner > .nodetree-bulk-selection{
-                left:-42px;
-            }  
-
-            &> .uk-nestable-list > .uk-nestable-list-item{
-            
-                // 3rd level
-                &> .nodetree-element-inner > .nodetree-bulk-selection{
-                    left:-60px;
-                }  
-
-            }
-
-        }
-
+    .nodetree-element-inner{
+        padding-right:70px;
     }
 
 }

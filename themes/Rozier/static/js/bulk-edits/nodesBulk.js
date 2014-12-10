@@ -77,6 +77,8 @@ NodesBulk.prototype.onCheckboxChange = function(event) {
     } else {
         _this.hideActions();
     }
+
+    return false;
 };
 
 
