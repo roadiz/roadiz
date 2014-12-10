@@ -268,6 +268,18 @@ class ThemesController extends RozierApp
                 )
             )
             ->add(
+                'staticTheme',
+                'checkbox',
+                array(
+                    'label' => $this->getTranslator()->trans('staticTheme'),
+                    'data' => $theme->isStaticTheme(),
+                    'required' => false,
+                    'attr' => array(
+                        'data-desc' => $this->getTranslator()->trans('staticTheme.does_not.allow.node_url_routes')
+                    )
+                )
+            )
+            ->add(
                 'hostname',
                 'text',
                 array(
@@ -311,6 +323,18 @@ class ThemesController extends RozierApp
                 'data' => $theme->isAvailable(),
                 'required' => false
             ))
+            ->add(
+                'staticTheme',
+                'checkbox',
+                array(
+                    'label' => $this->getTranslator()->trans('staticTheme'),
+                    'data' => $theme->isStaticTheme(),
+                    'required' => false,
+                    'attr' => array(
+                        'data-desc' => $this->getTranslator()->trans('staticTheme.does_not.allow.node_url_routes')
+                    )
+                )
+            )
             ->add('hostname', 'text', array(
                 'label' => $this->getTranslator()->trans('hostname'),
                 'data' => $theme->getHostname()

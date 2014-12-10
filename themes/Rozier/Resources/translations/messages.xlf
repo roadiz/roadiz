@@ -5554,6 +5554,20 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>nodes.bulk.status.changed</source>
           <target></target>
       </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="staticTheme">
+          <source>staticTheme</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="staticTheme.does_not.allow.node_url_routes">
+          <source>staticTheme.does_not.allow.node_url_routes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="theme.is_static">
+          <source>theme.is_static</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -62,7 +62,7 @@ class ThemeRepository extends EntityRepository
      *
      * This method uses Result cache.
      *
-     * @return array
+     * @return array|null
      */
     public function findAvailableFrontends()
     {
@@ -81,11 +81,11 @@ class ThemeRepository extends EntityRepository
     }
 
     /**
-     * Get available frontend theme for host.
+     * Get available frontend theme.
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme
+     * @return RZ\Roadiz\Core\Entities\Theme|null
      */
     public function findFirstAvailableFrontend()
     {
@@ -108,7 +108,7 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme
+     * @return RZ\Roadiz\Core\Entities\Theme|null
      */
     public function findAvailableFrontendWithHost($hostname = "*")
     {
@@ -120,6 +120,62 @@ class ThemeRepository extends EntityRepository
                     ->setParameter('hostname', $hostname);
 
         $query->useResultCache(true, 3600, 'RZTheme_frontend_'.$hostname);
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get available non-static frontend theme.
+     *
+     * Static means that your theme is not suitable for responding from
+     * nodes urls but only static routes.
+     *
+     * This method use Result cache.
+     *
+     * @return RZ\Roadiz\Core\Entities\Theme|null
+     */
+    public function findFirstAvailableNonStaticFrontend()
+    {
+        $query = $this->_em->createQuery('
+            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
+            WHERE t.available = true
+            AND t.backendTheme = false
+            AND t.staticTheme = false');
+
+        $query->useResultCache(true, 3600, 'RZTheme_first_nonstatic_frontend');
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get available non-static frontend theme for host.
+     *
+     * Static means that your theme is not suitable for responding from
+     * nodes urls but only static routes.
+     *
+     * This method use Result cache.
+     *
+     * @return RZ\Roadiz\Core\Entities\Theme|null
+     */
+    public function findAvailableNonStaticFrontendWithHost($hostname = "*")
+    {
+        $query = $this->_em->createQuery('
+            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
+            WHERE t.available = true
+            AND t.backendTheme = false
+            AND t.staticTheme = false
+            AND t.hostname = :hostname')
+                    ->setParameter('hostname', $hostname);
+
+        $query->useResultCache(true, 3600, 'RZTheme_nonstatic_frontend_'.$hostname);
 
         try {
             return $query->getSingleResult();

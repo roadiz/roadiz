@@ -18,8 +18,8 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-12-08 11:55+0000
-Last-Translator: Julien Blanchet &lt;julien@rezo-zero.com&gt;
+PO-Revision-Date: 2014-12-10 16:35+0000
+Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
 MIME-Version: 1.0
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1418039754.662389
+X-POOTLE-MTIME: 1418229326.725219
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5538,26 +5538,40 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="change.status.nodes" approved="yes">
           <source>change.status.nodes</source>
           <target state="translated">Change selected nodes status</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="change.nodes.status" approved="yes">
           <source>change.nodes.status</source>
           <target state="translated">Change selected nodes status</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="change.nodes.status.all" approved="yes">
           <source>change.nodes.status.all</source>
           <target state="translated">Change all selected nodes status</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.change-status.these.nodes" approved="yes">
           <source>are_you_sure.change-status.these.nodes</source>
           <target state="translated">Are you sure you want to change every selected nodes status?</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="nodes.status" approved="yes">
           <source>nodes.status</source>
           <target state="translated">Selection status</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="nodes.bulk.status.changed" approved="yes">
           <source>nodes.bulk.status.changed</source>
           <target state="translated">Node selection status has been changed.</target>
+      <note/></trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="staticTheme" approved="yes">
+          <source>staticTheme</source>
+          <target state="translated">Static theme</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="staticTheme.does_not.allow.node_url_routes" approved="yes">
+          <source>staticTheme.does_not.allow.node_url_routes</source>
+          <target state="translated">A static theme means that it won’t listen dynamic nodes URLs, only static routes.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="theme.is_static" approved="yes">
+          <source>theme.is_static</source>
+          <target state="translated">Static</target>
       </trans-unit>
     </body>
   </file>

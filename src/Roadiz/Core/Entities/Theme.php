@@ -39,7 +39,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\ThemeRepository")
  * @ORM\Table(name="themes", indexes={
  *      @ORM\Index(name="backend_theme_idx", columns={"backend"}),
- *      @ORM\Index(name="available_theme_idx", columns={"available"})
+ *      @ORM\Index(name="available_theme_idx", columns={"available"}),
+ *      @ORM\Index(name="static_theme_theme_idx", columns={"static_theme"})
  * })
  */
 class Theme extends AbstractEntity
@@ -68,6 +69,31 @@ class Theme extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * @ORM\Column(type="boolean", name="static_theme", nullable=false)
+     */
+    protected $staticTheme = false;
+
+    /**
+     * Static means that your theme is not suitable for responding from
+     * nodes urls but only static routes.
+     *
+     * @return boolean
+     */
+    public function isStaticTheme() {
+        return (boolean) $this->staticTheme;
+    }
+
+    /**
+     * @param boolean $newstaticTheme
+     */
+    public function setStaticTheme($newstaticTheme) {
+        $this->staticTheme = (boolean) $newstaticTheme;
+
+        return $this;
+    }
+
 
     /**
      * @ORM\Column(name="classname", type="string", unique=true)

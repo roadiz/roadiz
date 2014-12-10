@@ -62,9 +62,9 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                 return $ret;
             } else {
                 return array(
-                    '_controller' => $this->getThemeController().'::throw404',
-                    'message' => 'Unable to find any matching route nor matching node.'.
-                                 ' Check your `Resources/routes.yml` file.',
+                    '_controller' => 'RZ\Roadiz\CMS\Controllers\FrontendController::throw404',
+                    'message'     => 'Unable to find any matching route nor matching node. '.
+                                     'Check your `Resources/routes.yml` file.',
                     'node'        => null,
                     'translation' => null
                 );
@@ -79,50 +79,55 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
      */
     private function matchNode($decodedUrl)
     {
-        $tokens = explode('/', $decodedUrl);
-        // Remove empty tokens (especially when a trailing slash is present)
-        $tokens = array_values(array_filter($tokens));
+        if (null !== $this->getThemeController()) {
 
-        /*
-         * Try with URL Aliases
-         */
-        $node = $this->parseFromUrlAlias($tokens);
+            $tokens = explode('/', $decodedUrl);
+            // Remove empty tokens (especially when a trailing slash is present)
+            $tokens = array_values(array_filter($tokens));
 
-        if ($node !== null) {
-
-            $translation = $node->getNodeSources()->first()->getTranslation();
-
-            return array(
-                '_controller' => $this->getThemeController().'::indexAction',
-                '_locale'     => $translation->getLocale(), //pass request locale to init translator
-                'node'        => $node,
-                'translation' => $translation
-            );
-        } else {
             /*
-             * Try with node name
+             * Try with URL Aliases
              */
-            $translation = $this->parseTranslation($tokens);
+            $node = $this->parseFromUrlAlias($tokens);
 
-            $node = $this->parseNode($tokens, $translation);
             if ($node !== null) {
-                /*
-                 * Try with nodeName
-                 */
-                $match = array(
+
+                $translation = $node->getNodeSources()->first()->getTranslation();
+
+                return array(
                     '_controller' => $this->getThemeController().'::indexAction',
+                    '_locale'     => $translation->getLocale(), //pass request locale to init translator
                     'node'        => $node,
                     'translation' => $translation
                 );
-
-                if (null !== $translation) {
-                    $match['_locale'] = $translation->getLocale(); //pass request locale to init translator
-                }
-
-                return $match;
             } else {
-                return false;
+                /*
+                 * Try with node name
+                 */
+                $translation = $this->parseTranslation($tokens);
+
+                $node = $this->parseNode($tokens, $translation);
+                if ($node !== null) {
+                    /*
+                     * Try with nodeName
+                     */
+                    $match = array(
+                        '_controller' => $this->getThemeController().'::indexAction',
+                        'node'        => $node,
+                        'translation' => $translation
+                    );
+
+                    if (null !== $translation) {
+                        $match['_locale'] = $translation->getLocale(); //pass request locale to init translator
+                    }
+
+                    return $match;
+                } else {
+                    return false;
+                }
             }
+        } else {
+            return false;
         }
     }
 
@@ -139,7 +144,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
          */
         $theme = Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                        ->findAvailableFrontendWithHost($host);
+                        ->findAvailableNonStaticFrontendWithHost($host);
 
         /*
          * If no theme for current host, we look for
@@ -148,13 +153,13 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
         if (null === $theme) {
             $theme = Kernel::getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                            ->findFirstAvailableFrontend();
+                            ->findFirstAvailableNonStaticFrontend();
         }
 
         if (null !== $theme) {
             return $theme->getClassName();
         } else {
-            return 'RZ\Roadiz\CMS\Controllers\FrontendController';
+            return null;
         }
     }
 
