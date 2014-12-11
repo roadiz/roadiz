@@ -9,7 +9,7 @@
         {% include 'tags/navBar.html.twig' with {"current": 'tree', "tag":tag} only %}
     </header>
 
-    <article class="content content-no-action-menu content-tags-tree">
+    <article class="content content-tags-tree">
         {% include 'widgets/tagTree/tagTree.html.twig' with { "tagTree":specificTagTree, "tag":specificTagTree.getRootTag } only %}
     </article>
 
