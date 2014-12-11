@@ -85,10 +85,22 @@ class UserViewer implements ViewableInterface
      */
     public function sendSignInConfirmation()
     {
+        $emailContact = SettingsBag::get('email_sender');
+
+        if (empty($emailContact)) {
+            $emailContact = "noreply@roady.io";
+        }
+
+        $siteName = SettingsBag::get('site_name');
+
+        if (empty($siteName)) {
+            $siteName = "Unnamed site";
+        }
+
         $assignation = array(
             'user' => $this->user,
-            'site' => SettingsBag::get('site_name'),
-            'mailContact' => SettingsBag::get('email_sender'),
+            'site' => $siteName,
+            'mailContact' => $emailContact,
         );
         $emailBody = $this->getTwig()->render('users/newUser_email.html.twig', $assignation);
 
@@ -105,10 +117,10 @@ class UserViewer implements ViewableInterface
             // Give the message a subject
             ->setSubject($this->getTranslator()->trans(
                 'welcome.user.email.%site%',
-                array('%site%'=>SettingsBag::get('site_name'))
+                array('%site%'=>$siteName)
             ))
             // Set the From address with an associative array
-            ->setFrom(array(SettingsBag::get('email_sender') => SettingsBag::get('site_name')))
+            ->setFrom(array($emailContact => $siteName))
             // Set the To addresses with an associative array
             ->setTo(array($this->user->getEmail()))
             // Give it a body
