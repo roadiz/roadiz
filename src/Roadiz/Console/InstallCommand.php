@@ -97,6 +97,36 @@ class InstallCommand extends Command
                     $text .= '<error>A back-end theme is already installed.</error>'.PHP_EOL;
                 }
 
+                /**
+                 * Import default data
+                 */
+                $installRoot = ROADIZ_ROOT . "/themes/Install";
+                $data = json_decode(file_get_contents($installRoot . "/config.json"), true);
+                if (isset($data["importFiles"]['roles'])) {
+                    foreach ($data["importFiles"]['roles'] as $filename) {
+                        \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
+                            file_get_contents($installRoot . "/" . $filename)
+                        );
+                        $text .= '     — <info>Theme file “'.$installRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
+                    }
+                }
+                if (isset($data["importFiles"]['groups'])) {
+                    foreach ($data["importFiles"]['groups'] as $filename) {
+                        \RZ\Roadiz\CMS\Importers\GroupsImporter::importJsonFile(
+                            file_get_contents($installRoot . "/" . $filename)
+                        );
+                        $text .= '     — <info>Theme file “'.$installRoot . "/" .$filename.'” has been imported..</info>'.PHP_EOL;
+                    }
+                }
+                if (isset($data["importFiles"]['settings'])) {
+                    foreach ($data["importFiles"]['settings'] as $filename) {
+                        \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
+                            file_get_contents($installRoot . "/" . $filename)
+                        );
+                        $text .= '     — <info>Theme files “'.$installRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
+                    }
+                }
+
                 /*
                  * Create default translation
                  */
