@@ -18,7 +18,7 @@ X-Generator: Translate Toolkit 1.9.0
         <target state="translated">Project-Id-Version: PACKAGE VERSION
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-12-10 16:35+0000
+PO-Revision-Date: 2014-12-11 10:39+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
 Language: 
@@ -27,7 +27,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1418229326.725219
+X-POOTLE-MTIME: 1418294362.262401
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -5564,15 +5564,29 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="staticTheme" approved="yes">
           <source>staticTheme</source>
           <target state="translated">Static theme</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="staticTheme.does_not.allow.node_url_routes" approved="yes">
           <source>staticTheme.does_not.allow.node_url_routes</source>
           <target state="translated">A static theme means that it won’t listen dynamic nodes URLs, only static routes.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="theme.is_static" approved="yes">
           <source>theme.is_static</source>
           <target state="translated">Static</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="password.must.match" approved="yes">
+          <source>password.must.match</source>
+          <target state="translated">Passwords must match</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="passwords.must.match" approved="yes">
+          <source>passwords.must.match</source>
+          <target state="translated">Passwords must match</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.nodeType.available.create_one_first" approved="yes">
+          <source>no.nodeType.available.create_one_first</source>
+          <target state="translated">No node-type have been found. Please create one before adding a node.</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

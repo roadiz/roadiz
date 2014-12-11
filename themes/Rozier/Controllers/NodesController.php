@@ -419,6 +419,7 @@ class NodesController extends RozierApp
             $form = $this->getService('formFactory')
                 ->createBuilder()
                 ->add('nodeName', 'text', array(
+                    'label' => $this->getTranslator()->trans('nodeName'),
                     'constraints' => array(
                         new NotBlank()
                     )
@@ -465,6 +466,7 @@ class NodesController extends RozierApp
             $this->assignation['translation'] = $translation;
             $this->assignation['form'] = $form->createView();
             $this->assignation['type'] = $type;
+            $this->assignation['nodeTypesCount'] = true;
 
             return new Response(
                 $this->getTwig()->render('nodes/add.html.twig', $this->assignation),
@@ -492,6 +494,10 @@ class NodesController extends RozierApp
         $translation = $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                 ->findDefault();
+
+        $nodeTypesCount = $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                ->countBy(array());
 
         if (null !== $translationId) {
             $translation = $this->getService('em')
@@ -549,6 +555,7 @@ class NodesController extends RozierApp
             $this->assignation['translation'] = $translation;
             $this->assignation['form'] = $form->createView();
             $this->assignation['parentNode'] = $parentNode;
+            $this->assignation['nodeTypesCount'] = $nodeTypesCount;
 
             return new Response(
                 $this->getTwig()->render('nodes/add.html.twig', $this->assignation),

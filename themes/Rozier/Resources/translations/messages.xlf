@@ -5568,6 +5568,20 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>theme.is_static</source>
           <target></target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="password.must.match">
+          <source>password.must.match</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="passwords.must.match">
+          <source>passwords.must.match</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.nodeType.available.create_one_first">
+          <source>no.nodeType.available.create_one_first</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
