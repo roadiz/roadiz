@@ -47,7 +47,7 @@ use Pimple\Container;
  */
 class RozierApp extends BackendController
 {
-    protected static $themeName =      'Rozier administration theme';
+    protected static $themeName =      'Rozier Backstage theme';
     protected static $themeAuthor =    'Ambroise Maupate, Julien Blanchet';
     protected static $themeCopyright = 'REZO ZERO';
     protected static $themeDir =       'Rozier';
