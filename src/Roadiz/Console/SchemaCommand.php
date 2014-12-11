@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Kernel;
+use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -153,7 +154,7 @@ class SchemaCommand extends Command
     {
         CacheCommand::clearDoctrine();
 
-        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
+        $tool = new SchemaTool(Kernel::getService('em'));
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
 
         $sql = $tool->getUpdateSchemaSql($meta, true);
@@ -183,13 +184,10 @@ class SchemaCommand extends Command
      */
     public static function createSchema()
     {
-        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
+        $tool = new SchemaTool(Kernel::getService('em'));
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
-        $sql = $tool->getUpdateSchemaSql($meta, true);
 
-        foreach ($sql as $statement) {
-            Kernel::getService('em')->getConnection()->exec($statement);
-        }
+        $tool->createSchema($meta);
     }
 
     /**
