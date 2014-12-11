@@ -626,6 +626,11 @@ class InstallApp extends AppController
                     \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
 
                     /*
+                     * Close Session for security and temp translation
+                     */
+                    $this->getService('session')->invalidate();
+
+                    /*
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $response = new RedirectResponse(

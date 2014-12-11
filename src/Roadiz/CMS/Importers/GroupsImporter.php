@@ -59,7 +59,8 @@ class GroupsImporter implements ImporterInterface
                    /*
                     * then persist each role
                     */
-                    $role = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Role')->findOneByName($role->getName());
+                    $role = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Role')
+                                                    ->findOneByName($role->getName());
                 }
 
                 Kernel::getService('em')->persist($group);
