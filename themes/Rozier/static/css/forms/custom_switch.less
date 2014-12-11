@@ -6,7 +6,7 @@
 /* -------- VARS -------- */
 
 @switch-off-color:#9e9e9e;
-@switch-round: 5px;
+@switch-round: 4px;
 @switch-label-color: #e0e0e0;
 
 /* -------- STYLES -------- */
@@ -18,7 +18,6 @@
     height: 28px;
     border: 0 none;
     .box-sizing();
-    //.rounded(10px);
 
     .bootstrap-switch-container {
        width: 90px;
@@ -34,19 +33,17 @@
     .bootstrap-switch-default {
         font-size: 14px;
         font-weight: bold;
-        padding-top: 5px;
+        padding: 5px 0 3px 0;
     }
 
     .bootstrap-switch-handle-on.bootstrap-switch-primary {
         background-color: @contrast-color-darker;
         .border-radius(0, 0, @switch-round, @switch-round);
-        //text-shadow: rgba(0, 0, 0, 0.3) -1px -1px 0px;
         color: rgba(255, 255, 255, 0.9);
     }
     .bootstrap-switch-handle-off.bootstrap-switch-default {
         background-color: @switch-off-color;
         .border-radius(@switch-round, @switch-round, 0, 0);
-        //text-shadow: rgba(0, 0, 0, 0.3) -1px -1px 0px;
         color: rgba(255, 255, 255, 0.9);
     }
 
