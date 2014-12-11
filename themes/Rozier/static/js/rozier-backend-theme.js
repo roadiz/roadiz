@@ -1728,12 +1728,12 @@ NodeEditSource.prototype.init = function(){
    _this.$input = _this.$content.find('input, select');
 
     for(var i = 0; i < _this.$input.length; i++) {
-        
+
         if(_this.$input[i].getAttribute('data-desc') !== ''){
             $(_this.$input[i]).after('<div class="form-help uk-alert uk-alert-large">'+_this.$input[i].getAttribute('data-desc')+'</div>');
-        }   
+        }
 
-    }    
+    }
 
     _this.$input.on('focus', $.proxy(_this.inputFocus, _this));
     _this.$input.on('focusout', $.proxy(_this.inputFocusOut, _this));
@@ -1760,7 +1760,7 @@ NodeEditSource.prototype.inputFocus = function(e){
 NodeEditSource.prototype.inputFocusOut = function(e){
     var _this = this;
 
-    
+
     $(e.currentTarget).parent().removeClass('form-col-focus');
 
 };
