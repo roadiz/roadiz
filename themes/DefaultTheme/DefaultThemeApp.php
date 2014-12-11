@@ -142,6 +142,9 @@ class DefaultThemeApp extends FrontendController
                             array(
                                 'parent' => $parent,
                                 'translation' => $this->translation
+                            ),
+                            array(
+                                'position' => 'ASC'
                             )
                         );
         }
