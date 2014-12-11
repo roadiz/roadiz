@@ -238,48 +238,56 @@ class InstallApp extends AppController
 
             if ($databaseForm->isValid()) {
 
-                $tempConf = $config->getConfiguration();
-                foreach ($databaseForm->getData() as $key => $value) {
-                    $tempConf['doctrine'][$key] = $value;
-                }
-                $config->setConfiguration($tempConf);
-
-
-                /*
-                 * Test connexion
-                 */
                 try {
-                    $fixtures = new Fixtures();
-                    $fixtures->createFolders();
+                    $config->testDoctrineConnexion($databaseForm->getData());
 
-                    $config->writeConfiguration();
+
+                    $tempConf = $config->getConfiguration();
+                    foreach ($databaseForm->getData() as $key => $value) {
+                        $tempConf['doctrine'][$key] = $value;
+                    }
+                    $config->setConfiguration($tempConf);
+
 
                     /*
-                     * Force redirect to avoid resending form when refreshing page
+                     * Test connexion
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'installDatabaseSchemaPage'
-                        )
-                    );
-                    $response->prepare($request);
+                    try {
+                        $fixtures = new Fixtures();
+                        $fixtures->createFolders();
 
-                    return $response->send();
-                } catch (\PDOException $e) {
-                    $message = "";
-                    if (strstr($e->getMessage(), 'SQLSTATE[')) {
-                        preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
-                        $message = $matches[3];
-                    } else {
-                        $message = $e->getMessage();
+                        $config->writeConfiguration();
+
+                        /*
+                         * Force redirect to avoid resending form when refreshing page
+                         */
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate(
+                                'installDatabaseSchemaPage'
+                            )
+                        );
+                        $response->prepare($request);
+
+                        return $response->send();
+                    } catch (\PDOException $e) {
+                        $message = "";
+                        if (strstr($e->getMessage(), 'SQLSTATE[')) {
+                            preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
+                            $message = $matches[3];
+                        } else {
+                            $message = $e->getMessage();
+                        }
+                        $this->assignation['error'] = true;
+                        $this->assignation['errorMessage'] = ucfirst($message);
+                    } catch (\Exception $e) {
+                        $this->assignation['error'] = true;
+                        $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
                     }
-                    $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = ucfirst($message);
+
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+                    $this->assignation['errorMessage'] = $e->getMessage();
                 }
-
             }
             $this->assignation['databaseForm'] = $databaseForm->createView();
         }

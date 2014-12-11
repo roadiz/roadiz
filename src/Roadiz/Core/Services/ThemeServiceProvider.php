@@ -52,26 +52,38 @@ class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['backendTheme'] = function ($c) {
 
-            return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                             ->findAvailableBackend();
+            if (isset($c['config']['install']) &&
+                true === $c['config']['install']) {
+
+                return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                                 ->findAvailableBackend();
+            } else {
+                return null;
+            }
         };
 
         $container['frontendThemes'] = function ($c) {
-            $themes = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                              ->findAvailableFrontends();
+
+            if (isset($c['config']['install']) &&
+                true === $c['config']['install']) {
+                $themes = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                                  ->findAvailableFrontends();
 
 
-            if (count($themes) < 1) {
+                if (count($themes) < 1) {
 
-                $defaultTheme = new Theme();
-                $defaultTheme->setClassName('RZ\Roadiz\CMS\Controllers\FrontendController');
-                $defaultTheme->setAvailable(true);
+                    $defaultTheme = new Theme();
+                    $defaultTheme->setClassName('RZ\Roadiz\CMS\Controllers\FrontendController');
+                    $defaultTheme->setAvailable(true);
 
-                return array(
-                    $defaultTheme
-                );
+                    return array(
+                        $defaultTheme
+                    );
+                } else {
+                    return $themes;
+                }
             } else {
-                return $themes;
+                return array();
             }
         };
 
