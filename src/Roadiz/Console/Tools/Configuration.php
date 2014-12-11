@@ -29,6 +29,9 @@
  */
 namespace RZ\Roadiz\Console\Tools;
 
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManager;
+
 /**
 * Configuration class
 */
@@ -91,6 +94,27 @@ class Configuration
                 "sources/GeneratedNodeSources"
             )
         );
+    }
+
+    /**
+     * Test database connexion with given configuration.
+     *
+     * @param array $connexion Doctrine array parameters
+     *
+     * @throws \PDOException
+     */
+    public function testDoctrineConnexion($connexion = array())
+    {
+        $config = Setup::createAnnotationMetadataConfiguration(
+                    array(),
+                    true,
+                    null,
+                    null,
+                    false
+                );
+
+        $em = EntityManager::create($connexion, $config);
+        $em->getConnection()->connect();
     }
 
     /**

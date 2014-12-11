@@ -71,20 +71,30 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
                     $c['translator.locale']
                 );
             }
+            $installPath = ROADIZ_ROOT.'/themes/Install/Resources/translations/messages.'.$c['translator.locale'].'.xlf';
+            if (file_exists($installPath)) {
+                $translator->addResource(
+                    'xlf',
+                    $installPath,
+                    $c['translator.locale']
+                );
+            }
 
             $classes = array($c['backendTheme']);
             $classes = array_merge($classes, $c['frontendThemes']);
 
             foreach ($classes as $theme) {
-                $themeClass = $theme->getClassName();
+                if (null !== $theme) {
+                    $themeClass = $theme->getClassName();
 
-                $msgPath = $themeClass::getResourcesFolder().'/translations/messages.'.$c['translator.locale'].'.xlf';
-                if (file_exists($msgPath)) {
-                    $translator->addResource(
-                        'xlf',
-                        $msgPath,
-                        $c['translator.locale']
-                    );
+                    $msgPath = $themeClass::getResourcesFolder().'/translations/messages.'.$c['translator.locale'].'.xlf';
+                    if (file_exists($msgPath)) {
+                        $translator->addResource(
+                            'xlf',
+                            $msgPath,
+                            $c['translator.locale']
+                        );
+                    }
                 }
             }
 
