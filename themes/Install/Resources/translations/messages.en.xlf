@@ -46,11 +46,11 @@
             </trans-unit>
             <trans-unit id="welcome.subtitle" approved="yes">
                 <source>welcome.subtitle</source>
-                <target state="translated">Welcome to Roadiz CMS Installation</target>
+                <target state="translated">Welcome to Roadiz CMS!</target>
             </trans-unit>
             <trans-unit id="welcome.message" approved="yes">
                 <source>welcome.message</source>
-                <target state="translated">&lt;p&gt;Welcome to Roadiz CMS install assistant. Here is just a bit of configuration before letting you play.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Here is just a bit of configuration before letting you play. So start the engine!&lt;/p&gt;</target>
             </trans-unit>
 
 

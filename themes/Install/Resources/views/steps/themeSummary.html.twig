@@ -37,7 +37,7 @@
                             <td>{{theme.name}}</td>
                             <td>{{theme.version}}</td>
                             <td>{{cms.version}}</td>
-                            <td>
+                            <td class="align-right">
                                 {% if status.version == true %}
                                     <div class="uk-badge uk-badge-success uk-badge-notification" id="theme"><i class="uk-icon-check"></i></div>
                                 {% else %}
@@ -64,7 +64,7 @@
                             <td>{{theme.name}}</td>
                             <td>{{theme.supportedLocale|join(", ")}}</td>
                             <td>{{cms.locale}}</td>
-                            <td>
+                            <td class="align-right">
                                 {% if status.locale == true %}
                                     <div class="uk-badge uk-badge-success uk-badge-notification" id="theme"><i class="uk-icon-check"></i></div>
                                 {% else %}
@@ -92,7 +92,7 @@
                             <td></td>
                             <td>{{name}}</td>
                             <td>{{filename}}</td>
-                            <td>
+                            <td class="align-right">
                                 {% if status.import[filename] == true %}
                                     <div class="uk-badge uk-badge-success uk-badge-notification" id="theme"><i class="uk-icon-check"></i></div>
                                 {% else %}
@@ -115,7 +115,7 @@
                 {% if not status.version or not status.locale or false in status.import %}
                 <button class="content-button uk-button uk-button-primary" data-uk-modal="{target:'#error'}">{% trans %}goto.import{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></button>
                 {% else %}
-                <a class="content-button uk-button uk-button-primary" href="{{ path('installThemeBasePage') ~ '?classname=' ~ classname|url_encode }}">{% trans %}install.theme{% endtrans %} <i class="uk-icon-arrow-circle-right" ></i></a>
+                <a class="content-button uk-button uk-button-primary" href="{{ path('installThemeBasePage') ~ '?classname=' ~ classname|url_encode }}">{% trans %}install.theme{% endtrans %} <i class="uk-icon-arrow-circle-right icon-right" ></i></a>
                 {% endif %}
             </div>
             {% endspaceless %}
@@ -144,7 +144,7 @@
             {% endfor %}
         </lu>
         <p>Warning.theme.continue</p>
-        <a class="content-button uk-button uk-button-primary" href="{{ path('installThemeBasePage') ~ '?classname=' ~ classname|url_encode }}">{% trans %}install.theme{% endtrans %} <i class="uk-icon-arrow-circle-right" ></i></a>
+        <a class="content-button uk-button uk-button-primary" href="{{ path('installThemeBasePage') ~ '?classname=' ~ classname|url_encode }}">{% trans %}install.theme{% endtrans %} <i class="uk-icon-arrow-circle-right icon-right"></i></a>
     </div>
 </div>
 {% endblock %}

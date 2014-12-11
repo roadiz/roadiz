@@ -40,7 +40,7 @@
                 <form id="language-form" class="uk-form uk-form-horizontal" action="#" method="post" {{ form_enctype(form) }}>
                     <div class="content-text content-text-form">
                         {{ form_widget(form) }}
-                        <button class="content-button form-save-button uk-button"><i class="uk-icon-magic"></i> {% trans %}choose.language{% endtrans %}</button>
+                        <button class="content-button form-save-button uk-button"><i class="uk-icon-flag"></i> {% trans %}choose.language{% endtrans %}</button>
                     </div>
                 </form>
             </div>
@@ -48,7 +48,7 @@
             {% spaceless %}
             <div class="content-buttons">
 
-                <a class="content-button uk-button uk-button-primary" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+                <a class="content-button uk-button uk-button-primary" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right icon-right"></i></a>
 
             </div>
             {% endspaceless %}

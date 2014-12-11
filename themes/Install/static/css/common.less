@@ -17,15 +17,11 @@ p, li, a, input, button, textarea {
     font-family: @main-font;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    -webkit-font-smoothing: antialiased;
-}
-
 body {
     position: absolute;
     width:100%; height:100%;
     -webkit-font-smoothing: antialiased;
-    font:bold 12px/18px @main-font;
+    font:normal 13px/20px @main-font;
     color: @grey-interface;
     background:@bg-color;
 }
@@ -68,7 +64,7 @@ body {
     .uk-icon-rz-roadiz-icon {
         display: table-cell;
         width: 128px; height: 116px;
-        font-size: 65px;
+        font-size: 57px;
         vertical-align: middle;
         padding-left: 5px;
         -webkit-font-smoothing: subpixel-antialiased;
@@ -90,8 +86,8 @@ body {
     .uk-icon-rz-rezozero{
         position: absolute;
         color: @grey-medium;
-        bottom: 50px;
-        font-size: 22px;
+        bottom: 45px;
+        font-size: 16px;
         width: 100%;
         left: 0px;
     }
@@ -101,10 +97,10 @@ body {
     position: absolute;
     color: @grey-medium;
     font-size: 10px;
-    font-weight: bold;
-    bottom: 26px;
+    bottom: 23px;
     width: 100%;
     left: 0px;
+    font-weight: 500;
 }
 
 .content{
@@ -127,13 +123,13 @@ body {
     margin:0;
     border-bottom:1px solid @grey-border;
     vertical-align: middle;
-    font-size:36px;
-    font-weight:400;
+    font-size:33px;
+    font-weight:300;
 }
 
 .content-progress{
     position: absolute;
-    top:109px; right:0; left:0;
+    top:108px; right:0; left:0;
     height:9px;
     text-align: center;
     cursor: default;
@@ -141,9 +137,9 @@ body {
 
 .content-progress-item{
     display: inline-block;
-    width:9px; height:9px;
+    width:11px; height:11px;
     .rounded(6px);
-    margin:0 16px;
+    margin:0 8px;
     border:1px solid @grey-medium;
     background: white;
 
@@ -161,7 +157,7 @@ body {
 }
 
 .content-text-cont{
-    padding: 40px 50px;
+    padding: 40px;
     background:@grey-verylight;
 
     p{
@@ -174,7 +170,7 @@ body {
 
     h3{
         font-weight: bold;
-        margin:0 15px 5px 15px;
+        margin:0 15px 10px 15px;
     }
 }
 
@@ -192,19 +188,12 @@ body {
 
     margin-bottom:20px;
 
-    &.content-intro-only{
-        margin-bottom:0;
-    }
-
     &.content-intro-big{
-        margin-bottom:0;
 
         p{
             font-size:14px; line-height:18px;
         }
-
     }
-
 }
 
 .content-buttons{
@@ -217,4 +206,8 @@ body {
     &:last-child{
         margin-right:0;
     }
+}
+
+.icon-right{
+    margin: 0 0 0 3px !important;
 }

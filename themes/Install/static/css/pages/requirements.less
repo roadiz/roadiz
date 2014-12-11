@@ -1,17 +1,24 @@
 #requirements-table{
-
     .uk-badge{
         height:22px;
         line-height:22px;
+        -webkit-font-smoothing: subpixel-antialiased;
+    }
+    th {
+        border-right: 1px solid #CCC;
+        &:first-child{
+            border-left: 1px solid #CCC;
+        }
     }
 
     [class*=uk-icon-]{
         line-height:22px;
     }
-
 }
 .requirement-name{
     padding-left:15px;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .uk-badge-folder{
@@ -22,7 +29,7 @@
             .opacity(1);
         }
     }
-    
+
 }
 
 .uk-badge-notification-infos{
