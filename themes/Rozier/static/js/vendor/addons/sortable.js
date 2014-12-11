@@ -107,7 +107,8 @@
             UI.$html.on('mouseup touchend', function() {
 
                 if(!moving && clickedlink) {
-                    location.href = clickedlink.attr('href');
+                    // Removed location change to prevent loading new page (node-type-fields & custom-form-fields list pages)
+                    // location.href = clickedlink.attr('href');
                 }
 
                 delayIdle = clickedlink = false;
