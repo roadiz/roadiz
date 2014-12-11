@@ -53,7 +53,7 @@ class InstallCommand extends Command
     {
         $this
             ->setName('install')
-            ->setDescription('First install database and default backend theme')
+            ->setDescription('Install Roadiz roles, settings, translations and default backend theme')
             ->addOption(
                 'with-theme',
                 null,
@@ -70,14 +70,12 @@ class InstallCommand extends Command
         if ($input->getOption('no-interaction') ||
             $this->dialog->askConfirmation(
                 $output,
+                'Before installing Roadiz, did you create database schema? '.PHP_EOL.
+                'If not execute: <info>bin/roadiz orm:schema-tool:create</info>'.PHP_EOL.
                 '<question>Are you sure to perform installation?</question> : ',
                 false
             )
         ) {
-
-            SchemaCommand::createSchema();
-
-            $text .= '<info>Schema created…</info>'.PHP_EOL;
 
             /*
              * Create backend theme
