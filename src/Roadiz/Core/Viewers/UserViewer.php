@@ -88,7 +88,7 @@ class UserViewer implements ViewableInterface
         $emailContact = SettingsBag::get('email_sender');
 
         if (empty($emailContact)) {
-            $emailContact = "noreply@roady.io";
+            $emailContact = "noreply@roadiz.io";
         }
 
         $siteName = SettingsBag::get('site_name');
