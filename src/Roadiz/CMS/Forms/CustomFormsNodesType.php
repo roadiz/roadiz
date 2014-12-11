@@ -81,11 +81,11 @@ class CustomFormsNodesType extends AbstractType
                 }
 
             } else {
-                $customForms = Kernel::getService('em')
+                $customForm = Kernel::getService('em')
                                 ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $object);
 
                 // Vérifie si le nom est bidon
-                if (null !== $object && null === $CustomForm) {
+                if (null !== $object && null === $customForm) {
                     $context->addViolationAt(
                         null,
                         'CustomForm '.$object.' does not exists',

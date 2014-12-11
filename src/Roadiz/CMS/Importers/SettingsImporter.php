@@ -48,7 +48,6 @@ class SettingsImporter implements ImporterInterface
      */
     public static function importJsonFile($serializedData)
     {
-        $return = false;
         $settingGroups = SettingCollectionJsonSerializer::deserialize($serializedData);
         $groupsNames = Kernel::getService('em')
                   ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
@@ -109,7 +108,7 @@ class SettingsImporter implements ImporterInterface
                 Kernel::getService('em')->persist($setting);
             }
         }
-        $return = true;
+
         Kernel::getService('em')->flush();
 
         // Clear result cache
@@ -118,6 +117,6 @@ class SettingsImporter implements ImporterInterface
             $cacheDriver->deleteAll();
         }
 
-        return $return;
+        return true;
     }
 }

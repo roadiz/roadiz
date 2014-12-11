@@ -293,7 +293,7 @@ class Node extends AbstractDateTimedPositioned
      */
     public function setArchived($archived)
     {
-        $this->archived = ($archived) ? Node::ARCHIVED : Node::PUBLISHED;
+        $this->status = ($archived) ? Node::ARCHIVED : Node::PUBLISHED;
 
         return $this;
     }
@@ -389,7 +389,7 @@ class Node extends AbstractDateTimedPositioned
      *
      * @return $this
      */
-    public function setNodeType($nodeType)
+    public function setNodeType($nodeType = null)
     {
         $this->nodeType = $nodeType;
 
@@ -622,11 +622,11 @@ class Node extends AbstractDateTimedPositioned
      */
     public function getOneLineSourceSummary()
     {
-        $text = "Source ".$this->getDefaultNodeSource()->getId().PHP_EOL;
+        $text = "Source ".$this->getNodeSources()->first()->getId().PHP_EOL;
 
         foreach ($this->getNodeType()->getFields() as $key => $field) {
-            $getterName = 'get'.ucwords($field->getName());
-            $text .= '['.$field->getLabel().']: '.$this->getDefaultNodeSource()->$getterName().PHP_EOL;
+            $getterName = $field->getGetterName();
+            $text .= '['.$field->getLabel().']: '.$this->getNodeSources()->first()->$getterName().PHP_EOL;
         }
 
         return $text;

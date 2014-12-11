@@ -41,14 +41,14 @@ class SettingsBag
      *
      * @var array
      */
-    private static $settings = array();
+    protected static $settings = array();
 
     /**
      * Get a setting value from its name.
      *
      * @param string $settingName
      *
-     * @return string or false
+     * @return string|boolean
      */
     public static function get($settingName)
     {

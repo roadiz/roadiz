@@ -62,7 +62,7 @@ class TagsImporter implements ImporterInterface
         return true;
     }
 
-    private static function browseTree($tag)
+    protected static function browseTree($tag)
     {
         $childObj = array();
         $sourceObj = array();

@@ -106,12 +106,12 @@ class Configuration
     public function testDoctrineConnexion($connexion = array())
     {
         $config = Setup::createAnnotationMetadataConfiguration(
-                    array(),
-                    true,
-                    null,
-                    null,
-                    false
-                );
+            array(),
+            true,
+            null,
+            null,
+            false
+        );
 
         $em = EntityManager::create($connexion, $config);
         $em->getConnection()->connect();

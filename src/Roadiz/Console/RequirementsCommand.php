@@ -47,7 +47,6 @@ class RequirementsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
         $text="";
 
         $text .= $this->testPHPVersion('5.4');

@@ -43,7 +43,7 @@ class RolesBag
      *
      * @var array
      */
-    private static $roles = array();
+    protected static $roles = array();
 
     /**
      * Get role by name or create it if non-existant.

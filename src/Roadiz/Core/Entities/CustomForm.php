@@ -324,7 +324,7 @@ class CustomForm extends AbstractDateTimed
     public function getOneLineSummary()
     {
         return $this->getId()." — ".$this->getName().
-            " — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
+            " — Open : ".($this->isOpen()?'true':'false').PHP_EOL;
     }
 
     /**

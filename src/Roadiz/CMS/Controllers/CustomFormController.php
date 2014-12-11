@@ -81,74 +81,73 @@ class CustomFormController extends AppController
 
         if (null !== $customForm) {
             $closeDate = $customForm->getCloseDate();
-
             $nowDate = new \DateTime();
-        }
 
-        if (null !== $customForm && $closeDate >= $nowDate) {
-            $this->assignation['customForm'] = $customForm;
-            $this->assignation['fields'] = $customForm->getFields();
+            if ($closeDate >= $nowDate) {
+                $this->assignation['customForm'] = $customForm;
+                $this->assignation['fields'] = $customForm->getFields();
 
-            /*
-             * form
-             */
-            $form = $this->buildForm($request, $customForm);
-            $form->handleRequest();
-            if ($form->isValid()) {
-                try {
+                /*
+                 * form
+                 */
+                $form = $this->buildForm($request, $customForm);
+                $form->handleRequest();
+                if ($form->isValid()) {
+                    try {
 
-                    $data = $form->getData();
-                    $data["ip"] = $request->getClientIp();
-                    $this->addCustomFormAnswer($data, $customForm);
+                        $data = $form->getData();
+                        $data["ip"] = $request->getClientIp();
+                        $this->addCustomFormAnswer($data, $customForm);
 
-                    $msg = $this->getTranslator()->trans('customForm.%name%.send', array('%name%'=>$customForm->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                        $msg = $this->getTranslator()->trans('customForm.%name%.send', array('%name%'=>$customForm->getName()));
+                        $request->getSession()->getFlashBag()->add('confirm', $msg);
+                        $this->getService('logger')->info($msg);
 
-                    $this->assignation['title'] = $this->getTranslator()->trans(
-                        'new.answer.form.%site%',
-                        array('%site%'=>$customForm->getDisplayName())
-                    );
+                        $this->assignation['title'] = $this->getTranslator()->trans(
+                            'new.answer.form.%site%',
+                            array('%site%'=>$customForm->getDisplayName())
+                        );
 
-                    $this->assignation['mailContact'] = SettingsBag::get('email_sender');
+                        $this->assignation['mailContact'] = SettingsBag::get('email_sender');
 
-                    $this->sendAnswer($this->assignation, $customForm->getEmail());
+                        $this->sendAnswer($this->assignation, $customForm->getEmail());
 
-                    /*
-                     * Redirect to update schema page
-                     */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'customFormSendAction',
-                            array("customFormId" => $customFormId)
-                        )
-                    );
+                        /*
+                         * Redirect to update schema page
+                         */
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate(
+                                'customFormSendAction',
+                                array("customFormId" => $customFormId)
+                            )
+                        );
 
-                } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'customFormSendAction',
-                            array("customFormId" => $customFormId)
-                        )
-                    );
+                    } catch (EntityAlreadyExistsException $e) {
+                        $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+                        $this->getService('logger')->warning($e->getMessage());
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate(
+                                'customFormSendAction',
+                                array("customFormId" => $customFormId)
+                            )
+                        );
+                    }
+                    $response->prepare($request);
+
+                    return $response->send();
                 }
-                $response->prepare($request);
 
-                return $response->send();
+                $this->assignation['form'] = $form->createView();
+
+                return new Response(
+                    $this->getTwig()->render('forms/customForm.html.twig', $this->assignation),
+                    Response::HTTP_OK,
+                    array('content-type' => 'text/html')
+                );
             }
-
-            $this->assignation['form'] = $form->createView();
-
-            return new Response(
-                $this->getTwig()->render('forms/customForm.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                array('content-type' => 'text/html')
-            );
-        } else {
-            return $this->throw404();
         }
+
+        return $this->throw404();
     }
 
     /**
