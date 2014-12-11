@@ -38,7 +38,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Console\Tools\Configuration;
 use RZ\Roadiz\Console\Tools\Fixtures;
@@ -76,174 +75,174 @@ class InstallCommand extends Command
             )
         ) {
 
-            if (SchemaCommand::updateSchema()) {
-                $text .= '<info>Schema updated…</info>'.PHP_EOL;
+            SchemaCommand::createSchema();
 
-                /*
-                 * Create backend theme
-                 */
-                if (!$this->hasDefaultBackend()) {
+            $text .= '<info>Schema created…</info>'.PHP_EOL;
 
-                    $theme = new Theme();
-                    $theme->setAvailable(true)
-                        ->setBackendTheme(true)
-                        ->setClassName("Themes\Rozier\RozierApp");
+            /*
+             * Create backend theme
+             */
+            if (!$this->hasDefaultBackend()) {
 
-                    Kernel::getService('em')->persist($theme);
-                    Kernel::getService('em')->flush();
+                $theme = new Theme();
+                $theme->setAvailable(true)
+                    ->setBackendTheme(true)
+                    ->setClassName("Themes\Rozier\RozierApp");
 
-                    $text .= '<info>Rozier back-end theme installed…</info>'.PHP_EOL;
-                } else {
-                    $text .= '<error>A back-end theme is already installed.</error>'.PHP_EOL;
+                Kernel::getService('em')->persist($theme);
+                Kernel::getService('em')->flush();
+
+                $text .= '<info>Rozier back-end theme installed…</info>'.PHP_EOL;
+            } else {
+                $text .= '<error>A back-end theme is already installed.</error>'.PHP_EOL;
+            }
+
+            /**
+             * Import default data
+             */
+            $installRoot = ROADIZ_ROOT . "/themes/Install";
+            $data = json_decode(file_get_contents($installRoot . "/config.json"), true);
+            if (isset($data["importFiles"]['roles'])) {
+                foreach ($data["importFiles"]['roles'] as $filename) {
+                    \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
+                        file_get_contents($installRoot . "/" . $filename)
+                    );
+                    $text .= '     — <info>Theme file “'.$installRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
                 }
-
-                /**
-                 * Import default data
-                 */
-                $installRoot = ROADIZ_ROOT . "/themes/Install";
-                $data = json_decode(file_get_contents($installRoot . "/config.json"), true);
-                if (isset($data["importFiles"]['roles'])) {
-                    foreach ($data["importFiles"]['roles'] as $filename) {
-                        \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
-                            file_get_contents($installRoot . "/" . $filename)
-                        );
-                        $text .= '     — <info>Theme file “'.$installRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                    }
+            }
+            if (isset($data["importFiles"]['groups'])) {
+                foreach ($data["importFiles"]['groups'] as $filename) {
+                    \RZ\Roadiz\CMS\Importers\GroupsImporter::importJsonFile(
+                        file_get_contents($installRoot . "/" . $filename)
+                    );
+                    $text .= '     — <info>Theme file “'.$installRoot . "/" .$filename.'” has been imported..</info>'.PHP_EOL;
                 }
-                if (isset($data["importFiles"]['groups'])) {
-                    foreach ($data["importFiles"]['groups'] as $filename) {
-                        \RZ\Roadiz\CMS\Importers\GroupsImporter::importJsonFile(
-                            file_get_contents($installRoot . "/" . $filename)
-                        );
-                        $text .= '     — <info>Theme file “'.$installRoot . "/" .$filename.'” has been imported..</info>'.PHP_EOL;
-                    }
+            }
+            if (isset($data["importFiles"]['settings'])) {
+                foreach ($data["importFiles"]['settings'] as $filename) {
+                    \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
+                        file_get_contents($installRoot . "/" . $filename)
+                    );
+                    $text .= '     — <info>Theme files “'.$installRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
                 }
-                if (isset($data["importFiles"]['settings'])) {
-                    foreach ($data["importFiles"]['settings'] as $filename) {
-                        \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
-                            file_get_contents($installRoot . "/" . $filename)
-                        );
-                        $text .= '     — <info>Theme files “'.$installRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                    }
-                }
+            }
 
-                /*
-                 * Create default translation
-                 */
-                if (!$this->hasDefaultTranslation()) {
+            /*
+             * Create default translation
+             */
+            if (!$this->hasDefaultTranslation()) {
 
-                    $defaultTrans = new Translation();
-                    $defaultTrans
-                        ->setDefaultTranslation(true)
-                        ->setLocale("en")
-                        ->setName("Default translation");
+                $defaultTrans = new Translation();
+                $defaultTrans
+                    ->setDefaultTranslation(true)
+                    ->setLocale("en")
+                    ->setName("Default translation");
 
-                    Kernel::getService('em')->persist($defaultTrans);
-                    Kernel::getService('em')->flush();
+                Kernel::getService('em')->persist($defaultTrans);
+                Kernel::getService('em')->flush();
 
-                    $text .= '<info>Default translation installed…</info>'.PHP_EOL;
-                } else {
-                    $text .= '<error>A default translation is already installed.</error>'.PHP_EOL;
-                }
+                $text .= '<info>Default translation installed…</info>'.PHP_EOL;
+            } else {
+                $text .= '<error>A default translation is already installed.</error>'.PHP_EOL;
+            }
 
-                /*
-                 * Install theme
-                 */
-                if ($input->getOption('with-theme')) {
+            /*
+             * Install theme
+             */
+            if ($input->getOption('with-theme')) {
 
-                    $themeFile = $input->getOption('with-theme');
-                    $themeFile = str_replace('\\', '/', $themeFile);
-                    $themeFile = str_replace('Themes', 'themes', $themeFile);
-                    $themeFile .= ".php";
+                $themeFile = $input->getOption('with-theme');
+                $themeFile = str_replace('\\', '/', $themeFile);
+                $themeFile = str_replace('Themes', 'themes', $themeFile);
+                $themeFile .= ".php";
 
-                    if (file_exists($themeFile)) {
+                if (file_exists($themeFile)) {
 
-                        $fixtures = new Fixtures();
-                        $fixtures->installFrontendTheme($input->getOption('with-theme'));
-                        $text .= '<info>Theme class “'.$themeFile.'” has been installed…</info>'.PHP_EOL;
+                    $fixtures = new Fixtures();
+                    $fixtures->installFrontendTheme($input->getOption('with-theme'));
+                    $text .= '<info>Theme class “'.$themeFile.'” has been installed…</info>'.PHP_EOL;
 
-                        // install fixtures
-                        $array = explode('\\', $input->getOption('with-theme'));
-                        $themeRoot = ROADIZ_ROOT . "/themes/". $array[count($array) - 2];
-                        $data = json_decode(file_get_contents($themeRoot . "/config.json"), true);
+                    // install fixtures
+                    $array = explode('\\', $input->getOption('with-theme'));
+                    $themeRoot = ROADIZ_ROOT . "/themes/". $array[count($array) - 2];
+                    $data = json_decode(file_get_contents($themeRoot . "/config.json"), true);
 
-                        if (false !== $data && isset($data["importFiles"])) {
+                    if (false !== $data && isset($data["importFiles"])) {
 
-                            if (isset($data["importFiles"]['roles'])) {
-                                foreach ($data["importFiles"]['roles'] as $filename) {
-                                    \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
-                                        file_get_contents($themeRoot . "/" . $filename)
-                                    );
-                                    $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                                }
+                        if (isset($data["importFiles"]['roles'])) {
+                            foreach ($data["importFiles"]['roles'] as $filename) {
+                                \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
+                                    file_get_contents($themeRoot . "/" . $filename)
+                                );
+                                $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
                             }
-                            if (isset($data["importFiles"]['groups'])) {
-                                foreach ($data["importFiles"]['groups'] as $filename) {
-                                    \RZ\Roadiz\CMS\Importers\GroupsImporter::importJsonFile(
-                                        file_get_contents($themeRoot . "/" . $filename)
-                                    );
-                                    $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported..</info>'.PHP_EOL;
-                                }
+                        }
+                        if (isset($data["importFiles"]['groups'])) {
+                            foreach ($data["importFiles"]['groups'] as $filename) {
+                                \RZ\Roadiz\CMS\Importers\GroupsImporter::importJsonFile(
+                                    file_get_contents($themeRoot . "/" . $filename)
+                                );
+                                $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported..</info>'.PHP_EOL;
                             }
-                            if (isset($data["importFiles"]['settings'])) {
-                                foreach ($data["importFiles"]['settings'] as $filename) {
-                                    \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
-                                        file_get_contents($themeRoot . "/" . $filename)
-                                    );
-                                    $text .= '     — <info>Theme files “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                                }
+                        }
+                        if (isset($data["importFiles"]['settings'])) {
+                            foreach ($data["importFiles"]['settings'] as $filename) {
+                                \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
+                                    file_get_contents($themeRoot . "/" . $filename)
+                                );
+                                $text .= '     — <info>Theme files “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
                             }
-                            if (isset($data["importFiles"]['nodetypes'])) {
-                                foreach ($data["importFiles"]['nodetypes'] as $filename) {
-                                    \RZ\Roadiz\CMS\Importers\NodeTypesImporter::importJsonFile(
-                                        file_get_contents($themeRoot . "/" . $filename)
-                                    );
-                                    $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                                }
-
-                                static::rebuildEntityManager();
-                                SchemaCommand::updateSchema();
-                            }
-                            if (isset($data["importFiles"]['tags'])) {
-                                foreach ($data["importFiles"]['tags'] as $filename) {
-                                    \RZ\Roadiz\CMS\Importers\TagsImporter::importJsonFile(
-                                        file_get_contents($themeRoot . "/" . $filename)
-                                    );
-                                    $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                                }
-                            }
-                            if (isset($data["importFiles"]['nodes'])) {
-
-                                foreach ($data["importFiles"]['nodes'] as $filename) {
-                                    \RZ\Roadiz\CMS\Importers\NodesImporter::importJsonFile(
-                                        file_get_contents($themeRoot . "/" . $filename)
-                                    );
-                                    $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                                }
+                        }
+                        if (isset($data["importFiles"]['nodetypes'])) {
+                            foreach ($data["importFiles"]['nodetypes'] as $filename) {
+                                \RZ\Roadiz\CMS\Importers\NodeTypesImporter::importJsonFile(
+                                    file_get_contents($themeRoot . "/" . $filename)
+                                );
+                                $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
                             }
 
+                            static::rebuildEntityManager();
                             SchemaCommand::updateSchema();
-                        } else {
-                            $text .= '<info>Theme class “'.$themeFile.'” has no data to import.</info>'.PHP_EOL;
+                        }
+                        if (isset($data["importFiles"]['tags'])) {
+                            foreach ($data["importFiles"]['tags'] as $filename) {
+                                \RZ\Roadiz\CMS\Importers\TagsImporter::importJsonFile(
+                                    file_get_contents($themeRoot . "/" . $filename)
+                                );
+                                $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
+                            }
+                        }
+                        if (isset($data["importFiles"]['nodes'])) {
+
+                            foreach ($data["importFiles"]['nodes'] as $filename) {
+                                \RZ\Roadiz\CMS\Importers\NodesImporter::importJsonFile(
+                                    file_get_contents($themeRoot . "/" . $filename)
+                                );
+                                $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
+                            }
                         }
 
+                        SchemaCommand::updateSchema();
                     } else {
-                        $text .= '<error>Theme class “'.$themeFile.'” does not exist.</error>'.PHP_EOL;
+                        $text .= '<info>Theme class “'.$themeFile.'” has no data to import.</info>'.PHP_EOL;
                     }
+
+                } else {
+                    $text .= '<error>Theme class “'.$themeFile.'” does not exist.</error>'.PHP_EOL;
                 }
-
-                $configuration = new Configuration();
-                $configuration->setInstall(false);
-                $configuration->writeConfiguration();
-
-                // Clear result cache
-                $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
-                if ($cacheDriver !== null) {
-                    $cacheDriver->deleteAll();
-                }
-
-                $text .= 'Install mode has been changed to false.'.PHP_EOL;
             }
+
+            $configuration = new Configuration();
+            $configuration->setInstall(false);
+            $configuration->writeConfiguration();
+
+            // Clear result cache
+            $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+            if ($cacheDriver !== null) {
+                $cacheDriver->deleteAll();
+            }
+
+            $text .= 'Install mode has been changed to false.'.PHP_EOL;
         }
 
         $output->writeln($text);
