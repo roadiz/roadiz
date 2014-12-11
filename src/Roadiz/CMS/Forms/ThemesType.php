@@ -69,7 +69,7 @@ class ThemesType extends AbstractType
              * Parsed file is not or does not contain any PHP Class
              * Bad Theme !
              */
-            $choices[$classname] = $data['themeDir']."App".": ".$data['name'];
+            $choices[$classname] = $data['name'];
 
         }
         foreach ($themes as $theme) {

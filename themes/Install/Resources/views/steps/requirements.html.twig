@@ -5,7 +5,7 @@
     <article id="content-requirements" class="content">
 
         <div class="content-title-cont">
-            <h1 class="content-title">{% trans %}requirements.title{% endtrans %}</h1>   
+            <h1 class="content-title">{% trans %}requirements.title{% endtrans %}</h1>
         </div>
 
         <div class="content-progress">
@@ -20,7 +20,7 @@
         </div>
 
         <div class="content-text-cont">
-            
+
             <div class="content-text">
 
                 <div class="content-intro content-intro-only">
@@ -49,7 +49,7 @@
                                     <div class="uk-badge-folder uk-badge uk-badge-notification uk-badge-notification-infos">
                                         <i class="uk-icon-rz-infos"></i>
                                          <div class="uk-badge-folder-content uk-badge {% if require.status %}uk-badge-success{% else %}uk-badge-danger{% endif %}">{{ require.folder }}</div>
-                                    </div>                                   
+                                    </div>
                                 {% endif %}
                             </td>
                             <td class="status">
@@ -72,16 +72,16 @@
             </div>
 
             {% spaceless %}
-            <div class="content-buttons">          
+            <div class="content-buttons">
                 <a class="content-button uk-button" href="{{ path('installHomePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.welcome{% endtrans %}</a>
                 {% if totalSuccess %}
-                <a class="content-button uk-button uk-button-primary" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+                <a class="content-button uk-button uk-button-primary" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right icon-right"></i></a>
                 {% endif %}
             </div>
-            {% endspaceless %}            
+            {% endspaceless %}
 
         </div>
-        
+
     </article>
 
 {% endblock %}
