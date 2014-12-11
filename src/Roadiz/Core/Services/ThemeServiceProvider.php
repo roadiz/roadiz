@@ -53,7 +53,7 @@ class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
         $container['backendTheme'] = function ($c) {
 
             if (isset($c['config']['install']) &&
-                true === $c['config']['install']) {
+                false === $c['config']['install']) {
 
                 return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
                                  ->findAvailableBackend();
@@ -65,7 +65,7 @@ class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
         $container['frontendThemes'] = function ($c) {
 
             if (isset($c['config']['install']) &&
-                true === $c['config']['install']) {
+                false === $c['config']['install']) {
                 $themes = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
                                   ->findAvailableFrontends();
 
