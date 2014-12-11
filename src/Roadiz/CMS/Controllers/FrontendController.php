@@ -97,8 +97,6 @@ class FrontendController extends AppController
      */
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
     {
-        $translation = null;
-
         /*
          * If you use a static route for Home page
          * we need to grab manually language.
@@ -167,6 +165,10 @@ class FrontendController extends AppController
                                 'locale'=>$_locale
                             )
                         );
+        } else {
+            $translation = $this->getService('em')
+                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                        ->findDefault();
         }
 
         /*
@@ -224,10 +226,10 @@ class FrontendController extends AppController
     /**
      * Handle node based routing.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
-     * @throws Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
      */
     protected function handle(Request $request)
     {
@@ -244,6 +246,7 @@ class FrontendController extends AppController
                 /*
                  * Not allowed to see unpublished nodes
                  */
+
                 return $this->throw404();
             }
 

@@ -48,7 +48,6 @@ class GroupsImporter implements ImporterInterface
      */
     public static function importJsonFile($serializedData)
     {
-        $return = false;
         $groups = GroupCollectionJsonSerializer::deserialize($serializedData);
         foreach ($groups as $group) {
             $existingGroup = Kernel::getService('em')
@@ -57,9 +56,9 @@ class GroupsImporter implements ImporterInterface
 
             if (null === $existingGroup) {
                 foreach ($group->getRolesEntities() as $role) {
-                  /*
-                   * then persist each role
-                   */
+                   /*
+                    * then persist each role
+                    */
                     $role = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Role')->findOneByName($role->getName());
                 }
 
@@ -72,7 +71,7 @@ class GroupsImporter implements ImporterInterface
 
             Kernel::getService('em')->flush();
         }
-        $return = true;
-        return $return;
+
+        return true;
     }
 }

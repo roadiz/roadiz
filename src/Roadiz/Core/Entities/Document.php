@@ -409,7 +409,6 @@ class Document extends AbstractDateTimed
      */
     public function __construct()
     {
-        $this->tags = new ArrayCollection();
         $this->folders = new ArrayCollection();
         $this->documentTranslations = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();

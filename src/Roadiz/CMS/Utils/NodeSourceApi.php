@@ -45,7 +45,6 @@ class NodeSourceApi extends AbstractApi
 
     private function getRepositoryName($criteria)
     {
-        $rep = null;
         if (isset($criteria['node.nodeType'])) {
             $rep = NodeType::getGeneratedEntitiesNamespace().
                    "\\".

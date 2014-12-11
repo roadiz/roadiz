@@ -48,7 +48,7 @@ class EntryPointsController extends AppController
 {
     const CONTACT_FORM_TOKEN_INTENTION = 'contact_form';
 
-    private static $mandatoryContactFields = array(
+    protected static $mandatoryContactFields = array(
         'email',
         'message'
     );
@@ -59,7 +59,6 @@ class EntryPointsController extends AppController
     public function __init()
     {
         $this->getTwigLoader()
-             ->initializeTranslator()
              ->prepareBaseAssignation();
     }
 

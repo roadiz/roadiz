@@ -222,10 +222,8 @@ class UsersCommand extends Command
         InputInterface $input,
         OutputInterface $output
     ) {
-        $text = "";
         $user = new User();
         $user->setUsername($username);
-        $email = false;
 
         do {
             $email = $this->dialog->ask(

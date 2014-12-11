@@ -159,7 +159,7 @@ class CustomFormAnswer extends AbstractEntity
      */
     public function __construct()
     {
-        $this->children = new ArrayCollection();
+        $this->answerFields = new ArrayCollection();
     }
     /**
      * @return string
@@ -167,20 +167,6 @@ class CustomFormAnswer extends AbstractEntity
     public function getOneLineSummary()
     {
         return $this->getId()." — ".$this->getIp().
-            " — Sumitted : ".($this->getSummittedTime()).PHP_EOL;
-    }
-    /**
-     * @return string
-     */
-    public function getOneLineSourceSummary()
-    {
-        $text = "Source ".$this->getDefaultCustomFormAnswerSource()->getId().PHP_EOL;
-
-        foreach ($this->getCustomFormAnswerType()->getFields() as $key => $field) {
-            $getterName = 'get'.ucwords($field->getName());
-            $text .= '['.$field->getLabel().']: '.$this->getDefaultCustomFormAnswerSource()->$getterName().PHP_EOL;
-        }
-
-        return $text;
+            " — Sumitted : ".($this->getSubmittedAt()).PHP_EOL;
     }
 }

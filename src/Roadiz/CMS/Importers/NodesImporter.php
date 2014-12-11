@@ -62,7 +62,7 @@ class NodesImporter implements ImporterInterface
         return true;
     }
 
-    private static function browseTree($node)
+    protected static function browseTree($node)
     {
         $childObj = array();
         $sourceObj = array();

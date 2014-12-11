@@ -138,6 +138,7 @@ class AssetsController extends AppController
                         break;
                     default:
                         $fontpath = "";
+                        $mime = "text/html";
                         break;
                 }
 

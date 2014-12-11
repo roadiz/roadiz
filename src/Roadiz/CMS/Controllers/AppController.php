@@ -438,7 +438,7 @@ class AppController implements ViewableInterface
      *
      * @param string $message Additionnal message to describe 404 error.
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function throw404($message = "")
     {

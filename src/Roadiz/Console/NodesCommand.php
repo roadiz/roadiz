@@ -174,7 +174,6 @@ class NodesCommand extends Command
         NodeType $type,
         Translation $translation
     ) {
-        $text = "";
         $nodeName = $input->getArgument('node-name');
         $node = new Node($type);
         $node->setNodeName($nodeName);
