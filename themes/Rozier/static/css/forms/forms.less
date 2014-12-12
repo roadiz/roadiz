@@ -139,29 +139,33 @@
         position: relative;
         display: inline-block;
         width: auto; height:36px;
-        padding-right:20px;
+        margin: 0;
+        padding: 0 20px 0 0;
         font-size:12px;
-        // font-weight: bold;
         color: @grey-form-text;
         background-color: white;
         border: 1px solid @grey-form-border;
         .border-radius(0px);
-        overflow: hidden;
+        overflow: hidden;   
 
         &:after{
             position: absolute;
             top:0; right:0; bottom:0;
+            height:36px;
             content: "\f0d7";
-            padding:10px 15px;
-            font:normal 12px/16px 'FontAwesome';
+            padding:0 15px;
+            background: white;
+            font:normal 12px/36px 'FontAwesome';
             pointer-events: none;
         }
 
         select{
+
             width: 110%; max-width: 110%;
             height:36px;
             padding:8px 15px;
-            background-color: white;
+            background-color: transparent;
+            background-image: none;
             font-family: @main-font;
             border: none;
             box-shadow: none;
@@ -172,7 +176,6 @@
             appearance:none;
 
             &:focus, &:active{
-                // background-color: @grey-verylight;
                 outline:none;
             }
         }
