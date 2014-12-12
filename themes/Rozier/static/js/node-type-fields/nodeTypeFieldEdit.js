@@ -8,6 +8,7 @@ NodeTypeFieldEdit = function(){
     // Selectors
     _this.$btn = $('.node-type-field-edit-button');
     _this.$formFieldRow = $('.node-type-field-row');
+    _this.$formFieldCol = $('.node-type-field-col');
 
     // Methods
     _this.init();
@@ -18,8 +19,8 @@ NodeTypeFieldEdit = function(){
 NodeTypeFieldEdit.prototype.$btn = null;
 NodeTypeFieldEdit.prototype.indexOpen = null;
 NodeTypeFieldEdit.prototype.openFormDelay = 0;
-NodeTypeFieldEdit.prototype.$formRow = null;
-NodeTypeFieldEdit.prototype.$formRow = null;
+NodeTypeFieldEdit.prototype.$formFieldRow = null;
+NodeTypeFieldEdit.prototype.$formFieldCol = null;
 NodeTypeFieldEdit.prototype.$formCont = null;
 NodeTypeFieldEdit.prototype.$form = null;
 NodeTypeFieldEdit.prototype.$formIcon = null;
@@ -102,6 +103,9 @@ NodeTypeFieldEdit.prototype.applyContent = function(target, data, url){
 
     $(target).parent().parent().after(dataWrapped);
 
+    // Remove class to pause sortable actions
+    _this.$formFieldCol.removeClass('node-type-field-col');
+
     setTimeout(function(){
         _this.$formCont = $('.node-type-field-edit-form-cont');
         _this.formContHeight = _this.$formCont.actual('height');
@@ -112,8 +116,6 @@ NodeTypeFieldEdit.prototype.applyContent = function(target, data, url){
         _this.$form.attr('action', url);
         _this.$formIcon[0].className = 'uk-icon-chevron-down';
 
-        // _this.$form[0].style.height = '0px';
-        // _this.$form[0].style.display = 'table-row';
         _this.$formCont[0].style.height = '0px';
         _this.$formCont[0].style.display = 'block';
         TweenLite.to(_this.$form, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
@@ -135,6 +137,7 @@ NodeTypeFieldEdit.prototype.closeForm = function(){
     TweenLite.to(_this.$formCont, 0.4, {height:0, ease:Expo.easeOut, onComplete:function(){
         _this.$formRow.remove();
         _this.indexOpen = null;
+        _this.$formFieldCol.addClass('node-type-field-col');
     }});
 
 };

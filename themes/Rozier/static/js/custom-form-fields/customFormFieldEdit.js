@@ -8,6 +8,7 @@ CustomFormFieldEdit = function(){
     // Selectors
     _this.$btn = $('.custom-form-field-edit-button');
     _this.$formFieldRow = $('.custom-form-field-row');
+    _this.$formFieldCol = $('.custom-form-field-col');
 
     // Methods
     _this.init();
@@ -19,7 +20,7 @@ CustomFormFieldEdit.prototype.$btn = null;
 CustomFormFieldEdit.prototype.indexOpen = null;
 CustomFormFieldEdit.prototype.openFormDelay = 0;
 CustomFormFieldEdit.prototype.$formFieldRow = null;
-CustomFormFieldEdit.prototype.$formRow = null;
+CustomFormFieldEdit.prototype.$formFieldCol = null;
 CustomFormFieldEdit.prototype.$formCont = null;
 CustomFormFieldEdit.prototype.$form = null;
 CustomFormFieldEdit.prototype.$formIcon = null;
@@ -102,6 +103,9 @@ CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
 
     $(target).parent().parent().after(dataWrapped);
 
+    // Remove class to pause sortable actions
+    _this.$formFieldCol.removeClass('custom-form-field-col');
+
     setTimeout(function(){
         _this.$formCont = $('.custom-form-field-edit-form-cont');
         _this.formContHeight = _this.$formCont.actual('height');
@@ -133,6 +137,7 @@ CustomFormFieldEdit.prototype.closeForm = function(){
     TweenLite.to(_this.$formCont, 0.4, {height:0, ease:Expo.easeOut, onComplete:function(){
         _this.$formRow.remove();
         _this.indexOpen = null;
+        _this.$formFieldCol.addClass('custom-form-field-col');
     }});
 
 };
