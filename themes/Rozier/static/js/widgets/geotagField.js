@@ -44,7 +44,10 @@ GeotagField.prototype.bindFields = function() {
 GeotagField.prototype.bindSingleField = function(element) {
     var _this = this;
 
-    var $input = $(element);
+    var $input = $(element),
+        $label = $input.parent().find('.uk-form-label'),
+        labelText = $label[0].innerHTML;
+
     var jsonCode = {'lat':45.769785, 'lng':4.833967, 'zoom':14}; // default location
     var fieldId = 'geotag-canvas-'+GeotagField.uniqid();
     var fieldAddressId = fieldId+'-address';
@@ -60,11 +63,26 @@ GeotagField.prototype.bindSingleField = function(element) {
      * prepare DOM
      */
     $input.hide();
+    $label.hide();
     $input.attr('data-geotag-canvas', fieldId);
     $input.after('<div class="rz-geotag-canvas" id="'+fieldId+'" style="width: 100%; height: 400px;"></div>');
+
     // Geocode input text
-    var metaDOM = '<nav class="rz-geotag-meta"><input class="rz-geotag-address" id="'+fieldAddressId+'" type="text" value="" />';
-    metaDOM += '<a id="'+resetButtonId+'" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="'+Rozier.messages.geotag.resetMarker+'" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a></nav>';
+    var metaDOM = [
+        '<nav class="geotag-widget-nav uk-navbar rz-geotag-meta">',
+            '<ul class="uk-navbar-nav">',
+                '<li class="uk-navbar-brand"><i class="uk-icon-map-marker"></i><label class="geotag-label">'+labelText+'</li>',
+            '</ul>',
+            '<div class="uk-navbar-content uk-navbar-flip">',
+                '<div class="geotag-widget-quick-creation uk-button-group">',
+                    '<input class="rz-geotag-address" id="'+fieldAddressId+'" type="text" value="" />',
+                    '<a id="'+resetButtonId+'" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="'+Rozier.messages.geotag.resetMarker+'" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>',
+                '</div>',
+            '</div>',
+        '</nav>'
+    ].join('');
+
+
     $input.after(metaDOM);
 
     var $geocodeInput = $('#'+fieldAddressId);

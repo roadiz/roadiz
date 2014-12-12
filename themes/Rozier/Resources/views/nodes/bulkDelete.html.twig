@@ -8,6 +8,22 @@
     </header>
 
     <article class="content content-delete content-no-action-menu">
+
+        {% if referer %}
+            {% set returnPath = referer %}
+        {% else %}
+            {% set returnPath = path('nodesHomePage') %}
+        {% endif %}
+		{% form_theme form 'forms.html.twig' %}
+		<form id="nodes-bulk-delete-form" class="uk-form uk-form-stacked" action="{{ action }}" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<legend>{% trans %}are_you_sure.delete.these.nodes{% endtrans %}</legend>
+		    	<a href="{{ returnPath }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}delete.all{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+
         {% spaceless %}
         <ul class="nodes-list">
         {% for node in nodes %}
@@ -22,20 +38,6 @@
         </ul>
         {% endspaceless %}
 
-        {% if referer %}
-            {% set returnPath = referer %}
-        {% else %}
-            {% set returnPath = path('nodesHomePage') %}
-        {% endif %}
-		{% form_theme form 'forms.html.twig' %}
-		<form class="uk-form uk-form-stacked" action="{{ action }}" method="post" {{ form_enctype(form) }}>
-		    {{ form_widget(form) }}
-		    <fieldset data-uk-margin>
-		    	<legend>{% trans %}are_you_sure.delete.these.nodes{% endtrans %}</legend>
-		    	<a href="{{ returnPath }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
-		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}delete.all{% endtrans %}</button>
-	   		</fieldset>
-		</form>
 	</article>
 </section>
 {% endblock %}
