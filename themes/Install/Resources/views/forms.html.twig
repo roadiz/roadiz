@@ -73,7 +73,7 @@
     {% if errors|length > 0 -%}
     <ul class="errors">
         {%- for error in errors -%}
-        <li class="uk-alert uk-alert-danger">{{ error.message }}</li>
+        <li class="uk-alert uk-alert-danger">{{ error.message|trans }}</li>
         {%- endfor -%}
     </ul>
     {%- endif %}
