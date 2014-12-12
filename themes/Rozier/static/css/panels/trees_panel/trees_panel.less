@@ -87,41 +87,49 @@
    margin: 0;
    padding: 0;
    text-align: center;
+
     li {
         position: relative;
         display: inline-block;
+
         &:first-child a{
             border-left: 0 none;
         }
+        
         &.active a{
+            cursor: default;
+
             &:after{
-                background-color: #555555;
+                background-color: #777;
             }
         }
     }
+
     a{
         display: block;
         border-left: 1px solid #BBB;
-        padding: 0px 6px 0px 8px;
+        padding: 0px 10px;
         color: #555;
         font-size: 11px;
         .box-sizing();
-        width: 28px;
+        // width: 28px;
         text-decoration: none;
         margin: 6px 0 0;
+        outline:none;
 
         &:after{
             position: absolute;
             display: block;
             content: '';
-            bottom: -1px;
+            right:8px; bottom: -1px; left: 8px; 
             height: 2px;
-            width: 14px;
             background-color: transparent;
-            left: 8px;
+            .transition(0.4s background-color @easeOutExpo);
         }
+
         &:hover {
             color: #111;
+
             &:after{
                 background-color: #777;
             }
