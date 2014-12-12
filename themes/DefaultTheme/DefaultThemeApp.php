@@ -89,11 +89,10 @@ class DefaultThemeApp extends FrontendController
              * Common image format for pages headers
              */
             $array['headerImage'] = array(
-                'width'=>1024,
-                'crop'=>'1024x200'
+                'width'=>1600
             );
             $array['thumbnail'] = array(
-                "width"=>300,
+                "width"=>200,
                 "crop"=>"1:1",
                 "controls"=>true,
                 "embed"=>true
