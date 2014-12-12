@@ -18,7 +18,7 @@
             <a class="uk-button rz-no-ajax-link" href="{{ path('nodesExportAllPage') }}"><i class="uk-icon-rz-download"></i> {% trans %}export.all.nodes{% endtrans %}</a>
             <div class="uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
                 <button class="uk-button"><i class="uk-icon-rz-plus"></i> {% trans %}create.a.node{% endtrans %} <i class="uk-icon-caret-down"></i></button>
-                <div class="uk-dropdown uk-dropdown-small">
+                <div class="uk-dropdown uk-dropdown-flip uk-dropdown-small">
                     <ul class="uk-nav uk-nav-dropdown">
                         {% for type in nodeTypes %}
                         <li><a href="{{ path('nodesAddPage', { nodeTypeId: type.getId, translationId:translation.getId }) }}">{{ type.getDisplayName }}</a></li>

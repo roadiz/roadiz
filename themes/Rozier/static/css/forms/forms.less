@@ -54,7 +54,7 @@
     input[type="number"],
     textarea {
         font-size: 12px;
-        line-height: 15px;
+        line-height: 16px;
         font-weight: bold;
         //width: 100%; // You cannot place this for a wide selector! it will break ui-kit
         color: @grey-form-text;
@@ -146,7 +146,8 @@
         background-color: white;
         border: 1px solid @grey-form-border;
         .border-radius(0px);
-        overflow: hidden;   
+        overflow: hidden;
+        .box-sizing();
 
         &:after{
             position: absolute;
@@ -222,7 +223,10 @@
     }
 
     legend{
-        text-align: center;
+        text-align: left;
+        color: @grey-form-label;
+        font-size: 16px;
+        line-height: 22px;
 
         &:after{
             border-bottom:none;

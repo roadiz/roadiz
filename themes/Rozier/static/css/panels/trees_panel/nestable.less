@@ -60,10 +60,8 @@
 
     h4 {
         text-align: center;
-        // margin:0 0 0; // b0.8em;
         margin:0;
         height:79px;
-        // padding: 1.7em  0 1.3em;
         font-size: 19px; line-height:79px;
         font-weight: bold;
         border-bottom: 1px solid #b5b5b5;
@@ -93,7 +91,7 @@
             }
             & > li:first-child {
                 padding-top: 7px;
-                margin-top: -5px;
+                margin-top: -7px;
                 position: relative;
 
                 &:before {
@@ -168,10 +166,6 @@
             padding-left: @node-icon-offset;
         }
 
-        // &.home-node{
-        //     padding-left:6px !important;
-        // }
-
         &:hover {
             .uk-nestable-handle:after {
                 color: @nestable-handle-border-color-hover;
@@ -197,7 +191,6 @@
         .transition(color ease 0.35s);
 
         & > i {
-            // color: red;
             font-size: 12px;
             .opacity(0.5);
         }
@@ -248,7 +241,8 @@
                 font-size: 16px;
                 color: darken(@item-color, 10%);
                 vertical-align: middle;
-                top: -2px;
+                top: -1px;
+                left: 1px;
             }
             &.unpublished-node .uk-icon-rz-home:before {
                 content: @home;

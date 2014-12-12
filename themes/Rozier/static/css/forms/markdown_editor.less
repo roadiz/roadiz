@@ -36,7 +36,6 @@
         position: relative;
         background: none;
         margin-top: 8px;
-        // margin-bottom: 20px;
 
         &-nav>li {
             width: @navbar-liHW;
@@ -82,7 +81,7 @@
                     border-color: @grey-form-submit-border-hover;
                     background-color: @grey-form-submit-hover;
                     &:before {
-                        .opacity(1);
+                    .opacity(1);
                     }
                 }
             }
@@ -168,7 +167,7 @@
         padding: 10px 20px;
         font-size: 12px;
         -webkit-font-smoothing: subpixel-antialiased;
-        letter-spacing: 0.5px;
+        //letter-spacing: 0.5px;
 
         h2, h3, h4, h5, h6 {
             font-weight: bold;
@@ -182,12 +181,11 @@
     }
     &-code {
         .CodeMirror {
-            font-family: 'RezoZero Mono', monospace;
+            font-family: @roadiz-mono-font;
             font-size: 12px;
-            -webkit-font-smoothing: antialiased;
+            webkit-font-smoothing: antialiased;
             line-height: 18px;
             color: #666666;
-            letter-spacing: 0.5px;
             padding: 10px 14px;
 
             &.cm-s-default .cm-header {
@@ -196,7 +194,6 @@
         }
     }
 }
-
 
 // Separate buttons
 .uk-htmleditor-button-cont-bold, .uk-htmleditor-button-cont-back, .uk-htmleditor-button-cont-blockquote{
@@ -212,9 +209,7 @@
     font-size: 12px;
     text-align: right;
     display: none;
-    // .opacity(0);
 }
-
 
 // Fullscreen
 .uk-htmleditor-fullscreen{
@@ -229,12 +224,10 @@
     .CodeMirror {
         font-size: 14px; line-height:22px;
         padding:25px 60px 30px 30px;
-        letter-spacing: 0px;
     }
     .uk-htmleditor-preview {
         font-size: 14px; line-height:22px;
         padding:25px 60px 30px 40px;
-        letter-spacing: 0.5px;
     }
 
     .uk-htmleditor-navbar{

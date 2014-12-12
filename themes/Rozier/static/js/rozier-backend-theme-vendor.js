@@ -1541,23 +1541,23 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
                 nbsp :       'Non-breaking space'
             },
             icons:{
-                h2:          '<i class="@-icon-rz-h2"></i>',
-                h3:          '<i class="@-icon-rz-h3"></i>',
-                h4:          '<i class="@-icon-rz-h4"></i>',
-                h5:          '<i class="@-icon-rz-h5"></i>',
-                h6:          '<i class="@-icon-rz-h6"></i>',
-                fullscreen:  '<i class="@-icon-rz-fullscreen"></i>',
-                bold :       '<i class="@-icon-rz-bold"></i>',
-                italic :     '<i class="@-icon-rz-italic"></i>',
-                strike :     '<i class="@-icon-rz-strikethrough"></i>',
-                blockquote : '<i class="@-icon-rz-quote"></i>',
-                link :       '<i class="@-icon-rz-link"></i>',
-                image :      '<i class="@-icon-rz-documents"></i>',
-                listUl :     '<i class="@-icon-rz-unordered-list"></i>',
-                listOl :     '<i class="@-icon-rz-ordered-list"></i>',
-                back :       '<i class="@-icon-rz-back"></i>',
-                hr :         '<i class="@-icon-rz-hr"></i>',
-                nbsp :       '<i class="@-icon-rz-space-forced"></i>'
+                h2:          '<i class="uk-icon-rz-h2"></i>',
+                h3:          '<i class="uk-icon-rz-h3"></i>',
+                h4:          '<i class="uk-icon-rz-h4"></i>',
+                h5:          '<i class="uk-icon-rz-h5"></i>',
+                h6:          '<i class="uk-icon-rz-h6"></i>',
+                fullscreen:  '<i class="uk-icon-rz-fullscreen"></i>',
+                bold :       '<i class="uk-icon-rz-bold"></i>',
+                italic :     '<i class="uk-icon-rz-italic"></i>',
+                strike :     '<i class="uk-icon-rz-strikethrough"></i>',
+                blockquote : '<i class="uk-icon-rz-quote"></i>',
+                link :       '<i class="uk-icon-rz-link"></i>',
+                image :      '<i class="uk-icon-rz-documents"></i>',
+                listUl :     '<i class="uk-icon-rz-unordered-list"></i>',
+                listOl :     '<i class="uk-icon-rz-ordered-list"></i>',
+                back :       '<i class="uk-icon-rz-back"></i>',
+                hr :         '<i class="uk-icon-rz-hr"></i>',
+                nbsp :       '<i class="uk-icon-rz-space-forced"></i>'
             }
         },
 
@@ -1566,12 +1566,12 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
             // init code
             UI.ready(function(context) {
 
-                UI.$('textarea[data-@-htmleditor]', context).each(function() {
+                UI.$('textarea[data-uk-htmleditor]', context).each(function() {
 
                     var editor = UI.$(this), obj;
 
                     if (!editor.data('htmleditor')) {
-                        obj = UI.htmleditor(editor, UI.Utils.options(editor.attr('data-@-htmleditor')));
+                        obj = UI.htmleditor(editor, UI.Utils.options(editor.attr('data-uk-htmleditor')));
                     }
                 });
             });
@@ -1588,10 +1588,10 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
             tpl = tpl.replace(/\{:lblCodeview\}/g, this.options.lblCodeview);
 
             this.htmleditor = UI.$(tpl);
-            this.content    = this.htmleditor.find('.@-htmleditor-content');
-            this.toolbar    = this.htmleditor.find('.@-htmleditor-toolbar');
-            this.preview    = this.htmleditor.find('.@-htmleditor-preview').children().eq(0);
-            this.code       = this.htmleditor.find('.@-htmleditor-code');
+            this.content    = this.htmleditor.find('.uk-htmleditor-content');
+            this.toolbar    = this.htmleditor.find('.uk-htmleditor-toolbar');
+            this.preview    = this.htmleditor.find('.uk-htmleditor-preview').children().eq(0);
+            this.code       = this.htmleditor.find('.uk-htmleditor-code');
 
             this.element.before(this.htmleditor).appendTo(this.code);
             this.editor = this.CodeMirror.fromTextArea(this.element[0], this.options.codemirror);
@@ -1603,7 +1603,7 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
             // iframe mode?
             if (this.options.iframe) {
 
-                this.iframe = UI.$('<iframe class="@-htmleditor-iframe" frameborder="0" scrolling="auto" height="100" width="100%"></iframe>');
+                this.iframe = UI.$('<iframe class="uk-htmleditor-iframe" frameborder="0" scrolling="auto" height="100" width="100%"></iframe>');
                 this.preview.append(this.iframe);
 
                 // must open and close document object to start using it!
@@ -1640,15 +1640,15 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
 
                 }, 10));
 
-            this.htmleditor.on('click', '.@-htmleditor-button-code, .@-htmleditor-button-preview', function(e) {
+            this.htmleditor.on('click', '.uk-htmleditor-button-code, .uk-htmleditor-button-preview', function(e) {
 
                 e.preventDefault();
 
                 if ($this.htmleditor.attr('data-mode') == 'tab') {
 
-                    $this.htmleditor.find('.@-htmleditor-button-code, .@-htmleditor-button-preview').removeClass('@-active').filter(this).addClass('@-active');
+                    $this.htmleditor.find('.uk-htmleditor-button-code, .uk-htmleditor-button-preview').removeClass('uk-active').filter(this).addClass('uk-active');
 
-                    $this.activetab = UI.$(this).hasClass('@-htmleditor-button-code') ? 'code' : 'preview';
+                    $this.activetab = UI.$(this).hasClass('uk-htmleditor-button-code') ? 'code' : 'preview';
                     $this.htmleditor.attr('data-active-tab', $this.activetab);
                     $this.editor.refresh();
                 }
@@ -1687,7 +1687,7 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
                 $this.redraw();
             });
 
-            this.element.attr('data-@-check-display', 1).on('display.uk.check', function(e) {
+            this.element.attr('data-uk-check-display', 1).on('display.uk.check', function(e) {
                 if (this.htmleditor.is(":visible")) this.fit();
             }.bind(this));
 
@@ -1760,7 +1760,7 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
 
                 var title = $this.buttons[button].title ? $this.buttons[button].title : button;
 
-                bar.push('<li class="@-htmleditor-button-cont-'+button+'"><a class="@-htmleditor-button-'+button+'" data-htmleditor-button="'+button+'" title="'+title+'" data-@-tooltip="{animation:true}">'+$this.buttons[button].label+'</a></li>');
+                bar.push('<li class="uk-htmleditor-button-cont-'+button+'"><a class="uk-htmleditor-button-'+button+'" data-htmleditor-button="'+button+'" title="'+title+'" data-uk-tooltip="{animation:true}">'+$this.buttons[button].label+'</a></li>');
 
             });
 
@@ -1781,9 +1781,9 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
                     this.htmleditor.attr('data-active-tab', this.activetab);
                 }
 
-                this.htmleditor.find('.@-htmleditor-button-code, .@-htmleditor-button-preview').removeClass('@-active')
-                    .filter(this.activetab == 'code' ? '.@-htmleditor-button-code' : '.@-htmleditor-button-preview')
-                    .addClass('@-active');
+                this.htmleditor.find('.uk-htmleditor-button-code, .uk-htmleditor-button-preview').removeClass('uk-active')
+                    .filter(this.activetab == 'code' ? '.uk-htmleditor-button-code' : '.uk-htmleditor-button-preview')
+                    .addClass('uk-active');
             }
 
             this.editor.refresh();
@@ -1894,23 +1894,23 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
 
 
     UI.components.htmleditor.template = [
-        '<div class="@-htmleditor @-clearfix" data-mode="split">',
-            '<div class="@-htmleditor-navbar">',
-                '<ul class="@-htmleditor-navbar-nav @-htmleditor-toolbar"></ul>',
-                '<div class="@-htmleditor-navbar-flip">',
-                    '<ul class="@-htmleditor-navbar-nav">',
-                        '<li class="@-htmleditor-button-code"><a class="@-htmleditor-button-link-code-preview @-htmleditor-button-link-code" title="Markdown" data-@-tooltip="{animation:true}">{:lblCodeview}</a></li>',
-                        '<li class="@-htmleditor-button-preview"><a class="@-htmleditor-button-link-code-preview @-htmleditor-button-link-preview" title="Preview" data-@-tooltip="{animation:true}"><i class="@-icon-rz-visibility-mini"></i></a></li>', // {:lblPreview}
-                        '<li class="@-htmleditor-button-fullscreen"><a class="@-htmleditor-button-link-fullscreen" data-htmleditor-button="fullscreen" title="Fullscreen"  data-@-tooltip="{animation:true}"><i class="@-icon-rz-fullscreen"></i></a></li>',
+        '<div class="uk-htmleditor uk-clearfix" data-mode="split">',
+            '<div class="uk-htmleditor-navbar">',
+                '<ul class="uk-htmleditor-navbar-nav uk-htmleditor-toolbar"></ul>',
+                '<div class="uk-htmleditor-navbar-flip">',
+                    '<ul class="uk-htmleditor-navbar-nav">',
+                        '<li class="uk-htmleditor-button-code"><a class="uk-htmleditor-button-link-code-preview uk-htmleditor-button-link-code" title="Markdown" data-uk-tooltip="{animation:true}">{:lblCodeview}</a></li>',
+                        '<li class="uk-htmleditor-button-preview"><a class="uk-htmleditor-button-link-code-preview uk-htmleditor-button-link-preview" title="Preview" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility-mini"></i></a></li>', // {:lblPreview}
+                        '<li class="uk-htmleditor-button-fullscreen"><a class="uk-htmleditor-button-link-fullscreen" data-htmleditor-button="fullscreen" title="Fullscreen"  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-fullscreen"></i></a></li>',
                     '</ul>',
                     '<div class="uk-htmleditor-count">',
                         '<span class="count-current"></span> / <span class="count-limit"></span>',
                     '</div>',
                 '</div>',
             '</div>',
-            '<div class="@-htmleditor-content">',
-                '<div class="@-htmleditor-code"></div>',
-                '<div class="@-htmleditor-preview"><div></div></div>',
+            '<div class="uk-htmleditor-content">',
+                '<div class="uk-htmleditor-code"></div>',
+                '<div class="uk-htmleditor-preview"><div></div></div>',
             '</div>',
         '</div>'
     ].join('');
@@ -2036,11 +2036,11 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
             });
 
             editor.htmleditor.on('click', 'a[data-htmleditor-button="fullscreen"]', function() {
-                editor.htmleditor.toggleClass('@-htmleditor-fullscreen');
+                editor.htmleditor.toggleClass('uk-htmleditor-fullscreen');
 
                 var wrap = editor.editor.getWrapperElement();
 
-                if (editor.htmleditor.hasClass('@-htmleditor-fullscreen')) {
+                if (editor.htmleditor.hasClass('uk-htmleditor-fullscreen')) {
 
                     editor.editor.state.fullScreenRestore = {scrollTop: window.pageYOffset, scrollLeft: window.pageXOffset, width: wrap.style.width, height: wrap.style.height};
                     wrap.style.width  = '';
@@ -2092,10 +2092,49 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
             addAction('h4', '####$1');
             addAction('h5', '#####$1');
             addAction('h6', '######$1');
+            
+            // Custom action for back, nbsp & hr
+            editor.on('action.back', function() {
 
-            addAction('back', '$1   \n');
-            addAction('hr', '$1 \n\n---\n\n');
-            addAction('nbsp', '$1 ');
+                if (editor.getCursorMode() == 'markdown') {
+
+                    var cm   = editor.editor,
+                        pos  = cm.getDoc().getCursor(true),
+                        posEnd = cm.getDoc().getCursor(false),
+                        text = cm.getRange({ line: pos.line, ch: pos.ch }, { line: posEnd.line, ch: posEnd.ch });
+
+                    cm.replaceRange(text+'   \n', { line: pos.line, ch: pos.ch }, { line: posEnd.line, ch: posEnd.ch });
+                    cm.focus();
+                }
+            });
+
+            editor.on('action.nbsp', function() {
+
+                if (editor.getCursorMode() == 'markdown') {
+
+                    var cm   = editor.editor,
+                        pos  = cm.getDoc().getCursor(true),
+                        posEnd = cm.getDoc().getCursor(false),
+                        text = cm.getRange({ line: pos.line, ch: pos.ch }, { line: posEnd.line, ch: posEnd.ch });
+
+                    cm.replaceRange(text+' ', { line: pos.line, ch: pos.ch }, { line: posEnd.line, ch: posEnd.ch });
+                    cm.focus();
+                }
+            });
+
+            editor.on('action.hr', function() {
+
+                if (editor.getCursorMode() == 'markdown') {
+
+                    var cm   = editor.editor,
+                        pos  = cm.getDoc().getCursor(true),
+                        posEnd = cm.getDoc().getCursor(false),
+                        text = cm.getRange({ line: pos.line, ch: pos.ch }, { line: posEnd.line, ch: posEnd.ch });
+
+                    cm.replaceRange(text+'   \n\n---\n\n', { line: pos.line, ch: pos.ch }, { line: posEnd.line, ch: posEnd.ch });
+                    cm.focus();
+                }
+            });
 
             addAction('bold', '**$1**');
             addAction('italic', '*$1*');
@@ -2171,7 +2210,7 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
                 },
                 disableMarkdown: function() {
                     this.editor.setOption('mode', 'htmlmixed');
-                    this.htmleditor.find('.@-htmleditor-button-code a').html(this.options.lblCodeview);
+                    this.htmleditor.find('.uk-htmleditor-button-code a').html(this.options.lblCodeview);
                     this.render();
                 }
 
@@ -2186,11 +2225,12 @@ var e={x:window.scrollX,y:window.scrollY},n=(i.$win,i.$doc),o=i.$html,s={show:fu
             function enableMarkdown() {
                 editor.editor.setOption('mode', 'gfm');
 
-                editor.htmleditor.find('.@-htmleditor-button-code a').html('<i class="@-icon-rz-visibility-mini"></i>');
+                editor.htmleditor.find('.uk-htmleditor-button-code a').html('<i class="uk-icon-rz-visibility-mini"></i>');
             }
 
             function addAction(name, replace, mode) {
                 editor.on('action.'+name, function() {
+
                     if (editor.getCursorMode() == 'markdown') {
                         editor[mode == 'replaceLine' ? 'replaceLine' : 'replaceSelection'](replace);
                     }
