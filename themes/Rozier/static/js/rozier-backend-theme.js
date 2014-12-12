@@ -4186,7 +4186,9 @@ Rozier.onDocumentReady = function(event) {
 		$(this).val("");
 		setTimeout(function(){ Rozier.resize(); }, 500);
 	});
+
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
+	$("#nodes-sources-search-form").on('submit', Rozier.onSubmitSearchNodesSources);
 
 	// Minify trees panel toggle button
 	Rozier.$minifyTreePanelButton.on('click', Rozier.toggleTreesPanel);
@@ -4484,6 +4486,17 @@ Rozier.onSearchNodesSources = function (event) {
 			});
 		}, 300);
 	}
+};
+
+
+/**
+ * On submit search nodes sources
+ * @return {[type]} [description]
+ */
+Rozier.onSubmitSearchNodesSources = function(e){
+	var _this = this;
+
+	return false;
 };
 
 
