@@ -362,6 +362,10 @@
                 <source>check.import.files</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="password.must_match">
+                <source>password.must_match</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

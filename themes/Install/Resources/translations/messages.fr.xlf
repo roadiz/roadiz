@@ -362,6 +362,10 @@
                 <source>check.import.files</source>
                 <target state="translated">Fichiers à importer</target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="password.must_match" approved="yes">
+                <source>password.must_match</source>
+                <target state="translated">Les mots de passe doivent correspondre</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
