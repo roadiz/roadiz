@@ -29,6 +29,15 @@
 
         <!-- Add your site or application content here -->
         <div id="main-content">{% block content %}{% endblock %}</div>
+        <div id="my-id" class="uk-offcanvas">
+             <div class="uk-offcanvas-bar">
+                <ul class="uk-nav uk-nav-offcanvas" data-uk-nav>...</ul>
+            </div>
+        </div>
+
+        {% block footer %}
+        <footer></footer>
+        {% endblock %}
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
