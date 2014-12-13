@@ -49,7 +49,7 @@ class NodeApi extends AbstractApi
         $offset = null
     ) {
         if (empty($criteria['status'])) {
-            $criteria['status'] = array('==', Node::PUBLISHED);
+            $criteria['status'] = array('<=', Node::PUBLISHED);
         }
 
         return $this->container['em']
@@ -67,7 +67,7 @@ class NodeApi extends AbstractApi
     public function countBy(array $criteria)
     {
         if (empty($criteria['status'])) {
-            $criteria['status'] = array('==', Node::PUBLISHED);
+            $criteria['status'] = array('<=', Node::PUBLISHED);
         }
 
         return $this->container['em']
@@ -82,7 +82,7 @@ class NodeApi extends AbstractApi
     public function getOneBy(array $criteria, array $order = null)
     {
         if (empty($criteria['status'])) {
-            $criteria['status'] = array('==', Node::PUBLISHED);
+            $criteria['status'] = array('<=', Node::PUBLISHED);
         }
 
         return $this->container['em']

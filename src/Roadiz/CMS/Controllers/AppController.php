@@ -66,7 +66,7 @@ class AppController implements ViewableInterface
     const FONT_TOKEN_INTENTION = 'font_request';
 
 
-    private $kernel = null;
+    protected $kernel = null;
     /**
      * Inject current Kernel into running controller.
      *
