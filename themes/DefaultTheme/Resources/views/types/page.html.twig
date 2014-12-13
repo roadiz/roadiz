@@ -4,7 +4,7 @@
 	{% if nodeSource.headerImage|length > 0 %}
 	{% set headerImage = nodeSource.headerImage[0] %}
 	<header>
-		<figure></figure>
+		<figure style="background-image:url({{ headerImage.viewer.documentUrlByArray(themeServices.imageFormats.headerImage) }})"></figure>
 	</header>
 	{% else %}
 	{{ parent() }}
