@@ -62,8 +62,8 @@ class ContactController extends DefaultThemeApp
             $request,
             true,
             null,
-            "ambroise.maupate@gmail.com",
-            "Sujet d’email personalisé"
+            null,
+            null
         );
         $formBuilder->add('email', 'email', array(
                         'label'=>$this->getTranslator()->trans('your.email')
