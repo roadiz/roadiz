@@ -117,6 +117,8 @@ class DefaultThemeApp extends FrontendController
                                           ->findHomeWithTranslation($translation);
 
         $this->assignation['themeServices'] = $this->themeContainer;
+        // Get session messages
+        $this->assignation['session']['messages'] = $this->getService('session')->getFlashBag()->all();
     }
 
     /**

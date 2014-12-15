@@ -31,6 +31,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -217,7 +218,30 @@ class EntryPointsController extends AppController
                 'value' => $request->getClientIp()
             );
 
-            $this->sendContactForm($assignation, $receiver);
+            /*
+             * Custom receiver
+             */
+            if (!empty($request->get('form')['_emailReceiver'])) {
+
+                $email = StringHandler::decodeWithSecret($request->get('form')['_emailReceiver'], $this->getService('config')['security']['secret']);
+                if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $receiver = $email;
+                }
+            }
+
+            /*
+             * Custom subject
+             */
+            if (!empty($request->get('form')['_emailSubject'])) {
+                $subject = StringHandler::decodeWithSecret($request->get('form')['_emailSubject'], $this->getService('config')['security']['secret']);
+            } else {
+                $subject = null;
+            }
+
+            /*
+             * Send contact form email
+             */
+            $this->sendContactForm($assignation, $receiver, $subject);
 
             $responseArray['message'] = $this->getTranslator()->trans(
                 'form.successfully.sent'
@@ -246,7 +270,6 @@ class EntryPointsController extends AppController
                 array('content-type' => 'application/javascript')
             );
         }
-
     }
 
     /**
@@ -284,6 +307,13 @@ class EntryPointsController extends AppController
      *
      * </pre>
      *
+     * Add session messages to your assignations
+     *
+     * <pre>
+     * // Get session messages
+     * $this->assignation['session']['messages'] = $this->getService('session')->getFlashBag()->all();
+     * </pre>
+     *
      * Then in your contact page Twig template
      *
      * <pre>
@@ -309,13 +339,21 @@ class EntryPointsController extends AppController
      * {{ form(contactForm) }}
      * </pre>
      *
-     * @param Symfony\Component\HttpFoundation\Request $request Contact page request
-     * @param boolean                                  $redirect Redirect to contact page after sending?
+     * @param Symfony\Component\HttpFoundation\Request $request             Contact page request
+     * @param boolean                                  $redirect            Redirect to contact page after sending?
+     * @param string                                   $customRedirectUrl   Redirect to a custom url
+     * @param string                                   $customEmailReceiver Send contact form to a custom email (or emails)
+     * @param string                                   $customEmailSubject  Customize email subject
      *
      * @return Symfony\Component\Form\FormBuilder
      */
-    public static function getContactFormBuilder(Request $request, $redirect = true)
-    {
+    public static function getContactFormBuilder(
+        Request $request,
+        $redirect = true,
+        $customRedirectUrl = null,
+        $customEmailReceiver = null,
+        $customEmailSubject = null
+    ) {
         $action = Kernel::getService('urlGenerator')
                         ->generate('contactFormLocaleAction', array(
                             '_locale' => $request->getLocale()
@@ -337,8 +375,27 @@ class EntryPointsController extends AppController
             ));
 
         if (true === $redirect) {
-            $builder->add('_redirect', 'hidden', array(
-                'data' => strip_tags($request->getURI())
+
+            if (null !== $customRedirectUrl) {
+                $builder->add('_redirect', 'hidden', array(
+                    'data' => strip_tags($customRedirectUrl)
+                ));
+            } else {
+                $builder->add('_redirect', 'hidden', array(
+                    'data' => strip_tags($request->getURI())
+                ));
+            }
+        }
+
+        if (null !== $customEmailReceiver) {
+            $builder->add('_emailReceiver', 'hidden', array(
+                'data' => StringHandler::encodeWithSecret($customEmailReceiver, Kernel::getService('config')['security']['secret'])
+            ));
+        }
+
+        if (null !== $customEmailSubject) {
+            $builder->add('_emailSubject', 'hidden', array(
+                'data' => StringHandler::encodeWithSecret($customEmailSubject, Kernel::getService('config')['security']['secret'])
             ));
         }
 
@@ -348,12 +405,13 @@ class EntryPointsController extends AppController
     /**
      * Send a contact form by Email.
      *
-     * @param  array $assignation
-     * @param  string $receiver
+     * @param array $assignation
+     * @param string $receiver
+     * @param string|null $subject
      *
      * @return boolean
      */
-    protected function sendContactForm($assignation, $receiver)
+    protected function sendContactForm($assignation, $receiver, $subject = null)
     {
         $emailBody = $this->getTwig()->render('forms/contactForm.html.twig', $assignation);
         /*
@@ -364,13 +422,19 @@ class EntryPointsController extends AppController
             ROADIZ_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
         ));
 
+        if (null !== $subject) {
+            $subject = trim(strip_tags($subject));
+        } else {
+            $subject = $this->getTranslator()->trans(
+                'new.contact.form.%site%',
+                array('%site%'=>SettingsBag::get('site_name'))
+            );
+        }
+
         // Create the message
         $message = \Swift_Message::newInstance()
             // Give the message a subject
-            ->setSubject($this->getTranslator()->trans(
-                'new.contact.form.%site%',
-                array('%site%'=>SettingsBag::get('site_name'))
-            ))
+            ->setSubject($subject)
             // Set the From address with an associative array
             ->setFrom(array($assignation['email']))
             // Set the To addresses with an associative array

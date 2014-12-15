@@ -107,7 +107,7 @@ ChildrenNodesField.prototype.refreshNodeTree = function( $nodeTree, rootNodeId, 
 
         $.ajax({
             url: url,
-            type: 'post',
+            type: 'get',
             dataType: 'json',
             data: postData,
         })

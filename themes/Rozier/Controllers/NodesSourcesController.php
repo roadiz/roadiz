@@ -300,6 +300,14 @@ class NodesSourcesController extends RozierApp
                         new Type('integer')
                     )
                 );
+            case NodeTypeField::EMAIL_T:
+                return array(
+                    'label' => $field->getLabel(),
+                    'required' => false,
+                    'constraints' => array(
+                        new \Symfony\Component\Validator\Constraints\Email()
+                    )
+                );
             case NodeTypeField::DECIMAL_T:
                 return array(
                     'label' => $field->getLabel(),

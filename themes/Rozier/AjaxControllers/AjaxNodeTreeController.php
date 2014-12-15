@@ -47,7 +47,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
         /*
          * Validate
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
+        if (true !== $notValid = $this->validateRequest($request, "GET")) {
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_FORBIDDEN,
@@ -92,6 +92,17 @@ class AjaxNodeTreeController extends AbstractAjaxController
                         $node,
                         $translation
                     );
+
+                    if ($request->get('tagId') && $request->get('tagId') > 0) {
+                        $filterTag = $this->getService('em')
+                                            ->find(
+                                                '\RZ\Roadiz\Core\Entities\Tag',
+                                                (int) $request->get('tagId')
+                                            );
+
+                        $this->assignation['nodeTree']->setTag($filterTag);
+                    }
+
                     $this->assignation['mainNodeTree'] = false;
 
                     if (true === (boolean) $request->get('stackTree')) {

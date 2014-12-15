@@ -46,6 +46,7 @@ class NodeTreeWidget extends AbstractWidget
 {
     protected $parentNode =            null;
     protected $nodes =                 null;
+    protected $tag =                   null;
     protected $translation =           null;
     protected $availableTranslations = null;
     protected $stackTree =             false;
@@ -81,6 +82,24 @@ class NodeTreeWidget extends AbstractWidget
 
 
     /**
+     * @return RZ\Roadiz\Core\Entities\Tag
+     */
+    public function getTag()
+    {
+        return $this->tag;
+    }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\Tag $tag
+     */
+    public function setTag($tag)
+    {
+        $this->tag = $tag;
+
+        return $this;
+    }
+
+    /**
      * @return boolean
      */
     public function isStackTree()
@@ -108,6 +127,16 @@ class NodeTreeWidget extends AbstractWidget
 
     protected function getListManager(Node $parent = null)
     {
+        $criteria = array(
+            'parent' =>      $parent,
+            'translation' => $this->translation,
+            'status' =>      array('<=', Node::PUBLISHED),
+        );
+
+        if (null !== $this->tag) {
+            $criteria['tags'] = $this->tag;
+        }
+
         /*
          * Manage get request to filter list
          */
@@ -115,11 +144,7 @@ class NodeTreeWidget extends AbstractWidget
             $this->request,
             $this->controller->getService('em'),
             'RZ\Roadiz\Core\Entities\Node',
-            array(
-                'parent' =>      $parent,
-                'translation' => $this->translation,
-                'status' =>      array('<=', Node::PUBLISHED),
-            ),
+            $criteria,
             array('position'=>'ASC')
         );
 

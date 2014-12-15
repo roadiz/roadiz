@@ -36,8 +36,9 @@ StackNodeTree.prototype.onChangeLangClick = function(event) {
     var $nodeTree = _this.$page.find('.nodetree-widget');
     var parentNodeId = parseInt($link.attr('data-children-parent-node'));
     var translationId = parseInt($link.attr('data-translation-id'));
+    var tagId = $link.attr('data-filter-tag');
 
-    _this.refreshNodeTree(parentNodeId, translationId);
+    _this.refreshNodeTree(parentNodeId, translationId, tagId);
 
     return false;
 };
@@ -60,6 +61,10 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
             "pushTop":1
         };
 
+        if (isset($link.attr('data-filter-tag'))) {
+            postData.tagId = parseInt($link.attr('data-filter-tag'));
+        }
+
         $.ajax({
             url: Rozier.routes.nodesQuickAddAjax,
             type: 'post',
@@ -71,7 +76,7 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
             console.log(data);
 
             Rozier.refreshMainNodeTree();
-            _this.refreshNodeTree(parentNodeId);
+            _this.refreshNodeTree(parentNodeId, null, postData.tagId);
 
             UIkit.notify({
                 message : data.responseText,
@@ -101,7 +106,7 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
     return false;
 };
 
-StackNodeTree.prototype.refreshNodeTree = function( rootNodeId, translationId ) {
+StackNodeTree.prototype.refreshNodeTree = function( rootNodeId, translationId, tagId) {
     var _this = this;
     var $nodeTree = _this.$page.find('.nodetree-widget');
 
@@ -119,9 +124,14 @@ StackNodeTree.prototype.refreshNodeTree = function( rootNodeId, translationId ) 
             url += '/'+translationId;
         }
 
+        //data-filter-tag
+        if (isset(tagId)) {
+            postData.tagId = parseInt(tagId);
+        }
+
         $.ajax({
             url: url,
-            type: 'post',
+            type: 'get',
             dataType: 'json',
             data: postData,
         })
