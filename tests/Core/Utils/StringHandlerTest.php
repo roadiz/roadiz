@@ -101,4 +101,49 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
             array("JAime les_sushis", "jAimeLesSushis"),
         );
     }
+
+    /**
+     * @dataProvider encodeWithSecretProvider
+     */
+    public function testEncodeWithSecret($input, $secret)
+    {
+        $code = StringHandler::encodeWithSecret($input, $secret);
+
+        // Assert
+        $this->assertEquals($input, StringHandler::decodeWithSecret($code, $secret));
+    }
+
+    public function encodeWithSecretProvider()
+    {
+        return array(
+            array("Ligula  $* _--Egestas Mattis Nullam", "Commodo Pellentesque Sem Fusce Quam"),
+            array("Véèsti buœlum Rïsus ", "  change#this#secret#very#important"),
+            array("J'aime les sushis  ", " Fringilla Vulputate Dolor Inceptos"),
+            array("auietauieauie@auietsrt.trr", "Sit Vestibulum Dolor Ullamcorper Aenean"),
+            array("JAime les_sushis", "Sit Vestibulum Dolor"),
+        );
+    }
+
+    /**
+     * @dataProvider encodeWithSecretNoSaltProvider
+     */
+    public function testEncodeWithSecretNoSalt($input, $secret)
+    {
+        $this->setExpectedException('RZ\\Roadiz\\Core\\Exceptions\\EmptySaltException');
+
+        $code = StringHandler::encodeWithSecret($input, $secret);
+
+        // Assert
+        $this->assertEquals($input, StringHandler::decodeWithSecret($code, $secret));
+    }
+
+    public function encodeWithSecretNoSaltProvider()
+    {
+        return array(
+            array("Ligula  $* _--Egestas Mattis Nullam", ""),
+            array("Véèsti buœlum Rïsus ", "  "),
+            array("J'aime les sushis  ", "  "),
+            array("auietauieauie@auietsrt.trr", PHP_EOL),
+        );
+    }
 }

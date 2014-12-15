@@ -60,7 +60,10 @@ class ContactController extends DefaultThemeApp
          */
         $formBuilder = EntryPointsController::getContactFormBuilder(
             $request,
-            true
+            true,
+            null,
+            "ambroise.maupate@gmail.com",
+            "Sujet d’email personalisé"
         );
         $formBuilder->add('email', 'email', array(
                         'label'=>$this->getTranslator()->trans('your.email')
