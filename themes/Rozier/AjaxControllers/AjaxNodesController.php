@@ -366,12 +366,22 @@ class AjaxNodesController extends AbstractAjaxController
                     }
                 }
 
+                if ($request->get('tagId') > 0) {
+                    $tag = $this->getService('em')
+                                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $request->get('tagId'));
+                } else {
+                    $tag = null;
+                }
+
                 try {
                     $name = "Untitled ".uniqid();
 
                     $node = new Node($nodeType);
                     $node->setParent($parent);
                     $node->setNodeName($name);
+                    if (null !== $tag) {
+                        $node->addTag($tag);
+                    }
                     $this->getService('em')->persist($node);
 
                     if (!empty($request->get('pushTop')) &&

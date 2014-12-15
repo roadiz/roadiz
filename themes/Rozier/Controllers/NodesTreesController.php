@@ -75,6 +75,19 @@ class NodesTreesController extends RozierApp
         if (null !== $node) {
 
             $widget = new NodeTreeWidget($request, $this, $node, $translation);
+
+            if ($request->get('tagId') && $request->get('tagId') > 0) {
+                $filterTag = $this->getService('em')
+                                    ->find(
+                                        '\RZ\Roadiz\Core\Entities\Tag',
+                                        (int) $request->get('tagId')
+                                    );
+
+                $this->assignation['filterTag'] = $filterTag;
+
+                $widget->setTag($filterTag);
+            }
+
             $widget->setStackTree(true);
             $widget->getNodes(); //pre-fetch nodes for enable filters
             $this->assignation['node'] =             $node;

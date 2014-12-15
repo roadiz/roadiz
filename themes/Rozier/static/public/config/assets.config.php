@@ -6,8 +6,8 @@ return array(
                 '/style.20372070.css',
             ),
             'js' => array(
-                '/rozier-backend-theme.0120484f.min.js',
-                '/rozier-backend-theme-vendor.6a067d92.min.js',
+                '/rozier-backend-theme.530f95a7.min.js',
+                '/rozier-backend-theme-vendor.d17a59aa.min.js',
             ),
         ),
     )

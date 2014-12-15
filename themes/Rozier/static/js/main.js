@@ -255,7 +255,7 @@ Rozier.refreshMainNodeTree = function (translationId) {
 
 		$.ajax({
 			url: url,
-			type: 'post',
+			type: 'get',
 			dataType: 'json',
 			data: postData,
 		})
