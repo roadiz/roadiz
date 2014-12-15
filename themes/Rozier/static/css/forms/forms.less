@@ -138,7 +138,7 @@
     .rz-select {
         position: relative;
         display: inline-block;
-        width: auto; height:36px;
+        width: auto; min-width:60px; height:36px;
         margin: 0;
         padding: 0 20px 0 0;
         font-size:12px;
@@ -154,7 +154,7 @@
             top:0; right:0; bottom:0;
             height:36px;
             content: "\f0d7";
-            padding:0 15px;
+            padding:0 10px;
             background: white;
             font:normal 12px/36px 'FontAwesome';
             pointer-events: none;
@@ -240,6 +240,10 @@
     // Date
     .form-col-datetime{
         display: inline-block;
+
+        .form-help{
+            display: none;
+        }
 
         &> div > div{
             display:inline-block;
