@@ -161,7 +161,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @ORM\Column(name="close_date", type="datetime")
+     * @ORM\Column(name="close_date", type="datetime", nullable=true)
      */
     private $closeDate = null;
     /**
