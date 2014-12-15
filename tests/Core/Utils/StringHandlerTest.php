@@ -119,7 +119,7 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
             array("Ligula  $* _--Egestas Mattis Nullam", "Commodo Pellentesque Sem Fusce Quam"),
             array("Véèsti buœlum Rïsus ", "  change#this#secret#very#important"),
             array("J'aime les sushis  ", " Fringilla Vulputate Dolor Inceptos"),
-            array("auietauieauie@auietsrt.trr", "Sit Vestibulum Dolor Ullamcorper Aenean"),
+            array("au   ".PHP_EOL."ietaui.\\eauie@auietsrt.trr", "Sit Vestibulum Dolor Ullamcorper Aenean"),
             array("JAime les_sushis", "Sit Vestibulum Dolor"),
         );
     }

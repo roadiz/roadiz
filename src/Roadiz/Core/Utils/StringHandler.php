@@ -148,7 +148,8 @@ class StringHandler
         $secret = trim($secret);
 
         if (!empty($secret)) {
-            return base64_encode($secret . strip_tags($value));
+            $secret = crypt($secret, $secret);
+            return base64_encode($secret . base64_encode(strip_tags($value)));
         } else {
             throw new EmptySaltException("You cannot encode with an empty salt. Did you enter a secret security phrase in your conf/config.json file?", 1);
         }
@@ -167,11 +168,12 @@ class StringHandler
         $secret = trim($secret);
 
         if (!empty($secret)) {
+            $secret = crypt($secret, $secret);
             $salted = base64_decode($value);
 
-            $nonSalted = substr($salted, strlen($secret));
+            $nonSalted = str_replace($secret, "", $salted);// substr($salted, strlen($secret));
 
-            return $nonSalted;
+            return base64_decode($nonSalted);
         } else {
             throw new EmptySaltException("You cannot encode with an empty salt. Did you enter a secret security phrase in your conf/config.json file?", 1);
         }
