@@ -755,7 +755,7 @@ class NodesController extends RozierApp
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
-    private function createNode($data, NodeType $type, Translation $translation)
+    protected function createNode($data, NodeType $type, Translation $translation)
     {
         if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
@@ -803,7 +803,7 @@ class NodesController extends RozierApp
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
-    private function createChildNode($data, Node $parentNode = null, Translation $translation = null)
+    protected function createChildNode($data, Node $parentNode = null, Translation $translation = null)
     {
         if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
@@ -862,7 +862,7 @@ class NodesController extends RozierApp
      *
      * @return boolean
      */
-    private function urlAliasExists($name)
+    protected function urlAliasExists($name)
     {
         return (boolean) $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
@@ -874,7 +874,7 @@ class NodesController extends RozierApp
      *
      * @return boolean
      */
-    private function nodeNameExists($name)
+    protected function nodeNameExists($name)
     {
         return (boolean) $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
@@ -887,7 +887,7 @@ class NodesController extends RozierApp
      * @param array                       $data
      * @param RZ\Roadiz\Core\Entities\Node $node
      */
-    private function editNode($data, Node $node)
+    protected function editNode($data, Node $node)
     {
         $testingNodeName = StringHandler::slugify($data['nodeName']);
         if ($testingNodeName != $node->getNodeName() &&
@@ -943,7 +943,7 @@ class NodesController extends RozierApp
      *
      * @return RZ\Roadiz\Core\Entities\Tag $linkedTag
      */
-    private function addNodeTag($data, Node $node)
+    protected function addNodeTag($data, Node $node)
     {
         if (!empty($data['tagPaths'])) {
             $paths = explode(',', $data['tagPaths']);
@@ -970,7 +970,7 @@ class NodesController extends RozierApp
      *
      * @return RZ\Roadiz\Core\Entities\Tag
      */
-    private function removeNodeTag($data, Node $node, Tag $tag)
+    protected function removeNodeTag($data, Node $node, Tag $tag)
     {
         if ($data['nodeId'] == $node->getId() &&
             $data['tagId'] == $tag->getId()) {
@@ -990,7 +990,7 @@ class NodesController extends RozierApp
      *
      * @return void
      */
-    private function translateNode($data, Node $node)
+    protected function translateNode($data, Node $node)
     {
         $newTranslation = $this->getService('em')
                 ->find(
@@ -1017,7 +1017,7 @@ class NodesController extends RozierApp
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildTranslateForm(Node $node)
+    protected function buildTranslateForm(Node $node)
     {
         $translations = $node->getHandler()->getUnavailableTranslations();
         $choices = array();
@@ -1078,7 +1078,7 @@ class NodesController extends RozierApp
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildAddChildForm(Node $parentNode = null)
+    protected function buildAddChildForm(Node $parentNode = null)
     {
         $defaults = array();
 
@@ -1111,7 +1111,7 @@ class NodesController extends RozierApp
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildEditForm(Node $node)
+    protected function buildEditForm(Node $node)
     {
         $defaults = array(
             'nodeName' => $node->getNodeName(),
@@ -1154,7 +1154,7 @@ class NodesController extends RozierApp
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildEditTagsForm(Node $node)
+    protected function buildEditTagsForm(Node $node)
     {
         $defaults = array(
             'nodeId' =>  $node->getId()
@@ -1184,7 +1184,7 @@ class NodesController extends RozierApp
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildDeleteForm(Node $node)
+    protected function buildDeleteForm(Node $node)
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
@@ -1201,7 +1201,7 @@ class NodesController extends RozierApp
     /**
      * @return \Symfony\Component\Form\Form
      */
-    private function buildEmptyTrashForm()
+    protected function buildEmptyTrashForm()
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form');
@@ -1215,7 +1215,7 @@ class NodesController extends RozierApp
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildRemoveTagForm(Node $node, Tag $tag)
+    protected function buildRemoveTagForm(Node $node, Tag $tag)
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
