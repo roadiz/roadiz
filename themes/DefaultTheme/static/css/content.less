@@ -59,6 +59,7 @@ body {
     .uk-dropdown {
         text-align: left;
         font-size: 12px;
+        margin-top: 0px;
         padding: 4px;
         font-family: @main-font;
 
@@ -105,6 +106,23 @@ body {
         font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 0.05em;
+    }
+
+    .breadcrumb {
+        text-align: center;
+
+        a {
+            margin: 0px;
+            padding: 0 10px;
+            color: #666;
+            font-size: 12px;
+
+            border-left: 1px solid rgba(0,0,0,0.1);
+
+            &:first-child {
+                border-left: 0 none;
+            }
+        }
     }
 
     .content {

@@ -12,8 +12,21 @@
 {% endblock %}
 
 {% block content %}
+{% spaceless %}
+{% set breadcrumb = nodeSource.handler.parents %}
+<div class="breadcrumb">
+	{% for parent in breadcrumb|reverse %}
+		{% if parent.id == home.id %}
+		{% else %}
+	    <a href="{{ parent.handler.url }}">{{ parent.title }}</a>
+		{% endif %}
+	{% endfor %}
+</div>
+{% endspaceless %}
 <h1>{{ nodeSource.title }}</h1>
 <h2>{{ nodeSource.subtitle }}</h2>
+
+
 <div class="content">{{ nodeSource.content|markdown }}</div>
 <div class="photos">
 	{% for document in nodeSource.photos %}

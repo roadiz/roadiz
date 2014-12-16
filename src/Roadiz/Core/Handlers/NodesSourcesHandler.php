@@ -44,6 +44,7 @@ class NodesSourcesHandler
 {
     protected $nodeSource;
     protected $parentNodeSource = null;
+    protected $parentsNodeSources = null;
 
     /**
      * Create a new node-source handler with node-source to handle.
@@ -235,6 +236,51 @@ class NodesSourcesHandler
         }
 
         return $this->parentNodeSource;
+    }
+
+    /**
+     * Get every nodeSources parents from direct parent to farest ancestor.
+     *
+     * @param  array                $criteria
+     * @param  SecurityContext|null $securityContext
+     *
+     * @return array
+     */
+    public function getParents(
+        array $criteria = array(),
+        SecurityContext $securityContext = null
+    ) {
+        if (null === $this->parentsNodeSources) {
+
+            $this->parentsNodeSources = array();
+
+            $parent = $this->nodeSource;
+
+            while (null !== $parent) {
+                $criteria = array_merge(
+                    $criteria,
+                    array(
+                        'node'=>$parent->getNode()->getParent(),
+                        'translation' => $this->nodeSource->getTranslation()
+                    )
+                );
+                $currentParent = Kernel::getService('em')
+                                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                                ->findOneBy(
+                                    $criteria,
+                                    array(),
+                                    $securityContext
+                                );
+
+                if (null !== $currentParent) {
+                    $this->parentsNodeSources[] = $currentParent;
+                }
+
+                $parent = $currentParent;
+            }
+        }
+
+        return $this->parentsNodeSources;
     }
 
     /**
