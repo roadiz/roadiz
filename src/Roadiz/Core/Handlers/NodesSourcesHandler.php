@@ -248,7 +248,6 @@ class NodesSourcesHandler
         SecurityContext $securityContext = null
     ) {
         if (null === $this->parentsNodeSources) {
-
             $this->parentsNodeSources = array();
 
             $parent = $this->nodeSource;
