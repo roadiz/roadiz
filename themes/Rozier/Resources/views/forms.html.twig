@@ -162,7 +162,7 @@
                         data-children-node-type="{{ linkedType.getId }}"
                         data-children-parent-node="{{ nodeTree.rootNode.getId }}"
                         data-translation-id="{{ nodeTree.translation.getId }}">
-                        <i class="uk-icon-rz-plus-simple"></i> {{ "add.a.%nodeType%"|trans({'%nodeType%': linkedType.getDisplayName}) }}
+                        <i class="uk-icon-rz-plus-simple"></i>{{ linkedType.getDisplayName }}
                     </a>
                     {% endfor %}
                 </div>
