@@ -107,7 +107,6 @@ class CustomFormAnswersController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['customFormAnswerId'] == $customFormAnswer->getId() ) {
-
                 $this->getService("em")->remove($customFormAnswer);
 
                 $msg = $this->getTranslator()->trans('customFormAnswer.%id%.deleted', array('%id%'=>$customFormAnswer->getId()));

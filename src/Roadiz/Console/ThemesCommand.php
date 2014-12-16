@@ -82,13 +82,11 @@ class ThemesCommand extends Command
         $name = $input->getArgument('classname');
 
         if ($name) {
-
             $theme = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Theme')
                 ->findOneBy(array('className'=>$name));
 
             if ($theme !== null) {
-
                 if ($input->getOption('enable')) {
                     if ($theme !== null && $name::enable()) {
                         $text = '<info>Theme enabled…</info>'.PHP_EOL;

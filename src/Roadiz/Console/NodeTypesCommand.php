@@ -117,7 +117,6 @@ class NodeTypesCommand extends Command
         $name = $input->getArgument('name');
 
         if ($name) {
-
             $nodetype = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                 ->findOneBy(array('name'=>$name));
@@ -157,13 +156,11 @@ class NodeTypesCommand extends Command
                 }
             }
         } else {
-
             $nodetypes = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                 ->findAll();
 
             if (count($nodetypes) > 0) {
-
                 if ($input->getOption('generateAllEntities')) {
                     foreach ($nodetypes as $nt) {
                         $text .= '<info>'.$nt->getHandler()->generateSourceEntityClass().'</info>'.PHP_EOL;

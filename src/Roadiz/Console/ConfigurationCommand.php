@@ -99,7 +99,6 @@ class ConfigurationCommand extends Command
         }
 
         if ($input->getOption('enable-install')) {
-
             $configuration->setInstall(true);
             $configuration->setDevMode(true);
 
@@ -108,7 +107,6 @@ class ConfigurationCommand extends Command
             $text .= '<info>Install mode has been changed to true</info>'.PHP_EOL;
         }
         if ($input->getOption('disable-install')) {
-
             $configuration->setInstall(false);
             $configuration->writeConfiguration();
 
@@ -117,7 +115,6 @@ class ConfigurationCommand extends Command
         }
 
         if ($input->getOption('generateHtaccess')) {
-
             $text .= '<info>Generating .htaccess files…</info>'.PHP_EOL;
             // Simple deny access files
             $paths = array(
@@ -135,7 +132,6 @@ class ConfigurationCommand extends Command
                 $filePath = ROADIZ_ROOT . $path . "/.htaccess";
                 if (file_exists(ROADIZ_ROOT . $path) &&
                     !file_exists($filePath)) {
-
                     file_put_contents($filePath, "deny from all".PHP_EOL);
                     $text .= '    — '.$filePath.PHP_EOL;
                 } else {
@@ -180,7 +176,6 @@ class ConfigurationCommand extends Command
 
             if (file_exists(ROADIZ_ROOT) &&
                 !file_exists($filePath)) {
-
                 file_put_contents($filePath, $mainHtaccess.PHP_EOL);
                 $text .= '    — '.$filePath.PHP_EOL;
             } else {

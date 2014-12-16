@@ -215,7 +215,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         if (is_object($value) && $value instanceof PersistableInterface) {
             $finalQuery->setParameter($key, $value->getId());
         } elseif (is_array($value)) {
-
             if (count($value) > 1) {
                 switch ($value[0]) {
                     case '<=':
@@ -270,7 +269,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             $i = 0;
 
             foreach ($criteria as $key => $value) {
-
                 if (is_array($value)) {
                     $res = $expr->in($key, $value);
                 } else {
@@ -325,7 +323,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             $qb->orWhere($qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value)));
         }
     }
-   /**
+    /**
     * Create a Criteria object from a search pattern and additionnal fields.
     *
     * @param string                  $pattern  Search pattern

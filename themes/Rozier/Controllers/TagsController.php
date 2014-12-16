@@ -104,7 +104,6 @@ class TagsController extends RozierApp
         }
 
         if (null !== $translation) {
-
             /*
              * Here we need to directly select tagTranslation
              * if not doctrine will grab a cache tag because of TagTreeWidget
@@ -136,7 +135,6 @@ class TagsController extends RozierApp
                 $form->handleRequest();
 
                 if ($form->isValid()) {
-
                     $this->editTag($form->getData(), $tt);
 
                     $msg = $this->getTranslator()->trans('tag.%name%.updated', array(
@@ -167,7 +165,6 @@ class TagsController extends RozierApp
                 $this->getService('em')->refresh($gtag);
 
                 if ($gtag !== null) {
-
                     $baseTranslation = $gtag->getTranslatedTags()->first();
 
                     $translatedTag = new TagTranslation($gtag, $translation);
@@ -228,7 +225,6 @@ class TagsController extends RozierApp
 
         if ($tag !== null &&
             $translation !== null) {
-
             $this->assignation['tag'] = $tag;
             $form = $this->buildAddForm($tag);
 
@@ -283,7 +279,6 @@ class TagsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
-
             $form = $this->buildEditSettingsForm($tag);
 
             $form->handleRequest();
@@ -385,7 +380,6 @@ class TagsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['tagId'] == $tag->getId()) {
-
                 $this->deleteTag($form->getData(), $tag);
                 $msg = $this->getTranslator()->trans('tag.%name%.deleted', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -440,12 +434,10 @@ class TagsController extends RozierApp
 
         if ($translation !== null &&
             $parentTag !== null) {
-
             $form = $this->buildAddChildForm($parentTag);
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $tag = $this->addChildTag($form->getData(), $parentTag, $translation);
 
@@ -463,7 +455,6 @@ class TagsController extends RozierApp
 
                     return $response->send();
                 } catch (EntityAlreadyExistsException $e) {
-
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getService('logger')->warning($e->getMessage());
 
@@ -508,7 +499,6 @@ class TagsController extends RozierApp
                     ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if (null !== $tag) {
-
             $translation = $this->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                     ->findDefault();
@@ -540,7 +530,6 @@ class TagsController extends RozierApp
             );
 
         } else {
-
             return $this->throw404();
         }
     }
@@ -687,7 +676,6 @@ class TagsController extends RozierApp
         $translatedTag = new TagTranslation($tag, $translation);
 
         foreach ($data as $key => $value) {
-
             $setter = 'set'.ucwords($key);
 
             if ($key == 'name' || $key == 'description') {

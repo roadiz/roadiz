@@ -94,7 +94,6 @@ class CustomFormController extends AppController
                 $form->handleRequest();
                 if ($form->isValid()) {
                     try {
-
                         $data = $form->getData();
                         $data["ip"] = $request->getClientIp();
                         $this->addCustomFormAnswer($data, $customForm);
@@ -215,7 +214,6 @@ class CustomFormController extends AppController
             $fieldAttr->setCustomFormField($field);
 
             if (is_array($data[$field->getName()])) {
-
                 $values = array();
 
                 foreach ($data[$field->getName()] as $value) {
@@ -228,7 +226,6 @@ class CustomFormController extends AppController
                 $this->assignation["fields"][] = array("name" => $field->getName(), "value" => $val);
 
             } else {
-
                 $fieldAttr->setValue($data[$field->getName()]);
                 $this->assignation["fields"][] = array("name" => $field->getName(), "value" => $data[$field->getName()]);
 

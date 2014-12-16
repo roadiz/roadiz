@@ -162,7 +162,6 @@ class SearchController extends RozierApp
         }
 
         if ($form->isValid()) {
-
             $data = array();
             foreach ($form->getData() as $key => $value) {
                 if ((!is_array($value) && $this->notBlank($value)) ||
@@ -229,10 +228,8 @@ class SearchController extends RozierApp
         }
 
         if ($form->isValid()) {
-
             $data = array();
             foreach ($form->getData() as $key => $value) {
-
                 if ((!is_array($value) && $this->notBlank($value))
                     || (is_array($value) && isset($value["compareDatetime"]))
                     || (is_array($value) && $value != array() && !isset($value["compareOp"]))) {

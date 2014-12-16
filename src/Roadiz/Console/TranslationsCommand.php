@@ -128,7 +128,6 @@ class TranslationsCommand extends Command
                 }
             } else {
                 if ($input->getOption('create')) {
-
                     if (!empty($locale)) {
                         $newTrans = new Translation();
                         $newTrans->setName($name)

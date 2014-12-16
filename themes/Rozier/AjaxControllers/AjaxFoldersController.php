@@ -70,7 +70,6 @@ class AjaxFoldersController extends AbstractAjaxController
             ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if ($folder !== null) {
-
             $responseArray = null;
 
             /*
@@ -133,7 +132,6 @@ class AjaxFoldersController extends AbstractAjaxController
         );
 
         if (!empty($request->get('search'))) {
-
             $responseArray = array();
 
             $pattern = strip_tags($request->get('search'));
@@ -171,7 +169,6 @@ class AjaxFoldersController extends AbstractAjaxController
 
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
-
             $parent = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['newParent']);
 
@@ -194,7 +191,6 @@ class AjaxFoldersController extends AbstractAjaxController
             }
         } elseif (!empty($parameters['prevFolderId']) &&
             $parameters['prevFolderId'] > 0) {
-
             $prevFolder = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['prevFolderId']);
             if ($prevFolder !== null) {

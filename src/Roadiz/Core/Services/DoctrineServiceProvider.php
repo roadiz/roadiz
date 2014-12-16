@@ -54,7 +54,6 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
     {
         if ($container['config'] !== null &&
             isset($container['config']["doctrine"])) {
-
             $container['em.config'] = function ($c) {
                 $config = Setup::createAnnotationMetadataConfiguration(
                     $c['entitiesPaths'],

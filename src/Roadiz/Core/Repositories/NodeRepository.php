@@ -139,7 +139,6 @@ class NodeRepository extends EntityRepository
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
-
             if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
@@ -181,7 +180,6 @@ class NodeRepository extends EntityRepository
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
-
             if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
@@ -238,12 +236,10 @@ class NodeRepository extends EntityRepository
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id'])) {
-
             $qb->innerJoin('n.nodeSources', 'ns');
             $qb->innerJoin('ns.translation', 't');
 
         } else {
-
             if (null !== $translation) {
                 /*
                  * With a given translation

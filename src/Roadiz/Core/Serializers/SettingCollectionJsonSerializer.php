@@ -83,7 +83,6 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
         $collection = new ArrayCollection();
         $groups = json_decode($jsonString, true);
         foreach ($groups as $group) {
-
             $newGroup = new SettingGroup();
             $newGroup->setName($group['name']);
             $newGroup->setInMenu($group['inMenu']);

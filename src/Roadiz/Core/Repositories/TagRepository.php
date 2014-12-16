@@ -48,7 +48,6 @@ class TagRepository extends EntityRepository
     protected function filterByNodes(&$criteria, &$qb)
     {
         if (in_array('nodes', array_keys($criteria))) {
-
             if (is_array($criteria['nodes'])) {
                 $qb->innerJoin(
                     'tg.nodes',
@@ -175,7 +174,6 @@ class TagRepository extends EntityRepository
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
-
             $this->applyComparison($key, $value, $finalQuery);
         }
     }
@@ -192,12 +190,10 @@ class TagRepository extends EntityRepository
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id'])) {
-
             $qb->innerJoin('tg.translatedTags', 'tt');
             $qb->innerJoin('tt.translation', 't');
 
         } else {
-
             if (null !== $translation) {
                 /*
                  * With a given translation
@@ -678,7 +674,6 @@ class TagRepository extends EntityRepository
         }
 
         if (null === $tag) {
-
             /*
              * Creation of a new tag
              * before linking it to the node

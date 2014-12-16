@@ -95,15 +95,12 @@ class NodeTypesUtilsController extends RozierApp
 
         if ($form->isValid() &&
             !empty($form['node_type_file'])) {
-
             $file = $form['node_type_file']->getData();
 
             if (UPLOAD_ERR_OK == $file['error']) {
-
                 $serializedData = file_get_contents($file['tmp_name']);
 
                 if (null !== json_decode($serializedData)) {
-
                     $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
                     $existingNT = $this->getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\NodeType')

@@ -100,11 +100,9 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                     $feClass = $theme->getClassName();
                     $feCollection = $feClass::getRoutes();
                     if ($feCollection !== null) {
-
                         // set host pattern if defined
                         if ($theme->getHostname() != '*' &&
                             $theme->getHostname() != '') {
-
                             $feCollection->setHost($theme->getHostname());
                         }
                         $rCollection->addCollection($feCollection);

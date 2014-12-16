@@ -54,7 +54,6 @@ class XlsxExporter
         }
         foreach ($data as $key => $answer) {
             foreach ($answer as $k => $value) {
-
                 $columnAlpha = \PHPExcel_Cell::stringFromColumnIndex($k);
 
                 if ($value instanceof \DateTime) {

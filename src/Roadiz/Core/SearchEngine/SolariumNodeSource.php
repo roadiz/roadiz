@@ -110,7 +110,6 @@ class SolariumNodeSource
     public function index()
     {
         if (null !== $this->document) {
-
             $this->document->id = uniqid(); //or something else suitably unique
 
             foreach ($this->getFieldsAssoc() as $key => $value) {
@@ -227,7 +226,6 @@ class SolariumNodeSource
         if (false === $this->remove($update)) {
             return $this->indexAndCommit();
         } else {
-
             $this->setDocument($update->createDocument());
 
             if (true === $this->index()) {
@@ -272,7 +270,6 @@ class SolariumNodeSource
     public function remove(Query $update)
     {
         if (null !== $this->document) {
-
             $update->addDeleteById($this->getDocument()->id);
 
             return true;

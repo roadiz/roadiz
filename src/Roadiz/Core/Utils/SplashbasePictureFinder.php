@@ -52,7 +52,6 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
             $this->feed = $response->json();
 
             if (false !== strpos($this->feed['url'], '.jpg')) {
-
                 $this->embedId = $this->feed['id'];
 
                 return $this->feed;

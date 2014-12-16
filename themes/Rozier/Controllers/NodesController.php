@@ -161,7 +161,6 @@ class NodesController extends RozierApp
                 $translationForm->handleRequest();
 
                 if ($translationForm->isValid()) {
-
                     try {
                         $this->translateNode($translationForm->getData(), $node);
                         $msg = $this->getTranslator()->trans('node.%name%.translated', array(
@@ -278,7 +277,6 @@ class NodesController extends RozierApp
                 ->findDefault();
 
         if (null !== $translation) {
-
             $source = $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                 ->findOneBy(array(
@@ -288,7 +286,6 @@ class NodesController extends RozierApp
 
             if (null !== $source &&
                 null !== $translation) {
-
                 $node = $source->getNode();
 
                 $this->assignation['translation'] = $translation;
@@ -357,7 +354,6 @@ class NodesController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 $this->removeNodeTag($form->getData(), $node, $tag);
                 $msg = $this->getTranslator()->trans(
                     'tag.%name%.removed',
@@ -415,7 +411,6 @@ class NodesController extends RozierApp
 
         if ($type !== null &&
             $translation !== null) {
-
             $form = $this->getService('formFactory')
                 ->createBuilder()
                 ->add('nodeName', 'text', array(
@@ -428,7 +423,6 @@ class NodesController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $node = $this->createNode($form->getData(), $type, $translation);
 
@@ -448,7 +442,6 @@ class NodesController extends RozierApp
 
                     return $response->send();
                 } catch (EntityAlreadyExistsException $e) {
-
                     $this->publishErrorMessage($request, $e->getMessage());
 
                     $response = new RedirectResponse(
@@ -512,12 +505,10 @@ class NodesController extends RozierApp
         }
 
         if (null !== $translation) {
-
             $form = $this->buildAddChildForm($parentNode, $translation);
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $node = $this->createChildNode($form->getData(), $parentNode, $translation);
 
@@ -537,7 +528,6 @@ class NodesController extends RozierApp
 
                     return $response->send();
                 } catch (EntityAlreadyExistsException $e) {
-
                     $this->publishErrorMessage($request, $e->getMessage());
 
                     $response = new RedirectResponse(
@@ -585,7 +575,6 @@ class NodesController extends RozierApp
         if (null !== $node &&
             !$node->isDeleted() &&
             !$node->isLocked()) {
-
             $this->assignation['node'] = $node;
 
             $form = $this->buildDeleteForm($node);
@@ -593,13 +582,11 @@ class NodesController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['nodeId'] == $node->getId()) {
-
                 $node->getHandler()->softRemoveWithChildren();
                 $this->getService('em')->flush();
 
                 // Update Solr Search engine if setup
                 if (true === $this->getKernel()->pingSolrServer()) {
-
                     foreach ($node->getNodeSources() as $nodeSource) {
                         $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
                             $nodeSource,
@@ -693,7 +680,6 @@ class NodesController extends RozierApp
 
         if (null !== $node &&
             $node->isDeleted()) {
-
             $this->assignation['node'] = $node;
 
             $form = $this->buildDeleteForm($node);
@@ -701,13 +687,11 @@ class NodesController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['nodeId'] == $node->getId()) {
-
                 $node->getHandler()->softUnremoveWithChildren();
                 $this->getService('em')->flush();
 
                 // Update Solr Search engine if setup
                 if (true === $this->getKernel()->pingSolrServer()) {
-
                     foreach ($node->getNodeSources() as $nodeSource) {
                         $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
                             $nodeSource,
@@ -893,12 +877,10 @@ class NodesController extends RozierApp
         if ($testingNodeName != $node->getNodeName() &&
                 ($this->nodeNameExists($testingNodeName) ||
                 $this->urlAliasExists($testingNodeName))) {
-
             $msg = $this->getTranslator()->trans('node.%name%.noUpdate.alreadyExists', array('%name%'=>$data['nodeName']));
             throw new EntityAlreadyExistsException($msg, 1);
         }
         foreach ($data as $key => $value) {
-
             if ($key == 'home' &&
                 true === (boolean) $value) {
                 $node->getHandler()->makeHome();
@@ -919,12 +901,10 @@ class NodesController extends RozierApp
     {
         if ($data['nodeId'] == $node->getId() &&
             !empty($data['nodeTypeId'])) {
-
             $nodeType = $this->getService('em')
                  ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $data['nodeTypeId']);
 
             if (null !== $nodeType) {
-
                 $node->addStackType($nodeType);
                 $this->getService('em')->flush();
 
@@ -974,7 +954,6 @@ class NodesController extends RozierApp
     {
         if ($data['nodeId'] == $node->getId() &&
             $data['tagId'] == $tag->getId()) {
-
             $node->removeTag($tag);
             $this->getService('em')->flush();
 
@@ -1027,7 +1006,6 @@ class NodesController extends RozierApp
         }
 
         if ($translations !== null && count($choices) > 0) {
-
             $builder = $this->getService('formFactory')
                 ->createBuilder('form')
                 ->add('nodeId', 'hidden', array(

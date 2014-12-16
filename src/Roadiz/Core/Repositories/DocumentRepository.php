@@ -134,7 +134,6 @@ class DocumentRepository extends EntityRepository
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
-
             if ($key == "folders" || $key == "folderExclusive") {
                 continue;
             }
@@ -170,7 +169,7 @@ class DocumentRepository extends EntityRepository
         }
     }
 
-   /**
+    /**
     * Create a Criteria object from a search pattern and additionnal fields.
     *
     * @param string                  $pattern  Search pattern
@@ -224,7 +223,6 @@ class DocumentRepository extends EntityRepository
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
-
             if ($key == "folders" || $key == "folderExclusive") {
                 continue;
             }
@@ -281,12 +279,10 @@ class DocumentRepository extends EntityRepository
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id'])) {
-
             $qb->innerJoin('d.documentTranslations', 'dt');
             $qb->innerJoin('dt.translation', 't');
 
         } else {
-
             if (null !== $translation) {
                 /*
                  * With a given translation

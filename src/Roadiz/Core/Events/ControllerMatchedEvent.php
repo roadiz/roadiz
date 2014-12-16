@@ -73,7 +73,6 @@ class ControllerMatchedEvent extends Event
          * Inject current Kernel to the matched Controller
          */
         if ($matchedCtrl instanceof AppController) {
-
             $matchedCtrl->setKernel($this->kernel);
             $matchedCtrl->__init();
         }

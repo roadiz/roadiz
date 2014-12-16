@@ -51,7 +51,6 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
     protected function handleFieldActions(Request $request, AbstractField $field = null)
     {
         if ($field !== null) {
-
             $responseArray = null;
 
             /*
@@ -94,7 +93,6 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
          */
         if (!empty($parameters['newPosition']) &&
             null !== $field) {
-
             $field->setPosition($parameters['newPosition']);
             // Apply position update before cleaning
             $this->getService('em')->flush();

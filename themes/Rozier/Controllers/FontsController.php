@@ -90,7 +90,6 @@ class FontsController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             try {
                 $font = $this->addFont($form); // only pass form for file handling
 
@@ -143,7 +142,6 @@ class FontsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['fontId'] == $font->getId()) {
-
                 try {
                     $this->deleteFont($form->getData(), $font);
                     $msg = $this->getTranslator()->trans(
@@ -194,13 +192,11 @@ class FontsController extends RozierApp
                     ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
         if ($font !== null) {
-
             $form = $this->buildEditForm($font);
             $form->handleRequest();
 
             if ($form->isValid() &&
                 $form->getData()['fontId'] == $font->getId()) {
-
                 try {
                     $this->editFont($form, $font); // only pass form for file handling
                     $msg = $this->getTranslator()->trans(
@@ -251,7 +247,6 @@ class FontsController extends RozierApp
                     ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
         if ($font !== null) {
-
             // Prepare File
             $file = tempnam("tmp", "zip");
             $zip = new \ZipArchive();
@@ -439,7 +434,6 @@ class FontsController extends RozierApp
     {
         try {
             if (!empty($data['eotFile'])) {
-
                 $eotFile = $data['eotFile']->getData();
                 $uploadedEOTFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
                     $eotFile['tmp_name'],
@@ -451,7 +445,6 @@ class FontsController extends RozierApp
                 if ($uploadedEOTFile !== null &&
                     $uploadedEOTFile->getError() == UPLOAD_ERR_OK &&
                     $uploadedEOTFile->isValid()) {
-
                     $font->setEOTFilename($uploadedEOTFile->getClientOriginalName());
                     $uploadedEOTFile->move(Font::getFilesFolder().'/'.$font->getFolder(), $font->getEOTFilename());
                 }
@@ -461,7 +454,6 @@ class FontsController extends RozierApp
         }
         try {
             if (!empty($data['woffFile'])) {
-
                 $woffFile = $data['woffFile']->getData();
                 $uploadedWOFFFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
                     $woffFile['tmp_name'],
@@ -473,7 +465,6 @@ class FontsController extends RozierApp
                 if ($uploadedWOFFFile !== null &&
                     $uploadedWOFFFile->getError() == UPLOAD_ERR_OK &&
                     $uploadedWOFFFile->isValid()) {
-
                     $font->setWOFFFilename($uploadedWOFFFile->getClientOriginalName());
                     $uploadedWOFFFile->move(Font::getFilesFolder().'/'.$font->getFolder(), $font->getWOFFFilename());
                 }
@@ -483,7 +474,6 @@ class FontsController extends RozierApp
         }
         try {
             if (!empty($data['woff2File'])) {
-
                 $woff2File = $data['woff2File']->getData();
                 $uploadedWOFF2File = new \Symfony\Component\HttpFoundation\File\UploadedFile(
                     $woff2File['tmp_name'],
@@ -495,7 +485,6 @@ class FontsController extends RozierApp
                 if ($uploadedWOFF2File !== null &&
                     $uploadedWOFF2File->getError() == UPLOAD_ERR_OK &&
                     $uploadedWOFF2File->isValid()) {
-
                     $font->setWOFF2Filename($uploadedWOFF2File->getClientOriginalName());
                     $uploadedWOFF2File->move(
                         Font::getFilesFolder().'/'.$font->getFolder(),
@@ -508,7 +497,6 @@ class FontsController extends RozierApp
         }
         try {
             if (!empty($data['otfFile'])) {
-
                 $otfFile = $data['otfFile']->getData();
                 $uploadedOTFFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
                     $otfFile['tmp_name'],
@@ -520,7 +508,6 @@ class FontsController extends RozierApp
                 if (null !== $uploadedOTFFile &&
                     $uploadedOTFFile->getError() == UPLOAD_ERR_OK &&
                     $uploadedOTFFile->isValid()) {
-
                     $font->setOTFFilename($uploadedOTFFile->getClientOriginalName());
                     $uploadedOTFFile->move(Font::getFilesFolder().'/'.$font->getFolder(), $font->getOTFFilename());
                 }
@@ -530,7 +517,6 @@ class FontsController extends RozierApp
         }
         try {
             if (!empty($data['svgFile'])) {
-
                 $svgFile = $data['svgFile']->getData();
                 $uploadedSVGFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
                     $svgFile['tmp_name'],
@@ -542,7 +528,6 @@ class FontsController extends RozierApp
                 if (null !== $uploadedSVGFile &&
                     $uploadedSVGFile->getError() == UPLOAD_ERR_OK &&
                     $uploadedSVGFile->isValid()) {
-
                     $font->setSVGFilename($uploadedSVGFile->getClientOriginalName());
                     $uploadedSVGFile->move(Font::getFilesFolder().'/'.$font->getFolder(), $font->getSVGFilename());
                 }

@@ -239,7 +239,6 @@ class FrontendController extends AppController
         $namespace = $refl->getNamespaceName() . '\\Controllers';
 
         if ($this->getRequestedNode() !== null) {
-
             if (null !== $this->getSecurityContext() &&
                 !$this->getSecurityContext()->isGranted(Role::ROLE_BACKEND_USER) &&
                 !$this->getRequestedNode()->isPublished()) {
@@ -260,16 +259,13 @@ class FrontendController extends AppController
             if (in_array($this->getRequestedNode()->getNodeName(), static::$specificNodesControllers) &&
                 class_exists($nodeController) &&
                 method_exists($nodeController, 'indexAction')) {
-
                 $ctrl = new $nodeController();
 
             } elseif (class_exists($nodeTypeController) &&
                 method_exists($nodeTypeController, 'indexAction')) {
-
                 $ctrl = new $nodeTypeController();
 
             } else {
-
                 return $this->throw404(
                     "No front-end controller found for '".
                     $this->getRequestedNode()->getNodeName().
@@ -301,7 +297,6 @@ class FrontendController extends AppController
                 $this->getRequestedTranslation()
             );
         } else {
-
             return $this->throw404("No front-end controller found");
         }
     }
@@ -387,7 +382,6 @@ class FrontendController extends AppController
             $ns = $this->node->getNodeSources()->first();
 
             if (null !== $ns) {
-
                 return array(
                     'title' => ($ns->getMetaTitle() != "") ?
                                         $ns->getMetaTitle() :

@@ -77,13 +77,11 @@ class TranslationsController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
 
         foreach ($translations as $translation) {
-
             // Make default forms
             $form = $this->buildMakeDefaultForm($translation);
             $form->handleRequest();
             if ($form->isValid() &&
                 $form->getData()['translationId'] == $translation->getId()) {
-
                 $translation->getHandler()->makeDefault();
 
                 $msg = $this->getTranslator()->trans('translation.%name%.made_default', array('%name%'=>$translation->getName()));
@@ -136,7 +134,6 @@ class TranslationsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->editTranslation($form->getData(), $translation);
 
@@ -194,7 +191,6 @@ class TranslationsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->addTranslation($form->getData(), $translation);
 
@@ -251,7 +247,6 @@ class TranslationsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['translationId'] == $translation->getId()) {
-
                 try {
                     $this->deleteTranslation($form->getData(), $translation);
 
@@ -346,7 +341,6 @@ class TranslationsController extends RozierApp
     private function deleteTranslation($data, Translation $translation)
     {
         if ($data['translationId'] == $translation->getId()) {
-
             if (false === $translation->isDefaultTranslation()) {
                 $this->getService('em')->remove($translation);
                 $this->getService('em')->flush();

@@ -89,7 +89,6 @@ class FoldersController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             try {
                 $folder = $this->addFolder($form); // only pass form for file handling
 
@@ -142,7 +141,6 @@ class FoldersController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['folderId'] == $folder->getId()) {
-
                 try {
                     $this->deleteFolder($form->getData(), $folder);
                     $msg = $this->getTranslator()->trans(
@@ -193,13 +191,11 @@ class FoldersController extends RozierApp
                     ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if ($folder !== null) {
-
             $form = $this->buildEditForm($folder);
             $form->handleRequest();
 
             if ($form->isValid() &&
                 $form->getData()['folderId'] == $folder->getId()) {
-
                 try {
                     $this->editFolder($form, $folder); // only pass form for file handling
                     $msg = $this->getTranslator()->trans(
@@ -250,7 +246,6 @@ class FoldersController extends RozierApp
                     ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if ($folder !== null) {
-
             // Prepare File
             $file = tempnam("tmp", "zip");
             $zip = new \ZipArchive();

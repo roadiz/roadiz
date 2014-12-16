@@ -73,7 +73,6 @@ class SchemaCommand extends Command
         $text="";
 
         if ($input->getOption('update')) {
-
             $sql = static::getUpdateSchema();
             $count = count($sql);
 
@@ -88,7 +87,6 @@ class SchemaCommand extends Command
                         'Deletions may remove some of your data.'.PHP_EOL.'Have you done a database backup before?'.PHP_EOL.'<question>Are you sure to update your database schema? [y / N]</question> : ',
                         false
                     )) {
-
                         if (static::updateSchema(true)) {
                             $text .= '<info>Schema updated…</info>'.PHP_EOL;
                         }
@@ -104,7 +102,6 @@ class SchemaCommand extends Command
                         '<question>Are you sure to update your database schema? [y / N]</question> : ',
                         false
                     )) {
-
                         if (static::updateSchema()) {
                             $text .= '<info>Schema updated…</info>'.PHP_EOL;
                         }
@@ -112,7 +109,6 @@ class SchemaCommand extends Command
                         $text .= '<info>Schema update aborted</info>'.PHP_EOL;
                     }
                 } else {
-
                     /*
                      * Print changes
                      */
@@ -161,7 +157,6 @@ class SchemaCommand extends Command
         $deletions = array();
 
         foreach ($sql as $statement) {
-
             if (substr($statement, 0, 6) == 'DELETE' ||
                 strpos($statement, 'DROP')) {
                 $deletions[] = $statement;

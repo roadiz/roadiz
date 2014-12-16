@@ -68,7 +68,6 @@ class NodesSourcesController extends RozierApp
                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
-
             /*
              * Here we need to directly select nodeSource
              * if not doctrine will grab a cache tag because of NodeTreeWidget
@@ -82,7 +81,6 @@ class NodesSourcesController extends RozierApp
                 ->findOneBy(array('translation'=>$translation, 'node'=>$gnode));
 
             if (null !== $source) {
-
                 $node = $source->getNode();
 
                 $this->assignation['translation'] = $translation;

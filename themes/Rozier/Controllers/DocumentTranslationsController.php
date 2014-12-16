@@ -85,7 +85,6 @@ class DocumentTranslationsController extends RozierApp
 
         if ($documentTr !== null &&
             $document !== null) {
-
             $this->assignation['document'] = $document;
             $this->assignation['translation'] = $translation;
             $this->assignation['documentTr'] = $documentTr;
@@ -97,7 +96,6 @@ class DocumentTranslationsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 $this->editDocument($form->getData(), $documentTr);
                 $msg = $this->getTranslator()->trans('document.translation.%name%.updated', array(
                     '%name%'=>$document->getFilename()
@@ -173,7 +171,6 @@ class DocumentTranslationsController extends RozierApp
 
         if ($documentTr !== null &&
             $document !== null) {
-
             $this->assignation['documentTr'] = $documentTr;
             $this->assignation['document'] = $document;
             $form = $this->buildDeleteForm($documentTr);
@@ -181,7 +178,6 @@ class DocumentTranslationsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['documentId'] == $documentTr->getId()) {
-
                 try {
                     $this->getService('em')->remove($documentTr);
                     $this->getService('em')->flush();
@@ -191,7 +187,6 @@ class DocumentTranslationsController extends RozierApp
                     $this->getService('logger')->info($msg);
 
                 } catch (\Exception $e) {
-
                     $msg = $this->getTranslator()->trans('document.translation.%name%.cannot_delete', array('%name%'=>$document->getFilename()));
                     $request->getSession()->getFlashBag()->add('error', $msg);
                     $this->getService('logger')->warning($msg);

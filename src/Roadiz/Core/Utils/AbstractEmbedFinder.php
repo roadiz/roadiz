@@ -302,7 +302,6 @@ abstract class AbstractEmbedFinder
 
         if (false !== $url &&
             '' !== $url) {
-
             $pathinfo = basename($url);
 
             if ($pathinfo != "") {
@@ -315,7 +314,6 @@ abstract class AbstractEmbedFinder
 
                     if (file_exists(Document::getFilesFolder().'/'.$thumbnailName) &&
                         filesize(Document::getFilesFolder().'/'.$thumbnailName) > 0) {
-
                         return $thumbnailName;
                     } else {
                         return false;

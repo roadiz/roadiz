@@ -76,12 +76,10 @@ class InstallCommand extends Command
                 false
             )
         ) {
-
             /*
              * Create backend theme
              */
             if (!$this->hasDefaultBackend()) {
-
                 $theme = new Theme();
                 $theme->setAvailable(true)
                     ->setBackendTheme(true)
@@ -129,7 +127,6 @@ class InstallCommand extends Command
              * Create default translation
              */
             if (!$this->hasDefaultTranslation()) {
-
                 $defaultTrans = new Translation();
                 $defaultTrans
                     ->setDefaultTranslation(true)
@@ -148,14 +145,12 @@ class InstallCommand extends Command
              * Install theme
              */
             if ($input->getOption('with-theme')) {
-
                 $themeFile = $input->getOption('with-theme');
                 $themeFile = str_replace('\\', '/', $themeFile);
                 $themeFile = str_replace('Themes', 'themes', $themeFile);
                 $themeFile .= ".php";
 
                 if (file_exists($themeFile)) {
-
                     $fixtures = new Fixtures();
                     $fixtures->installFrontendTheme($input->getOption('with-theme'));
                     $text .= '<info>Theme class “'.$themeFile.'” has been installed…</info>'.PHP_EOL;
@@ -166,7 +161,6 @@ class InstallCommand extends Command
                     $data = json_decode(file_get_contents($themeRoot . "/config.json"), true);
 
                     if (false !== $data && isset($data["importFiles"])) {
-
                         if (isset($data["importFiles"]['roles'])) {
                             foreach ($data["importFiles"]['roles'] as $filename) {
                                 \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
@@ -211,7 +205,6 @@ class InstallCommand extends Command
                             }
                         }
                         if (isset($data["importFiles"]['nodes'])) {
-
                             foreach ($data["importFiles"]['nodes'] as $filename) {
                                 \RZ\Roadiz\CMS\Importers\NodesImporter::importJsonFile(
                                     file_get_contents($themeRoot . "/" . $filename)

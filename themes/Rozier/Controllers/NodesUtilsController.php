@@ -134,7 +134,6 @@ class NodesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         try {
-
             $existingNode = $this->getService('em')
                                   ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
             $newNode = $existingNode->getHandler()->duplicate();
@@ -155,7 +154,6 @@ class NodesUtilsController extends RozierApp
             );
 
         } catch (\Exception $e) {
-
             $request->getSession()->getFlashBag()->add(
                 'error',
                 $this->getTranslator()->trans("impossible.duplicate.node.%name%", array(

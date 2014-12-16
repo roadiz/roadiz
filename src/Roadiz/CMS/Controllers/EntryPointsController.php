@@ -99,7 +99,6 @@ class EntryPointsController extends AppController
     {
         if ($request->getMethod() != $method ||
             !is_array($request->get('form'))) {
-
             return array(
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
@@ -108,7 +107,6 @@ class EntryPointsController extends AppController
         }
         if (!$this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::CONTACT_FORM_TOKEN_INTENTION, $request->get('form')['_token'])) {
-
             return array(
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
@@ -129,7 +127,6 @@ class EntryPointsController extends AppController
     public function contactFormAction(Request $request, $_locale = null)
     {
         if (true !== $validation = $this->validateRequest($request)) {
-
             return new Response(
                 json_encode($validation),
                 Response::HTTP_FORBIDDEN,
@@ -145,7 +142,6 @@ class EntryPointsController extends AppController
 
         foreach (static::$mandatoryContactFields as $mandatoryField) {
             if (empty($request->get('form')[$mandatoryField])) {
-
                 $responseArray['statusCode'] = Response::HTTP_FORBIDDEN;
                 $responseArray['status'] = 'danger';
                 $responseArray['field_error'] = $mandatoryField;
@@ -179,7 +175,6 @@ class EntryPointsController extends AppController
          * if no error, create Email
          */
         if ($canSend) {
-
             $receiver = SettingsBag::get('email_sender');
 
             $assignation = array(
@@ -196,7 +191,6 @@ class EntryPointsController extends AppController
                 if ($key[0] == '_') {
                     continue;
                 } elseif (!empty($value)) {
-
                     $assignation['fields'][] = array(
                         'name' => strip_tags($key),
                         'value' => (strip_tags($value))
@@ -222,7 +216,6 @@ class EntryPointsController extends AppController
              * Custom receiver
              */
             if (!empty($request->get('form')['_emailReceiver'])) {
-
                 $email = StringHandler::decodeWithSecret($request->get('form')['_emailReceiver'], $this->getService('config')['security']['secret']);
                 if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     $receiver = $email;
@@ -256,14 +249,12 @@ class EntryPointsController extends AppController
          * just redirect.
          */
         if (!empty($request->get('form')['_redirect'])) {
-
             $response = new RedirectResponse($request->get('form')['_redirect']);
             $response->prepare($request);
 
             return $response->send();
 
         } else {
-
             return new Response(
                 json_encode($responseArray),
                 Response::HTTP_OK,
@@ -375,7 +366,6 @@ class EntryPointsController extends AppController
             ));
 
         if (true === $redirect) {
-
             if (null !== $customRedirectUrl) {
                 $builder->add('_redirect', 'hidden', array(
                     'data' => strip_tags($customRedirectUrl)

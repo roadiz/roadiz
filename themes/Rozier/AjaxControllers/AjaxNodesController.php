@@ -70,7 +70,6 @@ class AjaxNodesController extends AbstractAjaxController
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if ($node !== null) {
-
             $responseArray = null;
 
             /*
@@ -128,7 +127,6 @@ class AjaxNodesController extends AbstractAjaxController
 
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
-
             $parent = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['newParent']);
 
@@ -202,12 +200,10 @@ class AjaxNodesController extends AbstractAjaxController
 
         if ("nodeChangeStatus" == $request->get('_action') &&
             "" != $request->get('statusName')) {
-
             // just verify role when updating status
             if ($request->get('statusName') == 'status' &&
                 $request->get('statusValue') > Node::PENDING &&
                 !$this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_STATUS')) {
-
                 $responseArray = array(
                     'statusCode' => Response::HTTP_FORBIDDEN,
                     'status'    => 'danger',
@@ -215,31 +211,25 @@ class AjaxNodesController extends AbstractAjaxController
                 );
 
             } else {
-
                 if ($request->get('nodeId') > 0) {
-
                     $node = $this->getService('em')
                                  ->find('RZ\Roadiz\Core\Entities\Node', (int) $request->get('nodeId'));
 
                     if (null !== $node) {
-
                         /*
                          * Check if status name is a valid boolean node field.
                          */
                         if (in_array($request->get('statusName'), array_keys($availableStatuses))) {
-
                             $setter = $availableStatuses[$request->get('statusName')];
                             $value = $request->get('statusValue');
 
                             if ($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_STATUS') ||
                                 $request->get('statusName') != 'status') {
-
                                 $node->$setter($value);
                                 $this->em()->flush();
 
                                 // Update Solr Search engine if setup
                                 if (true === $this->getKernel()->pingSolrServer()) {
-
                                     foreach ($node->getNodeSources() as $nodeSource) {
                                         $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
                                             $nodeSource,
@@ -335,7 +325,6 @@ class AjaxNodesController extends AbstractAjaxController
 
         if ($request->get('nodeTypeId') > 0 &&
             $request->get('parentNodeId') > 0) {
-
             $nodeType = $this->getService('em')
                             ->find(
                                 'RZ\Roadiz\Core\Entities\NodeType',
@@ -350,8 +339,6 @@ class AjaxNodesController extends AbstractAjaxController
 
             if (null !== $nodeType &&
                 null !== $parent) {
-
-
                 if ($request->get('translationId') > 0) {
                     $translation = $this->getService('em')
                                             ->find('RZ\Roadiz\Core\Entities\Translation', (int) $request->get('translationId'));

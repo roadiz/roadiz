@@ -332,7 +332,6 @@ class AppController implements ViewableInterface
     public static function forceTwigCompilation()
     {
         if (file_exists(static::getViewsFolder())) {
-
             $ctrl = new static();
             $ctrl->setKernel(Kernel::getInstance());
             $ctrl->getTwigLoader();
@@ -361,7 +360,6 @@ class AppController implements ViewableInterface
 
             return true;
         } else {
-
             return false;
         }
     }
@@ -423,7 +421,6 @@ class AppController implements ViewableInterface
 
         if ($this->getService('securityContext') !== null &&
             $this->getService('securityContext')->getToken() !== null ) {
-
             $this->assignation['securityContext'] = $this->getService('securityContext');
             $this->assignation['session']['user'] = $this->getService('securityContext')
                                                          ->getToken()
@@ -605,7 +602,6 @@ class AppController implements ViewableInterface
     public function validateAccessForRole($role)
     {
         if (!$this->getService('securityContext')->isGranted($role)) {
-
             throw new AccessDeniedException("You don't have access to this page:" . $role);
         }
     }

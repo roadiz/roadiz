@@ -54,7 +54,6 @@ class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
 
             if (isset($c['config']['install']) &&
                 false === $c['config']['install']) {
-
                 return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
                                  ->findAvailableBackend();
             } else {
@@ -71,7 +70,6 @@ class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
 
 
                 if (count($themes) < 1) {
-
                     $defaultTheme = new Theme();
                     $defaultTheme->setClassName('RZ\Roadiz\CMS\Controllers\FrontendController');
                     $defaultTheme->setAvailable(true);

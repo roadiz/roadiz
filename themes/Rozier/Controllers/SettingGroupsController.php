@@ -158,7 +158,6 @@ class SettingGroupsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->addSettingGroup($form->getData(), $settingGroup);
                     $msg = $this->getTranslator()->trans(
@@ -219,7 +218,6 @@ class SettingGroupsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['settingGroupId'] == $settingGroup->getId() ) {
-
                 $this->deleteSettingGroup($form->getData(), $settingGroup);
 
                 $msg = $this->getTranslator()->trans(

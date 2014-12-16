@@ -64,7 +64,6 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         if ("" != $request->get('searchTerms')) {
-
             $nodesSources = $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                 ->findBySearchQuery(strip_tags($request->get('searchTerms')));
@@ -77,7 +76,6 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
 
             if (null !== $nodesSources &&
                 count($nodesSources) > 0) {
-
                 $responseArray = array(
                     'statusCode' => '200',
                     'status' => 'success',

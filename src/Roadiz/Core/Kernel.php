@@ -225,7 +225,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
         if ($this->container['config'] === null ||
             (isset($this->container['config']['install']) &&
             true === (boolean) $this->container['config']['install'])) {
-
             return true;
         } else {
             return false;
@@ -242,7 +241,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
         if ($this->isDebug() ||
             !file_exists(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php') ||
             !file_exists(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php')) {
-
             $this->container['stopwatch']->start('dumpUrlUtils');
             $this->dumpUrlUtils();
             $this->container['stopwatch']->stop('dumpUrlUtils');
@@ -257,7 +255,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
         }
 
         if ($this->isInstallMode()) {
-
             // nothing to prepare
 
         } else {

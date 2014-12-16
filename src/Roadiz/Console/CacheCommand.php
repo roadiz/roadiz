@@ -100,7 +100,6 @@ class CacheCommand extends Command
 
             $text .= '<info>All caches have been been purged…</info>'.PHP_EOL;
         } else {
-
             if ($input->getOption('clear-doctrine')) {
                 $text .= static::clearDoctrine();
             }
@@ -229,7 +228,6 @@ class CacheCommand extends Command
 
         if (file_exists(ROADIZ_ROOT . '/cache/request') &&
             file_exists(ROADIZ_ROOT . '/cache/rendered')) {
-
             $finder->in(ROADIZ_ROOT . '/cache/request')
                    ->in(ROADIZ_ROOT . '/cache/rendered');
             $fs->remove($finder);

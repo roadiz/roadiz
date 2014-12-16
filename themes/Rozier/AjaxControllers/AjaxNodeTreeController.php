@@ -79,7 +79,6 @@ class AjaxNodeTreeController extends AbstractAjaxController
              */
             case 'requestNodeTree':
                 if ($request->get('parentNodeId') > 0) {
-
                     $node = $this->getService('em')
                                  ->find(
                                      '\RZ\Roadiz\Core\Entities\Node',

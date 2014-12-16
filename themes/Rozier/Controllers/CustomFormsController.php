@@ -225,7 +225,6 @@ class CustomFormsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['customFormId'] == $customForm->getId() ) {
-
                 $this->getService("em")->remove($customForm);
 
                 $msg = $this->getTranslator()->trans('customForm.%name%.deleted', array('%name%'=>$customForm->getName()));

@@ -60,15 +60,12 @@ class SettingsImporter implements ImporterInterface
         $newSettings = array();
 
         foreach ($settingGroups as $index => $settingGroup) {
-
             /*
              * Loop over settings to set their group
              * and move them to a temp collection
              */
             foreach ($settingGroup->getSettings() as $setting) {
-
                 if (!in_array($setting->getName(), $settingsNames)) {
-
                 } else {
                     $setting = Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Setting')

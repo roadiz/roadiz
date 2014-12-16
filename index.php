@@ -34,7 +34,6 @@ require 'bootstrap.php';
 if (php_sapi_name() == 'cli') {
     echo 'Use "bin/roadiz" as an executable instead of calling index.php'.PHP_EOL;
 } else {
-
     $request = Kernel::getInstance()->getRequest();
 
     /*

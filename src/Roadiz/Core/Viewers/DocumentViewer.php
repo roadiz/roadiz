@@ -142,7 +142,6 @@ class DocumentViewer implements ViewableInterface
         if (isset($args['embed']) &&
             true === $args['embed'] &&
             $this->isEmbedPlatformSupported()) {
-
             return $this->getEmbedByArray($args);
 
         } elseif ($this->document->isImage()) {
@@ -179,7 +178,6 @@ class DocumentViewer implements ViewableInterface
     public function getEmbedFinder()
     {
         if (null === $this->embedFinder) {
-
             if ($this->isEmbedPlatformSupported()) {
                 $handlers = Kernel::getService('document.platforms');
                 $class = $handlers[$this->document->getEmbedPlatform()];
@@ -277,7 +275,6 @@ class DocumentViewer implements ViewableInterface
         if ($args === null ||
             (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
-
             return Kernel::getInstance()->getRequest()
                                         ->getBaseUrl().'/files/'.$this->document->getRelativeUrl();
         } else {

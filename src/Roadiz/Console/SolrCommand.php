@@ -72,17 +72,13 @@ class SolrCommand extends Command
         $solr = Kernel::getService('solr');
 
         if (null !== $solr) {
-
             if (true === Kernel::getInstance()->pingSolrServer()) {
-
                 if ($input->getOption('reset')) {
-
                     if ($this->dialog->askConfirmation(
                         $output,
                         '<question>Are you sure to reset Solr index?</question> : ',
                         false
                     )) {
-
                         $update = $solr->createUpdate();
                         $update->addDeleteQuery('*:*');
                         $update->addCommit();

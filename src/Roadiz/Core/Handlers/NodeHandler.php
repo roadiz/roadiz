@@ -534,7 +534,6 @@ class NodeHandler
         $nodeSources = new ArrayCollection($node->getNodeSources()->toArray());
         $node->getNodeSources()->clear();
         foreach ($nodeSources as $nodeSource) {
-
             $nodeSource->setNode(null);
 
             $tran = Kernel::getService('em')->merge($nodeSource->getTranslation());

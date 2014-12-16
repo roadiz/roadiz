@@ -94,7 +94,6 @@ class NodeTypeFieldsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
         if ($field !== null) {
-
             $this->assignation['nodeType'] = $field->getNodeType();
             $this->assignation['field'] = $field;
             $form = $this->buildEditForm($field);
@@ -156,14 +155,12 @@ class NodeTypeFieldsController extends RozierApp
 
         if ($nodeType !== null &&
             $field !== null) {
-
             $this->assignation['nodeType'] = $nodeType;
             $this->assignation['field'] = $field;
             $form = $this->buildEditForm($field);
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->addNodeTypeField($form->getData(), $field, $nodeType);
 
@@ -243,7 +240,6 @@ class NodeTypeFieldsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['nodeTypeFieldId'] == $field->getId()) {
-
                 $nodeTypeId = $field->getNodeType()->getId();
 
                 $this->getService('em')->remove($field);
@@ -339,7 +335,7 @@ class NodeTypeFieldsController extends RozierApp
                          ->findOneBy(array(
                             'name' => $data['name'],
                             'nodeType' => $nodeType
-                        ));
+                         ));
         if (null !== $existing) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans(
                 "%field%.already_exists",

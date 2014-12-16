@@ -73,7 +73,6 @@ class NodesTreesController extends RozierApp
         }
 
         if (null !== $node) {
-
             $widget = new NodeTreeWidget($request, $this, $node, $translation);
 
             if ($request->get('tagId') && $request->get('tagId') > 0) {
@@ -131,7 +130,6 @@ class NodesTreesController extends RozierApp
              * Handle bulk status
              */
             if ($this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_STATUS')) {
-
                 $statusBulkNodes = $this->buildBulkStatusForm($request->getRequestUri());
                 $this->assignation['statusNodesForm'] = $statusBulkNodes->createView();
             }
@@ -165,7 +163,6 @@ class NodesTreesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES_DELETE');
 
         if (!empty($request->get('deleteForm')['nodesIds'])) {
-
             $nodesIds = trim($request->get('deleteForm')['nodesIds']);
             $nodesIds = explode(',', $nodesIds);
             array_filter($nodesIds);
@@ -177,7 +174,6 @@ class NodesTreesController extends RozierApp
                             ));
 
             if (count($nodes) > 0) {
-
                 $form = $this->buildBulkDeleteForm(
                     $request->get('deleteForm')['referer'],
                     $nodesIds
@@ -230,7 +226,6 @@ class NodesTreesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES_STATUS');
 
         if (!empty($request->get('statusForm')['nodesIds'])) {
-
             $nodesIds = trim($request->get('statusForm')['nodesIds']);
             $nodesIds = explode(',', $nodesIds);
             array_filter($nodesIds);
@@ -242,7 +237,6 @@ class NodesTreesController extends RozierApp
                             ));
 
             if (count($nodes) > 0) {
-
                 $form = $this->buildBulkStatusForm(
                     $request->get('statusForm')['referer'],
                     $nodesIds,
@@ -429,7 +423,6 @@ class NodesTreesController extends RozierApp
 
         if (!empty($data['tagsPaths']) &&
             !empty($data['nodesIds'])) {
-
             $nodesIds = explode(',', $data['nodesIds']);
             $nodesIds = array_filter($nodesIds);
 
@@ -472,7 +465,6 @@ class NodesTreesController extends RozierApp
 
         if (!empty($data['tagsPaths']) &&
             !empty($data['nodesIds'])) {
-
             $nodesIds = explode(',', $data['nodesIds']);
             $nodesIds = array_filter($nodesIds);
 
@@ -544,7 +536,6 @@ class NodesTreesController extends RozierApp
             ));
         }
         if (true === $submit) {
-
             $builder->add('submitStatus', 'submit', array(
                 'label' => $this->getTranslator()->trans('change.nodes.status'),
                 'attr' => array(

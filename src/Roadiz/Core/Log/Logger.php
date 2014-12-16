@@ -171,14 +171,12 @@ class Logger implements LoggerInterface
     public function log($level, $message, array $context = array())
     {
         if (Kernel::getService('em')->isOpen()) {
-
             $log = new Log($level, $message, $context);
 
             if (null !== $this->getSecurityContext() &&
                 null !== $this->getSecurityContext()->getToken() &&
                 is_object($this->getSecurityContext()->getToken()->getUser()) &&
                 null !== $this->getSecurityContext()->getToken()->getUser()->getId()) {
-
                 $log->setUser($this->getSecurityContext()->getToken()->getUser());
             }
 

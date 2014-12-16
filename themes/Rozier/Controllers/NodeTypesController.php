@@ -230,7 +230,6 @@ class NodeTypesController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['nodeTypeId'] == $nodeType->getId() ) {
-
                 /*
                  * Delete All node-type association and schema
                  */

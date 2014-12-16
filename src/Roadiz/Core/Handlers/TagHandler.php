@@ -149,7 +149,6 @@ class TagHandler
                         ->setParameter('tag_id', $this->tag->getId());
 
         try {
-
             $simpleArray = array();
             $complexArray = $query->getScalarResult();
             foreach ($complexArray as $subArray) {

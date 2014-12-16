@@ -81,7 +81,6 @@ class DocumentsType extends AbstractType
                 }
 
             } else {
-
                 $document = Kernel::getService('em')
                                 ->find('RZ\Roadiz\Core\Entities\Document', (int) $object);
 

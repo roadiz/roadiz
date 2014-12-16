@@ -93,7 +93,6 @@ class CustomFormFieldsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
 
         if ($field !== null) {
-
             $this->assignation['customForm'] = $field->getCustomForm();
             $this->assignation['field'] = $field;
             $form = $this->buildEditForm($field);
@@ -152,14 +151,12 @@ class CustomFormFieldsController extends RozierApp
 
         if ($customForm !== null &&
             $field !== null) {
-
             $this->assignation['customForm'] = $customForm;
             $this->assignation['field'] = $field;
             $form = $this->buildEditForm($field);
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->addCustomFormField($form->getData(), $field, $customForm);
 
@@ -236,7 +233,6 @@ class CustomFormFieldsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['customFormFieldId'] == $field->getId()) {
-
                 $customFormId = $field->getCustomForm()->getId();
 
                 $this->getService('em')->remove($field);
@@ -323,7 +319,7 @@ class CustomFormFieldsController extends RozierApp
                          ->findOneBy(array(
                             'name' => $data['name'],
                             'customForm' => $customForm
-                        ));
+                         ));
         if (null !== $existing) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans(
                 "%field%.already_exists",

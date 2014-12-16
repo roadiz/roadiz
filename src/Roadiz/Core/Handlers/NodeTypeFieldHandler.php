@@ -124,7 +124,6 @@ class NodeTypeFieldHandler
     protected function generateSourceSetter()
     {
         if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
-
             $assignation = '$'.$this->nodeTypeField->getName();
 
             if ($this->nodeTypeField->getType() === NodeTypeField::BOOLEAN_T) {
@@ -163,7 +162,6 @@ class NodeTypeFieldHandler
     protected function generateSourceGetter()
     {
         if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
-
             $assignation = '$this->'.$this->nodeTypeField->getName();
 
             return '
@@ -176,7 +174,6 @@ class NodeTypeFieldHandler
     }'.PHP_EOL;
 
         } elseif (AbstractField::DOCUMENTS_T === $this->nodeTypeField->getType()) {
-
             return '
     /**
      * @return array Documents array

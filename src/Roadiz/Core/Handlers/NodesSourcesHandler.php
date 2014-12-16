@@ -146,7 +146,6 @@ class NodesSourcesHandler
         }
 
         if ($this->nodeSource->getNode()->isHome()) {
-
             if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
                 return $host.'/';
             } else {
@@ -161,7 +160,6 @@ class NodesSourcesHandler
         $parent = $this->getParent();
         if ($parent !== null &&
             !$parent->getNode()->isHome()) {
-
             do {
                 if ($parent->getNode()->isVisible()) {
                     $handler = $parent->getHandler();
@@ -214,7 +212,6 @@ class NodesSourcesHandler
     public function getParent()
     {
         if (null === $this->parentNodeSource) {
-
             $parent = $this->nodeSource->getNode()->getParent();
             if ($parent !== null) {
                 $query = Kernel::getService('em')

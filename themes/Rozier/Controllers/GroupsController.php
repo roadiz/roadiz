@@ -92,7 +92,6 @@ class GroupsController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             try {
                 $group = $this->addGroup($form->getData());
                 $msg = $this->getTranslator()->trans(
@@ -143,7 +142,6 @@ class GroupsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['groupId'] == $group->getId()) {
-
                 try {
                     $this->deleteGroup($form->getData(), $group);
                     $msg = $this->getTranslator()->trans(
@@ -198,7 +196,6 @@ class GroupsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['groupId'] == $group->getId()) {
-
                 try {
                     $this->editGroup($form->getData(), $group);
                     $msg = $this->getTranslator()->trans(
@@ -249,7 +246,6 @@ class GroupsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
 
         if ($group !== null) {
-
             $this->assignation['group'] = $group;
             $form = $this->buildEditRolesForm($group);
             $form->handleRequest();
@@ -311,7 +307,6 @@ class GroupsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 $this->removeRole($form->getData(), $group, $role);
                 $msg = $this->getTranslator()->trans('role.%role%.removed_from_group.%group%', array(
                     '%role%'=>$role->getName(),
@@ -356,7 +351,6 @@ class GroupsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
 
         if ($group !== null) {
-
             $this->assignation['group'] = $group;
             $form = $this->buildEditUsersForm($group);
             $form->handleRequest();
@@ -418,7 +412,6 @@ class GroupsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 $this->removeUser($form->getData(), $group, $user);
                 $msg = $this->getTranslator()->trans('user.%user%.removed_from_group.%group%', array(
                     '%user%'=>$user->getUserName(),
@@ -731,7 +724,6 @@ class GroupsController extends RozierApp
     {
         if ($data['groupId'] == $group->getId() &&
             $data['roleId'] == $role->getId()) {
-
             if ($role !== null) {
                 $group->removeRole($role);
                 $this->getService('em')->flush();
@@ -773,7 +765,6 @@ class GroupsController extends RozierApp
     {
         if ($data['groupId'] == $group->getId() &&
             $data['userId'] == $user->getId()) {
-
             if ($user !== null) {
                 $user->removeGroup($group);
                 $this->getService('em')->flush();

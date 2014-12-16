@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Utils;
 
-
 use RZ\Roadiz\Core\Kernel;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -74,7 +73,6 @@ class DebugPanel implements EventSubscriberInterface
             $event->setResponse($response);
 
         } elseif (false !== strpos($response->getContent(), '</body>')) {
-
             $this->initializeTwig();
             $content = str_replace('</body>', $this->getDebugView()."</body>", $response->getContent());
             $response->setContent($content);

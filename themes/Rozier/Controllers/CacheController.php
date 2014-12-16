@@ -55,7 +55,6 @@ class CacheController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             CacheCommand::clearDoctrine();
             CacheCommand::clearRouteCollections();
             CacheCommand::clearTemplates();
@@ -108,7 +107,6 @@ class CacheController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             CacheCommand::clearCachedAssets();
 
             $msg = $this->getTranslator()->trans('cache.deleted');

@@ -2,7 +2,6 @@
 
 namespace RZ\Roadiz\Core\Utils;
 
-
 /**
  * Inline Markdown Parser Class.
  *

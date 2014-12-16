@@ -130,7 +130,6 @@ class SettingsController extends RozierApp
             $form->handleRequest();
             if ($form->isValid() &&
                 $form->getData()['id'] == $setting->getId()) {
-
                 try {
                     $this->editSetting($form->getData(), $setting);
                     $msg = $this->getTranslator()->trans(
@@ -250,7 +249,6 @@ class SettingsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->addSetting($form->getData(), $setting);
                     $msg = $this->getTranslator()->trans('setting.%name%.created', array('%name%'=>$setting->getName()));
@@ -308,7 +306,6 @@ class SettingsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['settingId'] == $setting->getId() ) {
-
                 $this->deleteSetting($form->getData(), $setting);
 
                 $msg = $this->getTranslator()->trans('setting.%name%.deleted', array('%name%'=>$setting->getName()));

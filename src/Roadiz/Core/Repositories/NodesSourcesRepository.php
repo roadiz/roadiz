@@ -131,7 +131,6 @@ class NodesSourcesRepository extends EntityRepository
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
-
             if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
@@ -175,7 +174,6 @@ class NodesSourcesRepository extends EntityRepository
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
-
             if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
@@ -226,7 +224,6 @@ class NodesSourcesRepository extends EntityRepository
         // Add ordering
         if (null !== $orderBy) {
             foreach ($orderBy as $key => $value) {
-
                 if (false !== strpos($key, 'node.')) {
                     if (!$joinedNode) {
                         $qb->innerJoin('ns.node', 'n');

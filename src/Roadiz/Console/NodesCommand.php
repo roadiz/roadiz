@@ -111,7 +111,6 @@ class NodesCommand extends Command
             $typeName &&
             $input->getOption('create')
         ) {
-
             $type = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                 ->findOneBy(array('name'=>$typeName));
@@ -134,7 +133,6 @@ class NodesCommand extends Command
                 // Node
                 $text = $this->executeNodeCreation($input, $output, $type, $translation);
             } else {
-
             }
 
         } elseif ($nodeName) {

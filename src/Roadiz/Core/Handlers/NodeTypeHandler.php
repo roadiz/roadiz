@@ -102,7 +102,6 @@ class NodeTypeHandler
         }
 
         if (!file_exists($file)) {
-
             $fields = $this->nodeType->getFields();
             $fieldsArray = array();
             $indexes = array();

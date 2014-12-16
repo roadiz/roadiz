@@ -133,15 +133,12 @@ class GroupsUtilsController extends RozierApp
 
         if ($form->isValid() &&
             !empty($form['group_file'])) {
-
             $file = $form['group_file']->getData();
 
             if (UPLOAD_ERR_OK == $file['error']) {
-
                 $serializedData = file_get_contents($file['tmp_name']);
 
                 if (null !== json_decode($serializedData)) {
-
                     GroupsImporter::importJsonFile($serializedData);
 
                     $msg = $this->getTranslator()->trans('group.imported.updated');

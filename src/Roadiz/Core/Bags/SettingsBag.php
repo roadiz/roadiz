@@ -54,7 +54,6 @@ class SettingsBag
     {
         if (!isset(static::$settings[$settingName]) &&
             Kernel::getService('em') !== null) {
-
             try {
                 static::$settings[$settingName] =
                             Kernel::getService('em')

@@ -57,7 +57,6 @@ abstract class AbstractAjaxController extends RozierApp
         }
         if (!$this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::AJAX_TOKEN_INTENTION, $request->get('_token'))) {
-
             return array(
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
@@ -65,7 +64,6 @@ abstract class AbstractAjaxController extends RozierApp
             );
         }
         if ($request->getMethod() != $method) {
-
             return array(
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',

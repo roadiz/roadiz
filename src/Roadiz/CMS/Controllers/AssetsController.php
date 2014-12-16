@@ -42,7 +42,7 @@ use Symfony\Component\Config\FileLocator;
  */
 class AssetsController extends AppController
 {
-   /**
+    /**
      * Initialize controller with NO twig environment.
      */
     public function __init()
@@ -111,9 +111,7 @@ class AssetsController extends AppController
             ->findOneBy(array('hash'=>$filename, 'variant'=>$variant));
 
         if (null !== $font) {
-
             if ($this->getService('csrfProvider')->isCsrfTokenValid($font->getHash().$font->getVariant(), $token)) {
-
                 switch ($extension) {
                     case 'eot':
                         $fontpath = $font->getEOTAbsolutePath();
@@ -178,7 +176,6 @@ class AssetsController extends AppController
     {
         if ($this->getService('csrfProvider')
                  ->isCsrfTokenValid(static::FONT_TOKEN_INTENTION, $token)) {
-
             $lastMod = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Font')
                 ->getLatestUpdateDate();

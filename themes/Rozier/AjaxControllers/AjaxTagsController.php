@@ -70,7 +70,6 @@ class AjaxTagsController extends AbstractAjaxController
             ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
-
             $responseArray = null;
 
             /*
@@ -133,7 +132,6 @@ class AjaxTagsController extends AbstractAjaxController
         );
 
         if (!empty($request->get('search'))) {
-
             $responseArray = array();
 
             $pattern = strip_tags($request->get('search'));
@@ -170,7 +168,6 @@ class AjaxTagsController extends AbstractAjaxController
 
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
-
             $parent = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['newParent']);
 
@@ -193,7 +190,6 @@ class AjaxTagsController extends AbstractAjaxController
             }
         } elseif (!empty($parameters['prevTagId']) &&
             $parameters['prevTagId'] > 0) {
-
             $prevTag = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['prevTagId']);
             if ($prevTag !== null) {

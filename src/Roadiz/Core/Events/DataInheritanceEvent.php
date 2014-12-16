@@ -70,7 +70,6 @@ class DataInheritanceEvent
         $class = $metadata->getReflectionClass();
 
         if ($class->getName() === 'RZ\Roadiz\Core\Entities\NodesSources') {
-
             try {
                 // List node types
                 $nodeTypes = Kernel::getService('em')

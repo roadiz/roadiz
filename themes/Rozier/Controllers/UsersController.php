@@ -106,7 +106,6 @@ class UsersController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->editUser($form->getData(), $user);
                     $msg = $this->getTranslator()->trans(
@@ -161,7 +160,6 @@ class UsersController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
-
             $this->assignation['user'] = $user;
             $form = $this->buildEditRolesForm($user);
             $form->handleRequest();
@@ -228,7 +226,6 @@ class UsersController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 $this->removeUserRole($form->getData(), $user);
                 $msg = $this->getTranslator()->trans(
                     'user.%name%.role_removed',
@@ -390,14 +387,12 @@ class UsersController extends RozierApp
         $user = new User();
 
         if ($user !== null) {
-
             $this->assignation['user'] = $user;
             $form = $this->buildAddForm($user);
 
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->addUser($form->getData(), $user);
                     $user->getViewer()->sendSignInConfirmation();
@@ -455,7 +450,6 @@ class UsersController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['userId'] == $user->getId() ) {
-
                 try {
                     $this->deleteUser($form->getData(), $user);
 
@@ -500,7 +494,6 @@ class UsersController extends RozierApp
                 ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->usernameExists($data['username'])
             ) {
-
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'user.%name%.cannot_update.name_already_exists',
@@ -513,7 +506,6 @@ class UsersController extends RozierApp
             $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->emailExists($data['email'])) {
-
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'user.%name%.cannot_update.email_already_exists',
@@ -544,7 +536,6 @@ class UsersController extends RozierApp
             $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->emailExists($data['email'])) {
-
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'user.%name%.cannot_create_already_exists',

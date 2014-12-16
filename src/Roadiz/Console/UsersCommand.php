@@ -114,7 +114,6 @@ class UsersCommand extends Command
 
             if ($user !== null) {
                 if ($input->getOption('enable')) {
-
                     if ($user !== null && $user->setEnabled(true)) {
                         Kernel::getService('em')->flush();
                         $text = '<info>User enabled…</info>'.PHP_EOL;
@@ -122,7 +121,6 @@ class UsersCommand extends Command
                         $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
                     }
                 } elseif ($input->getOption('disable')) {
-
                     if ($user !== null && $user->setEnabled(false)) {
                         Kernel::getService('em')->flush();
                         $text = '<info>User disabled…</info>'.PHP_EOL;
@@ -130,7 +128,6 @@ class UsersCommand extends Command
                         $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
                     }
                 } elseif ($input->getOption('delete')) {
-
                     if ($user !== null && $this->dialog->askConfirmation(
                         $output,
                         '<question>Do you really want to delete user “'.$user->getUsername().'”?</question> : ',
@@ -243,7 +240,6 @@ class UsersCommand extends Command
             '<question>Is user a backend user?</question> : ',
             false
         )) {
-
             $user->addRole($this->getRole(Role::ROLE_BACKEND_USER));
         }
         if ($this->dialog->askConfirmation(
@@ -251,7 +247,6 @@ class UsersCommand extends Command
             '<question>Is user a super-admin user?</question> : ',
             false
         )) {
-
             $user->addRole($this->getRole(Role::ROLE_SUPERADMIN));
         }
 

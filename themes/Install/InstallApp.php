@@ -109,7 +109,6 @@ class InstallApp extends AppController
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             $locale = $form->getData()['language'];
             $request->setLocale($locale);
             $this->getService('session')->set('_locale', $locale);
@@ -237,7 +236,6 @@ class InstallApp extends AppController
             $databaseForm->handleRequest();
 
             if ($databaseForm->isValid()) {
-
                 try {
                     $config->testDoctrineConnexion($databaseForm->getData());
 
@@ -316,7 +314,6 @@ class InstallApp extends AppController
             $this->assignation['errorMessage'] = $c['session']->getFlashBag()->all();
 
         } else {
-
             try {
                 $fixtures = new Fixtures();
 
@@ -548,7 +545,6 @@ class InstallApp extends AppController
             $infosForm->handleRequest();
 
             if ($infosForm->isValid()) {
-
                 /*
                  * Save informations
                  */
@@ -611,7 +607,6 @@ class InstallApp extends AppController
 
             if ($doneForm->isValid() &&
                 $doneForm->getData()['action'] == 'quit_install') {
-
                 /*
                  * Save informations
                  */

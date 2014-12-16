@@ -80,7 +80,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     private function matchNode($decodedUrl)
     {
         if (null !== $this->getThemeController()) {
-
             $tokens = explode('/', $decodedUrl);
             // Remove empty tokens (especially when a trailing slash is present)
             $tokens = array_values(array_filter($tokens));
@@ -91,7 +90,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             $node = $this->parseFromUrlAlias($tokens);
 
             if ($node !== null) {
-
                 $translation = $node->getNodeSources()->first()->getTranslation();
 
                 return array(
@@ -174,7 +172,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     private function parseNode(&$tokens, Translation $translation)
     {
         if (!empty($tokens[0])) {
-
             /*
              * If the only url token is for language, return Home page
              */
@@ -188,7 +185,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
 
                 if ($identifier !== null &&
                     $identifier != '') {
-
                     return Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Node')
                         ->findByNodeNameWithTranslation($identifier, $translation);
@@ -209,7 +205,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     private function parseFromUrlAlias(&$tokens)
     {
         if (!empty($tokens[0])) {
-
             /*
              * If the only url token if for language, return no url alias !
              */
@@ -220,7 +215,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                 $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
 
                 if ($identifier != '') {
-
                     $ua = Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
                         ->findOneBy(array('alias'=>$identifier));
@@ -247,7 +241,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     private function parseTranslation(&$tokens)
     {
         if (!empty($tokens[0])) {
-
             $firstToken = $tokens[0];
             /*
              * First token is for language

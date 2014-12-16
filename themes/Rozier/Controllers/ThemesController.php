@@ -138,12 +138,10 @@ class ThemesController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
-
             $form = $this->buildEditForm($theme);
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->editTheme($form->getData(), $theme);
                     $msg = $this->getTranslator()->trans(
@@ -199,7 +197,6 @@ class ThemesController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['themeId'] == $theme->getId()) {
-
                 try {
                     $this->deleteTheme($form->getData(), $theme);
                     $msg = $this->getTranslator()->trans(
