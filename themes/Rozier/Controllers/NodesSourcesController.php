@@ -142,6 +142,15 @@ class NodesSourcesController extends RozierApp
     {
         if (isset($data['title'])) {
             $nodeSource->setTitle($data['title']);
+
+            /*
+             * update node name if dynamic option enabled and
+             * default translation
+             */
+            if (true === $nodeSource->getNode()->isDynamicNodeName() &&
+                $nodeSource->getTranslation()->isDefaultTranslation()) {
+                $nodeSource->getNode()->setNodeName($data['title']);
+            }
         }
 
         $fields = $nodeSource->getNode()->getNodeType()->getFields();

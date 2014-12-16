@@ -1117,6 +1117,7 @@ class NodesController extends RozierApp
             'nodeName' => $node->getNodeName(),
             'home' => $node->isHome(),
             'priority' => $node->getPriority(),
+            'dynamicNodeName' => $node->isDynamicNodeName(),
         );
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
@@ -1141,6 +1142,15 @@ class NodesController extends RozierApp
                 'checkbox',
                 array(
                     'label' => $this->getTranslator()->trans('node.isHome'),
+                    'required' => false,
+                    'attr' => array('class' => 'rz-boolean-checkbox')
+                )
+            )
+            ->add(
+                'dynamicNodeName',
+                'checkbox',
+                array(
+                    'label' => $this->getTranslator()->trans('node.dynamicNodeName'),
                     'required' => false,
                     'attr' => array('class' => 'rz-boolean-checkbox')
                 )

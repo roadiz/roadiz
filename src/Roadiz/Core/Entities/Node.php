@@ -86,6 +86,40 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
+     * @ORM\Column(type="boolean", name="dynamic_node_name", nullable=true)
+     */
+    protected $dynamicNodeName = true;
+
+    /**
+     * Dynamic node name will be updated against default
+     * translated nodeSource title at each save.
+     *
+     * Disable this parameter if you need to protect your nodeName
+     * from title changes.
+     *
+     * @return boolean
+     */
+    public function isDynamicNodeName()
+    {
+        if (null === $this->dynamicNodeName) {
+            return true;
+        } else {
+            return $this->dynamicNodeName;
+        }
+    }
+
+    /**
+     * @param boolean $newdynamicNodeName
+     */
+    public function setDynamicNodeName($dynamicNodeName)
+    {
+        $this->dynamicNodeName = (boolean) $dynamicNodeName;
+
+        return $this;
+    }
+
+
+    /**
      * @ORM\Column(type="boolean", name="home")
      */
     private $home = false;
