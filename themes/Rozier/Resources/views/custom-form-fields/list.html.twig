@@ -28,7 +28,11 @@
 				<tbody class="uk-sortable" data-uk-sortable="{animation:0, dragCustomClass:'rz-custom-form-field-dragged', handleClass:'custom-form-field-col'}">
 					{% for field in fields %}
 					<tr data-position="{{ field.position }}" data-field-id="{{ field.getId }}" class="custom-form-field-row">
-						<td class="custom-form-field-col custom-form-field-col-1"><i class="uk-icon-chevron-right"></i><a class="custom-form-field-edit-button rz-no-ajax-link" href="{{ path('customFormFieldsEditPage', { customFormFieldId: field.getId }) }}" data-index="{{ loop.index0 }}">{{ field.getName }}</a></td>
+						<td class="custom-form-field-col custom-form-field-col-1">
+                            <a class="custom-form-field-edit-button edit-button-chevron rz-no-ajax-link" href="{{ path('customFormFieldsEditPage', { customFormFieldId: field.getId }) }}" data-index="{{ loop.index0 }}">
+                                <i class="uk-icon-chevron-right"></i>{{ field.getName }}
+                            </a>
+                        </td>
 						<td class="mobile-hidden">{{ field.getLabel }}</td>
 						<td class="mobile-hidden">{{ field.getTypeName|trans }}</td>
 						<td>
