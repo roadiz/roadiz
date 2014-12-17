@@ -305,6 +305,9 @@ class NodesSourcesController extends RozierApp
                     'required' => false,
                     'constraints' => array(
                         new Type('integer')
+                    ),
+                    'attr' => array(
+                        'data-desc' => $field->getDescription()
                     )
                 );
             case NodeTypeField::EMAIL_T:
@@ -313,6 +316,9 @@ class NodesSourcesController extends RozierApp
                     'required' => false,
                     'constraints' => array(
                         new \Symfony\Component\Validator\Constraints\Email()
+                    ),
+                    'attr' => array(
+                        'data-desc' => $field->getDescription()
                     )
                 );
             case NodeTypeField::DECIMAL_T:
@@ -321,6 +327,9 @@ class NodesSourcesController extends RozierApp
                     'required' => false,
                     'constraints' => array(
                         new Type('double')
+                    ),
+                    'attr' => array(
+                        'data-desc' => $field->getDescription()
                     )
                 );
             case NodeTypeField::COLOUR_T:
