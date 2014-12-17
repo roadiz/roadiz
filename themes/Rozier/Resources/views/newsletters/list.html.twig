@@ -1,0 +1,125 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global content-nav-and-filters">
+
+    <header class="content-header header-node header-nodes-list">
+        <h1 class="content-title">
+            {% trans %}newsletter{% endtrans %}
+        </h1>
+        {% include 'widgets/countFiltersBar.html.twig' %}
+        {# Add node control #}
+        {% if nodeTypes|length %}
+        <div class="content-header-action-menu">
+            <div class="uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
+                <button class="uk-button"><i class="uk-icon-rz-plus"></i> {% trans %}create.a.newsletter{% endtrans %} <i class="uk-icon-caret-down"></i></button>
+                <div class="uk-dropdown uk-dropdown-flip uk-dropdown-small">
+                    <ul class="uk-nav uk-nav-dropdown">
+                        {% for type in nodeTypes %}
+                        <li><a href="{{ path('newslettersAddPage', { nodeTypeId: type.getId, translationId:translation.getId }) }}">{{ type.getDisplayName }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </header>
+
+    {% include 'widgets/filtersBar.html.twig' %}
+
+    <article class="content content-no-action-menu">
+        <div class="content-table-cont">
+            <table class="nodes content-table uk-table">
+                <thead>
+                    <tr>
+                        <th>{% trans %}nodeName{% endtrans %}
+                        {% if request.query.get("field") == 'nodeName' and request.query.get("ordering") == "DESC" %}
+                            <a href="?field=nodeName&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
+                        {% else %}
+                            <a href="?field=nodeName&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+                        {% endif %}
+                        </th>
+                        <th class="mobile-hidden">{% trans %}node.type{% endtrans %}
+                        {% if request.query.get("field") == 'nodeType' and request.query.get("ordering") == "DESC" %}
+                            <a href="?field=nodeType&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
+                        {% else %}
+                            <a href="?field=nodeType&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
+                        {% endif %}
+                        </th>
+                        <th class="mobile-hidden">{% trans %}node.status{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}last.modification{% endtrans %}
+                        {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
+                            <a href="?field=updatedAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
+                        {% else %}
+                            <a href="?field=updatedAt&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
+                        {% endif %}
+                        </th>
+                        <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for node in nodes %}
+                    <tr>
+                        {% if node.getNodeSources.first.getTitle %}
+                        <td class="nodes-list-item-link"><span class="nodes-list-item-color" style="background-color:{{ node.nodeType.color }};"></span><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeSources.first.getTitle }}</a></td>
+                        {% else %}
+                        <td class="nodes-list-item-link"><span class="nodes-list-item-color" style="background-color:{{ node.nodeType.color }};"></span><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeName }}</a></td>
+                        {% endif %}
+                        <td class="mobile-hidden">{{ node.getNodeType.getDisplayName }}</td>
+                        <td class="mobile-hidden">  <!-- style="text-align:center;" -->
+                            {% spaceless %}
+                                {% if node.isDraft == true %}
+                                <div class="uk-button-status uk-button-draft" title="{% trans %}node.draft{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-draft-nodes"></i>
+                                </div><!-- uk-badge-warning -->
+                                {% endif %}
+                                {% if node.isPending == true %}
+                                <div class="uk-button-status uk-button-pending" title="{% trans %}node.pending.validation{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-pending-nodes"></i>
+                                </div><!-- uk-badge-warning -->
+                                {% endif %}
+                                {% if node.isDeleted == true %}
+                                <div class="uk-button-status uk-button-deleted" title="{% trans %}node.deleted{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-trash-mini-o"></i>
+                                </div><!-- uk-badge-danger -->
+                                {% endif %}
+                                {% if node.isVisible == false %}
+                                <div class="uk-button-status uk-button-hidden" title="{% trans %}node.hidden{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-hidden-o"></i>
+                                </div><!-- uk-badge-notification -->
+                                {% endif %}
+                                {% if node.isLocked %}
+                                <div class="uk-button-status uk-button-locked" title="{% trans %}locked{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-lock"></i>
+                                </div><!-- uk-badge-notification -->
+                                {% endif %}
+                                {% if node.isArchived %}
+                                <div class="uk-button-status uk-button-archived" title="{% trans %}node.archived{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-archive-mini"></i>
+                                </div><!-- uk-badge-notification -->
+                                {% endif %}
+                            {% endspaceless %}
+                        </td>
+                        <td class="mobile-hidden">{{ node.getUpdatedAt|localizeddate('short', 'none') }}</td>
+                        <td>
+                        {% spaceless %}
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditPage', { nodeId: node.getId }) }}" title="{% trans %}edit.node{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}" title="{% trans %}see.nodetree{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-tree-mini"></i></a>
+                            {% if not node.locked %}
+                                {% if not node.isDeleted %}
+                                <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                {% else %}
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesUndeletePage', { nodeId: node.getId }) }}" data-uk-tooltip="{animation:true}" title="{% trans %}undelete{% endtrans %}"><i class="uk-icon-rz-untrash"></i></a>
+                                {% endif %}
+                            {% endif %}
+                        {% endspaceless %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+</section>
+{% endblock %}

@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEnitty;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Entities\Subscriber;
 use Doctrine\ORM\Mapping as ORM;
@@ -85,12 +85,12 @@ class NewsletterSubscriber extends AbstractEntity
     }
 
     /**
-     * @ORM\Column(type="int", unique=false)
+     * @ORM\Column(type="integer", unique=false)
      */
     private $status = Newsletter::PENDING;
 
     /**
-     * @return int
+     * @return integer
      */
     public function getStatus()
     {
@@ -98,9 +98,9 @@ class NewsletterSubscriber extends AbstractEntity
     }
 
     /**
-     * @param int $status
+     * @param integer $status
      *
-     * @return int
+     * @return integer
      */
     public function setStatus($status)
     {

@@ -630,6 +630,15 @@ class Node extends AbstractDateTimedPositioned
         return $this->aNodes;
     }
 
+    /**
+     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter",inversedBy="node")
+     */
+    protected $newsletter;
+
+    public function getNewsletter()
+    {
+        return $this->newsletter;
+    }
 
     /**
      * Create a new empty Node according to given node-type.

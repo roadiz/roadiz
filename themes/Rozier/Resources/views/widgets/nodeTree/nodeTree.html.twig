@@ -34,7 +34,9 @@
                 {% if nodeTree.isStackTree %}data-stack-tree="1"{% endif %}
                 {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}>
             {% for cnode in nodeTree.getNodes %}
-                {% include 'widgets/nodeTree/singleNode.html.twig' with { "node":cnode, "nodeTree":nodeTree, "securityContext":securityContext, "mainNodeTree":mainNodeTree} only %}
+                {% if not cnode.nodetype.newsletterType %}
+                    {% include 'widgets/nodeTree/singleNode.html.twig' with { "node":cnode, "nodeTree":nodeTree, "securityContext":securityContext, "mainNodeTree":mainNodeTree} only %}
+                {% endif %}
             {% endfor %}
             </ul>
         {% if mainNodeTree %}

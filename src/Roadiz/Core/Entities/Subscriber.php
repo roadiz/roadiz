@@ -97,14 +97,15 @@ class Subscriber extends AbstractHuman
     }
 
     /**
-     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NewsletterSubscriber", mappedBy="subscriber")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NewsletterSubscriber", mappedBy="subscriber")
      */
     protected $newsletterSubscriber;
 
     /**
      * @return NewsletterSubscriber
      */
-    public function getNewsletterSubscriber() {
+    public function getNewsletterSubscriber()
+    {
         return $this->newsletterSubscriber;
     }
 
@@ -112,7 +113,8 @@ class Subscriber extends AbstractHuman
      * @param NewsletterSubscriber $newsletterSubscriber
      * @return NewsletterSubscriber
      */
-    public function setNewsletterSubscriber($newsletterSubscriber) {
+    public function setNewsletterSubscriber($newsletterSubscriber)
+    {
         $this->newsletterSubscriber = $newsletterSubscriber;
         return $this->newsletterSubscriber;
     }

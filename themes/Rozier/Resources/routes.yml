@@ -622,6 +622,18 @@ searchNodeSourcePage:
     defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeSourceAction }
     requirements: { nodetypeId : "[0-9]+" }
 
+#NEWSLETTERS
+newslettersIndexPage:
+    path:     /rz-admin/newsletter
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::listAction }
+#NEWSLETTERS
+newslettersAddPage:
+    path:     /rz-admin/newsletter/add/{nodeTypeId}/{translationId}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::addAction }
+    requirements:
+        nodetypeId : "[0-9]+"
+        translationId : "[0-9]+"
+
 # CSS to style with main color
 cssMainColor:
     path : /rz-admin/css/main-color.css

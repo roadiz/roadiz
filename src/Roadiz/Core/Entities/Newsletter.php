@@ -51,12 +51,12 @@ class Newsletter extends AbstractDateTimed
     const SENT = 40;
 
     /**
-     * @ORM\Column(type="int", unique=false)
+     * @ORM\Column(type="integer", unique=false)
      */
-    private $status = DRAFT;
+    private $status;
 
     /**
-     * @return int
+     * @return integer
      */
     public function getStatus()
     {
@@ -64,9 +64,9 @@ class Newsletter extends AbstractDateTimed
     }
 
     /**
-     * @param int $status
+     * @param integer $status
      *
-     * @return int
+     * @return integer
      */
     public function setStatus($status)
     {
@@ -76,14 +76,14 @@ class Newsletter extends AbstractDateTimed
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="",inversedBy="")
-     * @ORM\JoinColumn(name="property", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="newsletter")
+     * @ORM\JoinColumn(name="node_id", referencedColumnName="id")
      */
 
     private $node;
 
     /**
-     * @return int
+     * @return Node
      */
     public function getNode()
     {
@@ -91,9 +91,9 @@ class Newsletter extends AbstractDateTimed
     }
 
     /**
-     * @param int $node
+     * @param Node $node
      *
-     * @return int
+     * @return Node
      */
     public function setNode($node)
     {
@@ -110,7 +110,8 @@ class Newsletter extends AbstractDateTimed
     /**
      * @return NewsletterSubscriber
      */
-    public function getNewsletterSubscriber() {
+    public function getNewsletterSubscriber()
+    {
         return $this->newsletterSubscriber;
     }
 
@@ -118,8 +119,15 @@ class Newsletter extends AbstractDateTimed
      * @param NewsletterSubscriber $newsletterSubscriber
      * @return NewsletterSubscriber
      */
-    public function setNewsletterSubscriber($newsletterSubscriber) {
+    public function setNewsletterSubscriber($newsletterSubscriber)
+    {
         $this->newsletterSubscriber = $newsletterSubscriber;
         return $this->newsletterSubscriber;
+    }
+
+    public function __contruct($node)
+    {
+        $this->status = static::DRAFT;
+        $this->node = $node;
     }
 }
