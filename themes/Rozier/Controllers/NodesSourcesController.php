@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Themes\Rozier\RozierApp;
 
@@ -147,7 +148,16 @@ class NodesSourcesController extends RozierApp
              */
             if (true === $nodeSource->getNode()->isDynamicNodeName() &&
                 $nodeSource->getTranslation()->isDefaultTranslation()) {
-                $nodeSource->getNode()->setNodeName($data['title']);
+                $testingNodeName = StringHandler::slugify($data['title']);
+
+                /*
+                 * node name wont be updated if name already taken
+                 */
+                if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
+                    false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($testingNodeName) &&
+                    false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($testingNodeName)) {
+                    $nodeSource->getNode()->setNodeName($data['title']);
+                }
             }
         }
 
