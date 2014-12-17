@@ -386,6 +386,8 @@ class AppController implements ViewableInterface
      *     - resourcesUrl
      *     - ajaxToken
      *     - fontToken
+     *     - universalAnalyticsId
+     *     - useCdn
      * - session
      *     - messages
      *     - id
@@ -404,6 +406,7 @@ class AppController implements ViewableInterface
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => (boolean) $this->kernel->container['config']['devMode'],
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
+                'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
                 'baseUrl' => $this->kernel->getResolvedBaseUrl(),//$this->kernel->getRequest()->getBaseUrl(),
                 'filesUrl' => $this->kernel
                                    ->getRequest()
