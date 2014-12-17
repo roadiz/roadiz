@@ -89,24 +89,32 @@ class Subscriber extends AbstractHuman
     }
 
     /**
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="subscribers")
-     * @ORM\JoinTable(name="subscribers_tags")
-     * @var ArrayCollection
-     */
-    private $tags = null;
-    /**
-     * @return ArrayCollection
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
      * Create a new Subscriber
      */
     public function __construct()
     {
         $this->tags = new ArrayCollection();
     }
+
+    /**
+     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NewsletterSubscriber", mappedBy="subscriber")
+     */
+    protected $newsletterSubscriber;
+
+    /**
+     * @return NewsletterSubscriber
+     */
+    public function getNewsletterSubscriber() {
+        return $this->newsletterSubscriber;
+    }
+
+    /**
+     * @param NewsletterSubscriber $newsletterSubscriber
+     * @return NewsletterSubscriber
+     */
+    public function setNewsletterSubscriber($newsletterSubscriber) {
+        $this->newsletterSubscriber = $newsletterSubscriber;
+        return $this->newsletterSubscriber;
+    }
+
 }
