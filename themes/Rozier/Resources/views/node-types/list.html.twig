@@ -26,6 +26,7 @@
 			            <th class="mobile-hidden">{% trans %}nodeType.displayName{% endtrans %}</th>
 			            <th class="mobile-hidden">{% trans %}nodeType.entityName{% endtrans %}</th>
 			            <th class="mobile-hidden">{% trans %}nodeType.numberFields{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}nodeType.status{% endtrans %}</th>
 			            <th class="table-actions-row table-actions-row-4">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -38,6 +39,11 @@
 							<td class="mobile-hidden">{{ type.getDisplayName }}</td>
 							<td class="mobile-hidden">{{ type.getSourceEntityClassName }}</td>
 							<td class="mobile-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields{% endtranschoice %}</div></td>
+                            <td class="mobile-hidden">
+                                {% if not type.visible %}<span data-uk-tooltip="{animation:true}" title="{% trans %}newsletter.not_visible{% endtrans %}" class="uk-button-status"><i class="uk-icon-eye-slash"></i></span>{% endif %}
+                                {% if type.newsletterType %}<span class="uk-button-status" data-uk-tooltip="{animation:true}" title="{% trans %}newsletter.nodetype{% endtrans %}"><i class="uk-icon-rz-newsletters"></i></span>{% endif %}
+                                {% if type.hidingNodes %}<span class="uk-button-status" data-uk-tooltip="{animation:true}" title="{% trans %}newsletter.hiding_nodes{% endtrans %}"><i class="uk-icon-rz-steril"></i></span>{% endif %}
+                            </td>
 							<td>
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodeTypesEditPage', { nodeTypeId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
