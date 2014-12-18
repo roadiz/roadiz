@@ -151,9 +151,9 @@ class GroupsUtilsController extends RozierApp
                             'groupsHomePage'
                         )
                     );
-                    $response->prepare($request);
+                     $response->prepare($request);
 
-                    return $response->send();
+                     return $response->send();
 
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');

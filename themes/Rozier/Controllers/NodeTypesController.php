@@ -338,7 +338,8 @@ class NodeTypesController extends RozierApp
                 'label' => $this->getTranslator()->trans('name'),
                 'constraints' => array(
                     new NotBlank()
-                )));
+                )
+            ));
 
         $this->buildCommonFormFields($builder);
 
@@ -379,7 +380,8 @@ class NodeTypesController extends RozierApp
             'label' => $this->getTranslator()->trans('nodeType.displayName'),
             'constraints' => array(
                 new NotBlank()
-            )))
+            )
+        ))
         ->add('description', 'text', array(
             'label' => $this->getTranslator()->trans('description'),
             'required' => false

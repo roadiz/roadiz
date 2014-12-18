@@ -326,7 +326,8 @@ class CustomFormsController extends RozierApp
                 'label' => $this->getTranslator()->trans('customForm.displayName'),
                 'constraints' => array(
                     new NotBlank()
-                )))
+                )
+            ))
             ->add('description', 'text', array(
                 'label' => $this->getTranslator()->trans('description'),
                 'required' => false
