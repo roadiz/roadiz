@@ -40,9 +40,9 @@
 							<td class="mobile-hidden">{{ type.getSourceEntityClassName }}</td>
 							<td class="mobile-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields{% endtranschoice %}</div></td>
                             <td class="mobile-hidden">
-                                {% if not type.visible %}<span data-uk-tooltip="{animation:true}" title="{% trans %}newsletter.not_visible{% endtrans %}" class="uk-button-status"><i class="uk-icon-eye-slash"></i></span>{% endif %}
-                                {% if type.newsletterType %}<span class="uk-button-status" data-uk-tooltip="{animation:true}" title="{% trans %}newsletter.nodetype{% endtrans %}"><i class="uk-icon-rz-newsletters"></i></span>{% endif %}
-                                {% if type.hidingNodes %}<span class="uk-button-status" data-uk-tooltip="{animation:true}" title="{% trans %}newsletter.hiding_nodes{% endtrans %}"><i class="uk-icon-rz-steril"></i></span>{% endif %}
+                                {% if not type.visible %}<span data-uk-tooltip="{animation:true}" title="{% trans %}nodeType.not_visible{% endtrans %}" class="uk-button-status"><i class="uk-icon-eye-slash"></i></span>{% endif %}
+                                {% if type.newsletterType %}<span class="uk-button-status" data-uk-tooltip="{animation:true}" title="{% trans %}newsletter.nodeType{% endtrans %}"><i class="uk-icon-rz-newsletters"></i></span>{% endif %}
+                                {% if type.hidingNodes %}<span class="uk-button-status" data-uk-tooltip="{animation:true}" title="{% trans %}nodeType.hiding_nodes{% endtrans %}"><i class="uk-icon-rz-steril"></i></span>{% endif %}
                             </td>
 							<td>
                             {% spaceless %}

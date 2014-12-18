@@ -5592,6 +5592,22 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="nodeType.status">
+          <source>nodeType.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.not_visible">
+          <source>nodeType.not_visible</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter.nodeType">
+          <source>newsletter.nodeType</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hiding_nodes">
+          <source>nodeType.hiding_nodes</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

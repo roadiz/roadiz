@@ -16,12 +16,12 @@ Content-Transfer-Encoding: 8bit
 X-Generator: Translate Toolkit 1.9.0
 </source>
         <target state="translated">Project-Id-Version: PACKAGE VERSION
-Report-Msgid-Bugs-To: 
+Report-Msgid-Bugs-To:
 POT-Creation-Date: 2014-10-02 15:29+0200
 PO-Revision-Date: 2014-12-16 10:50+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
-Language: 
+Language:
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -5595,6 +5595,23 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="node.dynamicNodeName" approved="yes">
           <source>node.dynamicNodeName</source>
           <target state="translated">Dynamic node name</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="nodeType.status">
+          <source>nodeType.status</source>
+          <target state="translated">Status</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.not_visible">
+          <source>nodeType.not_visible</source>
+          <target state="translated">Unvisible node-type</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter.nodeType">
+          <source>newsletter.nodeType</source>
+          <target state="translated">Newsletters reserved type</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hiding_nodes">
+          <source>nodeType.hiding_nodes</source>
+          <target state="translated">This type hides its node-tree</target>
       </trans-unit>
 
     </body>
