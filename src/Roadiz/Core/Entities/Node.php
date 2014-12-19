@@ -62,6 +62,8 @@ class Node extends AbstractDateTimedPositioned
     const ARCHIVED =    40;
     const DELETED =     50;
 
+    protected $handler;
+
     /**
      * @ORM\Column(type="string", name="node_name", unique=true)
      */
@@ -458,7 +460,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="parent", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
      */
@@ -501,7 +503,7 @@ class Node extends AbstractDateTimedPositioned
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes")
      * @ORM\JoinTable(name="nodes_tags")
      * @var ArrayCollection
      */
@@ -555,7 +557,7 @@ class Node extends AbstractDateTimedPositioned
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="NodeType", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="NodeType")
      * @ORM\JoinTable(name="stack_types")
      * @var ArrayCollection
      */
@@ -595,7 +597,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true)
      */
     private $nodeSources;
 
@@ -684,7 +686,10 @@ class Node extends AbstractDateTimedPositioned
      */
     public function getHandler()
     {
-        return new NodeHandler($this);
+        if (null === $this->handler) {
+            $this->handler = new NodeHandler($this);
+        }
+        return $this->handler;
     }
 
     public function __clone()

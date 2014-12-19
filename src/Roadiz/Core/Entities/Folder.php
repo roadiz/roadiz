@@ -116,7 +116,7 @@ class Folder extends AbstractDateTimedPositioned
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="folders", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="folders")
      * @ORM\JoinTable(name="documents_folders")
      */
     protected $documents;

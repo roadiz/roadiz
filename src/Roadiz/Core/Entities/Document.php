@@ -346,7 +346,7 @@ class Document extends AbstractDateTimed
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
      * @ORM\JoinTable(name="documents_folders")
      */
     protected $folders;

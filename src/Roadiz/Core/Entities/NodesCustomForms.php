@@ -62,7 +62,7 @@ class NodesCustomForms extends AbstractPositioned implements PersistableInterfac
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="customForms")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="customForms", fetch="EAGER")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Roadiz\Core\Entities\Node
      */
@@ -81,7 +81,7 @@ class NodesCustomForms extends AbstractPositioned implements PersistableInterfac
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="nodes")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="nodes", fetch="EAGER")
      * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Roadiz\Core\Entities\CustomForm
      */

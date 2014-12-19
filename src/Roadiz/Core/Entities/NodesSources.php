@@ -51,7 +51,7 @@ class NodesSources extends AbstractEntity
     private $handler = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources")
+     * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $node;
@@ -123,7 +123,7 @@ class NodesSources extends AbstractEntity
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true)
      */
     private $documentsByFields = null;
 

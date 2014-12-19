@@ -174,7 +174,7 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true)
      * @var ArrayCollection
      */
     private $children;
