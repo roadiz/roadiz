@@ -71,7 +71,7 @@ GeotagField.prototype.bindSingleField = function(element) {
     var metaDOM = [
         '<nav class="geotag-widget-nav uk-navbar rz-geotag-meta">',
             '<ul class="uk-navbar-nav">',
-                '<li class="uk-navbar-brand"><i class="uk-icon-map-marker"></i><label class="geotag-label">'+labelText+'</li>',
+                '<li class="uk-navbar-brand"><i class="uk-icon-rz-map-marker"></i><label class="geotag-label">'+labelText+'</li>',
             '</ul>',
             '<div class="uk-navbar-content uk-navbar-flip">',
                 '<div class="geotag-widget-quick-creation uk-button-group">',
@@ -114,7 +114,8 @@ GeotagField.prototype.bindSingleField = function(element) {
             //map:map,
             draggable:true,
             position: mapOptions.center,
-            animation: google.maps.Animation.DROP
+            animation: google.maps.Animation.DROP,
+            icon : Rozier.resourcesUrl+'img/map_marker.png'
         });
     }
 
@@ -203,7 +204,8 @@ GeotagField.prototype.createMarker = function(geocode, $input, map) {
         map:map,
         draggable:true,
         animation: google.maps.Animation.DROP,
-        position: latlng
+        position: latlng,
+        icon : Rozier.resourcesUrl+'img/map_marker.png'
     });
 
     map.panTo(latlng);

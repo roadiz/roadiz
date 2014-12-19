@@ -101,7 +101,7 @@
                     .rounded(30px);
                     border:1px solid @grey-form-border;
                     padding-left: 6px;
-                    line-height: 27px;
+                    line-height: 30px;
 
                     &:before{
                         display: none;
@@ -158,7 +158,7 @@
             color: #333;
         }
         &:focus, &:active {
-            background-color: @grey-verylight;
+            background: @grey-verylight;
             border-color: @grey-form-submit-border-hover;
             color: #333;
         }
@@ -167,7 +167,6 @@
         padding: 10px 20px;
         font-size: 12px;
         -webkit-font-smoothing: subpixel-antialiased;
-        //letter-spacing: 0.5px;
 
         h2, h3, h4, h5, h6 {
             font-weight: bold;
@@ -177,21 +176,27 @@
         p {
             margin: 5px 0;
             color: #666666;
+            letter-spacing: normal;
+            font-weight: normal;
+            font-size: 13px;
         }
     }
     &-code {
         .CodeMirror {
             font-family: @roadiz-mono-font;
-            font-size: 12px;
-            webkit-font-smoothing: antialiased;
+            font-size: 0.72em;
             line-height: 18px;
             color: #666666;
             padding: 10px 14px;
 
-            &.cm-s-default .cm-header {
-                color: #0F0F0F;
-            }
+            &.cm-s-default .cm-header {color: #0F0F0F;}
+            &.cm-s-default .cm-quote {color: #4e76b7;}
+            &.cm-s-default .cm-link {color: #333;}
+            &.cm-s-default .cm-string {color: #bc8039;}
+            &.cm-s-default .cm-string-2 {color: #c46743;}
         }
+        .CodeMirror-selected { background: #d9d9d9; }
+        .CodeMirror-focused { background: #FFF; }
     }
 }
 
