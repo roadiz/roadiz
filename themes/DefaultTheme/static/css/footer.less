@@ -2,8 +2,20 @@
    Footer styles
    ========================================================================== */
 
-footer {
+#footer {
     position: relative;
     height: 170px;
     background-color: @footer-color;
+
+    p{
+        margin:0;
+        color:#fff;
+        text-align: center;
+        font-size:12px; line-height:170px;
+    }
+
+    &.fixed{
+        position: fixed;
+        right:0; bottom:0; left:0;
+    }
 }

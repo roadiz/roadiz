@@ -3,10 +3,10 @@ return array(
     'staticAssets' => array(
         'global' => array(
             'css' => array(
-                '/style.f14d85e7.css',
+                '/style.195f386f.css',
             ),
             'js' => array(
-                '/default-theme.3e34d379.min.js',
+                '/default-theme.096f9d9d.min.js',
             ),
         ),
     )

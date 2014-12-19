@@ -27,15 +27,28 @@ module.exports = function(grunt) {
 		  }
 		},
 		less: {
-			options: {
-				compress: true,
-				yuicompress: true,
-				optimization: 3,
-				sourceMap: true
+			minified: {
+				options: {
+					compress: true,
+					yuicompress: true,
+					optimization: 3,
+					sourceMap: true
+				},
+				files:
+				{
+					"css/style.min.css": "css/style.less"
+				}
 			},
-			files: {
-				src : "css/style.less",
-				dest : "css/style.min.css"
+			unminified: {
+				options: {
+					compress: false,
+					yuicompress: false,
+					optimization: 0,
+				},
+				files:
+				{	
+					"css/style.css": "css/style.less"
+				}
 			}
 		},
 		watch: {

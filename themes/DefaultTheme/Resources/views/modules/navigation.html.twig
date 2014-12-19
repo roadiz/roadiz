@@ -32,10 +32,12 @@
 	<ul class="uk-navbar-nav uk-hidden-small">
 		{% for cnode in themeServices.navigation %}
 			{% set source = cnode.nodeSources.first %}
+            {% set level = 0 %}
 			{% include 'modules/navigationElement.html.twig' with {
-                "source" : source,
-                "activeId" : node.id,
-                'securityContext':securityContext
+                'source' : source,
+                'activeId' : node.id,
+                'level' : level,
+                'securityContext' : securityContext
             } only %}
 		{% endfor %}
 
