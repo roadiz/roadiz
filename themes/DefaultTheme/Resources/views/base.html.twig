@@ -13,7 +13,12 @@
 
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.almost-flat.min.css" />
         <link rel="stylesheet" href="{{ path('FontFaceCSS', {"token": head.fontToken}) }}" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ themeServices.grunt.staticAssets.global.css[0] }}" />
+        
+        {% if themeServices.useGrunt %}
+            <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ themeServices.grunt.staticAssets.global.css[0] }}" /> 
+        {% else %}
+            <link rel="stylesheet" href="{{ head.resourcesUrl }}css/style.css" />  
+        {% endif %}
 
         <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
@@ -36,7 +41,9 @@
         </div>
 
         {% block footer %}
-        <footer></footer>
+        <footer id="footer">
+            <p>© {{"now"|date('Y')}} Rezo Zero</p>
+        </footer>
         {% endblock %}
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>

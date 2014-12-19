@@ -45,6 +45,8 @@ use Pimple\Container;
 */
 class DefaultThemeApp extends FrontendController
 {
+    const USE_GRUNT = false;
+
     protected static $themeName =      'Default theme';
     protected static $themeAuthor =    'Ambroise Maupate';
     protected static $themeCopyright = 'REZO ZERO';
@@ -103,6 +105,10 @@ class DefaultThemeApp extends FrontendController
 
         $this->themeContainer['navigation'] = function ($c) {
             return $this->assignMainNavigation();
+        };
+
+        $this->themeContainer['useGrunt'] = function ($c) {
+            return static::USE_GRUNT;
         };
 
         /*

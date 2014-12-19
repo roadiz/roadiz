@@ -5,6 +5,7 @@
 body {
     padding: 0px;
     margin: 0 auto;
+    font-family: @main-font;
 }
 * {
     .box-sizing();
@@ -23,12 +24,14 @@ body {
     position: relative;
     background: none;
 
+    &.uk-open >a, &:hover>a{
+        background: none;
+    }
+
     &>a {
-       font-family: @main-font;
-       font-size: 13px;
+        font-size: 13px;
         border: 0 none;
-        padding: 0;
-        margin: 0 15px;
+        padding: 0 15px;
         background: none;
 
         &:after {
@@ -41,12 +44,13 @@ body {
             width: 100%;
             padding: 0;
         }
-       &:hover, &:focus {
+
+        &:hover, &:focus {
             background: none;
-        &:after {
-            background-color: @dark-grey;
+            &:after {
+                background-color: @dark-grey;
+            }
         }
-       }
     }
     &.uk-active>a {
         background: none;
