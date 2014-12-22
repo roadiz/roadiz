@@ -34,7 +34,7 @@
                         "meta_title": "",
                         "meta_keywords": "",
                         "meta_description": "",
-                        "content": "This is a about example page.\r\n\r\n*To edit this page, connect to your backstage at [/rz-admin](/rz-admin)*",
+                        "content": "This is a about example page.\r\n\r\nTo edit this page, connect to your backstage at **/rz-admin**",
                         "url_aliases": []
                     },
                     {
@@ -43,7 +43,7 @@
                         "meta_title": "",
                         "meta_keywords": "",
                         "meta_description": "",
-                        "content": "Ceci est une page d'exemple (\"À propos\").\r\n\r\n*Pour éditer cette page, connectez-vous au backstage sur [/rz-admin](/rz-admin)*",
+                        "content": "Ceci est une page d'exemple (\"À propos\").\r\n\r\nPour éditer cette page, connectez-vous au backstage sur **/rz-admin**",
                         "url_aliases": []
                     }
                 ],
@@ -57,7 +57,7 @@
                 "meta_title": "Hello Roadiz!",
                 "meta_keywords": "",
                 "meta_description": "",
-                "content": "This is Roadiz default theme. It’s made for you to create your own theme from a simple base.\r\n\r\n*To edit this page, connect to your backstage at [/rz-admin](/rz-admin)*",
+                "content": "This is Roadiz default theme. It’s made for you to create your own theme from a simple base.\r\n\r\nTo edit this page, connect to your backstage at **/rz-admin**",
                 "url_aliases": []
             },
             {
@@ -66,7 +66,7 @@
                 "meta_title": "Bonjour Roadiz !",
                 "meta_keywords": "",
                 "meta_description": "",
-                "content": "Bienvenue sur le thème par défaut de Roadiz. Il a été fait pour vous permettre de créer votre propre thème à partir d’une base existante.\r\n\r\n*Pour éditer cette page, connectez-vous au backstage sur [/rz-admin](/rz-admin)*",
+                "content": "Bienvenue sur le thème par défaut de Roadiz. Il a été fait pour vous permettre de créer votre propre thème à partir d’une base existante.\r\n\r\nPour éditer cette page, connectez-vous au backstage sur **/rz-admin**",
                 "url_aliases": []
             }
         ],
