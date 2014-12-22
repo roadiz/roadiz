@@ -95,11 +95,12 @@ Rozier.onDocumentReady = function(event) {
 	// Back top btn
 	Rozier.$backTopBtn.on('click', $.proxy(Rozier.backTopBtnClick, Rozier));
 
-	Rozier.lazyload.generalBind();
-	Rozier.bindMainNodeTreeLangs();
-
 	Rozier.$window.on('resize', $.proxy(Rozier.resize, Rozier));
 	Rozier.$window.trigger('resize');
+
+	
+	Rozier.lazyload.generalBind();
+	Rozier.bindMainNodeTreeLangs();
 };
 
 

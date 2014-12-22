@@ -1836,9 +1836,9 @@ NodeTree.prototype.$dropdown = null;
 NodeTree.prototype.init = function(){
     var _this = this;
 
-    _this.contentHeight = _this.$content.height();
+    _this.contentHeight = _this.$content.actual('height');
 
-    if(_this.contentHeight >= (Rozier.windowHeight - 300)) _this.dropdownFlip();
+    if(_this.contentHeight >= (Rozier.windowHeight - 400)) _this.dropdownFlip();
 
 };
 
@@ -1850,7 +1850,7 @@ NodeTree.prototype.init = function(){
 NodeTree.prototype.dropdownFlip = function(){
     var _this = this;
 
-    for (var i = _this.$elements.length - 1; i >= _this.$elements.length - 3; i--) {
+    for (var i = _this.$dropdown.length - 1; i >= _this.$dropdown.length - 3; i--) {
         addClass(_this.$dropdown[i], 'uk-dropdown-up');
     }
 };
@@ -4310,11 +4310,12 @@ Rozier.onDocumentReady = function(event) {
 	// Back top btn
 	Rozier.$backTopBtn.on('click', $.proxy(Rozier.backTopBtnClick, Rozier));
 
-	Rozier.lazyload.generalBind();
-	Rozier.bindMainNodeTreeLangs();
-
 	Rozier.$window.on('resize', $.proxy(Rozier.resize, Rozier));
 	Rozier.$window.trigger('resize');
+
+	
+	Rozier.lazyload.generalBind();
+	Rozier.bindMainNodeTreeLangs();
 };
 
 
