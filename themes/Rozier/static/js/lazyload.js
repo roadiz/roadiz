@@ -192,6 +192,7 @@ Lazyload.prototype.generalBind = function() {
     _this.settingsSaveButtons = new SettingsSaveButtons();
     _this.nodeTypeFieldEdit = new NodeTypeFieldEdit();
     _this.nodeEditSource = new NodeEditSource();
+    _this.nodeTree = new NodeTree();
     _this.customFormFieldEdit = new CustomFormFieldEdit();
 
 

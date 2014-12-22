@@ -31,7 +31,7 @@
         statusNodesForm: statusNodesForm
     } only %}
 
-    <article class="content">
+    <article class="content content-node-tree">
         {% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
     </article>
 

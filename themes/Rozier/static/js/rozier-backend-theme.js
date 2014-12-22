@@ -1709,12 +1709,17 @@ NodeEditSource = function(){
     _this.$content = $('.content-node-edit-source');
 
     // Methods
-    if(_this.$content.length) _this.init();
+    if(_this.$content.length){
+        _this.$formRow = _this.$content.find('.uk-form-row');
+        _this.init();
+    }
 
 };
 
 
 NodeEditSource.prototype.$content = null;
+NodeEditSource.prototype.$formRow = null;
+NodeEditSource.prototype.$dropdown = null;
 NodeEditSource.prototype.$input = null;
 
 
@@ -1725,7 +1730,8 @@ NodeEditSource.prototype.$input = null;
 NodeEditSource.prototype.init = function(){
     var _this = this;
 
-   _this.$input = _this.$content.find('input, select');
+    // Inputs - add form help
+    _this.$input = _this.$content.find('input, select');
 
     for(var i = 0; i < _this.$input.length; i++) {
 
@@ -1737,6 +1743,32 @@ NodeEditSource.prototype.init = function(){
 
     _this.$input.on('focus', $.proxy(_this.inputFocus, _this));
     _this.$input.on('focusout', $.proxy(_this.inputFocusOut, _this));
+
+
+    // Check if children node widget needs his dropdowns to be flipped up
+    for(var j = 0; j < _this.$formRow.length; j++) {
+
+        if(_this.$formRow[j].className.indexOf('children-nodes-widget') >= 0){
+            _this.childrenNodeWidgetFlip(j);
+            break;
+        }
+    }
+
+};
+
+
+/**
+ * Flip children node widget 
+ * @param  {[type]} index [description]
+ * @return {[type]}       [description]
+ */
+NodeEditSource.prototype.childrenNodeWidgetFlip = function(index){
+    var _this = this;
+
+    if(index >= (_this.$formRow.length-2)){
+        _this.$dropdown = $(_this.$formRow[index]).find('.uk-dropdown-small');
+        _this.$dropdown.addClass('uk-dropdown-up');
+    }
 
 };
 
@@ -1766,18 +1798,61 @@ NodeEditSource.prototype.inputFocusOut = function(e){
 };
 
 
+/**
+ * Window resize callback
+ * @return {[type]} [description]
+ */
+NodeEditSource.prototype.resize = function(){
+    var _this = this;
+
+};;/**
+ * NODE TREE
+ */
+
+NodeTree = function(){
+    var _this = this;
+
+    // Selectors
+    _this.$content = $('.content-node-tree');
+
+    // Methods
+    if(_this.$content.length){
+        _this.$dropdown = _this.$content.find('.uk-dropdown-small');
+        _this.init();
+    }
+
+};
 
 
+NodeTree.prototype.$content = null;
+NodeTree.prototype.$elements = null;
+NodeTree.prototype.$dropdown = null;
 
 
 /**
- * Destroy
+ * Init
  * @return {[type]} [description]
  */
-NodeEditSource.prototype.destroy = function(){
+NodeTree.prototype.init = function(){
     var _this = this;
 
+    _this.contentHeight = _this.$content.height();
 
+    if(_this.contentHeight >= (Rozier.windowHeight - 300)) _this.dropdownFlip();
+
+};
+
+
+/**
+ * Flip dropdown
+ * @return {[type]}       [description]
+ */
+NodeTree.prototype.dropdownFlip = function(){
+    var _this = this;
+
+    for (var i = _this.$elements.length - 1; i >= _this.$elements.length - 3; i--) {
+        addClass(_this.$dropdown[i], 'uk-dropdown-up');
+    }
 };
 
 
@@ -1785,7 +1860,7 @@ NodeEditSource.prototype.destroy = function(){
  * Window resize callback
  * @return {[type]} [description]
  */
-NodeEditSource.prototype.resize = function(){
+NodeTree.prototype.resize = function(){
     var _this = this;
 
 };;var NodeStatuses = function () {
@@ -3888,6 +3963,7 @@ Lazyload.prototype.generalBind = function() {
     _this.settingsSaveButtons = new SettingsSaveButtons();
     _this.nodeTypeFieldEdit = new NodeTypeFieldEdit();
     _this.nodeEditSource = new NodeEditSource();
+    _this.nodeTree = new NodeTree();
     _this.customFormFieldEdit = new CustomFormFieldEdit();
 
 
