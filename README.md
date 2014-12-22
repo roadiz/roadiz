@@ -5,8 +5,10 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=develop)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d/mini.png)](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d)
 
-Roadiz is a polymorphic CMS based on a node system which can handle many type of services.
+Roadiz is a polymorphic CMS based on a node system which can handle many types of services.
 It’s based on Symfony components and Doctrine ORM for maximum performances and security.
+
+### Licenses
 
 * *Roadiz* is released under **MIT** licence
 * *RZ Icons* font-icon is released under **MIT** licence too
@@ -15,22 +17,34 @@ It’s based on Symfony components and Doctrine ORM for maximum performances and
 ### Documentation
 
 * *Roadiz* website: http://www.roadiz.io
-* *Read the Docs* complete documentation can be found at http://docs.roadiz.io
+* *Read the Docs* documentation can be found at http://docs.roadiz.io
 * *API* documentation can be found at http://api.roadiz.io
 
 ### Installation
 
-* Clone current repository to your web root
-* Create an **empty** database for your new website.
-**Don’t setup your website on an already used database, it will erase any existing table on it.**
-* Install dependencies: `composer install`, if you don’t have *Composer* installed on your machine
-follow official doc at https://getcomposer.org/doc/00-intro.md#globally
-* Generate an optimized autoloader: `composer dumpautoload -o`
-* Create an *Apache* or *Nginx* virtual host based on samples in `samples/` folder.
-**If you don’t have any permission to create a virtual host,
-execute `bin/roadiz config --generateHtaccess` to create `.htaccess` files to protect critical informations
-from bad requests.**
+#### From bundle
+
+Here is a simple install process if you already have a ready webserver.
+
+* Download Roadiz ZIP bundle from our [website](http://www.roadiz.io) or from [github releases](https://github.com/roadiz/roadiz/releases) section.
+* Unzip it into your server root folder (eg. `www/`)
 * Go to your web-browser to launch Install wizard.
+
+#### From sources
+
+This process needs an *SSH* connexion to your server with *Git* and [*Composer*](https://getcomposer.org/doc/00-intro.md#globally).
+It will enable you to make Roadiz updates more easily than with the bundle version.
+This is the recommended method if you are expert.
+
+* Clone current repository to your web root
+* Install dependencies with *Composer*: `composer install -n --no-dev`
+* Copy `conf/config.default.json` to `conf/config.json`. After this command, `bin/roadiz` executable is available.
+* Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
+**If you don’t have any permission to create a virtual host,
+execute `bin/roadiz config --generateHtaccess` to create `.htaccess` files.**
+* Go to your web-browser to launch Install wizard.
+
+Once you’ve installed Roadiz, just type `/rz-admin` after your server domain name to reach backoffice interface.
 
 #### Database connexion
 
@@ -59,8 +73,7 @@ If you prefer socket:
 ```
 
 You can specify a table prefix adding `"prefix":"myprefix"` if you can’t create a dedicated database for your project
-and you need to use Roadiz side by side with other tables.
-But we strongly recommend you to respect the 1 app = 1 database motto.
+and you need to use Roadiz side by side with other tables. But we strongly recommend you to respect the 1 app = 1 database motto.
 
 For more options you can visit *Doctrine* website: http://doctrine-dbal.readthedocs.org/en/latest/reference/configuration.html
 
@@ -104,13 +117,14 @@ Add this to your `config.json` to link your Roadiz install to your Solr server:
 
 ### Migrating with an existing database
 
-When you import your existing database, you must regenerate all node-types sources classes.
+When you import your existing database, before performing any database migration,
+you **must** regenerate first all node-types classes.
 
 ```
 bin/roadiz core:node-types --regenerateAllEntities
 ```
 
-This will parse every node-types from your database and recreate PHP classes in your `gen-src/GeneratedNodeSources` folder.
+This will parse every node-types from your existing database and recreate PHP classes in `gen-src/GeneratedNodeSources` folder.
 
 ### Upgrading database schema
 
