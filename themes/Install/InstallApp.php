@@ -64,20 +64,29 @@ class InstallApp extends AppController
     public function prepareBaseAssignation()
     {
         $this->assignation = array(
-            'request' => $this->getKernel()->getRequest(),
+            'request' => $this->kernel->getRequest(),
             'head' => array(
-                'ajax' => $this->getKernel()->getRequest()->isXmlHttpRequest(),
+                'ajax' => $this->kernel->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
+                'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
-                'devMode' => (boolean) $this->getService('config')['devMode'],
-                'baseUrl' => $this->getKernel()->getRequest()->getBaseUrl(),
-                'filesUrl' => $this->getKernel()
+                'devMode' => (boolean) $this->kernel->container['config']['devMode'],
+                'baseUrl' => $this->kernel->getResolvedBaseUrl(),//$this->kernel->getRequest()->getBaseUrl(),
+                'filesUrl' => $this->kernel
                                    ->getRequest()
                                    ->getBaseUrl().'/'.Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'grunt' => include(dirname(__FILE__).'/static/public/config/assets.config.php')
+                'ajaxToken' => $this->getService('csrfProvider')
+                                    ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
+                'fontToken' => $this->getService('csrfProvider')
+                                    ->generateCsrfToken(static::FONT_TOKEN_INTENTION)
             ),
+            'session' => array(
+                'id' => $this->kernel->getRequest()->getSession()->getId()
+            )
         );
+
+        $this->assignation['head']['grunt'] = include(dirname(__FILE__).'/static/public/config/assets.config.php');
 
         return $this;
     }
@@ -705,6 +714,7 @@ class InstallApp extends AppController
                     'pdo_sqlite' => 'pdo_sqlite',
                     'oci8' => 'oci8',
                 ),
+                'label' => $this->getTranslator()->trans('driver'),
                 'constraints' => array(
                     new NotBlank()
                 ),
@@ -714,6 +724,7 @@ class InstallApp extends AppController
             ))
             ->add('host', 'text', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('host'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id' => "host"
@@ -721,6 +732,7 @@ class InstallApp extends AppController
             ))
             ->add('port', 'integer', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('port'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id' => "port"
@@ -728,6 +740,7 @@ class InstallApp extends AppController
             ))
             ->add('unix_socket', 'text', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('unix_socket'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id' => "unix_socket"
@@ -735,6 +748,7 @@ class InstallApp extends AppController
             ))
             ->add('path', 'text', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('path'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id' => "path"
@@ -745,12 +759,14 @@ class InstallApp extends AppController
                     "autocomplete"=>"off",
                     'id' => "user"
                 ),
+                'label' => $this->getTranslator()->trans('username'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
             ->add('password', 'password', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('password'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id'=>'password'
@@ -758,6 +774,7 @@ class InstallApp extends AppController
             ))
             ->add('dbname', 'text', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('dbname'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id'=>'dbname'
@@ -779,12 +796,14 @@ class InstallApp extends AppController
             ->createBuilder('form')
             ->add('username', 'text', array(
                 'required' => true,
+                'label' => $this->getTranslator()->trans('username'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
             ->add('email', 'email', array(
                 'required' => true,
+                'label' => $this->getTranslator()->trans('email'),
                 'constraints' => array(
                     new NotBlank()
                 )
@@ -833,27 +852,32 @@ class InstallApp extends AppController
             ->createBuilder('form', $defaults)
             ->add('site_name', 'text', array(
                 'required' => true,
+                'label' => $this->getTranslator()->trans('site_name'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
             ->add('email_sender', 'email', array(
                 'required' => true,
+                'label' => $this->getTranslator()->trans('email_sender'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
             ->add('email_sender_name', 'text', array(
                 'required' => true,
+                'label' => $this->getTranslator()->trans('email_sender_name'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
             ->add('meta_description', 'text', array(
-                'required' => false
+                'required' => false,
+                'label' => $this->getTranslator()->trans('meta_description'),
             ))
             ->add('timezone', 'choice', array(
                 'choices' => $timeZoneList,
+                'label' => $this->getTranslator()->trans('timezone'),
                 'required' => true
             ));
 
@@ -864,7 +888,8 @@ class InstallApp extends AppController
                 'label' => $this->getTranslator()->trans('themes.frontend.description')
             ))
             ->add('install_theme', 'checkbox', array(
-                'required' => false
+                'required' => false,
+                'label' => $this->getTranslator()->trans('install_theme')
             ))
             ->add(
                 'className',

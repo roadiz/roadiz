@@ -379,6 +379,7 @@ class AppController implements ViewableInterface
      * - head
      *     - ajax: `boolean`
      *     - cmsVersion
+     *     - cmsVersionNumber
      *     - cmsBuild
      *     - devMode: `boolean`
      *     - baseUrl
@@ -403,6 +404,7 @@ class AppController implements ViewableInterface
             'head' => array(
                 'ajax' => $this->kernel->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
+                'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => (boolean) $this->kernel->container['config']['devMode'],
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),

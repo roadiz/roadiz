@@ -366,6 +366,64 @@
                 <source>password.must_match</source>
                 <target></target>
             </trans-unit>
+
+            <trans-unit xml:space="preserve" id="site_name">
+                <source>site_name</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="email_sender">
+                <source>email_sender</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="email_sender_name">
+                <source>email_sender_name</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="meta_description">
+                <source>meta_description</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="timezone">
+                <source>timezone</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="install_theme">
+                <source>install_theme</source>
+                <target></target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="driver">
+                <source>driver</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="host">
+                <source>host</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="port">
+                <source>port</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="unix_socket">
+                <source>unix_socket</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="path">
+                <source>path</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="user">
+                <source>user</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="password">
+                <source>password</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="dbname">
+                <source>dbname</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
