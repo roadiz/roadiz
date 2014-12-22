@@ -193,7 +193,7 @@ class DefaultThemeApp extends FrontendController
             /*
              * Add a test entry in your Backoffice
              * Remove this in your theme if you don’t
-             * want to extend Backstage
+             * want to extend Back-office
              */
             $entries['test'] = array(
                 'name' => 'test',
