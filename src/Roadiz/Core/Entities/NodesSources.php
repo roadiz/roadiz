@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file NodesSources.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
@@ -33,21 +32,27 @@ namespace RZ\Roadiz\Core\Entities;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * NodesSources store Node content according to a translation and a NodeType.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
- * @Table(name="nodes_sources", uniqueConstraints={@UniqueConstraint(columns={"id","node_id", "translation_id"})})
- * @InheritanceType("JOINED")
- * @DiscriminatorColumn(name="discr", type="string")
- * @HasLifecycleCallbacks
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
+ * @ORM\Table(name="nodes_sources", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="sources_nodetrans_constraint", columns={"node_id", "translation_id"})
+ * })
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\HasLifecycleCallbacks
  */
 class NodesSources extends AbstractEntity
 {
+
+    private $handler = null;
+
     /**
-     * @ManyToOne(targetEntity="Node", inversedBy="nodeSources")
-     * @JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $node;
 
@@ -72,7 +77,7 @@ class NodesSources extends AbstractEntity
     }
 
     /**
-     * @PreUpdate
+     * @ORM\PreUpdate
      */
     public function preUpdate()
     {
@@ -82,8 +87,8 @@ class NodesSources extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="Translation", inversedBy="nodeSources")
-     * @JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Translation", inversedBy="nodeSources")
+     * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $translation;
     /**
@@ -106,7 +111,7 @@ class NodesSources extends AbstractEntity
     }
 
     /**
-     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\UrlAlias", mappedBy="nodeSource", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\UrlAlias", mappedBy="nodeSource", orphanRemoval=true, fetch="EXTRA_LAZY")
      */
     private $urlAliases = null;
     /**
@@ -118,7 +123,7 @@ class NodesSources extends AbstractEntity
     }
 
     /**
-     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true)
      */
     private $documentsByFields = null;
 
@@ -131,7 +136,7 @@ class NodesSources extends AbstractEntity
     }
 
     /**
-     * @Column(type="string", name="title", unique=false, nullable=true)
+     * @ORM\Column(type="string", name="title", unique=false, nullable=true)
      */
     protected $title = '';
 
@@ -156,7 +161,7 @@ class NodesSources extends AbstractEntity
     }
 
     /**
-     * @Column(type="string", name="meta_title", unique=false)
+     * @ORM\Column(type="string", name="meta_title", unique=false)
      */
     protected $metaTitle = '';
 
@@ -180,7 +185,7 @@ class NodesSources extends AbstractEntity
         return $this;
     }
     /**
-     * @Column(type="text", name="meta_keywords")
+     * @ORM\Column(type="text", name="meta_keywords")
      */
     protected $metaKeywords = '';
 
@@ -204,7 +209,7 @@ class NodesSources extends AbstractEntity
         return $this;
     }
     /**
-     * @Column(type="text", name="meta_description")
+     * @ORM\Column(type="text", name="meta_description")
      */
     protected $metaDescription = '';
 
@@ -233,7 +238,10 @@ class NodesSources extends AbstractEntity
      */
     public function getHandler()
     {
-        return new NodesSourcesHandler($this);
+        if (null === $this->handler) {
+            $this->handler = new NodesSourcesHandler($this);
+        }
+        return $this->handler;
     }
 
     /**

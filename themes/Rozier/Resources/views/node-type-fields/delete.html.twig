@@ -4,7 +4,7 @@
 <section class="content-global">
 
     <header class="content-header header-node-types header-node-type-fields-delete">
-        <h1 class="content-title node-delete-title">{{ "delete.nodeTypeField.%name%"|trans({'%name%': field.getLabel}) }}</h1>
+        <h1 class="content-title node-delete-title">{{ "delete.nodeTypeField.%name%"|trans({'%name%': field.getLabel})|truncate(25, true, '[…]') }}</h1>
     </header>
 
     <article class="content content-delete content-node-type-fields-delete content-no-action-menu">

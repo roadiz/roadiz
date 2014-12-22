@@ -1,22 +1,37 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  * @file GroupsUtilsController.php
- * @copyright REZO ZERO 2014
  * @author Thomas Aufresne
  */
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Group;
-use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Handlers\GroupHandler;
-use RZ\Roadiz\Core\Serializers\GroupJsonSerializer;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use Themes\Rozier\RozierApp;
 
@@ -24,11 +39,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * {@inheritdoc}
@@ -123,15 +133,12 @@ class GroupsUtilsController extends RozierApp
 
         if ($form->isValid() &&
             !empty($form['group_file'])) {
-
             $file = $form['group_file']->getData();
 
             if (UPLOAD_ERR_OK == $file['error']) {
-
                 $serializedData = file_get_contents($file['tmp_name']);
 
                 if (null !== json_decode($serializedData)) {
-
                     GroupsImporter::importJsonFile($serializedData);
 
                     $msg = $this->getTranslator()->trans('group.imported.updated');
@@ -144,9 +151,9 @@ class GroupsUtilsController extends RozierApp
                             'groupsHomePage'
                         )
                     );
-                    $response->prepare($request);
+                     $response->prepare($request);
 
-                    return $response->send();
+                     return $response->send();
 
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');

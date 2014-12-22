@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file NodesImporter.php
- * @copyright REZO ZERO 2014
  * @author Maxime Constantinian
  */
 namespace RZ\Roadiz\CMS\Importers;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
@@ -61,11 +58,11 @@ class NodesImporter implements ImporterInterface
                 static::browseTree($node);
             }
         }
-        
+
         return true;
     }
 
-    private static function browseTree($node)
+    protected static function browseTree($node)
     {
         $childObj = array();
         $sourceObj = array();

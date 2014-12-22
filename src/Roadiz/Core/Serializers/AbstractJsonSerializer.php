@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file AbstractJsonSerializer.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Serializers;
-
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
 /**
  * Define basic serialize operations for Json data type.

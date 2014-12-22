@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Requirements.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 
@@ -188,9 +187,9 @@ class Requirements
         $this->totalChecks++;
 
         $checks['project_folder_writable'] = array(
-            'status'=>$this->folderWritable(RENZO_ROOT),
-            'folder' => RENZO_ROOT,
-            'mod' => fileperms(RENZO_ROOT),
+            'status'=>$this->folderWritable(ROADIZ_ROOT),
+            'folder' => ROADIZ_ROOT,
+            'mod' => fileperms(ROADIZ_ROOT),
             'message' => 'Project folder is not writable by PHP, you must change its permissions.'
         );
 
@@ -200,9 +199,9 @@ class Requirements
         $this->totalChecks++;
 
         $checks['files_folder_writable'] = array(
-            'status'=>$this->folderWritable(RENZO_ROOT.'/files'),
-            'folder' => RENZO_ROOT.'/files',
-            'mod' => fileperms(RENZO_ROOT.'/files'),
+            'status'=>$this->folderWritable(ROADIZ_ROOT.'/files'),
+            'folder' => ROADIZ_ROOT.'/files',
+            'mod' => fileperms(ROADIZ_ROOT.'/files'),
             'message' => 'Storage folder is not writable by PHP, you must change its permissions.'
         );
 
@@ -238,7 +237,7 @@ class Requirements
      */
     protected function methodExists($name)
     {
-        return (function_exists($name) == true) ? (true) : (false);
+        return (function_exists($name) === true) ? (true) : (false);
     }
 
     /**
@@ -248,7 +247,7 @@ class Requirements
      */
     protected function folderWritable($filename)
     {
-        return is_writable($filename) == true ? true : false;
+        return is_writable($filename) === true ? true : false;
     }
 
     /**

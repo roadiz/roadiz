@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Tag.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
@@ -34,23 +33,24 @@ use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Tags are hierarchical entities used
  * to qualify Nodes, Documents, Subscribers.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\TagRepository")
- * @HasLifecycleCallbacks
- * @Table(name="tags", indexes={
- *     @index(name="visible_tag_idx",  columns={"visible"}),
- *     @index(name="locked_tag_idx",   columns={"locked"}),
- *     @index(name="position_tag_idx", columns={"position"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\TagRepository")
+ * @ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="tags", indexes={
+ *     @ORM\Index(name="visible_tag_idx",  columns={"visible"}),
+ *     @ORM\Index(name="locked_tag_idx",   columns={"locked"}),
+ *     @ORM\Index(name="position_tag_idx", columns={"position"})
  * })
  */
 class Tag extends AbstractDateTimedPositioned
 {
     /**
-     * @Column(type="string", name="tag_name", unique=true)
+     * @ORM\Column(type="string", name="tag_name", unique=true)
      */
     private $tagName;
     /**
@@ -73,7 +73,7 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $visible = true;
     /**
@@ -96,7 +96,7 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $locked = false;
     /**
@@ -119,8 +119,8 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ManyToMany(targetEntity="Node", mappedBy="tags")
-     * @JoinTable(name="nodes_tags")
+     * @ORM\ManyToMany(targetEntity="Node", mappedBy="tags")
+     * @ORM\JoinTable(name="nodes_tags")
      * @var ArrayCollection
      */
     private $nodes = null;
@@ -133,8 +133,8 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ManyToMany(targetEntity="Subscriber", mappedBy="tags")
-     * @JoinTable(name="subscribers_tags")
+     * @ORM\ManyToMany(targetEntity="Subscriber", mappedBy="tags")
+     * @ORM\JoinTable(name="subscribers_tags")
      * @var ArrayCollection
      */
     private $subscribers = null;
@@ -147,8 +147,8 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ManyToOne(targetEntity="Tag", inversedBy="children", fetch="EXTRA_LAZY")
-     * @JoinColumn(name="parent_tag_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Tag", inversedBy="children", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="parent_tag_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Tag
      */
     private $parent;
@@ -174,7 +174,7 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true)
      * @var ArrayCollection
      */
     private $children;
@@ -214,7 +214,7 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @OneToMany(targetEntity="TagTranslation", mappedBy="tag", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="TagTranslation", mappedBy="tag", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @var ArrayCollection
      */
     private $translatedTags = null;
@@ -230,8 +230,6 @@ class Tag extends AbstractDateTimedPositioned
      */
     public function __construct()
     {
-        //$this->setTagName('Tag '.uniqid());
-
         $this->nodes =          new ArrayCollection();
         $this->subscribers =    new ArrayCollection();
         $this->documents =      new ArrayCollection();
@@ -240,7 +238,6 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @todo Move this method to a TagViewer
      * @return string
      */
     public function getOneLineSummary()
@@ -258,7 +255,7 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function prePersist()
     {

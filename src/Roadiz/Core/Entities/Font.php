@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,28 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Font.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Fonts are entities which store each webfont file for a
  * font-family and a font-variant.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FontRepository")
- * @Table(name="fonts",uniqueConstraints={
- *     @UniqueConstraint(name="name_variant_idx", columns={"name", "variant"})})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FontRepository")
+ * @ORM\Table(name="fonts",uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="name_variant_idx", columns={"name", "variant"})})
  */
 class Font extends AbstractDateTimed
 {
@@ -91,7 +89,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="integer", name="variant", unique=false, nullable=false)
+     * @ORM\Column(type="integer", name="variant", unique=false, nullable=false)
      */
     protected $variant = Font::REGULAR;
     /**
@@ -128,12 +126,12 @@ class Font extends AbstractDateTimed
             case static::LIGHT_ITALIC:
                 return array(
                     'style' => 'italic',
-                    'weight' => 'lighter'
+                    'weight' => 300
                 );
             case static::LIGHT:
                 return array(
                     'style' => 'normal',
-                    'weight' => 'lighter'
+                    'weight' => 300
                 );
 
             case static::BOLD_ITALIC:
@@ -165,7 +163,7 @@ class Font extends AbstractDateTimed
 
 
     /**
-     * @Column(type="string", nullable=true, name="eot_filename")
+     * @ORM\Column(type="string", nullable=true, name="eot_filename")
      */
     private $eotFilename;
     /**
@@ -188,7 +186,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true, name="woff_filename")
+     * @ORM\Column(type="string", nullable=true, name="woff_filename")
      */
     private $woffFilename;
     /**
@@ -211,7 +209,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true, name="woff2_filename")
+     * @ORM\Column(type="string", nullable=true, name="woff2_filename")
      */
     private $woff2Filename;
     /**
@@ -234,7 +232,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true, name="otf_filename")
+     * @ORM\Column(type="string", nullable=true, name="otf_filename")
      */
     private $otfFilename;
     /**
@@ -257,7 +255,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true, name="svg_filename")
+     * @ORM\Column(type="string", nullable=true, name="svg_filename")
      */
     private $svgFilename;
     /**
@@ -281,7 +279,7 @@ class Font extends AbstractDateTimed
 
 
     /**
-     * @Column(type="string", nullable=false, unique=false)
+     * @ORM\Column(type="string", nullable=false, unique=false)
      */
     private $name;
     /**
@@ -304,7 +302,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=false, unique=false)
+     * @ORM\Column(type="string", nullable=false, unique=false)
      */
     private $hash;
     /**
@@ -321,13 +319,13 @@ class Font extends AbstractDateTimed
      */
     public function setHash($secret)
     {
-        $this->hash = substr(hash("crc32b", $this->name.$this->getVariant().$secret), 0, 12);
+        $this->hash = substr(hash("crc32b", $this->name.$secret), 0, 12);
 
         return $this;
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $folder;
     /**
@@ -410,7 +408,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     /**
@@ -445,7 +443,7 @@ class Font extends AbstractDateTimed
      */
     public static function getFilesFolder()
     {
-        return RENZO_ROOT.'/'.static::getFilesFolderName();
+        return ROADIZ_ROOT.'/'.static::getFilesFolderName();
     }
     /**
      * @return string

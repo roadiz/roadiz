@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file UserHandler.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Log\Logger;
-use Symfony\Component\Security\Core\Util\SecureRandom;
 
 /**
  * Handle operations with users entities.
@@ -75,7 +72,7 @@ class UserHandler
             );
             $this->user->setPassword($encodedPassword);
         } else {
-            throw new Exception("User plain password is empty", 1);
+            throw new \Exception("User plain password is empty", 1);
         }
 
         return $this;
@@ -112,22 +109,24 @@ class UserHandler
         mt_srand(crc32(microtime()));
         $max = strlen($lowercase) - 1;
 
-        for ($x = 0; $x < abs($length/3); $x++) {
+        $absLength = abs($length/3);
+
+        for ($x = 0; $x < $absLength; $x++) {
             $randomCode .= $lowercase{mt_rand(0, $max)};
         }
         $max = strlen($uppercase) - 1;
 
-        for ($x = 0; $x < abs($length/3); $x++) {
+        for ($x = 0; $x < $absLength; $x++) {
             $randomCode .= $uppercase{mt_rand(0, $max)};
         }
         $max = strlen($specialcharacters) - 1;
 
-        for ($x = 0; $x < abs($length/3); $x++) {
+        for ($x = 0; $x < $absLength; $x++) {
             $randomCode .= $specialcharacters{mt_rand(0, $max)};
         }
         $max = strlen($numbers) - 1;
 
-        for ($x = 0; $x < abs($length/3); $x++) {
+        for ($x = 0; $x < $absLength; $x++) {
             $randomCode .= $numbers{mt_rand(0, $max)};
         }
 

@@ -14,9 +14,6 @@
 // List
 .custom-form-fields {
     .uk-sortable {
-        tr {
-            cursor: move;
-        }
 
         .uk-sortable-placeholder {
             .opacity(1);
@@ -69,7 +66,11 @@
     }
 }
 
-.custom-form-field-col-1{
+.custom-form-field-col{
+    cursor: move;
+}
+
+.edit-button-chevron{
 
     &> [class*=uk-icon-]{
         margin-right:10px;

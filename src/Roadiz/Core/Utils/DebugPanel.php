@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,30 +20,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file DebugPanel.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Utils;
 
-
 use RZ\Roadiz\Core\Kernel;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
-use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * Event subscriber which append a debug console after any HTML output.
@@ -82,7 +73,6 @@ class DebugPanel implements EventSubscriberInterface
             $event->setResponse($response);
 
         } elseif (false !== strpos($response->getContent(), '</body>')) {
-
             $this->initializeTwig();
             $content = str_replace('</body>', $this->getDebugView()."</body>", $response->getContent());
             $response->setContent($content);
@@ -106,10 +96,10 @@ class DebugPanel implements EventSubscriberInterface
      */
     private function initializeTwig()
     {
-        $cacheDir = RENZO_ROOT.'/cache/twig_cache';
+        $cacheDir = ROADIZ_ROOT.'/cache/twig_cache';
 
         $loader = new \Twig_Loader_Filesystem(array(
-            RENZO_ROOT.'/src/Roadiz/CMS/Resources/views', // Theme templates
+            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/views', // Theme templates
         ));
         $this->twig = new \Twig_Environment($loader, array(
             'debug' => Kernel::getInstance()->isDebug(),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,53 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file BackendController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Log\Logger;
 use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Handlers\UserProvider;
-use RZ\Roadiz\Core\Handlers\UserHandler;
 use RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler;
-use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use Pimple\Container;
 
 use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
-use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
-use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
-use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
-use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
-use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\User\UserChecker;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
-use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
-
-use Symfony\Component\EventDispatcher\EventDispatcher;
-
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * Special controller app file for backend themes.
@@ -84,7 +62,7 @@ class BackendController extends AppController
      */
     public static function setupDependencyInjection(Container $container)
     {
-        $container->extend('firewallMap', function ($map, $c) {
+        $container->extend('firewallMap', function (FirewallMap $map, $c) {
 
             /*
              * Prepare app firewall

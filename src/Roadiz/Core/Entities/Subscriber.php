@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,30 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Subscriber.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A Subscriber is a light User which only can subscribe
  * to newsletter feeds and can be tagged.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="subscribers")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="subscribers")
  */
 class Subscriber extends AbstractHuman
 {
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $hardBounced = false;
     /**
@@ -66,7 +66,7 @@ class Subscriber extends AbstractHuman
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $softBounced = false;
     /**
@@ -89,8 +89,8 @@ class Subscriber extends AbstractHuman
     }
 
     /**
-     * @ManyToMany(targetEntity="Tag", inversedBy="subscribers")
-     * @JoinTable(name="subscribers_tags")
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="subscribers")
+     * @ORM\JoinTable(name="subscribers_tags")
      * @var ArrayCollection
      */
     private $tags = null;

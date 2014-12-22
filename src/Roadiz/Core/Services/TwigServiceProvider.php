@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file TwigServiceProvider.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Services;
@@ -40,8 +39,6 @@ use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use \Michelf\Markdown;
 use RZ\Roadiz\Core\Utils\InlineMarkdown;
 
-use RZ\Roadiz\Core\Kernel;
-
 /**
  * Register Twig services for dependency injection container.
  */
@@ -53,14 +50,14 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
     public function register(Container $container)
     {
         $container['twig.cacheFolder'] = function ($c) {
-            return RENZO_ROOT.'/cache/twig_cache';
+            return ROADIZ_ROOT.'/cache/twig_cache';
         };
 
         /*
          * Return every paths to search for twig templates.
          */
         $container['twig.loaderFileSystem'] = function ($c) {
-            $vendorDir = realpath(RENZO_ROOT . '/vendor');
+            $vendorDir = realpath(ROADIZ_ROOT . '/vendor');
 
             // le chemin vers TwigBridge pour que Twig puisse localiser
             // le fichier form_div_layout.html.twig
@@ -70,7 +67,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             return new \Twig_Loader_Filesystem(array(
                 // Default Form extension templates
                 $vendorTwigBridgeDir.'/Resources/views/Form',
-                RENZO_ROOT.'/src/Roadiz/CMS/Resources/views',
+                ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/views',
             ));
         };
 
@@ -79,7 +76,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
          */
         $container['twig.environment'] = function ($c) {
 
-            $devMode = (isset($c['config']['devMode']) && $c['config']['devMode'] == true) ?
+            $devMode = (isset($c['config']['devMode']) && true === (boolean) $c['config']['devMode']) ?
                         true :
                         false;
 
@@ -98,6 +95,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             );
 
             $twig->addFilter($c['twig.markdownExtension']);
+            $twig->addFilter($c['twig.inlineMarkdownExtension']);
             $twig->addFilter($c['twig.centralTruncateExtension']);
 
             /*
@@ -171,5 +169,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 }
             );
         };
+
+        return $container;
     }
 }

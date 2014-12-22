@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file CustomFormFieldAttribute.php
- * @copyright REZO ZERO 2014
  * @author Maxime Constantinian
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Utils\StringHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * CustomFormField entities are used to create CustomForms with
  * custom data structure.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="custom_form_field_attributes")
- * @HasLifecycleCallbacks
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="custom_form_field_attributes")
+ * @ORM\HasLifecycleCallbacks
  */
 class CustomFormFieldAttribute extends AbstractEntity
 {
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer", inversedBy="answerFields")
-     * @JoinColumn(name="custom_form_answer_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer", inversedBy="answerFields")
+     * @ORM\JoinColumn(name="custom_form_answer_id", referencedColumnName="id", onDelete="CASCADE")
      */
 
     private $customFormAnswer;
@@ -64,8 +62,8 @@ class CustomFormFieldAttribute extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", inversedBy="customFormFieldAttribute")
-     * @JoinColumn(name="custom_form_field_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", inversedBy="customFormFieldAttribute")
+     * @ORM\JoinColumn(name="custom_form_field_id", referencedColumnName="id")
      */
     private $customFormField;
 
@@ -81,7 +79,7 @@ class CustomFormFieldAttribute extends AbstractEntity
     }
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $value;
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Logger.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Log;
@@ -152,14 +151,14 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Detailed debug information.
+     * Detailed debug information is desactivated not to flood Log table.
      *
      * @param string $message
      * @param array  $context
      */
     public function debug($message, array $context = array())
     {
-        //$this->log(Log::DEBUG, $message, $context);
+        return;
     }
 
     /**
@@ -172,14 +171,12 @@ class Logger implements LoggerInterface
     public function log($level, $message, array $context = array())
     {
         if (Kernel::getService('em')->isOpen()) {
-
             $log = new Log($level, $message, $context);
 
             if (null !== $this->getSecurityContext() &&
                 null !== $this->getSecurityContext()->getToken() &&
-                null !== $this->getSecurityContext()->getToken()->getUser() &&
+                is_object($this->getSecurityContext()->getToken()->getUser()) &&
                 null !== $this->getSecurityContext()->getToken()->getUser()->getId()) {
-
                 $log->setUser($this->getSecurityContext()->getToken()->getUser());
             }
 

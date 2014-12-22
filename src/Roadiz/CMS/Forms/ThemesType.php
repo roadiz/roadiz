@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file ThemesType.php
- * @copyright REZO ZERO 2014
  * @author Maxime Constantinian
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Exceptions\ThemeClassNotValidException;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Finder\Finder;
@@ -61,21 +57,19 @@ class ThemesType extends AbstractType
             ->files()
             ->name('config.json')
             ->depth(1)
-            ->in(RENZO_ROOT.'/themes');
+            ->in(ROADIZ_ROOT.'/themes');
 
         // And storing it into an array, used in the form
         foreach ($iterator as $file) {
             $data = json_decode(file_get_contents($file->getPathname()), true);
 
-            $classPath = RENZO_ROOT.'/themes/'.$file->getRelativePathname();
-
-            $classname = '\Themes\\'.$data['themeDir']."\\".$data['themeDir']."App";//str_replace('.php', '', $namespace);
+            $classname = '\Themes\\'.$data['themeDir']."\\".$data['themeDir']."App";
 
             /*
              * Parsed file is not or does not contain any PHP Class
              * Bad Theme !
              */
-            $choices[$classname] = $data['themeDir']."App".": ".$data['name'];
+            $choices[$classname] = $data['name'];
 
         }
         foreach ($themes as $theme) {

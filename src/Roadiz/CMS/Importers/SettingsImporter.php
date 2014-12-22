@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,37 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file SettingsImporter.php
- * @copyright REZO ZERO 2014
  * @author Maxime Constantinian
  */
 namespace RZ\Roadiz\CMS\Importers;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Entities\SettingGroup;
-use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
-
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * {@inheritdoc}
@@ -66,7 +48,6 @@ class SettingsImporter implements ImporterInterface
      */
     public static function importJsonFile($serializedData)
     {
-        $return = false;
         $settingGroups = SettingCollectionJsonSerializer::deserialize($serializedData);
         $groupsNames = Kernel::getService('em')
                   ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
@@ -78,19 +59,13 @@ class SettingsImporter implements ImporterInterface
 
         $newSettings = array();
 
-        $newSettingGroups = new ArrayCollection();
-
-
         foreach ($settingGroups as $index => $settingGroup) {
-
             /*
              * Loop over settings to set their group
              * and move them to a temp collection
              */
             foreach ($settingGroup->getSettings() as $setting) {
-
                 if (!in_array($setting->getName(), $settingsNames)) {
-
                 } else {
                     $setting = Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Setting')
@@ -130,7 +105,7 @@ class SettingsImporter implements ImporterInterface
                 Kernel::getService('em')->persist($setting);
             }
         }
-        $return = true;
+
         Kernel::getService('em')->flush();
 
         // Clear result cache
@@ -139,6 +114,6 @@ class SettingsImporter implements ImporterInterface
             $cacheDriver->deleteAll();
         }
 
-        return $return;
+        return true;
     }
 }

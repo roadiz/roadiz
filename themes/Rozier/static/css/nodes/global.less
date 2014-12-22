@@ -23,10 +23,6 @@
         float: none;
     }
 
-    .uk-navbar-item{
-        margin:0 5px;
-    }
-
     .uk-navbar-link{
         padding:0 6px;
     }
@@ -50,7 +46,6 @@
     }
 }
 
-
 .nodes-bulk-actions {
     display: none;
     &.visible {
@@ -62,6 +57,7 @@
     }
 }
 
+.node-bulk-status-form,
 .node-bulk-tag-form {
     display: inline-block;
 
@@ -199,7 +195,8 @@
 }
 
 // Bulk delete
-.content-delete{
+.content-change-status,
+.content-delete {
 
     .node-item{
         position: relative;
@@ -212,4 +209,7 @@
         width:4px;
     }
 
+    .uk-form .form-col-choice {
+        max-width: none;
+    }
 }

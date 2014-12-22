@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file NodeTypeHandler.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Handlers;
@@ -33,9 +32,6 @@ namespace RZ\Roadiz\Core\Handlers;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
-use Doctrine\DBAL\Schema\Column;
 
 /**
  * Handle operations with node-type entities.
@@ -81,7 +77,7 @@ class NodeTypeHandler
      */
     public function removeSourceEntityClass()
     {
-        $folder = RENZO_ROOT.'/gen-src/'.NodeType::getGeneratedEntitiesNamespace();
+        $folder = ROADIZ_ROOT.'/gen-src/'.NodeType::getGeneratedEntitiesNamespace();
         $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
 
         if (file_exists($file)) {
@@ -98,7 +94,7 @@ class NodeTypeHandler
      */
     public function generateSourceEntityClass()
     {
-        $folder = RENZO_ROOT.'/gen-src/'.NodeType::getGeneratedEntitiesNamespace();
+        $folder = ROADIZ_ROOT.'/gen-src/'.NodeType::getGeneratedEntitiesNamespace();
         $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
 
         if (!file_exists($folder)) {
@@ -106,7 +102,6 @@ class NodeTypeHandler
         }
 
         if (!file_exists($file)) {
-
             $fields = $this->nodeType->getFields();
             $fieldsArray = array();
             $indexes = array();
@@ -125,12 +120,13 @@ class NodeTypeHandler
 namespace '.NodeType::getGeneratedEntitiesNamespace().';
 
 use RZ\Roadiz\Core\Entities\NodesSources;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Generated custom node-source type from RZ-CMS backoffice.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
- * @Table(name="'.$this->nodeType->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
+ * @ORM\Table(name="'.$this->nodeType->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
  */
 class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
 {
@@ -252,7 +248,7 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
             $existingFieldsNames = $this->nodeType->getFieldsNames();
 
             foreach ($newNodeType->getFields() as $newField) {
-                if (false == in_array($newField->getName(), $existingFieldsNames)) {
+                if (false === in_array($newField->getName(), $existingFieldsNames)) {
                     /*
                      * Field does not exist in type,
                      * creating it.

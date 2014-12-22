@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file ThemeRepository.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Repositories;
-
-use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * {@inheritdoc}
@@ -68,7 +62,7 @@ class ThemeRepository extends EntityRepository
      *
      * This method uses Result cache.
      *
-     * @return array
+     * @return array|null
      */
     public function findAvailableFrontends()
     {
@@ -87,11 +81,11 @@ class ThemeRepository extends EntityRepository
     }
 
     /**
-     * Get available frontend theme for host.
+     * Get available frontend theme.
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme
+     * @return RZ\Roadiz\Core\Entities\Theme|null
      */
     public function findFirstAvailableFrontend()
     {
@@ -114,7 +108,7 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme
+     * @return RZ\Roadiz\Core\Entities\Theme|null
      */
     public function findAvailableFrontendWithHost($hostname = "*")
     {
@@ -126,6 +120,62 @@ class ThemeRepository extends EntityRepository
                     ->setParameter('hostname', $hostname);
 
         $query->useResultCache(true, 3600, 'RZTheme_frontend_'.$hostname);
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get available non-static frontend theme.
+     *
+     * Static means that your theme is not suitable for responding from
+     * nodes urls but only static routes.
+     *
+     * This method use Result cache.
+     *
+     * @return RZ\Roadiz\Core\Entities\Theme|null
+     */
+    public function findFirstAvailableNonStaticFrontend()
+    {
+        $query = $this->_em->createQuery('
+            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
+            WHERE t.available = true
+            AND t.backendTheme = false
+            AND t.staticTheme = false');
+
+        $query->useResultCache(true, 3600, 'RZTheme_first_nonstatic_frontend');
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get available non-static frontend theme for host.
+     *
+     * Static means that your theme is not suitable for responding from
+     * nodes urls but only static routes.
+     *
+     * This method use Result cache.
+     *
+     * @return RZ\Roadiz\Core\Entities\Theme|null
+     */
+    public function findAvailableNonStaticFrontendWithHost($hostname = "*")
+    {
+        $query = $this->_em->createQuery('
+            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
+            WHERE t.available = true
+            AND t.backendTheme = false
+            AND t.staticTheme = false
+            AND t.hostname = :hostname')
+                    ->setParameter('hostname', $hostname);
+
+        $query->useResultCache(true, 3600, 'RZTheme_nonstatic_frontend_'.$hostname);
 
         try {
             return $query->getSingleResult();

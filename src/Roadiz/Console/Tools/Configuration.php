@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,15 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Configuration.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console\Tools;
+
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManager;
 
 /**
 * Configuration class
@@ -43,8 +45,8 @@ class Configuration
     public function __construct()
     {
         // Try to load existant configuration
-        if (false === $this->loadFromFile(RENZO_ROOT . '/conf/config.json')) {
-            if (false === $this->loadFromFile(RENZO_ROOT . '/conf/config.default.json')) {
+        if (false === $this->loadFromFile(ROADIZ_ROOT . '/conf/config.json')) {
+            if (false === $this->loadFromFile(ROADIZ_ROOT . '/conf/config.default.json')) {
                 $this->setConfiguration($this->getDefaultConfiguration());
             }
         }
@@ -92,6 +94,27 @@ class Configuration
                 "sources/GeneratedNodeSources"
             )
         );
+    }
+
+    /**
+     * Test database connexion with given configuration.
+     *
+     * @param array $connexion Doctrine array parameters
+     *
+     * @throws \PDOException
+     */
+    public function testDoctrineConnexion($connexion = array())
+    {
+        $config = Setup::createAnnotationMetadataConfiguration(
+            array(),
+            true,
+            null,
+            null,
+            false
+        );
+
+        $em = EntityManager::create($connexion, $config);
+        $em->getConnection()->connect();
     }
 
     /**
@@ -151,7 +174,7 @@ class Configuration
      */
     public function writeConfiguration()
     {
-        $writePath = RENZO_ROOT . '/conf/config.json';
+        $writePath = ROADIZ_ROOT . '/conf/config.json';
 
         if (file_exists($writePath)) {
             unlink($writePath);

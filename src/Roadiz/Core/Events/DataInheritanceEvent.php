@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file DataInheritanceEvent.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Events;
@@ -49,12 +48,28 @@ class DataInheritanceEvent
         // the $metadata is all the mapping info for this class
         $metadata = $eventArgs->getClassMetadata();
 
+        /*
+         * Prefix tables
+         */
+        if (!empty(Kernel::getService('config')['doctrine']['prefix'])) {
+            $metadata->table['name'] = Kernel::getService('config')['doctrine']['prefix'].'_'.$metadata->table['name'];
+
+            /*
+             * Prefix join tables
+             */
+            foreach ($metadata->associationMappings as $key => $association) {
+                if (!empty($association['joinTable']['name'])) {
+                    $metadata->associationMappings[$key]['joinTable']['name'] =
+                        Kernel::getService('config')['doctrine']['prefix'].'_'.$association['joinTable']['name'];
+                }
+            }
+        }
+
         // the annotation reader accepts a ReflectionClass, which can be
         // obtained from the $metadata
         $class = $metadata->getReflectionClass();
 
         if ($class->getName() === 'RZ\Roadiz\Core\Entities\NodesSources') {
-
             try {
                 // List node types
                 $nodeTypes = Kernel::getService('em')
@@ -72,7 +87,6 @@ class DataInheritanceEvent
                  * Database tables don't exist yet
                  * Need Install
                  */
-                //$this->getSession()->getFlashBag()->add('error', 'Impossible to create discriminator map, make sure your database is fully installed.');
             }
         }
     }
@@ -85,7 +99,6 @@ class DataInheritanceEvent
     public static function getNodesSourcesMetadata()
     {
         $metadata = new ClassMetadata('RZ\Roadiz\Core\Entities\NodesSources');
-        $class = $metadata->getReflectionClass();
 
         try {
             /**
@@ -108,35 +121,8 @@ class DataInheritanceEvent
              * Database tables don't exist yet
              * Need Install
              */
-            $this->getSession()->getFlashBag()->add('error', 'Impossible to create discriminator map, make sure your database is fully installed.');
 
             return null;
         }
-    }
-
-
-    /**
-     * Check if given table exists.
-     *
-     * This method must be used at installation not to throw error when
-     * creating discriminator map with node-types
-     *
-     * @param string  $table
-     *
-     * @return boolean
-     */
-    public function checkTable($table)
-    {
-        $conn = Kernel::getService('em')->getConnection();
-        $sm = $conn->getSchemaManager();
-        $tables = $sm->listTables();
-
-        foreach ($tables as $table) {
-            if ($table->getName() == $table) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

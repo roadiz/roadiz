@@ -1,0 +1,68 @@
+/*------------------------------------*\
+    GEOTAG WIDGET
+\*------------------------------------*/
+
+
+/* -------- VARS -------- */
+@geotag-widget-border :         #cbcbcb;
+@geotag-widget-btn-bg :         #ededed;
+@geotag-widget-btn-border :     #bfbfbf;
+@geotag-widget-btn-color :      #2d2d2d;
+
+
+/* -------- STYLES -------- */
+
+.geotag-widget{
+    position: relative;
+}
+
+
+.geotag-label{
+    position: absolute;
+    left:66px;
+    height:55px;
+    line-height:59px;
+    font-size:12px;
+    color:#555;
+}
+
+.geotag-widget-nav{
+    position: relative;
+    height:55px;
+    border:1px solid @geotag-widget-border;
+    border-bottom:1px dashed @geotag-widget-border;
+
+    .uk-navbar-brand{
+        padding:0 10px 0 31px;
+        color:#666;
+        line-height:55px;
+    }
+
+    .uk-icon-rz-map-marker{
+        font-size: 28px;
+        line-height:55px;
+    }
+
+    .geotag-widget-quick-creation{
+        margin:11px 0;
+    }
+
+    .uk-navbar-content {
+        padding: 0 10px;
+    }
+
+}
+
+.rz-geotag-meta{
+
+    input[type="text"]{
+        width:280px;
+    }
+}
+
+.rz-geotag-canvas{
+    border:1px solid @geotag-widget-border;
+    border-top:none;
+    .box-sizing();
+}
+

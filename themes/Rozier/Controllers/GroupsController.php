@@ -1,28 +1,45 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  * @file GroupsController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -75,24 +92,20 @@ class GroupsController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             try {
                 $group = $this->addGroup($form->getData());
-                $msg = $this->getTranslator()->trans('group.%name%.created', array('%name%'=>$group->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $msg = $this->getTranslator()->trans(
+                    'group.%name%.created',
+                    array('%name%'=>$group->getName())
+                );
+                $this->publishConfirmMessage($request, $msg);
 
             } catch (EntityAlreadyExistsException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             } catch (\RuntimeException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             }
 
-            /*
-             * Force redirect to avoid resending form when refreshing page
-             */
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')->generate('groupsHomePage')
             );
@@ -129,21 +142,18 @@ class GroupsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['groupId'] == $group->getId()) {
-
                 try {
                     $this->deleteGroup($form->getData(), $group);
-                    $msg = $this->getTranslator()->trans('group.%name%.deleted', array('%name%' => $group->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'group.%name%.deleted',
+                        array('%name%' => $group->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('groupsHomePage')
                 );
@@ -186,24 +196,20 @@ class GroupsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['groupId'] == $group->getId()) {
-
                 try {
                     $this->editGroup($form->getData(), $group);
-                    $msg = $this->getTranslator()->trans('group.%name%.updated', array('%name%'=>$group->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'group.%name%.updated',
+                        array('%name%'=>$group->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('groupsHomePage')
                 );
@@ -240,7 +246,6 @@ class GroupsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
 
         if ($group !== null) {
-
             $this->assignation['group'] = $group;
             $form = $this->buildEditRolesForm($group);
             $form->handleRequest();
@@ -252,12 +257,8 @@ class GroupsController extends RozierApp
                             '%group%'=>$group->getName(),
                             '%role%'=>$role->getName()
                         ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
-                /*
-                * Force redirect to avoid resending form when refreshing page
-                */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'groupsEditRolesPage',
@@ -306,18 +307,13 @@ class GroupsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 $this->removeRole($form->getData(), $group, $role);
                 $msg = $this->getTranslator()->trans('role.%role%.removed_from_group.%group%', array(
                     '%role%'=>$role->getName(),
                     '%group%'=>$group->getName()
                 ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'groupsEditRolesPage',
@@ -355,7 +351,6 @@ class GroupsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
 
         if ($group !== null) {
-
             $this->assignation['group'] = $group;
             $form = $this->buildEditUsersForm($group);
             $form->handleRequest();
@@ -367,12 +362,8 @@ class GroupsController extends RozierApp
                             '%group%'=>$group->getName(),
                             '%user%'=>$user->getUserName()
                         ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
-                /*
-                * Force redirect to avoid resending form when refreshing page
-                */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'groupsEditUsersPage',
@@ -421,18 +412,13 @@ class GroupsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 $this->removeUser($form->getData(), $group, $user);
                 $msg = $this->getTranslator()->trans('user.%user%.removed_from_group.%group%', array(
                     '%user%'=>$user->getUserName(),
                     '%group%'=>$group->getName()
                 ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'groupsEditUsersPage',
@@ -738,7 +724,6 @@ class GroupsController extends RozierApp
     {
         if ($data['groupId'] == $group->getId() &&
             $data['roleId'] == $role->getId()) {
-
             if ($role !== null) {
                 $group->removeRole($role);
                 $this->getService('em')->flush();
@@ -761,7 +746,6 @@ class GroupsController extends RozierApp
                 ->find('RZ\Roadiz\Core\Entities\User', (int) $data['userId']);
 
             if ($user !== null) {
-                //$group->addUser($user);
                 $user->addGroup($group);
                 $this->getService('em')->flush();
 
@@ -781,7 +765,6 @@ class GroupsController extends RozierApp
     {
         if ($data['groupId'] == $group->getId() &&
             $data['userId'] == $user->getId()) {
-
             if ($user !== null) {
                 $user->removeGroup($group);
                 $this->getService('em')->flush();

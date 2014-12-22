@@ -1,22 +1,40 @@
 <?php
 /**
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  *
  *
  * @file NodeTypesController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
@@ -25,10 +43,9 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
+
+use RZ\Roadiz\Core\Kernel;
 
 /**
 * NodeType controller
@@ -146,9 +163,7 @@ class NodeTypesController extends RozierApp
             $form->handleRequest();
             if ($form->isValid()) {
                 try {
-                    //echo "Before add node type";
                     $this->addNodeType($form->getData(), $nodeType);
-                    //echo "After add node type";
 
                     $msg = $this->getTranslator()->trans('nodeType.%name%.created', array('%name%'=>$nodeType->getName()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -215,7 +230,6 @@ class NodeTypesController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['nodeTypeId'] == $nodeType->getId() ) {
-
                 /*
                  * Delete All node-type association and schema
                  */
@@ -324,33 +338,10 @@ class NodeTypesController extends RozierApp
                 'label' => $this->getTranslator()->trans('name'),
                 'constraints' => array(
                     new NotBlank()
-                )))
-            ->add('displayName', 'text', array(
-                'label' => $this->getTranslator()->trans('nodeType.displayName'),
-                'constraints' => array(
-                    new NotBlank()
-                )))
-            ->add('description', 'text', array(
-                'label' => $this->getTranslator()->trans('description'),
-                'required' => false
-            ))
-            ->add('visible', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('visible'),
-                'required' => false
-            ))
-            ->add('newsletterType', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('nodeType.newsletterType'),
-                'required' => false
-            ))
-            ->add('hidingNodes', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('nodeType.hidingNodes'),
-                'required' => false
-            ))
-            ->add('color', 'text', array(
-                'label' => $this->getTranslator()->trans('nodeType.color'),
-                'required' => false,
-                'attr' => array('class'=>'colorpicker-input')
+                )
             ));
+
+        $this->buildCommonFormFields($builder);
 
         return $builder->getForm();
     }
@@ -371,35 +362,49 @@ class NodeTypesController extends RozierApp
             'color' =>          $nodeType->getColor(),
         );
         $builder = $this->getService('formFactory')
-            ->createBuilder('form', $defaults)
-            ->add('displayName', 'text', array(
-                'label' => $this->getTranslator()->trans('nodeType.displayName'),
-                'constraints' => array(
-                    new NotBlank()
-                )))
-            ->add('description', 'text', array(
-                'label' => $this->getTranslator()->trans('description'),
-                'required' => false
-            ))
-            ->add('visible', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('visible'),
-                'required' => false
-            ))
-            ->add('newsletterType', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('nodeType.newsletterType'),
-                'required' => false
-            ))
-            ->add('hidingNodes', 'checkbox', array(
-                'label' => $this->getTranslator()->trans('nodeType.hidingNodes'),
-                'required' => false
-            ))
-            ->add('color', 'text', array(
-                'label' => $this->getTranslator()->trans('nodeType.color'),
-                'required' => false,
-                'attr' => array('class'=>'colorpicker-input')
-            ));
+            ->createBuilder('form', $defaults);
+
+        $this->buildCommonFormFields($builder);
 
         return $builder->getForm();
+    }
+
+    /**
+     * Build common fields between add and edit node-type forms.
+     *
+     * @param FormBuilder $builder
+     */
+    private function buildCommonFormFields(&$builder)
+    {
+        $builder->add('displayName', 'text', array(
+            'label' => $this->getTranslator()->trans('nodeType.displayName'),
+            'constraints' => array(
+                new NotBlank()
+            )
+        ))
+        ->add('description', 'text', array(
+            'label' => $this->getTranslator()->trans('description'),
+            'required' => false
+        ))
+        ->add('visible', 'checkbox', array(
+            'label' => $this->getTranslator()->trans('visible'),
+            'required' => false
+        ))
+        ->add('newsletterType', 'checkbox', array(
+            'label' => $this->getTranslator()->trans('nodeType.newsletterType'),
+            'required' => false
+        ))
+        ->add('hidingNodes', 'checkbox', array(
+            'label' => $this->getTranslator()->trans('nodeType.hidingNodes'),
+            'required' => false
+        ))
+        ->add('color', 'text', array(
+            'label' => $this->getTranslator()->trans('nodeType.color'),
+            'required' => false,
+            'attr' => array('class'=>'colorpicker-input')
+        ));
+
+        return $builder;
     }
 
     /**
@@ -426,7 +431,7 @@ class NodeTypesController extends RozierApp
      */
     public static function getNewsletterNodeTypes()
     {
-        return $this->getService('em')
+        return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findBy(array('newsletterType' => true));
     }

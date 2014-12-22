@@ -1,18 +1,36 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  * @file DocumentsController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Utils\SplashbasePictureFinder;
 use Themes\Rozier\RozierApp;
@@ -22,16 +40,19 @@ use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * {@inheritdoc}
  */
 class DocumentsController extends RozierApp
 {
+    protected $thumbnailFormat = array(
+        'width' =>   128,
+        'quality' => 50,
+        'crop' =>    '1x1'
+    );
+
     /**
      * @param Symfony\Component\HttpFoundation\Request $request
      *
@@ -45,7 +66,6 @@ class DocumentsController extends RozierApp
 
         if (null !== $folderId &&
             $folderId > 0) {
-
             $folder = $this->getService('em')
                            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
@@ -59,7 +79,6 @@ class DocumentsController extends RozierApp
         $joinFolderForm = $this->buildLinkFoldersForm();
         $joinFolderForm->handleRequest();
         if ($joinFolderForm->isValid()) {
-
             $data = $joinFolderForm->getData();
 
             if ($joinFolderForm->get('submitFolder')->isClicked()) {
@@ -70,8 +89,7 @@ class DocumentsController extends RozierApp
                 $msg = $this->getTranslator()->trans('wrong.request');
             }
 
-            $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getService('logger')->info($msg);
+            $this->publishConfirmMessage($request, $msg);
 
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')->generate(
@@ -100,12 +118,7 @@ class DocumentsController extends RozierApp
 
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['documents'] = $listManager->getEntities();
-
-        $this->assignation['thumbnailFormat'] = array(
-            'width' =>   128,
-            'quality' => 50,
-            'crop' =>    '1x1'
-        );
+        $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
         return new Response(
             $this->getTwig()->render('documents/list.html.twig', $this->assignation),
@@ -128,7 +141,6 @@ class DocumentsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
-
             $this->assignation['document'] = $document;
 
             /*
@@ -138,13 +150,11 @@ class DocumentsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 $this->editDocument($form->getData(), $document);
                 $msg = $this->getTranslator()->trans('document.%name%.updated', array(
                     '%name%'=>$document->getFilename()
                 ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -185,7 +195,6 @@ class DocumentsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
-
             $this->assignation['document'] = $document;
             $this->assignation['thumbnailFormat'] = array(
                 'width' => 500,
@@ -224,18 +233,14 @@ class DocumentsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['documentId'] == $document->getId()) {
-
                 try {
                     $document->getHandler()->removeWithAssets();
                     $msg = $this->getTranslator()->trans('document.%name%.deleted', array('%name%'=>$document->getFilename()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (\Exception $e) {
-
                     $msg = $this->getTranslator()->trans('document.%name%.cannot_delete', array('%name%'=>$document->getFilename()));
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->warning($msg);
+                    $this->publishErrorMessage($request, $msg);
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -282,32 +287,27 @@ class DocumentsController extends RozierApp
 
         if ($documents !== null &&
             count($documents) > 0) {
-
             $this->assignation['documents'] = $documents;
             $form = $this->buildBulkDeleteForm($documentsIds);
 
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
-
                     foreach ($documents as $document) {
                         $document->getHandler()->removeWithAssets();
-                        $msg = $this->getTranslator()->trans('document.%name%.deleted', array('%name%'=>$document->getFilename()));
-                        $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getService('logger')->info($msg);
+                        $msg = $this->getTranslator()->trans(
+                            'document.%name%.deleted',
+                            array('%name%'=>$document->getFilename())
+                        );
+                        $this->publishConfirmMessage($request, $msg);
                     }
 
                 } catch (\Exception $e) {
-
                     $msg = $this->getTranslator()->trans('documents.cannot_delete');
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->warning($msg);
+                    $this->publishErrorMessage($request, $msg);
                 }
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
+
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('documentsHomePage')
                 );
@@ -318,11 +318,7 @@ class DocumentsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
             $this->assignation['action'] = '?'. http_build_query(array('documents'=>$documentsIds));
-            $this->assignation['thumbnailFormat'] = array(
-                'width' =>   128,
-                'quality' => 50,
-                'crop' =>    '1x1'
-            );
+            $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
             return new Response(
                 $this->getTwig()->render('documents/bulkDelete.html.twig', $this->assignation),
@@ -356,43 +352,31 @@ class DocumentsController extends RozierApp
 
         if ($documents !== null &&
             count($documents) > 0) {
-
             $this->assignation['documents'] = $documents;
             $form = $this->buildBulkDownloadForm($documentsIds);
 
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
-
                     return $this->downloadDocuments($documents);
 
                 } catch (\Exception $e) {
-
                     $msg = $this->getTranslator()->trans('documents.cannot_download');
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->warning($msg);
-
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate('documentsHomePage')
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    $this->publishErrorMessage($request, $msg);
                 }
+
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate('documentsHomePage')
+                );
+                $response->prepare($request);
+
+                return $response->send();
             }
 
             $this->assignation['form'] = $form->createView();
             $this->assignation['action'] = '?'. http_build_query(array('documents'=>$documentsIds));
-            $this->assignation['thumbnailFormat'] = array(
-                'width' =>   128,
-                'quality' => 50,
-                'crop' =>    '1x1'
-            );
+            $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
             return new Response(
                 $this->getTwig()->render('documents/bulkDownload.html.twig', $this->assignation),
@@ -417,11 +401,9 @@ class DocumentsController extends RozierApp
 
         if (null !== $folderId &&
             $folderId > 0) {
-
             $folder = $this->getService('em')
                            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
-            $prefilters['folders'] = array($folder);
             $this->assignation['folder'] = $folder;
         }
 
@@ -432,19 +414,16 @@ class DocumentsController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             try {
                 $document = $this->embedDocument($form->getData(), $folderId);
 
                 $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
                     '%name%'=>$document->getFilename()
                 ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
             } catch (\Exception $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->error($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             }
             /*
              * Force redirect to avoid resending form when refreshing page
@@ -484,12 +463,13 @@ class DocumentsController extends RozierApp
             $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
                 '%name%'=>$document->getFilename()
             ));
-            $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getService('logger')->info($msg);
+            $this->publishConfirmMessage($request, $msg);
 
         } catch (\Exception $e) {
-            $request->getSession()->getFlashBag()->add('error', $this->getTranslator()->trans($e->getMessage()));
-            $this->getService('logger')->error($this->getTranslator()->trans($e->getMessage()));
+            $this->publishErrorMessage(
+                $request,
+                $this->getTranslator()->trans($e->getMessage())
+            );
         }
         /*
          * Force redirect to avoid resending form when refreshing page
@@ -513,11 +493,9 @@ class DocumentsController extends RozierApp
 
         if (null !== $folderId &&
             $folderId > 0) {
-
             $folder = $this->getService('em')
                            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
-            $prefilters['folders'] = array($folder);
             $this->assignation['folder'] = $folder;
         }
 
@@ -528,16 +506,13 @@ class DocumentsController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             $document = $this->uploadDocument($form, $folderId);
 
             if (false !== $document) {
-
                 $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
                     '%name%'=>$document->getFilename()
                 ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 return new Response(
                     json_encode(array(
@@ -556,8 +531,7 @@ class DocumentsController extends RozierApp
 
             } else {
                 $msg = $this->getTranslator()->trans('document.cannot_persist');
-                $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->getService('logger')->error($msg);
+                $this->publishErrorMessage($request, $msg);
 
                 return new Response(
                     json_encode(array(
@@ -799,7 +773,6 @@ class DocumentsController extends RozierApp
 
         if (!empty($data['documentsId']) &&
             !empty($data['folderPaths'])) {
-
             $documentsIds = explode(',', $data['documentsId']);
 
             $documents = $this->getService('em')
@@ -812,7 +785,6 @@ class DocumentsController extends RozierApp
             $folderPaths = array_filter($folderPaths);
 
             foreach ($folderPaths as $path) {
-
                 $folder = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                             ->findOrCreateByPath($path);
@@ -844,7 +816,6 @@ class DocumentsController extends RozierApp
 
         if (!empty($data['documentsId']) &&
             !empty($data['folderPaths'])) {
-
             $documentsIds = explode(',', $data['documentsId']);
 
             $documents = $this->getService('em')
@@ -857,7 +828,6 @@ class DocumentsController extends RozierApp
             $folderPaths = array_filter($folderPaths);
 
             foreach ($folderPaths as $path) {
-
                 $folder = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                             ->findByPath($path);
@@ -887,13 +857,11 @@ class DocumentsController extends RozierApp
     private function downloadDocuments($documents)
     {
         if (count($documents) > 0) {
-
             $tmpFileName = tempnam("/tmp", "rzdocs_");
             $zip = new \ZipArchive();
             $zip->open($tmpFileName, \ZipArchive::CREATE);
 
             foreach ($documents as $document) {
-
                 $zip->addFile($document->getAbsolutePath(), $document->getFilename());
             }
 
@@ -926,18 +894,15 @@ class DocumentsController extends RozierApp
         if (isset($data['embedId']) &&
             isset($data['embedPlatform']) &&
             in_array($data['embedPlatform'], array_keys($handlers))) {
-
             $class = $handlers[$data['embedPlatform']];
             $finder = new $class($data['embedId']);
 
             if ($finder->exists()) {
-
                 $document = $finder->createDocumentFromFeed($this->getService());
 
                 if (null !== $document &&
                     null !== $folderId &&
                     $folderId > 0) {
-
                     $folder = $this->getService('em')
                                    ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
@@ -969,7 +934,6 @@ class DocumentsController extends RozierApp
         if (null !== $document &&
             null !== $folderId &&
             $folderId > 0) {
-
             $folder = $this->getService('em')
                            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
@@ -988,7 +952,6 @@ class DocumentsController extends RozierApp
     {
         if (!empty($data['filename']) &&
             $data['filename'] != $document->getFilename()) {
-
             $oldUrl = $document->getAbsolutePath();
 
             /*
@@ -1022,7 +985,6 @@ class DocumentsController extends RozierApp
     private function uploadDocument($data, $folderId = null)
     {
         if (!empty($data['attachment'])) {
-
             $file = $data['attachment']->getData();
 
             $uploadedFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
@@ -1036,7 +998,6 @@ class DocumentsController extends RozierApp
             if ($uploadedFile !== null &&
                 $uploadedFile->getError() == UPLOAD_ERR_OK &&
                 $uploadedFile->isValid()) {
-
                 try {
                     $document = new Document();
                     $document->setFilename($uploadedFile->getClientOriginalName());
@@ -1045,7 +1006,6 @@ class DocumentsController extends RozierApp
                     $this->getService('em')->flush();
 
                     if (null !== $folderId && $folderId > 0) {
-
                         $folder = $this->getService('em')
                                        ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
@@ -1058,7 +1018,6 @@ class DocumentsController extends RozierApp
 
                     return $document;
                 } catch (\Exception $e) {
-
                     return false;
                 }
             }

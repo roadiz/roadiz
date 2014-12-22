@@ -37,7 +37,7 @@
     border-bottom:1px dashed @children-nodes-border;
 
     .uk-navbar-brand{
-        padding:0 10px 0 28px;
+        padding:0 10px 0 26px;
         color:#666;
         line-height:55px;
     }
@@ -88,8 +88,14 @@
         }
     }
 
-    .nodetree-contextualmenu{
+    .nodetree-contextualmenu {
 
+        top: 0px;
+
+        .tree-contextualmenu-button {
+            display: inline-block;
+
+        }
         .uk-button-mini{
             background:#ddd;
         }
@@ -109,10 +115,11 @@
             border-top: 1px solid #E2E2E2;
         }
     }
-
 }
 
-.children-nodes-tree .uk-nestable, .uk-nestable-moving body > .children-node-widget, .uk-nestable-moving body > .children-node-widget-list{
+.children-nodes-tree .uk-nestable,
+.uk-nestable-moving body > .children-node-widget,
+.uk-nestable-moving body > .children-node-widget-list {
 
     // 1st level
     &> .uk-nestable-list-item{
@@ -124,6 +131,7 @@
         }
         .nodetree-contextualmenu {
             right: 27px;
+            top: 0px;
         }
 
         &:nth-child(2n){
@@ -244,7 +252,7 @@
 
             &> .uk-nestable-handle:after{
                 width:40px; height:40px;
-                top:7px;
+                top:6px;
                 background-color:#CCCCCC;
                 border: 1px solid #C2C2C2;
             }
@@ -281,12 +289,12 @@
                     display: inline-block;
                     height: 25px;
                     top: 6px;
-                    left: 7px;
+                    left: 9px;
                     position: absolute;
                     // position: relative;
                 }
                 .icon-stack-folder {
-                    left: 14px;
+                    left: 15px;
                     &-final {
                         left: 21px;
 

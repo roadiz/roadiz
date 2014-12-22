@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file SLIRConfig.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Utils;
@@ -44,9 +43,9 @@ class SLIRConfig extends \SLIR\SLIRConfigDefaults
         static::$garbageCollectDivisor =               400;
         static::$garbageCollectFileCacheMaxLifetime =  345600;
         static::$browserCacheTTL  =                    604800; // 7*24*60*60
-        static::$pathToCacheDir =                      RENZO_ROOT.'/cache'; // Place cache dir outside of VENDOR to make updates easier.
-        static::$pathToErrorLog =                      RENZO_ROOT.'/files/slir-error-log';
-        static::$documentRoot =                        RENZO_ROOT.'/files'; // RZ_CMS The document root is used directly in the rz-core document class.
+        static::$pathToCacheDir =                      ROADIZ_ROOT.'/cache'; // Place cache dir outside of VENDOR to make updates easier.
+        static::$pathToErrorLog =                      ROADIZ_ROOT.'/files/slir-error-log';
+        static::$documentRoot =                        ROADIZ_ROOT.'/files'; // RZ_CMS The document root is used directly in the rz-core document class.
         static::$urlToSLIR =                           '/assets';
         static::$maxMemoryToAllocate =                 64;
         // This must be the last line of this function

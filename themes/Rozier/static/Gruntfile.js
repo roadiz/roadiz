@@ -13,11 +13,11 @@ module.exports = function(grunt) {
 				'src': [
 					'js/vendor/uikit.min.js',
 
-					'js/addons/sortable.js',
-					'js/addons/nestable.js',
-					'js/addons/pagination.js',
-					'js/addons/notify.js',
-					'js/addons/htmleditor.js',
+					'js/vendor/addons/sortable.js',
+					'js/vendor/addons/nestable.js',
+					'js/vendor/addons/pagination.js',
+					'js/vendor/addons/notify.js',
+					'js/vendor/addons/htmleditor.js',
 
 					'js/vendor/jquery-ui.js',
 					'js/vendor/TweenMax.min.js',
@@ -47,17 +47,18 @@ module.exports = function(grunt) {
 					'js/widgets/saveButtons.js',
 					'js/widgets/settingsSaveButtons.js',
 					'js/widgets/nodeEditSource.js',
+					'js/widgets/nodeTree.js',
 					'js/widgets/nodeStatuses.js',
-					'js/widgets/nodeTypeFieldEdit.js',
 					'js/widgets/geotagField.js',
 					'js/widgets/childrenNodesField.js',
 					'js/widgets/markdownEditor.js',
 					'js/widgets/tagAutocomplete.js',
 					'js/widgets/folderAutocomplete.js',
 					'js/widgets/stackNodeTree.js',
-					'js/widgets/nodeTypeFieldsPosition.js',
-					'js/widgets/customFormFieldsPosition.js',
-					'js/widgets/customFormFieldEdit.js',
+					'js/node-type-fields/nodeTypeFieldsPosition.js',
+					'js/node-type-fields/nodeTypeFieldEdit.js',
+					'js/custom-form-fields/customFormFieldsPosition.js',
+					'js/custom-form-fields/customFormFieldEdit.js',
 
 					'js/rozierMobile.js',
 					'js/lazyload.js',
@@ -84,7 +85,8 @@ module.exports = function(grunt) {
 			options: {
 				compress: true,
 				yuicompress: true,
-				optimization: 3
+				optimization: 3,
+				sourceMap: true
 			},
 			rozier:
 			{

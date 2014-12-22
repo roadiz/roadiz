@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file SearchController.php
- * @copyright REZO ZERO 2014
  * @author Maxime Constantinian
  */
 
@@ -46,7 +45,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 
 class SearchController extends RozierApp
@@ -85,7 +83,6 @@ class SearchController extends RozierApp
                 $data[$prefix.'createdAt']['compareOp'],
                 $data[$prefix.'createdAt']['compareDatetime']
             );
-            //unset($data[$prefix.'createdAt']);
         }
 
         if (isset($data[$prefix.'updatedAt'])) {
@@ -93,7 +90,6 @@ class SearchController extends RozierApp
                 $data[$prefix.'updatedAt']['compareOp'],
                 $data[$prefix.'updatedAt']['compareDatetime']
             );
-            //unset($data[$prefix.'updatedAt']);
         }
 
         if (isset($data[$prefix."limitResult"])) {
@@ -139,7 +135,6 @@ class SearchController extends RozierApp
                             $data[$key]['compareOp'],
                             $data[$key]['compareDatetime']
                         );
-                        //unset($data[$key]);
                     }
                 }
             }
@@ -156,51 +151,17 @@ class SearchController extends RozierApp
         ))->getForm();
         $form->handleRequest();
 
-        $builderNodeType = $this->getService('formFactory')
-                                ->createNamedBuilder(
-                                    'nodeTypeForm',
-                                    "form",
-                                    array(),
-                                    array("method" => "get")
-                                );
-        $builderNodeType->add(
-            "nodetype",
-            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-            array(
-                'empty_value' => "",
-                'required' => false
-            )
-        )
-        ->add("nodetypeSubmit", "submit", array(
-            "label" => $this->getTranslator()->trans("select.nodetype"),
-            "attr" => array("class" => "uk-button uk-button-primary")
-        ));
+        $builderNodeType = $this->buildNodeTypeForm();
 
         $nodeTypeForm = $builderNodeType->getForm();
         $nodeTypeForm->handleRequest();
 
-        if ($nodeTypeForm->isValid()) {
-            if (empty($nodeTypeForm->getData()['nodetype'])) {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('searchNodePage')
-                );
-                $response->prepare($request);
-            } else {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'searchNodeSourcePage',
-                        array("nodetypeId" => $nodeTypeForm->getData()['nodetype'])
-                    )
-                );
-                $response->prepare($request);
-            }
-
+        if (null !== $response = $this->handleNodeTypeForm($nodeTypeForm)) {
+            $response->prepare($request);
             return $response->send();
         }
 
         if ($form->isValid()) {
-
-            // $data = array_filter($form->getData(), $this->isBlank);
             $data = array();
             foreach ($form->getData() as $key => $value) {
                 if ((!is_array($value) && $this->notBlank($value)) ||
@@ -215,7 +176,7 @@ class SearchController extends RozierApp
                 'RZ\Roadiz\Core\Entities\Node',
                 $data
             );
-            if ($this->pagination == false) {
+            if ($this->pagination === false) {
                 $listManager->setItemPerPage($this->itemPerPage);
                 $listManager->disablePagination();
             }
@@ -256,55 +217,19 @@ class SearchController extends RozierApp
         $form = $builder->getForm();
         $form->handleRequest();
 
-        $builderNodeType = $this->getService('formFactory')
-                                ->createNamedBuilder(
-                                    'nodeTypeForm',
-                                    "form",
-                                    array(),
-                                    array("method" => "get")
-                                );
-        $builderNodeType->add(
-            "nodetype",
-            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-            array(
-                  'empty_value' => "",
-                  'required' => false,
-                  'data' => $nodetypeId
-            )
-        )
-        ->add("nodetypeSubmit", "submit", array(
-            "label" => $this->getTranslator()->trans("select.nodetype"),
-            "attr" => array("class" => "uk-button uk-button-primary")
-        ));
+        $builderNodeType = $this->buildNodeTypeForm($nodetypeId);
 
         $nodeTypeForm = $builderNodeType->getForm();
         $nodeTypeForm->handleRequest();
 
-        if ($nodeTypeForm->isValid()) {
-            if (empty($nodeTypeForm->getData()['nodetype'])) {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('searchNodePage')
-                );
-                $response->prepare($request);
-            } else {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'searchNodeSourcePage',
-                        array(
-                            "nodetypeId" => $nodeTypeForm->getData()['nodetype']
-                        )
-                    )
-                );
-                $response->prepare($request);
-            }
+        if (null !== $response = $this->handleNodeTypeForm($nodeTypeForm)) {
+            $response->prepare($request);
             return $response->send();
         }
 
         if ($form->isValid()) {
-
             $data = array();
             foreach ($form->getData() as $key => $value) {
-
                 if ((!is_array($value) && $this->notBlank($value))
                     || (is_array($value) && isset($value["compareDatetime"]))
                     || (is_array($value) && $value != array() && !isset($value["compareOp"]))) {
@@ -325,7 +250,7 @@ class SearchController extends RozierApp
                 NodeType::getGeneratedEntitiesNamespace().'\\'.$nodetype->getSourceEntityClassName(),
                 $data
             );
-            if ($this->pagination == false) {
+            if ($this->pagination === false) {
                 $listManager->setItemPerPage($this->itemPerPage);
                 $listManager->disablePagination();
             }
@@ -351,7 +276,6 @@ class SearchController extends RozierApp
                 foreach ($listManager->getEntities() as $idx => $nodesSource) {
                     $array = array();
                     foreach ($keys as $key) {
-                        //$getter = 'get'.ucwords($key);
                         $getter = 'get'.str_replace('_', '', ucwords($key));
                         $tmp = $nodesSource->$getter();
                         if (is_array($tmp)) {
@@ -395,6 +319,61 @@ class SearchController extends RozierApp
             Response::HTTP_OK,
             array('content-type' => 'text/html')
         );
+    }
+
+    /**
+     * Build node-type selection form.
+     *
+     * @param int|null $nodetypeId
+     */
+    protected function buildNodeTypeForm($nodetypeId = null)
+    {
+        $builderNodeType = $this->getService('formFactory')
+                                ->createNamedBuilder(
+                                    'nodeTypeForm',
+                                    "form",
+                                    array(),
+                                    array("method" => "get")
+                                );
+        $builderNodeType->add(
+            "nodetype",
+            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+            array(
+                  'empty_value' => "",
+                  'required' => false,
+                  'data' => $nodetypeId
+            )
+        )
+        ->add("nodetypeSubmit", "submit", array(
+            "label" => $this->getTranslator()->trans("select.nodetype"),
+            "attr" => array("class" => "uk-button uk-button-primary")
+        ));
+
+        return $builderNodeType;
+    }
+
+    protected function handleNodeTypeForm($nodeTypeForm)
+    {
+        if ($nodeTypeForm->isValid()) {
+            if (empty($nodeTypeForm->getData()['nodetype'])) {
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate('searchNodePage')
+                );
+            } else {
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate(
+                        'searchNodeSourcePage',
+                        array(
+                            "nodetypeId" => $nodeTypeForm->getData()['nodetype']
+                        )
+                    )
+                );
+            }
+
+            return $response;
+        }
+
+        return null;
     }
 
     public function buildSimpleForm($prefix)

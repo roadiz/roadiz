@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,18 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file SolariumNodeSource.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
@@ -110,7 +110,6 @@ class SolariumNodeSource
     public function index()
     {
         if (null !== $this->document) {
-
             $this->document->id = uniqid(); //or something else suitably unique
 
             foreach ($this->getFieldsAssoc() as $key => $value) {
@@ -150,7 +149,7 @@ class SolariumNodeSource
         // Need a locale field
         $assoc['locale_s'] = $this->nodeSource->getTranslation()->getLocale();
         $out = array_map(
-            function ($x) {
+            function (Tag $x) {
                 return $x->getTranslatedTags()->first()->getName();
             },
             $this->nodeSource->getHandler()->getTags()
@@ -227,7 +226,6 @@ class SolariumNodeSource
         if (false === $this->remove($update)) {
             return $this->indexAndCommit();
         } else {
-
             $this->setDocument($update->createDocument());
 
             if (true === $this->index()) {
@@ -272,7 +270,6 @@ class SolariumNodeSource
     public function remove(Query $update)
     {
         if (null !== $this->document) {
-
             $update->addDeleteById($this->getDocument()->id);
 
             return true;
@@ -292,7 +289,7 @@ class SolariumNodeSource
 
         if (true === $this->remove($update)) {
             $update->addCommit();
-            $result = $this->client->update($update);
+            $this->client->update($update);
         }
     }
     /**
@@ -306,7 +303,7 @@ class SolariumNodeSource
 
         if (true === $this->clean($update)) {
             $update->addCommit();
-            $result = $this->client->update($update);
+            $this->client->update($update);
         }
     }
 

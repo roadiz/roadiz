@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,22 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file SplashbasePictureFinder.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Utils;
 
 use GuzzleHttp\Client;
-use RZ\Roadiz\Core\Entities\Document;
-
 use GuzzleHttp\Exception\ClientErrorResponseException;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use Pimple\Container;
 
 /**
  * Util to grab a facebook profile picture from userAlias.
@@ -57,7 +52,6 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
             $this->feed = $response->json();
 
             if (false !== strpos($this->feed['url'], '.jpg')) {
-
                 $this->embedId = $this->feed['id'];
 
                 return $this->feed;

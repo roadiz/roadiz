@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,30 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file UrlAlias.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Utils\StringHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * UrlAliases are used to translate Nodes URLs.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\UrlAliasRepository")
- * @Table(name="url_aliases")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\UrlAliasRepository")
+ * @ORM\Table(name="url_aliases")
  */
 class UrlAlias extends AbstractEntity
 {
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      * @var string
      */
     private $alias;
@@ -67,8 +66,8 @@ class UrlAlias extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="urlAliases")
-     * @JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="urlAliases", fetch="EAGER")
+     * @ORM\JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $nodeSource;
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,37 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file GroupsImporter.php
- * @copyright REZO ZERO 2014
  * @author Maxime Constantinian
  */
 namespace RZ\Roadiz\CMS\Importers;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Entities\SettingGroup;
-use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Serializers\GroupJsonSerializer;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
-
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * {@inheritdoc}
@@ -66,7 +48,6 @@ class GroupsImporter implements ImporterInterface
      */
     public static function importJsonFile($serializedData)
     {
-        $return = false;
         $groups = GroupCollectionJsonSerializer::deserialize($serializedData);
         foreach ($groups as $group) {
             $existingGroup = Kernel::getService('em')
@@ -75,10 +56,11 @@ class GroupsImporter implements ImporterInterface
 
             if (null === $existingGroup) {
                 foreach ($group->getRolesEntities() as $role) {
-                  /*
-                   * then persist each role
-                   */
-                    $role = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Role')->findOneByName($role->getName());
+                   /*
+                    * then persist each role
+                    */
+                    $role = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Role')
+                                                    ->findOneByName($role->getName());
                 }
 
                 Kernel::getService('em')->persist($group);
@@ -90,7 +72,7 @@ class GroupsImporter implements ImporterInterface
 
             Kernel::getService('em')->flush();
         }
-        $return = true;
-        return $return;
+
+        return true;
     }
 }

@@ -6,11 +6,6 @@
 /* -------- STYLES -------- */
 
 .uk-alert {
-    position: absolute;
-    width: 400px;
-    right: 15px;
-    left: 50%;
-    margin: 0 auto 0 -200px;
     text-align: center;
     padding: 18px;
     z-index: 99999;
@@ -32,12 +27,14 @@
     background: #FFEEEE;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 }
+
 .uk-alert-success {
     background: @contrast-color-darker;
     border-color: darken(@contrast-color-darker, 5%);
     color: white;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 }
+
 .uk-alert-warning {
 
 }
@@ -53,8 +50,9 @@ td.uk-alert {
     position: static;
     width:100%;
     left:0;
-    margin:0;
+    margin:20px 0;
     border-top: 1px solid rgba(216,80,48,.3);
+    word-wrap: break-word;
 
     .uk-close{
         display: none;

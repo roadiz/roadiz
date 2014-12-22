@@ -11,7 +11,6 @@ var ChildrenNodesField = function () {
     _this.init();
 };
 ChildrenNodesField.prototype.$fields = null;
-//ChildrenNodesField.prototype.$switchLangButtons = null;
 ChildrenNodesField.prototype.$quickAddNodeButtons = null;
 
 ChildrenNodesField.prototype.init = function() {
@@ -22,30 +21,10 @@ ChildrenNodesField.prototype.init = function() {
         var proxiedClick = $.proxy(_this.onQuickAddClick, _this);
         _this.$quickAddNodeButtons.off("click", proxiedClick);
         _this.$quickAddNodeButtons.on("click", proxiedClick);
-
-        /*if(_this.$switchLangButtons.length){
-            var proxiedChangeLang = $.proxy(_this.onChangeLangClick, _this);
-            _this.$switchLangButtons.off("click", proxiedChangeLang);
-            _this.$switchLangButtons.on("click", proxiedChangeLang);
-        }*/
-
     }
-    
+
     _this.$fields.find('.nodetree-langs').remove();
 };
-
-/*ChildrenNodesField.prototype.onChangeLangClick = function(event) {
-    var _this = this;
-    var $link = $(event.currentTarget);
-
-    var $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
-    var parentNodeId = parseInt($link.attr('data-children-parent-node'));
-    var translationId = parseInt($link.attr('data-translation-id'));
-
-    _this.refreshNodeTree($nodeTree, parentNodeId, translationId);
-
-    return false;
-};*/
 
 ChildrenNodesField.prototype.onQuickAddClick = function(event) {
     var _this = this;
@@ -81,7 +60,7 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
             var $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
             _this.refreshNodeTree($nodeTree, parentNodeId, translationId);
 
-            $.UIkit.notify({
+            UIkit.notify({
                 message : data.responseText,
                 status  : data.status,
                 timeout : 3000,
@@ -94,7 +73,7 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
 
             data = JSON.parse(data.responseText);
 
-            $.UIkit.notify({
+            UIkit.notify({
                 message : data.responseText,
                 status  : data.status,
                 timeout : 3000,
@@ -128,7 +107,7 @@ ChildrenNodesField.prototype.refreshNodeTree = function( $nodeTree, rootNodeId, 
 
         $.ajax({
             url: url,
-            type: 'post',
+            type: 'get',
             dataType: 'json',
             data: postData,
         })
@@ -148,12 +127,6 @@ ChildrenNodesField.prototype.refreshNodeTree = function( $nodeTree, rootNodeId, 
                     Rozier.lazyload.generalBind();
                     $nodeTree.fadeIn();
 
-                    /*_this.$switchLangButtons = _this.$fields.find('.nodetree-langs a');
-                    if(_this.$switchLangButtons.length){
-                        var proxiedChangeLang = $.proxy(_this.onChangeLangClick, _this);
-                        _this.$switchLangButtons.off("click", proxiedChangeLang);
-                        _this.$switchLangButtons.on("click", proxiedChangeLang);
-                    }*/
                     _this.$fields.find('.nodetree-langs').remove();
 
                     Rozier.lazyload.canvasLoader.hide();

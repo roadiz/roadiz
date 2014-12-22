@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file NodeHandler.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Handlers;
@@ -37,7 +36,6 @@ use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -523,7 +521,7 @@ class NodeHandler
         return $this;
     }
 
-    private function duplicateRec($node, $level)
+    private function duplicateRec(Node $node, $level)
     {
         $childrenArray = array();
         $sourceArray = array();
@@ -536,7 +534,6 @@ class NodeHandler
         $nodeSources = new ArrayCollection($node->getNodeSources()->toArray());
         $node->getNodeSources()->clear();
         foreach ($nodeSources as $nodeSource) {
-
             $nodeSource->setNode(null);
 
             $tran = Kernel::getService('em')->merge($nodeSource->getTranslation());
@@ -559,14 +556,12 @@ class NodeHandler
             Kernel::getService('em')->flush();
             $sourceArray[] = $nodeSource;
         }
-            //exit();
+
         $nodetype = Kernel::getService('em')->merge($node->getNodeType());
 
         $node->setNodeType($nodetype);
 
         $node->setParent(null);
-
-        //$node->setNodeName($node->getNodeName()."-".uniqid());
 
         Kernel::getService('em')->persist($node);
         foreach ($childrenArray as $child) {

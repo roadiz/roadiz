@@ -1,33 +1,47 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  * @file ThemesController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Finder\Finder;
 
 /**
  * {@inheritdoc}
@@ -80,13 +94,14 @@ class ThemesController extends RozierApp
         if ($form->isValid()) {
             try {
                 $this->addTheme($form->getData(), $theme);
-                $msg = $this->getTranslator()->trans('theme.%name%.created', array('%name%'=>$theme->getClassName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $msg = $this->getTranslator()->trans(
+                    'theme.%name%.created',
+                    array('%name%'=>$theme->getClassName())
+                );
+                $this->publishConfirmMessage($request, $msg);
 
             } catch (EntityAlreadyExistsException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             }
 
             $response = new RedirectResponse(
@@ -123,28 +138,23 @@ class ThemesController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
-
             $form = $this->buildEditForm($theme);
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->editTheme($form->getData(), $theme);
-                    $msg = $this->getTranslator()->trans('theme.%name%.updated', array('%name%'=>$theme->getClassName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'theme.%name%.updated',
+                        array('%name%'=>$theme->getClassName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('themesHomePage')
                 );
@@ -187,24 +197,20 @@ class ThemesController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['themeId'] == $theme->getId()) {
-
                 try {
                     $this->deleteTheme($form->getData(), $theme);
-                    $msg = $this->getTranslator()->trans('theme.%name%.deleted', array('%name%'=>$theme->getClassName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'theme.%name%.deleted',
+                        array('%name%'=>$theme->getClassName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityRequiredException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('themesHomePage')
                 );
@@ -259,6 +265,18 @@ class ThemesController extends RozierApp
                 )
             )
             ->add(
+                'staticTheme',
+                'checkbox',
+                array(
+                    'label' => $this->getTranslator()->trans('staticTheme'),
+                    'data' => $theme->isStaticTheme(),
+                    'required' => false,
+                    'attr' => array(
+                        'data-desc' => $this->getTranslator()->trans('staticTheme.does_not.allow.node_url_routes')
+                    )
+                )
+            )
+            ->add(
                 'hostname',
                 'text',
                 array(
@@ -302,6 +320,18 @@ class ThemesController extends RozierApp
                 'data' => $theme->isAvailable(),
                 'required' => false
             ))
+            ->add(
+                'staticTheme',
+                'checkbox',
+                array(
+                    'label' => $this->getTranslator()->trans('staticTheme'),
+                    'data' => $theme->isStaticTheme(),
+                    'required' => false,
+                    'attr' => array(
+                        'data-desc' => $this->getTranslator()->trans('staticTheme.does_not.allow.node_url_routes')
+                    )
+                )
+            )
             ->add('hostname', 'text', array(
                 'label' => $this->getTranslator()->trans('hostname'),
                 'data' => $theme->getHostname()

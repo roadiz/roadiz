@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file RequirementsCommand.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Console\SchemaCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -45,8 +38,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class RequirementsCommand extends Command
 {
-    private $dialog;
-
     protected function configure()
     {
         $this
@@ -56,7 +47,6 @@ class RequirementsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
         $text="";
 
         $text .= $this->testPHPVersion('5.4');
@@ -75,7 +65,7 @@ class RequirementsCommand extends Command
         $text .= $this->testPHPIntValue('upload_max_filesize', '16');
 
         $text .= $this->methodExists('gettext');
-        $text .= $this->folderWritable(RENZO_ROOT);
+        $text .= $this->folderWritable(ROADIZ_ROOT);
 
         $output->writeln($text);
     }
@@ -94,12 +84,12 @@ class RequirementsCommand extends Command
 
     protected function methodExists($name, $mandatory = true)
     {
-        return '<info>Method '.$name.'()</info> — '.(function_exists($name) == true && $mandatory == true ? 'OK' : '<error>Fail</error>').''.PHP_EOL;
+        return '<info>Method '.$name.'()</info> — '.(function_exists($name) === true && $mandatory === true ? 'OK' : '<error>Fail</error>').''.PHP_EOL;
     }
 
     protected function folderWritable($filename)
     {
-        return '<info>Folder “'.$filename.'”</info> — '.(is_writable($filename) == true ? 'Writable' : '<error>Not writable</error>').''.PHP_EOL;
+        return '<info>Folder “'.$filename.'”</info> — '.(is_writable($filename) === true ? 'Writable' : '<error>Not writable</error>').''.PHP_EOL;
     }
 
     protected function testExtension($name)

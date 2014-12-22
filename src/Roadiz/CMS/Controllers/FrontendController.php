@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file FrontendController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Log\Logger;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Handlers\UserProvider;
-use RZ\Roadiz\Core\Handlers\UserHandler;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use Pimple\Container;
 
@@ -45,35 +41,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-
-use RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler;
-use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
-
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
-use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
-use Symfony\Component\Security\Http\Firewall\ExceptionListener;
-use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
-use Symfony\Component\Security\Http\Firewall\ContextListener;
-use Symfony\Component\Security\Http\Firewall\LogoutListener;
-use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
-use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
-use Symfony\Component\Security\Http\AccessMap;
-use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
-use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
-use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\User\UserChecker;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
-use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
-
-use Symfony\Component\EventDispatcher\EventDispatcher;
-
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * Frontend controller to handle a page request.
@@ -115,7 +85,7 @@ class FrontendController extends AppController
 
     protected $node = null;
     protected $translation = null;
-
+    protected $themeContainer = null;
 
     /**
      * Make translation variable with the good localization
@@ -127,8 +97,6 @@ class FrontendController extends AppController
      */
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
     {
-        $translation = null;
-
         /*
          * If you use a static route for Home page
          * we need to grab manually language.
@@ -197,6 +165,10 @@ class FrontendController extends AppController
                                 'locale'=>$_locale
                             )
                         );
+        } else {
+            $translation = $this->getService('em')
+                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                        ->findDefault();
         }
 
         /*
@@ -211,7 +183,7 @@ class FrontendController extends AppController
                     $this->getSecurityContext()
                 );
 
-        $this->storeNodeAndTranslation($node, $translation);
+        $this->prepareThemeAssignation($node, $translation);
 
         return new Response(
             $this->getTwig()->render('home.html.twig', $this->assignation),
@@ -254,25 +226,26 @@ class FrontendController extends AppController
     /**
      * Handle node based routing.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
-     * @throws Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
      */
     protected function handle(Request $request)
     {
+        Kernel::getService('stopwatch')->start('handleNodeController');
         $currentClass = get_class($this);
         $refl = new \ReflectionClass($currentClass);
         $namespace = $refl->getNamespaceName() . '\\Controllers';
 
         if ($this->getRequestedNode() !== null) {
-
             if (null !== $this->getSecurityContext() &&
                 !$this->getSecurityContext()->isGranted(Role::ROLE_BACKEND_USER) &&
                 !$this->getRequestedNode()->isPublished()) {
                 /*
                  * Not allowed to see unpublished nodes
                  */
+
                 return $this->throw404();
             }
 
@@ -286,16 +259,13 @@ class FrontendController extends AppController
             if (in_array($this->getRequestedNode()->getNodeName(), static::$specificNodesControllers) &&
                 class_exists($nodeController) &&
                 method_exists($nodeController, 'indexAction')) {
-
                 $ctrl = new $nodeController();
 
             } elseif (class_exists($nodeTypeController) &&
                 method_exists($nodeTypeController, 'indexAction')) {
-
                 $ctrl = new $nodeTypeController();
 
             } else {
-
                 return $this->throw404(
                     "No front-end controller found for '".
                     $this->getRequestedNode()->getNodeName().
@@ -327,7 +297,6 @@ class FrontendController extends AppController
                 $this->getRequestedTranslation()
             );
         } else {
-
             return $this->throw404("No front-end controller found");
         }
     }
@@ -371,12 +340,34 @@ class FrontendController extends AppController
         $this->assignation['meta'] = array(
             'siteName' =>        SettingsBag::get('site_name'),
             'siteCopyright' =>   SettingsBag::get('site_copyright'),
-            'siteDescription' => SettingsBag::get('seo_description'),
-            'analytics' =>       SettingsBag::get('universal_analytics_id')
+            'siteDescription' => SettingsBag::get('seo_description')
         );
 
         return $this;
     }
+
+    /**
+     * Store basic informations for your theme.
+     *
+     * @param RZ\Roadiz\Core\Entities\Node        $node
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     *
+     * @return void
+     */
+    protected function prepareThemeAssignation(Node $node = null, Translation $translation = null)
+    {
+        $this->storeNodeAndTranslation($node, $translation);
+
+        $this->assignation['home'] = $this->getService('em')
+                                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                          ->findHomeWithTranslation($translation);
+
+        /*
+         * Use a DI container to delay API requuests
+         */
+        $this->themeContainer = new Container();
+    }
+
     /**
      * Get SEO informations for current node.
      *
@@ -390,7 +381,6 @@ class FrontendController extends AppController
             $ns = $this->node->getNodeSources()->first();
 
             if (null !== $ns) {
-
                 return array(
                     'title' => ($ns->getMetaTitle() != "") ?
                                         $ns->getMetaTitle() :
@@ -425,13 +415,11 @@ class FrontendController extends AppController
      */
     public static function setupDependencyInjection(Container $container)
     {
-        $container->extend('firewallMap', function ($map, $c) {
+        $container->extend('firewallMap', function (FirewallMap $map, Container $c) {
             /*
              * Prepare app firewall
              */
             $requestMatcher = new RequestMatcher('^/');
-            // allows configuration of different access control rules for specific parts of the website.
-            //$accessMap = new AccessMap($requestMatcher, array());
 
             $listeners = array(
                 // manages the SecurityContext persistence through a session
@@ -446,6 +434,15 @@ class FrontendController extends AppController
             $map->add($requestMatcher, $listeners, $c['firewallExceptionListener']);
 
             return $map;
+        });
+
+        /*
+         * Enable frontend theme to extends backoffice and using FrontendTheme twig templates.
+         */
+        $container->extend('twig.loaderFileSystem', function (\Twig_Loader_Filesystem $loader, $c) {
+            $loader->addPath(static::getViewsFolder());
+
+            return $loader;
         });
     }
 }

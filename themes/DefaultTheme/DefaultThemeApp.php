@@ -1,99 +1,77 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * Description
  *
  * @file DefaultThemeApp.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 
 namespace Themes\DefaultTheme;
 
 use RZ\Roadiz\CMS\Controllers\FrontendController;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Pimple\Container;
 
 /**
 * DefaultThemeApp class
 */
 class DefaultThemeApp extends FrontendController
 {
-    /**
-     * {@inheritdoc}
-     */
+    const USE_GRUNT = false;
+
     protected static $themeName =      'Default theme';
-    /**
-     * {@inheritdoc}
-     */
     protected static $themeAuthor =    'Ambroise Maupate';
-    /**
-     * {@inheritdoc}
-     */
     protected static $themeCopyright = 'REZO ZERO';
-    /**
-     * {@inheritdoc}
-     */
     protected static $themeDir =       'DefaultTheme';
-    /**
-     * {@inheritdoc}
-     */
     protected static $backendTheme =    false;
 
-    /**
-     * {@inheritdoc}
-     */
     protected static $specificNodesControllers = array(
         // Put here your nodes which need a specific controller
         // instead of a node-type controller
     );
 
-    /**
-     * {@inheritdoc}
-     */
     public function homeAction(
         Request $request,
         $_locale = null
     ) {
-        /*
-         * If you use a static route for Home page
-         * we need to grab manually language.
-         *
-         * Get language from static route
-         */
+
         $translation = $this->bindLocaleFromRoute($request, $_locale);
 
-        $node = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findOneBy(
-                    array('home'=>true),
-                    null,
-                    $translation,
-                    $this->getSecurityContext()
-                );
+        $home = $this->getService('em')
+                     ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                     ->findHomeWithTranslation($translation);
 
-        $this->prepareThemeAssignation(null, $translation);
+        $this->prepareThemeAssignation($home, $translation);
 
-        /*
-         * First choice, render Homepage as any other nodes
-         */
-        //return $this->handle($request);
-
-        /*
-         * Second choice, render Homepage manually
-         */
-        return new Response(
-            $this->getTwig()->render('home.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
+        return $this->handle($request);
     }
 
     /**
@@ -104,20 +82,49 @@ class DefaultThemeApp extends FrontendController
      */
     protected function prepareThemeAssignation(Node $node = null, Translation $translation = null)
     {
-        $this->storeNodeAndTranslation($node, $translation);
-        $this->assignation['navigation'] = $this->assignMainNavigation();
+        parent::prepareThemeAssignation($node, $translation);
+
+        $this->themeContainer['imageFormats'] = function ($c) {
+            $array = array();
+
+            /*
+             * Common image format for pages headers
+             */
+            $array['headerImage'] = array(
+                'width'=>1600
+            );
+            $array['thumbnail'] = array(
+                "width"=>200,
+                "crop"=>"1:1",
+                "controls"=>true,
+                "embed"=>true
+            );
+
+            return $array;
+        };
+
+        $this->themeContainer['navigation'] = function ($c) {
+            return $this->assignMainNavigation();
+        };
+
+        $this->themeContainer['useGrunt'] = function ($c) {
+            return static::USE_GRUNT;
+        };
+
+        /*
+         * Use Grunt to generate unique asset files for CSS and JS
+         */
+        $this->themeContainer['grunt'] = function ($c) {
+            return include(dirname(__FILE__).'/static/public/config/assets.config.php');
+        };
 
         $this->assignation['home'] = $this->getService('em')
                                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
                                           ->findHomeWithTranslation($translation);
 
-        /*
-         * Common image format for pages headers
-         */
-        $this->assignation['headerImageFilter'] = array(
-            'width'=>1024,
-            'crop'=>'1024x200'
-        );
+        $this->assignation['themeServices'] = $this->themeContainer;
+        // Get session messages
+        $this->assignation['session']['messages'] = $this->getService('session')->getFlashBag()->all();
     }
 
     /**
@@ -139,10 +146,64 @@ class DefaultThemeApp extends FrontendController
         if ($parent !== null) {
             return $this->getService('nodeApi')
                         ->getBy(
-                            array('parent' => $parent)
+                            array(
+                                'parent' => $parent,
+                                'translation' => $this->translation
+                            ),
+                            array(
+                                'position' => 'ASC'
+                            )
                         );
         }
 
         return null;
+    }
+
+    /**
+     * Return a Response with default backend 404 error page.
+     *
+     * @param string $message Additionnal message to describe 404 error.
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function throw404($message = "")
+    {
+        $this->prepareThemeAssignation(null, null);
+
+        $this->assignation['errorMessage'] = $message;
+
+        return new Response(
+            $this->getTwig()->render('404.html.twig', $this->assignation),
+            Response::HTTP_NOT_FOUND,
+            array('content-type' => 'text/html')
+        );
+    }
+
+    /**
+     * Append objects to global container.
+     *
+     * @param Pimple\Container $container
+     */
+    public static function setupDependencyInjection(Container $container)
+    {
+        FrontendController::setupDependencyInjection($container);
+
+        $container->extend('backoffice.entries', function (array $entries, $c) {
+
+            /*
+             * Add a test entry in your Backoffice
+             * Remove this in your theme if you don’t
+             * want to extend Back-office
+             */
+            $entries['test'] = array(
+                'name' => 'test',
+                'path' => $c['urlGenerator']->generate('adminTestPage'),
+                'icon' => 'uk-icon-cube',
+                'roles' => null,
+                'subentries' => null
+            );
+
+            return $entries;
+        });
     }
 }

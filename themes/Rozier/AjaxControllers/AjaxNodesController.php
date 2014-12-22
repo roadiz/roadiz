@@ -1,28 +1,41 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  * @file AjaxNodesController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * {@inheritdoc}
@@ -57,7 +70,6 @@ class AjaxNodesController extends AbstractAjaxController
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if ($node !== null) {
-
             $responseArray = null;
 
             /*
@@ -115,14 +127,14 @@ class AjaxNodesController extends AbstractAjaxController
 
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
-
             $parent = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $node->setParent($parent);
             }
-        } elseif ($parameters['newParent'] == null) {
+        } else {
+            // if no parent or null we place node at root level
             $node->setParent(null);
         }
 
@@ -188,12 +200,10 @@ class AjaxNodesController extends AbstractAjaxController
 
         if ("nodeChangeStatus" == $request->get('_action') &&
             "" != $request->get('statusName')) {
-
             // just verify role when updating status
             if ($request->get('statusName') == 'status' &&
                 $request->get('statusValue') > Node::PENDING &&
                 !$this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_STATUS')) {
-
                 $responseArray = array(
                     'statusCode' => Response::HTTP_FORBIDDEN,
                     'status'    => 'danger',
@@ -201,31 +211,25 @@ class AjaxNodesController extends AbstractAjaxController
                 );
 
             } else {
-
                 if ($request->get('nodeId') > 0) {
-
                     $node = $this->getService('em')
                                  ->find('RZ\Roadiz\Core\Entities\Node', (int) $request->get('nodeId'));
 
                     if (null !== $node) {
-
                         /*
                          * Check if status name is a valid boolean node field.
                          */
                         if (in_array($request->get('statusName'), array_keys($availableStatuses))) {
-
                             $setter = $availableStatuses[$request->get('statusName')];
                             $value = $request->get('statusValue');
 
                             if ($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_STATUS') ||
                                 $request->get('statusName') != 'status') {
-
                                 $node->$setter($value);
                                 $this->em()->flush();
 
                                 // Update Solr Search engine if setup
                                 if (true === $this->getKernel()->pingSolrServer()) {
-
                                     foreach ($node->getNodeSources() as $nodeSource) {
                                         $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
                                             $nodeSource,
@@ -321,7 +325,6 @@ class AjaxNodesController extends AbstractAjaxController
 
         if ($request->get('nodeTypeId') > 0 &&
             $request->get('parentNodeId') > 0) {
-
             $nodeType = $this->getService('em')
                             ->find(
                                 'RZ\Roadiz\Core\Entities\NodeType',
@@ -336,8 +339,6 @@ class AjaxNodesController extends AbstractAjaxController
 
             if (null !== $nodeType &&
                 null !== $parent) {
-
-
                 if ($request->get('translationId') > 0) {
                     $translation = $this->getService('em')
                                             ->find('RZ\Roadiz\Core\Entities\Translation', (int) $request->get('translationId'));
@@ -352,12 +353,22 @@ class AjaxNodesController extends AbstractAjaxController
                     }
                 }
 
+                if ($request->get('tagId') > 0) {
+                    $tag = $this->getService('em')
+                                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $request->get('tagId'));
+                } else {
+                    $tag = null;
+                }
+
                 try {
                     $name = "Untitled ".uniqid();
 
                     $node = new Node($nodeType);
                     $node->setParent($parent);
                     $node->setNodeName($name);
+                    if (null !== $tag) {
+                        $node->addTag($tag);
+                    }
                     $this->getService('em')->persist($node);
 
                     if (!empty($request->get('pushTop')) &&

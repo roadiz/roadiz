@@ -1,12 +1,33 @@
 <?php
 
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * Description
  *
  * @file UserViewer.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 
@@ -16,14 +37,9 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
-use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 use \InlineStyle\InlineStyle;
 
@@ -34,15 +50,16 @@ class UserViewer implements ViewableInterface
 {
     protected $user = null;
     protected $twig = null;
-    protected $translator = null;
 
     /**
      * @param RZ\Roadiz\Core\Entities\User $user
      */
     public function __construct(User $user)
     {
-        $this->initializeTranslator();
         $this->user = $user;
+
+        Kernel::getService('twig.environment')->addExtension(new TranslationExtension(Kernel::getService('translator')));
+        Kernel::getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
     }
 
     /**
@@ -50,7 +67,7 @@ class UserViewer implements ViewableInterface
      */
     public function getTranslator()
     {
-        return $this->translator;
+        return Kernel::getService('translator');
     }
 
     /**
@@ -62,51 +79,28 @@ class UserViewer implements ViewableInterface
     }
 
     /**
-     * Create a translator instance and load theme messages
-     *
-     * src/Roadiz/CMS/Resources/translations/messages.{{lang}}.xlf
-     *
-     * @todo  [Cache] Need to write XLF catalog to PHP using \Symfony\Component\Translation\Writer\TranslationWriter
-     *
-     * @return Symfony\Component\Translation\Translator
-     */
-    public function initializeTranslator()
-    {
-        $lang = Kernel::getInstance()->getRequest()->getLocale();
-        $msgPath = RENZO_ROOT.'/src/Roadiz/CMS/Resources/translations/messages.'.$lang.'.xlf';
-
-        /*
-         * fallback to english, if message catalog absent
-         */
-        if (!file_exists($msgPath)) {
-            $lang = 'en';
-        }
-        // instancier un objet de la classe Translator
-        $this->translator = new Translator($lang);
-        // charger, en quelque sorte, des traductions dans ce translator
-        $this->translator->addLoader('xlf', new XliffFileLoader());
-        $this->translator->addResource(
-            'xlf',
-            RENZO_ROOT.'/src/Roadiz/CMS/Resources/translations/messages.'.$lang.'.xlf',
-            $lang
-        );
-        // ajoutez le TranslationExtension (nous donnant les filtres trans et transChoice)
-        Kernel::getService('twig.environment')->addExtension(new TranslationExtension($this->translator));
-
-        return $this;
-    }
-
-    /**
      * Send an email with credentials details to user
      *
      * @return void
      */
     public function sendSignInConfirmation()
     {
+        $emailContact = SettingsBag::get('email_sender');
+
+        if (empty($emailContact)) {
+            $emailContact = "noreply@roadiz.io";
+        }
+
+        $siteName = SettingsBag::get('site_name');
+
+        if (empty($siteName)) {
+            $siteName = "Unnamed site";
+        }
+
         $assignation = array(
             'user' => $this->user,
-            'site' => SettingsBag::get('site_name'),
-            'mailContact' => SettingsBag::get('email_sender'),
+            'site' => $siteName,
+            'mailContact' => $emailContact,
         );
         $emailBody = $this->getTwig()->render('users/newUser_email.html.twig', $assignation);
 
@@ -115,7 +109,7 @@ class UserViewer implements ViewableInterface
          */
         $htmldoc = new InlineStyle($emailBody);
         $htmldoc->applyStylesheet(file_get_contents(
-            RENZO_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
+            ROADIZ_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
         ));
 
         // Create the message
@@ -123,10 +117,10 @@ class UserViewer implements ViewableInterface
             // Give the message a subject
             ->setSubject($this->getTranslator()->trans(
                 'welcome.user.email.%site%',
-                array('%site%'=>SettingsBag::get('site_name'))
+                array('%site%'=>$siteName)
             ))
             // Set the From address with an associative array
-            ->setFrom(array(SettingsBag::get('email_sender') => SettingsBag::get('site_name')))
+            ->setFrom(array($emailContact => $siteName))
             // Set the To addresses with an associative array
             ->setTo(array($this->user->getEmail()))
             // Give it a body

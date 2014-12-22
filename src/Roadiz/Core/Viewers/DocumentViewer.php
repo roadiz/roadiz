@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,30 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file DocumentViewer.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Viewers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Exceptions\EmbedPlatformNotSupportedException;
-
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
-use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\Loader\XliffFileLoader;
-
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * DocumentViewer
@@ -83,14 +70,6 @@ class DocumentViewer implements ViewableInterface
     public function getTwig()
     {
         return Kernel::getService('twig.environment');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function initializeTranslator()
-    {
-        return $this;
     }
 
     /**
@@ -134,8 +113,8 @@ class DocumentViewer implements ViewableInterface
         if (!empty($args['width'])) {
             $assignation['width'] = (int) $args['width'];
         }
-        if (!empty($args['heigth'])) {
-            $assignation['heigth'] = (int) $args['heigth'];
+        if (!empty($args['height'])) {
+            $assignation['height'] = (int) $args['height'];
         }
         if (!empty($args['identifier'])) {
             $assignation['identifier'] = $args['identifier'];
@@ -163,7 +142,6 @@ class DocumentViewer implements ViewableInterface
         if (isset($args['embed']) &&
             true === $args['embed'] &&
             $this->isEmbedPlatformSupported()) {
-
             return $this->getEmbedByArray($args);
 
         } elseif ($this->document->isImage()) {
@@ -200,16 +178,12 @@ class DocumentViewer implements ViewableInterface
     public function getEmbedFinder()
     {
         if (null === $this->embedFinder) {
-
             if ($this->isEmbedPlatformSupported()) {
                 $handlers = Kernel::getService('document.platforms');
                 $class = $handlers[$this->document->getEmbedPlatform()];
                 $this->embedFinder = new $class($this->document->getEmbedId());
             } else {
                 $this->embedFinder = false;
-                /*throw new EmbedPlatformNotSupportedException(
-                    "“".$this->document->getEmbedPlatform()."” is not a supported platform."
-                );*/
             }
         }
 
@@ -299,9 +273,8 @@ class DocumentViewer implements ViewableInterface
     public function getDocumentUrlByArray($args = null)
     {
         if ($args === null ||
-            (isset($args['noProcess']) && $args['noProcess'] == true) ||
+            (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
-
             return Kernel::getInstance()->getRequest()
                                         ->getBaseUrl().'/files/'.$this->document->getRelativeUrl();
         } else {
@@ -316,8 +289,8 @@ class DocumentViewer implements ViewableInterface
             if (!empty($args['crop'])) {
                 $slirArgs['c'] = 'c'.strip_tags($args['crop']);
             }
-            if ((!empty($args['grayscale']) && $args['grayscale'] == true) ||
-                (!empty($args['greyscale']) && $args['greyscale'] == true)) {
+            if ((!empty($args['grayscale']) && $args['grayscale'] === true) ||
+                (!empty($args['greyscale']) && $args['greyscale'] === true)) {
                 $slirArgs['g'] = 'g1';
             }
             if (!empty($args['quality'])) {
@@ -326,7 +299,7 @@ class DocumentViewer implements ViewableInterface
             if (!empty($args['background'])) {
                 $slirArgs['b'] = 'b'.strip_tags($args['background']);
             }
-            if (!empty($args['progressive']) && $args['progressive'] == true) {
+            if (!empty($args['progressive']) && $args['progressive'] === true) {
                 $slirArgs['p'] = 'p1';
             }
 

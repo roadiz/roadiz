@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file UsersCommand.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console;
@@ -115,7 +114,6 @@ class UsersCommand extends Command
 
             if ($user !== null) {
                 if ($input->getOption('enable')) {
-
                     if ($user !== null && $user->setEnabled(true)) {
                         Kernel::getService('em')->flush();
                         $text = '<info>User enabled…</info>'.PHP_EOL;
@@ -123,7 +121,6 @@ class UsersCommand extends Command
                         $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
                     }
                 } elseif ($input->getOption('disable')) {
-
                     if ($user !== null && $user->setEnabled(false)) {
                         Kernel::getService('em')->flush();
                         $text = '<info>User disabled…</info>'.PHP_EOL;
@@ -131,7 +128,6 @@ class UsersCommand extends Command
                         $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
                     }
                 } elseif ($input->getOption('delete')) {
-
                     if ($user !== null && $this->dialog->askConfirmation(
                         $output,
                         '<question>Do you really want to delete user “'.$user->getUsername().'”?</question> : ',
@@ -223,10 +219,8 @@ class UsersCommand extends Command
         InputInterface $input,
         OutputInterface $output
     ) {
-        $text = "";
         $user = new User();
         $user->setUsername($username);
-        $email = false;
 
         do {
             $email = $this->dialog->ask(
@@ -246,7 +240,6 @@ class UsersCommand extends Command
             '<question>Is user a backend user?</question> : ',
             false
         )) {
-
             $user->addRole($this->getRole(Role::ROLE_BACKEND_USER));
         }
         if ($this->dialog->askConfirmation(
@@ -254,8 +247,7 @@ class UsersCommand extends Command
             '<question>Is user a super-admin user?</question> : ',
             false
         )) {
-
-            $user->addRole($this->getRole(Role::ROLE_SUPER_ADMIN));
+            $user->addRole($this->getRole(Role::ROLE_SUPERADMIN));
         }
 
         $user->setPlainPassword(UserHandler::generatePassword());
@@ -278,7 +270,7 @@ class UsersCommand extends Command
      *
      * @return Role
      */
-    public function getRole($roleName = Role::ROLE_SUPER_ADMIN)
+    public function getRole($roleName = Role::ROLE_SUPERADMIN)
     {
         $role = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Role')

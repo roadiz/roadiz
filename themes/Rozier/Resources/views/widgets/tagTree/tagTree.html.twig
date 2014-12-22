@@ -3,21 +3,25 @@
     {% if mainTagTree %}
         <div class="tree-head tagtree-head">
             <h4>{% trans %}tagTree{% endtrans %}</h4>
-            {% endif %}
             {% if tagTree.getRootTag == null %}
             <a href="{{ path('tagsAddPage') }}" class="tree-btn-add" id="tagtree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.a.tag{% endtrans %}</a>
             {% else %}
             <a href="{{ path('tagsAddChildPage', { tagId : tagTree.getRootTag.getId }) }}" class="tree-btn-add" id="tagtree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.a.child.tag{% endtrans %}</a>
+            {% endif %}
         </div>
     {% endif %}
+    {% if mainTagTree %}
     <div class="tree-scroll-cont">
         <div class="tree-scroll">
+        {% endif %}
             <ul class="root-tree uk-nestable uk-nestable-tag" data-uk-nestable="{'group':'tagTree'}" data-parent-tag-id="{{ tag.getId }}">
                 {% for ctag in tagTree.getTags %}
                     {% include 'widgets/tagTree/singleTag.html.twig' with { "tag":ctag, "tagTree":tagTree } only %}
                 {% endfor %}
             </ul>
+        {% if mainTagTree %}
         </div>
     </div>
+    {% endif %}
 </nav>
 {% endif %}

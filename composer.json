@@ -66,12 +66,13 @@
         "solarium/solarium":       "3.2.*",
         "pimple/pimple":           "3.0.*",
         "inlinestyle/inlinestyle": "1.2.*",
-        "phpoffice/phpexcel":      "1.8.*"
+        "phpoffice/phpexcel":      "1.8.*",
+        "guzzlehttp/cache-subscriber": "0.1.*"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
         "satooshi/php-coveralls": "dev-master",
-        "squizlabs/php_codesniffer": "1.*"
+        "squizlabs/php_codesniffer": "@stable"
     },
     "autoload": {
         "psr-4": {

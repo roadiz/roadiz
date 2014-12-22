@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file DocumentTranslation.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Viewers\DocumentViewer;
-use RZ\Roadiz\Core\Handlers\DocumentHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * DocumentTranslation.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="documents_translations", uniqueConstraints={@UniqueConstraint(columns={"document_id", "translation_id"})})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="documents_translations", uniqueConstraints={@ORM\UniqueConstraint(columns={"document_id", "translation_id"})})
  */
 class DocumentTranslation extends AbstractEntity
 {
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $name;
     /**
@@ -68,7 +64,7 @@ class DocumentTranslation extends AbstractEntity
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     /**
@@ -91,7 +87,7 @@ class DocumentTranslation extends AbstractEntity
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $copyright;
     /**
@@ -114,8 +110,8 @@ class DocumentTranslation extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
-     * @JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $translation;
 
@@ -137,8 +133,8 @@ class DocumentTranslation extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="Document", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
-     * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Document", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $document;
 

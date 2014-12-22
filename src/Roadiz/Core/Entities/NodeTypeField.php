@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,35 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file NodeTypeField.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
-use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
-use RZ\Roadiz\Core\Serializers\NodeTypeFieldSerializer;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * NodeTypeField entities are used to create NodeTypes with
  * custom data structure.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="node_type_fields",  indexes={
- *         @index(name="visible_nodetypefield_idx",  columns={"visible"}),
- *         @index(name="indexed_nodetypefield_idx",  columns={"indexed"}),
- *         @index(name="position_nodetypefield_idx", columns={"position"}),
- *         @index(name="type_nodetypefield_idx",     columns={"type"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="node_type_fields",  indexes={
+ *         @ORM\Index(name="visible_nodetypefield_idx",  columns={"visible"}),
+ *         @ORM\Index(name="indexed_nodetypefield_idx",  columns={"indexed"}),
+ *         @ORM\Index(name="position_nodetypefield_idx", columns={"position"}),
+ *         @ORM\Index(name="type_nodetypefield_idx",     columns={"type"})
  *     },
- *     uniqueConstraints={@UniqueConstraint(columns={"name", "node_type_id"})}
+ *     uniqueConstraints={@ORM\UniqueConstraint(columns={"name", "node_type_id"})}
  * )
- * @HasLifecycleCallbacks
+ * @ORM\HasLifecycleCallbacks
  */
 class NodeTypeField extends AbstractField
 {
@@ -139,8 +137,8 @@ class NodeTypeField extends AbstractField
     );
 
     /**
-     * @ManyToOne(targetEntity="NodeType", inversedBy="fields")
-     * @JoinColumn(name="node_type_id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="NodeType", inversedBy="fields")
+     * @ORM\JoinColumn(name="node_type_id", onDelete="CASCADE")
      */
     private $nodeType;
 
@@ -165,7 +163,7 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @Column(name="min_length", type="integer", nullable=true)
+     * @ORM\Column(name="min_length", type="integer", nullable=true)
      */
     private $minLength = null;
 
@@ -190,7 +188,7 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @Column(name="max_length", type="integer", nullable=true)
+     * @ORM\Column(name="max_length", type="integer", nullable=true)
      */
     private $maxLength = null;
 
@@ -215,7 +213,7 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $indexed = false;
 
@@ -240,7 +238,7 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $visible = true;
 
@@ -283,7 +281,7 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function prePersist()
     {
@@ -294,7 +292,6 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @todo Move this method to a NodeTypeFieldViewer
      * @return string
      */
     public function getOneLineSummary()

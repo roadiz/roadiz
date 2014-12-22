@@ -80,7 +80,7 @@
             <!-- Database -->
             <trans-unit id="database.title" approved="yes">
                 <source>database.title</source>
-                <target state="translated">Database</target>
+                <target state="translated">Base de données</target>
             </trans-unit>
             <trans-unit id="database.message" approved="yes">
                 <source>database.message</source>
@@ -103,7 +103,7 @@
             </trans-unit>
             <trans-unit id="database_done.message" approved="yes">
                 <source>database_done.message</source>
-                <target state="translated">&lt;p&gt;Roadiz a besoin d'une base de données pour stocker vos contenus de qualité. Vous pouvez même sélectionner votre moteur de base de données préféré!&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;La base de donnée a bien été installée. Maintenant, nous allons importer des contenus et paramètres de base pour mettre en route votre site.&lt;/p&gt;</target>
             </trans-unit>
 
             <!-- Database fail -->
@@ -113,7 +113,7 @@
             </trans-unit>
             <trans-unit id="database_fail.message" approved="yes">
                 <source>database_fail.message</source>
-                <target state="translated">&lt;p&gt;La base de données n’a pas pu être installée.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;La base de données n’a pas pu être installée. Veuillez vérifier si les identifiants sont corrects ou si la base n’a pas déjà été installée.&lt;/p&gt;</target>
             </trans-unit>
 
 
@@ -138,7 +138,7 @@
             </trans-unit>
             <trans-unit id="user.message" approved="yes">
                 <source>user.message</source>
-                <target state="translated">&lt;p&gt;Créer un utilisateur pour accéder à l'espace d'administration de votre site&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Créer un utilisateur pour accéder à l'espace d’administration de votre site&lt;/p&gt;</target>
             </trans-unit>
             <trans-unit id="user.create" approved="yes">
                 <source>user.create</source>
@@ -180,7 +180,7 @@
             </trans-unit>
             <trans-unit id="themes.frontend.description" approved="yes">
                 <source>themes.frontend.description</source>
-                <target state="translated">Vous pouvez installer un(des) thème(s) et contenu par défaut pour votre CMS</target>
+                <target state="translated">Vous pouvez installer un thème et ses contenus par défaut pour votre CMS.</target>
             </trans-unit>
 
             <!-- Import node type -->
@@ -194,11 +194,11 @@
             </trans-unit>
             <trans-unit id="import_node_type.node_type" approved="yes">
                 <source>import_node_type.node_type</source>
-                <target state="translated">Type de noeud</target>
+                <target state="translated">Type de nœud</target>
             </trans-unit>
             <trans-unit id="import_node_type.node" approved="yes">
                 <source>import_node_type.node</source>
-                <target state="translated">Noeud</target>
+                <target state="translated">Nœud</target>
             </trans-unit>
 
 
@@ -249,7 +249,7 @@
             </trans-unit>
             <trans-unit id="skip.user.goto.theme" approved="yes">
                 <source>skip.user.goto.theme</source>
-                <target state="translated">Passer «Utilisateur»</target>
+                <target state="translated">Passer</target>
             </trans-unit>
             <trans-unit id="skip.user.goto.done" approved="yes">
                 <source>skip.user.goto.done</source>
@@ -257,7 +257,7 @@
             </trans-unit>
             <trans-unit id="skip.database.goto.import" approved="yes">
                 <source>skip.database.goto.import</source>
-                <target state="translated">Passer «Base de données»</target>
+                <target state="translated">Passer</target>
             </trans-unit>
 
             <trans-unit id="choose.language" approved="yes">
@@ -271,12 +271,12 @@
 
             <trans-unit id="skip.database.goto.theme" approved="yes">
                 <source>skip.database.goto.theme</source>
-                <target state="translated">Passer «Base de données»</target>
+                <target state="translated">Passer</target>
             </trans-unit>
 
             <trans-unit xml:space="preserve" id="theme.summary.title" approved="yes">
                 <source>theme.summary.title</source>
-                <target state="translated">Validation du thème à installer</target>
+                <target state="translated">Validation du thème</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="check.version" approved="yes">
                 <source>check.version</source>
@@ -325,7 +325,7 @@
 
             <trans-unit xml:space="preserve" id="import.theme.content.title" approved="yes">
                 <source>import.theme.content.title</source>
-                <target state="translated">Importation des contenus du thème</target>
+                <target state="translated">Importation du thème</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="step.name" approved="yes">
                 <source>step.name</source>
@@ -361,6 +361,64 @@
             <trans-unit xml:space="preserve" id="check.import.files" approved="yes">
                 <source>check.import.files</source>
                 <target state="translated">Fichiers à importer</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="password.must_match" approved="yes">
+                <source>password.must_match</source>
+                <target state="translated">Les mots de passe doivent correspondre</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="site_name">
+                <source>site_name</source>
+                <target>Nom de votre site</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="email_sender">
+                <source>email_sender</source>
+                <target>Email principal</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="email_sender_name">
+                <source>email_sender_name</source>
+                <target>Nom du compte lié à l’email</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="meta_description">
+                <source>meta_description</source>
+                <target>Méta description</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="timezone">
+                <source>timezone</source>
+                <target>TImezone</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="install_theme">
+                <source>install_theme</source>
+                <target>Installer un thème ?</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="driver">
+                <source>driver</source>
+                <target>Moteur de base de donnée</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="host">
+                <source>host</source>
+                <target>Hôte</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="port">
+                <source>port</source>
+                <target>Port</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="unix_socket">
+                <source>unix_socket</source>
+                <target>Socket UNIX</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="path">
+                <source>path</source>
+                <target>Chemin</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="user">
+                <source>user</source>
+                <target>Nom d’utilisateur</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="dbname">
+                <source>dbname</source>
+                <target>Nom de la base</target>
             </trans-unit>
         </body>
     </file>

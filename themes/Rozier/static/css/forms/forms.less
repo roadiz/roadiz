@@ -54,7 +54,7 @@
     input[type="number"],
     textarea {
         font-size: 12px;
-        line-height: 15px;
+        line-height: 16px;
         font-weight: bold;
         //width: 100%; // You cannot place this for a wide selector! it will break ui-kit
         color: @grey-form-text;
@@ -138,30 +138,35 @@
     .rz-select {
         position: relative;
         display: inline-block;
-        width: auto; height:36px;
-        padding-right:20px;
+        width: auto; min-width:60px; height:36px;
+        margin: 0;
+        padding: 0 20px 0 0;
         font-size:12px;
-        // font-weight: bold;
         color: @grey-form-text;
         background-color: white;
         border: 1px solid @grey-form-border;
         .border-radius(0px);
         overflow: hidden;
+        .box-sizing();
 
         &:after{
             position: absolute;
             top:0; right:0; bottom:0;
+            height:36px;
             content: "\f0d7";
-            padding:10px 15px;
-            font:normal 12px/16px 'FontAwesome';
+            padding:0 10px;
+            background: white;
+            font:normal 12px/36px 'FontAwesome';
             pointer-events: none;
         }
 
         select{
+
             width: 110%; max-width: 110%;
             height:36px;
             padding:8px 15px;
-            background-color: white;
+            background-color: transparent;
+            background-image: none;
             font-family: @main-font;
             border: none;
             box-shadow: none;
@@ -172,7 +177,6 @@
             appearance:none;
 
             &:focus, &:active{
-                // background-color: @grey-verylight;
                 outline:none;
             }
         }
@@ -219,7 +223,10 @@
     }
 
     legend{
-        text-align: center;
+        text-align: left;
+        color: @grey-form-label;
+        font-size: 16px;
+        line-height: 22px;
 
         &:after{
             border-bottom:none;
@@ -233,6 +240,10 @@
     // Date
     .form-col-datetime{
         display: inline-block;
+
+        .form-help{
+            display: none;
+        }
 
         &> div > div{
             display:inline-block;
@@ -294,7 +305,7 @@
         }
     }
     &.uk-form-stacked .uk-form-label {
-        margin-bottom: 7px;
+        margin-bottom: 5px;
     }
 
     // Colorpicker
@@ -323,15 +334,6 @@
         display: none;
     }
 
-}
-
-// Geotag
-.rz-geotag-meta{
-    margin-bottom:10px;
-
-    input[type="text"]{
-        width:280px;
-    }
 }
 
 .uk-form-translation-default{

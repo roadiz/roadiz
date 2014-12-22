@@ -125,7 +125,7 @@ Lazyload.prototype.loadContent = function(state, location) {
     })
     .fail(function() {
         console.log("error");
-        $.UIkit.notify({
+        UIkit.notify({
             message : Rozier.messages.forbiddenPage,
             status  : 'danger',
             timeout : 3000,
@@ -192,6 +192,7 @@ Lazyload.prototype.generalBind = function() {
     _this.settingsSaveButtons = new SettingsSaveButtons();
     _this.nodeTypeFieldEdit = new NodeTypeFieldEdit();
     _this.nodeEditSource = new NodeEditSource();
+    _this.nodeTree = new NodeTree();
     _this.customFormFieldEdit = new CustomFormFieldEdit();
 
 
@@ -208,7 +209,7 @@ Lazyload.prototype.generalBind = function() {
         setTimeout(function(){
             for(var i = 0; i < _this.$textAreaHTMLeditor.length; i++) {
 
-                _this.htmlEditor[i] = $.UIkit.htmleditor(
+                _this.htmlEditor[i] = UIkit.htmleditor(
                     $(_this.$textAreaHTMLeditor[i]),
                     {
                         markdown:true,

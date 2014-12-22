@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file EmbedDocumentsServiceProvider.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
-
-use Doctrine\ORM\Events;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
-
-use RZ\Roadiz\Core\Events\DataInheritanceEvent;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Register Embed documents services for dependency injection container.
@@ -62,5 +54,7 @@ class EmbedDocumentsServiceProvider implements \Pimple\ServiceProviderInterface
                 'soundcloud' =>  '\RZ\Roadiz\Core\Utils\SoundcloudEmbedFinder'
             );
         };
+
+        return $container;
     }
 }

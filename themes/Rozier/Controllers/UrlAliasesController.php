@@ -1,21 +1,37 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  * @file UrlAliasesController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\UrlAlias;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Utils\StringHandler;
 use Themes\Rozier\RozierApp;
 
@@ -25,10 +41,7 @@ use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * {@inheritdoc}
@@ -46,10 +59,6 @@ class UrlAliasesController extends RozierApp
     public function editAliasesAction(Request $request, $nodeId, $translationId = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
-
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
         if (null === $translationId && $translationId < 1) {
             $translation = $this->getService('em')
@@ -69,7 +78,6 @@ class UrlAliasesController extends RozierApp
 
         if ($source !== null &&
             $node !== null) {
-
             $uas = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
                             ->findAllFromNode($node->getId());
@@ -123,9 +131,7 @@ class UrlAliasesController extends RozierApp
                 $editForm->handleRequest();
                 if ($editForm->isValid() &&
                     $editForm->getData()['urlaliasId'] == $alias->getId()) {
-
                     if ($this->editUrlAlias($editForm->getData(), $alias)) {
-
                         $msg = $this->getTranslator()->trans('url_alias.%alias%.updated', array('%alias%'=>$alias->getAlias()));
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
                         $this->getService('logger')->info($msg);
@@ -154,7 +160,6 @@ class UrlAliasesController extends RozierApp
 
                 if ($deleteForm->isValid() &&
                     $deleteForm->getData()['urlaliasId'] == $alias->getId()) {
-
                     $this->deleteUrlAlias($editForm->getData(), $alias);
                     $msg = $this->getTranslator()->trans('url_alias.%alias%.deleted', array('%alias%'=>$alias->getAlias()));
                     $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -188,7 +193,6 @@ class UrlAliasesController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $ua = $this->addNodeUrlAlias($form->getData(), $node);
                     $msg = $this->getTranslator()->trans('url_alias.%alias%.created.%translation%', array(
@@ -241,7 +245,6 @@ class UrlAliasesController extends RozierApp
     private function addNodeUrlAlias($data, Node $node)
     {
         if ($data['nodeId'] == $node->getId()) {
-
             $translation = $this->getService('em')
                         ->find('RZ\Roadiz\Core\Entities\Translation', (int) $data['translationId']);
 
@@ -251,11 +254,9 @@ class UrlAliasesController extends RozierApp
 
             if ($translation !== null &&
                 $nodeSource !== null) {
-
                 $testingAlias = StringHandler::slugify($data['alias']);
                 if ($this->nodeNameExists($testingAlias) ||
                         $this->urlAliasExists($testingAlias)) {
-
                     $msg = $this->getTranslator()->trans('url_alias.%alias%.no_creation.already_exists', array('%alias%'=>$data['alias']));
                     throw new EntityAlreadyExistsException($msg, 1);
                 }
@@ -293,7 +294,6 @@ class UrlAliasesController extends RozierApp
     private function editSEO(array $data, $nodeSource)
     {
         if ($data['id'] == $nodeSource->getId()) {
-
             $nodeSource->setMetaTitle($data['metaTitle']);
             $nodeSource->setMetaKeywords($data['metaKeywords']);
             $nodeSource->setMetaDescription($data['metaDescription']);
@@ -340,7 +340,6 @@ class UrlAliasesController extends RozierApp
         if ($testingAlias != $ua->getAlias() &&
                 ($this->nodeNameExists($testingAlias) ||
                 $this->urlAliasExists($testingAlias))) {
-
             $msg = $this->getTranslator()->trans(
                 'url_alias.%alias%.no_update.already_exists',
                 array('%alias%'=>$data['alias'])
@@ -350,7 +349,6 @@ class UrlAliasesController extends RozierApp
         }
 
         if ($data['urlaliasId'] == $ua->getId()) {
-
             try {
                 $ua->setAlias($data['alias']);
                 $this->getService('em')->flush();

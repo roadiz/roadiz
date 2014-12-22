@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file AbstractEmbedFinder.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Utils;
@@ -33,7 +32,6 @@ namespace RZ\Roadiz\Core\Utils;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
 use Symfony\Component\HttpFoundation\Response;
 use Pimple\Container;
 
@@ -74,8 +72,6 @@ abstract class AbstractEmbedFinder
                 $this->feed = json_decode($this->feed, true);
             }
         }
-        // var_dump($this->feed);
-        // exit();
         return $this->feed;
     }
 
@@ -146,10 +142,10 @@ abstract class AbstractEmbedFinder
             $attributes['id'] = $args['id'];
         }
 
-        if (isset($args['autoplay']) && $args['autoplay'] == true) {
+        if (isset($args['autoplay']) && $args['autoplay'] === true) {
             $attributes['src'] .= '&autoplay=1';
         }
-        if (isset($args['controls']) && $args['controls'] == false) {
+        if (isset($args['controls']) && $args['controls'] === false) {
             $attributes['src'] .= '&controls=0';
         }
 
@@ -306,7 +302,6 @@ abstract class AbstractEmbedFinder
 
         if (false !== $url &&
             '' !== $url) {
-
             $pathinfo = basename($url);
 
             if ($pathinfo != "") {
@@ -319,7 +314,6 @@ abstract class AbstractEmbedFinder
 
                     if (file_exists(Document::getFilesFolder().'/'.$thumbnailName) &&
                         filesize(Document::getFilesFolder().'/'.$thumbnailName) > 0) {
-
                         return $thumbnailName;
                     } else {
                         return false;

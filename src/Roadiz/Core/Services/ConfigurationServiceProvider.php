@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file ConfigurationServiceProvider.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
-
-
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Register configuration services for dependency injection container.
@@ -49,7 +45,7 @@ class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
          * Inject app config
          */
         $container['config'] = function ($c) {
-            $configFile = RENZO_ROOT.'/conf/config.json';
+            $configFile = ROADIZ_ROOT.'/conf/config.json';
             if (file_exists($configFile)) {
                 return json_decode(file_get_contents($configFile), true);
             } else {
@@ -71,5 +67,7 @@ class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
                 );
             }
         };
+
+        return $container;
     }
 }

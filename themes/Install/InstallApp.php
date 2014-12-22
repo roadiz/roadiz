@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file InstallApp.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 
@@ -34,38 +33,19 @@ namespace Themes\Install;
 use RZ\Roadiz\Console\Tools\Configuration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
-use RZ\Roadiz\Core\Events\DataInheritanceEvent;
-use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
 
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
-use Symfony\Component\Validator\Validation;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\Loader\XliffFileLoader;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
-
-use Doctrine\ORM\Events;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
 
 /**
  * Installation application
@@ -84,20 +64,29 @@ class InstallApp extends AppController
     public function prepareBaseAssignation()
     {
         $this->assignation = array(
-            'request' => $this->getKernel()->getRequest(),
+            'request' => $this->kernel->getRequest(),
             'head' => array(
-                'ajax' => $this->getKernel()->getRequest()->isXmlHttpRequest(),
+                'ajax' => $this->kernel->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
+                'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
-                'devMode' => (boolean) $this->getService('config')['devMode'],
-                'baseUrl' => $this->getKernel()->getRequest()->getBaseUrl(),
-                'filesUrl' => $this->getKernel()
+                'devMode' => (boolean) $this->kernel->container['config']['devMode'],
+                'baseUrl' => $this->kernel->getResolvedBaseUrl(),//$this->kernel->getRequest()->getBaseUrl(),
+                'filesUrl' => $this->kernel
                                    ->getRequest()
                                    ->getBaseUrl().'/'.Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'grunt' => include(dirname(__FILE__).'/static/public/config/assets.config.php')
+                'ajaxToken' => $this->getService('csrfProvider')
+                                    ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
+                'fontToken' => $this->getService('csrfProvider')
+                                    ->generateCsrfToken(static::FONT_TOKEN_INTENTION)
             ),
+            'session' => array(
+                'id' => $this->kernel->getRequest()->getSession()->getId()
+            )
         );
+
+        $this->assignation['head']['grunt'] = include(dirname(__FILE__).'/static/public/config/assets.config.php');
 
         return $this;
     }
@@ -129,7 +118,6 @@ class InstallApp extends AppController
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             $locale = $form->getData()['language'];
             $request->setLocale($locale);
             $this->getService('session')->set('_locale', $locale);
@@ -229,7 +217,7 @@ class InstallApp extends AppController
         $result = $this->getService('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
 
         $array = explode('\\', $result->getClassName());
-        $data = json_decode(file_get_contents(RENZO_ROOT . "/themes/". $array[2] . "/config.json"), true);
+        $data = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/". $array[2] . "/config.json"), true);
 
         $this->assignation = array_merge($this->assignation, $data["importFiles"]);
         $this->assignation["themeId"] = $id;
@@ -257,49 +245,56 @@ class InstallApp extends AppController
             $databaseForm->handleRequest();
 
             if ($databaseForm->isValid()) {
-
-                $tempConf = $config->getConfiguration();
-                foreach ($databaseForm->getData() as $key => $value) {
-                    $tempConf['doctrine'][$key] = $value;
-                }
-                $config->setConfiguration($tempConf);
-
-
-                /*
-                 * Test connexion
-                 */
                 try {
-                    $fixtures = new Fixtures();
-                    $fixtures->createFolders();
+                    $config->testDoctrineConnexion($databaseForm->getData());
 
-                    $config->writeConfiguration();
+
+                    $tempConf = $config->getConfiguration();
+                    foreach ($databaseForm->getData() as $key => $value) {
+                        $tempConf['doctrine'][$key] = $value;
+                    }
+                    $config->setConfiguration($tempConf);
+
 
                     /*
-                     * Force redirect to avoid resending form when refreshing page
+                     * Test connexion
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'installDatabaseSchemaPage'
-                        )
-                    );
-                    $response->prepare($request);
+                    try {
+                        $fixtures = new Fixtures();
+                        $fixtures->createFolders();
 
-                    return $response->send();
-                } catch (\PDOException $e) {
-                    $message = "";
-                    if (strstr($e->getMessage(), 'SQLSTATE[')) {
-                        preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
-                        $message = $matches[3];
-                    } else {
-                        $message = $e->getMessage();
+                        $config->writeConfiguration();
+
+                        /*
+                         * Force redirect to avoid resending form when refreshing page
+                         */
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate(
+                                'installDatabaseSchemaPage'
+                            )
+                        );
+                        $response->prepare($request);
+
+                        return $response->send();
+                    } catch (\PDOException $e) {
+                        $message = "";
+                        if (strstr($e->getMessage(), 'SQLSTATE[')) {
+                            preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
+                            $message = $matches[3];
+                        } else {
+                            $message = $e->getMessage();
+                        }
+                        $this->assignation['error'] = true;
+                        $this->assignation['errorMessage'] = ucfirst($message);
+                    } catch (\Exception $e) {
+                        $this->assignation['error'] = true;
+                        $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
                     }
-                    $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = ucfirst($message);
+
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+                    $this->assignation['errorMessage'] = $e->getMessage();
                 }
-
             }
             $this->assignation['databaseForm'] = $databaseForm->createView();
         }
@@ -328,7 +323,6 @@ class InstallApp extends AppController
             $this->assignation['errorMessage'] = $c['session']->getFlashBag()->all();
 
         } else {
-
             try {
                 $fixtures = new Fixtures();
 
@@ -340,7 +334,7 @@ class InstallApp extends AppController
                 /*
                  * files to import
                  */
-                $installData = json_decode(file_get_contents(RENZO_ROOT . "/themes/Install/config.json"), true);
+                $installData = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/Install/config.json"), true);
                 $this->assignation['imports'] = $installData['importFiles'];
 
             } catch (\PDOException $e) {
@@ -460,7 +454,7 @@ class InstallApp extends AppController
     public function themeInstallAction(Request $request)
     {
         $array = explode('\\', $request->get("classname"));
-        $data = json_decode(file_get_contents(RENZO_ROOT . "/themes/". $array[2] . "/config.json"), true);
+        $data = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/". $array[2] . "/config.json"), true);
         $fix = new Fixtures();
         $data["className"] = $request->get("classname");
         $fix->installTheme($data);
@@ -481,7 +475,7 @@ class InstallApp extends AppController
             }
         }
 
-        if ($exist == false) {
+        if ($exist === false) {
             $newTranslation = new Translation();
             $newTranslation->setLocale($data["supportedLocale"][0]);
             $newTranslation->setName(Translation::$availableLocales[$data["supportedLocale"][0]]);
@@ -511,7 +505,7 @@ class InstallApp extends AppController
     public function themeSummaryAction(Request $request)
     {
         $array = explode('\\', $request->get("classname"));
-        $data = json_decode(file_get_contents(RENZO_ROOT . "/themes/". $array[2] . "/config.json"), true);
+        $data = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/". $array[2] . "/config.json"), true);
 
         $this->assignation["theme"] = array(
             "name" => $data["name"],
@@ -532,7 +526,7 @@ class InstallApp extends AppController
 
         foreach ($data["importFiles"] as $name => $filenames) {
             foreach ($filenames as $filename) {
-                $this->assignation["status"]["import"][$filename] = file_exists(RENZO_ROOT . "/themes/". $array[2] . "/" . $filename);
+                $this->assignation["status"]["import"][$filename] = file_exists(ROADIZ_ROOT . "/themes/". $array[2] . "/" . $filename);
             }
         }
 
@@ -560,7 +554,6 @@ class InstallApp extends AppController
             $infosForm->handleRequest();
 
             if ($infosForm->isValid()) {
-
                 /*
                  * Save informations
                  */
@@ -568,7 +561,7 @@ class InstallApp extends AppController
                     $fixtures = new Fixtures();
                     $fixtures->saveInformations($infosForm->getData());
 
-                    if (isset($infosForm->getData()["install_theme"])) {
+                    if (!empty($infosForm->getData()["install_theme"])) {
                         /*
                          * Force redirect to avoid resending form when refreshing page
                          */
@@ -623,7 +616,6 @@ class InstallApp extends AppController
 
             if ($doneForm->isValid() &&
                 $doneForm->getData()['action'] == 'quit_install') {
-
                 /*
                  * Save informations
                  */
@@ -636,6 +628,11 @@ class InstallApp extends AppController
                     $config->writeConfiguration();
 
                     \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
+
+                    /*
+                     * Close Session for security and temp translation
+                     */
+                    $this->getService('session')->invalidate();
 
                     /*
                      * Force redirect to avoid resending form when refreshing page
@@ -717,6 +714,7 @@ class InstallApp extends AppController
                     'pdo_sqlite' => 'pdo_sqlite',
                     'oci8' => 'oci8',
                 ),
+                'label' => $this->getTranslator()->trans('driver'),
                 'constraints' => array(
                     new NotBlank()
                 ),
@@ -726,6 +724,7 @@ class InstallApp extends AppController
             ))
             ->add('host', 'text', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('host'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id' => "host"
@@ -733,6 +732,7 @@ class InstallApp extends AppController
             ))
             ->add('port', 'integer', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('port'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id' => "port"
@@ -740,6 +740,7 @@ class InstallApp extends AppController
             ))
             ->add('unix_socket', 'text', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('unix_socket'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id' => "unix_socket"
@@ -747,6 +748,7 @@ class InstallApp extends AppController
             ))
             ->add('path', 'text', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('path'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id' => "path"
@@ -757,12 +759,14 @@ class InstallApp extends AppController
                     "autocomplete"=>"off",
                     'id' => "user"
                 ),
+                'label' => $this->getTranslator()->trans('username'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
             ->add('password', 'password', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('password'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id'=>'password'
@@ -770,6 +774,7 @@ class InstallApp extends AppController
             ))
             ->add('dbname', 'text', array(
                 "required"=>false,
+                'label' => $this->getTranslator()->trans('dbname'),
                 'attr'=>array(
                     "autocomplete"=>"off",
                     'id'=>'dbname'
@@ -791,12 +796,14 @@ class InstallApp extends AppController
             ->createBuilder('form')
             ->add('username', 'text', array(
                 'required' => true,
+                'label' => $this->getTranslator()->trans('username'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
             ->add('email', 'email', array(
                 'required' => true,
+                'label' => $this->getTranslator()->trans('email'),
                 'constraints' => array(
                     new NotBlank()
                 )
@@ -845,27 +852,32 @@ class InstallApp extends AppController
             ->createBuilder('form', $defaults)
             ->add('site_name', 'text', array(
                 'required' => true,
+                'label' => $this->getTranslator()->trans('site_name'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
             ->add('email_sender', 'email', array(
                 'required' => true,
+                'label' => $this->getTranslator()->trans('email_sender'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
             ->add('email_sender_name', 'text', array(
                 'required' => true,
+                'label' => $this->getTranslator()->trans('email_sender_name'),
                 'constraints' => array(
                     new NotBlank()
                 )
             ))
             ->add('meta_description', 'text', array(
-                'required' => false
+                'required' => false,
+                'label' => $this->getTranslator()->trans('meta_description'),
             ))
             ->add('timezone', 'choice', array(
                 'choices' => $timeZoneList,
+                'label' => $this->getTranslator()->trans('timezone'),
                 'required' => true
             ));
 
@@ -876,7 +888,8 @@ class InstallApp extends AppController
                 'label' => $this->getTranslator()->trans('themes.frontend.description')
             ))
             ->add('install_theme', 'checkbox', array(
-                'required' => false
+                'required' => false,
+                'label' => $this->getTranslator()->trans('install_theme')
             ))
             ->add(
                 'className',

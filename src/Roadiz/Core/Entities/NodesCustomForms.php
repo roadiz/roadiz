@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file NodesCustomForms.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
@@ -35,22 +34,23 @@ use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Describes a complexe ManyToMany relation
  * between Nodes, CustomForms and NodeTypeFields.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesCustomFormsRepository")
- * @Table(name="nodes_custom_forms", indexes={
- *     @index(name="position_nodescustomforms_idx", columns={"position"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesCustomFormsRepository")
+ * @ORM\Table(name="nodes_custom_forms", indexes={
+ *     @ORM\Index(name="position_nodescustomforms_idx", columns={"position"})
  * })
  */
 class NodesCustomForms extends AbstractPositioned implements PersistableInterface
 {
     /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private $id;
     /**
@@ -62,22 +62,46 @@ class NodesCustomForms extends AbstractPositioned implements PersistableInterfac
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="customForms")
-     * @JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="customForms", fetch="EAGER")
+     * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Roadiz\Core\Entities\Node
      */
     private $node;
+    /**
+     * @return RZ\Roadiz\Core\Entities\Node
+     */
+    public function getNode()
+    {
+        return $this->node;
+    }
+
+    public function setNode($node)
+    {
+        $this->node = $node;
+    }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="nodes")
-     * @JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="nodes", fetch="EAGER")
+     * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Roadiz\Core\Entities\CustomForm
      */
     private $customForm;
+    /**
+     * @return RZ\Roadiz\Core\Entities\CustomForm
+     */
+    public function getCustomForm()
+    {
+        return $this->customForm;
+    }
+
+    public function setCustomForm($customForm)
+    {
+        $this->customForm = $customForm;
+    }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
-     * @JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
+     * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
      * @var RZ\Roadiz\Core\Entities\NodeTypeField
      */
     private $field;

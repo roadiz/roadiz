@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file FullTextSearchHandler.php
- * @copyright REZO ZERO 2014
  * @author Maxime Constantinian
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
-use Symfony\Component\HttpFoundation\Request;
-
-use Solarium\QueryType\Update\Query\Query;
-use Solarium\QueryType\Update\Query\Document\DocumentInterface;
 
 class FullTextSearchHandler
 {
@@ -65,8 +57,6 @@ class FullTextSearchHandler
                 }
             }
             $query->addSort('score', $query::SORT_DESC);
-
-            //var_dump($query); exit();
 
             $resultset = $this->client->select($query);
             $reponse = json_decode($resultset->getResponse()->getBody(), true);

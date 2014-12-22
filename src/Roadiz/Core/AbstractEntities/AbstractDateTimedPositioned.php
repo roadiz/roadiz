@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,29 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file AbstractDateTimedPositioned.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Combined AbstractDateTimed and AbstractPositioned.
  *
- * @MappedSuperclass
- * @HasLifecycleCallbacks
- * @Table(indexes={@Index(name="position_idx", columns={"position"})})
+ * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
+ * @ORM\Table(indexes={@ORM\Index(name="position_idx", columns={"position"})})
  */
 abstract class AbstractDateTimedPositioned extends AbstractDateTimed
 {
     /**
-     * @Column(type="float")
+     * @ORM\Column(type="float")
      */
     private $position = 0;
     /**

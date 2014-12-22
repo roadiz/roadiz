@@ -1,10 +1,31 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  * @file TagsController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\Controllers;
@@ -14,7 +35,6 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Utils\StringHandler;
@@ -23,10 +43,7 @@ use Themes\Rozier\Widgets\TagTreeWidget;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * {@inheritdoc}
@@ -87,7 +104,6 @@ class TagsController extends RozierApp
         }
 
         if (null !== $translation) {
-
             /*
              * Here we need to directly select tagTranslation
              * if not doctrine will grab a cache tag because of TagTreeWidget
@@ -119,7 +135,6 @@ class TagsController extends RozierApp
                 $form->handleRequest();
 
                 if ($form->isValid()) {
-
                     $this->editTag($form->getData(), $tt);
 
                     $msg = $this->getTranslator()->trans('tag.%name%.updated', array(
@@ -150,7 +165,6 @@ class TagsController extends RozierApp
                 $this->getService('em')->refresh($gtag);
 
                 if ($gtag !== null) {
-
                     $baseTranslation = $gtag->getTranslatedTags()->first();
 
                     $translatedTag = new TagTranslation($gtag, $translation);
@@ -211,7 +225,6 @@ class TagsController extends RozierApp
 
         if ($tag !== null &&
             $translation !== null) {
-
             $this->assignation['tag'] = $tag;
             $form = $this->buildAddForm($tag);
 
@@ -266,7 +279,6 @@ class TagsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
-
             $form = $this->buildEditSettingsForm($tag);
 
             $form->handleRequest();
@@ -368,7 +380,6 @@ class TagsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['tagId'] == $tag->getId()) {
-
                 $this->deleteTag($form->getData(), $tag);
                 $msg = $this->getTranslator()->trans('tag.%name%.deleted', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
@@ -414,7 +425,7 @@ class TagsController extends RozierApp
                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                 ->findDefault();
 
-        if ($translationId != null) {
+        if ($translationId !== null) {
             $translation = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
@@ -423,12 +434,10 @@ class TagsController extends RozierApp
 
         if ($translation !== null &&
             $parentTag !== null) {
-
             $form = $this->buildAddChildForm($parentTag);
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $tag = $this->addChildTag($form->getData(), $parentTag, $translation);
 
@@ -446,7 +455,6 @@ class TagsController extends RozierApp
 
                     return $response->send();
                 } catch (EntityAlreadyExistsException $e) {
-
                     $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                     $this->getService('logger')->warning($e->getMessage());
 
@@ -491,7 +499,6 @@ class TagsController extends RozierApp
                     ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if (null !== $tag) {
-
             $translation = $this->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                     ->findDefault();
@@ -523,7 +530,6 @@ class TagsController extends RozierApp
             );
 
         } else {
-
             return $this->throw404();
         }
     }
@@ -670,7 +676,6 @@ class TagsController extends RozierApp
         $translatedTag = new TagTranslation($tag, $translation);
 
         foreach ($data as $key => $value) {
-
             $setter = 'set'.ucwords($key);
 
             if ($key == 'name' || $key == 'description') {
@@ -861,7 +866,7 @@ class TagsController extends RozierApp
      */
     public static function getTags()
     {
-        return $this->getService('em')
+        return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
             ->findAll();
     }

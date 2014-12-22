@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Setting.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\SettingGroup;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Settings entity are a simple key-value configuration system.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\SettingRepository")
- * @Table(name="settings")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\SettingRepository")
+ * @ORM\Table(name="settings")
  */
 class Setting extends AbstractEntity
 {
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     private $name;
     /**
@@ -70,7 +69,7 @@ class Setting extends AbstractEntity
     }
 
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $value;
     /**
@@ -104,7 +103,7 @@ class Setting extends AbstractEntity
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $visible = true;
     /**
@@ -127,8 +126,8 @@ class Setting extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="SettingGroup", inversedBy="settings")
-     * @JoinColumn(name="setting_group_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="SettingGroup", inversedBy="settings")
+     * @ORM\JoinColumn(name="setting_group_id", referencedColumnName="id")
      * @var SettingGroup
      */
     private $settingGroup;
@@ -155,7 +154,7 @@ class Setting extends AbstractEntity
      * Value types.
      * Use NodeTypeField types constants.
      *
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     private $type = NodeTypeField::STRING_T;
     /**

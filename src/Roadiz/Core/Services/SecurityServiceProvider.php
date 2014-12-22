@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file SecurityServiceProvider.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Services;
@@ -38,16 +37,12 @@ use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserChecker;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
-use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
-use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
-use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -56,7 +51,6 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Handlers\UserProvider;
-use RZ\Roadiz\Core\Handlers\UserHandler;
 
 /**
  * Register security services for dependency injection container.
@@ -215,5 +209,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         $container['accessDeniedHandler'] = function ($c) {
             return new \RZ\Roadiz\Core\Authorization\AccessDeniedHandler();
         };
+
+        return $container;
     }
 }

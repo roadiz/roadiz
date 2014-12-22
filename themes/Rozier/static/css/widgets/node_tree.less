@@ -16,13 +16,10 @@
         position: absolute;
         display: inline-block;
         vertical-align: middle;
-        left: -24px;
         padding: 10px;
         top: -4px;
 
         input[type="checkbox"] {
-            // display: none;
-
 
             &:checked {
                 display: block;
@@ -84,7 +81,7 @@
     &-contextualmenu {
         position: absolute;
         right: 22px;
-        top: 2px;
+        top: 5px;
         .opacity(0);
 
         .uk-icon-caret-down {
@@ -97,9 +94,7 @@
             }
         }
     }
-
 }
-
 
 .uk-nestable {
 
@@ -128,5 +123,14 @@
             top: 0px; bottom:0; left: 0px;
             width:1px;
         }
+    }
+}
+
+// Different display in main content
+#main-content-scrollable {
+    .stack-tree-widget>li, .stack-tree-widget>li:first-child {
+        padding: 11px 0;
+        background-color: #F0F0F0;
+        border-color: #D2D2D2;
     }
 }

@@ -1,17 +1,37 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  * @file RolesController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 
 use Themes\Rozier\RozierApp;
@@ -73,24 +93,20 @@ class RolesController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             try {
                 $role = $this->addRole($form->getData());
-                $msg = $this->getTranslator()->trans('role.%name%.created', array('%name%'=>$role->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $msg = $this->getTranslator()->trans(
+                    'role.%name%.created',
+                    array('%name%'=>$role->getName())
+                );
+                $this->publishConfirmMessage($request, $msg);
 
             } catch (EntityAlreadyExistsException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             } catch (\RuntimeException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             }
 
-            /*
-             * Force redirect to avoid resending form when refreshing page
-             */
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')->generate('rolesHomePage')
             );
@@ -123,30 +139,25 @@ class RolesController extends RozierApp
         $role = $this->getService('em')
                     ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
         if ($role !== null) {
-
             $form = $this->buildDeleteForm($role);
             $form->handleRequest();
 
             if ($form->isValid() &&
                 $form->getData()['roleId'] == $role->getId()) {
-
                 try {
                     $this->deleteRole($form->getData(), $role);
-                    $msg = $this->getTranslator()->trans('role.%name%.deleted', array('%name%'=>$role->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'role.%name%.deleted',
+                        array('%name%'=>$role->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityRequiredException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('rolesHomePage')
                 );
@@ -184,30 +195,25 @@ class RolesController extends RozierApp
 
         if ($role !== null &&
             !$role->required()) {
-
             $form = $this->buildEditForm($role);
             $form->handleRequest();
 
             if ($form->isValid() &&
                 $form->getData()['roleId'] == $role->getId()) {
-
                 try {
                     $this->editRole($form->getData(), $role);
-                    $msg = $this->getTranslator()->trans('role.%name%.updated', array('%name%'=>$role->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'role.%name%.updated',
+                        array('%name%'=>$role->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('rolesHomePage')
                 );

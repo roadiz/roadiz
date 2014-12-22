@@ -38,7 +38,7 @@
     border-bottom:1px dashed @documents-widget-border;
 
     .uk-navbar-brand{
-        padding:0 10px 0 28px;
+        padding:0 10px 0 25px;
         color:#666;
         line-height:55px;
     }
@@ -95,6 +95,7 @@
     margin-right:12px;
     margin-top: 8px;
     cursor: move;
+    background: #eee;
     overflow: hidden;
 
     &:hover{
@@ -123,7 +124,16 @@
         background:@contrast-color;
     }
 
+    .document-image{
+        min-width: 80px;
+        min-height: 80px;
+    }
+
     .document-name{
+        display: none;
+    }
+
+    .document-mime-type{
         display: none;
     }
 
@@ -164,7 +174,7 @@
     }
 
     .link-button{
-        display: block;
+        display: none;
     }
 
     .document-platform-icon{
@@ -176,13 +186,14 @@
         left: 50%;
         .rounded(4px);
         text-align: center;
-        line-height: 37px;
+        line-height: 35px;
         .box-shadow(0px 0px 3px rgba(0, 0, 0, 0.1));
         .opacity(0.95);
         .transition(0.9s opacity @easeOutExpo);
 
         i{
             font-size: 28px;
+            line-height: 35px;
             color: #3C3C3C;
         }
     }

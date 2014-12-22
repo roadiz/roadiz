@@ -2,11 +2,11 @@
 # Ambroise Maupate
 language: php
 php:
-  - 5.5
   - 5.4
+  - 5.5
   - 5.6
-  - hhvm
-  - hhvm-nightly
+  # - hhvm
+  # - hhvm-nightly
 
 env:
   - DB=mysql
@@ -14,17 +14,17 @@ env:
   - DB=sqlite
 
 before_script:
-  - echo 'date.timezone = "Europe/Paris"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests_tmp;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database roadiz_tests;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database roadiz_tests_tmp;' -U postgres; fi"
+  - sh -c "if [ '$DB' = 'pgsql' ]; then cp conf/config.pgsql.travis.json conf/config.json; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS roadiz_tests_tmp;create database IF NOT EXISTS roadiz_tests;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then cp conf/config.mysql.travis.json conf/config.json; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then cp conf/config.pgsql.travis.json conf/config.json; fi"
   - sh -c "if [ '$DB' = 'sqlite' ]; then cp conf/config.sqlite.travis.json conf/config.json; fi"
-  - composer install --dev
-  - php bin/roadiz install --no-interaction --with-theme="Themes\\DefaultTheme\\DefaultThemeApp"
+  - composer install --dev --no-interaction
+  - php bin/roadiz orm:schema-tool:create -n
+  - php bin/roadiz install -n --with-theme="Themes\\DefaultTheme\\DefaultThemeApp"
 
 script:
   - ENABLE_SECOND_LEVEL_CACHE=0 ./vendor/bin/phpunit -v --bootstrap=bootstrap.php --coverage-clover ./build/logs/clover.xml tests/

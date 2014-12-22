@@ -1,34 +1,41 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * Description
  *
  * @file SchemaController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\CMS\Controllers\FrontendController;
 use Themes\Rozier\RozierApp;
 
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Redirection controller use to update database schema.
@@ -55,22 +62,8 @@ class SchemaController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
-        if ($this->getService('csrfProvider')
-                ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
+        $this->updateSchema($request, $_token);
 
-            \RZ\Roadiz\Console\SchemaCommand::updateSchema();
-
-            $msg = $this->getTranslator()->trans('database.schema.updated');
-            $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getService('logger')->info($msg);
-        } else {
-            $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
-            $request->getSession()->getFlashBag()->add('error', $msg);
-            $this->getService('logger')->error($msg);
-        }
-        /*
-         * Redirect to update schema page
-         */
         $response = new RedirectResponse(
             $this->getService('urlGenerator')->generate(
                 'nodeTypesHomePage'
@@ -91,25 +84,9 @@ class SchemaController extends RozierApp
     public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $nodeTypeId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODETYPES')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
-        if ($this->getService('csrfProvider')
-                ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
-            \RZ\Roadiz\Console\SchemaCommand::updateSchema();
+        $this->updateSchema($request, $_token);
 
-            $msg = $this->getTranslator()->trans('database.schema.updated');
-            $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getService('logger')->info($msg);
-        } else {
-            $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
-            $request->getSession()->getFlashBag()->add('error', $msg);
-            $this->getService('logger')->error($msg);
-        }
-        /*
-         * Redirect to update schema page
-         */
         $response = new RedirectResponse(
             $this->getService('urlGenerator')->generate(
                 'nodeTypeFieldsListPage',
@@ -121,5 +98,20 @@ class SchemaController extends RozierApp
         $response->prepare($request);
 
         return $response->send();
+    }
+
+    protected function updateSchema(Request $request, $_token)
+    {
+
+        if ($this->getService('csrfProvider')
+                ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
+            \RZ\Roadiz\Console\SchemaCommand::updateSchema();
+
+            $msg = $this->getTranslator()->trans('database.schema.updated');
+            $this->publishConfirmMessage($request, $msg);
+        } else {
+            $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
+            $this->publishErrorMessage($request, $e->getMessage());
+        }
     }
 }

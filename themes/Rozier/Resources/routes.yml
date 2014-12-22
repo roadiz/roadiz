@@ -83,6 +83,9 @@ nodesTreePage:
 nodesBulkDeletePage:
     path:     /rz-admin/nodes/bulk-delete
     defaults: { _controller: Themes\Rozier\Controllers\NodesTreesController::bulkDeleteAction }
+nodesBulkStatusPage:
+    path:     /rz-admin/nodes/bulk-status
+    defaults: { _controller: Themes\Rozier\Controllers\NodesTreesController::bulkStatusAction }
 nodesAddPage:
     path:     /rz-admin/nodes/add/{nodeTypeId}/{translationId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::addAction }

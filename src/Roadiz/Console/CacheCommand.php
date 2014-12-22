@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file CacheCommand.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-
-use Doctrine\ORM\Events;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
 
 /**
  * Command line utils for managing Cache from terminal.
  */
 class CacheCommand extends Command
 {
-    private $dialog;
-
     protected function configure()
     {
         $this->setName('cache')
@@ -99,7 +88,6 @@ class CacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
         $text="";
 
         if ($input->getOption('infos')) {
@@ -112,7 +100,6 @@ class CacheCommand extends Command
 
             $text .= '<info>All caches have been been purged…</info>'.PHP_EOL;
         } else {
-
             if ($input->getOption('clear-doctrine')) {
                 $text .= static::clearDoctrine();
             }
@@ -197,12 +184,12 @@ class CacheCommand extends Command
          */
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->files()->in(RENZO_ROOT . '/gen-src/Proxies');
+        $finder->files()->in(ROADIZ_ROOT . '/gen-src/Proxies');
         $fs->remove($finder);
 
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
         $proxyFactory = Kernel::getService('em')->getProxyFactory();
-        $proxyFactory->generateProxyClasses($meta, RENZO_ROOT . '/gen-src/Proxies');
+        $proxyFactory->generateProxyClasses($meta, ROADIZ_ROOT . '/gen-src/Proxies');
         $text .= '<info>Doctrine proxy classes has been purged…</info>'.PHP_EOL;
 
         return $text;
@@ -219,7 +206,7 @@ class CacheCommand extends Command
 
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->files()->in(RENZO_ROOT . '/gen-src/Compiled');
+        $finder->files()->in(ROADIZ_ROOT . '/gen-src/Compiled');
         $fs->remove($finder);
 
         $text .= '<info>Compiled route collections have been purged…</info>'.PHP_EOL;
@@ -239,11 +226,10 @@ class CacheCommand extends Command
         $fs = new Filesystem();
         $finder = new Finder();
 
-        if (file_exists(RENZO_ROOT . '/cache/request') &&
-            file_exists(RENZO_ROOT . '/cache/rendered')) {
-
-            $finder->in(RENZO_ROOT . '/cache/request')
-                   ->in(RENZO_ROOT . '/cache/rendered');
+        if (file_exists(ROADIZ_ROOT . '/cache/request') &&
+            file_exists(ROADIZ_ROOT . '/cache/rendered')) {
+            $finder->in(ROADIZ_ROOT . '/cache/request')
+                   ->in(ROADIZ_ROOT . '/cache/rendered');
             $fs->remove($finder);
 
             $text .= '<info>Assets cache has been purged…</info>'.PHP_EOL;
@@ -263,7 +249,7 @@ class CacheCommand extends Command
 
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->in(RENZO_ROOT . '/cache/twig_cache');
+        $finder->in(ROADIZ_ROOT . '/cache/twig_cache');
         $fs->remove($finder);
 
         $text .= '<info>Compiled Twig templates have been purged…</info>'.PHP_EOL;

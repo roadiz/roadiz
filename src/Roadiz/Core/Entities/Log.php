@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Log.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Log Entity
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="log")
- * @HasLifecycleCallbacks
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="log")
+ * @ORM\HasLifecycleCallbacks
  */
 class Log extends AbstractEntity
 {
@@ -64,8 +63,8 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\User")
-     * @JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
      */
     protected $user = null;
 
@@ -90,7 +89,7 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @Column(type="text", name="message")
+     * @ORM\Column(type="text", name="message")
      */
     protected $message = '';
 
@@ -103,7 +102,7 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @Column(type="integer", name="level", nullable=false)
+     * @ORM\Column(type="integer", name="level", nullable=false)
      */
     protected $level = null;
 
@@ -116,7 +115,7 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @Column(type="datetime", name="datetime", nullable=false)
+     * @ORM\Column(type="datetime", name="datetime", nullable=false)
      */
     protected $datetime = null;
 
@@ -129,7 +128,7 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @Column(type="string", name="client_ip", unique=false, nullable=true)
+     * @ORM\Column(type="string", name="client_ip", unique=false, nullable=true)
      */
     protected $clientIp = null;
 
@@ -154,7 +153,7 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function prePersist()
     {

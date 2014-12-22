@@ -16,18 +16,18 @@ Content-Transfer-Encoding: 8bit
 X-Generator: Translate Toolkit 1.9.0
 </source>
         <target state="translated">Project-Id-Version: PACKAGE VERSION
-Report-Msgid-Bugs-To: 
+Report-Msgid-Bugs-To:
 POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: 2014-12-01 10:14+0000
+PO-Revision-Date: 2014-12-16 10:50+0000
 Last-Translator: Ambroise Maupate &lt;ambroise@rezo-zero.com&gt;
 Language-Team: LANGUAGE &lt;LL@li.org&gt;
-Language: 
+Language:
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Plural-Forms: nplurals=2; plural=(n != 1);
 X-Generator: Pootle 2.6.0-rc1
-X-POOTLE-MTIME: 1417428854.834088
+X-POOTLE-MTIME: 1418727033.633994
 </target>
         <context-group name="po-entry" purpose="information">
           <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
@@ -1909,7 +1909,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="166" approved="yes">
         <source>edit.node.%name%.seo</source>
-        <target state="translated">Edit "%name%" SEO data.</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/2c/bc/f78e83d7b7a91138b88d51d73ace0b1d017f65f3cb770c69321dd591a7f8.php</context>
           <context context-type="linenumber">34</context>
@@ -2081,7 +2081,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="173" approved="yes">
         <source>edit.nodeType.%name%</source>
-        <target state="translated">Edit node-type %name%</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/58/34/6fca25bc88a344f19fac62afd149efeabfe818926d08ab2783af8eb23b4f.php</context>
           <context context-type="linenumber">34</context>
@@ -2089,7 +2089,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="174" approved="yes">
         <source>edit.tag.%name%</source>
-        <target state="translated">Edit tag %name%</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/9b/9b/101fce5be59ba162b8058fba276b99ada5119f168c0548364c1ca853ba0b.php</context>
           <context context-type="linenumber">81</context>
@@ -2141,7 +2141,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="179" approved="yes">
         <source>edit.user.%name%.groups</source>
-        <target state="translated">Edit user %name%’s groups</target>
+        <target state="translated">%name%’s groups</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/9b/17/c7c673e292376ca07e2047e3dfa86730370fca4b7456a6f1c165284bd433.php</context>
           <context context-type="linenumber">34</context>
@@ -2217,7 +2217,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="185" approved="yes">
         <source>edit.group.%name%</source>
-        <target state="translated">Edit group %name%</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/98/fe/f429540f2176749c3bfe135644838bc53eba121bbcfff5414069505a9010.php</context>
           <context context-type="linenumber">34</context>
@@ -2233,7 +2233,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="187" approved="yes">
         <source>edit.user.%name%</source>
-        <target state="translated">Edit user %name%</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/d1/59/00febda6bebd22b6bd2a730cf004899476b0bbf800a005dd635de3922f69.php</context>
           <context context-type="linenumber">34</context>
@@ -2497,7 +2497,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="213" approved="yes">
         <source>edit.nodeSource.%name%</source>
-        <target state="translated">Edit node source %name%</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/94/de/e6b569bd849606322f323a5286d1cfe3182d103e32b004609e41fe2008dd.php</context>
           <context context-type="linenumber">34</context>
@@ -2525,7 +2525,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="216" approved="yes">
         <source>edit.nodeTypeFields.for.nodeType.%name%</source>
-        <target state="translated">Edit node-type fields for %name% node-type.</target>
+        <target state="translated">%name% fields</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/33/e7/9e82d7a8feea7652483c09b8030610c931482d7752fc6dfae1c91f2af48c.php</context>
           <context context-type="linenumber">34</context>
@@ -2581,7 +2581,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="221" approved="yes">
         <source>edi.user.%name%.roles</source>
-        <target state="translated">Edit %name%'s roles</target>
+        <target state="translated">%name%'s roles</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/f6/59/0a38b9a68e563db5735cefa665bf43aaf5652c1de54214e1cb48d43f749c.php</context>
           <context context-type="linenumber">34</context>
@@ -2625,7 +2625,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="226" approved="yes">
         <source>edit.node.%name%.tags</source>
-        <target state="translated">Edit %name%'s tags</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/bf/e6/52ec52a76e8b766d78e11bf71d172ad4c728c1989a505cca16baf4f411f4.php</context>
           <context context-type="linenumber">34</context>
@@ -3005,7 +3005,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="267" approved="yes">
         <source>edit.role.%name%</source>
-        <target state="translated">Edit %name%'s role</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/ce/a3/5269e1d440eafe97ad71fceb2449a39dfda6a22a4f4c384262c207af6358.php</context>
           <context context-type="linenumber">34</context>
@@ -3245,7 +3245,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="292" approved="yes">
         <source>edit.tag.%name%.settings</source>
-        <target state="translated">Edit tag %name% settings</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/59/ed/248c257a75ff86687320b26cbb7843d80d632a68b45fd78e134aabbdb119.php</context>
           <context context-type="linenumber">34</context>
@@ -3277,7 +3277,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="296" approved="yes">
         <source>edit.nodeTypeField.%name%</source>
-        <target state="translated">Edit node-type field %name%</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/90/cc/cb63f4b1ba7e48d029508dfb831411c6e87a7bc65129fcacb68ec1055ef0.php</context>
           <context context-type="linenumber">34</context>
@@ -3373,7 +3373,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="307" approved="yes">
         <source>edit.node.%name%</source>
-        <target state="translated">Edit node %name%</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php</context>
           <context context-type="linenumber">135</context>
@@ -3509,7 +3509,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="323" approved="yes">
         <source>edit.document.%name%</source>
-        <target state="translated">Edit document %name%</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/88/a3/92998fb1fc971638b98fe2d111bb4f76609fe000bf22f480bfb08546dd4e.php</context>
           <context context-type="linenumber">34</context>
@@ -3549,7 +3549,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="328" approved="yes">
         <source>edit.group.%name%.users</source>
-        <target state="translated">Edit group %name% users</target>
+        <target state="translated">%name% users</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/6c/cf/ad8eff16d585a8b7d7f366870423d51c1f0ff17d5d16f5ffabeb99f090d4.php</context>
           <context context-type="linenumber">34</context>
@@ -3817,7 +3817,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="360" approved="yes">
         <source>back_office</source>
-        <target state="translated">Back office</target>
+        <target state="translated">Backstage</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/e8/c7/7ba41fc783c4aa8b6168d51eb8f8e9b9ce3863413078537a8a6468617306.php</context>
           <context context-type="linenumber">59</context>
@@ -3909,7 +3909,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="370" approved="yes">
         <source>edit.translation.%name%</source>
-        <target state="translated">Edit translation %name%</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/2a/15/b758cc0b3ece9915b126ad7db5b129677bbee487bb7f7f3fdfb5b85f23e1.php</context>
           <context context-type="linenumber">34</context>
@@ -3933,7 +3933,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="373" approved="yes">
         <source>edit.node.%name%.tree</source>
-        <target state="translated">Edit node %name% tree</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/04/9c/7e2fe134a69a4add4f35b2b5b342ebe4728b2150c9c6ba34a683432a7cf3.php</context>
           <context context-type="linenumber">34</context>
@@ -4041,7 +4041,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="386" approved="yes">
         <source>edit.font.%name%</source>
-        <target state="translated">Edit font %name%</target>
+        <target state="translated">%name%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/de/03/6cb30cfbaeddb9370c458b1694d8751a7c5e34716db56ef2a35604ef8003.php</context>
           <context context-type="linenumber">34</context>
@@ -4438,7 +4438,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="edit.settingGroup.%name%" approved="yes">
         <source>edit.settingGroup.%name%</source>
-        <target state="translated">Edit setting group %name%</target>
+        <target state="translated">%name%</target>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="save.settingGroup" approved="yes">
         <source>save.settingGroup</source>
@@ -4812,7 +4812,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="edit.folder.%name%" approved="yes">
           <source>edit.folder.%name%</source>
-          <target state="translated">Edit folder “%name%”</target>
+          <target state="translated">%name%</target>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="folders" approved="yes">
           <source>folders</source>
@@ -5079,11 +5079,11 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="edit.customFormField.%name%" approved="yes">
           <source>edit.customFormField.%name%</source>
-          <target state="translated">Edit field %name%</target>
+          <target state="translated">%name%</target>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="edit.customFormFields.for.customForm.%name%" approved="yes">
           <source>edit.customFormFields.for.customForm.%name%</source>
-          <target state="translated">Edit fields for %name%</target>
+          <target state="translated">%name% fields</target>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="delete.customForm" approved="yes">
           <source>delete.customForm</source>
@@ -5099,7 +5099,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="edit.customForm.%name%" approved="yes">
           <source>edit.customForm.%name%</source>
-          <target state="translated">Edit %name%</target>
+          <target state="translated">%name%</target>
       <note/></trans-unit>
 
       <trans-unit xml:space="preserve" id="{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields" approved="yes">
@@ -5505,7 +5505,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="added.node.%name%" approved="yes">
           <source>added.node.%name%</source>
-          <target state="translated">Custom form</target>
+          <target state="translated">Node “%name%” has been added.</target>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="custom-forms.type" approved="yes">
           <source>custom-forms.type</source>
@@ -5515,24 +5515,105 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>Bad credentials</source>
           <target state="translated">Bad credentials</target>
       <note/></trans-unit>
-      
+
       <trans-unit xml:space="preserve" id="User account has expired." approved="yes">
           <source>User account has expired.</source>
           <target state="translated">User account has expired.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="User account is locked." approved="yes">
           <source>User account is locked.</source>
           <target state="translated">User account is locked.</target>
-      </trans-unit>
+      <note/></trans-unit>
 
       <trans-unit xml:space="preserve" id="User credentials have expired." approved="yes">
           <source>User credentials have expired.</source>
           <target state="translated">User credentials have expired.</target>
-      </trans-unit>
+      <note/></trans-unit>
       <trans-unit xml:space="preserve" id="User account is disabled." approved="yes">
           <source>User account is disabled.</source>
           <target state="translated">User account is disabled.</target>
+      <note/></trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="change.status.nodes" approved="yes">
+          <source>change.status.nodes</source>
+          <target state="translated">Change selected nodes status</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="change.nodes.status" approved="yes">
+          <source>change.nodes.status</source>
+          <target state="translated">Change selected nodes status</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="change.nodes.status.all" approved="yes">
+          <source>change.nodes.status.all</source>
+          <target state="translated">Change all selected nodes status</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.change-status.these.nodes" approved="yes">
+          <source>are_you_sure.change-status.these.nodes</source>
+          <target state="translated">Are you sure you want to change every selected nodes status?</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.status" approved="yes">
+          <source>nodes.status</source>
+          <target state="translated">Selection status</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.status.changed" approved="yes">
+          <source>nodes.bulk.status.changed</source>
+          <target state="translated">Node selection status has been changed.</target>
+      <note/></trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="staticTheme" approved="yes">
+          <source>staticTheme</source>
+          <target state="translated">Static theme</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="staticTheme.does_not.allow.node_url_routes" approved="yes">
+          <source>staticTheme.does_not.allow.node_url_routes</source>
+          <target state="translated">A static theme means that it won’t listen dynamic nodes URLs, only static routes.</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="theme.is_static" approved="yes">
+          <source>theme.is_static</source>
+          <target state="translated">Static</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="password.must.match" approved="yes">
+          <source>password.must.match</source>
+          <target state="translated">Passwords must match</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="passwords.must.match" approved="yes">
+          <source>passwords.must.match</source>
+          <target state="translated">Passwords must match</target>
+      <note/></trans-unit>
+      <trans-unit xml:space="preserve" id="no.nodeType.available.create_one_first" approved="yes">
+          <source>no.nodeType.available.create_one_first</source>
+          <target state="translated">No node-type have been found. Please create one before adding a node.</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.%name%.no_creation.already_exists" approved="yes">
+          <source>node.%name%.no_creation.already_exists</source>
+          <target state="translated">Node “%name%” can't be created, one with same name already exists.</target>
+      <note/></trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.dynamicNodeName" approved="yes">
+          <source>node.dynamicNodeName</source>
+          <target state="translated">Dynamic node name</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="nodeType.status">
+          <source>nodeType.status</source>
+          <target state="translated">Status</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.not_visible">
+          <source>nodeType.not_visible</source>
+          <target state="translated">Unvisible node-type</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter.nodeType">
+          <source>newsletter.nodeType</source>
+          <target state="translated">Newsletters reserved type</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hiding_nodes">
+          <source>nodeType.hiding_nodes</source>
+          <target state="translated">This type hides its node-tree</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

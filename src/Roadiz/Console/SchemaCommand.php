@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file SchemaCommand.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
+use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-
-use Doctrine\ORM\Events;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
 
 /**
  * Command line utils for managing database schema from terminal.
@@ -84,7 +73,6 @@ class SchemaCommand extends Command
         $text="";
 
         if ($input->getOption('update')) {
-
             $sql = static::getUpdateSchema();
             $count = count($sql);
 
@@ -99,7 +87,6 @@ class SchemaCommand extends Command
                         'Deletions may remove some of your data.'.PHP_EOL.'Have you done a database backup before?'.PHP_EOL.'<question>Are you sure to update your database schema? [y / N]</question> : ',
                         false
                     )) {
-
                         if (static::updateSchema(true)) {
                             $text .= '<info>Schema updated…</info>'.PHP_EOL;
                         }
@@ -115,7 +102,6 @@ class SchemaCommand extends Command
                         '<question>Are you sure to update your database schema? [y / N]</question> : ',
                         false
                     )) {
-
                         if (static::updateSchema()) {
                             $text .= '<info>Schema updated…</info>'.PHP_EOL;
                         }
@@ -123,7 +109,6 @@ class SchemaCommand extends Command
                         $text .= '<info>Schema update aborted</info>'.PHP_EOL;
                     }
                 } else {
-
                     /*
                      * Print changes
                      */
@@ -165,14 +150,13 @@ class SchemaCommand extends Command
     {
         CacheCommand::clearDoctrine();
 
-        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
+        $tool = new SchemaTool(Kernel::getService('em'));
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
 
         $sql = $tool->getUpdateSchemaSql($meta, true);
         $deletions = array();
 
         foreach ($sql as $statement) {
-
             if (substr($statement, 0, 6) == 'DELETE' ||
                 strpos($statement, 'DROP')) {
                 $deletions[] = $statement;
@@ -195,13 +179,10 @@ class SchemaCommand extends Command
      */
     public static function createSchema()
     {
-        $tool = new \Doctrine\ORM\Tools\SchemaTool(Kernel::getService('em'));
+        $tool = new SchemaTool(Kernel::getService('em'));
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
-        $sql = $tool->getUpdateSchemaSql($meta, true);
 
-        foreach ($sql as $statement) {
-            Kernel::getService('em')->getConnection()->exec($statement);
-        }
+        $tool->createSchema($meta);
     }
 
     /**

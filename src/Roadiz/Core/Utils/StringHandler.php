@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,15 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file StringHandler.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Utils;
+
+use RZ\Roadiz\Core\Exceptions\EmptySaltException;
 
 /**
  * String handling methods.
@@ -113,5 +114,68 @@ class StringHandler
         $string = trim($string);
 
         return $string;
+    }
+
+    /**
+     * Transform to camelcase.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function camelCase($string)
+    {
+        $string = static::removeDiacritics($string);
+        $string = preg_replace('#([-_=\.,;:]+)#', ' ', $string);
+        $string = preg_replace('#([^a-zA-Z0-9]+)#', '', ucwords($string));
+        $string = trim($string);
+        $string[0] = strtolower($string[0]);
+
+        return $string;
+    }
+
+
+    /**
+     * Encode a string using website security secret.
+     *
+     * @param string $value String to encode
+     * @param string $secret Secret salt
+     *
+     * @return string
+     */
+    public static function encodeWithSecret($value, $secret)
+    {
+        $secret = trim($secret);
+
+        if (!empty($secret)) {
+            $secret = crypt($secret, $secret);
+            return base64_encode($secret . base64_encode(strip_tags($value)));
+        } else {
+            throw new EmptySaltException("You cannot encode with an empty salt. Did you enter a secret security phrase in your conf/config.json file?", 1);
+        }
+    }
+
+    /**
+     * Decode a string using website security secret.
+     *
+     * @param string $value Salted base64 string
+     * @param string $secret Secret salt
+     *
+     * @return string
+     */
+    public static function decodeWithSecret($value, $secret)
+    {
+        $secret = trim($secret);
+
+        if (!empty($secret)) {
+            $secret = crypt($secret, $secret);
+            $salted = base64_decode($value);
+
+            $nonSalted = str_replace($secret, "", $salted);// substr($salted, strlen($secret));
+
+            return base64_decode($nonSalted);
+        } else {
+            throw new EmptySaltException("You cannot encode with an empty salt. Did you enter a secret security phrase in your conf/config.json file?", 1);
+        }
     }
 }

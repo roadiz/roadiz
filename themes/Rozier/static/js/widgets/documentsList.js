@@ -37,14 +37,7 @@ DocumentsList.prototype.resize = function(){
         _this.itemsWidth = (_this.itemWidth * _this.itemsPerLine) - 16;
         _this.contMarginLeft = Math.floor((_this.contWidth - _this.itemsWidth)/2);
 
-        _this.$cont[0].style.marginLeft = _this.contMarginLeft+'px'; 
-
-        // console.log('cont width  : '+_this.contWidth);
-        // console.log('item width  : '+_this.itemWidth);
-        // console.log('items /line : '+_this.itemsPerLine);
-        // console.log('items width : '+_this.itemsWidth);
-        // console.log('cont ml     : '+_this.contMarginLeft);
-        // console.log('-----------------------');
+        _this.$cont[0].style.marginLeft = _this.contMarginLeft+'px';
     }
 
 };

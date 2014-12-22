@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file CustomFormField.php
- * @copyright REZO ZERO 2014
  * @author Maxime Constantinian
  */
 namespace RZ\Roadiz\Core\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
-use RZ\Roadiz\Core\Utils\StringHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * CustomFormField entities are used to create CustomForms with
  * custom data structure.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="custom_form_fields",
- * uniqueConstraints={@UniqueConstraint(columns={"name", "custom_form_id"})})
- * @HasLifecycleCallbacks
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="custom_form_fields", uniqueConstraints={
+ *      @ORM\UniqueConstraint(columns={"name", "custom_form_id"})
+ * })
+ * @ORM\HasLifecycleCallbacks
  */
 class CustomFormField extends AbstractField
 {
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="fields")
-     * @JoinColumn(name="custom_form_id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="fields")
+     * @ORM\JoinColumn(name="custom_form_id", onDelete="CASCADE")
      */
     private $customForm;
 
@@ -72,7 +73,7 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
      */
     private $customFormFieldAttribute;
 
@@ -87,7 +88,7 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @Column(name="field_required", type="boolean")
+     * @ORM\Column(name="field_required", type="boolean")
      */
     private $required = false;
 
@@ -120,7 +121,7 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function prePersist()
     {
@@ -131,7 +132,6 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @todo Move this method to a CustomFormFieldViewer
      * @return string
      */
     public function getOneLineSummary()

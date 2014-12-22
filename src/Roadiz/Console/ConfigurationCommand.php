@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,22 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file InstallCommand.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Console\SchemaCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,8 +41,6 @@ use RZ\Roadiz\Console\Tools\Configuration;
  */
 class ConfigurationCommand extends Command
 {
-    private $dialog;
-
     protected function configure()
     {
         $this
@@ -77,12 +69,17 @@ class ConfigurationCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Disable the install assistant'
+            )
+            ->addOption(
+                'generateHtaccess',
+                null,
+                InputOption::VALUE_NONE,
+                'Generate .htaccess files to protect critical directories'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
         $text="";
 
         $configuration = new Configuration();
@@ -102,7 +99,6 @@ class ConfigurationCommand extends Command
         }
 
         if ($input->getOption('enable-install')) {
-
             $configuration->setInstall(true);
             $configuration->setDevMode(true);
 
@@ -111,12 +107,80 @@ class ConfigurationCommand extends Command
             $text .= '<info>Install mode has been changed to true</info>'.PHP_EOL;
         }
         if ($input->getOption('disable-install')) {
-
             $configuration->setInstall(false);
             $configuration->writeConfiguration();
 
             $text .= '<info>Install mode has been changed to false</info>'.PHP_EOL;
             $text .= 'Do not forget to empty all cache and purge XCache/APC caches manually.'.PHP_EOL;
+        }
+
+        if ($input->getOption('generateHtaccess')) {
+            $text .= '<info>Generating .htaccess files…</info>'.PHP_EOL;
+            // Simple deny access files
+            $paths = array(
+                "/conf",
+                "/src",
+                "/samples",
+                "/gen-src",
+                "/files/fonts",
+                "/bin",
+                "/tests",
+                "/cache",
+            );
+
+            foreach ($paths as $path) {
+                $filePath = ROADIZ_ROOT . $path . "/.htaccess";
+                if (file_exists(ROADIZ_ROOT . $path) &&
+                    !file_exists($filePath)) {
+                    file_put_contents($filePath, "deny from all".PHP_EOL);
+                    $text .= '    — '.$filePath.PHP_EOL;
+                } else {
+                    $text .= '    — Can’t write '.$filePath.", file already exists or folder is absent.".PHP_EOL;
+                }
+            }
+
+            $mainHtaccess = 'IndexIgnore *
+
+            # ------------------------------------
+            # EXPIRES CACHING
+            # ------------------------------------
+            <IfModule mod_expires.c>
+                ExpiresActive On
+                ExpiresByType image/jpg "access plus 1 year"
+                ExpiresByType image/jpeg "access plus 1 year"
+                ExpiresByType image/gif "access plus 1 year"
+                ExpiresByType image/png "access plus 1 year"
+                ExpiresByType text/css "access plus 1 month"
+                ExpiresByType application/pdf "access plus 1 month"
+                ExpiresByType text/x-javascript "access plus 1 month"
+                ExpiresByType text/javascript "access plus 1 month"
+                ExpiresByType application/x-shockwave-flash "access plus 1 month"
+                ExpiresByType image/x-icon "access plus 1 year"
+                ExpiresDefault "access plus 2 days"
+            </IfModule>
+
+            # --------------------
+            # REWRITE ENGINE
+            # --------------------
+            RewriteEngine On
+
+            # Redirect to www
+            #RewriteCond %{HTTP_HOST} !^www\.
+            #RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteRule ^(.*)$ index.php [QSA,L]';
+
+            $filePath = ROADIZ_ROOT . "/.htaccess";
+
+            if (file_exists(ROADIZ_ROOT) &&
+                !file_exists($filePath)) {
+                file_put_contents($filePath, $mainHtaccess.PHP_EOL);
+                $text .= '    — '.$filePath.PHP_EOL;
+            } else {
+                $text .= '    — Can’t write '.$filePath.", file already exists or folder is absent.".PHP_EOL;
+            }
         }
 
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Document.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
@@ -35,12 +34,13 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Documents entity represent a file on server with datetime and naming.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\DocumentRepository")
- * @Table(name="documents")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\DocumentRepository")
+ * @ORM\Table(name="documents")
  */
 class Document extends AbstractDateTimed
 {
@@ -110,7 +110,7 @@ class Document extends AbstractDateTimed
     );
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $filename;
     /**
@@ -133,7 +133,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @Column(name="mime_type", type="string", nullable=true)
+     * @ORM\Column(name="mime_type", type="string", nullable=true)
      */
     private $mimeType;
     /**
@@ -205,7 +205,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $folder;
     /**
@@ -241,7 +241,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", name="embedId", unique=false, nullable=true)
+     * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
      */
     protected $embedId = null;
     /**
@@ -262,7 +262,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", name="embedPlatform", unique=false, nullable=true)
+     * @ORM\Column(type="string", name="embedPlatform", unique=false, nullable=true)
      */
     protected $embedPlatform = null;
     /**
@@ -293,7 +293,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $private = false;
     /**
@@ -331,7 +331,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="document")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="document")
      * @var ArrayCollection
      */
     protected $nodesSourcesByFields = null;
@@ -346,8 +346,8 @@ class Document extends AbstractDateTimed
 
 
     /**
-     * @ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents", fetch="EXTRA_LAZY")
-     * @JoinTable(name="documents_folders")
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
+     * @ORM\JoinTable(name="documents_folders")
      */
     protected $folders;
 
@@ -372,7 +372,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true)
      * @var ArrayCollection
      */
     protected $documentTranslations;
@@ -409,7 +409,6 @@ class Document extends AbstractDateTimed
      */
     public function __construct()
     {
-        $this->tags = new ArrayCollection();
         $this->folders = new ArrayCollection();
         $this->documentTranslations = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
@@ -421,7 +420,7 @@ class Document extends AbstractDateTimed
      */
     public static function getFilesFolder()
     {
-        return RENZO_ROOT.'/'.static::getFilesFolderName();
+        return ROADIZ_ROOT.'/'.static::getFilesFolderName();
     }
     /**
      * @return string

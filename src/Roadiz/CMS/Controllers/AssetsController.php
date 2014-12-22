@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file AssetsController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Controllers;
@@ -34,12 +33,7 @@ use RZ\Roadiz\Core\Kernel;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 
@@ -48,7 +42,7 @@ use Symfony\Component\Config\FileLocator;
  */
 class AssetsController extends AppController
 {
-   /**
+    /**
      * Initialize controller with NO twig environment.
      */
     public function __init()
@@ -70,10 +64,10 @@ class AssetsController extends AppController
     public static function getRoutes()
     {
         $locator = new FileLocator(array(
-            RENZO_ROOT.'/src/Roadiz/CMS/Resources'
+            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources'
         ));
 
-        if (file_exists(RENZO_ROOT.'/src/Roadiz/CMS/Resources/assetsRoutes.yml')) {
+        if (file_exists(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/assetsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
 
             return $loader->load('assetsRoutes.yml');
@@ -110,56 +104,64 @@ class AssetsController extends AppController
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function fontFileAction(Request $request, $filename, $extension, $token)
+    public function fontFileAction(Request $request, $filename, $variant, $extension, $token)
     {
         $font = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Font')
-            ->findOneBy(array('hash'=>$filename));
+            ->findOneBy(array('hash'=>$filename, 'variant'=>$variant));
 
-        if (null !== $font &&
-            $this->getService('csrfProvider')->isCsrfTokenValid($font->getHash().$extension, $token)) {
+        if (null !== $font) {
+            if ($this->getService('csrfProvider')->isCsrfTokenValid($font->getHash().$font->getVariant(), $token)) {
+                switch ($extension) {
+                    case 'eot':
+                        $fontpath = $font->getEOTAbsolutePath();
+                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['eot'];
+                        break;
+                    case 'woff':
+                        $fontpath = $font->getWOFFAbsolutePath();
+                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff'];
+                        break;
+                    case 'woff2':
+                        $fontpath = $font->getWOFF2AbsolutePath();
+                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff2'];
+                        break;
+                    case 'svg':
+                        $fontpath = $font->getSVGAbsolutePath();
+                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['svg'];
+                        break;
+                    case 'otf':
+                    case 'ttf':
+                        $fontpath = $font->getOTFAbsolutePath();
+                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['otf'];
+                        break;
+                    default:
+                        $fontpath = "";
+                        $mime = "text/html";
+                        break;
+                }
 
-            switch ($extension) {
-                case 'eot':
-                    $fontpath = $font->getEOTAbsolutePath();
-                    $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['eot'];
-                    break;
-                case 'woff':
-                    $fontpath = $font->getWOFFAbsolutePath();
-                    $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff'];
-                    break;
-                case 'woff2':
-                    $fontpath = $font->getWOFF2AbsolutePath();
-                    $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff2'];
-                    break;
-                case 'svg':
-                    $fontpath = $font->getSVGAbsolutePath();
-                    $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['svg'];
-                    break;
-                case 'otf':
-                case 'ttf':
-                    $fontpath = $font->getOTFAbsolutePath();
-                    $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['otf'];
-                    break;
-                default:
-                    $fontpath = "";
-                    break;
-            }
-
-            if ("" != $fontpath) {
+                if ("" != $fontpath) {
+                    return new Response(
+                        file_get_contents($fontpath),
+                        Response::HTTP_OK,
+                        array('content-type' => $mime)
+                    );
+                }
+            } else {
                 return new Response(
-                    file_get_contents($fontpath),
-                    Response::HTTP_OK,
-                    array('content-type' => $mime)
+                    "Font Fail ".$token,
+                    Response::HTTP_NOT_FOUND,
+                    array('content-type' => 'text/html')
                 );
             }
-        }
 
-        return new Response(
-            "Font Fail",
-            Response::HTTP_NOT_FOUND,
-            array('content-type' => 'text/html')
-        );
+        } else {
+            return new Response(
+                "Font doesn't exist ".$filename,
+                Response::HTTP_NOT_FOUND,
+                array('content-type' => 'text/html')
+            );
+        }
     }
 
     /**
@@ -174,7 +176,6 @@ class AssetsController extends AppController
     {
         if ($this->getService('csrfProvider')
                  ->isCsrfTokenValid(static::FONT_TOKEN_INTENTION, $token)) {
-
             $lastMod = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Font')
                 ->getLatestUpdateDate();

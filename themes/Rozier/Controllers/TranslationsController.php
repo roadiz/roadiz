@@ -1,20 +1,39 @@
 <?php
 /**
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  *
  *
  * @file TranslationsController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
@@ -23,10 +42,7 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
 * Translation's controller
@@ -61,13 +77,11 @@ class TranslationsController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
 
         foreach ($translations as $translation) {
-
             // Make default forms
             $form = $this->buildMakeDefaultForm($translation);
             $form->handleRequest();
             if ($form->isValid() &&
                 $form->getData()['translationId'] == $translation->getId()) {
-
                 $translation->getHandler()->makeDefault();
 
                 $msg = $this->getTranslator()->trans('translation.%name%.made_default', array('%name%'=>$translation->getName()));
@@ -120,7 +134,6 @@ class TranslationsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->editTranslation($form->getData(), $translation);
 
@@ -178,7 +191,6 @@ class TranslationsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->addTranslation($form->getData(), $translation);
 
@@ -235,7 +247,6 @@ class TranslationsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['translationId'] == $translation->getId()) {
-
                 try {
                     $this->deleteTranslation($form->getData(), $translation);
 
@@ -330,7 +341,6 @@ class TranslationsController extends RozierApp
     private function deleteTranslation($data, Translation $translation)
     {
         if ($data['translationId'] == $translation->getId()) {
-
             if (false === $translation->isDefaultTranslation()) {
                 $this->getService('em')->remove($translation);
                 $this->getService('em')->flush();

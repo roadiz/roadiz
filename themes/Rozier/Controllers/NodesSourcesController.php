@@ -1,37 +1,46 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  * @file NodesController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\UrlAlias;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 
-use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\RozierApp;
-
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Translation\Translator;
 
@@ -60,7 +69,6 @@ class NodesSourcesController extends RozierApp
                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
-
             /*
              * Here we need to directly select nodeSource
              * if not doctrine will grab a cache tag because of NodeTreeWidget
@@ -74,7 +82,6 @@ class NodesSourcesController extends RozierApp
                 ->findOneBy(array('translation'=>$translation, 'node'=>$gnode));
 
             if (null !== $source) {
-
                 $node = $source->getNode();
 
                 $this->assignation['translation'] = $translation;
@@ -95,11 +102,9 @@ class NodesSourcesController extends RozierApp
                         '%node_source%'=>$source->getNode()->getNodeName(),
                         '%translation%'=>$source->getTranslation()->getName()
                     ));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
+
+                    $this->publishConfirmMessage($request, $msg);
+
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesEditSourcePage',
@@ -112,7 +117,6 @@ class NodesSourcesController extends RozierApp
                 }
 
                 $this->assignation['form'] = $form->createView();
-                //$this->getService('em')->detach($node);
 
                 return new Response(
                     $this->getTwig()->render('nodes/editSource.html.twig', $this->assignation),
@@ -137,6 +141,24 @@ class NodesSourcesController extends RozierApp
     {
         if (isset($data['title'])) {
             $nodeSource->setTitle($data['title']);
+
+            /*
+             * update node name if dynamic option enabled and
+             * default translation
+             */
+            if (true === $nodeSource->getNode()->isDynamicNodeName() &&
+                $nodeSource->getTranslation()->isDefaultTranslation()) {
+                $testingNodeName = StringHandler::slugify($data['title']);
+
+                /*
+                 * node name wont be updated if name already taken
+                 */
+                if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
+                    false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($testingNodeName) &&
+                    false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($testingNodeName)) {
+                    $nodeSource->getNode()->setNodeName($data['title']);
+                }
+            }
         }
 
         $fields = $nodeSource->getNode()->getNodeType()->getFields();
@@ -179,7 +201,12 @@ class NodesSourcesController extends RozierApp
         foreach ($fields as $field) {
             if (!$field->isVirtual()) {
                 $getter = $field->getGetterName();
-                $sourceDefaults[$field->getName()] = $source->$getter();
+
+                if (method_exists($source, $getter)) {
+                    $sourceDefaults[$field->getName()] = $source->$getter();
+                } else {
+                    throw new \Exception($getter.' method does not exist in '.$node->getNodeType()->getName());
+                }
             }
         }
 
@@ -193,7 +220,10 @@ class NodesSourcesController extends RozierApp
                 'text',
                 array(
                     'label' => $this->getTranslator()->trans('title'),
-                    'required' => false
+                    'required' => false,
+                    'attr' => array(
+                        'data-desc' => ''
+                    )
                 )
             );
         foreach ($fields as $field) {
@@ -285,6 +315,20 @@ class NodesSourcesController extends RozierApp
                     'required' => false,
                     'constraints' => array(
                         new Type('integer')
+                    ),
+                    'attr' => array(
+                        'data-desc' => $field->getDescription()
+                    )
+                );
+            case NodeTypeField::EMAIL_T:
+                return array(
+                    'label' => $field->getLabel(),
+                    'required' => false,
+                    'constraints' => array(
+                        new \Symfony\Component\Validator\Constraints\Email()
+                    ),
+                    'attr' => array(
+                        'data-desc' => $field->getDescription()
                     )
                 );
             case NodeTypeField::DECIMAL_T:
@@ -293,6 +337,9 @@ class NodesSourcesController extends RozierApp
                     'required' => false,
                     'constraints' => array(
                         new Type('double')
+                    ),
+                    'attr' => array(
+                        'data-desc' => $field->getDescription()
                     )
                 );
             case NodeTypeField::COLOUR_T:
@@ -393,7 +440,8 @@ class NodesSourcesController extends RozierApp
                 break;
             default:
                 $setter = $field->getSetterName();
-                $nodeSource->$setter( $dataValue );
+                $nodeSource->$setter($dataValue);
+
                 break;
         }
     }

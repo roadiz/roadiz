@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file NodesCommand.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console;
@@ -33,9 +32,7 @@ namespace RZ\Roadiz\Console;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use Doctrine\ORM\Query\ResultSetMapping;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -114,7 +111,6 @@ class NodesCommand extends Command
             $typeName &&
             $input->getOption('create')
         ) {
-
             $type = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                 ->findOneBy(array('name'=>$typeName));
@@ -137,7 +133,6 @@ class NodesCommand extends Command
                 // Node
                 $text = $this->executeNodeCreation($input, $output, $type, $translation);
             } else {
-
             }
 
         } elseif ($nodeName) {
@@ -177,7 +172,6 @@ class NodesCommand extends Command
         NodeType $type,
         Translation $translation
     ) {
-        $text = "";
         $nodeName = $input->getArgument('node-name');
         $node = new Node($type);
         $node->setNodeName($nodeName);

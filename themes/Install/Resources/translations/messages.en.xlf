@@ -46,11 +46,11 @@
             </trans-unit>
             <trans-unit id="welcome.subtitle" approved="yes">
                 <source>welcome.subtitle</source>
-                <target state="translated">Welcome to Roadiz CMS Installation</target>
+                <target state="translated">Welcome to Roadiz CMS!</target>
             </trans-unit>
             <trans-unit id="welcome.message" approved="yes">
                 <source>welcome.message</source>
-                <target state="translated">&lt;p&gt;Welcome to Roadiz CMS install assistant. Here is just a bit of configuration before letting you play.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Here is just a bit of configuration before letting you play. So start the engine!&lt;/p&gt;</target>
             </trans-unit>
 
 
@@ -103,7 +103,7 @@
             </trans-unit>
             <trans-unit id="database_done.message" approved="yes">
                 <source>database_done.message</source>
-                <target state="translated">&lt;p&gt;Your database has been successfully installed.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Your database has been successfully installed. We are going to import base contents and parameters for your website.&lt;/p&gt;</target>
             </trans-unit>
 
             <!-- Database fail -->
@@ -113,7 +113,7 @@
             </trans-unit>
             <trans-unit id="database_fail.message" approved="yes">
                 <source>database_fail.message</source>
-                <target state="translated">&lt;p&gt;Your database could not be installed due to following errors.&lt;/p&gt;</target>
+                <target state="translated">&lt;p&gt;Your database could not be installed due to following errors. Verify your database credentials or if database has been installed yet.&lt;/p&gt;</target>
             </trans-unit>
 
 
@@ -249,7 +249,7 @@
             </trans-unit>
             <trans-unit id="skip.user.goto.theme" approved="yes">
                 <source>skip.user.goto.theme</source>
-                <target state="translated">Skip “user”</target>
+                <target state="translated">Skip</target>
             </trans-unit>
             <trans-unit id="skip.user.goto.done" approved="yes">
                 <source>skip.user.goto.done</source>
@@ -257,7 +257,7 @@
             </trans-unit>
             <trans-unit id="skip.database.goto.import" approved="yes">
                 <source>skip.database.goto.import</source>
-                <target state="translated">Skip “database”</target>
+                <target state="translated">Skip</target>
             </trans-unit>
 
             <trans-unit id="choose.language" approved="yes">
@@ -271,7 +271,7 @@
 
             <trans-unit id="skip.database.goto.theme" approved="yes">
                 <source>skip.database.goto.theme</source>
-                <target state="translated">Skip “database”</target>
+                <target state="translated">Skip</target>
             </trans-unit>
 
             <trans-unit xml:space="preserve" id="theme.summary.title" approved="yes">
@@ -361,6 +361,64 @@
             <trans-unit xml:space="preserve" id="check.import.files" approved="yes">
                 <source>check.import.files</source>
                 <target state="translated">Files to import</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="password.must_match" approved="yes">
+                <source>password.must_match</source>
+                <target state="translated">Passwords must match</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="site_name">
+                <source>site_name</source>
+                <target>Your website name</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="email_sender">
+                <source>email_sender</source>
+                <target>Main email</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="email_sender_name">
+                <source>email_sender_name</source>
+                <target>Main email account name</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="meta_description">
+                <source>meta_description</source>
+                <target>SEO Description</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="timezone">
+                <source>timezone</source>
+                <target>TImezone</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="install_theme">
+                <source>install_theme</source>
+                <target>Install a theme?</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="driver">
+                <source>driver</source>
+                <target>Driver</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="host">
+                <source>host</source>
+                <target>Host</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="port">
+                <source>port</source>
+                <target>Port</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="unix_socket">
+                <source>unix_socket</source>
+                <target>UNIX socket</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="path">
+                <source>path</source>
+                <target>Path</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="user">
+                <source>user</source>
+                <target>Username</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="dbname">
+                <source>dbname</source>
+                <target>Database name</target>
             </trans-unit>
         </body>
     </file>

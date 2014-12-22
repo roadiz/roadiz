@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file User.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
@@ -38,22 +37,23 @@ use RZ\Roadiz\Core\Handlers\UserHandler;
 use RZ\Roadiz\Core\Viewers\UserViewer;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * User Entity.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\UserRepository")
- * @Table(name="users", indexes={
- *     @index(name="enabled_users_idx",   columns={"enabled"}),
- *     @index(name="expired_users_idx",   columns={"expired"}),
- *     @index(name="expiresat_users_idx", columns={"expires_at"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\UserRepository")
+ * @ORM\Table(name="users", indexes={
+ *     @ORM\Index(name="enabled_users_idx",   columns={"enabled"}),
+ *     @ORM\Index(name="expired_users_idx",   columns={"expired"}),
+ *     @ORM\Index(name="expiresat_users_idx", columns={"expires_at"})
  * })
- * @HasLifecycleCallbacks
+ * @ORM\HasLifecycleCallbacks
  */
 class User extends AbstractHuman implements AdvancedUserInterface
 {
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      * @var string
      */
     private $username;
@@ -79,7 +79,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @Column(type="string", name="facebook_name", unique=false, nullable=true)
+     * @ORM\Column(type="string", name="facebook_name", unique=false, nullable=true)
      */
     protected $facebookName = null;
 
@@ -106,7 +106,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @Column(type="text", name="picture_url")
+     * @ORM\Column(type="text", name="picture_url")
      */
     protected $pictureUrl = '';
 
@@ -133,7 +133,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * The salt to use for hashing
      *
-     * @Column(name="salt", type="string")
+     * @ORM\Column(name="salt", type="string")
      * @var string
      */
     private $salt;
@@ -161,7 +161,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * Encrypted password.
      *
-     * @Column(type="string", nullable=false)
+     * @ORM\Column(type="string", nullable=false)
      */
     private $password;
 
@@ -218,7 +218,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @var boolean
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     protected $enabled = true;
 
@@ -251,7 +251,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @var \DateTime
-     * @Column(name="last_login", type="datetime", nullable=true)
+     * @ORM\Column(name="last_login", type="datetime", nullable=true)
      */
     private $lastLogin;
 
@@ -276,10 +276,10 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role")
-     * @JoinTable(name="users_roles",
-     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")}
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role")
+     * @ORM\JoinTable(name="users_roles",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")}
      * )
      */
     private $roles;
@@ -366,10 +366,10 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", inversedBy="users")
-     * @JoinTable(name="users_groups",
-     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", inversedBy="users")
+     * @ORM\JoinTable(name="users_groups",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
      * )
      * @var ArrayCollection
      */
@@ -430,7 +430,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @var boolean
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $expired = false;
 
@@ -457,7 +457,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @var boolean
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $locked = false;
 
@@ -493,7 +493,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @var boolean
-     * @Column(type="boolean", name="credentials_expired")
+     * @ORM\Column(type="boolean", name="credentials_expired")
      */
     private $credentialsExpired = false;
 
@@ -513,7 +513,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @Column(name="expires_at", type="datetime", nullable=true)
+     * @ORM\Column(name="expires_at", type="datetime", nullable=true)
      * @var \DateTime
      */
     private $expiresAt;
@@ -539,7 +539,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @PrePersist
+     * @ORM\PrePersist
      */
     public function prePersist()
     {

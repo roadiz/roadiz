@@ -1,17 +1,37 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * Description
  *
  * @file FoldersController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Utils\StringHandler;
@@ -22,9 +42,6 @@ use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
  * Folders controller
@@ -72,25 +89,21 @@ class FoldersController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-
             try {
                 $folder = $this->addFolder($form); // only pass form for file handling
 
-                $msg = $this->getTranslator()->trans('folder.%name%.created', array('%name%'=>$folder->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $msg = $this->getTranslator()->trans(
+                    'folder.%name%.created',
+                    array('%name%'=>$folder->getName())
+                );
+                $this->publishConfirmMessage($request, $msg);
 
             } catch (EntityAlreadyExistsException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             } catch (\RuntimeException $e) {
-                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                $this->getService('logger')->warning($e->getMessage());
+                $this->publishErrorMessage($request, $e->getMessage());
             }
 
-            /*
-             * Force redirect to avoid resending form when refreshing page
-             */
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')->generate('foldersHomePage')
             );
@@ -128,24 +141,20 @@ class FoldersController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['folderId'] == $folder->getId()) {
-
                 try {
                     $this->deleteFolder($form->getData(), $folder);
-                    $msg = $this->getTranslator()->trans('folder.%name%.deleted', array('%name%'=>$folder->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'folder.%name%.deleted',
+                        array('%name%'=>$folder->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityRequiredException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('foldersHomePage')
                 );
@@ -182,30 +191,25 @@ class FoldersController extends RozierApp
                     ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if ($folder !== null) {
-
             $form = $this->buildEditForm($folder);
             $form->handleRequest();
 
             if ($form->isValid() &&
                 $form->getData()['folderId'] == $folder->getId()) {
-
                 try {
                     $this->editFolder($form, $folder); // only pass form for file handling
-                    $msg = $this->getTranslator()->trans('folder.%name%.updated', array('%name%'=>$folder->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'folder.%name%.updated',
+                        array('%name%'=>$folder->getName())
+                    );
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate('foldersHomePage')
                 );
@@ -242,7 +246,6 @@ class FoldersController extends RozierApp
                     ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if ($folder !== null) {
-
             // Prepare File
             $file = tempnam("tmp", "zip");
             $zip = new \ZipArchive();

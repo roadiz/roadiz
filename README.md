@@ -1,17 +1,22 @@
-# Roadiz
-## REZO ZERO CMS
+# Roadiz CMS
+
+[![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=develop)](https://travis-ci.org/roadiz/roadiz)
+[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=develop)](https://coveralls.io/r/roadiz/roadiz?branch=develop)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=develop)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d/mini.png)](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d)
 
 Roadiz is a polymorphic CMS based on a node system which can handle many type of services.
 It’s based on Symfony components and Doctrine ORM for maximum performances and security.
 
 * *Roadiz* is released under **MIT** licence
 * *RZ Icons* font-icon is released under **MIT** licence too
-* *Rezo-Zero Sans* font is released under **GPL+FE** licence and is edited by *Nonpareille* type foundry
+* *Roadiz Sans* font family is released under **GPL+FE** licence and is edited by *Nonpareille* type foundry
 
 ### Documentation
 
-* *API* documentation can be found at http://api.roadiz.io
+* *Roadiz* website: http://www.roadiz.io
 * *Read the Docs* complete documentation can be found at http://docs.roadiz.io
+* *API* documentation can be found at http://api.roadiz.io
 
 ### Installation
 
@@ -21,6 +26,10 @@ It’s based on Symfony components and Doctrine ORM for maximum performances and
 * Install dependencies: `composer install`, if you don’t have *Composer* installed on your machine
 follow official doc at https://getcomposer.org/doc/00-intro.md#globally
 * Generate an optimized autoloader: `composer dumpautoload -o`
+* Create an *Apache* or *Nginx* virtual host based on samples in `samples/` folder.
+**If you don’t have any permission to create a virtual host,
+execute `bin/roadiz config --generateHtaccess` to create `.htaccess` files to protect critical informations
+from bad requests.**
 * Go to your web-browser to launch Install wizard.
 
 #### Database connexion
@@ -48,6 +57,10 @@ If you prefer socket:
     "dbname": ""
 }
 ```
+
+You can specify a table prefix adding `"prefix":"myprefix"` if you can’t create a dedicated database for your project
+and you need to use Roadiz side by side with other tables.
+But we strongly recommend you to respect the 1 app = 1 database motto.
 
 For more options you can visit *Doctrine* website: http://doctrine-dbal.readthedocs.org/en/latest/reference/configuration.html
 
@@ -77,7 +90,7 @@ Add this to your `config.json` to link your Roadiz install to your Solr server:
 * Install *dev* dependencies: `composer update --dev`
 * *PHPUnit tests*:
 ```
-./vendor/bin/phpunit -v --bootstrap=bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
+./vendor/bin/phpunit -v --bootstrap=bootstrap.php tests/
 ```
 * *Code quality*, use PHP_CodeSniffer with *PSR2 standard*:
 

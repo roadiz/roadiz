@@ -172,9 +172,14 @@ var NodesBulk = function () {
 
     _this.$nodesCheckboxes = $('input.node-checkbox');
     _this.$nodesIdBulkTags = $('input.nodes-id-bulk-tags');
+    _this.$nodesIdBulkStatus = $('input.nodes-id-bulk-status');
     _this.$actionsMenu = $('.nodes-bulk-actions');
+
     _this.$nodesFolderButton = $('.uk-button-bulk-folder-nodes');
     _this.$nodesFolderCont = $('.nodes-bulk-folder-cont');
+
+    _this.$nodesStatusButton = $('.uk-button-bulk-status-nodes');
+    _this.$nodesStatusCont = $('.nodes-bulk-status-cont');
 
     if (_this.$nodesCheckboxes.length) {
         _this.init();
@@ -184,10 +189,14 @@ var NodesBulk = function () {
 
 NodesBulk.prototype.$nodesCheckboxes = null;
 NodesBulk.prototype.$nodesIdBulkTags = null;
+NodesBulk.prototype.$nodesIdBulkStatus = null;
 NodesBulk.prototype.$actionsMenu = null;
 NodesBulk.prototype.$nodesFolderButton = null;
 NodesBulk.prototype.$nodesFolderCont = null;
 NodesBulk.prototype.nodesFolderOpen = false;
+NodesBulk.prototype.$nodesStatusButton = null;
+NodesBulk.prototype.$nodesStatusCont = null;
+NodesBulk.prototype.nodesStatusOpen = false;
 NodesBulk.prototype.nodesIds = null;
 
 /**
@@ -202,11 +211,7 @@ NodesBulk.prototype.init = function() {
     _this.$nodesCheckboxes.on('change', proxy);
 
     _this.$nodesFolderButton.on('click', $.proxy(_this.nodesFolderButtonClick, _this));
-
-    //var $bulkDeleteButton = _this.$actionsMenu.find('.node-bulk-delete');
-    //var deleteProxy = $.proxy(_this.onBulkDelete, _this);
-    //$bulkDeleteButton.off('click', deleteProxy);
-    //$bulkDeleteButton.on('click', deleteProxy);
+    _this.$nodesStatusButton.on('click', $.proxy(_this.nodesStatusButtonClick, _this));
 };
 
 
@@ -226,6 +231,9 @@ NodesBulk.prototype.onCheckboxChange = function(event) {
     if(_this.$nodesIdBulkTags.length){
         _this.$nodesIdBulkTags.val(_this.nodesIds.join(','));
     }
+    if(_this.$nodesIdBulkStatus.length){
+        _this.$nodesIdBulkStatus.val(_this.nodesIds.join(','));
+    }
 
     console.log(_this.nodesIds);
 
@@ -234,6 +242,8 @@ NodesBulk.prototype.onCheckboxChange = function(event) {
     } else {
         _this.hideActions();
     }
+
+    return false;
 };
 
 
@@ -292,14 +302,35 @@ NodesBulk.prototype.nodesFolderButtonClick = function(e){
     var _this = this;
 
     if(!_this.nodesFolderOpen){
+        _this.$nodesStatusCont.slideUp();
+        _this.nodesStatusOpen = false;
+
         _this.$nodesFolderCont.slideDown();
         _this.nodesFolderOpen = true;
     }
-    else{        
+    else{
         _this.$nodesFolderCont.slideUp();
         _this.nodesFolderOpen = false;
     }
+};
+/**
+ * Nodes status button click
+ * @return {[type]} [description]
+ */
+NodesBulk.prototype.nodesStatusButtonClick = function(e){
+    var _this = this;
 
+    if(!_this.nodesStatusOpen){
+        _this.$nodesFolderCont.slideUp();
+        _this.nodesFolderOpen = false;
+
+        _this.$nodesStatusCont.slideDown();
+        _this.nodesStatusOpen = true;
+    }
+    else{
+        _this.$nodesStatusCont.slideUp();
+        _this.nodesStatusOpen = false;
+    }
 };
 ;/**
  * Documents list
@@ -340,14 +371,7 @@ DocumentsList.prototype.resize = function(){
         _this.itemsWidth = (_this.itemWidth * _this.itemsPerLine) - 16;
         _this.contMarginLeft = Math.floor((_this.contWidth - _this.itemsWidth)/2);
 
-        _this.$cont[0].style.marginLeft = _this.contMarginLeft+'px'; 
-
-        // console.log('cont width  : '+_this.contWidth);
-        // console.log('item width  : '+_this.itemWidth);
-        // console.log('items /line : '+_this.itemsPerLine);
-        // console.log('items width : '+_this.itemsWidth);
-        // console.log('cont ml     : '+_this.contMarginLeft);
-        // console.log('-----------------------');
+        _this.$cont[0].style.marginLeft = _this.contMarginLeft+'px';
     }
 
 };
@@ -384,8 +408,8 @@ DocumentWidget.prototype.init = function() {
     var _this = this;
 
     var changeProxy = $.proxy(_this.onSortableDocumentWidgetChange, _this);
-    _this.$sortables.on('uk.sortable.change', changeProxy);
-    _this.$sortables.on('uk.sortable.change', changeProxy);
+    _this.$sortables.on('change.uk.sortable', changeProxy);
+    _this.$sortables.on('change.uk.sortable', changeProxy);
 
     var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
     _this.$toggleExplorerButtons.off('click', onExplorerToggleP);
@@ -634,7 +658,7 @@ DocumentWidget.prototype.onUnlinkDocument = function( event ) {
     var $widget = $element.parents('.documents-widget-sortable').first();
 
     $doc.remove();
-    $widget.trigger('uk.sortable.change', [$widget, $doc]);
+    $widget.trigger('change.uk.sortable', [$widget, $doc]);
 
     return false;
 };
@@ -819,8 +843,8 @@ NodeWidget.prototype.init = function() {
     var _this = this;
 
     var changeProxy = $.proxy(_this.onSortableNodeWidgetChange, _this);
-    _this.$sortables.on('uk.sortable.change', changeProxy);
-    _this.$sortables.on('uk.sortable.change', changeProxy);
+    _this.$sortables.on('change.uk.sortable', changeProxy);
+    _this.$sortables.on('change.uk.sortable', changeProxy);
 
     var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
     _this.$toggleExplorerButtons.off('click', onExplorerToggleP);
@@ -990,7 +1014,7 @@ NodeWidget.prototype.onUnlinkNode = function( event ) {
     var $widget = $element.parents('.nodes-widget-sortable').first();
 
     $doc.remove();
-    $widget.trigger('uk.sortable.change', [$widget, $doc]);
+    $widget.trigger('change.uk.sortable', [$widget, $doc]);
 
     return false;
 };
@@ -1156,8 +1180,8 @@ CustomFormWidget.prototype.init = function() {
     var _this = this;
 
     var changeProxy = $.proxy(_this.onSortableCustomFormWidgetChange, _this);
-    _this.$sortables.on('uk.sortable.change', changeProxy);
-    _this.$sortables.on('uk.sortable.change', changeProxy);
+    _this.$sortables.on('change.uk.sortable', changeProxy);
+    _this.$sortables.on('change.uk.sortable', changeProxy);
 
     var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
     _this.$toggleExplorerButtons.off('click', onExplorerToggleP);
@@ -1327,7 +1351,7 @@ CustomFormWidget.prototype.onUnlinkCustomForm = function( event ) {
     var $widget = $element.parents('.custom-forms-widget-sortable').first();
 
     $doc.remove();
-    $widget.trigger('uk.sortable.change', [$widget, $doc]);
+    $widget.trigger('change.uk.sortable', [$widget, $doc]);
 
     return false;
 };
@@ -1685,12 +1709,17 @@ NodeEditSource = function(){
     _this.$content = $('.content-node-edit-source');
 
     // Methods
-    if(_this.$content.length) _this.init();
+    if(_this.$content.length){
+        _this.$formRow = _this.$content.find('.uk-form-row');
+        _this.init();
+    }
 
 };
 
 
 NodeEditSource.prototype.$content = null;
+NodeEditSource.prototype.$formRow = null;
+NodeEditSource.prototype.$dropdown = null;
 NodeEditSource.prototype.$input = null;
 
 
@@ -1701,18 +1730,45 @@ NodeEditSource.prototype.$input = null;
 NodeEditSource.prototype.init = function(){
     var _this = this;
 
-   _this.$input = _this.$content.find('input, select');
+    // Inputs - add form help
+    _this.$input = _this.$content.find('input, select');
 
     for(var i = 0; i < _this.$input.length; i++) {
-        
-        if(_this.$input[i].getAttribute('data-desc') !== null){
-            $(_this.$input[i]).after('<div class="form-help uk-alert uk-alert-large">'+_this.$input[i].getAttribute('data-desc')+'</div>');
-        }   
 
-    }    
+        if(_this.$input[i].getAttribute('data-desc') !== ''){
+            $(_this.$input[i]).after('<div class="form-help uk-alert uk-alert-large">'+_this.$input[i].getAttribute('data-desc')+'</div>');
+        }
+
+    }
 
     _this.$input.on('focus', $.proxy(_this.inputFocus, _this));
     _this.$input.on('focusout', $.proxy(_this.inputFocusOut, _this));
+
+
+    // Check if children node widget needs his dropdowns to be flipped up
+    for(var j = 0; j < _this.$formRow.length; j++) {
+
+        if(_this.$formRow[j].className.indexOf('children-nodes-widget') >= 0){
+            _this.childrenNodeWidgetFlip(j);
+            break;
+        }
+    }
+
+};
+
+
+/**
+ * Flip children node widget 
+ * @param  {[type]} index [description]
+ * @return {[type]}       [description]
+ */
+NodeEditSource.prototype.childrenNodeWidgetFlip = function(index){
+    var _this = this;
+
+    if(index >= (_this.$formRow.length-2)){
+        _this.$dropdown = $(_this.$formRow[index]).find('.uk-dropdown-small');
+        _this.$dropdown.addClass('uk-dropdown-up');
+    }
 
 };
 
@@ -1736,23 +1792,8 @@ NodeEditSource.prototype.inputFocus = function(e){
 NodeEditSource.prototype.inputFocusOut = function(e){
     var _this = this;
 
-    
+
     $(e.currentTarget).parent().removeClass('form-col-focus');
-
-};
-
-
-
-
-
-
-/**
- * Destroy
- * @return {[type]} [description]
- */
-NodeEditSource.prototype.destroy = function(){
-    var _this = this;
-
 
 };
 
@@ -1762,6 +1803,64 @@ NodeEditSource.prototype.destroy = function(){
  * @return {[type]} [description]
  */
 NodeEditSource.prototype.resize = function(){
+    var _this = this;
+
+};;/**
+ * NODE TREE
+ */
+
+NodeTree = function(){
+    var _this = this;
+
+    // Selectors
+    _this.$content = $('.content-node-tree');
+
+    // Methods
+    if(_this.$content.length){
+        _this.$dropdown = _this.$content.find('.uk-dropdown-small');
+        _this.init();
+    }
+
+};
+
+
+NodeTree.prototype.$content = null;
+NodeTree.prototype.$elements = null;
+NodeTree.prototype.$dropdown = null;
+
+
+/**
+ * Init
+ * @return {[type]} [description]
+ */
+NodeTree.prototype.init = function(){
+    var _this = this;
+
+    _this.contentHeight = _this.$content.actual('height');
+
+    if(_this.contentHeight >= (Rozier.windowHeight - 400)) _this.dropdownFlip();
+
+};
+
+
+/**
+ * Flip dropdown
+ * @return {[type]}       [description]
+ */
+NodeTree.prototype.dropdownFlip = function(){
+    var _this = this;
+
+    for (var i = _this.$dropdown.length - 1; i >= _this.$dropdown.length - 3; i--) {
+        addClass(_this.$dropdown[i], 'uk-dropdown-up');
+    }
+};
+
+
+/**
+ * Window resize callback
+ * @return {[type]} [description]
+ */
+NodeTree.prototype.resize = function(){
     var _this = this;
 
 };;var NodeStatuses = function () {
@@ -1779,10 +1878,12 @@ NodeStatuses.prototype.$containers = null;
 NodeStatuses.prototype.$icon = null;
 NodeStatuses.prototype.$inputs = null;
 NodeStatuses.prototype.$item = null;
+NodeStatuses.prototype.locked = false;
 
 NodeStatuses.prototype.init = function() {
     var _this = this;
 
+    _this.$item.off('click', $.proxy(_this.itemClick, _this));
     _this.$item.on('click', $.proxy(_this.itemClick, _this));
 
     _this.$inputs.off('change', $.proxy(_this.onChange, _this));
@@ -1795,224 +1896,81 @@ NodeStatuses.prototype.init = function() {
 
 NodeStatuses.prototype.itemClick = function(event) {
     var _this = this;
-    
+
+    event.stopPropagation();
+
     $input = $(event.currentTarget).find('input[type="radio"]');
 
     if($input.length){
         $input.prop('checked', true);
         $input.trigger('change');
     }
-
 };
 
 NodeStatuses.prototype.onChange = function(event) {
     var _this = this;
 
-    var $input = $(event.currentTarget);
+    event.stopPropagation();
+    if (false === _this.locked) {
 
-    if ($input.length) {
+        _this.locked = true;
 
-        var statusName = $input.attr('name');
-        var statusValue = null;
-        if($input.is('input[type="checkbox"]')){
-            statusValue = Number($input.is(':checked'));
-        } else if($input.is('input[type="radio"]')){
-            _this.$icon[0].className = $input.parent().find('i')[0].className;
-            statusValue = Number($input.val());
-        }
+        var $input = $(event.currentTarget);
 
-        var postData = {
-            "_token": Rozier.ajaxToken,
-            "_action":'nodeChangeStatus',
-            "nodeId":parseInt($input.attr('data-node-id')),
-            "statusName": statusName,
-            "statusValue": statusValue
-        };
-        console.log(postData);
+        if ($input.length) {
 
-        $.ajax({
-            url: Rozier.routes.nodesStatusesAjax,
-            type: 'post',
-            dataType: 'json',
-            data: postData
-        })
-        .done(function(data) {
-            console.log(data);
-            Rozier.refreshMainNodeTree();
-            $.UIkit.notify({
-                message : data.responseText,
-                status  : data.status,
-                timeout : 3000,
-                pos     : 'top-center'
-            });
-        })
-        .fail(function(data) {
-            console.log(data.responseJSON);
+            var statusName = $input.attr('name');
+            var statusValue = null;
+            if($input.is('input[type="checkbox"]')){
+                statusValue = Number($input.is(':checked'));
+            } else if($input.is('input[type="radio"]')){
+                _this.$icon[0].className = $input.parent().find('i')[0].className;
+                statusValue = Number($input.val());
+            }
 
-            data = JSON.parse(data.responseText);
-
-            $.UIkit.notify({
-                message : data.responseText,
-                status  : data.status,
-                timeout : 3000,
-                pos     : 'top-center'
-            });
-        })
-        .always(function(data) {
-
-        });
-    }
-};;/**
- * NODE TYPE FIELD EDIT
- */
-
-NodeTypeFieldEdit = function(){
-    var _this = this;
-
-    // Selectors
-    _this.$btn = $('.node-type-field-edit-button');
-    _this.$formFieldRow = $('.node-type-field-row');
-
-    // Methods
-    _this.init();
-
-};
-
-
-NodeTypeFieldEdit.prototype.$btn = null;
-NodeTypeFieldEdit.prototype.indexOpen = null;
-NodeTypeFieldEdit.prototype.openFormDelay = 0;
-NodeTypeFieldEdit.prototype.$formRow = null;
-NodeTypeFieldEdit.prototype.$formRow = null;
-NodeTypeFieldEdit.prototype.$formCont = null;
-NodeTypeFieldEdit.prototype.$form = null;
-NodeTypeFieldEdit.prototype.$formIcon = null;
-NodeTypeFieldEdit.prototype.$formContHeight = null;
-
-
-/**
- * Init
- * @return {[type]} [description]
- */
-NodeTypeFieldEdit.prototype.init = function(){
-    var _this = this;
-
-    // Events
-    _this.$btn.on('click', $.proxy(_this.btnClick, _this));
-};
-
-
-/**
- * Btn click
- * @return {[type]} [description]
- */
-NodeTypeFieldEdit.prototype.btnClick = function(e){
-    var _this = this;
-
-    if(_this.indexOpen !== null){
-        _this.closeForm();
-        _this.openFormDelay = 500;
-    } 
-    else _this.openFormDelay = 0;
-
-    if(_this.indexOpen !==  parseInt(e.currentTarget.getAttribute('data-index')) ){
-
-        setTimeout(function(){
-
-            _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
+            var postData = {
+                "_token": Rozier.ajaxToken,
+                "_action":'nodeChangeStatus',
+                "nodeId":parseInt($input.attr('data-node-id')),
+                "statusName": statusName,
+                "statusValue": statusValue
+            };
+            console.log(postData);
 
             $.ajax({
-                url: e.currentTarget.href,
-                type: 'get',
-                dataType: 'html'
+                url: Rozier.routes.nodesStatusesAjax,
+                type: 'post',
+                dataType: 'json',
+                data: postData
             })
             .done(function(data) {
-                _this.applyContent(e.currentTarget, data, e.currentTarget.href);
-            })
-            .fail(function() {
-                console.log("error");
-                $.UIkit.notify({
-                    message : Rozier.messages.forbiddenPage,
-                    status  : 'danger',
+                console.log(data);
+                Rozier.refreshMainNodeTree();
+                UIkit.notify({
+                    message : data.responseText,
+                    status  : data.status,
                     timeout : 3000,
                     pos     : 'top-center'
                 });
+            })
+            .fail(function(data) {
+                console.log(data.responseJSON);
+
+                data = JSON.parse(data.responseText);
+
+                UIkit.notify({
+                    message : data.responseText,
+                    status  : data.status,
+                    timeout : 3000,
+                    pos     : 'top-center'
+                });
+            })
+            .always(function(data) {
+                _this.locked = false;
             });
-
-        }, _this.openFormDelay);
-
+        }
     }
-
-    return false;
-};
-
-
-/**
- * Apply content
- * @return {[type]} [description]
- */
-NodeTypeFieldEdit.prototype.applyContent = function(target, data, url){
-    var _this = this;
-
-    var dataWrapped = [
-        '<tr class="node-type-field-edit-form-row">',
-            '<td colspan="4">',
-                '<div class="node-type-field-edit-form-cont">',
-                    data,
-                '</div>',
-            '</td>',
-        '</tr>'
-    ].join('');
-
-    $(target).parent().parent().after(dataWrapped);  
-
-    setTimeout(function(){
-        _this.$formCont = $('.node-type-field-edit-form-cont');
-        _this.formContHeight = _this.$formCont.actual('height');
-        _this.$formRow = $('.node-type-field-edit-form-row');
-        _this.$form = $('#edit-node-type-field-form');
-        _this.$formIcon = $(_this.$formFieldRow[_this.indexOpen]).find('.node-type-field-col-1 i');
-
-        _this.$form.attr('action', url);
-        _this.$formIcon[0].className = 'uk-icon-chevron-down';
-
-        // _this.$form[0].style.height = '0px';
-        // _this.$form[0].style.display = 'table-row';
-        _this.$formCont[0].style.height = '0px';
-        _this.$formCont[0].style.display = 'block';
-        TweenLite.to(_this.$form, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
-        TweenLite.to(_this.$formCont, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
-    }, 200);       
-
-};
-
-
-/**
- * Close form
- * @return {[type]} [description]
- */
-NodeTypeFieldEdit.prototype.closeForm = function(){
-    var _this = this;
-
-    _this.$formIcon[0].className = 'uk-icon-chevron-right';
-
-    TweenLite.to(_this.$formCont, 0.4, {height:0, ease:Expo.easeOut, onComplete:function(){
-        _this.$formRow.remove();
-        _this.indexOpen = null;
-    }});
-
-};
-
-
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-NodeTypeFieldEdit.prototype.resize = function(){
-    var _this = this;
-
-};
-;var GeotagField = function () {
+};;var GeotagField = function () {
     var _this = this;
 
     _this.$fields = $('input.rz-geotag-field');
@@ -2058,7 +2016,10 @@ GeotagField.prototype.bindFields = function() {
 GeotagField.prototype.bindSingleField = function(element) {
     var _this = this;
 
-    var $input = $(element);
+    var $input = $(element),
+        $label = $input.parent().find('.uk-form-label'),
+        labelText = $label[0].innerHTML;
+
     var jsonCode = {'lat':45.769785, 'lng':4.833967, 'zoom':14}; // default location
     var fieldId = 'geotag-canvas-'+GeotagField.uniqid();
     var fieldAddressId = fieldId+'-address';
@@ -2074,11 +2035,26 @@ GeotagField.prototype.bindSingleField = function(element) {
      * prepare DOM
      */
     $input.hide();
+    $label.hide();
     $input.attr('data-geotag-canvas', fieldId);
     $input.after('<div class="rz-geotag-canvas" id="'+fieldId+'" style="width: 100%; height: 400px;"></div>');
+
     // Geocode input text
-    var metaDOM = '<nav class="rz-geotag-meta"><input class="rz-geotag-address" id="'+fieldAddressId+'" type="text" value="" />';
-    metaDOM += '<a id="'+resetButtonId+'" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="'+Rozier.messages.geotag.resetMarker+'" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a></nav>';
+    var metaDOM = [
+        '<nav class="geotag-widget-nav uk-navbar rz-geotag-meta">',
+            '<ul class="uk-navbar-nav">',
+                '<li class="uk-navbar-brand"><i class="uk-icon-rz-map-marker"></i><label class="geotag-label">'+labelText+'</li>',
+            '</ul>',
+            '<div class="uk-navbar-content uk-navbar-flip">',
+                '<div class="geotag-widget-quick-creation uk-button-group">',
+                    '<input class="rz-geotag-address" id="'+fieldAddressId+'" type="text" value="" />',
+                    '<a id="'+resetButtonId+'" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="'+Rozier.messages.geotag.resetMarker+'" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>',
+                '</div>',
+            '</div>',
+        '</nav>'
+    ].join('');
+
+
     $input.after(metaDOM);
 
     var $geocodeInput = $('#'+fieldAddressId);
@@ -2110,7 +2086,8 @@ GeotagField.prototype.bindSingleField = function(element) {
             //map:map,
             draggable:true,
             position: mapOptions.center,
-            animation: google.maps.Animation.DROP
+            animation: google.maps.Animation.DROP,
+            icon : Rozier.resourcesUrl+'img/map_marker.png'
         });
     }
 
@@ -2199,7 +2176,8 @@ GeotagField.prototype.createMarker = function(geocode, $input, map) {
         map:map,
         draggable:true,
         animation: google.maps.Animation.DROP,
-        position: latlng
+        position: latlng,
+        icon : Rozier.resourcesUrl+'img/map_marker.png'
     });
 
     map.panTo(latlng);
@@ -2250,7 +2228,6 @@ var ChildrenNodesField = function () {
     _this.init();
 };
 ChildrenNodesField.prototype.$fields = null;
-//ChildrenNodesField.prototype.$switchLangButtons = null;
 ChildrenNodesField.prototype.$quickAddNodeButtons = null;
 
 ChildrenNodesField.prototype.init = function() {
@@ -2261,30 +2238,10 @@ ChildrenNodesField.prototype.init = function() {
         var proxiedClick = $.proxy(_this.onQuickAddClick, _this);
         _this.$quickAddNodeButtons.off("click", proxiedClick);
         _this.$quickAddNodeButtons.on("click", proxiedClick);
-
-        /*if(_this.$switchLangButtons.length){
-            var proxiedChangeLang = $.proxy(_this.onChangeLangClick, _this);
-            _this.$switchLangButtons.off("click", proxiedChangeLang);
-            _this.$switchLangButtons.on("click", proxiedChangeLang);
-        }*/
-
     }
-    
+
     _this.$fields.find('.nodetree-langs').remove();
 };
-
-/*ChildrenNodesField.prototype.onChangeLangClick = function(event) {
-    var _this = this;
-    var $link = $(event.currentTarget);
-
-    var $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
-    var parentNodeId = parseInt($link.attr('data-children-parent-node'));
-    var translationId = parseInt($link.attr('data-translation-id'));
-
-    _this.refreshNodeTree($nodeTree, parentNodeId, translationId);
-
-    return false;
-};*/
 
 ChildrenNodesField.prototype.onQuickAddClick = function(event) {
     var _this = this;
@@ -2320,7 +2277,7 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
             var $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
             _this.refreshNodeTree($nodeTree, parentNodeId, translationId);
 
-            $.UIkit.notify({
+            UIkit.notify({
                 message : data.responseText,
                 status  : data.status,
                 timeout : 3000,
@@ -2333,7 +2290,7 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
 
             data = JSON.parse(data.responseText);
 
-            $.UIkit.notify({
+            UIkit.notify({
                 message : data.responseText,
                 status  : data.status,
                 timeout : 3000,
@@ -2367,7 +2324,7 @@ ChildrenNodesField.prototype.refreshNodeTree = function( $nodeTree, rootNodeId, 
 
         $.ajax({
             url: url,
-            type: 'post',
+            type: 'get',
             dataType: 'json',
             data: postData,
         })
@@ -2387,12 +2344,6 @@ ChildrenNodesField.prototype.refreshNodeTree = function( $nodeTree, rootNodeId, 
                     Rozier.lazyload.generalBind();
                     $nodeTree.fadeIn();
 
-                    /*_this.$switchLangButtons = _this.$fields.find('.nodetree-langs a');
-                    if(_this.$switchLangButtons.length){
-                        var proxiedChangeLang = $.proxy(_this.onChangeLangClick, _this);
-                        _this.$switchLangButtons.off("click", proxiedChangeLang);
-                        _this.$switchLangButtons.on("click", proxiedChangeLang);
-                    }*/
                     _this.$fields.find('.nodetree-langs').remove();
 
                     Rozier.lazyload.canvasLoader.hide();
@@ -2837,8 +2788,9 @@ StackNodeTree.prototype.onChangeLangClick = function(event) {
     var $nodeTree = _this.$page.find('.nodetree-widget');
     var parentNodeId = parseInt($link.attr('data-children-parent-node'));
     var translationId = parseInt($link.attr('data-translation-id'));
+    var tagId = $link.attr('data-filter-tag');
 
-    _this.refreshNodeTree(parentNodeId, translationId);
+    _this.refreshNodeTree(parentNodeId, translationId, tagId);
 
     return false;
 };
@@ -2861,6 +2813,10 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
             "pushTop":1
         };
 
+        if (isset($link.attr('data-filter-tag'))) {
+            postData.tagId = parseInt($link.attr('data-filter-tag'));
+        }
+
         $.ajax({
             url: Rozier.routes.nodesQuickAddAjax,
             type: 'post',
@@ -2872,9 +2828,9 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
             console.log(data);
 
             Rozier.refreshMainNodeTree();
-            _this.refreshNodeTree(parentNodeId);
+            _this.refreshNodeTree(parentNodeId, null, postData.tagId);
 
-            $.UIkit.notify({
+            UIkit.notify({
                 message : data.responseText,
                 status  : data.status,
                 timeout : 3000,
@@ -2887,7 +2843,7 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
 
             data = JSON.parse(data.responseText);
 
-            $.UIkit.notify({
+            UIkit.notify({
                 message : data.responseText,
                 status  : data.status,
                 timeout : 3000,
@@ -2902,7 +2858,7 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
     return false;
 };
 
-StackNodeTree.prototype.refreshNodeTree = function( rootNodeId, translationId ) {
+StackNodeTree.prototype.refreshNodeTree = function( rootNodeId, translationId, tagId) {
     var _this = this;
     var $nodeTree = _this.$page.find('.nodetree-widget');
 
@@ -2920,9 +2876,14 @@ StackNodeTree.prototype.refreshNodeTree = function( rootNodeId, translationId ) 
             url += '/'+translationId;
         }
 
+        //data-filter-tag
+        if (isset(tagId)) {
+            postData.tagId = parseInt(tagId);
+        }
+
         $.ajax({
             url: url,
-            type: 'post',
+            type: 'get',
             dataType: 'json',
             data: postData,
         })
@@ -2973,8 +2934,8 @@ NodeTypeFieldsPosition.prototype.init = function() {
     if (_this.$list.length &&
         _this.$list.children().length > 1) {
         var onChange = $.proxy(_this.onSortableChange, _this);
-        _this.$list.off('uk.sortable.change', onChange);
-        _this.$list.on('uk.sortable.change', onChange);
+        _this.$list.off('change.uk.sortable', onChange);
+        _this.$list.on('change.uk.sortable', onChange);
     }
 };
 
@@ -3012,7 +2973,7 @@ NodeTypeFieldsPosition.prototype.onSortableChange = function(event, list, elemen
     .done(function(data) {
         console.log(data);
         $element.attr('data-position', newPosition);
-        $.UIkit.notify({
+        UIkit.notify({
             message : data.responseText,
             status  : data.status,
             timeout : 3000,
@@ -3026,7 +2987,165 @@ NodeTypeFieldsPosition.prototype.onSortableChange = function(event, list, elemen
         console.log("complete");
     });
 
-};;var CustomFormFieldsPosition = function () {
+};;/**
+ * NODE TYPE FIELD EDIT
+ */
+
+NodeTypeFieldEdit = function(){
+    var _this = this;
+
+    // Selectors
+    _this.$btn = $('.node-type-field-edit-button');
+    _this.$formFieldRow = $('.node-type-field-row');
+    _this.$formFieldCol = $('.node-type-field-col');
+
+    // Methods
+    _this.init();
+
+};
+
+
+NodeTypeFieldEdit.prototype.$btn = null;
+NodeTypeFieldEdit.prototype.indexOpen = null;
+NodeTypeFieldEdit.prototype.openFormDelay = 0;
+NodeTypeFieldEdit.prototype.$formFieldRow = null;
+NodeTypeFieldEdit.prototype.$formFieldCol = null;
+NodeTypeFieldEdit.prototype.$formCont = null;
+NodeTypeFieldEdit.prototype.$form = null;
+NodeTypeFieldEdit.prototype.$formIcon = null;
+NodeTypeFieldEdit.prototype.$formContHeight = null;
+
+
+/**
+ * Init
+ * @return {[type]} [description]
+ */
+NodeTypeFieldEdit.prototype.init = function(){
+    var _this = this;
+
+    // Events
+    _this.$btn.on('click', $.proxy(_this.btnClick, _this));
+};
+
+
+/**
+ * Btn click
+ * @return {[type]} [description]
+ */
+NodeTypeFieldEdit.prototype.btnClick = function(e){
+    var _this = this;
+
+    if(_this.indexOpen !== null){
+        _this.closeForm();
+        _this.openFormDelay = 500;
+    }
+    else _this.openFormDelay = 0;
+
+    if(_this.indexOpen !==  parseInt(e.currentTarget.getAttribute('data-index')) ){
+
+        Rozier.lazyload.canvasLoader.show();
+
+        setTimeout(function(){
+
+            _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
+
+            $.ajax({
+                url: e.currentTarget.href,
+                type: 'get',
+                dataType: 'html'
+            })
+            .done(function(data) {
+                _this.applyContent(e.currentTarget, data, e.currentTarget.href);
+            })
+            .fail(function() {
+                console.log("error");
+                UIkit.notify({
+                    message : Rozier.messages.forbiddenPage,
+                    status  : 'danger',
+                    timeout : 3000,
+                    pos     : 'top-center'
+                });
+            })
+            .always(function () {
+                Rozier.lazyload.canvasLoader.hide();
+            });
+
+        }, _this.openFormDelay);
+
+    }
+
+    return false;
+};
+
+
+/**
+ * Apply content
+ * @return {[type]} [description]
+ */
+NodeTypeFieldEdit.prototype.applyContent = function(target, data, url){
+    var _this = this;
+
+    var dataWrapped = [
+        '<tr class="node-type-field-edit-form-row">',
+            '<td colspan="4">',
+                '<div class="node-type-field-edit-form-cont">',
+                    data,
+                '</div>',
+            '</td>',
+        '</tr>'
+    ].join('');
+
+    $(target).parent().parent().after(dataWrapped);
+
+    // Remove class to pause sortable actions
+    _this.$formFieldCol.removeClass('node-type-field-col');
+
+    setTimeout(function(){
+        _this.$formCont = $('.node-type-field-edit-form-cont');
+        _this.formContHeight = _this.$formCont.actual('height');
+        _this.$formRow = $('.node-type-field-edit-form-row');
+        _this.$form = $('#edit-node-type-field-form');
+        _this.$formIcon = $(_this.$formFieldRow[_this.indexOpen]).find('.node-type-field-col-1 i');
+
+        _this.$form.attr('action', url);
+        _this.$formIcon[0].className = 'uk-icon-chevron-down';
+
+        _this.$formCont[0].style.height = '0px';
+        _this.$formCont[0].style.display = 'block';
+        TweenLite.to(_this.$form, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
+        TweenLite.to(_this.$formCont, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
+    }, 200);
+
+};
+
+
+/**
+ * Close form
+ * @return {[type]} [description]
+ */
+NodeTypeFieldEdit.prototype.closeForm = function(){
+    var _this = this;
+
+    _this.$formIcon[0].className = 'uk-icon-chevron-right';
+
+    TweenLite.to(_this.$formCont, 0.4, {height:0, ease:Expo.easeOut, onComplete:function(){
+        _this.$formRow.remove();
+        _this.indexOpen = null;
+        _this.$formFieldCol.addClass('node-type-field-col');
+    }});
+
+};
+
+
+/**
+ * Window resize callback
+ * @return {[type]} [description]
+ */
+NodeTypeFieldEdit.prototype.resize = function(){
+    var _this = this;
+
+};
+;var CustomFormFieldsPosition = function () {
     var _this = this;
 
     _this.$list = $(".custom-form-fields > .uk-sortable");
@@ -3040,8 +3159,8 @@ CustomFormFieldsPosition.prototype.init = function() {
     if (_this.$list.length &&
         _this.$list.children().length > 1) {
         var onChange = $.proxy(_this.onSortableChange, _this);
-        _this.$list.off('uk.sortable.change', onChange);
-        _this.$list.on('uk.sortable.change', onChange);
+        _this.$list.off('change.uk.sortable', onChange);
+        _this.$list.on('change.uk.sortable', onChange);
     }
 };
 
@@ -3079,7 +3198,7 @@ CustomFormFieldsPosition.prototype.onSortableChange = function(event, list, elem
     .done(function(data) {
         console.log(data);
         $element.attr('data-position', newPosition);
-        $.UIkit.notify({
+        UIkit.notify({
             message : data.responseText,
             status  : data.status,
             timeout : 3000,
@@ -3104,6 +3223,7 @@ CustomFormFieldEdit = function(){
     // Selectors
     _this.$btn = $('.custom-form-field-edit-button');
     _this.$formFieldRow = $('.custom-form-field-row');
+    _this.$formFieldCol = $('.custom-form-field-col');
 
     // Methods
     _this.init();
@@ -3115,7 +3235,7 @@ CustomFormFieldEdit.prototype.$btn = null;
 CustomFormFieldEdit.prototype.indexOpen = null;
 CustomFormFieldEdit.prototype.openFormDelay = 0;
 CustomFormFieldEdit.prototype.$formFieldRow = null;
-CustomFormFieldEdit.prototype.$formRow = null;
+CustomFormFieldEdit.prototype.$formFieldCol = null;
 CustomFormFieldEdit.prototype.$formCont = null;
 CustomFormFieldEdit.prototype.$form = null;
 CustomFormFieldEdit.prototype.$formIcon = null;
@@ -3144,7 +3264,7 @@ CustomFormFieldEdit.prototype.btnClick = function(e){
     if(_this.indexOpen !== null){
         _this.closeForm();
         _this.openFormDelay = 500;
-    } 
+    }
     else _this.openFormDelay = 0;
 
     if(_this.indexOpen !==  parseInt(e.currentTarget.getAttribute('data-index')) ){
@@ -3163,7 +3283,7 @@ CustomFormFieldEdit.prototype.btnClick = function(e){
             })
             .fail(function() {
                 console.log("error");
-                $.UIkit.notify({
+                UIkit.notify({
                     message : Rozier.messages.forbiddenPage,
                     status  : 'danger',
                     timeout : 3000,
@@ -3196,7 +3316,10 @@ CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
         '</tr>'
     ].join('');
 
-    $(target).parent().parent().after(dataWrapped);  
+    $(target).parent().parent().after(dataWrapped);
+
+    // Remove class to pause sortable actions
+    _this.$formFieldCol.removeClass('custom-form-field-col');
 
     setTimeout(function(){
         _this.$formCont = $('.custom-form-field-edit-form-cont');
@@ -3212,7 +3335,7 @@ CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
         _this.$formCont[0].style.display = 'block';
         TweenLite.to(_this.$form, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
         TweenLite.to(_this.$formCont, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
-    }, 200);       
+    }, 200);
 
 };
 
@@ -3229,6 +3352,7 @@ CustomFormFieldEdit.prototype.closeForm = function(){
     TweenLite.to(_this.$formCont, 0.4, {height:0, ease:Expo.easeOut, onComplete:function(){
         _this.$formRow.remove();
         _this.indexOpen = null;
+        _this.$formFieldCol.addClass('custom-form-field-col');
     }});
 
 };
@@ -3777,7 +3901,7 @@ Lazyload.prototype.loadContent = function(state, location) {
     })
     .fail(function() {
         console.log("error");
-        $.UIkit.notify({
+        UIkit.notify({
             message : Rozier.messages.forbiddenPage,
             status  : 'danger',
             timeout : 3000,
@@ -3844,6 +3968,7 @@ Lazyload.prototype.generalBind = function() {
     _this.settingsSaveButtons = new SettingsSaveButtons();
     _this.nodeTypeFieldEdit = new NodeTypeFieldEdit();
     _this.nodeEditSource = new NodeEditSource();
+    _this.nodeTree = new NodeTree();
     _this.customFormFieldEdit = new CustomFormFieldEdit();
 
 
@@ -3860,7 +3985,7 @@ Lazyload.prototype.generalBind = function() {
         setTimeout(function(){
             for(var i = 0; i < _this.$textAreaHTMLeditor.length; i++) {
 
-                _this.htmlEditor[i] = $.UIkit.htmleditor(
+                _this.htmlEditor[i] = UIkit.htmleditor(
                     $(_this.$textAreaHTMLeditor[i]),
                     {
                         markdown:true,
@@ -4180,7 +4305,9 @@ Rozier.onDocumentReady = function(event) {
 		$(this).val("");
 		setTimeout(function(){ Rozier.resize(); }, 500);
 	});
+
 	$("#nodes-sources-search-input").on('keyup', Rozier.onSearchNodesSources);
+	$("#nodes-sources-search-form").on('submit', Rozier.onSubmitSearchNodesSources);
 
 	// Minify trees panel toggle button
 	Rozier.$minifyTreePanelButton.on('click', Rozier.toggleTreesPanel);
@@ -4188,11 +4315,12 @@ Rozier.onDocumentReady = function(event) {
 	// Back top btn
 	Rozier.$backTopBtn.on('click', $.proxy(Rozier.backTopBtnClick, Rozier));
 
-	Rozier.lazyload.generalBind();
-	Rozier.bindMainNodeTreeLangs();
-
 	Rozier.$window.on('resize', $.proxy(Rozier.resize, Rozier));
 	Rozier.$window.trigger('resize');
+
+	
+	Rozier.lazyload.generalBind();
+	Rozier.bindMainNodeTreeLangs();
 };
 
 
@@ -4204,7 +4332,7 @@ Rozier.initNestables = function  () {
 	var _this = this;
 
 	$('.uk-nestable').each(function (index, element) {
-        $.UIkit.nestable(element);
+        UIkit.nestable(element);
     });
 };
 
@@ -4217,17 +4345,17 @@ Rozier.bindMainTrees = function () {
 	var _this = this;
 
 	// TREES
-	$('.nodetree-widget .root-tree').off('uk.nestable.change');
-	$('.nodetree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableNodeTreeChange );
+	$('.nodetree-widget .root-tree').off('change.uk.nestable');
+	$('.nodetree-widget .root-tree').on('change.uk.nestable', Rozier.onNestableNodeTreeChange );
 
-	$('.tagtree-widget .root-tree').off('uk.nestable.change');
-	$('.tagtree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableTagTreeChange );
+	$('.tagtree-widget .root-tree').off('change.uk.nestable');
+	$('.tagtree-widget .root-tree').on('change.uk.nestable', Rozier.onNestableTagTreeChange );
 
-	$('.foldertree-widget .root-tree').off('uk.nestable.change');
-	$('.foldertree-widget .root-tree').on('uk.nestable.change', Rozier.onNestableFolderTreeChange );
-	
-	// Tree element name 
-	_this.$mainTreeElementName = _this.$mainTrees.find('.tree-element-name');	
+	$('.foldertree-widget .root-tree').off('change.uk.nestable');
+	$('.foldertree-widget .root-tree').on('change.uk.nestable', Rozier.onNestableFolderTreeChange );
+
+	// Tree element name
+	_this.$mainTreeElementName = _this.$mainTrees.find('.tree-element-name');
 	_this.$mainTreeElementName.off('contextmenu', $.proxy(_this.maintreeElementNameRightClick, _this));
 	_this.$mainTreeElementName.on('contextmenu', $.proxy(_this.maintreeElementNameRightClick, _this));
 
@@ -4295,7 +4423,7 @@ Rozier.getMessages = function () {
 
 				for (var i = data.messages.confirm.length - 1; i >= 0; i--) {
 
-					$.UIkit.notify({
+					UIkit.notify({
 						message : data.messages.confirm[i],
 						status  : 'success',
 						timeout : 2000,
@@ -4309,7 +4437,7 @@ Rozier.getMessages = function () {
 
 				for (var j = data.messages.error.length - 1; j >= 0; j--) {
 
-					$.UIkit.notify({
+					UIkit.notify({
 						message : data.messages.error[j],
 						status  : 'error',
 						timeout : 2000,
@@ -4348,7 +4476,7 @@ Rozier.refreshMainNodeTree = function (translationId) {
 
 		$.ajax({
 			url: url,
-			type: 'post',
+			type: 'get',
 			dataType: 'json',
 			data: postData,
 		})
@@ -4482,6 +4610,17 @@ Rozier.onSearchNodesSources = function (event) {
 
 
 /**
+ * On submit search nodes sources
+ * @return {[type]} [description]
+ */
+Rozier.onSubmitSearchNodesSources = function(e){
+	var _this = this;
+
+	return false;
+};
+
+
+/**
  *
  * @param  Event event
  * @param  jQueryNode element
@@ -4494,7 +4633,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 	console.log("Node: "+element.data('node-id')+ " status : "+status);
 
 	/*
-	 * If node removed, do not do anything, the otheuk.nestable.changer nodeTree will be triggered
+	 * If node removed, do not do anything, the othechange.uk.nestabler nodeTree will be triggered
 	 */
 	if (status == 'removed') {
 		return false;
@@ -4549,7 +4688,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 	})
 	.done(function( data ) {
 		console.log(data);
-		$.UIkit.notify({
+		UIkit.notify({
 			message : data.responseText,
 			status  : data.status,
 			timeout : 3000,
@@ -4630,7 +4769,7 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 	})
 	.done(function( data ) {
 		console.log(data);
-		$.UIkit.notify({
+		UIkit.notify({
 			message : data.responseText,
 			status  : data.status,
 			timeout : 3000,
@@ -4710,7 +4849,7 @@ Rozier.onNestableFolderTreeChange = function (event, element, status) {
 	})
 	.done(function( data ) {
 		console.log(data);
-		$.UIkit.notify({
+		UIkit.notify({
 			message : data.responseText,
 			status  : data.status,
 			timeout : 3000,
@@ -4757,15 +4896,15 @@ Rozier.resize = function(){
 	}
 
 	// Check if mobile
-	if(_this.windowWidth <= 768 && _this.resizeFirst) _this.mobile = new RozierMobile(); // && isMobile.any() !== null 
+	if(_this.windowWidth <= 768 && _this.resizeFirst) _this.mobile = new RozierMobile(); // && isMobile.any() !== null
 
 
 	// Set height to panels (fix for IE9,10)
 	if(isMobile.any() === null){
-		_this.$userPanelContainer[0].style.height = _this.windowHeight+'px';
-		_this.$mainTreesContainer[0].style.height = _this.windowHeight+'px';
+		_this.$userPanelContainer.height(_this.windowHeight);
+		_this.$mainTreesContainer.height(_this.windowHeight);
 	}
-	_this.$mainContentScrollable[0].style.height = _this.windowHeight+'px';  
+	_this.$mainContentScrollable.height(_this.windowHeight);
 
 	// Tree scroll height
 	_this.$nodeTreeHead = _this.$mainTrees.find('.nodetree-head');
@@ -4776,12 +4915,6 @@ Rozier.resize = function(){
 	_this.treeScrollHeight = _this.windowHeight - (_this.nodesSourcesSearchHeight + _this.nodeTreeHeadHeight);
 
 	if(isMobile.any() !== null) _this.treeScrollHeight = _this.windowHeight - (50 + 50 + _this.nodeTreeHeadHeight); // Menu + tree menu + tree head
-
-	// console.log('search height           : '+_this.nodesSourcesSearchHeight);
-	// console.log('node tree head height : '+_this.nodeTreeHeadHeight);
-	// console.log('windows height          : '+_this.windowHeight);
-	// console.log('tree scroll height     : '+_this.treeScrollHeight);
-	// console.log('----------------');
 
 	for(var i = 0; i < _this.$treeScrollCont.length; i++) {
 		_this.$treeScrollCont[i].style.height = _this.treeScrollHeight + 'px';

@@ -48,6 +48,7 @@
 						<td class="mobile-hidden">
 						{% if not theme.isAvailable %}<div class="uk-badge uk-badge-table"><span class="uk-icon-eye-slash"></span> {% trans %}theme.disabled{% endtrans %}</div>{% endif %}
 						{% if theme.isBackendTheme %}<div class="uk-badge uk-badge-table"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
+                        {% if theme.isStaticTheme %}<div class="uk-badge uk-badge-table"><span class="uk-icon-road"></span> {% trans %}theme.is_static{% endtrans %}</div>{% endif %}
 						</td>
 						<td>
                         {% spaceless %}

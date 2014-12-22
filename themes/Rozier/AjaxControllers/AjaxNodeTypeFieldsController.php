@@ -1,34 +1,43 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  * @file AjaxNodeTypeFieldsController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-use Themes\Rozier\RozierApp;
-
+use Themes\Rozier\AjaxControllers\AjaxAbstractFieldsController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * {@inheritdoc}
  */
-class AjaxNodeTypeFieldsController extends AbstractAjaxController
+class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
 {
     /**
      * Handle AJAX edition requests for NodeTypeFields
@@ -57,43 +66,19 @@ class AjaxNodeTypeFieldsController extends AbstractAjaxController
         $field = $this->getService('em')
                       ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
-        if ($field !== null) {
-
-            $responseArray = null;
-
-            /*
-             * Get the right update method against "_action" parameter
-             */
-            switch ($request->get('_action')) {
-                case 'updatePosition':
-                    $responseArray = $this->updatePosition($request->request->all(), $field);
-                    break;
-            }
-
-            if ($responseArray === null) {
-                $responseArray = array(
-                    'statusCode' => '200',
-                    'status' => 'success',
-                    'responseText' => $this->getTranslator()->trans('field.%name%.updated', array(
-                        '%name%' => $field->getName()
-                    ))
-                );
-            }
-
-            return new Response(
-                json_encode($responseArray),
-                Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
-            );
+        if (null !== $response = $this->handleFieldActions($request, $field)) {
+            return $response;
         }
-
 
         $responseArray = array(
             'statusCode' => '403',
             'status'    => 'danger',
-            'responseText' => $this->getTranslator()->trans('field.%nodeTypeFieldId%.not_exists', array(
-                '%nodeTypeFieldId%' => $nodeTypeFieldId
-            ))
+            'responseText' => $this->getTranslator()->trans(
+                'field.%nodeTypeFieldId%.not_exists',
+                array(
+                    '%nodeTypeFieldId%' => $nodeTypeFieldId
+                )
+            )
         );
 
         return new Response(
@@ -101,25 +86,5 @@ class AjaxNodeTypeFieldsController extends AbstractAjaxController
             Response::HTTP_OK,
             array('content-type' => 'application/javascript')
         );
-    }
-
-    /**
-     * @param array         $parameters
-     * @param NodeTypeField $field
-     */
-    protected function updatePosition($parameters, NodeTypeField $field)
-    {
-        /*
-         * First, we set the new parent
-         */
-        if (!empty($parameters['newPosition']) &&
-            null !== $field) {
-
-            $field->setPosition($parameters['newPosition']);
-            // Apply position update before cleaning
-            $this->getService('em')->flush();
-
-            $field->getHandler()->cleanPositions();
-        }
     }
 }

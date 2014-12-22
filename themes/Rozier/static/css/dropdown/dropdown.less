@@ -29,10 +29,10 @@
 }
 
 .uk-dropdown-small {
-    min-width: 220px;
     width: auto;
     padding:0 5px;
     white-space: nowrap;
+    font-size: 13px;
 }
 
 .uk-dropdown-flip {
@@ -41,13 +41,21 @@
 }
 
 .uk-nav-dropdown{
-
     border-color:#adadad;
-
     li{
-
+        border-top: 1px solid #CCC;
+        &:first-child{
+            border-top: 0 none;
+        }
         a{
             background: #e5e5e5;
+            font-size: 12px;
+            min-width: 150px;
+
+            &:active, &:focus{
+                color:#333;
+                background: darken(#cecece, 10%);
+            }
 
             &:hover{
                 color:#333;
@@ -55,7 +63,6 @@
                 box-shadow: none;
                 text-shadow:none;
             }
-
         }
     }
 }
@@ -63,6 +70,12 @@
 .nodetree-contextualmenu,
 .tagtree-contextualmenu,
 .foldertree-contextualmenu {
+
+    //Fix size contextual menu for tree panel
+    .uk-dropdown-small{
+        width: 220px;
+    }
+
     .uk-dropdown, .uk-dropdown-small {
         padding: 0 0 0 26px;
         background-color: @contextualdropdown-bg;
@@ -131,6 +144,7 @@
                 }
                 .uk-nav-header {
                     font-size: 11px;
+                    line-height: 14px;
                     margin: 0px;
                     padding: 7px 0 3px;
                     text-transform: capitalize;
@@ -153,7 +167,7 @@
             .rotation(-90deg);
             position: absolute;
             bottom: 0;
-            left: 25px;
+            left: 22px;
             text-transform: uppercase;
             font-size: 11px;
             font-weight: bold;

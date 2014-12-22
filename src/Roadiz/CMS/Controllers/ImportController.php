@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file ImportController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\CMS\Controllers\AppController;
-use RZ\Roadiz\CMS\Importer\SettingsImporter;
-use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Entities\Role;
 
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
-use Symfony\Component\Validator\Validation;
-
-use GeneratedNodeSources\NSPage;
 
 use Themes\Install\InstallApp;
 
@@ -71,9 +50,8 @@ class ImportController extends InstallApp
      */
     public static function importSettingsAction(Request $request, $filename, $themeId = null)
     {
-        #$pathFile = '/Resources/import/settings.rzt';
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\SettingsImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -88,9 +66,8 @@ class ImportController extends InstallApp
      */
     public static function importRolesAction(Request $request, $filename, $themeId = null)
     {
-        #$pathFile = '/Resources/import/roles.rzt';
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\RolesImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -105,9 +82,8 @@ class ImportController extends InstallApp
      */
     public static function importGroupsAction(Request $request, $filename, $themeId = null)
     {
-        #$pathFile = '/Resources/import/groups.rzt';
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\GroupsImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -122,9 +98,8 @@ class ImportController extends InstallApp
      */
     public static function importNodeTypesAction(Request $request, $filename, $themeId = null)
     {
-        #$pathFile = '/Resources/import/nodetype/' . basename($filename) . '.rzt';
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\NodeTypesImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -139,9 +114,8 @@ class ImportController extends InstallApp
      */
     public static function importTagsAction(Request $request, $filename, $themeId = null)
     {
-        #$pathFile = '/Resources/import/nodetype/' . basename($filename) . '.rzt';
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\TagsImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -156,7 +130,7 @@ class ImportController extends InstallApp
     public static function importNodesAction(Request $request, $filename, $themeId = null)
     {
         if (null === $themeId) {
-            $filename = RENZO_ROOT . '/themes/Install/' . $filename;
+            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
         }
         $classImporter = "RZ\Roadiz\CMS\Importers\NodesImporter";
         return self::importContent($filename, $classImporter, $themeId);
@@ -187,12 +161,12 @@ class ImportController extends InstallApp
                 }
 
                 $dir = explode('\\', $theme->getClassName());
-                $path = RENZO_ROOT . "/themes/" . $dir[2] . '/' . $pathFile;
+                $path = ROADIZ_ROOT . "/themes/" . $dir[2] . '/' . $pathFile;
 
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);
-                $ret = $classImporter::importJsonFile($file);
+                $classImporter::importJsonFile($file);
             } else {
                 throw new \Exception('File: ' . $path . ' don\'t exist');
             }

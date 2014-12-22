@@ -5510,7 +5510,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>Bad credentials</source>
           <target></target>
       </trans-unit>
-      
+
       <trans-unit xml:space="preserve" id="User account has expired.">
           <source>User account has expired.</source>
           <target></target>
@@ -5526,6 +5526,86 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="User account is disabled.">
           <source>User account is disabled.</source>
+          <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="change.status.nodes">
+          <source>change.status.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="change.nodes.status">
+          <source>change.nodes.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="change.nodes.status.all">
+          <source>change.nodes.status.all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.change-status.these.nodes">
+          <source>are_you_sure.change-status.these.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.status">
+          <source>nodes.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.status.changed">
+          <source>nodes.bulk.status.changed</source>
+          <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="staticTheme">
+          <source>staticTheme</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="staticTheme.does_not.allow.node_url_routes">
+          <source>staticTheme.does_not.allow.node_url_routes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="theme.is_static">
+          <source>theme.is_static</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="password.must.match">
+          <source>password.must.match</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="passwords.must.match">
+          <source>passwords.must.match</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.nodeType.available.create_one_first">
+          <source>no.nodeType.available.create_one_first</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.%name%.no_creation.already_exists">
+          <source>node.%name%.no_creation.already_exists</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.dynamicNodeName">
+          <source>node.dynamicNodeName</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="nodeType.status">
+          <source>nodeType.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.not_visible">
+          <source>nodeType.not_visible</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter.nodeType">
+          <source>newsletter.nodeType</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hiding_nodes">
+          <source>nodeType.hiding_nodes</source>
           <target></target>
       </trans-unit>
     </body>

@@ -1,11 +1,8 @@
 {% set nodeSource = node.getNodeSources.first %}
 {% spaceless %}
 <li class="uk-sortable-list-item nodes-widget-sortable-list-item" data-node-id="{{ node.getId }}">
-
 	<div class="uk-sortable-handle"></div>
-
     <div class="node-border" style="background-color:{{ node.nodeType.color }};"></div>
-
 	<span class="node-name">{% if nodeSource.title %}{{ nodeSource.title|truncate(26, false, '[…]') }}{% else %}{{ node.nodeName|truncate(26, false, '[…]') }}{% endif %}</span>
 	<input type="hidden" name="{{ full_name }}" value="{{ node.getId }}" />
 
@@ -19,13 +16,11 @@
             <span class="label">{% trans %}unlink.node{% endtrans %}</span>
         </a>
     </div>
-
     <a data-node-widget-link-node href="#" class="uk-button uk-button-mini link-button">
         <div class="link-button-inner">
             <i class="uk-icon-rz-plus"></i>
             <span class="label">{% trans %}link.node{% endtrans %}</span>
         </div>
     </a>
-
 </li>
 {% endspaceless %}

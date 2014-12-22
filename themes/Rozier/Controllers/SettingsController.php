@@ -1,9 +1,30 @@
 <?php
 /**
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file SettingsController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 
@@ -11,7 +32,6 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
@@ -21,8 +41,6 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\Form\Form;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Translation\Translator;
@@ -42,53 +60,9 @@ class SettingsController extends RozierApp
     public function indexAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
-        /*
-         * Manage get request to filter list
-         */
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
-            'RZ\Roadiz\Core\Entities\Setting',
-            array(),
-            array('name'=>'ASC')
-        );
-        $listManager->handle();
 
-        $this->assignation['filters'] = $listManager->getAssignation();
-        $settings = $listManager->getEntities();
-
-        $this->assignation['settings'] = array();
-
-        foreach ($settings as $setting) {
-            $form = $this->buildShortEditForm($setting);
-            $form->handleRequest();
-            if ($form->isValid() &&
-                $form->getData()['id'] == $setting->getId()) {
-                try {
-                    $this->editSetting($form->getData(), $setting);
-                    $msg = $this->getTranslator()->trans('setting.%name%.updated', array('%name%'=>$setting->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
-                } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
-                }
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'settingsHomePage'
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
-            }
-            $this->assignation['settings'][] = array(
-                'setting' => $setting,
-                'form' => $form->createView()
-            );
+        if (null !== $response = $this->commonSettingList($request)) {
+            return $response->send();
         }
 
         return new Response(
@@ -99,12 +73,10 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * [byGroupAction description]
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $settingGroupId
      *
-     * @param  Request $request        [description]
-     * @param  [type]  $settingGroupId [description]
-     *
-     * @return [type]                  [description]
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function byGroupAction(Request $request, $settingGroupId)
     {
@@ -116,53 +88,8 @@ class SettingsController extends RozierApp
         if ($settingGroup !== null) {
             $this->assignation['settingGroup'] = $settingGroup;
 
-            /*
-             * Manage get request to filter list
-             */
-            $listManager = new EntityListManager(
-                $request,
-                $this->getService('em'),
-                'RZ\Roadiz\Core\Entities\Setting',
-                array('settingGroup'=>$settingGroup),
-                array('name'=>'ASC')
-            );
-            $listManager->handle();
-
-            $this->assignation['filters'] = $listManager->getAssignation();
-            $settings = $listManager->getEntities();
-            $this->assignation['settings'] = array();
-
-            foreach ($settings as $setting) {
-                $form = $this->buildShortEditForm($setting);
-                $form->handleRequest();
-                if ($form->isValid() &&
-                    $form->getData()['id'] == $setting->getId()) {
-                    try {
-                        $this->editSetting($form->getData(), $setting);
-                        $msg = $this->getTranslator()->trans('setting.%name%.updated', array('%name%'=>$setting->getName()));
-                        $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getService('logger')->info($msg);
-                    } catch (EntityAlreadyExistsException $e) {
-                        $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                        $this->getService('logger')->warning($e->getMessage());
-                    }
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'settingGroupsSettingsPage',
-                            array('settingGroupId' => $settingGroupId)
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
-                }
-                $this->assignation['settings'][] = array(
-                    'setting' => $setting,
-                    'form' => $form->createView()
-                );
+            if (null !== $response = $this->commonSettingList($request, $settingGroup)) {
+                return $response->send();
             }
 
             return new Response(
@@ -175,6 +102,76 @@ class SettingsController extends RozierApp
             return $this->throw404();
         }
     }
+
+    protected function commonSettingList(Request $request, $settingGroup = null)
+    {
+        $criteria = array();
+        if (null !== $settingGroup) {
+            $criteria = array('settingGroup'=>$settingGroup);
+        }
+        /*
+         * Manage get request to filter list
+         */
+        $listManager = new EntityListManager(
+            $request,
+            $this->getService('em'),
+            'RZ\Roadiz\Core\Entities\Setting',
+            $criteria,
+            array('name'=>'ASC')
+        );
+        $listManager->handle();
+
+        $this->assignation['filters'] = $listManager->getAssignation();
+        $settings = $listManager->getEntities();
+        $this->assignation['settings'] = array();
+
+        foreach ($settings as $setting) {
+            $form = $this->buildShortEditForm($setting);
+            $form->handleRequest();
+            if ($form->isValid() &&
+                $form->getData()['id'] == $setting->getId()) {
+                try {
+                    $this->editSetting($form->getData(), $setting);
+                    $msg = $this->getTranslator()->trans(
+                        'setting.%name%.updated',
+                        array('%name%'=>$setting->getName())
+                    );
+                    $request->getSession()->getFlashBag()->add('confirm', $msg);
+                    $this->getService('logger')->info($msg);
+                } catch (EntityAlreadyExistsException $e) {
+                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+                    $this->getService('logger')->warning($e->getMessage());
+                }
+
+
+                if (null !== $settingGroup) {
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'settingGroupsSettingsPage',
+                            array('settingGroupId' => $settingGroup->getId())
+                        )
+                    );
+                } else {
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'settingsHomePage'
+                        )
+                    );
+                }
+
+                $response->prepare($request);
+
+                return $response;
+            }
+            $this->assignation['settings'][] = array(
+                'setting' => $setting,
+                'form' => $form->createView()
+            );
+        }
+
+        return null;
+    }
+
 
     /**
      * Return an edition form for requested setting.
@@ -241,9 +238,6 @@ class SettingsController extends RozierApp
     public function addAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
-        // if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_SETTINGS')
-        //     || $this->getSecurityContext()->isGranted('ROLE_SUPERADMIN')))
-        //     return $this->throw404();
 
         $setting = new Setting();
 
@@ -255,7 +249,6 @@ class SettingsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 try {
                     $this->addSetting($form->getData(), $setting);
                     $msg = $this->getTranslator()->trans('setting.%name%.created', array('%name%'=>$setting->getName()));
@@ -313,7 +306,6 @@ class SettingsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['settingId'] == $setting->getId() ) {
-
                 $this->deleteSetting($form->getData(), $setting);
 
                 $msg = $this->getTranslator()->trans('setting.%name%.deleted', array('%name%'=>$setting->getName()));
@@ -603,7 +595,7 @@ class SettingsController extends RozierApp
      */
     public static function getSettings()
     {
-        return $this->getService('em')
+        return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Setting')
             ->findAll();
     }

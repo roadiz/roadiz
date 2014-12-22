@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,30 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file AbstractHuman.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Abstract entity for any Human-like objects.
  *
  * This class can be extended for *Users*, *Subscribers*, etc.
  *
- * @MappedSuperclass
- * @HasLifecycleCallbacks
+ * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
  */
 abstract class AbstractHuman extends AbstractDateTimed
 {
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     protected $email;
     /**
@@ -68,7 +68,7 @@ abstract class AbstractHuman extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $firstName;
     /**
@@ -91,7 +91,7 @@ abstract class AbstractHuman extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $lastName;
     /**
@@ -114,7 +114,7 @@ abstract class AbstractHuman extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $company;
     /**
@@ -137,7 +137,7 @@ abstract class AbstractHuman extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $job;
     /**
@@ -161,7 +161,7 @@ abstract class AbstractHuman extends AbstractDateTimed
 
     /**
      * @var \DateTime
-     * @Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $birthday;
     /**

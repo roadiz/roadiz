@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file CustomFormController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Controllers;
@@ -38,8 +37,11 @@ use RZ\Roadiz\Core\Entities\CustomFormField;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Config\FileLocator;
 
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use \InlineStyle\InlineStyle;
 
 class CustomFormController extends AppController
@@ -51,7 +53,7 @@ class CustomFormController extends AppController
      */
     public static function getResourcesFolder()
     {
-        return RENZO_ROOT.'/src/Roadiz/CMS/Resources';
+        return ROADIZ_ROOT.'/src/Roadiz/CMS/Resources';
     }
 
     /**
@@ -60,10 +62,10 @@ class CustomFormController extends AppController
     public static function getRoutes()
     {
         $locator = new FileLocator(array(
-            RENZO_ROOT.'/src/Roadiz/CMS/Resources'
+            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources'
         ));
 
-        if (file_exists(RENZO_ROOT.'/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
+        if (file_exists(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
 
             return $loader->load('entryPointsRoutes.yml');
@@ -79,74 +81,72 @@ class CustomFormController extends AppController
 
         if (null !== $customForm) {
             $closeDate = $customForm->getCloseDate();
-
             $nowDate = new \DateTime();
-        }
 
-        if (null !== $customForm && $closeDate >= $nowDate) {
-            $this->assignation['customForm'] = $customForm;
-            $this->assignation['fields'] = $customForm->getFields();
+            if ($closeDate >= $nowDate) {
+                $this->assignation['customForm'] = $customForm;
+                $this->assignation['fields'] = $customForm->getFields();
 
-            /*
-             * form
-             */
-            $form = $this->buildForm($request, $customForm);
-            $form->handleRequest();
-            if ($form->isValid()) {
-                try {
+                /*
+                 * form
+                 */
+                $form = $this->buildForm($request, $customForm);
+                $form->handleRequest();
+                if ($form->isValid()) {
+                    try {
+                        $data = $form->getData();
+                        $data["ip"] = $request->getClientIp();
+                        $this->addCustomFormAnswer($data, $customForm);
 
-                    $data = $form->getData();
-                    $data["ip"] = $request->getClientIp();
-                    $this->addCustomFormAnswer($data, $customForm);
+                        $msg = $this->getTranslator()->trans('customForm.%name%.send', array('%name%'=>$customForm->getName()));
+                        $request->getSession()->getFlashBag()->add('confirm', $msg);
+                        $this->getService('logger')->info($msg);
 
-                    $msg = $this->getTranslator()->trans('customForm.%name%.send', array('%name%'=>$customForm->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                        $this->assignation['title'] = $this->getTranslator()->trans(
+                            'new.answer.form.%site%',
+                            array('%site%'=>$customForm->getDisplayName())
+                        );
 
-                    $this->assignation['title'] = $this->getTranslator()->trans(
-                        'new.answer.form.%site%',
-                        array('%site%'=>$customForm->getDisplayName())
-                    );
+                        $this->assignation['mailContact'] = SettingsBag::get('email_sender');
 
-                    $this->assignation['mailContact'] = SettingsBag::get('email_sender');
+                        $this->sendAnswer($this->assignation, $customForm->getEmail());
 
-                    $this->sendAnswer($this->assignation, $customForm->getEmail());
+                        /*
+                         * Redirect to update schema page
+                         */
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate(
+                                'customFormSendAction',
+                                array("customFormId" => $customFormId)
+                            )
+                        );
 
-                    /*
-                     * Redirect to update schema page
-                     */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'customFormSendAction',
-                            array("customFormId" => $customFormId)
-                        )
-                    );
+                    } catch (EntityAlreadyExistsException $e) {
+                        $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+                        $this->getService('logger')->warning($e->getMessage());
+                        $response = new RedirectResponse(
+                            $this->getService('urlGenerator')->generate(
+                                'customFormSendAction',
+                                array("customFormId" => $customFormId)
+                            )
+                        );
+                    }
+                    $response->prepare($request);
 
-                } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'customFormSendAction',
-                            array("customFormId" => $customFormId)
-                        )
-                    );
+                    return $response->send();
                 }
-                $response->prepare($request);
 
-                return $response->send();
+                $this->assignation['form'] = $form->createView();
+
+                return new Response(
+                    $this->getTwig()->render('forms/customForm.html.twig', $this->assignation),
+                    Response::HTTP_OK,
+                    array('content-type' => 'text/html')
+                );
             }
-
-            $this->assignation['form'] = $form->createView();
-
-            return new Response(
-                $this->getTwig()->render('forms/customForm.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                array('content-type' => 'text/html')
-            );
-        } else {
-            return $this->throw404();
         }
+
+        return $this->throw404();
     }
 
     /**
@@ -165,7 +165,7 @@ class CustomFormController extends AppController
          */
         $htmldoc = new InlineStyle($emailBody);
         $htmldoc->applyStylesheet(file_get_contents(
-            RENZO_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
+            ROADIZ_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
         ));
 
         if (empty($receiver)) {
@@ -214,7 +214,6 @@ class CustomFormController extends AppController
             $fieldAttr->setCustomFormField($field);
 
             if (is_array($data[$field->getName()])) {
-
                 $values = array();
 
                 foreach ($data[$field->getName()] as $value) {
@@ -227,7 +226,6 @@ class CustomFormController extends AppController
                 $this->assignation["fields"][] = array("name" => $field->getName(), "value" => $val);
 
             } else {
-
                 $fieldAttr->setValue($data[$field->getName()]);
                 $this->assignation["fields"][] = array("name" => $field->getName(), "value" => $data[$field->getName()]);
 
@@ -247,8 +245,6 @@ class CustomFormController extends AppController
      */
     private function buildForm(Request $request, CustomForm $customForm)
     {
-        $fields = $customForm->getFields();
-
         $defaults = $request->query->all();
         $form = $this->getService('formFactory')
                     ->create(new CustomFormsType($customForm), $defaults);

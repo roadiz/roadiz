@@ -7,7 +7,6 @@
  * Override ui kit breadcrumb styles and set new styles
  */
 
-
 /* -------- VARS -------- */
 
 @breadcrumb-link-hover : #808080;
@@ -15,23 +14,27 @@
 
 /* -------- STYLES -------- */
 
-
 .content-breadcrumb{
     position: absolute;
     top:47px; right:0; left:0;
     height:12px;
 
     > li{
-        font-size:10px; line-height:12px;
+        font-size:10px;
+        line-height:12px;
+        vertical-align: middle;
 
         &:nth-child(n+2):before{
             content:'\2192';
+            font-size: 13px;
             -webkit-font-smoothing: antialiased;
+            vertical-align: middle;
+            margin: 0 5px;
         }
     }
 }
 
-.node-breadcrumb-item{    
+.node-breadcrumb-item{
     color:@grey-medium;
     text-transform:uppercase;
 }

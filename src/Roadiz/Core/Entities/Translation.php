@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Translation.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
@@ -33,15 +32,16 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\TranslationHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Translations describe language locales to be used by Nodes,
  * Tags, UrlAliases and Documents.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\TranslationRepository")
- * @Table(name="translations", indexes={
- *     @index(name="available_translation_idx", columns={"available"}),
- *     @index(name="default_translation_idx", columns={"default_translation"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\TranslationRepository")
+ * @ORM\Table(name="translations", indexes={
+ *     @ORM\Index(name="available_translation_idx", columns={"available"}),
+ *     @ORM\Index(name="default_translation_idx", columns={"default_translation"})
  * })
  */
 class Translation extends AbstractDateTimed
@@ -103,7 +103,7 @@ class Translation extends AbstractDateTimed
      *
      * fr_FR or en_US for example
      *
-     * @Column(type="string", unique=true, length=10)
+     * @ORM\Column(type="string", unique=true, length=10)
      */
     private $locale;
 
@@ -136,7 +136,7 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     private $name;
 
@@ -161,7 +161,7 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @Column(name="default_translation", type="boolean")
+     * @ORM\Column(name="default_translation", type="boolean")
      */
     private $defaultTranslation = false;
     /**
@@ -184,7 +184,7 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      */
     private $available = true;
 
@@ -209,7 +209,6 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @todo Move this method to a TranslationViewer
      * @return string
      */
     public function getOneLineSummary()
@@ -240,7 +239,7 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @var ArrayCollection
      */
     private $nodeSources = null;
@@ -253,7 +252,7 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @OneToMany(targetEntity="TagTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="TagTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @var ArrayCollection
      */
     private $tagTranslations = null;
@@ -266,7 +265,7 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @OneToMany(targetEntity="DocumentTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @var ArrayCollection
      */
     protected $documentTranslations;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,28 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file EntryPointsController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 
@@ -54,7 +49,7 @@ class EntryPointsController extends AppController
 {
     const CONTACT_FORM_TOKEN_INTENTION = 'contact_form';
 
-    private static $mandatoryContactFields = array(
+    protected static $mandatoryContactFields = array(
         'email',
         'message'
     );
@@ -65,7 +60,6 @@ class EntryPointsController extends AppController
     public function __init()
     {
         $this->getTwigLoader()
-             ->initializeTranslator()
              ->prepareBaseAssignation();
     }
 
@@ -74,7 +68,7 @@ class EntryPointsController extends AppController
      */
     public static function getResourcesFolder()
     {
-        return RENZO_ROOT.'/src/Roadiz/CMS/Resources';
+        return ROADIZ_ROOT.'/src/Roadiz/CMS/Resources';
     }
 
     /**
@@ -83,10 +77,10 @@ class EntryPointsController extends AppController
     public static function getRoutes()
     {
         $locator = new FileLocator(array(
-            RENZO_ROOT.'/src/Roadiz/CMS/Resources'
+            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources'
         ));
 
-        if (file_exists(RENZO_ROOT.'/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
+        if (file_exists(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
 
             return $loader->load('entryPointsRoutes.yml');
@@ -105,7 +99,6 @@ class EntryPointsController extends AppController
     {
         if ($request->getMethod() != $method ||
             !is_array($request->get('form'))) {
-
             return array(
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
@@ -114,7 +107,6 @@ class EntryPointsController extends AppController
         }
         if (!$this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::CONTACT_FORM_TOKEN_INTENTION, $request->get('form')['_token'])) {
-
             return array(
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
@@ -135,7 +127,6 @@ class EntryPointsController extends AppController
     public function contactFormAction(Request $request, $_locale = null)
     {
         if (true !== $validation = $this->validateRequest($request)) {
-
             return new Response(
                 json_encode($validation),
                 Response::HTTP_FORBIDDEN,
@@ -151,7 +142,6 @@ class EntryPointsController extends AppController
 
         foreach (static::$mandatoryContactFields as $mandatoryField) {
             if (empty($request->get('form')[$mandatoryField])) {
-
                 $responseArray['statusCode'] = Response::HTTP_FORBIDDEN;
                 $responseArray['status'] = 'danger';
                 $responseArray['field_error'] = $mandatoryField;
@@ -185,7 +175,6 @@ class EntryPointsController extends AppController
          * if no error, create Email
          */
         if ($canSend) {
-
             $receiver = SettingsBag::get('email_sender');
 
             $assignation = array(
@@ -202,7 +191,6 @@ class EntryPointsController extends AppController
                 if ($key[0] == '_') {
                     continue;
                 } elseif (!empty($value)) {
-
                     $assignation['fields'][] = array(
                         'name' => strip_tags($key),
                         'value' => (strip_tags($value))
@@ -224,7 +212,29 @@ class EntryPointsController extends AppController
                 'value' => $request->getClientIp()
             );
 
-            $this->sendContactForm($assignation, $receiver);
+            /*
+             * Custom receiver
+             */
+            if (!empty($request->get('form')['_emailReceiver'])) {
+                $email = StringHandler::decodeWithSecret($request->get('form')['_emailReceiver'], $this->getService('config')['security']['secret']);
+                if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $receiver = $email;
+                }
+            }
+
+            /*
+             * Custom subject
+             */
+            if (!empty($request->get('form')['_emailSubject'])) {
+                $subject = StringHandler::decodeWithSecret($request->get('form')['_emailSubject'], $this->getService('config')['security']['secret']);
+            } else {
+                $subject = null;
+            }
+
+            /*
+             * Send contact form email
+             */
+            $this->sendContactForm($assignation, $receiver, $subject);
 
             $responseArray['message'] = $this->getTranslator()->trans(
                 'form.successfully.sent'
@@ -239,21 +249,18 @@ class EntryPointsController extends AppController
          * just redirect.
          */
         if (!empty($request->get('form')['_redirect'])) {
-
             $response = new RedirectResponse($request->get('form')['_redirect']);
             $response->prepare($request);
 
             return $response->send();
 
         } else {
-
             return new Response(
                 json_encode($responseArray),
                 Response::HTTP_OK,
                 array('content-type' => 'application/javascript')
             );
         }
-
     }
 
     /**
@@ -291,6 +298,13 @@ class EntryPointsController extends AppController
      *
      * </pre>
      *
+     * Add session messages to your assignations
+     *
+     * <pre>
+     * // Get session messages
+     * $this->assignation['session']['messages'] = $this->getService('session')->getFlashBag()->all();
+     * </pre>
+     *
      * Then in your contact page Twig template
      *
      * <pre>
@@ -316,13 +330,21 @@ class EntryPointsController extends AppController
      * {{ form(contactForm) }}
      * </pre>
      *
-     * @param Symfony\Component\HttpFoundation\Request $request Contact page request
-     * @param boolean                                  $redirect Redirect to contact page after sending?
+     * @param Symfony\Component\HttpFoundation\Request $request             Contact page request
+     * @param boolean                                  $redirect            Redirect to contact page after sending?
+     * @param string                                   $customRedirectUrl   Redirect to a custom url
+     * @param string                                   $customEmailReceiver Send contact form to a custom email (or emails)
+     * @param string                                   $customEmailSubject  Customize email subject
      *
      * @return Symfony\Component\Form\FormBuilder
      */
-    public static function getContactFormBuilder(Request $request, $redirect = true)
-    {
+    public static function getContactFormBuilder(
+        Request $request,
+        $redirect = true,
+        $customRedirectUrl = null,
+        $customEmailReceiver = null,
+        $customEmailSubject = null
+    ) {
         $action = Kernel::getService('urlGenerator')
                         ->generate('contactFormLocaleAction', array(
                             '_locale' => $request->getLocale()
@@ -344,8 +366,26 @@ class EntryPointsController extends AppController
             ));
 
         if (true === $redirect) {
-            $builder->add('_redirect', 'hidden', array(
-                'data' => strip_tags($request->getURI())
+            if (null !== $customRedirectUrl) {
+                $builder->add('_redirect', 'hidden', array(
+                    'data' => strip_tags($customRedirectUrl)
+                ));
+            } else {
+                $builder->add('_redirect', 'hidden', array(
+                    'data' => strip_tags($request->getURI())
+                ));
+            }
+        }
+
+        if (null !== $customEmailReceiver) {
+            $builder->add('_emailReceiver', 'hidden', array(
+                'data' => StringHandler::encodeWithSecret($customEmailReceiver, Kernel::getService('config')['security']['secret'])
+            ));
+        }
+
+        if (null !== $customEmailSubject) {
+            $builder->add('_emailSubject', 'hidden', array(
+                'data' => StringHandler::encodeWithSecret($customEmailSubject, Kernel::getService('config')['security']['secret'])
             ));
         }
 
@@ -355,12 +395,13 @@ class EntryPointsController extends AppController
     /**
      * Send a contact form by Email.
      *
-     * @param  array $assignation
-     * @param  string $receiver
+     * @param array $assignation
+     * @param string $receiver
+     * @param string|null $subject
      *
      * @return boolean
      */
-    protected function sendContactForm($assignation, $receiver)
+    protected function sendContactForm($assignation, $receiver, $subject = null)
     {
         $emailBody = $this->getTwig()->render('forms/contactForm.html.twig', $assignation);
         /*
@@ -368,16 +409,22 @@ class EntryPointsController extends AppController
          */
         $htmldoc = new InlineStyle($emailBody);
         $htmldoc->applyStylesheet(file_get_contents(
-            RENZO_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
+            ROADIZ_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
         ));
+
+        if (null !== $subject) {
+            $subject = trim(strip_tags($subject));
+        } else {
+            $subject = $this->getTranslator()->trans(
+                'new.contact.form.%site%',
+                array('%site%'=>SettingsBag::get('site_name'))
+            );
+        }
 
         // Create the message
         $message = \Swift_Message::newInstance()
             // Give the message a subject
-            ->setSubject($this->getTranslator()->trans(
-                'new.contact.form.%site%',
-                array('%site%'=>SettingsBag::get('site_name'))
-            ))
+            ->setSubject($subject)
             // Set the From address with an associative array
             ->setFrom(array($assignation['email']))
             // Set the To addresses with an associative array

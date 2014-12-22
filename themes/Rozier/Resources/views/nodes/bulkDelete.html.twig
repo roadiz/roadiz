@@ -4,10 +4,26 @@
 {% block content %}
 <section class="content-global delete-node">
 	<header class="content-header header-node header-node-preview">
-        <h1 class="content-title node-delete-title">{{ "delete.nodes"|trans() }}</h1>
+        <h1 class="content-title node-delete-title">{{ "delete.nodes"|trans()|truncate(25, true, '[…]') }}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">
+
+        {% if referer %}
+            {% set returnPath = referer %}
+        {% else %}
+            {% set returnPath = path('nodesHomePage') %}
+        {% endif %}
+		{% form_theme form 'forms.html.twig' %}
+		<form id="nodes-bulk-delete-form" class="uk-form uk-form-stacked" action="{{ action }}" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	<legend>{% trans %}are_you_sure.delete.these.nodes{% endtrans %}</legend>
+		    	<a href="{{ returnPath }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}delete.all{% endtrans %}</button>
+	   		</fieldset>
+		</form>
+
         {% spaceless %}
         <ul class="nodes-list">
         {% for node in nodes %}
@@ -21,15 +37,7 @@
         {% endfor %}
         </ul>
         {% endspaceless %}
-		{% form_theme form 'forms.html.twig' %}
-		<form class="uk-form uk-form-stacked" action="{{ action }}" method="post" {{ form_enctype(form) }}>
-		    {{ form_widget(form) }}
-		    <fieldset data-uk-margin>
-		    	<legend>{% trans %}are_you_sure.delete.these.nodes{% endtrans %}</legend>
-		    	<a href="{{ path('nodesHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
-		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}delete.all{% endtrans %}</button>
-	   		</fieldset>
-		</form>
+
 	</article>
 </section>
 {% endblock %}

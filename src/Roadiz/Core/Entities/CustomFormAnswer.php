@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,39 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file CustomFormAnswer.php
- * @copyright REZO ZERO 2014
  * @author Maxime Constantinian
  */
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
-
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * CustomFormAnswer entities
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @Table(name="custom_form_answers",  indexes={
- *     @index(name="ip_customformanswer_idx", columns={"ip"}),
- *     @index(name="submitted_customformanswer_idx", columns={"submitted_at"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="custom_form_answers",  indexes={
+ *     @ORM\Index(name="ip_customformanswer_idx", columns={"ip"}),
+ *     @ORM\Index(name="submitted_customformanswer_idx", columns={"submitted_at"})
  * })
  */
 class CustomFormAnswer extends AbstractEntity
 {
 
     /**
-     * @Column(type="string", name="ip")
+     * @ORM\Column(type="string", name="ip")
      */
     private $ip;
     /**
@@ -75,7 +69,7 @@ class CustomFormAnswer extends AbstractEntity
     }
 
     /**
-     * @Column(type="datetime", name="submitted_at")
+     * @ORM\Column(type="datetime", name="submitted_at")
      */
     private $submittedAt = null;
     /**
@@ -98,7 +92,7 @@ class CustomFormAnswer extends AbstractEntity
     }
 
     /**
-     * @OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute",
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute",
      *            mappedBy="customFormAnswer",
      *            fetch="EXTRA_LAZY",
      *            cascade={"ALL"})
@@ -141,9 +135,9 @@ class CustomFormAnswer extends AbstractEntity
     }
 
     /**
-     * @ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm",
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm",
      *           inversedBy="customFormAnswers")
-     * @JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
      **/
     private $customForm;
 
@@ -165,30 +159,14 @@ class CustomFormAnswer extends AbstractEntity
      */
     public function __construct()
     {
-        $this->children = new ArrayCollection();
+        $this->answerFields = new ArrayCollection();
     }
     /**
-     * @todo Move this method to a CustomFormAnswerViewer
      * @return string
      */
     public function getOneLineSummary()
     {
         return $this->getId()." — ".$this->getIp().
-            " — Sumitted : ".($this->getSummittedTime()).PHP_EOL;
-    }
-    /**
-     * @todo Move this method to a CustomFormAnswerViewer
-     * @return string
-     */
-    public function getOneLineSourceSummary()
-    {
-        $text = "Source ".$this->getDefaultCustomFormAnswerSource()->getId().PHP_EOL;
-
-        foreach ($this->getCustomFormAnswerType()->getFields() as $key => $field) {
-            $getterName = 'get'.ucwords($field->getName());
-            $text .= '['.$field->getLabel().']: '.$this->getDefaultCustomFormAnswerSource()->$getterName().PHP_EOL;
-        }
-
-        return $text;
+            " — Sumitted : ".($this->getSubmittedAt()).PHP_EOL;
     }
 }

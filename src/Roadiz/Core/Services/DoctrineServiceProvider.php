@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file DoctrineServiceProvider.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Services;
@@ -33,11 +32,10 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 
 use Doctrine\ORM\Events;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManager;
 
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Register Doctrine services for dependency injection container.
@@ -56,20 +54,26 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
     {
         if ($container['config'] !== null &&
             isset($container['config']["doctrine"])) {
+            $container['em.config'] = function ($c) {
+                $config = Setup::createAnnotationMetadataConfiguration(
+                    $c['entitiesPaths'],
+                    (boolean) $c['config']['devMode'],
+                    ROADIZ_ROOT . '/gen-src/Proxies',
+                    null,
+                    false
+                );
+
+                $config->setProxyDir(ROADIZ_ROOT . '/gen-src/Proxies');
+                $config->setProxyNamespace('Proxies');
+
+                return $config;
+            };
 
             $container['em'] = function ($c) {
                 try {
                     $c['stopwatch']->start('initDoctrine');
-                    // the connection configuration
-                    $configDB = Setup::createAnnotationMetadataConfiguration(
-                        $c['entitiesPaths'],
-                        (boolean) $c['config']['devMode']
-                    );
 
-                    $configDB->setProxyDir(RENZO_ROOT . '/gen-src/Proxies');
-                    $configDB->setProxyNamespace('Proxies');
-
-                    $em = EntityManager::create($c['config']["doctrine"], $configDB);
+                    $em = EntityManager::create($c['config']["doctrine"], $c['em.config']);
 
                     $evm = $em->getEventManager();
 
@@ -110,5 +114,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                 }
             };
         }
+
+        return $container;
     }
 }

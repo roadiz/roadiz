@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file AppController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 
@@ -34,49 +33,28 @@ namespace RZ\Roadiz\CMS\Controllers;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Handlers\UserProvider;
-use RZ\Roadiz\Core\Handlers\UserHandler;
+
+use RZ\Roadiz\Core\Bags\SettingsBag;
 
 use Pimple\Container;
 
 use RZ\Roadiz\Core\Viewers\ViewableInterface;
-use \Michelf\Markdown;
-
-use Symfony\Component\Security\Http\Firewall;
-use Symfony\Component\Security\Http\FirewallMap;
-use Symfony\Component\Security\Http\HttpUtils;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
-use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
-use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
-use Symfony\Component\Validator\Validation;
-use Symfony\Bridge\Twig\Extension\FormExtension;
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
-use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 
-use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\User\UserChecker;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
-use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 
 /**
  * Base class for Roadiz themes.
@@ -88,7 +66,7 @@ class AppController implements ViewableInterface
     const FONT_TOKEN_INTENTION = 'font_request';
 
 
-    private $kernel = null;
+    protected $kernel = null;
     /**
      * Inject current Kernel into running controller.
      *
@@ -139,7 +117,7 @@ class AppController implements ViewableInterface
         return $this->kernel->container['securityContext'];
     }
     /**
-     * Alias for `$this->kernel->getEntityManager()`.
+     * Alias for `$this->kernel->container['em']`.
      *
      * @return Doctrine\ORM\EntityManager
      */
@@ -252,7 +230,7 @@ class AppController implements ViewableInterface
      */
     public function getTranslator()
     {
-        return $this->translator;
+        return $this->kernel->container['translator'];
     }
 
     /**
@@ -263,7 +241,6 @@ class AppController implements ViewableInterface
     public function __init()
     {
         $this->getTwigLoader()
-             ->initializeTranslator()
              ->prepareBaseAssignation();
     }
 
@@ -301,45 +278,11 @@ class AppController implements ViewableInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function initializeTranslator()
-    {
-        $this->getService('stopwatch')->start('initTranslations');
-        $lang = $this->kernel->getRequest()->getLocale();
-
-        $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
-        /*
-         * fallback to english, if message catalog absent
-         */
-        if (!file_exists($msgPath)) {
-            $lang = 'en';
-            $msgPath = static::getResourcesFolder().'/translations/messages.'.$lang.'.xlf';
-        }
-
-        $this->translator = new Translator($lang);
-
-        if (file_exists($msgPath)) {
-            $this->translator->addLoader('xlf', new XliffFileLoader());
-            $this->translator->addResource(
-                'xlf',
-                $msgPath,
-                $lang
-            );
-        }
-        $this->getService('twig.environment')->addExtension(new TranslationExtension($this->translator));
-        $this->getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
-        $this->getService('stopwatch')->stop('initTranslations');
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public static function getResourcesFolder()
     {
-        return RENZO_ROOT.'/themes/'.static::$themeDir.'/Resources';
+        return ROADIZ_ROOT.'/themes/'.static::$themeDir.'/Resources';
     }
     /**
      * @return string
@@ -367,10 +310,16 @@ class AppController implements ViewableInterface
      */
     public function getTwigLoader()
     {
-        $this->getService()->extend('twig.loaderFileSystem', function ($loader, $c) {
-            $loader->prependPath(static::getViewsFolder());
-            return $loader;
-        });
+        $this->getService()->extend(
+            'twig.loaderFileSystem',
+            function (\Twig_Loader_Filesystem $loader, $c) {
+                $loader->prependPath(static::getViewsFolder());
+                return $loader;
+            }
+        );
+
+        $this->getService('twig.environment')->addExtension(new TranslationExtension($this->getService('translator')));
+        $this->getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
 
         return $this;
     }
@@ -383,10 +332,9 @@ class AppController implements ViewableInterface
     public static function forceTwigCompilation()
     {
         if (file_exists(static::getViewsFolder())) {
-
             $ctrl = new static();
             $ctrl->setKernel(Kernel::getInstance());
-            $ctrl->initializeTranslator();
+            $ctrl->getTwigLoader();
 
             try {
                 $fs = new Filesystem();
@@ -409,28 +357,9 @@ class AppController implements ViewableInterface
                     $ctrl->getTwig()->loadTemplate(str_replace(static::getViewsFolder().'/', '', $file));
                 }
             }
-            /*
-             * Common templates
-             */
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(RENZO_ROOT.'/src/Roadiz/CMS/Resources/views/forms'),
-                \RecursiveIteratorIterator::LEAVES_ONLY
-            );
-            foreach ($iterator as $file) {
-                // force compilation
-                if ($file->isFile() &&
-                    $file->getExtension() == 'twig') {
-                    $ctrl->getTwig()->loadTemplate(str_replace(
-                        RENZO_ROOT.'/src/Roadiz/CMS/Resources/views/forms/',
-                        '',
-                        $file
-                    ));
-                }
-            }
 
             return true;
         } else {
-
             return false;
         }
     }
@@ -450,6 +379,7 @@ class AppController implements ViewableInterface
      * - head
      *     - ajax: `boolean`
      *     - cmsVersion
+     *     - cmsVersionNumber
      *     - cmsBuild
      *     - devMode: `boolean`
      *     - baseUrl
@@ -457,6 +387,8 @@ class AppController implements ViewableInterface
      *     - resourcesUrl
      *     - ajaxToken
      *     - fontToken
+     *     - universalAnalyticsId
+     *     - useCdn
      * - session
      *     - messages
      *     - id
@@ -472,8 +404,11 @@ class AppController implements ViewableInterface
             'head' => array(
                 'ajax' => $this->kernel->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
+                'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => (boolean) $this->kernel->container['config']['devMode'],
+                'useCdn' => (boolean) SettingsBag::get('use_cdn'),
+                'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
                 'baseUrl' => $this->kernel->getResolvedBaseUrl(),//$this->kernel->getRequest()->getBaseUrl(),
                 'filesUrl' => $this->kernel
                                    ->getRequest()
@@ -491,7 +426,6 @@ class AppController implements ViewableInterface
 
         if ($this->getService('securityContext') !== null &&
             $this->getService('securityContext')->getToken() !== null ) {
-
             $this->assignation['securityContext'] = $this->getService('securityContext');
             $this->assignation['session']['user'] = $this->getService('securityContext')
                                                          ->getToken()
@@ -506,7 +440,7 @@ class AppController implements ViewableInterface
      *
      * @param string $message Additionnal message to describe 404 error.
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function throw404($message = "")
     {
@@ -600,6 +534,50 @@ class AppController implements ViewableInterface
     }
 
     /**
+     * Publish a message in Session flash bag and
+     * logger interface.
+     *
+     * @param Request $request
+     * @param string  $msg
+     * @param string  $level
+     */
+    protected function publishMessage(Request $request, $msg, $level = "confirm")
+    {
+        $request->getSession()->getFlashBag()->add($level, $msg);
+
+        switch ($level) {
+            case 'error':
+                $this->getService('logger')->error($msg);
+                break;
+            default:
+                $this->getService('logger')->info($msg);
+                break;
+        }
+    }
+    /**
+     * Publish a confirm message in Session flash bag and
+     * logger interface.
+     *
+     * @param Request $request
+     * @param string  $msg
+     */
+    public function publishConfirmMessage(Request $request, $msg)
+    {
+        $this->publishMessage($request, $msg, 'confirm');
+    }
+    /**
+     * Publish an error message in Session flash bag and
+     * logger interface.
+     *
+     * @param Request $request
+     * @param string  $msg
+     */
+    public function publishErrorMessage(Request $request, $msg)
+    {
+        $this->publishMessage($request, $msg, 'error');
+    }
+
+    /**
      * Custom route for redirecting routes with a trailing slash.
      *
      * @param  Request $request [description]
@@ -629,7 +607,6 @@ class AppController implements ViewableInterface
     public function validateAccessForRole($role)
     {
         if (!$this->getService('securityContext')->isGranted($role)) {
-
             throw new AccessDeniedException("You don't have access to this page:" . $role);
         }
     }

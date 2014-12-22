@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file SettingGroup.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Setting;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Settings entity are a simple key-value configuration system.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\SettingGroupRepository")
- * @Table(name="settings_groups")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\SettingGroupRepository")
+ * @ORM\Table(name="settings_groups")
  *
  */
 class SettingGroup extends AbstractEntity
 {
     /**
-     * @Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     private $name;
     /**
@@ -68,7 +65,7 @@ class SettingGroup extends AbstractEntity
     }
 
     /**
-     * @Column(type="boolean", name="in_menu", nullable=false)
+     * @ORM\Column(type="boolean", name="in_menu", nullable=false)
      */
     protected $inMenu = false;
 
@@ -91,7 +88,7 @@ class SettingGroup extends AbstractEntity
 
 
     /**
-     * @OneToMany(targetEntity="Setting", mappedBy="settingGroup")
+     * @ORM\OneToMany(targetEntity="Setting", mappedBy="settingGroup")
      * @var ArrayCollection
      *
      */

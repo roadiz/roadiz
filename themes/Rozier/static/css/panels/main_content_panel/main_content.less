@@ -31,10 +31,26 @@
     .container{
         padding: 0px 60px;
     }
+    .content {
+        position: relative;
+        .nodetree-langs{
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 200px;
+            margin-left: -100px;
+            a{
+                border-color: #CFCFCF;
+                padding-bottom: 5px;
+                &:after {
+                    bottom: 4px;
+                }
+            }
+        }
+    }
 }
 
 .content-global{
-
     &.new-content-global{
         display: none;
     }
@@ -70,6 +86,7 @@
     margin: 0px;
     text-align: center;
     color:@black-title;
+    font-weight: lighter;
 
     &:after {
         content: "";
@@ -102,13 +119,11 @@
     top:36px; right:50px;
 
     .uk-button{
-
         i{
-            margin-top:-2px;
+            margin-top:-3px;
         }
     }
 }
-
 
 .content{
     padding:@main-content-padding-top 0 @main-content-padding-bottom;
@@ -132,7 +147,10 @@
     }
 
     &.content-delete{
-        text-align: center;
+        text-align: left;
+    }
+    hr{
+        margin: 3em 0 1em;
     }
 }
 

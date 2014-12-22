@@ -5,7 +5,7 @@
 <section class="content-global delete-user">
 
     <header class="content-header header-user header-user-delete">
-        <h1 class="content-title user-delete-title">{{ "remove.user.%name%.from.group.%group%"|trans({'%name%': user.getUserName, '%group%': group.getName}) }}</h1>
+        <h1 class="content-title user-delete-title">{{ "remove.user.%name%.from.group.%group%"|trans({'%name%': user.getUserName, '%group%': group.getName})|truncate(25, true, '[…]') }}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">

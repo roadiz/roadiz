@@ -16,14 +16,23 @@
         {% endif %}
             {% if nodeTree.availableTranslations and nodeTree.availableTranslations|length > 1 %}
             <ul class="nodetree-langs">
+                {% spaceless %}
                 {% for lang in nodeTree.availableTranslations %}
                 <li class="{% if lang.id == nodeTree.translation.id %}active{% endif %}">
-                    <a href="#" data-children-parent-node="{{ nodeTree.rootNode.id }}" data-translation-id="{{ lang.id }}">{{ lang.name }}</a>
+                    <a href="#"
+                       {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}
+                       data-children-parent-node="{{ nodeTree.rootNode.id }}"
+                       data-translation-id="{{ lang.id }}">{{ lang.name }}</a>
                 </li>
                 {% endfor %}
+                {% endspaceless %}
             </ul>
             {% endif %}
-            <ul class="root-tree uk-nestable{% if not mainNodeTree and not nodeTree.isStackTree %} children-node-widget {% elseif nodeTree.isStackTree %} stack-tree-widget{% endif %}" data-uk-nestable="{'group':'nodeTree'}" data-parent-node-id="{{ nodeTree.rootNode.id }}" {% if nodeTree.isStackTree %}data-stack-tree="1"{% endif %}>
+            <ul class="root-tree uk-nestable{% if not mainNodeTree and not nodeTree.isStackTree %} children-node-widget {% elseif nodeTree.isStackTree %} stack-tree-widget{% endif %}"
+                data-uk-nestable="{'group':'nodeTree'}"
+                data-parent-node-id="{{ nodeTree.rootNode.id }}"
+                {% if nodeTree.isStackTree %}data-stack-tree="1"{% endif %}
+                {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}>
             {% for cnode in nodeTree.getNodes %}
                 {% include 'widgets/nodeTree/singleNode.html.twig' with { "node":cnode, "nodeTree":nodeTree, "securityContext":securityContext, "mainNodeTree":mainNodeTree} only %}
             {% endfor %}

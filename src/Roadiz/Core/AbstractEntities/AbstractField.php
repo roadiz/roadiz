@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file AbstractField.php
- * @copyright REZO ZERO 2014
  * @author Maxime Constantinian
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
@@ -33,11 +32,12 @@ namespace RZ\Roadiz\Core\AbstractEntities;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
 use RZ\Roadiz\Core\Utils\StringHandler;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  *
  *
- * @MappedSuperclass
+ * @ORM\MappedSuperclass
  */
 abstract class AbstractField extends AbstractPositioned implements PersistableInterface
 {
@@ -228,9 +228,9 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     );
 
     /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private $id;
     /**
@@ -242,7 +242,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $name;
 
@@ -265,13 +265,13 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
 
         return $this;
     }
-    
+
     /**
      * @return string
      */
     public function getGetterName()
     {
-        return 'get'.str_replace('_', '', ucwords($this->getName()));
+        return StringHandler::camelCase('get '.$this->getName());
     }
 
     /**
@@ -279,11 +279,11 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
      */
     public function getSetterName()
     {
-        return 'set'.str_replace('_', '', ucwords($this->getName()));
+        return StringHandler::camelCase('set '.$this->getName());
     }
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $label;
 
@@ -307,7 +307,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         return $this;
     }
     /**
-     * @Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
@@ -331,7 +331,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         return $this;
     }
     /**
-     * @Column(name="default_values", type="text", nullable=true)
+     * @ORM\Column(name="default_values", type="text", nullable=true)
      */
     private $defaultValues;
 
@@ -356,7 +356,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     }
 
     /**
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      */
     private $type = AbstractField::STRING_T;
 

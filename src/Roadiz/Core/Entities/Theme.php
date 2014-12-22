@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Theme.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Themes describe a database entity to store
  * front-end and back-end controllers.
  *
- * @Entity(repositoryClass="RZ\Roadiz\Core\Repositories\ThemeRepository")
- * @Table(name="themes", indexes={
- *      @index(name="backend_theme_idx", columns={"backend"}),
- *      @index(name="available_theme_idx", columns={"available"})
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\ThemeRepository")
+ * @ORM\Table(name="themes", indexes={
+ *      @ORM\Index(name="backend_theme_idx", columns={"backend"}),
+ *      @ORM\Index(name="available_theme_idx", columns={"available"}),
+ *      @ORM\Index(name="static_theme_theme_idx", columns={"static_theme"})
  * })
  */
 class Theme extends AbstractEntity
 {
     /**
-     * @Column(type="boolean")
+     * @ORM\Column(type="boolean")
      * @var boolean
      */
     private $available = false;
@@ -71,7 +71,34 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @Column(name="classname", type="string", unique=true)
+     * @ORM\Column(type="boolean", name="static_theme", nullable=false)
+     */
+    protected $staticTheme = false;
+
+    /**
+     * Static means that your theme is not suitable for responding from
+     * nodes urls but only static routes.
+     *
+     * @return boolean
+     */
+    public function isStaticTheme()
+    {
+        return (boolean) $this->staticTheme;
+    }
+
+    /**
+     * @param boolean $newstaticTheme
+     */
+    public function setStaticTheme($newstaticTheme)
+    {
+        $this->staticTheme = (boolean) $newstaticTheme;
+
+        return $this;
+    }
+
+
+    /**
+     * @ORM\Column(name="classname", type="string", unique=true)
      * @var string
      */
     private $className;
@@ -118,7 +145,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @Column(name="hostname",type="string")
+     * @ORM\Column(name="hostname",type="string")
      * @var string
      */
     private $hostname = '*';
@@ -144,7 +171,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @Column(name="backend", type="boolean")
+     * @ORM\Column(name="backend", type="boolean")
      * @var boolean
      */
     private $backendTheme = false;

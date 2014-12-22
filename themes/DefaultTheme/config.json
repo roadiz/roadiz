@@ -1,13 +1,10 @@
 {
     "name": "Default theme",
     "author": "Ambroise Maupate",
-    "copyright": "REZO ZERO",
+    "copyright": "Ambroise Maupate and Julien Blanchet",
     "themeDir": "DefaultTheme",
-
     "supportedLocale": ["en", "fr"],
-
     "versionRequire": "0.1.0",
-
     "importFiles": {
         "roles": [],
         "groups": [],

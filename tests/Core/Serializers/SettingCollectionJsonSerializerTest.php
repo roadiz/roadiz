@@ -33,7 +33,7 @@ class SettingCollectionJsonSerializerTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array(
-                file_get_contents(RENZO_ROOT.'/tests/Fixtures/Serializers/settingCollectionJsonSerializer01.json'),
+                file_get_contents(ROADIZ_ROOT.'/tests/Fixtures/Serializers/settingCollectionJsonSerializer01.json'),
                 3
             ),
         );
@@ -62,7 +62,7 @@ class SettingCollectionJsonSerializerTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array(
-                file_get_contents(RENZO_ROOT.'/tests/Fixtures/Serializers/settingCollectionJsonSerializer01.json'),
+                file_get_contents(ROADIZ_ROOT.'/tests/Fixtures/Serializers/settingCollectionJsonSerializer01.json'),
                 "Doctrine\Common\Collections\ArrayCollection"
             ),
         );

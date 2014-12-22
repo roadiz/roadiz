@@ -5,14 +5,14 @@
     <div id="login-infos">
         <div id="login-logo">
             {% if adminImage %}
-                {{ adminImage.viewer.getDocumentByArray({width:200, crop:'1:1'})|raw }}
+                {{ adminImage.viewer.getDocumentByArray({width:70, crop:'1:1'})|raw }}
             {% else %}
-                <i class="uk-icon-rz-rezozero"></i>
+                <i class="uk-icon-rz-roadiz-icon"></i>
             {% endif %}
         </div>
         <div id="login-credit">
             <i class="uk-icon-rz-rezozero"></i>
-            <span id="login-version">{{ head.cmsVersion }} - build {{ head.cmsBuild }}</span>
+            <span id="login-version">{{ head.cmsVersion }} {{ head.cmsVersionNumber }}</span>
         </div>
     </div>
     <div id="login-formGlobal">

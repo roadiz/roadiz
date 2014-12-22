@@ -1,31 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% set headerImages = nodeSource.getHandler.getDocumentsFromFieldName('header_image') %}
 {% block header %}
-<header>
-	{% for headerImage in headerImages %}
-	<figure>
-		<img alt="{{ nodeSource.getTitle }}" src="{{ headerImage.getViewer.getDocumentUrlByArray(headerImageFilter) }}" />
-	</figure>
-	{% endfor %}
-</header>
+	{% if nodeSource.headerImage|length > 0 %}
+	{% set headerImage = nodeSource.headerImage[0] %}
+	<header>
+		<figure style="background-image:url({{ headerImage.viewer.documentUrlByArray(themeServices.imageFormats.headerImage) }})"></figure>
+	</header>
+	{% else %}
+	{{ parent() }}
+	{% endif %}
 {% endblock %}
 
 {% block content %}
-<h1>{{ nodeSource.getTitle }}</h1>
-<div>{{ nodeSource.getContent|markdown }}</div>
-<div class="image">
-	{% for document in nodeSource.getHandler.getDocumentsFromFieldName('images') %}
+{% spaceless %}
+{% set breadcrumb = nodeSource.handler.parents %}
+<div class="breadcrumb">
+	{% for parent in breadcrumb|reverse %}
+		{% if parent.id == home.id %}
+		{% else %}
+	    <a href="{{ parent.handler.url }}">{{ parent.title }}</a>
+		{% endif %}
+	{% endfor %}
+</div>
+{% endspaceless %}
+<h1>{{ nodeSource.title }}</h1>
+<h2>{{ nodeSource.subtitle }}</h2>
 
+
+<div class="content">{{ nodeSource.content|markdown }}</div>
+<div class="photos">
+	{% for document in nodeSource.photos %}
 		{% set imageMetas = document.documentTranslations.first %}
 		<figure class="uk-thumbnail">
-			{{ document.getViewer.getDocumentByArray({
-				"width":600,
-				"crop":"16x9",
-				"controls":true,
-				"embed":true
-			})|raw }}
+			{{ document.viewer.documentByArray(themeServices.imageFormats.thumbnail)|raw }}
+			{% if imageMetas.name or imageMetas.copyright %}
 			<figcaption>{{ imageMetas.name }} — {{ imageMetas.copyright }}</figcaption>
+			{% endif %}
 		</figure>
 	{% endfor %}
 </div>

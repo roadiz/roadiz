@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file RoutingServiceProvider.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Services;
@@ -57,39 +56,6 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                 return $rCollection;
             };
         } else {
-            /*
-             * Parse existing themes
-             */
-            $container['backendClass'] = function ($c) {
-                $theme = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                                 ->findAvailableBackend();
-
-                if ($theme !== null) {
-                    return $theme->getClassName();
-                }
-
-                return 'RZ\Roadiz\CMS\Controllers\BackendController';
-            };
-
-            $container['frontendThemes'] = function ($c) {
-                $themes = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                                  ->findAvailableFrontends();
-
-
-
-                if (count($themes) < 1) {
-
-                    $defaultTheme = new Theme();
-                    $defaultTheme->setClassName('RZ\Roadiz\CMS\Controllers\FrontendController');
-                    $defaultTheme->setAvailable(true);
-
-                    return array(
-                        $defaultTheme
-                    );
-                } else {
-                    return $themes;
-                }
-            };
             /*
              * Get App routes
              */
@@ -134,11 +100,9 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                     $feClass = $theme->getClassName();
                     $feCollection = $feClass::getRoutes();
                     if ($feCollection !== null) {
-
                         // set host pattern if defined
                         if ($theme->getHostname() != '*' &&
                             $theme->getHostname() != '') {
-
                             $feCollection->setHost($theme->getHostname());
                         }
                         $rCollection->addCollection($feCollection);
@@ -148,5 +112,7 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                 return $rCollection;
             };
         }
+
+        return $container;
     }
 }

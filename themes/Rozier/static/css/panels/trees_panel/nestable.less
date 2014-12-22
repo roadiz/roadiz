@@ -60,10 +60,8 @@
 
     h4 {
         text-align: center;
-        // margin:0 0 0; // b0.8em;
         margin:0;
         height:79px;
-        // padding: 1.7em  0 1.3em;
         font-size: 19px; line-height:79px;
         font-weight: bold;
         border-bottom: 1px solid #b5b5b5;
@@ -93,7 +91,7 @@
             }
             & > li:first-child {
                 padding-top: 7px;
-                margin-top: -5px;
+                margin-top: -7px;
                 position: relative;
 
                 &:before {
@@ -117,7 +115,7 @@
 
         & > li {
             border-left: 0 none;
-            border-top: 1px solid #C5C5C5;
+            border-top: 1px solid #BDBDBD;
             padding: 11px 0 10px;
 
             &:first-child{
@@ -143,6 +141,10 @@
 
     .uk-nestable-list {
         padding-left: 17px;
+
+        .home-node{
+            padding-left:10px !important;
+        }
     }
 
     .uk-nestable-item {
@@ -189,7 +191,6 @@
         .transition(color ease 0.35s);
 
         & > i {
-            // color: red;
             font-size: 12px;
             .opacity(0.5);
         }
@@ -240,14 +241,19 @@
                 font-size: 16px;
                 color: darken(@item-color, 10%);
                 vertical-align: middle;
-                top: -2px;
+                top: -1px;
+                left: 1px;
             }
             &.unpublished-node .uk-icon-rz-home:before {
                 content: @home;
             }
 
             & > .uk-nestable-handle:after {
-                display: none;
+                position: absolute;
+                top:6px; margin-left:2px;
+                .opacity(0);
+                z-index:4;
+                // display: none;
             }
             &:hover {
                 .nodetree-element-name a{
@@ -337,6 +343,21 @@
                 }
             }
         }
+        &.hidden-tag {
+            & > .tagtree-element-name {
+                a {
+                    text-decoration: line-through;
+                    .opacity(0.8);
+                }
+            }
+            &:hover {
+                & > .tagtree-element-name {
+                    a {
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
         &.unpublished-node {
            & > .uk-nestable-handle:after {
                 width: 9px;
@@ -353,7 +374,7 @@
      */
     [data-nestable-action="toggle"] {
         position: absolute;
-        right: 3px;
+        top:2px; right: 3px;
         color: #A0A0A0;
         -webkit-font-smoothing: antialiased;
         text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);

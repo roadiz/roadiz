@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,19 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file Kernel.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core;
 
 use RZ\Roadiz\Core\Routing\MixedUrlMatcher;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Services\SecurityServiceProvider;
 use RZ\Roadiz\Core\Services\FormServiceProvider;
 use RZ\Roadiz\Core\Services\RoutingServiceProvider;
@@ -42,6 +40,9 @@ use RZ\Roadiz\Core\Services\SolrServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
+use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
+use RZ\Roadiz\Core\Services\ThemeServiceProvider;
+use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -49,15 +50,12 @@ use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Security\Http\HttpUtils;
-use Symfony\Component\Security\Http\Firewall;
 
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -92,12 +90,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
     {
         $this->container = new Container();
         $this->request = Request::createFromGlobals();
-        /*
-         * Get build number from txt file generated at each pre-commit
-         */
-        //if (file_exists(RENZO_ROOT.'/BUILD.txt')) {
-        //    static::$cmsBuild = intval(trim(file_get_contents(RENZO_ROOT.'/BUILD.txt')));
-        //}
 
         /*
          * Register current Kernel as a service provider.
@@ -176,6 +168,9 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $container->register(new EmbedDocumentsServiceProvider());
         $container->register(new TwigServiceProvider());
         $container->register(new EntityApiServiceProvider());
+        $container->register(new BackofficeServiceProvider());
+        $container->register(new ThemeServiceProvider());
+        $container->register(new TranslationServiceProvider());
     }
 
     /**
@@ -204,7 +199,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $application->add(new \RZ\Roadiz\Console\TranslationsCommand);
         $application->add(new \RZ\Roadiz\Console\NodeTypesCommand);
         $application->add(new \RZ\Roadiz\Console\NodesCommand);
-        //$application->add(new \RZ\Roadiz\Console\SchemaCommand);
         $application->add(new \RZ\Roadiz\Console\ThemesCommand);
         $application->add(new \RZ\Roadiz\Console\InstallCommand);
         $application->add(new \RZ\Roadiz\Console\UsersCommand);
@@ -230,8 +224,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
     {
         if ($this->container['config'] === null ||
             (isset($this->container['config']['install']) &&
-             $this->container['config']['install'] == true)) {
-
+            true === (boolean) $this->container['config']['install'])) {
             return true;
         } else {
             return false;
@@ -246,9 +239,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
     public function runApp()
     {
         if ($this->isDebug() ||
-            !file_exists(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php') ||
-            !file_exists(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php')) {
-
+            !file_exists(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php') ||
+            !file_exists(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php')) {
             $this->container['stopwatch']->start('dumpUrlUtils');
             $this->dumpUrlUtils();
             $this->container['stopwatch']->stop('dumpUrlUtils');
@@ -262,10 +254,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
             date_default_timezone_set("Europe/Paris");
         }
 
-        if ($this->container['config'] === null ||
-            (isset($this->container['config']['install']) &&
-             $this->container['config']['install'] == true)) {
-
+        if ($this->isInstallMode()) {
             // nothing to prepare
 
         } else {
@@ -298,8 +287,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     protected function dumpUrlUtils()
     {
-        if (!file_exists(RENZO_ROOT.'/gen-src/Compiled')) {
-            mkdir(RENZO_ROOT.'/gen-src/Compiled', 0755, true);
+        if (!file_exists(ROADIZ_ROOT.'/gen-src/Compiled')) {
+            mkdir(ROADIZ_ROOT.'/gen-src/Compiled', 0755, true);
         }
 
         /*
@@ -309,7 +298,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $class = $dumper->dump(array(
             'class' => 'GlobalUrlMatcher'
         ));
-        file_put_contents(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php', $class);
+        file_put_contents(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php', $class);
 
         /*
          * Generate custom UrlGenerator
@@ -318,7 +307,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $class = $dumper->dump(array(
             'class' => 'GlobalUrlGenerator'
         ));
-        file_put_contents(RENZO_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php', $class);
+        file_put_contents(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php', $class);
     }
 
     /**
@@ -390,7 +379,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         /*
          * If debug, alter HTML responses to append Debug panel to view
          */
-        if (true == SettingsBag::get('display_debug_panel')) {
+        if (true === (boolean) SettingsBag::get('display_debug_panel')) {
             $this->container['dispatcher']->addSubscriber(new \RZ\Roadiz\Core\Utils\DebugPanel());
         }
     }
@@ -433,7 +422,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
             $ping = $this->container['solr']->createPing();
             // execute the ping query
             try {
-                $result = $this->container['solr']->ping($ping);
+                $this->container['solr']->ping($ping);
 
                 return true;
             } catch (\Exception $e) {

@@ -10,17 +10,11 @@
 <li data-tag-id="{{ tag.getId }}"
 	class="uk-nestable-list-item uk-nestable-list-item-tag tagtree-element{% if tag.getChildren.count > 0 %} has-children{% endif %}">
 
-	<div class="tagtree-element-inner uk-nestable-item uk-nestable-item-tag">
+	<div class="tagtree-element-inner uk-nestable-item uk-nestable-item-tag {% if not tag.isVisible %} hidden-tag{% endif %}">
 		<div class="uk-nestable-handle uk-nestable-handle-tag"><i class="{% if tag.getChildren.count > 0 %}uk-icon-rz-tags{% else %}uk-icon-rz-tag-tree{% endif %}"></i></div>
 		<div data-nestable-action="toggle"></div>
 		<div class="tree-element-name tagtree-element-name">
-			{% if not tag.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %}
-
-			{% if tag.isHidingChildren %}
-				<a href="{{ path('tagsTreePage', { tagId:tag.getId }) }}">{{ name }}</a>
-			{% else %}
-				<a href="{{ editUrl }}">{{ name }}</a>
-			{% endif %}
+			<a href="{{ path('tagsEditNodesPage', { tagId:tag.getId }) }}">{{ name }}</a>
 		</div>
 
 		<div class="tree-contextualmenu tagtree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click'}">

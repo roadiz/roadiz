@@ -10,7 +10,21 @@
         <meta name="description" content="" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <link rel="apple-touch-icon" sizes="57x57" href="{{ head.resourcesUrl }}img/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="{{ head.resourcesUrl }}img/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="{{ head.resourcesUrl }}img/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="{{ head.resourcesUrl }}img/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon" sizes="60x60" href="{{ head.resourcesUrl }}img/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="{{ head.resourcesUrl }}img/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="{{ head.resourcesUrl }}img/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="{{ head.resourcesUrl }}img/apple-touch-icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ head.resourcesUrl }}img/apple-touch-icon-180x180.png" />
+        <link rel="icon" type="image/png" href="{{ head.resourcesUrl }}img/favicon-192x192.png" sizes="192x192" />
+        <link rel="icon" type="image/png" href="{{ head.resourcesUrl }}img/favicon-160x160.png" sizes="160x160" />
+        <link rel="icon" type="image/png" href="{{ head.resourcesUrl }}img/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="{{ head.resourcesUrl }}img/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="{{ head.resourcesUrl }}img/favicon-32x32.png" sizes="32x32" />
+        <meta name="msapplication-TileImage" content="{{ head.resourcesUrl }}img/mstile-144x144.png" />
 
         {# <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.min.css" /> #}
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/uikit.gradient.min.css" />
@@ -20,6 +34,7 @@
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/codemirror.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.css[0] }}" />
         <link rel="stylesheet" href="{{ path('cssMainColor') }}" />
+        {% block customStyles %}{% endblock %}
         <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
@@ -36,7 +51,8 @@
                 <section class="main-container-section" id="admin-menu">
                     {% include 'panels/admin_menu.html.twig' with {
                         'settingGroups' : settingGroups,
-                        'securityContext' : securityContext
+                        'securityContext' : securityContext,
+                        'backofficeEntries':backofficeEntries
                     } only %}
                 </section>
                 {% if (securityContext.isGranted('ROLE_ACCESS_NODES') or securityContext.isGranted('ROLE_ACCESS_TAGS')) %}
@@ -71,13 +87,13 @@
         <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.1.1.min.js"><\/script>')</script>
 
         {% if head.devMode %}
-        <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/uikit.js"></script>
 
-        <script src="{{ head.resourcesUrl }}js/addons/sortable.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/nestable.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/pagination.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/notify.js"></script>
-        <script src="{{ head.resourcesUrl }}js/addons/htmleditor.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/addons/sortable.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/addons/nestable.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/addons/pagination.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/addons/notify.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/addons/htmleditor.js"></script>
 
         <script src="{{ head.resourcesUrl }}js/vendor/jquery-ui.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/TweenMax.min.js"></script>
@@ -104,17 +120,18 @@
         <script src="{{ head.resourcesUrl }}js/widgets/saveButtons.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/settingsSaveButtons.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/nodeEditSource.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/nodeTree.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/nodeStatuses.js"></script>
-        <script src="{{ head.resourcesUrl }}js/widgets/nodeTypeFieldEdit.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/childrenNodesField.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/geotagField.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/markdownEditor.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/tagAutocomplete.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/folderAutocomplete.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/stackNodeTree.js"></script>
-        <script src="{{ head.resourcesUrl }}js/widgets/nodeTypeFieldsPosition.js"></script>
-        <script src="{{ head.resourcesUrl }}js/widgets/customFormFieldsPosition.js"></script>
-        <script src="{{ head.resourcesUrl }}js/widgets/customFormFieldEdit.js"></script>
+        <script src="{{ head.resourcesUrl }}js/node-type-fields/nodeTypeFieldEdit.js"></script>
+        <script src="{{ head.resourcesUrl }}js/node-type-fields/nodeTypeFieldsPosition.js"></script>
+        <script src="{{ head.resourcesUrl }}js/custom-form-fields/customFormFieldsPosition.js"></script>
+        <script src="{{ head.resourcesUrl }}js/custom-form-fields/customFormFieldEdit.js"></script>
         <script src="{{ head.resourcesUrl }}js/rozierMobile.js"></script>
         <script src="{{ head.resourcesUrl }}js/lazyload.js"></script>
         <script src="{{ head.resourcesUrl }}js/plugins.js"></script>

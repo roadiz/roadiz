@@ -1,28 +1,41 @@
 <?php
 /*
- * Copyright REZO ZERO 2014
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
  * @file AjaxTagsController.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Handlers\TagHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * {@inheritdoc}
@@ -57,7 +70,6 @@ class AjaxTagsController extends AbstractAjaxController
             ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
-
             $responseArray = null;
 
             /*
@@ -120,7 +132,6 @@ class AjaxTagsController extends AbstractAjaxController
         );
 
         if (!empty($request->get('search'))) {
-
             $responseArray = array();
 
             $pattern = strip_tags($request->get('search'));
@@ -157,14 +168,13 @@ class AjaxTagsController extends AbstractAjaxController
 
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
-
             $parent = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $tag->setParent($parent);
             }
-        } elseif ($parameters['newParent'] == null) {
+        } else {
             $tag->setParent(null);
         }
 
@@ -180,7 +190,6 @@ class AjaxTagsController extends AbstractAjaxController
             }
         } elseif (!empty($parameters['prevTagId']) &&
             $parameters['prevTagId'] > 0) {
-
             $prevTag = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['prevTagId']);
             if ($prevTag !== null) {

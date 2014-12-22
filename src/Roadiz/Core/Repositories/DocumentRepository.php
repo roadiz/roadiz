@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file DocumentRepository.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * {@inheritdoc}
@@ -51,7 +50,7 @@ class DocumentRepository extends EntityRepository
         if (in_array('folders', array_keys($criteria))) {
             if (is_array($criteria['folders'])) {
                 if (in_array("folderExclusive", array_keys($criteria))
-                    && $criteria["folderExclusive"] == true) {
+                    && $criteria["folderExclusive"] === true) {
                     $documents = static::getDocumentIdsByFolderExcl($criteria['folders']);
                     $criteria["id"] = $documents;
                     unset($criteria["folderExclusive"]);
@@ -135,7 +134,6 @@ class DocumentRepository extends EntityRepository
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
-
             if ($key == "folders" || $key == "folderExclusive") {
                 continue;
             }
@@ -167,74 +165,11 @@ class DocumentRepository extends EntityRepository
                 $prefix = 'dt.';
             }
 
-            if (is_object($value) && $value instanceof PersistableInterface) {
-                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
-            } elseif (is_array($value)) {
-                /*
-                 * array
-                 *
-                 * ['<=', $value]
-                 * ['<', $value]
-                 * ['>=', $value]
-                 * ['>', $value]
-                 * ['BETWEEN', $value, $value]
-                 * ['LIKE', $value]
-                 * in [$value, $value]
-                 */
-                if (count($value) > 1) {
-                    switch ($value[0]) {
-                        case '<=':
-                            # lte
-                            $res = $qb->expr()->lte($prefix.$key, ':'.$baseKey);
-                            break;
-                        case '<':
-                            # lt
-                            $res = $qb->expr()->lt($prefix.$key, ':'.$baseKey);
-                            break;
-                        case '>=':
-                            # gte
-                            $res = $qb->expr()->gte($prefix.$key, ':'.$baseKey);
-                            break;
-                        case '>':
-                            # gt
-                            $res = $qb->expr()->gt($prefix.$key, ':'.$baseKey);
-                            break;
-                        case 'BETWEEN':
-                            $res = $qb->expr()->between(
-                                $prefix.$key,
-                                ':'.$baseKey.'_1',
-                                ':'.$baseKey.'_2'
-                            );
-                            break;
-                        case 'LIKE':
-                            $res = $qb->expr()->like($prefix.$key, $qb->expr()->literal($value[1]));
-                            break;
-                        case 'NOT IN':
-                            $res = $qb->expr()->notIn($prefix.$key, ':'.$baseKey);
-                            break;
-                        default:
-                            $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
-                            break;
-                    }
-                } else {
-                    $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
-                }
-
-            } elseif (is_bool($value)) {
-                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
-            } elseif ('NOT NULL' == $value) {
-                $res = $qb->expr()->isNotNull($prefix.$key);
-            } elseif (isset($value)) {
-                $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
-            } elseif (null === $value) {
-                $res = $qb->expr()->isNull($prefix.$key);
-            }
-
-            $qb->andWhere($res);
+            $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
         }
     }
 
-   /**
+    /**
     * Create a Criteria object from a search pattern and additionnal fields.
     *
     * @param string                  $pattern  Search pattern
@@ -250,28 +185,8 @@ class DocumentRepository extends EntityRepository
         array $criteria = array(),
         $alias = "obj"
     ) {
-        /*
-         * get fields needed for a search
-         * query
-         */
-        $types = array('string', 'text');
 
-        /*
-         * Search in document fields
-         */
-        $criteriaFields = array();
-        $metadatas = $this->_em->getClassMetadata($this->getEntityName());
-        $cols = $metadatas->getColumnNames();
-        foreach ($cols as $col) {
-            $field = $metadatas->getFieldName($col);
-            $type = $metadatas->getTypeOfField($field);
-            if (in_array($type, $types)) {
-                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
-            }
-        }
-        foreach ($criteriaFields as $key => $value) {
-            $qb->orWhere($qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value)));
-        }
+        $this->classicLikeComparison($pattern, $qb, $alias);
 
         /*
          * Search in translations
@@ -283,7 +198,7 @@ class DocumentRepository extends EntityRepository
         foreach ($cols as $col) {
             $field = $metadatas->getFieldName($col);
             $type = $metadatas->getTypeOfField($field);
-            if (in_array($type, $types)) {
+            if (in_array($type, $this->searchableTypes)) {
                 $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
             }
         }
@@ -291,19 +206,7 @@ class DocumentRepository extends EntityRepository
             $qb->orWhere($qb->expr()->like('dt.' .$key, $qb->expr()->literal($value)));
         }
 
-        foreach ($criteria as $key => $value) {
-            if (is_object($value) && $value instanceof PersistableInterface) {
-                $res = $qb->expr()->eq($alias . '.' .$key, $value->getId());
-            } elseif (is_array($value)) {
-                $res = $qb->expr()->in($alias . '.' .$key, $value);
-            } elseif (is_bool($value)) {
-                $res = $qb->expr()->eq($alias . '.' .$key, (int) $value);
-            } else {
-                $res = $qb->expr()->eq($alias . '.' .$key, $value);
-            }
-
-            $qb->andWhere($res);
-        }
+        $qb = $this->directComparison($criteria, $qb, $alias);
 
         return $qb;
     }
@@ -320,51 +223,11 @@ class DocumentRepository extends EntityRepository
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
-
             if ($key == "folders" || $key == "folderExclusive") {
                 continue;
             }
 
-            // Dots are forbidden in field definitions
-            $key = str_replace('.', '_', $key);
-
-            if (is_object($value) && $value instanceof PersistableInterface) {
-                $finalQuery->setParameter($key, $value->getId());
-            } elseif (is_array($value)) {
-
-                if (count($value) > 1) {
-                    switch ($value[0]) {
-                        case '<=':
-                        case '<':
-                        case '>=':
-                        case '>':
-                        case 'NOT IN':
-                            $finalQuery->setParameter($key, $value[1]);
-                            break;
-                        case 'BETWEEN':
-                            $finalQuery->setParameter($key.'_1', $value[1]);
-                            $finalQuery->setParameter($key.'_2', $value[2]);
-                            break;
-                        case 'LIKE':
-                            // param is setted in filterBy
-                            break;
-                        default:
-                            $finalQuery->setParameter($key, $value);
-                            break;
-                    }
-                } else {
-                    $finalQuery->setParameter($key, $value);
-                }
-
-            } elseif (is_bool($value)) {
-                $finalQuery->setParameter($key, $value);
-            } elseif ('NOT NULL' == $value) {
-                // param is not needed
-            } elseif (isset($value)) {
-                $finalQuery->setParameter($key, $value);
-            } elseif (null === $value) {
-                // param is not needed
-            }
+            $this->applyComparison($key, $value, $finalQuery);
         }
     }
 
@@ -416,12 +279,10 @@ class DocumentRepository extends EntityRepository
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id'])) {
-
             $qb->innerJoin('d.documentTranslations', 'dt');
             $qb->innerJoin('dt.translation', 't');
 
         } else {
-
             if (null !== $translation) {
                 /*
                  * With a given translation
@@ -473,8 +334,6 @@ class DocumentRepository extends EntityRepository
         $qb->add('select', 'd')
            ->add('from', $this->getEntityName() . ' d');
 
-        //$this->filterByTranslation($criteria, $qb, $translation);
-
         /*
          * Filtering by tag
          */
@@ -518,7 +377,6 @@ class DocumentRepository extends EntityRepository
         $qb->add('select', 'count(d.id)')
            ->add('from', $this->getEntityName() . ' d');
 
-        //$this->filterByTranslation($criteria, $qb, $translation);
         /*
          * Filtering by tag
          */
@@ -556,11 +414,8 @@ class DocumentRepository extends EntityRepository
 
         $finalQuery = $query->getQuery();
 
-        //var_dump($finalQuery->getDql()); exit();
-
         $this->applyFilterByFolder($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
-        //$this->applyTranslationByFolder($criteria, $finalQuery, $translation);
 
         try {
             return $finalQuery->getResult();
@@ -596,7 +451,6 @@ class DocumentRepository extends EntityRepository
 
         $this->applyFilterByFolder($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
-        //$this->applyTranslationByFolder($criteria, $finalQuery, $translation);
 
         try {
             return $finalQuery->getSingleResult();
@@ -625,7 +479,6 @@ class DocumentRepository extends EntityRepository
         $finalQuery = $query->getQuery();
         $this->applyFilterByFolder($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
-        //$this->applyTranslationByFolder($criteria, $finalQuery, $translation);
 
         try {
             return $finalQuery->getSingleScalarResult();

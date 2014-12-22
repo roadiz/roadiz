@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file EntityListManager.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\ListManagers;
 
 use RZ\Roadiz\Core\Utils\Paginator;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Doctrine\ORM\EntityManager;
 
@@ -134,7 +131,6 @@ class EntityListManager
         if (false === $disabled) {
             if ($this->request->query->get('field') &&
                 $this->request->query->get('ordering')) {
-
                 $this->orderingArray[$this->request->query->get('field')] = $this->request->query->get('ordering');
                 $this->queryArray['field'] = $this->request->query->get('field');
                 $this->queryArray['ordering'] = $this->request->query->get('ordering');
@@ -158,7 +154,7 @@ class EntityListManager
     /**
      * Get Twig assignation to render list details.
      *
-     * ## Fields:
+     * ** Fields:
      *
      * * description
      * * search
@@ -215,7 +211,7 @@ class EntityListManager
      */
     public function getEntities()
     {
-        if ($this->pagination == true) {
+        if ($this->pagination === true) {
             return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
         } else {
             return $this->_em->getRepository($this->entityName)

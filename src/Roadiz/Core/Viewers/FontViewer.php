@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file FontViewer.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Viewers;
@@ -35,14 +34,6 @@ use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
-use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\Loader\XliffFileLoader;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * FontViewer
@@ -65,27 +56,8 @@ class FontViewer implements ViewableInterface
      */
     public function getTranslator()
     {
-        return $this->translator;
+        return null;
     }
-
-    /**
-     * Get twig cache folder for current Viewer
-     *
-     * @return string
-     */
-    public function getCacheDirectory()
-    {
-        return RENZO_ROOT.'/cache/twig_cache';
-    }
-
-    /**
-     * @{inheritdoc}
-     */
-    public function initializeTranslator()
-    {
-
-    }
-
 
     /**
      * @return \Twig_Environment

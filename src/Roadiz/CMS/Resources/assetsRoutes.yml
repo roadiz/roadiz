@@ -2,9 +2,9 @@
 # Fonts serving
 #
 FontFile:
-    path:     /fonts/files/{filename}/{token}.{extension}
+    path:     /fonts/files/{filename}/{variant}/{token}.{extension}
     defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFileAction }
-    requirements: { filename: "[a-zA-Z0-9\-_]+", extension: "[a-z0-9]+", token: "[a-zA-Z0-9\-_]+" }
+    requirements: { filename: "[a-zA-Z0-9\-_]+", variant: "[0-9]", extension: "[a-z0-9]+", token: "[a-zA-Z0-9\-_]+" }
 FontFaceCSS:
     path:     /fonts/faces/{token}.css
     defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFacesAction }

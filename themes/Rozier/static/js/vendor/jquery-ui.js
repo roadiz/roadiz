@@ -422,9 +422,6 @@ $.widget = function( name, base, prototype ) {
 		})();
 	});
 	constructor.prototype = $.widget.extend( basePrototype, {
-		// TODO: remove support for widgetEventPrefix
-		// always use the name + a colon as the prefix, e.g., draggable:start
-		// don't prefix for widgets that aren't DOM-based
 		widgetEventPrefix: existingConstructor ? (basePrototype.widgetEventPrefix || name) : name
 	}, proxiedPrototype, {
 		constructor: constructor,
@@ -1967,8 +1964,6 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	select: function( event ) {
-		// TODO: It should never be possible to not have an active item at this
-		// point, but the tests don't trigger mouseenter before click.
 		this.active = this.active || $( event.target ).closest( ".ui-menu-item" );
 		var ui = { item: this.active };
 		if ( !this.active.has( ".ui-menu" ).length ) {

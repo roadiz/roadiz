@@ -25,8 +25,8 @@ NodeWidget.prototype.init = function() {
     var _this = this;
 
     var changeProxy = $.proxy(_this.onSortableNodeWidgetChange, _this);
-    _this.$sortables.on('uk.sortable.change', changeProxy);
-    _this.$sortables.on('uk.sortable.change', changeProxy);
+    _this.$sortables.on('change.uk.sortable', changeProxy);
+    _this.$sortables.on('change.uk.sortable', changeProxy);
 
     var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
     _this.$toggleExplorerButtons.off('click', onExplorerToggleP);
@@ -196,7 +196,7 @@ NodeWidget.prototype.onUnlinkNode = function( event ) {
     var $widget = $element.parents('.nodes-widget-sortable').first();
 
     $doc.remove();
-    $widget.trigger('uk.sortable.change', [$widget, $doc]);
+    $widget.trigger('change.uk.sortable', [$widget, $doc]);
 
     return false;
 };

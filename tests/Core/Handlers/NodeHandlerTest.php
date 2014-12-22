@@ -75,7 +75,7 @@ class NodeHandlerTest extends PHPUnit_Framework_TestCase
         static::$runtimeCollection = array();
 
         date_default_timezone_set('Europe/Paris');
-        ImportController::importContent(RENZO_ROOT . '/tests/Fixtures/Handlers/Page.json',
+        ImportController::importContent(ROADIZ_ROOT . '/tests/Fixtures/Handlers/Page.json',
                                         "RZ\Roadiz\CMS\Importers\NodeTypesImporter", null);
     }
 

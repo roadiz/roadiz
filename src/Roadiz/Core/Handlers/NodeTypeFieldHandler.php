@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, REZO ZERO
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,23 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file NodeTypeFieldHandler.php
- * @copyright REZO ZERO 2014
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
-use RZ\Roadiz\Core\Serializers\NodeTypeFieldSerializer;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 
 /**
  * Handle operations with node-type fields entities.
@@ -72,7 +68,7 @@ class NodeTypeFieldHandler
     public function generateSourceFieldIndex()
     {
         if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
-            return '@Index(name="'.$this->nodeTypeField->getName().'_idx", columns={"'.$this->nodeTypeField->getName().'"})';
+            return '@ORM\Index(name="'.$this->nodeTypeField->getName().'_idx", columns={"'.$this->nodeTypeField->getName().'"})';
         } else {
             return '';
         }
@@ -96,13 +92,16 @@ class NodeTypeFieldHandler
 
             return '
                 /**
-                 * @Column(type="'.
+                 * @ORM\Column(type="'.
                     NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].
                     '", '.
                     $this->getDecimalPrecision().
                     'nullable=true )
                  */
-                '.$var.PHP_EOL.$this->generateSourceGetter().PHP_EOL.$this->generateSourceSetter().PHP_EOL;
+                '.$var.PHP_EOL.$this->generateSourceGetter().$this->generateSourceSetter();
+
+        } elseif (AbstractField::DOCUMENTS_T === $this->nodeTypeField->getType()) {
+            return $this->generateSourceGetter();
         }
 
         return '';
@@ -125,7 +124,6 @@ class NodeTypeFieldHandler
     protected function generateSourceSetter()
     {
         if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
-
             $assignation = '$'.$this->nodeTypeField->getName();
 
             if ($this->nodeTypeField->getType() === NodeTypeField::BOOLEAN_T) {
@@ -164,7 +162,6 @@ class NodeTypeFieldHandler
     protected function generateSourceGetter()
     {
         if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
-
             $assignation = '$this->'.$this->nodeTypeField->getName();
 
             return '
@@ -176,6 +173,15 @@ class NodeTypeFieldHandler
         return '.$assignation.';
     }'.PHP_EOL;
 
+        } elseif (AbstractField::DOCUMENTS_T === $this->nodeTypeField->getType()) {
+            return '
+    /**
+     * @return array Documents array
+     */
+    public function '.$this->nodeTypeField->getGetterName().'()
+    {
+        return $this->getHandler()->getDocumentsFromFieldName("'.$this->nodeTypeField->getName().'");
+    }'.PHP_EOL;
         }
 
         return '';
