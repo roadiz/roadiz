@@ -12,7 +12,11 @@ fi
 export PATH=`echo "$PHPCS" | rev | cut -c 7- | rev`:$PATH;
 
 # Launch PHP codeSniffer (change your executable path according to your system)
-$PHPCS --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/sources/*,*/Tests/* -p ./;
+php ./vendor/bin/phpcs --report=full --report-file=./report.txt \
+                --extensions=php --warning-severity=0 \
+                --standard=PSR2 \
+                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/Tests/* \
+                -p ./
 
 # Get error code from phpcs (0 : code clean, 1 code dirty)
 php_cs_output=$?;

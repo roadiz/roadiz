@@ -34,11 +34,6 @@ ImportNodeType.prototype.always = function( index) {
 ImportNodeType.prototype.callSingleImport = function( index ) {
     var _this = this;
 
-    //if(_this.routes.length > index) {
-    //   if (typeof _this.routes[index].update != "undefined") {
-    //     console.log(_this.routes[index].update);
-    //     _this.always(index, _this.routes[index].update);
-    //   }
     var $row = $("#"+_this.routes[index].id);
     var $icon = $row.find("i");
     $icon.removeClass('uk-icon-circle-o');

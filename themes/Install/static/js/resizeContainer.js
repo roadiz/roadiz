@@ -24,22 +24,22 @@ resizeContainer.prototype.margin = 50;
 
 /**
  * Init
- * @return {[type]} [description]
+ * @return void
  */
 resizeContainer.prototype.init = function() {
     var _this = this;
 
-    _this.windowHeight = _this.$window.height();  
-    _this.mainContainerHeight = _this.$mainContainer.height();
+    _this.windowHeight = _this.$window.height();
+    _this.mainContainerHeight = _this.$mainContainer.outerHeight();
     _this.windowHeightLimit = _this.windowHeight-(_this.margin*2);
 
     // Check if we have enough size to center container
-    if(_this.mainContainerHeight < _this.windowHeightLimit){     
+    if((_this.mainContainerHeight + 50) < _this.windowHeightLimit){
         _this.$mainContainer[0].className = 'absolute';
         _this.$mainContainer[0].style.marginTop = -_this.mainContainerHeight/2 +'px';
     }
-    else{
+    else {
+        $('body').css('position', 'relative');
         _this.$mainContainer[0].className = 'relative';
-       _this.$mainContainer[0].style.marginTop = '50px';
     }
 };

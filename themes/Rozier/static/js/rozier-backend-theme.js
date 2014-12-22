@@ -3043,6 +3043,8 @@ NodeTypeFieldEdit.prototype.btnClick = function(e){
 
     if(_this.indexOpen !==  parseInt(e.currentTarget.getAttribute('data-index')) ){
 
+        Rozier.lazyload.canvasLoader.show();
+
         setTimeout(function(){
 
             _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
@@ -3063,6 +3065,9 @@ NodeTypeFieldEdit.prototype.btnClick = function(e){
                     timeout : 3000,
                     pos     : 'top-center'
                 });
+            })
+            .always(function () {
+                Rozier.lazyload.canvasLoader.hide();
             });
 
         }, _this.openFormDelay);
