@@ -69,7 +69,7 @@ class RozierApp extends BackendController
         }
 
         //Settings
-        $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' back-office';
+        $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' backstage';
         $this->assignation['head']['mapsStyle'] = SettingsBag::get('maps_style');
 
         $this->assignation['head']['mainColor'] = SettingsBag::get('main_color');
