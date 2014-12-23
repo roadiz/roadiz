@@ -1,18 +1,12 @@
 # Roadiz CMS
 
-[![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=develop)](https://travis-ci.org/roadiz/roadiz)
-[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=develop)](https://coveralls.io/r/roadiz/roadiz?branch=develop)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=develop)
+[![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=master)](https://travis-ci.org/roadiz/roadiz)
+[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=master)](https://coveralls.io/r/roadiz/roadiz?branch=develop)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=develop)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d/mini.png)](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d)
 
 Roadiz is a polymorphic CMS based on a node system which can handle many types of services.
 It’s based on Symfony components and Doctrine ORM for maximum performances and security.
-
-### Licenses
-
-* *Roadiz* is released under **MIT** licence
-* *RZ Icons* font-icon is released under **MIT** licence too
-* *Roadiz Sans* font family is released under **GPL+FE** licence and is edited by *Nonpareille* type foundry
 
 ### Documentation
 
@@ -190,3 +184,9 @@ bin/roadiz cache --clear-all;
 
 If you are using a *OPCode var cache* like *APC*, *XCache*, you should purge it as Roadiz stores doctrine
 configuration there for better performances.
+
+### Licenses
+
+* *Roadiz* is released under **MIT** licence
+* *RZ Icons* font-icon is released under **MIT** licence too
+* *Roadiz Sans* font family is released under **GPL+FE** licence and is edited by *Nonpareille* type foundry
