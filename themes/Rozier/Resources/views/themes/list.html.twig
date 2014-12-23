@@ -6,11 +6,15 @@
     <header class="content-header header-themes header-nodes-list">
         <h1 class="content-title themes-list-title">{% trans %}themes{% endtrans %}</h1>
         {% include 'widgets/countFiltersBar.html.twig' %}
+
+        {# Add button will only appear if additional themes are available #}
+        {% if availableThemesCount > 0 %}
         <div class="content-header-action-menu">
             <nav>
 				<a class="uk-button" href="{{ path('themesAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.theme{% endtrans %}</a>
 			</nav>
         </div>
+        {% endif %}
     </header>
 
     {% include 'widgets/filtersBar.html.twig' %}

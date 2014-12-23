@@ -31,9 +31,6 @@
 namespace Themes\DefaultTheme\Controllers;
 
 use Themes\Rozier\RozierApp;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Translation;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

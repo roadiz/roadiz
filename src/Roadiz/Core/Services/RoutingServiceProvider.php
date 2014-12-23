@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Symfony\Component\Routing\RouteCollection;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Theme;
 
 /**
  * Register routing services for dependency injection container.

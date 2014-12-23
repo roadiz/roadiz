@@ -49,11 +49,8 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
-
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
-
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**

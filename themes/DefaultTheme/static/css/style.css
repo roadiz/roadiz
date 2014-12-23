@@ -802,6 +802,9 @@ body {
 .uk-navbar-nav > li:hover > a {
   background: none;
 }
+.uk-navbar-nav > li a {
+  font-family: 'Roadiz', Helvetica, sans-serif;
+}
 .uk-navbar-nav > li > a {
   font-size: 13px;
   border: 0 none;
@@ -837,7 +840,7 @@ body {
 .uk-navbar-nav > li .uk-dropdown {
   text-align: left;
   font-size: 12px;
-  margin-top: 0px;
+  margin-top: 1px;
   padding: 4px;
   font-family: 'Roadiz', Helvetica, sans-serif;
 }
@@ -917,7 +920,7 @@ body {
   font-size: 13px;
   line-height: 22px;
 }
-#main-content .photos {
+#main-content .pictures {
   width: 90%;
   font-family: 'Roadiz', Helvetica, sans-serif;
   margin: 20px auto 40px;
@@ -932,7 +935,6 @@ body {
 }
 #main-content .uk-thumbnail img {
   background-image: url('../img/install_imgbg.jpg');
-  height: 300px;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;

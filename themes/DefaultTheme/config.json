@@ -10,8 +10,7 @@
         "groups": [],
         "settings": [],
         "nodetypes": ["Resources/import/nodetype/Page.rzt",
-                      "Resources/import/nodetype/Neutral.rzt",
-                      "Resources/import/nodetype/Stack.rzt"],
+                      "Resources/import/nodetype/Neutral.rzt"],
         "tags": [],
         "nodes": ["Resources/import/node/node-home.rzn"]
     }

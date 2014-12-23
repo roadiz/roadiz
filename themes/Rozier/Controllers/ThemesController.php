@@ -67,6 +67,9 @@ class ThemesController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['themes'] = $listManager->getEntities();
 
+        $themeType = new \RZ\Roadiz\CMS\Forms\ThemesType();
+        $this->assignation['availableThemesCount'] = $themeType->getSize();
+
         return new Response(
             $this->getTwig()->render('themes/list.html.twig', $this->assignation),
             Response::HTTP_OK,
@@ -241,58 +244,23 @@ class ThemesController extends RozierApp
      */
     protected function buildAddForm(Theme $theme)
     {
-        $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add(
-                'className',
-                new \RZ\Roadiz\CMS\Forms\ThemesType(),
-                array(
-                    'label' => $this->getTranslator()->trans('themeClass'),
-                    'required' => true,
-                    'constraints' => array(
-                        new \Symfony\Component\Validator\Constraints\NotNull(),
-                        new \Symfony\Component\Validator\Constraints\Type('string'),
-                    )
+        $builder = $this->buildCommonForm($theme);
+
+        /*
+         * See if its possible to prepend field instead of adding it
+         */
+        $builder->add(
+            'className',
+            new \RZ\Roadiz\CMS\Forms\ThemesType(),
+            array(
+                'label' => $this->getTranslator()->trans('themeClass'),
+                'required' => true,
+                'constraints' => array(
+                    new \Symfony\Component\Validator\Constraints\NotNull(),
+                    new \Symfony\Component\Validator\Constraints\Type('string'),
                 )
             )
-            ->add(
-                'available',
-                'checkbox',
-                array(
-                    'label' => $this->getTranslator()->trans('available'),
-                    'data' => $theme->isAvailable(),
-                    'required' => false
-                )
-            )
-            ->add(
-                'staticTheme',
-                'checkbox',
-                array(
-                    'label' => $this->getTranslator()->trans('staticTheme'),
-                    'data' => $theme->isStaticTheme(),
-                    'required' => false,
-                    'attr' => array(
-                        'data-desc' => $this->getTranslator()->trans('staticTheme.does_not.allow.node_url_routes')
-                    )
-                )
-            )
-            ->add(
-                'hostname',
-                'text',
-                array(
-                    'label' => $this->getTranslator()->trans('hostname'),
-                    'data' => $theme->getHostname()
-                )
-            )
-            ->add(
-                'backendTheme',
-                'checkbox',
-                array(
-                    'label' => $this->getTranslator()->trans('backendTheme'),
-                    'data' => $theme->isBackendTheme(),
-                    'required' => false
-                )
-            );
+        );
 
         return $builder->getForm();
     }
@@ -305,6 +273,16 @@ class ThemesController extends RozierApp
      * @return \Symfony\Component\Form\Form
      */
     protected function buildEditForm(Theme $theme)
+    {
+        return $this->buildCommonForm($theme)->getForm();
+    }
+
+    /**
+     * @param Theme $theme
+     *
+     * @return FormBuilder
+     */
+    protected function buildCommonForm(Theme $theme)
     {
         $defaults = array(
             'available' =>    $theme->isAvailable(),
@@ -342,7 +320,7 @@ class ThemesController extends RozierApp
                 'required' => false
             ));
 
-        return $builder->getForm();
+        return $builder;
     }
 
     /**

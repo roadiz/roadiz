@@ -36,9 +36,6 @@ namespace RZ\Roadiz\Core\Viewers;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 
 use \InlineStyle\InlineStyle;

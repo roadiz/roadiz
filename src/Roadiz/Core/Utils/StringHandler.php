@@ -171,7 +171,7 @@ class StringHandler
             $secret = crypt($secret, $secret);
             $salted = base64_decode($value);
 
-            $nonSalted = str_replace($secret, "", $salted);// substr($salted, strlen($secret));
+            $nonSalted = str_replace($secret, "", $salted);
 
             return base64_decode($nonSalted);
         } else {
