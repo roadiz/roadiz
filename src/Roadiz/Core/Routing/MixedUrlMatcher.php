@@ -61,8 +61,19 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             if (false !== $ret = $this->matchNode($decodedUrl)) {
                 return $ret;
             } else {
+
+                $theme = Kernel::getService('em')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                            ->findFirstAvailableNonStaticFrontend();
+
+                if (null !== $theme) {
+                    $ctrl = $theme->getClassName();
+                } else {
+                    $ctrl = 'RZ\Roadiz\CMS\Controllers\FrontendController';
+                }
+
                 return array(
-                    '_controller' => 'RZ\Roadiz\CMS\Controllers\FrontendController::throw404',
+                    '_controller' => $ctrl.'::throw404',
                     'message'     => 'Unable to find any matching route nor matching node. '.
                                      'Check your `Resources/routes.yml` file.',
                     'node'        => null,
