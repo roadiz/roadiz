@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Theme;
 
 /**

@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Services;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Pimple\Container;
 
 /**

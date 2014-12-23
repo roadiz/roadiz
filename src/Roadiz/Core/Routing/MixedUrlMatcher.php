@@ -61,7 +61,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             if (false !== $ret = $this->matchNode($decodedUrl)) {
                 return $ret;
             } else {
-
                 $theme = Kernel::getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
                             ->findFirstAvailableNonStaticFrontend();
