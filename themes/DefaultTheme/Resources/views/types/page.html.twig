@@ -28,8 +28,8 @@
 
 
 <div class="content">{{ nodeSource.content|markdown }}</div>
-<div class="photos">
-	{% for document in nodeSource.photos %}
+<div class="pictures">
+	{% for document in nodeSource.pictures %}
 		{% set imageMetas = document.documentTranslations.first %}
 		<figure class="uk-thumbnail">
 			{{ document.viewer.documentByArray(themeServices.imageFormats.thumbnail)|raw }}

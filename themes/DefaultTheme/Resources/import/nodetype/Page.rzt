@@ -8,7 +8,7 @@
     "fields": [
         {
             "name": "content",
-            "label": "Contenu",
+            "label": "Content",
             "description": null,
             "visible": true,
             "type": 4,
@@ -18,7 +18,17 @@
         },
         {
             "name": "header_image",
-            "label": "Image d’en-tête",
+            "label": "Header image",
+            "description": null,
+            "visible": true,
+            "type": 9,
+            "indexed": false,
+            "virtual": true,
+            "default_values": null
+        },
+        {
+            "name": "pictures",
+            "label": "Pictures",
             "description": null,
             "visible": true,
             "type": 9,
