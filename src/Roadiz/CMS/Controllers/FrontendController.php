@@ -317,11 +317,11 @@ class FrontendController extends AppController
         return $this->translation;
     }
 
-    /*
-     * {@inheritdoc}
+    /**
+     * Add a default translation locale for static routes and
+     * node SEO data.
      *
-     * Add a default translation locale for static routes.
-     *
+     * * [parent assignations…]
      * * **_default_locale**
      * * meta
      *     * siteName

@@ -64,17 +64,22 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             /*
              * array
              *
+             * ['!=', $value]
              * ['<=', $value]
              * ['<', $value]
              * ['>=', $value]
              * ['>', $value]
              * ['BETWEEN', $value, $value]
              * ['LIKE', $value]
-             * ['NOT IN', $value]
-             * in [$value, $value]
+             * ['NOT IN', [$value]]
+             * [$value, $value] (IN)
              */
             if (count($value) > 1) {
                 switch ($value[0]) {
+                    case '!=':
+                        # neq
+                        $res = $qb->expr()->neq($prefix.$key, ':'.$baseKey);
+                        break;
                     case '<=':
                         # lte
                         $res = $qb->expr()->lte($prefix.$key, ':'.$baseKey);
@@ -153,6 +158,10 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
                  */
                 if (count($value) > 1) {
                     switch ($value[0]) {
+                        case '!=':
+                            # neq
+                            $res = $qb->expr()->neq($alias . '.' .$key, $value[1]);
+                            break;
                         case '<=':
                             # lte
                             $res = $qb->expr()->lte($alias . '.' .$key, $value[1]);
@@ -217,6 +226,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         } elseif (is_array($value)) {
             if (count($value) > 1) {
                 switch ($value[0]) {
+                    case '!=':
                     case '<=':
                     case '<':
                     case '>=':
