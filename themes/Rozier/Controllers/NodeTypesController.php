@@ -107,11 +107,9 @@ class NodeTypesController extends RozierApp
                     $this->editNodeType($form->getData(), $nodeType);
 
                     $msg = $this->getTranslator()->trans('nodeType.%name%.updated', array('%name%'=>$nodeType->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
                 /*
                  * Redirect to update schema page
@@ -166,8 +164,7 @@ class NodeTypesController extends RozierApp
                     $this->addNodeType($form->getData(), $nodeType);
 
                     $msg = $this->getTranslator()->trans('nodeType.%name%.created', array('%name%'=>$nodeType->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
                     /*
                      * Redirect to update schema page
@@ -182,8 +179,7 @@ class NodeTypesController extends RozierApp
                     );
 
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodeTypesAddPage'
@@ -236,8 +232,7 @@ class NodeTypesController extends RozierApp
                 $nodeType->getHandler()->deleteWithAssociations();
 
                 $msg = $this->getTranslator()->trans('nodeType.%name%.deleted', array('%name%'=>$nodeType->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
                 /*
                  * Redirect to update schema page
                  */

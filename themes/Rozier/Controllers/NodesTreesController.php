@@ -110,8 +110,7 @@ class NodesTreesController extends RozierApp
                     $msg = $this->getTranslator()->trans('wrong.request');
                 }
 
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
@@ -183,8 +182,7 @@ class NodesTreesController extends RozierApp
                 if ($form->isValid()) {
                     $msg = $this->bulkDeleteNodes($form->getData());
 
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
                     if (!empty($form->getData()['referer'])) {
                         $response = new RedirectResponse($form->getData()['referer']);
@@ -249,8 +247,7 @@ class NodesTreesController extends RozierApp
                 if ($form->isValid()) {
                     $msg = $this->bulkStatusNodes($form->getData());
 
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
 
                     if (!empty($form->getData()['referer'])) {

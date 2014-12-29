@@ -126,8 +126,7 @@ class NodeTypesUtilsController extends RozierApp
                         }
 
                         $msg = $this->getTranslator()->trans('nodeType.imported.created');
-                        $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getService('logger')->info($msg);
+                        $this->publishConfirmMessage($request, $msg);
 
                     } else {
                         /*
@@ -137,8 +136,7 @@ class NodeTypesUtilsController extends RozierApp
                         $existingNT->getHandler()->diff($nodeType);
 
                         $msg = $this->getTranslator()->trans('nodeType.imported.updated');
-                        $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getService('logger')->info($msg);
+                        $this->publishConfirmMessage($request, $msg);
                     }
 
                     $this->getService('em')->flush();

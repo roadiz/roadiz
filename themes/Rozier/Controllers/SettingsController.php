@@ -136,11 +136,9 @@ class SettingsController extends RozierApp
                         'setting.%name%.updated',
                         array('%name%'=>$setting->getName())
                     );
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
 
@@ -197,11 +195,9 @@ class SettingsController extends RozierApp
                 try {
                     $this->editSetting($form->getData(), $setting);
                     $msg = $this->getTranslator()->trans('setting.%name%.updated', array('%name%'=>$setting->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -252,12 +248,10 @@ class SettingsController extends RozierApp
                 try {
                     $this->addSetting($form->getData(), $setting);
                     $msg = $this->getTranslator()->trans('setting.%name%.created', array('%name%'=>$setting->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
                 /*
@@ -309,8 +303,7 @@ class SettingsController extends RozierApp
                 $this->deleteSetting($form->getData(), $setting);
 
                 $msg = $this->getTranslator()->trans('setting.%name%.deleted', array('%name%'=>$setting->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                  * Force redirect to avoid resending form when refreshing page

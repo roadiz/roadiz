@@ -103,8 +103,7 @@ class NodeTypeFieldsController extends RozierApp
                 $this->editNodeTypeField($form->getData(), $field);
 
                 $msg = $this->getTranslator()->trans('nodeTypeField.%name%.updated', array('%name%'=>$field->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                  * Redirect to update schema page
@@ -168,8 +167,7 @@ class NodeTypeFieldsController extends RozierApp
                         'nodeTypeField.%name%.created',
                         array('%name%'=>$field->getName())
                     );
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
 
                     /*
@@ -257,8 +255,7 @@ class NodeTypeFieldsController extends RozierApp
                     'nodeTypeField.%name%.deleted',
                     array('%name%'=>$field->getName())
                 );
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                  * Redirect to update schema page

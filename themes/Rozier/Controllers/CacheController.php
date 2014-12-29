@@ -60,8 +60,7 @@ class CacheController extends RozierApp
             CacheCommand::clearTemplates();
 
             $msg = $this->getTranslator()->trans('cache.deleted');
-            $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getService('logger')->info($msg);
+            $this->publishConfirmMessage($request, $msg);
 
             /*
              * Force redirect to avoid resending form when refreshing page
@@ -110,8 +109,7 @@ class CacheController extends RozierApp
             CacheCommand::clearCachedAssets();
 
             $msg = $this->getTranslator()->trans('cache.deleted');
-            $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getService('logger')->info($msg);
+            $this->publishConfirmMessage($request, $msg);
 
             /*
              * Force redirect to avoid resending form when refreshing page

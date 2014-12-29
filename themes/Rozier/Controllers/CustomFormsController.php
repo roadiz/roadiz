@@ -105,11 +105,9 @@ class CustomFormsController extends RozierApp
                     $this->editCustomForm($form->getData(), $customForm);
 
                     $msg = $this->getTranslator()->trans('customForm.%name%.updated', array('%name%'=>$customForm->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
                 /*
                  * Redirect to update schema page
@@ -164,8 +162,7 @@ class CustomFormsController extends RozierApp
                     $this->addCustomForm($form->getData(), $customForm);
 
                     $msg = $this->getTranslator()->trans('customForm.%name%.created', array('%name%'=>$customForm->getName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
                     /*
                      * Redirect to update schema page
@@ -177,8 +174,7 @@ class CustomFormsController extends RozierApp
                     );
 
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'customFormsAddPage'
@@ -228,8 +224,7 @@ class CustomFormsController extends RozierApp
                 $this->getService("em")->remove($customForm);
 
                 $msg = $this->getTranslator()->trans('customForm.%name%.deleted', array('%name%'=>$customForm->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
                 /*
                  * Redirect to update schema page
                  */
