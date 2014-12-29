@@ -38,6 +38,9 @@ use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 
 use \Michelf\Markdown;
 use RZ\Roadiz\Core\Utils\InlineMarkdown;
+use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
+use Asm89\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
+use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 
 /**
  * Register Twig services for dependency injection container.
@@ -105,6 +108,10 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             $twig->addExtension($c['twig.routingExtension']);
             $twig->addExtension(new \Twig_Extensions_Extension_Text());
 
+            if (null !== $c['twig.cacheExtension']) {
+                $twig->addExtension($c['twig.cacheExtension']);
+            }
+
             if ($devMode) {
                 $twig->addExtension(new \Twig_Extension_Debug());
             }
@@ -168,6 +175,23 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                     }
                 }
             );
+        };
+        /*
+         * Twig cache extension
+         * see https://github.com/asm89/twig-cache-extension
+         */
+        $container['twig.cacheExtension'] = function ($c) {
+
+            $resultCacheDriver = $c['em']->getConfiguration()->getResultCacheImpl();
+            if ($resultCacheDriver !== null) {
+                $cacheProvider  = new DoctrineCacheAdapter($resultCacheDriver);
+                $cacheStrategy  = new LifetimeCacheStrategy($cacheProvider);
+                $cacheExtension = new CacheExtension($cacheStrategy);
+
+                return $cacheExtension;
+            } else {
+                return null;
+            }
         };
 
         return $container;
