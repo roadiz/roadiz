@@ -75,6 +75,22 @@ class Newsletter extends AbstractDateTimed
         return $this;
     }
 
+    public function isDraft() {
+        return ($this->status == static::DRAFT ? true : false);
+    }
+
+    public function isPending() {
+        return ($this->status == static::PENDING ? true : false);
+    }
+
+    public function isSending() {
+        return ($this->status == static::SENDING ? true : false);
+    }
+
+    public function isSent() {
+        return ($this->status == static::SENT ? true : false);
+    }
+
     /**
      * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="newsletter")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id")
@@ -125,7 +141,7 @@ class Newsletter extends AbstractDateTimed
         return $this->newsletterSubscriber;
     }
 
-    public function __contruct($node)
+    public function __construct($node)
     {
         $this->status = static::DRAFT;
         $this->node = $node;

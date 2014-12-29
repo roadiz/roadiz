@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright © 2014, REZO ZERO
+/*
+ * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,26 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the REZO ZERO shall not
+ * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from the REZO ZERO SARL.
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NewsletterController.php
- * @copyright REZO ZERO 2014
+ *
+ * @file NewslettersController.php
  * @author Maxime Constantinian
  */
 
 namespace Themes\Rozier\Controllers;
 
-use Themes\Rozier\RozierApp;
+use Themes\Rozier\Controllers\NewsController;
 
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Entities\Newsletter;
+
+use Themes\Rozier\RozierApp;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Traits\NodesSourcesTrait;
+use Themes\Rozier\Traits\NodesTrait;
 
 /**
  * Nodes controller
@@ -48,6 +52,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class NewslettersController extends RozierApp
 {
+    use NodesSourcesTrait;
+    use NodesTrait;
+
     public function listAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
@@ -63,7 +70,7 @@ class NewslettersController extends RozierApp
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
-        $this->assignation['newsletter'] = $listManager->getEntities();
+        $this->assignation['newsletters'] = $listManager->getEntities();
         $this->assignation['nodeTypes'] = $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findBy(array('newsletterType' => true));
@@ -116,9 +123,11 @@ class NewslettersController extends RozierApp
 
             if ($form->isValid()) {
                 try {
+                    $data = $form->getData();
                     $node = $this->createNode($form->getData(), $type, $translation);
 
                     $newsletter = new Newsletter($node);
+                    $newsletter->setStatus(Newsletter::DRAFT);
 
                     $this->getService('em')->persist($newsletter);
                     $this->getService('em')->flush();
@@ -131,9 +140,7 @@ class NewslettersController extends RozierApp
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
-                            'newsletterEditPage',
-                            array('nodeId' => $node->getId())
-                        )
+                            'newslettersIndexPage')
                     );
                     $response->prepare($request);
 
@@ -167,4 +174,82 @@ class NewslettersController extends RozierApp
             return $this->throw404();
         }
     }
+
+     /**
+     * Return an edition form for requested newsletter.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $newsletterId
+     * @param int                                      $translationId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction(Request $request, $newsletterId, $translationId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
+
+        $translation = $this->getService('em')
+                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+
+        if ($translation !== null) {
+            /*
+             * Here we need to directly select nodeSource
+             * if not doctrine will grab a cache tag because of NodeTreeWidget
+             * that is initialized before calling route method.
+             */
+            $newsletter = $this->getService('em')
+                ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
+
+            $source = $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                ->findOneBy(array('translation'=>$translation, 'node'=>$newsletter->getNode()));
+
+            if (null !== $source) {
+                $node = $source->getNode();
+
+                $this->assignation['translation'] = $translation;
+                $this->assignation['available_translations'] = $newsletter->getNode()->getHandler()->getAvailableTranslations();
+                $this->assignation['node'] = $node;
+                $this->assignation['source'] = $source;
+
+                /*
+                 * Form
+                 */
+                $form = $this->buildEditSourceForm($node, $source);
+                $form->handleRequest();
+
+                if ($form->isValid()) {
+                    $this->editNodeSource($form->getData(), $source);
+
+                    $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', array(
+                        '%node_source%'=>$source->getNode()->getNodeName(),
+                        '%translation%'=>$source->getTranslation()->getName()
+                    ));
+
+                    $this->publishConfirmMessage($request, $msg);
+
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'nodesEditSourcePage',
+                            array('nodeId' => $node->getId(), 'translationId'=>$translation->getId())
+                        )
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
+                }
+
+                $this->assignation['form'] = $form->createView();
+
+                return new Response(
+                    $this->getTwig()->render('newsletters/edit.html.twig', $this->assignation),
+                    Response::HTTP_OK,
+                    array('content-type' => 'text/html')
+                );
+            }
+        }
+
+        return $this->throw404();
+    }
 }
+

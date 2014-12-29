@@ -626,12 +626,17 @@ searchNodeSourcePage:
 newslettersIndexPage:
     path:     /rz-admin/newsletter
     defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::listAction }
-#NEWSLETTERS
 newslettersAddPage:
     path:     /rz-admin/newsletter/add/{nodeTypeId}/{translationId}
     defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::addAction }
     requirements:
         nodetypeId : "[0-9]+"
+        translationId : "[0-9]+"
+newslettersEditPage:
+    path:     /rz-admin/newsletter/edit/{newsletterId}/{translationId}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::editAction }
+    requirements:
+        newsletterId : "[0-9]+"
         translationId : "[0-9]+"
 
 # CSS to style with main color

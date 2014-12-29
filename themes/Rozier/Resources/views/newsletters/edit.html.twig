@@ -15,7 +15,7 @@
 			{{ "edit.nodeSource.%name%"|trans({'%name%': currentTitle})|truncate(25, false, '[…]') }}
             {% include 'nodes/nodeTypeCircle.html.twig' %}
 		</h1>
-		{% include 'newsletter/navBack.html.twig' %}
+		{% include 'newsletters/navBack.html.twig' %}
 		{# {% include 'nodes/navBar.html.twig' with {"current": 'source'} %} #}
 		{# {% include 'nodes/translationBar.html.twig' with {"current": translation.getId} %} #}
 	</header>
@@ -35,6 +35,6 @@
 		</form>
 	</article>
 
-	{% include 'newsletter/actionsMenu.html.twig' %}
+	{% include 'newsletters/actionsMenu.html.twig' %}
 </section>
 {% endblock %}
