@@ -259,13 +259,7 @@ class NewslettersController extends RozierApp
         );
         $theme = $this->getService("em")
             ->getRepository("RZ\Roadiz\Core\Entities\Theme")
-            ->findOneBy(
-                array(
-                    "available" => true,
-                    "staticTheme" => false,
-                    "backendTheme" => false
-                )
-            );
+            ->findFirstAvailableNonStaticFrontend();
         $baseNamespace = explode("\\", $theme->getClassName());
         $baseNamespace = array_reverse($baseNamespace);
         unset($baseNamespace[0]);
@@ -276,10 +270,20 @@ class NewslettersController extends RozierApp
             . "\NewslettersController\\"
             . $newsletter->getNode()->getNodeType()->getName()
             . "Controller";
-        var_dump($classname);
+
+        // var_dump($this->getService('twig.loaderFileSystem'));
+        // $this->getService()->extend(
+        //     'twig.loaderFileSystem',
+        //     function (\Twig_Loader_Filesystem $loader, $c) {
+        //         $loader->prependPath($classname::getViewsFolder());
+        //         return $loader;
+        //     }
+        // );
+        // exit();
+        $this->getService('twig.loaderFileSystem')->prependPath($classname::getViewsFolder());
         $front = new $classname();
         $front->setKernel($this->kernel);
-        $front->__init();
-        return $front->makeHtmlAction($request, $newsletterId);
+        $front->prepareBaseAssignation();
+        return $front->makeHtmlAction($request, $newsletter);
     }
 }

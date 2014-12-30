@@ -77,7 +77,7 @@
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('newslettersEditPage', { newsletterId: newsletter.id, translationId: translation.id }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditPage', { nodeId: newsletter.node.id }) }}" title="{% trans %}duplicate{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('newslettersPreviewPage', { newsletterId: newsletter.id }) }}" title="{% trans %}see.newsletter{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('newslettersPreviewPage', { newsletterId: newsletter.id }) }}" target="_blank" title="{% trans %}see.newsletter{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditPage', { nodeId: newsletter.node.id }) }}" title="{% trans %}newsletter.test.email{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                         {% endspaceless %}
                         </td>

@@ -38,9 +38,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BasicNewsletterController extends DefaultThemeApp
 {
-    public function makeHtmlAction(Request $request, $newsletterId)
+    public function makeHtmlAction(Request $request, $newsletter)
     {
-        $this->prepareThemeAssignation(null, null);
+        $this->prepareThemeAssignation($newsletter->getNode(), null);
 
         return new Response(
             $this->getTwig()->render('newsletters/basicNewsletter.html.twig', $this->assignation),
