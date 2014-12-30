@@ -191,7 +191,7 @@ class DocumentRepository extends EntityRepository
         /*
          * Search in translations
          */
-        $qb->leftJoin('obj.documentTranslations', 'dt');
+        $qb->leftJoin($alias.'.documentTranslations', 'dt');
         $criteriaFields = array();
         $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\DocumentTranslation');
         $cols = $metadatas->getColumnNames();
