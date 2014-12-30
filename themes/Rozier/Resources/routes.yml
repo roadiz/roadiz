@@ -639,6 +639,12 @@ newslettersEditPage:
         newsletterId : "[0-9]+"
         translationId : "[0-9]+"
 
+newslettersPreviewPage:
+    path:     /rz-admin/newsletter/preview/{newsletterId}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::previewAction }
+    requirements:
+        newsletterId : "[0-9]+"
+
 # CSS to style with main color
 cssMainColor:
     path : /rz-admin/css/main-color.css

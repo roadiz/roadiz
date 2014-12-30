@@ -221,8 +221,8 @@ class NewslettersController extends RozierApp
                 if ($form->isValid()) {
                     $this->editNodeSource($form->getData(), $source);
 
-                    $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', array(
-                        '%node_source%'=>$source->getNode()->getNodeName(),
+                    $msg = $this->getTranslator()->trans('newsletter.%newsletter%.updated.%translation%', array(
+                        '%newsletter%'=>$source->getNode()->getNodeName(),
                         '%translation%'=>$source->getTranslation()->getName()
                     ));
 
@@ -230,8 +230,8 @@ class NewslettersController extends RozierApp
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
-                            'nodesEditSourcePage',
-                            array('nodeId' => $node->getId(), 'translationId'=>$translation->getId())
+                            'newslettersEditPage',
+                            array('newsletterId' => $newsletterId, 'translationId'=>$translationId)
                         )
                     );
                     $response->prepare($request);
@@ -251,5 +251,35 @@ class NewslettersController extends RozierApp
 
         return $this->throw404();
     }
-}
 
+    public function previewAction(Request $request, $newsletterId) {
+        $newsletter = $this->getService("em")->find(
+            "RZ\Roadiz\Core\Entities\Newsletter",
+            $newsletterId
+        );
+        $theme = $this->getService("em")
+            ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+            ->findOneBy(
+                array(
+                    "available" => true,
+                    "staticTheme" => false,
+                    "backendTheme" => false
+                )
+            );
+        $baseNamespace = explode("\\", $theme->getClassName());
+        $baseNamespace = array_reverse($baseNamespace);
+        unset($baseNamespace[0]);
+        $baseNamespace = array_reverse($baseNamespace);
+        unset($baseNamespace[0]);
+        $baseNamespace = implode("\\", $baseNamespace);
+        $classname = $baseNamespace
+            . "\NewslettersController\\"
+            . $newsletter->getNode()->getNodeType()->getName()
+            . "Controller";
+        var_dump($classname);
+        $front = new $classname();
+        $front->setKernel($this->kernel);
+        $front->__init();
+        return $front->makeHtmlAction($request, $newsletterId);
+    }
+}
