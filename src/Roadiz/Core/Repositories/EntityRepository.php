@@ -325,6 +325,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             $field = $metadatas->getFieldName($col);
             $type = $metadatas->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes) &&
+                $field != 'folder' &&
                 $field != 'childrenOrder' &&
                 $field != 'childrenOrderDirection') {
                 $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
@@ -425,7 +426,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     public function countSearchBy($pattern, array $criteria = array())
     {
         $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'count(obj.id)')
+        $qb->add('select', 'count(distinct obj.id)')
            ->add('from', $this->getEntityName() . ' obj');
 
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
