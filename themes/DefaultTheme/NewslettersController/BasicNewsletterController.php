@@ -41,7 +41,7 @@ class BasicNewsletterController extends DefaultThemeApp
     public function makeHtmlAction(Request $request, $newsletter)
     {
         $this->prepareThemeAssignation($newsletter->getNode(), null);
-
+        $this->assignation["node"] = $newsletter->getNode()->getNodeSources()->first();
         return new Response(
             $this->getTwig()->render('newsletters/basicNewsletter.html.twig', $this->assignation),
             Response::HTTP_OK,
