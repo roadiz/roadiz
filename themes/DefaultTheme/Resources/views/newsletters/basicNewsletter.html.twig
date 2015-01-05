@@ -9,42 +9,40 @@
 
 <body>
 
-{% set imgConf = {'width': 600, 'crop': '1:1'} %}
 
-{% macro simpleBlock(node)%}
-{% set headerImage = node.headerImage[0] %}
-    <tr>
-        <td class="content-block">
-            <figure style="background-image:url({{ headerImage.viewer.documentUrlByArray(imgConf) }})"></figure>
-            {{ node.content }}
-        </td>
-    </tr>
+{% macro simpleBlock(nodeSource, nbLevel) %}
+    {% set imgConf = {'width': 600, 'crop': '3:1'} %}
+    {% set headerImage = nodeSource.headerImage[0] %}
+
+	<td class="multi_{{ nbLevel }}">
+    	<figure>{{ headerImage.viewer.documentByArray(imgConf)|raw }}</figure>
+    	<h2> {{ nodeSource.title }} </h2>
+    	{{ nodeSource.content|markdown }}
+    </td>
 {% endmacro %}
 
-{% macro checkNode(node)%}
+{% macro checkNode(nodeSource, nbLevel)%}
     {% import _self as show %}
 
-    {% if node.node.nodetype.name == "blockContent" %}
-        {{ show.simpleBlock(node) }}
-    {% elseif node.node.nodetype.name == "blockCatagories" %}
-        {{ show.multiBlock(node) }}
+    {% if nodeSource.node.nodetype.name == "BlockContent" %}
+        {{ show.simpleBlock(nodeSource, nbLevel|default('1')) }}
+    {% elseif nodeSource.node.nodetype.name == "BlockCategories" %}
+        {{ show.multiBlock(nodeSource) }}
     {% endif %}
 {% endmacro %}
 
-{% macro multiBlock(node) %}
+{% macro multiBlock(nodeSource) %}
     {% import _self as show %}
 
     <table width="100%" cellpadding="0" cellspacing="0">
-        {% for tmp in node.child %}
-            <td class="content-block">
-                {{ show.checkNode(tmp.nodeSource) }}
-            </td>
+        <tr>
+        {% for tmp in nodeSource.handler.children %}
+            {{ show.checkNode(tmp, nodeSource.handler.children|length) }}
         {% endfor %}
+        </tr>
     </table>
 {% endmacro %}
 
-
-{% import _self as show %}
 
 <table class="body-wrap">
     <tr>
@@ -66,10 +64,9 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="content-block">
-										{{ dump(node) }}
-										{{ show.checkNode(node.block) }}
-                                    </td>
+                                        {% for ns in node.handler.children %}
+                                            {{ _self.checkNode(ns) }}
+                                        {% endfor %}
                                 </tr>
                             </table>
                         </td>

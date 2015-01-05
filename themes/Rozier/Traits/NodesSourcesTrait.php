@@ -37,7 +37,7 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 use Themes\Rozier\RozierApp;
-use Themes\Rozier\Traits\NodesSourcesTrait;
+use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
