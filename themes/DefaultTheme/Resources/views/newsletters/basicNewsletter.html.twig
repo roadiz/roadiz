@@ -3,7 +3,8 @@
 <head>
 <meta name="viewport" content="width=device-width" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>{{ node.subject }}</title>
+<title>{{ nodeSource.subject }}</title>
+{# Link balise will be replace during export process #}
 <link href="{{ head.resourcesUrl }}css/styleNewsletter.css" rel="stylesheet"/>
 </head>
 
@@ -14,12 +15,13 @@
     {% set imgConf = {'width': 600, 'crop': '3:1'} %}
     {% set headerImage = nodeSource.headerImage[0] %}
 
-	<td class="multi_{{ nbLevel }}">
-    	<figure>{{ headerImage.viewer.documentByArray(imgConf)|raw }}</figure>
-    	<h2> {{ nodeSource.title }} </h2>
-    	{{ nodeSource.content|markdown }}
+    <td class="multi_{{ nbLevel }}">
+        {{ headerImage.viewer.documentByArray(imgConf)|raw }}
+        <h2> {{ nodeSource.title }} </h2>
+        {{ nodeSource.content|markdown }}
     </td>
 {% endmacro %}
+
 
 {% macro checkNode(nodeSource, nbLevel)%}
     {% import _self as show %}
@@ -31,13 +33,34 @@
     {% endif %}
 {% endmacro %}
 
+{% macro childBlock(nodeSource, nbLevel) %}
+    {% set imgConf = {'width': 600, 'crop': '2:3'} %}
+    {% set headerImage = nodeSource.headerImage[0] %}
+
+    <td class="multi_{{ nbLevel }}">
+        {{ headerImage.viewer.documentByArray(imgConf)|raw }}
+        <h2> {{ nodeSource.title }} </h2>
+        {{ nodeSource.content|markdown }}
+    </td>
+{% endmacro %}
+
+{% macro checkChild(nodeSource, nbLevel)%}
+    {% import _self as show %}
+
+    {% if nodeSource.node.nodetype.name == "BlockContent" %}
+        {{ show.childBlock(nodeSource, nbLevel|default('1')) }}
+    {% elseif nodeSource.node.nodetype.name == "BlockCategories" %}
+        {{ show.multiBlock(nodeSource) }}
+    {% endif %}
+{% endmacro %}
+
 {% macro multiBlock(nodeSource) %}
     {% import _self as show %}
 
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
         {% for tmp in nodeSource.handler.children %}
-            {{ show.checkNode(tmp, nodeSource.handler.children|length) }}
+            {{ show.checkChild(tmp, nodeSource.handler.children|length) }}
         {% endfor %}
         </tr>
     </table>
@@ -55,18 +78,18 @@
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td class="content-block">
-                                        <a href="{{ node.titleLink }}" target="_blank"><h1>{{ node.newsletterTitle }}</h1></a>
+                                        <a href="{{ node.titleLink }}" target="_blank"><h1>{{ nodeSource.newsletterTitle }}</h1></a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="content-block">
-                                        Newsletter: {{ node.datetime|localizeddate('none', 'none', null, null, "Y MMMM") }}
+                                        Newsletter: {{ nodeSource.datetime|localizeddate('none', 'none', null, null, "Y MMMM") }}
                                     </td>
                                 </tr>
                                 <tr>
-                                        {% for ns in node.handler.children %}
-                                            {{ _self.checkNode(ns) }}
-                                        {% endfor %}
+                                    {% for ns in nodeSource.handler.children %}
+                                        {{ _self.checkNode(ns) }}
+                                    {% endfor %}
                                 </tr>
                             </table>
                         </td>
@@ -75,10 +98,11 @@
                 <div class="footer">
                     <table width="100%">
                         <tr>
-
+                            <td> </td>
                         </tr>
                     </table>
-                </div></div>
+                </div>
+            </div>
         </td>
         <td></td>
     </tr>

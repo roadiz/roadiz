@@ -640,7 +640,7 @@ newslettersEditPage:
         translationId : "[0-9]+"
 newslettersPreviewPage:
     path:     /rz-admin/newsletter/preview/{newsletterId}
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::previewAction }
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::previewAction }
     requirements:
         newsletterId : "[0-9]+"
 newslettersDuplicatePage:
@@ -648,7 +648,12 @@ newslettersDuplicatePage:
     defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::duplicateAction }
     requirements:
         newsletterId : "[0-9]+"
-
+newslettersExportPage:
+    path:     /rz-admin/newsletter/export/{newsletterId}/{inline}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::exportAction }
+    requirements:
+        newsletterId : "[0-9]+"
+        inline: 0|1
 # CSS to style with main color
 cssMainColor:
     path : /rz-admin/css/main-color.css

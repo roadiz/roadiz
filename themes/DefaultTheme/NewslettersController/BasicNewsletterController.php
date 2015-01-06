@@ -38,14 +38,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BasicNewsletterController extends DefaultThemeApp
 {
-    public function makeHtmlAction(Request $request, $newsletter)
+    public function makeHtml(Request $request, $newsletter)
     {
         $this->prepareThemeAssignation($newsletter->getNode(), null);
-        $this->assignation["node"] = $newsletter->getNode()->getNodeSources()->first();
-        return new Response(
-            $this->getTwig()->render('newsletters/basicNewsletter.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
+        $this->assignation["nodeSource"] = $newsletter->getNode()->getNodeSources()->first();
+        return $this->getTwig()->render('newsletters/basicNewsletter.html.twig', $this->assignation);
     }
 }

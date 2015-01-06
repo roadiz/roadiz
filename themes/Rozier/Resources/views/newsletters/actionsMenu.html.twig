@@ -30,7 +30,8 @@
                 {% endif %}
                 <a class="uk-button rz-no-ajax-link" href="{{ path('newslettersDuplicatePage', { newsletterId:newsletterId }) }}"><i class="uk-icon-rz-duplicate"></i><span class="label">{% trans %}duplicate{% endtrans %}</span></a>
 {#                 <a class="uk-button" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-plus"></i><span class="label">{% trans %}add.child{% endtrans %}</span></a> #}
-                <a class="uk-button rz-no-ajax-link" href="{{ path('nodesExportPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-download"></i><span class="label">{% trans %}export{% endtrans %}</span></a>
+                <a class="uk-button rz-no-ajax-link" href="{{ path('newslettersExportPage', { newsletterId:newsletterId, inline:0 }) }}"><i class="uk-icon-rz-download"></i><span class="label">{% trans %}export.html{% endtrans %}</span></a>
+                <a class="uk-button rz-no-ajax-link" href="{{ path('newslettersExportPage', { newsletterId:newsletterId, inline:1 }) }}"><i class="uk-icon-rz-download"></i><span class="label">{% trans %}export.html.inline{% endtrans %}</span></a>
             </nav>
         </div>
 
