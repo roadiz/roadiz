@@ -542,6 +542,18 @@ class NodesController extends RozierApp
                     $response->prepare($request);
 
                     return $response->send();
+                } catch (\Exception $e) {
+                    $this->publishErrorMessage($request, $e->getMessage());
+
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'nodesAddChildPage',
+                            array('nodeId' => $nodeId, 'translationId' => $translationId)
+                        )
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
                 }
             }
 
@@ -824,24 +836,18 @@ class NodesController extends RozierApp
             throw new \Exception("Requested parent node does not match form values", 1);
         }
 
-        try {
-            $node = new Node($type);
-            $node->setParent($parentNode);
-            $node->setNodeName($data['nodeName']);
-            $this->getService('em')->persist($node);
+        $node = new Node($type);
+        $node->setParent($parentNode);
+        $node->setNodeName($data['nodeName']);
+        $this->getService('em')->persist($node);
 
-            $sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
-            $source = new $sourceClass($node, $translation);
-            $source->setTitle($data['nodeName']);
-            $this->getService('em')->persist($source);
-            $this->getService('em')->flush();
+        $sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
+        $source = new $sourceClass($node, $translation);
+        $source->setTitle($data['nodeName']);
+        $this->getService('em')->persist($source);
+        $this->getService('em')->flush();
 
-            return $node;
-        } catch (\Exception $e) {
-            $msg = $this->getTranslator()->trans('node.%name%.no_creation.alreadyExists', array('%name%'=>$node->getNodeName()));
-
-            throw new EntityAlreadyExistsException($msg, 1);
-        }
+        return $node;
     }
 
     /**
