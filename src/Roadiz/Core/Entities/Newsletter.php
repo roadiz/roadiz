@@ -94,7 +94,7 @@ class Newsletter extends AbstractDateTimed
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="newsletter")
+     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="newsletter", fetch="EAGER")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id")
      */
 
@@ -149,6 +149,8 @@ class Newsletter extends AbstractDateTimed
         $this->node = $node;
     }
 
+    private $handler;
+
     /**
      * @return NewsletterHandler
      */
@@ -163,7 +165,7 @@ class Newsletter extends AbstractDateTimed
     public function __clone()
     {
         $this->setId(null);
-        $this->node = clone $this->node;
+        $this->node = null;
         $this->newsletterSubscriber = null;
     }
 }

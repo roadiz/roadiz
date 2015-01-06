@@ -72,11 +72,15 @@ class NewsletterHandler
 
     public function duplicate()
     {
+
+        $newNode = $this->newsletter->getNode()->getHandler()->duplicate();
+        Kernel::getService('em')->persist($newNode);
+
         Kernel::getService('em')->refresh($this->newsletter);
-
         $newsletter = clone $this->newsletter;
-
         Kernel::getService('em')->persist($newsletter);
+
+        $newsletter->setNode($newNode);
 
         Kernel::getService('em')->flush();
 

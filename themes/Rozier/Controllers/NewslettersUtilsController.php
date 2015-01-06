@@ -41,7 +41,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 /**
  * {@inheritdoc}
  */
-class NewsletterUtilsController extends RozierApp
+class NewslettersUtilsController extends RozierApp
 {
 
     /**
@@ -54,11 +54,16 @@ class NewsletterUtilsController extends RozierApp
      */
     public function duplicateAction(Request $request, $newsletterId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTER');
+        $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
+
+        $translation = $this->getService('em')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                            ->findDefault();
 
         try {
             $existingNewsletter = $this->getService('em')
                                   ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
+
             $newNewsletter = $existingNewsletter->getHandler()->duplicate();
 
             $msg = $this->getTranslator()->trans("duplicated.newsletter.%name%", array(
@@ -71,7 +76,10 @@ class NewsletterUtilsController extends RozierApp
                 $this->getService('urlGenerator')
                     ->generate(
                         'newslettersEditPage',
-                        array("newsletterId" => $newNewsletter->getId())
+                        array(
+                            "newsletterId" => $newNewsletter->getId(),
+                            "translationId" => $translation->getId()
+                        )
                     )
             );
 
@@ -86,14 +94,16 @@ class NewsletterUtilsController extends RozierApp
 
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')
-                    ->generate(
+                     ->generate(
                         'newslettersEditPage',
-                        array("nodeId" => $existingNewsletter->getId())
-                    )
+                        array(
+                            "newsletterId" => $existingNewsletter->getId(),
+                            "translationId" => $translation->getId()
+                        )
+                     )
             );
-        } finally {
-            $response->prepare($request);
-            return $response->send();
         }
+        $response->prepare($request);
+        return $response->send();
     }
 }

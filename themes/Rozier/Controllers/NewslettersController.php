@@ -211,6 +211,7 @@ class NewslettersController extends RozierApp
                 $this->assignation['available_translations'] = $newsletter->getNode()->getHandler()->getAvailableTranslations();
                 $this->assignation['node'] = $node;
                 $this->assignation['source'] = $source;
+                $this->assignation['newsletterId'] = $newsletterId;
 
                 /*
                  * Form

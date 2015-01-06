@@ -34,7 +34,7 @@
                     <tr>
                         <th>{% trans %}name{% endtrans %}</th>
                         <th class="mobile-hidden">{% trans %}newsletter.type{% endtrans %}</th>
-                        <th class="mobile-hidden">{% trans %}newsletter.status{% endtrans %}</th>
+                        <!-- <th class="mobile-hidden">{% trans %}newsletter.status{% endtrans %}</th> -->
                         <th class="mobile-hidden">{% trans %}last.modification{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
@@ -48,7 +48,7 @@
                         <td class="nodes-list-item-link"><span class="nodes-list-item-color" style="background-color:{{ newsletter.node.nodeType.color }};"></span><a href="{{ path('newslettersEditPage', { newsletterId: newsletter.id, translationId: translation.id }) }}">{{ newsletter.node.nodeName }}</a></td>
                         {% endif %}
                         <td class="mobile-hidden">{{ newsletter.node.nodeType.displayName }}</td>
-                        <td class="mobile-hidden">  <!-- style="text-align:center;" -->
+                        {# <td class="mobile-hidden">  <!-- style="text-align:center;" -->
                             {% spaceless %}
                                 {% if newsletter.draft == true %}
                                 <div class="uk-button-status uk-button-draft" title="{% trans %}newsletter.draft{% endtrans %}" data-uk-tooltip="{animation:true}">
@@ -71,14 +71,14 @@
                                 </div><!-- uk-badge-notification -->
                                 {% endif %}
                             {% endspaceless %}
-                        </td>
+                        </td> #}
                         <td class="mobile-hidden">{{ newsletter.node.updatedAt|localizeddate('short', 'none') }}</td>
                         <td>
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('newslettersEditPage', { newsletterId: newsletter.id, translationId: translation.id }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditPage', { nodeId: newsletter.node.id }) }}" title="{% trans %}duplicate{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('newslettersPreviewPage', { newsletterId: newsletter.id }) }}" target="_blank" title="{% trans %}see.newsletter{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditPage', { nodeId: newsletter.node.id }) }}" title="{% trans %}newsletter.test.email{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('newslettersDuplicatePage', { newsletterId: newsletter.id }) }}" title="{% trans %}duplicate{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-duplicate"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('newslettersPreviewPage', { newsletterId: newsletter.id }) }}" target="_blank" title="{% trans %}see.newsletter{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility"></i></a>
+                            <!-- <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditPage', { nodeId: newsletter.node.id }) }}" title="{% trans %}newsletter.test.email{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a> -->
                         {% endspaceless %}
                         </td>
                     </tr>
