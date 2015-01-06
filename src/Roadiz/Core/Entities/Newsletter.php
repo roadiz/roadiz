@@ -148,8 +148,6 @@ class Newsletter extends AbstractDateTimed
         $this->status = static::DRAFT;
         $this->node = $node;
     }
-<<<<<<< HEAD
-=======
 
     /**
      * @return NewsletterHandler
@@ -168,5 +166,4 @@ class Newsletter extends AbstractDateTimed
         $this->node = clone $this->node;
         $this->newsletterSubscriber = null;
     }
->>>>>>> 89ab5ca... duplicate
 }

@@ -622,10 +622,6 @@ searchNodeSourcePage:
     defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeSourceAction }
     requirements: { nodetypeId : "[0-9]+" }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 89ab5ca... duplicate
 #NEWSLETTERS
 newslettersIndexPage:
     path:     /rz-admin/newsletter
@@ -642,22 +638,17 @@ newslettersEditPage:
     requirements:
         newsletterId : "[0-9]+"
         translationId : "[0-9]+"
-
 newslettersPreviewPage:
     path:     /rz-admin/newsletter/preview/{newsletterId}
     defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::previewAction }
     requirements:
         newsletterId : "[0-9]+"
-
-<<<<<<< HEAD
-=======
 newslettersDuplicatePage:
     path:     /rz-admin/newsletter/duplicate/{newsletterId}
     defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::duplicateAction }
     requirements:
         newsletterId : "[0-9]+"
 
->>>>>>> 89ab5ca... duplicate
 # CSS to style with main color
 cssMainColor:
     path : /rz-admin/css/main-color.css
