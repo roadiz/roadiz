@@ -34,7 +34,6 @@ namespace Themes\DefaultTheme\NewslettersController;
 use Themes\DefaultTheme\DefaultThemeApp;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class BasicNewsletterController extends DefaultThemeApp
 {

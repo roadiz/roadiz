@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Newsletter;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Handle operations with newsletters entities.

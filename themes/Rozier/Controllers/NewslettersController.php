@@ -45,6 +45,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Traits\NodesSourcesTrait;
 use Themes\Rozier\Traits\NodesTrait;
 
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+
 /**
  * Nodes controller
  *
@@ -124,7 +126,7 @@ class NewslettersController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $data = $form->getData();
-                    $node = $this->createNode($form->getData(), $type, $translation);
+                    $node = $this->createNode($data, $type, $translation);
 
                     $newsletter = new Newsletter($node);
                     $newsletter->setStatus(Newsletter::DRAFT);

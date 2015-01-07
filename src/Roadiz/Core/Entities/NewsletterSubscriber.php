@@ -56,7 +56,7 @@ class NewsletterSubscriber extends AbstractEntity
      */
     public function getNewsletter()
     {
-        return $this->nodeSource;
+        return $this->newsletter;
     }
 
     public function setNewsletter($ns)

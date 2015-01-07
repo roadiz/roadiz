@@ -35,13 +35,10 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\NodesSources;
 
-use Themes\Rozier\RozierApp;
 use RZ\Roadiz\Core\Utils\StringHandler;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Translation\Translator;
 
@@ -55,7 +52,7 @@ trait NodesSourcesTrait
      *
      * @return void
      */
-    private function editNodeSource($data, $nodeSource)
+    private function editNodeSource($data, NodesSources $nodeSource)
     {
         if (isset($data['title'])) {
             $nodeSource->setTitle($data['title']);
@@ -107,7 +104,7 @@ trait NodesSourcesTrait
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildEditSourceForm(Node $node, $source)
+    private function buildEditSourceForm(Node $node, NodesSources $source)
     {
         $fields = $node->getNodeType()->getFields();
         /*
@@ -162,7 +159,7 @@ trait NodesSourcesTrait
      *
      * @return AbstractType
      */
-    public static function getFormTypeFromFieldType($nodeSource, NodeTypeField $field, $controller)
+    public static function getFormTypeFromFieldType(NodesSources $nodeSource, NodeTypeField $field, $controller)
     {
         switch ($field->getType()) {
             case NodeTypeField::DOCUMENTS_T:
@@ -203,7 +200,7 @@ trait NodesSourcesTrait
     }
 
     public static function getFormOptionsFromFieldType(
-        $nodeSource,
+        NodesSources $nodeSource,
         NodeTypeField $field,
         Translator $translator
     ) {
@@ -311,7 +308,7 @@ trait NodesSourcesTrait
      *
      * @return void
      */
-    public static function setValueFromFieldType($dataValue, $nodeSource, NodeTypeField $field)
+    public static function setValueFromFieldType($dataValue, NodesSources $nodeSource, NodeTypeField $field)
     {
         switch ($field->getType()) {
             case NodeTypeField::DOCUMENTS_T:

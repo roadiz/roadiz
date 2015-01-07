@@ -36,7 +36,6 @@ use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 use \InlineStyle\InlineStyle;
 

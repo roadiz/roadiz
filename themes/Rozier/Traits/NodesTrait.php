@@ -36,16 +36,10 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
-
-use Themes\Rozier\RozierApp;
 
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 trait NodesTrait
