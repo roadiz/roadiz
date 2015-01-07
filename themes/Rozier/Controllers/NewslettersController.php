@@ -101,17 +101,17 @@ class NewslettersController extends RozierApp
         $type = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
-        $translation = $this->getService('em')
+        $trans = $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findDefault();
 
         if ($translationId !== null) {
-            $translation = $this->getService('em')
+            $trans = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
 
         if ($type !== null &&
-            $translation !== null) {
+            $trans !== null) {
             $form = $this->getService('formFactory')
                 ->createBuilder()
                 ->add('nodeName', 'text', array(
@@ -126,7 +126,7 @@ class NewslettersController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $data = $form->getData();
-                    $node = $this->createNode($data, $type, $translation);
+                    $node = $this->createNode($data, $type, $trans);
 
                     $newsletter = new Newsletter($node);
                     $newsletter->setStatus(Newsletter::DRAFT);
@@ -163,7 +163,7 @@ class NewslettersController extends RozierApp
                 }
             }
 
-            $this->assignation['translation'] = $translation;
+            $this->assignation['translation'] = $trans;
             $this->assignation['form'] = $form->createView();
             $this->assignation['type'] = $type;
             $this->assignation['nodeTypesCount'] = true;
