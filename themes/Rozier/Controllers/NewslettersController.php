@@ -48,7 +48,7 @@ use Themes\Rozier\Traits\NodesTrait;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 /**
- * Nodes controller
+ * Newsletter controller
  *
  * {@inheritdoc}
  */

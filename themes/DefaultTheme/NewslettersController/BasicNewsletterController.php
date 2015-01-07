@@ -35,12 +35,24 @@ use Themes\DefaultTheme\DefaultThemeApp;
 
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class to generate html form BasicNewsletter newsletter nodetype.
+ */
 class BasicNewsletterController extends DefaultThemeApp
 {
+    /**
+     * Generate HTML. The function name makeHtml is important because it will be automaticaly use bye NewsletterUtilsController
+     *
+     * @param Symfony\Component\HttpFoundation\Request  $request
+     * @param RZ\Roadiz\Core\Entities\Newsletter        $newsletter
+     *
+     * @return string
+     */
     public function makeHtml(Request $request, $newsletter)
     {
         $this->prepareThemeAssignation($newsletter->getNode(), null);
         $this->assignation["nodeSource"] = $newsletter->getNode()->getNodeSources()->first();
+
         return $this->getTwig()->render('newsletters/basicNewsletter.html.twig', $this->assignation);
     }
 }

@@ -110,13 +110,16 @@ class NewslettersUtilsController extends RozierApp
 
     private function getBaseNamespace()
     {
+        // get first not static frontend
         $theme = $this->getService("em")
             ->getRepository("RZ\Roadiz\Core\Entities\Theme")
             ->findFirstAvailableNonStaticFrontend();
+
         $baseNamespace = explode("\\", $theme->getClassName());
-        $baseNamespace = array_reverse($baseNamespace);
-        unset($baseNamespace[0]);
-        $baseNamespace = array_reverse($baseNamespace);
+
+        // remove last elem of the array
+        array_pop($baseNamespace);
+
         $baseNamespace = implode("\\", $baseNamespace);
         return $baseNamespace;
     }
@@ -125,19 +128,29 @@ class NewslettersUtilsController extends RozierApp
     {
         $baseNamespace = $this->getBaseNamespace();
 
+        // make namespace of the newsletter from the default dynamic theme namespace and newsletter notetype
         $classname = $baseNamespace
             . "\NewslettersController\\"
             . $newsletter->getNode()->getNodeType()->getName()
             . "Controller";
-
+        // force the twig path
         $this->getService('twig.loaderFileSystem')->prependPath($classname::getViewsFolder());
 
+        // get html from the controller
         $front = new $classname();
         $front->setKernel($this->kernel);
         $front->prepareBaseAssignation();
         return $front->makeHtml($request, $newsletter);
     }
 
+    /**
+     * Preview a newsletter
+     *
+     * @param Symfony\Component\HttpFoundation\Request  $request
+     * @param int                                       $newsletterId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
     public function previewAction(Request $request, $newsletterId)
     {
         $newsletter = $this->getService("em")->find(
@@ -152,6 +165,15 @@ class NewslettersUtilsController extends RozierApp
         );
     }
 
+    /**
+     * Export the newsletter in HTML with or without inline CSS
+     *
+     * @param Symfony\Component\HttpFoundation\Request  $request
+     * @param int                                       $newsletterId
+     * @param int                                       $inline
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
     public function exportAction(Request $request, $newsletterId, $inline)
     {
         $newsletter = $this->getService("em")->find(

@@ -5616,7 +5616,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
 
       <trans-unit xml:space="preserve" id="newsletter.%name%.created">
           <source>newsletter.%name%.created</source>
-          <target state="translated">La Newsletter «%name%» a été créé.</target>
+          <target state="translated">La newsletter «%name%» a été créé.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="newsletter.%newsletter%.updated.%translation%">
           <source>newsletter.%newsletter%.updated.%translation%</source>
@@ -5640,7 +5640,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       </trans-unit>
       <trans-unit xml:space="preserve" id="edit.newsletter.%name%">
           <source>edit.newsletter.%name%</source>
-          <target state="translated">«%name%»</target>
+          <target state="translated">%name%</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="newsletter">
           <source>newsletter</source>
@@ -5652,7 +5652,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       </trans-unit>
       <trans-unit xml:space="preserve" id="back_to.newsletter">
           <source>back_to.newsletter</source>
-          <target state="translated">Retourner à la liste de newsletter</target>
+          <target state="translated">Retourner à la liste des newsletters</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="create.a.newsletter">
           <source>create.a.newsletter</source>

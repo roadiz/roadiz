@@ -101,7 +101,6 @@ class Newsletter extends AbstractDateTimed
      * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="newsletter", fetch="EAGER")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id")
      */
-
     private $node;
 
     /**

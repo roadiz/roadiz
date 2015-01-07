@@ -69,6 +69,9 @@ class NewsletterHandler
         $this->newsletter = $newsletter;
     }
 
+    /**
+     * Duplicate newsletter
+     */
     public function duplicate()
     {
 
