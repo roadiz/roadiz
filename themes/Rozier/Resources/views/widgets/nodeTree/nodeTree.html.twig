@@ -22,7 +22,7 @@
                     <a href="#"
                        {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}
                        data-children-parent-node="{{ nodeTree.rootNode.id }}"
-                       data-translation-id="{{ lang.id }}">{{ lang.name }}</a>
+                       data-translation-id="{{ lang.id }}">{{ lang.locale|capitalize }}</a>
                 </li>
                 {% endfor %}
                 {% endspaceless %}
