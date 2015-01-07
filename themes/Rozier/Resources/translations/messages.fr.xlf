@@ -5614,6 +5614,58 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <target state="translated">Type cachant son arborescence</target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="newsletter.%name%.created">
+          <source>newsletter.%name%.created</source>
+          <target state="translated">La newsletter «%name%» a été créé.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter.%newsletter%.updated.%translation%">
+          <source>newsletter.%newsletter%.updated.%translation%</source>
+          <target state="translated">La newsletter «%name%» a été mise à jour pour la traduction %translation%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="duplicated.newsletter.%name%">
+          <source>duplicated.newsletter.%name%</source>
+          <target state="translated">La newsletter «%name%» a bien été dupliquée</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.newsletter.%name%">
+          <source>impossible.duplicate.newsletter.%name%</source>
+          <target state="translated">Impossible de dupliquer la newsletter «%name%»</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="see.newsletter">
+          <source>see.newsletter</source>
+          <target state="translated">Voir la newsletter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.newsletter">
+          <source>add.a.newsletter</source>
+          <target state="translated">Ajouter une newsletter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.newsletter.%name%">
+          <source>edit.newsletter.%name%</source>
+          <target state="translated">%name%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter">
+          <source>newsletter</source>
+          <target state="translated">Newsletter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter.type">
+          <source>newsletter.type</source>
+          <target state="translated">Type de newsletter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.newsletter">
+          <source>back_to.newsletter</source>
+          <target state="translated">Retourner à la liste des newsletters</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="create.a.newsletter">
+          <source>create.a.newsletter</source>
+          <target state="translated">Créer une newsletter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.html">
+          <source>export.html</source>
+          <target state="translated">Exporter en HTML</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.html.inline">
+          <source>export.html.inline</source>
+          <target state="translated">Exporter en HTML (CSS incorporé)</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

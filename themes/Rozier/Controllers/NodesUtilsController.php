@@ -168,9 +168,8 @@ class NodesUtilsController extends RozierApp
                         array("nodeId" => $existingNode->getId())
                     )
             );
-        } finally {
-            $response->prepare($request);
-            return $response->send();
         }
+        $response->prepare($request);
+        return $response->send();
     }
 }

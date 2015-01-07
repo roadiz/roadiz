@@ -5614,6 +5614,58 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <target state="translated">This type hides its node-tree</target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="newsletter.%name%.created">
+          <source>newsletter.%name%.created</source>
+          <target state="translated">Newsletter “%name%” created.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter.%newsletter%.updated.%translation%">
+          <source>newsletter.%newsletter%.updated.%translation%</source>
+          <target state="translated">Newsletter “%newsletter%” has been updated for %translation% translation</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="duplicated.newsletter.%name%">
+          <source>duplicated.newsletter.%name%</source>
+          <target state="translated">Newsletter “%name%” duplicated.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.newsletter.%name%">
+          <source>impossible.duplicate.newsletter.%name%</source>
+          <target state="translated">Impossible to duplicate newsletter “%name%”</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="see.newsletter">
+          <source>see.newsletter</source>
+          <target state="translated">See newsletter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.newsletter">
+          <source>add.a.newsletter</source>
+          <target state="translated">Add a newsletter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.newsletter.%name%">
+          <source>edit.newsletter.%name%</source>
+          <target state="translated">Edit newsletter “%name%”</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter">
+          <source>newsletter</source>
+          <target state="translated">Newsletter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter.type">
+          <source>newsletter.type</source>
+          <target state="translated">Newsletter type</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.newsletter">
+          <source>back_to.newsletter</source>
+          <target state="translated">Back to newsletter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="create.a.newsletter">
+          <source>create.a.newsletter</source>
+          <target state="translated">Create a newsletter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.html">
+          <source>export.html</source>
+          <target state="translated">Export HTML</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.html.inline">
+          <source>export.html.inline</source>
+          <target state="translated">Export HTML (inline CSS)</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

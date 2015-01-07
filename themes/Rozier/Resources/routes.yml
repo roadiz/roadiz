@@ -622,6 +622,38 @@ searchNodeSourcePage:
     defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeSourceAction }
     requirements: { nodetypeId : "[0-9]+" }
 
+#NEWSLETTERS
+newslettersIndexPage:
+    path:     /rz-admin/newsletter
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::listAction }
+newslettersAddPage:
+    path:     /rz-admin/newsletter/add/{nodeTypeId}/{translationId}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::addAction }
+    requirements:
+        nodetypeId : "[0-9]+"
+        translationId : "[0-9]+"
+newslettersEditPage:
+    path:     /rz-admin/newsletter/edit/{newsletterId}/{translationId}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::editAction }
+    requirements:
+        newsletterId : "[0-9]+"
+        translationId : "[0-9]+"
+newslettersPreviewPage:
+    path:     /rz-admin/newsletter/preview/{newsletterId}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::previewAction }
+    requirements:
+        newsletterId : "[0-9]+"
+newslettersDuplicatePage:
+    path:     /rz-admin/newsletter/duplicate/{newsletterId}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::duplicateAction }
+    requirements:
+        newsletterId : "[0-9]+"
+newslettersExportPage:
+    path:     /rz-admin/newsletter/export/{newsletterId}/{inline}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::exportAction }
+    requirements:
+        newsletterId : "[0-9]+"
+        inline: 0|1
 # CSS to style with main color
 cssMainColor:
     path : /rz-admin/css/main-color.css
