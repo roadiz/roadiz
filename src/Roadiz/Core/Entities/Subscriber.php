@@ -118,5 +118,4 @@ class Subscriber extends AbstractHuman
         $this->newsletterSubscriber = $newsletterSubscriber;
         return $this->newsletterSubscriber;
     }
-
 }

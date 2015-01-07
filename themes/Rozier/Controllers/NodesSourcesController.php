@@ -130,6 +130,4 @@ class NodesSourcesController extends RozierApp
 
         return $this->throw404();
     }
-
-
 }

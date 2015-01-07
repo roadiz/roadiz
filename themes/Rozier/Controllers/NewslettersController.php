@@ -140,7 +140,8 @@ class NewslettersController extends RozierApp
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
-                            'newslettersIndexPage')
+                            'newslettersIndexPage'
+                        )
                     );
                     $response->prepare($request);
 

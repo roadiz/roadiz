@@ -32,6 +32,7 @@
             <table class="nodes content-table uk-table">
                 <thead>
                     <tr>
+                        <th>{% trans %}id{% endtrans %}</th>
                         <th>{% trans %}name{% endtrans %}</th>
                         <th class="mobile-hidden">{% trans %}newsletter.type{% endtrans %}</th>
                         <!-- <th class="mobile-hidden">{% trans %}newsletter.status{% endtrans %}</th> -->
@@ -42,8 +43,9 @@
                 <tbody>
                     {% for newsletter in newsletters %}
                     <tr>
+                        <td class="nodes-list-item-link"><span class="nodes-list-item-color" style="background-color:{{ newsletter.node.nodeType.color }};"></span>{{ newsletter.id }}</td>
                         {% if newsletter.node.nodeSources.first.title %}
-                        <td class="nodes-list-item-link"><span class="nodes-list-item-color" style="background-color:{{ newsletter.node.nodeType.color }};"></span><a href="{{ path('newslettersEditPage', { newsletterId: newsletter.id, translationId: translation.id }) }}">{{ newsletter.node.nodeSources.first.getTitle }}</a></td>
+                        <td class="nodes-list-item-link"><a href="{{ path('newslettersEditPage', { newsletterId: newsletter.id, translationId: translation.id }) }}">{{ newsletter.node.nodeSources.first.getTitle }}</a></td>
                         {% else %}
                         <td class="nodes-list-item-link"><span class="nodes-list-item-color" style="background-color:{{ newsletter.node.nodeType.color }};"></span><a href="{{ path('newslettersEditPage', { newsletterId: newsletter.id, translationId: translation.id }) }}">{{ newsletter.node.nodeName }}</a></td>
                         {% endif %}

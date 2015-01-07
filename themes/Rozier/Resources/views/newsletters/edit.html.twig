@@ -10,14 +10,11 @@
 <section class="content-global">
 
 	<header class="content-header header-node header-node-edit-source">
-		{# {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %} #}
 		<h1 class="content-title node-edit-source-title">
 			{{ "edit.newsletter.%name%"|trans({'%name%': currentTitle})|truncate(25, false, '[…]') }}
             {% include 'nodes/nodeTypeCircle.html.twig' %}
 		</h1>
 		{% include 'newsletters/navBack.html.twig' %}
-		{# {% include 'nodes/navBar.html.twig' with {"current": 'source'} %} #}
-		{# {% include 'nodes/translationBar.html.twig' with {"current": translation.getId} %} #}
 	</header>
 
 	<article class="content content-node-edit-source">

@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 use \InlineStyle\InlineStyle;
+
 /**
  * {@inheritdoc}
  */
@@ -96,11 +97,11 @@ class NewslettersUtilsController extends RozierApp
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')
                      ->generate(
-                        'newslettersEditPage',
-                        array(
+                         'newslettersEditPage',
+                         array(
                             "newsletterId" => $existingNewsletter->getId(),
                             "translationId" => $translation->getId()
-                        )
+                         )
                      )
             );
         }
@@ -172,14 +173,12 @@ class NewslettersUtilsController extends RozierApp
         }
 
         if ($inline != 0) {
-
             // inline newsletter html with css
 
             $htmldoc = new InlineStyle($content);
             $htmldoc->applyStylesheet($cssContent);
             $htmldoc = $htmldoc->getHtml();
         } else {
-
             // Remove all link element and add style balise with all css file content
 
             $content = preg_replace('/<link[^>]+\/>/', '', $content);

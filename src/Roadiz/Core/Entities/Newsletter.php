@@ -77,19 +77,23 @@ class Newsletter extends AbstractDateTimed
         return $this;
     }
 
-    public function isDraft() {
+    public function isDraft()
+    {
         return ($this->status == static::DRAFT ? true : false);
     }
 
-    public function isPending() {
+    public function isPending()
+    {
         return ($this->status == static::PENDING ? true : false);
     }
 
-    public function isSending() {
+    public function isSending()
+    {
         return ($this->status == static::SENDING ? true : false);
     }
 
-    public function isSent() {
+    public function isSent()
+    {
         return ($this->status == static::SENT ? true : false);
     }
 
