@@ -29,7 +29,7 @@
  * @author Maxime Constantinian
  */
 
-namespace Themes\DefaultTheme\NewslettersController;
+namespace Themes\DefaultTheme\NewsletterControllers;
 
 use Themes\DefaultTheme\DefaultThemeApp;
 

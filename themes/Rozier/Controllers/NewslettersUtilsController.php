@@ -130,7 +130,7 @@ class NewslettersUtilsController extends RozierApp
 
         // make namespace of the newsletter from the default dynamic theme namespace and newsletter notetype
         $classname = $baseNamespace
-            . "\NewslettersController\\"
+            . "\NewsletterControllers\\"
             . $newsletter->getNode()->getNodeType()->getName()
             . "Controller";
         // force the twig path
