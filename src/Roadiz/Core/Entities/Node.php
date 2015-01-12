@@ -631,10 +631,13 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter",inversedBy="node")
+     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter", mappedBy="node")
      */
     protected $newsletter;
 
+    /**
+     * @return RZ\Roadiz\Core\Entities\Newsletter
+     */
     public function getNewsletter()
     {
         return $this->newsletter;

@@ -98,13 +98,13 @@ class Newsletter extends AbstractDateTimed
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="newsletter", fetch="EAGER")
+     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="newsletter", fetch="EAGER")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id")
      */
     private $node;
 
     /**
-     * @return Node
+     * @return RZ\Roadiz\Core\Entities\Node
      */
     public function getNode()
     {
@@ -112,7 +112,7 @@ class Newsletter extends AbstractDateTimed
     }
 
     /**
-     * @param Node $node
+     * @param RZ\Roadiz\Core\Entities\Node $node
      *
      * @return Node
      */
