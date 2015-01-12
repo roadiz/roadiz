@@ -24,66 +24,39 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file Paginator.php
+ * @file NodesSourcesPaginator.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Utils;
+namespace RZ\Roadiz\Core\ListManagers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\ListManagers\Paginator;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
- * A simple paginator class to filter entities with limit and search.
+ * A paginator class to filter node-sources entities with limit and search.
+ *
+ * This class add securityContext filters
  */
-class Paginator
+class NodesSourcesPaginator extends Paginator
 {
-    protected $itemsPerPage;
-    protected $itemCount;
-    protected $entityName;
-    protected $criteria;
-    protected $searchPattern = null;
-    protected $em;
+    protected $securityContext = null;
+
 
     /**
-     * @param Doctrine\ORM\EntityManager $em           Entity manager
-     * @param string                     $entityName   Full qualified entity classname
-     * @param integer                    $itemPerPages Item par pages
-     * @param array                      $criteria     Force selection criteria
+     * @return Symfony\Component\Security\Core\SecurityContext
      */
-    public function __construct(
-        EntityManager $em,
-        $entityName,
-        $itemPerPages = 10,
-        array $criteria = array()
-    ) {
-        $this->em = $em;
-        $this->entityName = $entityName;
-        $this->setItemsPerPage($itemPerPages);
-        $this->criteria = $criteria;
-
-        if ($this->entityName == "") {
-            throw new \RuntimeException("Entity name could not be empty", 1);
-        }
-        if ($this->itemsPerPage < 1) {
-            throw new \RuntimeException("Items par page could not be lesser than 1.", 1);
-        }
+    public function getSecurityContext()
+    {
+        return $this->securityContext;
     }
 
     /**
-     * @return string
+     * @param Symfony\Component\Security\Core\SecurityContext $newsecurityContext
      */
-    public function getSearchPattern()
+    public function setSecurityContext(SecurityContext $newsecurityContext = null)
     {
-        return $this->searchPattern;
-    }
-
-    /**
-     * @param string $searchPattern
-     *
-     * @return $this
-     */
-    public function setSearchPattern($searchPattern)
-    {
-        $this->searchPattern = $searchPattern;
+        $this->securityContext = $newsecurityContext;
 
         return $this;
     }
@@ -102,7 +75,10 @@ class Paginator
                             ->countSearchBy($this->searchPattern, $this->criteria);
         } else {
             $total = $this->em->getRepository($this->entityName)
-                            ->countBy($this->criteria);
+                            ->countBy(
+                                $this->criteria,
+                                $this->securityContext
+                            );
         }
 
         return ceil($total / $this->getItemsPerPage());
@@ -133,27 +109,9 @@ class Paginator
                             $this->criteria,
                             $order,
                             $this->getItemsPerPage(),
-                            $this->getItemsPerPage() * ($page - 1)
+                            $this->getItemsPerPage() * ($page - 1),
+                            $this->securityContext
                         );
         }
-    }
-
-    /**
-     * @param integer $itemsPerPage
-     *
-     * @return $this
-     */
-    public function setItemsPerPage($itemsPerPage)
-    {
-        $this->itemsPerPage = $itemsPerPage;
-
-        return $this;
-    }
-    /**
-     * @return integer $itemsPerPage
-     */
-    public function getItemsPerPage()
-    {
-        return $this->itemsPerPage;
     }
 }
