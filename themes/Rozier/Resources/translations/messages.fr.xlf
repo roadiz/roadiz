@@ -5666,6 +5666,14 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>export.html.inline</source>
           <target state="translated">Exporter en HTML (CSS incorporé)</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="export.html.inline">
+          <source>start.test.user.right</source>
+          <target state="translated">Prendre les privilèges</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.html.inline">
+          <source>stop.test.user.right</source>
+          <target state="translated">Retourner à son utilisateur</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
