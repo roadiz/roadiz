@@ -126,7 +126,8 @@ class BackendController extends AppController
                     $c['accessDecisionManager'],
                     $accessMap,
                     $c['authentificationManager']
-                )
+                ),
+                $c["switchUser"],
             );
 
             $map->add($requestMatcher, $listeners, $c['firewallExceptionListener']);

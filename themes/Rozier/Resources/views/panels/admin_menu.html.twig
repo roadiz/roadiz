@@ -1,66 +1,66 @@
 <nav id="admin-menu-nav">
-	<header>
-		<div id="frontend-home-area">
-			<a id="frontend-home-link"
-			   title="{% trans %}see.website{% endtrans %}"
-			   class="uk-icon-button uk-icon-rz-earth"
-			   data-uk-tooltip="{pos:'right', animation:'true'}"
-			   target="_blank"
-			   href="{{ path('homePage') }}"></a>
-		</div>
-		{% if (securityContext.Granted('ROLE_ACCESS_NODES')) %}
-		<hr/>
-		<div id="minify-tree-panel-area">
-			<a id="minify-tree-panel-button"
-				title="{% trans %}minify.tree.panel{% endtrans %}"
-				class="uk-icon-button">
-				<i class="uk-icon-rz-panel-tree-close"></i>
-			</a>
-		</div>
-		{% endif %}
-	</header>
-	{% spaceless %}
-	<ul class="uk-nav uk-nav-parent-icon">
+    <header>
+        <div id="frontend-home-area">
+            <a id="frontend-home-link"
+               title="{% trans %}see.website{% endtrans %}"
+               class="uk-icon-button uk-icon-rz-earth"
+               data-uk-tooltip="{pos:'right', animation:'true'}"
+               target="_blank"
+               href="{{ path('homePage') }}"></a>
+        </div>
+        {% if (securityContext.Granted('ROLE_ACCESS_NODES')) %}
+        <hr/>
+        <div id="minify-tree-panel-area">
+            <a id="minify-tree-panel-button"
+                title="{% trans %}minify.tree.panel{% endtrans %}"
+                class="uk-icon-button">
+                <i class="uk-icon-rz-panel-tree-close"></i>
+            </a>
+        </div>
+        {% endif %}
+    </header>
+    {% spaceless %}
+    <ul class="uk-nav uk-nav-parent-icon">
 
-		{% if backofficeEntries %}
-			{% for mainEntry in backofficeEntries %}
-				{% if (not mainEntry.roles or securityContext.Granted(mainEntry.roles)) %}
-				{# Define entry #}
-				<li {% if mainEntry.subentries %}class="uk-parent"{% endif %}>
-					{% if mainEntry.path %}
-					<a href="{{ mainEntry.path }}"><i class="{{ mainEntry.icon }}"></i><span class="info">{{ mainEntry.name|trans }}</span></a>
-					{% else %}
-					<p><i class="{{ mainEntry.icon }}"></i><span class="info">{{ mainEntry.name|trans }}</span></p>
-					{% endif %}
+        {% if backofficeEntries %}
+            {% for mainEntry in backofficeEntries %}
+                {% if (not mainEntry.roles or securityContext.Granted(mainEntry.roles)) %}
+                {# Define entry #}
+                <li {% if mainEntry.subentries %}class="uk-parent"{% endif %}>
+                    {% if mainEntry.path %}
+                    <a href="{{ mainEntry.path }}"><i class="{{ mainEntry.icon }}"></i><span class="info">{{ mainEntry.name|trans }}</span></a>
+                    {% else %}
+                    <p><i class="{{ mainEntry.icon }}"></i><span class="info">{{ mainEntry.name|trans }}</span></p>
+                    {% endif %}
 
-					{% if mainEntry.subentries %}
-					<ul class="uk-nav-sub">
-						{% for subEntry in mainEntry.subentries %}
-							{# Exception for settings groups #}
-							{% if subEntry.name == 'setting.groups.dynamic' %}
-								{% for group in settingGroups %}
-									<li class="uk-nav-sub-item">
-										<a href="{{ path('settingGroupsSettingsPage', {'settingGroupId': group.getId}) }}">
-											<i class="uk-icon-rz-settings-group"></i><span class="info">{{ group.getName }}</span>
-										</a>
-									</li>
-								{% endfor %}
-							{% else %}
-								{% if (not subEntry.roles or securityContext.Granted(subEntry.roles)) %}
-								<li class="uk-nav-sub-item{% if not subEntry.path %} uk-rz-coming-soon{% endif %}">
-									<a href="{{ subEntry.path }}">
-										<i class="{{ subEntry.icon }}"></i><span class="info">{{ subEntry.name|trans }}</span>
-									</a>
-								</li>
-								{% endif %}
-							{% endif %}
-						{% endfor %}
-					</ul>
-					{% endif %}
-				</li>
-				{% endif %}
-			{% endfor %}
-		{% endif %}
-	</ul>
-	{% endspaceless %}
+                    {% if mainEntry.subentries %}
+                    <ul class="uk-nav-sub">
+                        {% for subEntry in mainEntry.subentries %}
+                            {# Exception for settings groups #}
+                            {% if subEntry.name == 'setting.groups.dynamic' %}
+                                {% for group in settingGroups %}
+                                    <li class="uk-nav-sub-item">
+                                        <a href="{{ path('settingGroupsSettingsPage', {'settingGroupId': group.getId}) }}">
+                                            <i class="uk-icon-rz-settings-group"></i><span class="info">{{ group.getName }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                {% if (not subEntry.roles or securityContext.Granted(subEntry.roles)) %}
+                                <li class="uk-nav-sub-item{% if not subEntry.path %} uk-rz-coming-soon{% endif %}">
+                                    <a href="{{ subEntry.path }}">
+                                        <i class="{{ subEntry.icon }}"></i><span class="info">{{ subEntry.name|trans }}</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </ul>
+    {% endspaceless %}
 </nav>
