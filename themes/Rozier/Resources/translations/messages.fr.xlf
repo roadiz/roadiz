@@ -5682,6 +5682,6 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>document.file.%name%.updated</source>
           <target state="translated">Le fichier «%name%» a été mis à jour</target>
       </trans-unit>
-  </body>t
+  </body>
   </file>
 </xliff>
