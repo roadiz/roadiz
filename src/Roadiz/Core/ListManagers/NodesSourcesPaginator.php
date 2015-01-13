@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\ListManagers\Paginator;
 use Symfony\Component\Security\Core\SecurityContext;
 
