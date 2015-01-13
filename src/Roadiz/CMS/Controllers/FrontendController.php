@@ -425,7 +425,8 @@ class FrontendController extends AppController
                 // manages the SecurityContext persistence through a session
                 $c['contextListener'],
                 // automatically adds a Token if none is already present.
-                new AnonymousAuthenticationListener($c['securityContext'], '') // $key
+                new AnonymousAuthenticationListener($c['securityContext'], ''), // $key
+                $c["switchUser"]
             );
 
             /*
