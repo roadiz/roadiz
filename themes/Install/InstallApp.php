@@ -70,7 +70,7 @@ class InstallApp extends AppController
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
-                'devMode' => (boolean) $this->kernel->container['config']['devMode'],
+                'devMode' => false,
                 'baseUrl' => $this->kernel->getResolvedBaseUrl(),//$this->kernel->getRequest()->getBaseUrl(),
                 'filesUrl' => $this->kernel
                                    ->getRequest()
@@ -188,22 +188,6 @@ class InstallApp extends AppController
     }
 
     /**
-     * Import screen
-     * @param Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function importAction(Request $request)
-    {
-        $this->assignation['names'] = array("installImportSettings", "installImportRoles", "installImportGroups");
-        return new Response(
-            $this->getTwig()->render('steps/import.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
-    }
-
-    /**
      * Import theme screen.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
@@ -224,138 +208,6 @@ class InstallApp extends AppController
 
         return new Response(
             $this->getTwig()->render('steps/importTheme.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
-    }
-
-    /**
-     * Install database screen.
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function databaseAction(Request $request)
-    {
-        $config = new Configuration();
-        $databaseForm = $this->buildDatabaseForm($request, $config);
-
-        if ($databaseForm !== null) {
-            $databaseForm->handleRequest();
-
-            if ($databaseForm->isValid()) {
-                try {
-                    $config->testDoctrineConnexion($databaseForm->getData());
-
-
-                    $tempConf = $config->getConfiguration();
-                    foreach ($databaseForm->getData() as $key => $value) {
-                        $tempConf['doctrine'][$key] = $value;
-                    }
-                    $config->setConfiguration($tempConf);
-
-
-                    /*
-                     * Test connexion
-                     */
-                    try {
-                        $fixtures = new Fixtures();
-                        $fixtures->createFolders();
-
-                        $config->writeConfiguration();
-
-                        /*
-                         * Force redirect to avoid resending form when refreshing page
-                         */
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate(
-                                'installDatabaseSchemaPage'
-                            )
-                        );
-                        $response->prepare($request);
-
-                        return $response->send();
-                    } catch (\PDOException $e) {
-                        $message = "";
-                        if (strstr($e->getMessage(), 'SQLSTATE[')) {
-                            preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
-                            $message = $matches[3];
-                        } else {
-                            $message = $e->getMessage();
-                        }
-                        $this->assignation['error'] = true;
-                        $this->assignation['errorMessage'] = ucfirst($message);
-                    } catch (\Exception $e) {
-                        $this->assignation['error'] = true;
-                        $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
-                    }
-
-                } catch (\Exception $e) {
-                    $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = $e->getMessage();
-                }
-            }
-            $this->assignation['databaseForm'] = $databaseForm->createView();
-        }
-
-        return new Response(
-            $this->getTwig()->render('steps/database.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
-    }
-
-    /**
-     * Perform database schema migration.
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function databaseSchemaAction(Request $request)
-    {
-        /*
-         * Test connexion
-         */
-        if (null === $this->getService('em')) {
-            $this->assignation['error'] = true;
-            $this->assignation['errorMessage'] = $c['session']->getFlashBag()->all();
-
-        } else {
-            try {
-                $fixtures = new Fixtures();
-
-                \RZ\Roadiz\Console\SchemaCommand::createSchema();
-                \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
-
-                $fixtures->installFixtures();
-
-                /*
-                 * files to import
-                 */
-                $installData = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/Install/config.json"), true);
-                $this->assignation['imports'] = $installData['importFiles'];
-
-            } catch (\PDOException $e) {
-                $message = "";
-                if (strstr($e->getMessage(), 'SQLSTATE[')) {
-                    preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
-                    $message = $matches[3];
-                } else {
-                    $message = $e->getMessage();
-                }
-                $this->assignation['error'] = true;
-                $this->assignation['errorMessage'] = ucfirst($message);
-            } catch (\Exception $e) {
-                $this->assignation['error'] = true;
-                $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
-            }
-        }
-
-
-        return new Response(
-            $this->getTwig()->render('steps/databaseDone.html.twig', $this->assignation),
             Response::HTTP_OK,
             array('content-type' => 'text/html')
         );
@@ -411,22 +263,6 @@ class InstallApp extends AppController
             $this->getTwig()->render('steps/user.html.twig', $this->assignation),
             Response::HTTP_OK,
             array('content-type' => 'text/html')
-        );
-    }
-
-    /**
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function updateSchemaAction(Request $request)
-    {
-        \RZ\Roadiz\Console\SchemaCommand::updateSchema();
-        return new Response(
-            json_encode(array('status' => true)),
-            Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
         );
     }
 
@@ -690,99 +526,7 @@ class InstallApp extends AppController
         return $builder->getForm();
     }
 
-    /**
-     * Build forms
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param Themes\Install\Controllers\Configuration $conf
-     *
-     * @return Symfony\Component\Form\Forms
-     */
-    protected function buildDatabaseForm(Request $request, Configuration $conf)
-    {
-        if (isset($conf->getConfiguration()['doctrine'])) {
-            $defaults = $conf->getConfiguration()['doctrine'];
-        } else {
-            $defaults = array();
-        }
 
-        $builder = $this->getService('formFactory')
-            ->createBuilder('form', $defaults)
-            ->add('driver', 'choice', array(
-                'choices' => array(
-                    'pdo_mysql'=>'pdo_mysql',
-                    'pdo_pgsql'=>'pdo_pgsql',
-                    'pdo_sqlite' => 'pdo_sqlite',
-                    'oci8' => 'oci8',
-                ),
-                'label' => $this->getTranslator()->trans('driver'),
-                'constraints' => array(
-                    new NotBlank()
-                ),
-                'attr' => array(
-                    "id" => "choice"
-                )
-            ))
-            ->add('host', 'text', array(
-                "required"=>false,
-                'label' => $this->getTranslator()->trans('host'),
-                'attr'=>array(
-                    "autocomplete"=>"off",
-                    'id' => "host"
-                )
-            ))
-            ->add('port', 'integer', array(
-                "required"=>false,
-                'label' => $this->getTranslator()->trans('port'),
-                'attr'=>array(
-                    "autocomplete"=>"off",
-                    'id' => "port"
-                )
-            ))
-            ->add('unix_socket', 'text', array(
-                "required"=>false,
-                'label' => $this->getTranslator()->trans('unix_socket'),
-                'attr'=>array(
-                    "autocomplete"=>"off",
-                    'id' => "unix_socket"
-                )
-            ))
-            ->add('path', 'text', array(
-                "required"=>false,
-                'label' => $this->getTranslator()->trans('path'),
-                'attr'=>array(
-                    "autocomplete"=>"off",
-                    'id' => "path"
-                )
-            ))
-            ->add('user', 'text', array(
-                'attr'=>array(
-                    "autocomplete"=>"off",
-                    'id' => "user"
-                ),
-                'label' => $this->getTranslator()->trans('username'),
-                'constraints' => array(
-                    new NotBlank()
-                )
-            ))
-            ->add('password', 'password', array(
-                "required"=>false,
-                'label' => $this->getTranslator()->trans('password'),
-                'attr'=>array(
-                    "autocomplete"=>"off",
-                    'id'=>'password'
-                )
-            ))
-            ->add('dbname', 'text', array(
-                "required"=>false,
-                'label' => $this->getTranslator()->trans('dbname'),
-                'attr'=>array(
-                    "autocomplete"=>"off",
-                    'id'=>'dbname'
-                )
-            ));
-
-        return $builder->getForm();
-    }
 
     /**
      * Build forms

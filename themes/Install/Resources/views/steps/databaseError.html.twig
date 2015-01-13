@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+    <article id="content-database-done" class="content">
+
+        <div class="content-title-cont">
+            <h1 class="content-title">{% trans %}database_fail.title{% endtrans %}</h1>
+        </div>
+
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item"></div>
+            <div class="content-progress-item last"></div>
+        </div>
+
+        <div class="content-text-cont">
+
+            <div class="content-text">
+                <div class="content-intro content-intro-only">
+                    {% trans %}database_fail.message{% endtrans %}
+                    <div class="uk-alert uk-alert-danger">
+                        <a href="#" class="uk-alert-close uk-close"></a>
+                        <p>{% trans %}database.cannot_connect{% endtrans %}</p>
+                        <p>{{ errorMessage }}</p>
+                    </div>
+                </div>
+            </div>
+
+            {% spaceless %}
+            <div class="content-buttons">
+                <a class="content-button uk-button" href="{{ path('installDatabasePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a>
+            </div>
+            {% endspaceless %}
+
+        </div>
+
+    </article>
+{% endblock %}

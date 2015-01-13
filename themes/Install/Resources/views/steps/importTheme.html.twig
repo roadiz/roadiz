@@ -159,22 +159,47 @@
     (function() {
         Install.importNodeTypeRoutes = [];
         {% for role in roles %}
-        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportRoles', {'filename': role, 'themeId': themeId}) }}",'id':'{{ role|replace({'/': '_', '.': '_'}) }}'});
+        Install.importNodeTypeRoutes.push({
+            'url': "{{ path('installImportRoles', {'themeId': themeId}) }}",
+            'id':'{{ role|replace({'/': '_', '.': '_'}) }}',
+            'filename': '{{ role }}'
+        });
         {% endfor %}
         {% for group in groups %}
-        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportGroups', {'filename': group, 'themeId': themeId}) }}",'id':'{{ group|replace({'/': '_', '.': '_'}) }}'});
+        Install.importNodeTypeRoutes.push({
+            'url': "{{ path('installImportGroups', {'themeId': themeId}) }}",
+            'id':'{{ group|replace({'/': '_', '.': '_'}) }}',
+            'filename': '{{ group }}'
+        });
         {% endfor %}
         {% for setting in settings %}
-        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportSettings', {'filename': setting, 'themeId': themeId}) }}",'id':'{{ setting|replace({'/': '_', '.': '_'}) }}'});
+        Install.importNodeTypeRoutes.push({
+            'url': "{{ path('installImportSettings', {'themeId': themeId}) }}",
+            'id':'{{ setting|replace({'/': '_', '.': '_'}) }}',
+            'filename': '{{ setting }}'
+        });
         {% endfor %}
         {% for nodetype in nodetypes %}
-        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportNodeTypes', {'filename': nodetype, 'themeId': themeId}) }}",'id':'{{ nodetype|replace({'/': '_', '.': '_'}) }}'});
+        Install.importNodeTypeRoutes.push({
+            'url': "{{ path('installImportNodeTypes', {'themeId': themeId}) }}",
+            'id':'{{ nodetype|replace({'/': '_', '.': '_'}) }}',
+            'filename': '{{ nodetype }}'
+        });
         {% endfor %}
         {% for tag in tags %}
-        Install.importNodeTypeRoutes.push({'url': "{{ path('installImportTags', {'filename': tag, 'themeId': themeId}) }}",'id':'{{ tag|replace({'/': '_', '.': '_'}) }}'});
+        Install.importNodeTypeRoutes.push({
+            'url': "{{ path('installImportTags', {'themeId': themeId}) }}",
+            'id':'{{ tag|replace({'/': '_', '.': '_'}) }}',
+            'filename': '{{ tag }}'
+        });
         {% endfor %}
         {% for node in nodes %}
-        Install.importNodeTypeRoutes.push({'update': "{{ path('installUpdateSchema') }}", 'url': "{{ path('installImportNodes', {'filename': node, 'themeId': themeId}) }}",'id':'{{ node|replace({'/': '_', '.': '_'}) }}'});
+        Install.importNodeTypeRoutes.push({
+            'update': "{{ path('installUpdateSchema') }}",
+            'url': "{{ path('installImportNodes', {'themeId': themeId}) }}",
+            'id':'{{ node|replace({'/': '_', '.': '_'}) }}',
+            'filename': '{{ node }}'
+        });
         {% endfor %}
     })();
 </script>

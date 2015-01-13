@@ -37,10 +37,47 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\Install\InstallApp;
 
 /**
- * Class to have generique importer for all theme.
+ * Generic importer class for themes fixtures.
  */
 class ImportController extends InstallApp
 {
+    /**
+     * @param  string  $classImporter
+     * @param  Request $request
+     * @param  integer  $themeId
+     *
+     * @return Response
+     */
+    protected function genericImportAction($classImporter, Request $request, $themeId = null)
+    {
+        if (null !== $filename = $this->getFilename($request)) {
+            if (null === $themeId) {
+                $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
+            }
+
+            return self::importContent($filename, $classImporter, $themeId);
+        } else {
+            return $this->throw404();
+        }
+    }
+
+    /**
+     * Get filename to import from POST request.
+     *
+     * @param  Request $request
+     *
+     * @return string|null
+     */
+    protected function getFilename(Request $request)
+    {
+        if ($request->getMethod() == 'POST' &&
+            $request->request->get("filename") != "") {
+            return $request->request->get("filename");
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Import theme's Settings file.
      *
@@ -48,13 +85,13 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importSettingsAction(Request $request, $filename, $themeId = null)
+    public function importSettingsAction(Request $request, $themeId = null)
     {
-        if (null === $themeId) {
-            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
-        }
-        $classImporter = "RZ\Roadiz\CMS\Importers\SettingsImporter";
-        return self::importContent($filename, $classImporter, $themeId);
+        return $this->genericImportAction(
+            "RZ\Roadiz\CMS\Importers\SettingsImporter",
+            $request,
+            $themeId
+        );
     }
 
     /**
@@ -64,13 +101,13 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importRolesAction(Request $request, $filename, $themeId = null)
+    public function importRolesAction(Request $request, $themeId = null)
     {
-        if (null === $themeId) {
-            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
-        }
-        $classImporter = "RZ\Roadiz\CMS\Importers\RolesImporter";
-        return self::importContent($filename, $classImporter, $themeId);
+        return $this->genericImportAction(
+            "RZ\Roadiz\CMS\Importers\RolesImporter",
+            $request,
+            $themeId
+        );
     }
 
     /**
@@ -80,13 +117,13 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importGroupsAction(Request $request, $filename, $themeId = null)
+    public function importGroupsAction(Request $request, $themeId = null)
     {
-        if (null === $themeId) {
-            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
-        }
-        $classImporter = "RZ\Roadiz\CMS\Importers\GroupsImporter";
-        return self::importContent($filename, $classImporter, $themeId);
+        return $this->genericImportAction(
+            "RZ\Roadiz\CMS\Importers\GroupsImporter",
+            $request,
+            $themeId
+        );
     }
 
     /**
@@ -96,13 +133,13 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importNodeTypesAction(Request $request, $filename, $themeId = null)
+    public function importNodeTypesAction(Request $request, $themeId = null)
     {
-        if (null === $themeId) {
-            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
-        }
-        $classImporter = "RZ\Roadiz\CMS\Importers\NodeTypesImporter";
-        return self::importContent($filename, $classImporter, $themeId);
+        return $this->genericImportAction(
+            "RZ\Roadiz\CMS\Importers\NodeTypesImporter",
+            $request,
+            $themeId
+        );
     }
 
     /**
@@ -112,13 +149,13 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importTagsAction(Request $request, $filename, $themeId = null)
+    public function importTagsAction(Request $request, $themeId = null)
     {
-        if (null === $themeId) {
-            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
-        }
-        $classImporter = "RZ\Roadiz\CMS\Importers\TagsImporter";
-        return self::importContent($filename, $classImporter, $themeId);
+        return $this->genericImportAction(
+            "RZ\Roadiz\CMS\Importers\TagsImporter",
+            $request,
+            $themeId
+        );
     }
 
     /**
@@ -127,13 +164,13 @@ class ImportController extends InstallApp
      *
      * @return string
      */
-    public static function importNodesAction(Request $request, $filename, $themeId = null)
+    public function importNodesAction(Request $request, $themeId = null)
     {
-        if (null === $themeId) {
-            $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
-        }
-        $classImporter = "RZ\Roadiz\CMS\Importers\NodesImporter";
-        return self::importContent($filename, $classImporter, $themeId);
+        return $this->genericImportAction(
+            "RZ\Roadiz\CMS\Importers\NodesImporter",
+            $request,
+            $themeId
+        );
     }
 
     /**
@@ -182,6 +219,22 @@ class ImportController extends InstallApp
         return new Response(
             json_encode($data),
             Response::HTTP_OK,
+            array('content-type' => 'application/javascript')
+        );
+    }
+
+    /**
+     * @return Response
+     */
+    public function throw404($message = '')
+    {
+        $data = array();
+        $data['status'] = false;
+        $data['error'] = 'File to import not found.';
+
+        return new Response(
+            json_encode($data),
+            Response::HTTP_NOT_FOUND,
             array('content-type' => 'application/javascript')
         );
     }
