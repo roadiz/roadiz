@@ -64,16 +64,6 @@ class Requirements
         }
         $this->totalChecks++;
 
-        $checks['intl'] = array(
-            'status'=>$this->testExtension('intl'),
-            'extension' => true,
-            'message' => 'Intl extension is needed for translations.'
-        );
-        if ($checks['intl']['status']) {
-            $this->successChecks++;
-        }
-        $this->totalChecks++;
-
         $checks['session'] = array(
             'status'=>$this->testExtension('session'),
             'extension' => true,
@@ -124,17 +114,6 @@ class Requirements
         );
 
         if ($checks['gd']['status']) {
-            $this->successChecks++;
-        }
-        $this->totalChecks++;
-
-        $checks['imap'] = array(
-            'status'=>$this->testExtension('imap'),
-            'extension' => true,
-            'message' => 'Imap extension is needed for Newsletter handling.'
-        );
-
-        if ($checks['imap']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;

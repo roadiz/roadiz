@@ -71,7 +71,7 @@ use Pimple\Container;
  */
 class Kernel implements \Pimple\ServiceProviderInterface
 {
-    const CMS_VERSION =         'pre-alpha';
+    const CMS_VERSION =         'alpha';
     const SECURITY_DOMAIN =     'roadiz_domain';
     const INSTALL_CLASSNAME =   '\\Themes\\Install\\InstallApp';
 
@@ -95,7 +95,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
          * Register current Kernel as a service provider.
          */
         $this->container->register($this);
-
         $this->container['stopwatch']->openSection();
     }
 
@@ -144,8 +143,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
         };
         $container['requestContext'] = function ($c) {
             $rc = new RequestContext($this->getResolvedBaseUrl());
-            $rc->setHost($this->getRequest()->server->get('HTTP_HOST'));
-            $rc->setHttpPort(intval($this->getRequest()->server->get('SERVER_PORT')));
+            $rc->setHost($this->request->server->get('HTTP_HOST'));
+            $rc->setHttpPort(intval($this->request->server->get('SERVER_PORT')));
 
             return $rc;
         };
@@ -238,30 +237,27 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function runApp()
     {
-        if ($this->isDebug() ||
-            !file_exists(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php') ||
-            !file_exists(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php')) {
-            $this->container['stopwatch']->start('dumpUrlUtils');
-            $this->dumpUrlUtils();
-            $this->container['stopwatch']->stop('dumpUrlUtils');
-        }
-        /*
-         * Define a request wide timezone
-         */
-        if (!empty($this->container['config']["timezone"])) {
-            date_default_timezone_set($this->container['config']["timezone"]);
-        } else {
-            date_default_timezone_set("Europe/Paris");
-        }
-
-        if ($this->isInstallMode()) {
-            // nothing to prepare
-
-        } else {
-            $this->prepareRequestHandling();
-        }
-
         try {
+            if ($this->isDebug() ||
+                !file_exists(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlMatcher.php') ||
+                !file_exists(ROADIZ_ROOT.'/gen-src/Compiled/GlobalUrlGenerator.php')) {
+                $this->container['stopwatch']->start('dumpUrlUtils');
+                $this->dumpUrlUtils();
+                $this->container['stopwatch']->stop('dumpUrlUtils');
+            }
+            /*
+             * Define a request wide timezone
+             */
+            if (!empty($this->container['config']["timezone"])) {
+                date_default_timezone_set($this->container['config']["timezone"]);
+            } else {
+                date_default_timezone_set("Europe/Paris");
+            }
+
+            if (!$this->isInstallMode()) {
+                $this->prepareRequestHandling();
+            }
+
             /*
              * ----------------------------
              * Main Framework handle call
@@ -276,8 +272,9 @@ class Kernel implements \Pimple\ServiceProviderInterface
 
         } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
             echo $e->getMessage().PHP_EOL;
+        } catch (\RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException $e) {
+            echo $e->getMessage().PHP_EOL;
         }
-
 
         return $this;
     }
@@ -443,23 +440,35 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function getResolvedBaseUrl()
     {
-        if (isset($_SERVER["SERVER_NAME"])) {
-            $url = pathinfo($_SERVER['PHP_SELF']);
+        if ($this->request->server->get('SERVER_NAME')) {
+
+            // Remove everything after index.php in php_self
+            // when using PHP dev servers
+            $url = pathinfo(substr(
+                $this->request->server->get('PHP_SELF'),
+                0,
+                strpos($this->request->server->get('PHP_SELF'), '.php')
+            ));
 
             // Protocol
             $pageURL = 'http';
-            if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
+            if ($this->request->server->get('HTTPS') &&
+                $this->request->server->get('HTTPS') == "on") {
                 $pageURL .= "s";
             }
             $pageURL .= "://";
             // Port
-            if (isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") {
-                $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"];
+            if ($this->request->server->get('SERVER_PORT') &&
+                $this->request->server->get('SERVER_PORT') != "80") {
+                $pageURL .= $this->request->server->get('SERVER_NAME').
+                            ":".
+                            $this->request->server->get('SERVER_PORT');
             } else {
-                $pageURL .= $_SERVER["SERVER_NAME"];
+                $pageURL .= $this->request->server->get('SERVER_NAME');
             }
             // Non root folder
-            if (!empty($url["dirname"]) && $url["dirname"] != '/') {
+            if (!empty($url["dirname"]) &&
+                $url["dirname"] != '/') {
                 $pageURL .= $url["dirname"];
             }
 
