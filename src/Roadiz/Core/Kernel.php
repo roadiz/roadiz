@@ -441,7 +441,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
     public function getResolvedBaseUrl()
     {
         if ($this->request->server->get('SERVER_NAME')) {
-
             // Remove everything after index.php in php_self
             // when using PHP dev servers
             $url = pathinfo(substr(
