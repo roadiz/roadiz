@@ -38,7 +38,8 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+
+use RZ\Roadiz\Core\Utils\StringHandler;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -154,10 +155,16 @@ class DocumentsController extends RozierApp
 
             if ($form->isValid()) {
                 $data = $form->getData();
+
                 if ($document !== null) {
                     $document = $this->updateDocument($data, $document);
                     $data["filename"] = $document->getFilename();
                     unset($data['newDocument']);
+
+                    $msg = $this->getTranslator()->trans('document.file.%name%.updated', array(
+                        '%name%'=>$document->getFilename()
+                    ));
+                    $this->publishConfirmMessage($request, $msg);
                 }
                 $this->editDocument($data, $document);
                 $msg = $this->getTranslator()->trans('document.%name%.updated', array(
@@ -992,51 +999,32 @@ class DocumentsController extends RozierApp
     private function updateDocument($data, $document)
     {
         $fs = new Filesystem();
-        // //$document->getRelativeUrl()
-        // var_dump($document->getFilesFolder() . '/' . $document->getFolder());
-        // if ($data['newDocument']['name'] == $document->getFilename()) {
-        //     var_dump('Biiiiiiiiiiiiiiiien');
-        //     exit();
-        // } else {
-        //     $fs->copy(
-        //     $data['newDocument']['tmp_name'],
-        //     $document->getFilesFolder() . '/'
-        //         . $document->getFolder() . '/'
-        //         . $data['newDocument']['name']
-        //     );
-        //     $fs->delete($document->getAbsolutePath());
-        //     $document->setFilename($data['newDocument']['name'])
-        //     exit();
-        // }
-        // exit();
+
         if (!empty($data['newDocument'])) {
             $file = $data['newDocument'];
 
             $uploadedFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
-            $file['tmp_name'],
-            $file['name'],
-            $file['type'],
-            $file['size'],
-            $file['error']
-        );
+                $file['tmp_name'],
+                $file['name'],
+                $file['type'],
+                $file['size'],
+                $file['error']
+            );
 
             if ($uploadedFile !== null &&
                 $uploadedFile->getError() == UPLOAD_ERR_OK &&
                 $uploadedFile->isValid()) {
-
                 try {
                     $fs->remove($document->getAbsolutePath());
 
-                    $document->setFilename($uploadedFile->getClientOriginalName());
-                    $document->setMimeType($uploadedFile->getMimeType());
-
-                    if ($uploadedFile->getClientOriginalName() == $document->getFilename()) {
+                    if (StringHandler::cleanForFilename($uploadedFile->getClientOriginalName()) == $document->getFilename()) {
                         $finder = new \Symfony\Component\Finder\Finder();
                         $finder->files()->in(
                             $document->getFilesFolder() . '/'
                             . $document->getFolder()
                         );
 
+                        // Remove Precious folder if it's empty
                         if ($finder->count() == 0) {
                             $fs->remove(
                                 $document->getFilesFolder() . '/' . $document->getFolder()
@@ -1046,10 +1034,11 @@ class DocumentsController extends RozierApp
                         $document->setFolder(substr(hash("crc32b", date('YmdHi')), 0, 12));
                     }
 
+                    $document->setFilename($uploadedFile->getClientOriginalName());
+                    $document->setMimeType($uploadedFile->getMimeType());
                     $this->getService('em')->flush();
 
                     $uploadedFile->move(Document::getFilesFolder().'/'.$document->getFolder(), $document->getFilename());
-
 
                     return $document;
                 } catch (\Exception $e) {
@@ -1058,7 +1047,7 @@ class DocumentsController extends RozierApp
             }
         }
 
-    return false;
+        return false;
     }
     /**
      * Handle upload form data to create a Document.

@@ -215,7 +215,13 @@ class Document extends AbstractDateTimed
     {
         return $this->folder;
     }
-
+    /**
+     * Set folder name.
+     *
+     * @param string $forlder
+     *
+     * @return $this
+     */
     public function setFolder($folder)
     {
         $this->folder = $folder;

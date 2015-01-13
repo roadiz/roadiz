@@ -5677,7 +5677,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>overwrite.document</source>
           <target></target>
       </trans-unit>
-
+      <trans-unit xml:space="preserve" id="document.file.%name%.updated">
+          <source>document.file.%name%.updated</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -5676,7 +5676,11 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       </trans-unit>
       <trans-unit xml:space="preserve" id="overwrite.document">
           <source>overwrite.document</source>
-          <target state="translated">Overwrite document</target>
+          <target state="translated">Overwrite document file</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.file.%name%.updated">
+          <source>document.file.%name%.updated</source>
+          <target state="translated">File “%name%” has been updated</target>
       </trans-unit>
     </body>
   </file>

@@ -5678,6 +5678,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>overwrite.document</source>
           <target state="translated">Mettre à jour le fichier</target>
       </trans-unit>
-    </body>
+      <trans-unit xml:space="preserve" id="document.file.%name%.updated">
+          <source>document.file.%name%.updated</source>
+          <target state="translated">Le fichier «%name%» a été mis à jour</target>
+      </trans-unit>
+  </body>t
   </file>
 </xliff>
