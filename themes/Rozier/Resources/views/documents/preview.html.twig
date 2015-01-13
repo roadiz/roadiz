@@ -13,7 +13,9 @@
     <article class="content content-document-preview">
 
         <div class="content-inner">
+            {% if document.image %}
             <figure class="uk-thumbnail">{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}</figure>
+            {% endif %}
             <div class="document-source"><code>{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}</code></div>
 
             {% if document.isEmbed and document.getViewer.getEmbedFinder %}
