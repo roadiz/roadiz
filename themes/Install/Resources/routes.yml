@@ -10,45 +10,45 @@ installCheckPage:
     defaults: { _controller: Themes\Install\InstallApp::requirementsAction }
 installDatabasePage:
     path:     /install/database
-    defaults: { _controller: Themes\Install\InstallApp::databaseAction }
+    defaults: { _controller: Themes\Install\Controllers\DatabaseController::databaseAction }
 installDatabaseSchemaPage:
     path:     /install/database/schema
-    defaults: { _controller: Themes\Install\InstallApp::databaseSchemaAction }
-# installImportPage:
-#     path:     /install/import
-#     defaults: { _controller: Themes\Install\InstallApp::importAction }
+    defaults: { _controller: Themes\Install\Controllers\DatabaseController::databaseSchemaAction }
+installDatabaseFixturesPage:
+    path:     /install/database/fixtures
+    defaults: { _controller: Themes\Install\Controllers\DatabaseController::databaseFixturesAction }
 installImportSettings:
-    path:     /install/import/settings/{filename}/{themeId}
+    path:     /install/import/settings/{themeId}
     defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importSettingsAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/\.-]+$"
         themeId: "[0-9]+"
 installImportGroups:
-    path:     /install/import/groups/{filename}/{themeId}
+    path:     /install/import/groups/{themeId}
     defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importGroupsAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/\.-]+$"
         themeId: "[0-9]+"
 installImportRoles:
-    path:     /install/import/roles/{filename}/{themeId}
+    path:     /install/import/roles/{themeId}
     defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importRolesAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/\.-]+$"
         themeId: "[0-9]+"
 installImportNodes:
-    path:     /install/import/nodes/{filename}/{themeId}
+    path:     /install/import/nodes/{themeId}
     defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodesAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         id: "[0-9]+"
 installImportNodeTypes:
-    path:     /install/import/nodetypes/{filename}/{themeId}
+    path:     /install/import/nodetypes/{themeId}
     defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodeTypesAction }
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         themeId: "[0-9]+"
 installImportTags:
-    path:     /install/import/tags/{filename}/{themeId}
+    path:     /install/import/tags/{themeId}
     defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importTagsAction }
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
@@ -81,7 +81,7 @@ installFailedPage:
     defaults: { _controller: Themes\Install\InstallApp::failedAction }
 installUpdateSchema:
     path:     /install/update
-    defaults: { _controller: Themes\Install\InstallApp::updateSchemaAction }
+    defaults: { _controller: Themes\Install\Controllers\DatabaseController::updateSchemaAction }
 removeTrailingSlash:
     path:     /{url}
     defaults: { _controller:  Themes\Install\InstallApp::removeTrailingSlashAction }

@@ -47,7 +47,6 @@ use Symfony\Component\Security\Core\Role\RoleHierarchy;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\RequestMatcher;
 
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -159,13 +158,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['firewallMap'] = function ($c) {
-            $map = new FirewallMap();
-            // $map->add(
-            //     new RequestMatcher('.'),
-            //     array($c["switchUser"]),
-            //     $c['firewallExceptionListener']
-            // );
-            return $map;
+            return new FirewallMap();
         };
 
         $container['firewallExceptionListener'] = function ($c) {

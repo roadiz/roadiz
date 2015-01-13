@@ -46,6 +46,14 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     public function match($pathinfo)
     {
         Kernel::getService('stopwatch')->start('matchingRoute');
+
+        if (isset($container['config']['install']) &&
+            true === $container['config']['install']) {
+            // No node controller matching in install mode
+
+            return parent::match($pathinfo);
+        }
+
         $decodedUrl = rawurldecode($pathinfo);
 
         try {

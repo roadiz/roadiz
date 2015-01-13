@@ -29,9 +29,7 @@
  */
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\ListManagers\Paginator;
-
 use Symfony\Component\Security\Core\SecurityContext;
 use RZ\Roadiz\Core\Entities\Translation;
 
@@ -84,30 +82,6 @@ class NodePaginator extends Paginator
     }
 
     /**
-     * Return page count according to criteria.
-     *
-     * **Warning** : EntityRepository must implements *countBy* method
-     *
-     * @return integer
-     */
-    public function getPageCount()
-    {
-        if ($this->searchPattern !== null) {
-            $total = $this->em->getRepository($this->entityName)
-                            ->countSearchBy($this->searchPattern, $this->criteria);
-        } else {
-            $total = $this->em->getRepository($this->entityName)
-                            ->countBy(
-                                $this->criteria,
-                                $this->translation,
-                                $this->securityContext
-                            );
-        }
-
-        return ceil($total / $this->getItemsPerPage());
-    }
-
-    /**
      * Return entities filtered for current page.
      *
      * @param array   $order
@@ -137,5 +111,29 @@ class NodePaginator extends Paginator
                             $this->securityContext
                         );
         }
+    }
+
+    /**
+     * Return page count according to criteria.
+     *
+     * **Warning** : EntityRepository must implements *countBy* method
+     *
+     * @return integer
+     */
+    public function getPageCount()
+    {
+        if ($this->searchPattern !== null) {
+            $total = $this->em->getRepository($this->entityName)
+                            ->countSearchBy($this->searchPattern, $this->criteria);
+        } else {
+            $total = $this->em->getRepository($this->entityName)
+                            ->countBy(
+                                $this->criteria,
+                                $this->translation,
+                                $this->securityContext
+                            );
+        }
+
+        return ceil($total / $this->getItemsPerPage());
     }
 }

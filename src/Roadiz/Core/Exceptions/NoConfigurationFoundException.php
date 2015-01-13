@@ -24,34 +24,15 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file index.php
+ * @file NoConfigurationFoundException.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
+namespace RZ\Roadiz\Core\Exceptions;
 
-require 'bootstrap.php';
+/**
+ * Exception raised when no configuration file has been found.
+ */
+class NoConfigurationFoundException extends \Exception
+{
 
-if (php_sapi_name() == 'cli') {
-    echo 'Use "bin/roadiz" as an executable instead of calling index.php'.PHP_EOL;
-} else {
-    try {
-        $request = Kernel::getInstance()->getRequest();
-        /*
-         * Bypass Roadiz kernel to directly serve SLIR assets
-         */
-        if (0 === strpos($request->getPathInfo(), '/assets') &&
-            preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
-        ) {
-            $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
-            $ctrl->slirAction($matches['queryString'], $matches['filename']);
-        } else {
-            /*
-             * Start Roadiz App handling
-             */
-            Kernel::getInstance()->runApp();
-        }
-    } catch (NoConfigurationFoundException $e) {
-        echo $e->getMessage().PHP_EOL;
-    }
 }
