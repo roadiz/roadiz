@@ -67,7 +67,9 @@ class NewslettersController extends RozierApp
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
-            'RZ\Roadiz\Core\Entities\Newsletter'
+            'RZ\Roadiz\Core\Entities\Newsletter',
+            array(),
+            array("id" => "DESC")
         );
         $listManager->handle();
 

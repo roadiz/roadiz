@@ -675,7 +675,7 @@ class DocumentsController extends RozierApp
                         'required' => false
                     ))
                     ->add('newDocument', 'file', array(
-                        'label' => $this->getTranslator()->trans('override.document'),
+                        'label' => $this->getTranslator()->trans('overwrite.document'),
                         'required' => false
                     ));
 

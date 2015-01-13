@@ -5674,6 +5674,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>stop.test.user.right</source>
           <target state="translated">Retourner à son utilisateur</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="overwrite.document">
+          <source>overwrite.document</source>
+          <target state="translated">Mettre à jour le fichier</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
