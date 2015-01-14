@@ -47,17 +47,15 @@ class RequirementsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $text="";
+        $text = "";
 
-        $text .= $this->testPHPVersion('5.4');
-        $text .= $this->testExtension('intl');
+        $text .= $this->testPHPVersion('5.4.3');
         $text .= $this->testExtension('ereg');
         $text .= $this->testExtension('session');
         $text .= $this->testExtension('json');
         $text .= $this->testExtension('zip');
         $text .= $this->testExtension('date');
         $text .= $this->testExtension('gd');
-        $text .= $this->testExtension('imap');
         $text .= $this->testExtension('curl');
 
         $text .= $this->testPHPIntValue('memory_limit', '64');
@@ -66,47 +64,50 @@ class RequirementsCommand extends Command
 
         $text .= $this->methodExists('gettext');
         $text .= $this->folderWritable(ROADIZ_ROOT);
+        $text .= $this->folderWritable(ROADIZ_ROOT . '/conf');
+        $text .= $this->folderWritable(ROADIZ_ROOT . '/cache');
+        $text .= $this->folderWritable(ROADIZ_ROOT . '/files');
+        $text .= $this->folderWritable(ROADIZ_ROOT . '/gen-src');
 
         $output->writeln($text);
     }
 
-
     protected function testPHPIntValue($name, $expected)
     {
-        $intValue = (int) (str_replace(array('s','K','M','G'), array('','','',''), ini_get($name)));
+        $intValue = (int) (str_replace(array('s', 'K', 'M', 'G'), array('', '', '', ''), ini_get($name)));
 
         if ($intValue < $expected) {
-            return '<info>'.$name.'</info> : '.ini_get($name).'  Excepted : '.$expected.' — <error>Fail</error>'.PHP_EOL;
+            return '<info>' . $name . '</info> : ' . ini_get($name) . '  Excepted : ' . $expected . ' — <error>Fail</error>' . PHP_EOL;
         }
 
-        return '<info>'.$name.'</info> : '.ini_get($name).' — Excepted : '.$expected.''.PHP_EOL;
+        return '<info>' . $name . '</info> : ' . ini_get($name) . ' — Excepted : ' . $expected . '' . PHP_EOL;
     }
 
     protected function methodExists($name, $mandatory = true)
     {
-        return '<info>Method '.$name.'()</info> — '.(function_exists($name) === true && $mandatory === true ? 'OK' : '<error>Fail</error>').''.PHP_EOL;
+        return '<info>Method ' . $name . '()</info> — ' . (function_exists($name) === true && $mandatory === true ? 'OK' : '<error>Fail</error>') . '' . PHP_EOL;
     }
 
     protected function folderWritable($filename)
     {
-        return '<info>Folder “'.$filename.'”</info> — '.(is_writable($filename) === true ? 'Writable' : '<error>Not writable</error>').''.PHP_EOL;
+        return '<info>Folder “' . $filename . '”</info> — ' . (is_writable($filename) === true ? 'Writable' : '<error>Not writable</error>') . '' . PHP_EOL;
     }
 
     protected function testExtension($name)
     {
         if (!extension_loaded($name)) {
-            return '<info>Extension '.$name.'</info> is not installed — <error>Fail</error>'.PHP_EOL;
+            return '<info>Extension ' . $name . '</info> is not installed — <error>Fail</error>' . PHP_EOL;
         } else {
-            return '<info>Extension '.$name.'</info> is installed — OK'.PHP_EOL;
+            return '<info>Extension ' . $name . '</info> is installed — OK' . PHP_EOL;
         }
     }
 
     protected function testPHPVersion($version)
     {
         if (version_compare(phpversion(), $version, '<')) {
-            return '<info>PHP</info> version is too old — <error>Fail</error>'.PHP_EOL;
+            return '<info>PHP</info> version is too old — <error>Fail</error>' . PHP_EOL;
         } else {
-            return '<info>PHP</info> version (v'.phpversion().') — OK'.PHP_EOL;
+            return '<info>PHP</info> version (v' . phpversion() . ') — OK' . PHP_EOL;
         }
     }
 }
