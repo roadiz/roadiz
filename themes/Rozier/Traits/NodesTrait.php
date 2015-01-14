@@ -31,15 +31,13 @@
 
 namespace Themes\Rozier\Traits;
 
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Utils\StringHandler;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
-
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-
+use RZ\Roadiz\Core\Utils\StringHandler;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 trait NodesTrait
@@ -57,7 +55,7 @@ trait NodesTrait
         if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
                 'node.%name%.no_creation.urlAlias.alreadyExists',
-                array('%name%'=>$data['nodeName'])
+                array('%name%' => $data['nodeName'])
             );
 
             throw new EntityAlreadyExistsException($msg, 1);
@@ -65,7 +63,7 @@ trait NodesTrait
         if ($this->nodeNameExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
                 'node.%name%.no_creation.already_exists',
-                array('%name%'=>$data['nodeName'])
+                array('%name%' => $data['nodeName'])
             );
 
             throw new EntityAlreadyExistsException($msg, 1);
@@ -76,7 +74,7 @@ trait NodesTrait
             $node->setNodeName($data['nodeName']);
             $this->getService('em')->persist($node);
 
-            $sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
+            $sourceClass = "GeneratedNodeSources\\" . $type->getSourceEntityClassName();
             $source = new $sourceClass($node, $translation);
             $source->setTitle($data['nodeName']);
 
@@ -87,7 +85,7 @@ trait NodesTrait
         } catch (\Exception $e) {
             $msg = $this->getTranslator()->trans(
                 'node.%name%.noCreation.alreadyExists',
-                array('%name%'=>$node->getNodeName())
+                array('%name%' => $node->getNodeName())
             );
             throw new EntityAlreadyExistsException($msg, 1);
         }
@@ -105,7 +103,7 @@ trait NodesTrait
         if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
                 'node.%name%.no_creation.url_alias.already_exists',
-                array('%name%'=>$data['nodeName'])
+                array('%name%' => $data['nodeName'])
             );
 
             throw new EntityAlreadyExistsException($msg, 1);
@@ -113,7 +111,7 @@ trait NodesTrait
         if ($this->nodeNameExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
                 'node.%name%.no_creation.already_exists',
-                array('%name%'=>$data['nodeName'])
+                array('%name%' => $data['nodeName'])
             );
 
             throw new EntityAlreadyExistsException($msg, 1);
@@ -122,10 +120,10 @@ trait NodesTrait
 
         if (!empty($data['nodeTypeId'])) {
             $type = $this->getService('em')
-                        ->find(
-                            'RZ\Roadiz\Core\Entities\NodeType',
-                            (int) $data['nodeTypeId']
-                        );
+                         ->find(
+                             'RZ\Roadiz\Core\Entities\NodeType',
+                             (int) $data['nodeTypeId']
+                         );
         }
         if (null === $type) {
             throw new \Exception("Cannot create a node without a valid node-type", 1);
@@ -139,7 +137,7 @@ trait NodesTrait
         $node->setNodeName($data['nodeName']);
         $this->getService('em')->persist($node);
 
-        $sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
+        $sourceClass = "GeneratedNodeSources\\" . $type->getSourceEntityClassName();
         $source = new $sourceClass($node, $translation);
         $source->setTitle($data['nodeName']);
         $this->getService('em')->persist($source);
@@ -156,8 +154,8 @@ trait NodesTrait
     protected function urlAliasExists($name)
     {
         return (boolean) $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
-            ->exists($name);
+                              ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
+                              ->exists($name);
     }
 
     /**
@@ -168,8 +166,8 @@ trait NodesTrait
     protected function nodeNameExists($name)
     {
         return (boolean) $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->exists($name);
+                              ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                              ->exists($name);
     }
 
     /**
@@ -182,9 +180,9 @@ trait NodesTrait
     {
         $testingNodeName = StringHandler::slugify($data['nodeName']);
         if ($testingNodeName != $node->getNodeName() &&
-                ($this->nodeNameExists($testingNodeName) ||
+            ($this->nodeNameExists($testingNodeName) ||
                 $this->urlAliasExists($testingNodeName))) {
-            $msg = $this->getTranslator()->trans('node.%name%.noUpdate.alreadyExists', array('%name%'=>$data['nodeName']));
+            $msg = $this->getTranslator()->trans('node.%name%.noUpdate.alreadyExists', array('%name%' => $data['nodeName']));
             throw new EntityAlreadyExistsException($msg, 1);
         }
         foreach ($data as $key => $value) {
@@ -192,8 +190,8 @@ trait NodesTrait
                 true === (boolean) $value) {
                 $node->getHandler()->makeHome();
             } else {
-                $setter = 'set'.ucwords($key);
-                $node->$setter( $value );
+                $setter = 'set' . ucwords($key);
+                $node->$setter($value);
             }
         }
 
@@ -209,7 +207,7 @@ trait NodesTrait
         if ($data['nodeId'] == $node->getId() &&
             !empty($data['nodeTypeId'])) {
             $nodeType = $this->getService('em')
-                 ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $data['nodeTypeId']);
+                             ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $data['nodeTypeId']);
 
             if (null !== $nodeType) {
                 $node->addStackType($nodeType);
@@ -247,11 +245,13 @@ trait NodesTrait
 
         $this->getService('em')->flush();
 
+        $this->updateSolrIndex($node);
+
         return $tag;
     }
 
     /**
-     * @param array                       $data
+     * @param array                        $data
      * @param RZ\Roadiz\Core\Entities\Node $node
      * @param RZ\Roadiz\Core\Entities\Tag  $tag
      *
@@ -264,14 +264,35 @@ trait NodesTrait
             $node->removeTag($tag);
             $this->getService('em')->flush();
 
+            $this->updateSolrIndex($node);
+
             return $tag;
+        }
+    }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\Node $node
+     */
+    protected function updateSolrIndex(Node $node)
+    {
+        // Update Solr Search engine if available
+        if (true === $this->getKernel()->pingSolrServer()) {
+
+            foreach ($node->getNodeSources() as $nodeSource) {
+                $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
+                    $nodeSource,
+                    $this->getService('solr')
+                );
+                $solrSource->getDocumentFromIndex();
+                $solrSource->updateAndCommit();
+            }
         }
     }
 
     /**
      * Create a new node-source for given translation.
      *
-     * @param array                       $data
+     * @param array                        $data
      * @param RZ\Roadiz\Core\Entities\Node $node
      *
      * @return void
@@ -279,10 +300,10 @@ trait NodesTrait
     protected function translateNode($data, Node $node)
     {
         $newTranslation = $this->getService('em')
-                ->find(
-                    'RZ\Roadiz\Core\Entities\Translation',
-                    (int) $data['translationId']
-                );
+                               ->find(
+                                   'RZ\Roadiz\Core\Entities\Translation',
+                                   (int) $data['translationId']
+                               );
 
         $baseSource = $node->getNodeSources()->first();
 
@@ -314,17 +335,17 @@ trait NodesTrait
 
         if ($translations !== null && count($choices) > 0) {
             $builder = $this->getService('formFactory')
-                ->createBuilder('form')
-                ->add('nodeId', 'hidden', array(
-                    'data' => $node->getId(),
-                    'constraints' => array(
-                        new NotBlank()
-                    )
-                ))
+                            ->createBuilder('form')
+                            ->add('nodeId', 'hidden', array(
+                                'data' => $node->getId(),
+                                'constraints' => array(
+                                    new NotBlank(),
+                                ),
+                            ))
                 ->add('translationId', 'choice', array(
                     'label' => $this->getTranslator()->trans('translation'),
                     'choices' => $choices,
-                    'required' => true
+                    'required' => true,
                 ));
 
             return $builder->getForm();
@@ -343,20 +364,19 @@ trait NodesTrait
             $defaults = array();
 
             $builder = $this->getService('formFactory')
-                ->createBuilder('form', $defaults)
-                ->add('nodeId', 'hidden', array(
-                    'data'=>(int) $node->getId()
-                ))
-                ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), array(
-                    'label' => $this->getTranslator()->trans('nodeType'),
-                ));
+                            ->createBuilder('form', $defaults)
+                            ->add('nodeId', 'hidden', array(
+                                'data' => (int) $node->getId(),
+                            ))
+                            ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), array(
+                                'label' => $this->getTranslator()->trans('nodeType'),
+                            ));
 
             return $builder->getForm();
         } else {
             return null;
         }
     }
-
 
     /**
      * @param RZ\Roadiz\Core\Entities\Node $parentNode
@@ -368,23 +388,23 @@ trait NodesTrait
         $defaults = array();
 
         $builder = $this->getService('formFactory')
-            ->createBuilder('form', $defaults)
-            ->add('nodeName', 'text', array(
-                'label' => $this->getTranslator()->trans('nodeName'),
-                'constraints' => array(
-                    new NotBlank()
-                )
-            ))
+                        ->createBuilder('form', $defaults)
+                        ->add('nodeName', 'text', array(
+                            'label' => $this->getTranslator()->trans('nodeName'),
+                            'constraints' => array(
+                                new NotBlank(),
+                            ),
+                        ))
             ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), array(
                 'label' => $this->getTranslator()->trans('nodeType'),
             ));
 
         if (null !== $parentNode) {
             $builder->add('parentId', 'hidden', array(
-                'data'=>(int) $parentNode->getId(),
+                'data' => (int) $parentNode->getId(),
                 'constraints' => array(
-                    new NotBlank()
-                )
+                    new NotBlank(),
+                ),
             ));
         }
 
@@ -405,21 +425,21 @@ trait NodesTrait
             'dynamicNodeName' => $node->isDynamicNodeName(),
         );
         $builder = $this->getService('formFactory')
-            ->createBuilder('form', $defaults)
-            ->add(
-                'nodeName',
-                'text',
-                array(
-                    'label' => $this->getTranslator()->trans('nodeName'),
-                    'constraints' => array(new NotBlank())
-                )
-            )
+                        ->createBuilder('form', $defaults)
+                        ->add(
+                            'nodeName',
+                            'text',
+                            array(
+                                'label' => $this->getTranslator()->trans('nodeName'),
+                                'constraints' => array(new NotBlank()),
+                            )
+                        )
             ->add(
                 'priority',
                 'number',
                 array(
                     'label' => $this->getTranslator()->trans('priority'),
-                    'constraints' => array(new NotBlank())
+                    'constraints' => array(new NotBlank()),
                 )
             )
             ->add(
@@ -428,7 +448,7 @@ trait NodesTrait
                 array(
                     'label' => $this->getTranslator()->trans('node.isHome'),
                     'required' => false,
-                    'attr' => array('class' => 'rz-boolean-checkbox')
+                    'attr' => array('class' => 'rz-boolean-checkbox'),
                 )
             )
             ->add(
@@ -437,7 +457,7 @@ trait NodesTrait
                 array(
                     'label' => $this->getTranslator()->trans('node.dynamicNodeName'),
                     'required' => false,
-                    'attr' => array('class' => 'rz-boolean-checkbox')
+                    'attr' => array('class' => 'rz-boolean-checkbox'),
                 )
             );
 
@@ -452,24 +472,24 @@ trait NodesTrait
     protected function buildEditTagsForm(Node $node)
     {
         $defaults = array(
-            'nodeId' =>  $node->getId()
+            'nodeId' => $node->getId(),
         );
         $builder = $this->getService('formFactory')
-                    ->createBuilder('form', $defaults)
-                    ->add('nodeId', 'hidden', array(
-                        'data' => $node->getId(),
-                        'constraints' => array(
-                            new NotBlank()
-                        )
-                    ))
-                    ->add('tagPaths', 'text', array(
-                        'label' => $this->getTranslator()->trans('list.tags.to_link'),
-                        'attr' => array('class' => 'rz-tag-autocomplete')
-                    ))
-                    ->add('separator_1', new SeparatorType(), array(
-                        'label' => $this->getTranslator()->trans('use.new_or_existing.tags_with_hierarchy'),
-                        'attr' => array('class' => 'form-help-static uk-alert uk-alert-large')
-                    ));
+                        ->createBuilder('form', $defaults)
+                        ->add('nodeId', 'hidden', array(
+                            'data' => $node->getId(),
+                            'constraints' => array(
+                                new NotBlank(),
+                            ),
+                        ))
+            ->add('tagPaths', 'text', array(
+                'label' => $this->getTranslator()->trans('list.tags.to_link'),
+                'attr' => array('class' => 'rz-tag-autocomplete'),
+            ))
+            ->add('separator_1', new SeparatorType(), array(
+                'label' => $this->getTranslator()->trans('use.new_or_existing.tags_with_hierarchy'),
+                'attr' => array('class' => 'form-help-static uk-alert uk-alert-large'),
+            ));
 
         return $builder->getForm();
     }
@@ -482,13 +502,13 @@ trait NodesTrait
     protected function buildDeleteForm(Node $node)
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add('nodeId', 'hidden', array(
-                'data' => $node->getId(),
-                'constraints' => array(
-                    new NotBlank()
-                )
-            ));
+                        ->createBuilder('form')
+                        ->add('nodeId', 'hidden', array(
+                            'data' => $node->getId(),
+                            'constraints' => array(
+                                new NotBlank(),
+                            ),
+                        ));
 
         return $builder->getForm();
     }
@@ -499,7 +519,7 @@ trait NodesTrait
     protected function buildEmptyTrashForm()
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form');
+                        ->createBuilder('form');
 
         return $builder->getForm();
     }
@@ -513,18 +533,18 @@ trait NodesTrait
     protected function buildRemoveTagForm(Node $node, Tag $tag)
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add('nodeId', 'hidden', array(
-                'data' => $node->getId(),
-                'constraints' => array(
-                    new NotBlank()
-                )
-            ))
+                        ->createBuilder('form')
+                        ->add('nodeId', 'hidden', array(
+                            'data' => $node->getId(),
+                            'constraints' => array(
+                                new NotBlank(),
+                            ),
+                        ))
             ->add('tagId', 'hidden', array(
                 'data' => $tag->getId(),
                 'constraints' => array(
-                    new NotBlank()
-                )
+                    new NotBlank(),
+                ),
             ));
 
         return $builder->getForm();

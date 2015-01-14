@@ -32,12 +32,11 @@ namespace RZ\Roadiz\Core\SearchEngine;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
-
-use Solarium\QueryType\Update\Query\Query;
+use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
+use RZ\Roadiz\Core\Kernel;
 use Solarium\QueryType\Update\Query\Document\DocumentInterface;
+use Solarium\QueryType\Update\Query\Query;
 
 /**
  * Wrap a Solarium and a NodeSource together to ease indexing.
@@ -83,8 +82,8 @@ class SolariumNodeSource
     public function getDocumentFromIndex()
     {
         $query = $this->client->createSelect();
-        $query->setQuery(static::IDENTIFIER_KEY.':'.$this->nodeSource->getId());
-        $query->createFilterQuery('type')->setQuery('document_type_s:'.static::DOCUMENT_TYPE);
+        $query->setQuery(static::IDENTIFIER_KEY . ':' . $this->nodeSource->getId());
+        $query->createFilterQuery('type')->setQuery('document_type_s:' . static::DOCUMENT_TYPE);
 
         // this executes the query and returns the result
         $resultset = $this->client->select($query);
@@ -160,7 +159,6 @@ class SolariumNodeSource
         $collection[] = $this->nodeSource->getTitle();
 
         $searchableFields = $this->nodeSource->getNode()->getNodeType()->getSearchableFields();
-
 
         /*
          * Only one content fields to search in.
@@ -250,9 +248,9 @@ class SolariumNodeSource
     public function clean(Query $update)
     {
         $update->addDeleteQuery(
-            static::IDENTIFIER_KEY.':"'.$this->nodeSource->getId().'"'.
-            '&document_type_s:"'.static::DOCUMENT_TYPE.'"'.
-            '&locale_s:"'.$this->nodeSource->getTranslation()->getLocale().'"'
+            static::IDENTIFIER_KEY . ':"' . $this->nodeSource->getId() . '"' .
+            '&document_type_s:"' . static::DOCUMENT_TYPE . '"' .
+            '&locale_s:"' . $this->nodeSource->getTranslation()->getLocale() . '"'
         );
 
         return true;
