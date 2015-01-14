@@ -5681,6 +5681,22 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>document.file.%name%.updated</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.nodeSource">
+          <source>are_you_sure.delete.nodeSource</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node_source.%node_source%.%translation%.cant.deleted">
+          <source>node_source.%node_source%.%translation%.cant.deleted</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node_source.%node_source%.deleted.%translation%">
+          <source>node_source.%node_source%.deleted.%translation%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.nodesource">
+          <source>delete.nodesource</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

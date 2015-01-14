@@ -5682,6 +5682,22 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>document.file.%name%.updated</source>
           <target state="translated">Le fichier «%name%» a été mis à jour</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.nodeSource">
+          <source>are_you_sure.delete.nodeSource</source>
+          <target state="translated">Êtes-vous sûr(e) de vouloir supprimer cette traduction de nœud ?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node_source.%node_source%.%translation%.cant.deleted">
+          <source>node_source.%node_source%.%translation%.cant.deleted</source>
+          <target state="translated">La supression de «%node_source%» en «%translation%» n'est pas possible</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node_source.%node_source%.deleted.%translation%">
+          <source>node_source.%node_source%.deleted.%translation%</source>
+          <target state="translated">La supression de «%node_source%» en «%translation%» n'est pas possible</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.nodesource">
+          <source>delete.nodesource</source>
+          <target state="translated">Supprimer la source du noeud</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>
