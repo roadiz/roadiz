@@ -277,7 +277,6 @@ trait NodesTrait
     {
         // Update Solr Search engine if available
         if (true === $this->getKernel()->pingSolrServer()) {
-
             foreach ($node->getNodeSources() as $nodeSource) {
                 $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
                     $nodeSource,

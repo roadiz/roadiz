@@ -103,7 +103,6 @@ class FullTextSearchHandler
 
         // filter by tag or tags
         if (!empty($args['tags'])) {
-
             if ($args['tags'] instanceof Tag) {
                 $args["fq"][] = "tags_en:" . $args['tags']->getTranslatedTags()->first()->getName();
             } elseif (is_array($args['tags'])) {
@@ -116,7 +115,6 @@ class FullTextSearchHandler
         }
 
         if (!empty($args['nodeType'])) {
-
             if ($args['nodeType'] instanceof NodeType) {
                 $args["fq"][] = "node_type_s:" . $args['nodeType']->getName();
             } else {
