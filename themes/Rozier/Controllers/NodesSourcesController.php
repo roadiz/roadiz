@@ -44,6 +44,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Translation\Translator;
 
+use Symfony\Component\Validator\Constraints\NotBlank;
+
 /**
  * Nodes sources controller.
  *
@@ -127,7 +129,75 @@ class NodesSourcesController extends RozierApp
                 );
             }
         }
-
         return $this->throw404();
+    }
+
+    /**
+    * Return an remove form for requested nodeSource.
+    *
+    * @param Symfony\Component\HttpFoundation\Request $request
+    * @param int                                      $nodeSourceId
+    *
+    * @return Symfony\Component\HttpFoundation\Response
+    */
+    public function removeAction(Request $request, $nodeSourceId)
+    {
+        $builder = $this->getService('formFactory')
+            ->createBuilder('form')
+            ->add('nodeId', 'hidden', array(
+                'data' => $nodeSourceId,
+                'constraints' => array(
+                    new NotBlank()
+                )
+            ));
+
+        $form = $builder->getForm();
+
+        $form->handleRequest();
+
+        $ns = $this->getService("em")->find("RZ\Roadiz\Core\Entities\NodesSources", $nodeSourceId);
+
+        if ($form->isValid()) {
+            $node = $ns->getNode();
+            if ($node->getNodeSources()->count() <= 1) {
+                $msg = $this->getTranslator()->trans('node_source.%node_source%.%translation%.cant.deleted', array(
+                    '%node_source%'=>$node->getNodeName(),
+                    '%translation%'=>$ns->getTranslation()->getName()
+                ));
+
+                $this->publishErrorMessage($request, $msg);
+            } else {
+                $this->getService("em")->remove($ns);
+                $this->getService("em")->flush();
+
+                $ns = $node->getNodeSources()->first();
+
+                $msg = $this->getTranslator()->trans('node_source.%node_source%.deleted.%translation%', array(
+                    '%node_source%'=>$node->getNodeName(),
+                    '%translation%'=>$ns->getTranslation()->getName()
+                ));
+
+                $this->publishConfirmMessage($request, $msg);
+            }
+            $response = new RedirectResponse(
+            $this->getService('urlGenerator')->generate(
+                'nodesEditSourcePage',
+                array('nodeId' => $node->getId(), "translationId" => $ns->getTranslation()->getId())
+                )
+            );
+
+            $response->prepare($request);
+
+            return $response->send();
+        }
+
+        $this->assignation["node"] = $ns;
+        $this->assignation['form'] = $form->createView();
+
+        return new Response(
+            $this->getTwig()->render('nodes/deleteSource.html.twig', $this->assignation),
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
     }
 }

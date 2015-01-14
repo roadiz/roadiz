@@ -61,6 +61,10 @@ nodesEditSourcePage:
     path:     /rz-admin/nodes/edit/{nodeId}/source/{translationId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesSourcesController::editSourceAction }
     requirements: { nodeId : "[0-9]+", translationId : "[0-9]+" }
+nodesDeleteSourcePage:
+    path:     /rz-admin/nodes/source/delete/{nodeSourceId}
+    defaults: { _controller : Themes\Rozier\Controllers\NodesSourcesController::removeAction }
+    requirements: {nodeSourceId : "[0-9]+"}
 nodesEditTagsPage:
     path:     /rz-admin/nodes/edit/{nodeId}/tags
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::editTagsAction }
