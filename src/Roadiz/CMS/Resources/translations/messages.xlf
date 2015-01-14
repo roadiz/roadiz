@@ -77,6 +77,11 @@
                 <target></target>
             </trans-unit>
 
+            <trans-unit xml:space="preserve" id="file.not.accepted">
+                <source>file.not.accepted</source>
+                <target></target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

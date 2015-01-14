@@ -41,7 +41,6 @@ class NodesSourcesPaginator extends Paginator
 {
     protected $securityContext = null;
 
-
     /**
      * @return Symfony\Component\Security\Core\SecurityContext
      */
@@ -69,15 +68,15 @@ class NodesSourcesPaginator extends Paginator
      */
     public function getPageCount()
     {
-        if ($this->searchPattern !== null) {
+        if (null !== $this->searchPattern) {
             $total = $this->em->getRepository($this->entityName)
-                            ->countSearchBy($this->searchPattern, $this->criteria);
+                                                   ->countSearchBy($this->searchPattern, $this->criteria);
         } else {
             $total = $this->em->getRepository($this->entityName)
-                            ->countBy(
-                                $this->criteria,
-                                $this->securityContext
-                            );
+                                                   ->countBy(
+                                                       $this->criteria,
+                                                       $this->securityContext
+                                                   );
         }
 
         return ceil($total / $this->getItemsPerPage());
@@ -93,24 +92,17 @@ class NodesSourcesPaginator extends Paginator
      */
     public function findByAtPage(array $order = array(), $page = 1)
     {
-        if ($this->searchPattern !== null) {
-            return $this->em->getRepository($this->entityName)
-                        ->searchBy(
-                            $this->searchPattern,
-                            $this->criteria,
-                            $order,
-                            $this->getItemsPerPage(),
-                            $this->getItemsPerPage() * ($page - 1)
-                        );
+        if (null !== $this->searchPattern) {
+            return $this->searchByAtPage($order, $page);
         } else {
             return $this->em->getRepository($this->entityName)
-                        ->findBy(
-                            $this->criteria,
-                            $order,
-                            $this->getItemsPerPage(),
-                            $this->getItemsPerPage() * ($page - 1),
-                            $this->securityContext
-                        );
+                                                 ->findBy(
+                                                     $this->criteria,
+                                                     $order,
+                                                     $this->getItemsPerPage(),
+                                                     $this->getItemsPerPage() * ($page - 1),
+                                                     $this->securityContext
+                                                 );
         }
     }
 }

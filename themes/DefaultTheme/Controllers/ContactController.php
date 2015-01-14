@@ -31,13 +31,12 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
+use RZ\Roadiz\CMS\Controllers\EntryPointsController;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\CMS\Controllers\EntryPointsController;
-use Themes\DefaultTheme\DefaultThemeApp;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
  * Contact form page.
@@ -55,9 +54,9 @@ class ContactController extends DefaultThemeApp
         $translation = $this->bindLocaleFromRoute($request, $_locale);
         $this->prepareThemeAssignation($node, $translation);
 
-        /*
-         * Create a custom contact form
-         */
+     /*
+      * Create a custom contact form
+      */
         $formBuilder = EntryPointsController::getContactFormBuilder(
             $request,
             true,
@@ -66,28 +65,32 @@ class ContactController extends DefaultThemeApp
             null
         );
         $formBuilder->add('email', 'email', array(
-                        'label'=>$this->getTranslator()->trans('your.email')
+                        'label' => $this->getTranslator()->trans('your.email'),
                     ))
                     ->add('name', 'text', array(
-                        'label'=>$this->getTranslator()->trans('your.name')
+                        'label' => $this->getTranslator()->trans('your.name'),
                     ))
                     ->add('message', 'textarea', array(
-                        'label'=>$this->getTranslator()->trans('your.message')
+                        'label' => $this->getTranslator()->trans('your.message'),
                     ))
                     ->add('callMeBack', 'checkbox', array(
-                        'label'=>$this->getTranslator()->trans('call.me.back'),
-                        'required' => false
+                        'label' => $this->getTranslator()->trans('call.me.back'),
+                        'required' => false,
+                    ))
+                    ->add('document', 'file', array(
+                        'label' => $this->getTranslator()->trans('document'),
+                        'required' => false,
                     ))
                     ->add('send', 'submit', array(
-                        'label'=>$this->getTranslator()->trans('send.contact.form')
+                        'label' => $this->getTranslator()->trans('send.contact.form'),
                     ));
         $form = $formBuilder->getForm();
 
         $this->assignation['contactForm'] = $form->createView();
 
         /*
-         * Assign route to check current menu entry in navigation.html.twig
-         */
+		 * Assign route to check current menu entry in navigation.html.twig
+		 */
         $this->assignation['route'] = $_route;
 
         return new Response(

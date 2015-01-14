@@ -77,6 +77,11 @@
                 <target state="translated">New answer from "%site%" form.</target>
             </trans-unit>
 
+            <trans-unit xml:space="preserve" id="file.not.accepted">
+                <source>file.not.accepted</source>
+                <target>Attached file could not be accepted.</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>
