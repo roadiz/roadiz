@@ -180,9 +180,9 @@ class NodesSourcesController extends RozierApp
                 $this->publishConfirmMessage($request, $msg);
             }
             $response = new RedirectResponse(
-            $this->getService('urlGenerator')->generate(
-                'nodesEditSourcePage',
-                array('nodeId' => $node->getId(), "translationId" => $ns->getTranslation()->getId())
+                $this->getService('urlGenerator')->generate(
+                    'nodesEditSourcePage',
+                    array('nodeId' => $node->getId(), "translationId" => $ns->getTranslation()->getId())
                 )
             );
 

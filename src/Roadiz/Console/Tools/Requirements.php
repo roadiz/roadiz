@@ -129,6 +129,16 @@ class Requirements
         }
         $this->totalChecks++;
 
+        $checks['intl'] = array(
+            'status' => $this->testExtension('intl'),
+            'extension' => true,
+            'message' => 'Intl extension is needed for translations.',
+        );
+        if ($checks['intl']['status']) {
+            $this->successChecks++;
+        }
+        $this->totalChecks++;
+
         $checks['memory_limit'] = array(
             'status' => $this->testPHPIntValue('memory_limit', '64M'),
             'value_minimum' => '64M',

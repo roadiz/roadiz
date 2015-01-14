@@ -57,6 +57,7 @@ class RequirementsCommand extends Command
         $text .= $this->testExtension('date');
         $text .= $this->testExtension('gd');
         $text .= $this->testExtension('curl');
+        $text .= $this->testExtension('intl');
 
         $text .= $this->testPHPIntValue('memory_limit', '64');
         $text .= $this->testPHPIntValue('post_max_size', '16');
