@@ -165,18 +165,6 @@ class Requirements
         }
         $this->totalChecks++;
 
-        $checks['project_folder_writable'] = array(
-            'status' => $this->folderWritable(ROADIZ_ROOT),
-            'folder' => ROADIZ_ROOT,
-            'mod' => fileperms(ROADIZ_ROOT),
-            'message' => 'Project folder is not writable by PHP, you must change its permissions.',
-        );
-
-        if ($checks['project_folder_writable']['status']) {
-            $this->successChecks++;
-        }
-        $this->totalChecks++;
-
         $checks['files_folder_writable'] = array(
             'status' => $this->folderWritable(ROADIZ_ROOT . '/files'),
             'folder' => ROADIZ_ROOT . '/files',
