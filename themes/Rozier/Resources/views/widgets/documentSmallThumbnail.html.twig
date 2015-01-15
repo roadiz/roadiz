@@ -1,9 +1,10 @@
 {% spaceless %}
-<li class="uk-sortable-list-item documents-widget-sortable-list-item" data-document-id="{{ document.getId }}">
+<li class="{% if not document.isImage %}not-image {% endif %}{{ document.getShortType }}-document uk-sortable-list-item documents-widget-sortable-list-item"
+    data-document-id="{{ document.getId }}">
 
 	<div class="uk-sortable-handle"></div>
 
-    <div class="document-border" style="background-color:{{ head.mainColor }};"></div>
+    <div class="document-border"></div>
 
 	{% if document.isImage %}
 	   <img class="document-image" src="{{ document.getViewer.getDocumentUrlByArray({"width":80, "crop":"1x1", "quality":50}) }}" />

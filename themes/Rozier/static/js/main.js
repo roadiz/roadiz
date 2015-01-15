@@ -37,6 +37,8 @@ Rozier.mainContentScrollableWidth = null;
 Rozier.mainContentScrollableOffsetLeft = null;
 Rozier.$backTopBtn = null;
 
+Rozier.entriesPanel = null;
+
 
 Rozier.onDocumentReady = function(event) {
 
@@ -48,6 +50,7 @@ Rozier.onDocumentReady = function(event) {
 	}
 
 	Rozier.lazyload = new Lazyload();
+	Rozier.entriesPanel = new EntriesPanel();
 
 	Rozier.$window = $(window);
 	Rozier.$body = $('body');
@@ -707,6 +710,7 @@ Rozier.resize = function(){
 	_this.mainContentScrollableOffsetLeft = _this.windowWidth - _this.mainContentScrollableWidth;
 
 	_this.lazyload.resize();
+	_this.entriesPanel.replaceSubNavs();
 
 	// Documents list
 	if(_this.lazyload !== null && !_this.resizeFirst) _this.lazyload.documentsList.resize();

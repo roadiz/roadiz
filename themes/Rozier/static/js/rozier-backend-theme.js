@@ -3388,7 +3388,33 @@ CustomFormFieldEdit.prototype.resize = function(){
     var _this = this;
 
 };
-;/**
+;var EntriesPanel = function () {
+    var _this = this;
+
+    _this.$adminMenuNav = $('#admin-menu-nav');
+
+    _this.replaceSubNavs();
+};
+
+EntriesPanel.prototype.$adminMenuNav = null;
+
+EntriesPanel.prototype.replaceSubNavs = function() {
+    var _this = this;
+
+    _this.$adminMenuNav.find('.uk-nav-sub').each(function (index, element) {
+
+        var subMenu = $(element);
+
+        subMenu.attr('style','display:block;');
+        var top = subMenu.offset().top;
+        var height = subMenu.height();
+        subMenu.removeAttr('style');
+
+        if((top + height + 20) > $(window).height()){
+            subMenu.parent().addClass('reversed-nav');
+        }
+    });
+};;/**
  * Rozier Mobile
  */
 
@@ -4279,6 +4305,8 @@ Rozier.mainContentScrollableWidth = null;
 Rozier.mainContentScrollableOffsetLeft = null;
 Rozier.$backTopBtn = null;
 
+Rozier.entriesPanel = null;
+
 
 Rozier.onDocumentReady = function(event) {
 
@@ -4290,6 +4318,7 @@ Rozier.onDocumentReady = function(event) {
 	}
 
 	Rozier.lazyload = new Lazyload();
+	Rozier.entriesPanel = new EntriesPanel();
 
 	Rozier.$window = $(window);
 	Rozier.$body = $('body');
@@ -4949,6 +4978,7 @@ Rozier.resize = function(){
 	_this.mainContentScrollableOffsetLeft = _this.windowWidth - _this.mainContentScrollableWidth;
 
 	_this.lazyload.resize();
+	_this.entriesPanel.replaceSubNavs();
 
 	// Documents list
 	if(_this.lazyload !== null && !_this.resizeFirst) _this.lazyload.documentsList.resize();

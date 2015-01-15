@@ -99,16 +99,6 @@
     background: #eee;
     overflow: hidden;
 
-    &:hover{
-
-        .document-links{
-            bottom:0px;
-        }
-        .document-platform-icon {
-            .opacity(0);
-        }
-    }
-
     .uk-sortable-handle{
         position: absolute;
         width:80px; height:80px;
@@ -132,6 +122,7 @@
 
     .document-name{
         display: none;
+        .transition(~"0.4s opacity ease, 0.4s top ease");
     }
 
     .document-mime-type{
@@ -196,6 +187,37 @@
             font-size: 28px;
             line-height: 35px;
             color: #3C3C3C;
+        }
+    }
+
+    &.not-image {
+
+        .document-platform-icon {
+            top: 45%;
+        }
+        .document-name {
+            display: block;
+            .opacity(0.7);
+            font-size: 9px;
+            position: absolute;
+            top: 63px;
+            width: 80px;
+            text-align: center;
+        }
+    }
+
+    &:hover{
+
+        .document-links{
+            bottom:0px;
+        }
+        .document-platform-icon {
+            .opacity(0);
+        }
+        &.not-image {
+            .document-name {
+                top: 10px;
+            }
         }
     }
 }
