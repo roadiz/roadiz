@@ -9,6 +9,7 @@ var ChildrenNodesField = function () {
     //_this.$switchLangButtons = _this.$fields.find('.nodetree-langs');
 
     _this.init();
+    _this.dropDownize();
 };
 ChildrenNodesField.prototype.$fields = null;
 ChildrenNodesField.prototype.$quickAddNodeButtons = null;
@@ -86,6 +87,26 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
     }
 
     return false;
+};
+
+ChildrenNodesField.prototype.dropDownize = function() {
+    var _this = this;
+
+    for (var i = _this.$fields.length - 1; i >= 0; i--) {
+        var $quickAddNode = $(_this.$fields[i]).find('.children-nodes-quick-creation');
+
+        if(!$quickAddNode.hasClass('uk-dropdown') &&
+            $quickAddNode.find('a').length > 2){
+            console.log("Need to convert buttons to dropdown");
+
+            $quickAddNode.addClass('uk-dropdown uk-dropdown-navbar uk-dropdown-flip');
+            $quickAddNode.removeClass('uk-button-group');
+            $quickAddNode.wrap('<div data-uk-dropdown="{mode:\'click\'}"></div>');
+            $quickAddNode.before('<a class="uk-button"><i class="uk-icon-rz-plus-simple"></i></a>');
+
+            $($quickAddNode.parents('.uk-navbar-content')[0]).removeClass('uk-navbar-content');
+        }
+    }
 };
 
 ChildrenNodesField.prototype.refreshNodeTree = function( $nodeTree, rootNodeId, translationId ) {

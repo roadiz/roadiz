@@ -1863,7 +1863,8 @@ NodeTree.prototype.dropdownFlip = function(){
 NodeTree.prototype.resize = function(){
     var _this = this;
 
-};;var NodeStatuses = function () {
+};
+;var NodeStatuses = function () {
     var _this = this;
 
     _this.$containers = $(".node-statuses");
@@ -2226,6 +2227,7 @@ var ChildrenNodesField = function () {
     //_this.$switchLangButtons = _this.$fields.find('.nodetree-langs');
 
     _this.init();
+    _this.dropDownize();
 };
 ChildrenNodesField.prototype.$fields = null;
 ChildrenNodesField.prototype.$quickAddNodeButtons = null;
@@ -2303,6 +2305,26 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
     }
 
     return false;
+};
+
+ChildrenNodesField.prototype.dropDownize = function() {
+    var _this = this;
+
+    for (var i = _this.$fields.length - 1; i >= 0; i--) {
+        var $quickAddNode = $(_this.$fields[i]).find('.children-nodes-quick-creation');
+
+        if(!$quickAddNode.hasClass('uk-dropdown') &&
+            $quickAddNode.find('a').length > 2){
+            console.log("Need to convert buttons to dropdown");
+
+            $quickAddNode.addClass('uk-dropdown uk-dropdown-navbar uk-dropdown-flip');
+            $quickAddNode.removeClass('uk-button-group');
+            $quickAddNode.wrap('<div data-uk-dropdown="{mode:\'click\'}"></div>');
+            $quickAddNode.before('<a class="uk-button"><i class="uk-icon-rz-plus-simple"></i></a>');
+
+            $($quickAddNode.parents('.uk-navbar-content')[0]).removeClass('uk-navbar-content');
+        }
+    }
 };
 
 ChildrenNodesField.prototype.refreshNodeTree = function( $nodeTree, rootNodeId, translationId ) {
@@ -4318,7 +4340,7 @@ Rozier.onDocumentReady = function(event) {
 	Rozier.$window.on('resize', $.proxy(Rozier.resize, Rozier));
 	Rozier.$window.trigger('resize');
 
-	
+
 	Rozier.lazyload.generalBind();
 	Rozier.bindMainNodeTreeLangs();
 };
@@ -4887,7 +4909,9 @@ Rozier.resize = function(){
 	_this.windowHeight = _this.$window.height();
 
 	// Close tree panel if small screen & first resize
-	if(_this.windowWidth > 768 && _this.windowWidth <= 1200 && _this.resizeFirst){
+	if(_this.windowWidth > 768 &&
+		_this.windowWidth <= 1200 &&
+		_this.resizeFirst) {
 		_this.$mainTrees[0].style.display = 'none';
 		_this.$minifyTreePanelButton.trigger('click');
 		setTimeout(function(){

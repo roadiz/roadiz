@@ -191,7 +191,7 @@ class NodesSourcesController extends RozierApp
             return $response->send();
         }
 
-        $this->assignation["node"] = $ns;
+        $this->assignation["nodeSource"] = $ns;
         $this->assignation['form'] = $form->createView();
 
         return new Response(
