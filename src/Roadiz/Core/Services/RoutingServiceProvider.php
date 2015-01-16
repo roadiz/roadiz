@@ -107,6 +107,7 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                         $rCollection->addCollection($feCollection);
                     }
                 }
+
                 $c['stopwatch']->stop('routeCollection');
                 return $rCollection;
             };

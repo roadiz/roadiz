@@ -46,7 +46,9 @@ class ThemeRepository extends EntityRepository
     {
         $query = $this->_em->createQuery('
             SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
-            WHERE t.available = true AND t.backendTheme = true');
+            WHERE t.available = true
+            AND t.backendTheme = true')
+                    ->setMaxResults(1);
 
         $query->useResultCache(true, 3600, 'RZTheme_backend');
 
@@ -62,6 +64,9 @@ class ThemeRepository extends EntityRepository
      *
      * This method uses Result cache.
      *
+     * We need to order themes using hostname to make
+     * hostnamed theme prioritary over wildcard themes.
+     *
      * @return array|null
      */
     public function findAvailableFrontends()
@@ -69,7 +74,8 @@ class ThemeRepository extends EntityRepository
         $query = $this->_em->createQuery('
             SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
             WHERE t.available = true
-            AND t.backendTheme = false');
+            AND t.backendTheme = false
+            ORDER BY t.hostname DESC');
 
         $query->useResultCache(true, 3600, 'RZTheme_frontends');
 
@@ -92,7 +98,9 @@ class ThemeRepository extends EntityRepository
         $query = $this->_em->createQuery('
             SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
             WHERE t.available = true
-            AND t.backendTheme = false');
+            AND t.backendTheme = false
+            AND t.hostname = \'*\'')
+                    ->setMaxResults(1);
 
         $query->useResultCache(true, 3600, 'RZTheme_first_frontend');
 
@@ -117,7 +125,8 @@ class ThemeRepository extends EntityRepository
             WHERE t.available = true
             AND t.backendTheme = false
             AND t.hostname = :hostname')
-                    ->setParameter('hostname', $hostname);
+                    ->setParameter('hostname', $hostname)
+                    ->setMaxResults(1);
 
         $query->useResultCache(true, 3600, 'RZTheme_frontend_'.$hostname);
 
@@ -144,7 +153,9 @@ class ThemeRepository extends EntityRepository
             SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
             WHERE t.available = true
             AND t.backendTheme = false
-            AND t.staticTheme = false');
+            AND t.staticTheme = false
+            AND t.hostname = \'*\'')
+                    ->setMaxResults(1);
 
         $query->useResultCache(true, 3600, 'RZTheme_first_nonstatic_frontend');
 
@@ -173,7 +184,8 @@ class ThemeRepository extends EntityRepository
             AND t.backendTheme = false
             AND t.staticTheme = false
             AND t.hostname = :hostname')
-                    ->setParameter('hostname', $hostname);
+                    ->setParameter('hostname', $hostname)
+                    ->setMaxResults(1);
 
         $query->useResultCache(true, 3600, 'RZTheme_nonstatic_frontend_'.$hostname);
 
