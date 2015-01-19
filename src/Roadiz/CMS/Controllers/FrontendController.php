@@ -45,6 +45,8 @@ use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
+
 /**
  * Frontend controller to handle a page request.
  *
@@ -109,9 +111,13 @@ class FrontendController extends AppController
                         ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                         ->findOneBy(
                             array(
-                                'locale'=>$_locale
+                                'locale'=>$_locale,
+                                'available'=>true
                             )
                         );
+            if ($translation === null) {
+                throw new NoTranslationAvailableException;
+            }
         } else {
             $translation = $this->getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Translation')

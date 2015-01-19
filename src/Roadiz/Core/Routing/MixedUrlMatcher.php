@@ -110,6 +110,10 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             if ($node !== null) {
                 $translation = $node->getNodeSources()->first()->getTranslation();
 
+                if (!$translation->isAvailable()) {
+                    return false;
+                }
+
                 return array(
                     '_controller' => $this->getThemeController().'::indexAction',
                     '_locale'     => $translation->getLocale(), //pass request locale to init translator
@@ -121,6 +125,10 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                  * Try with node name
                  */
                 $translation = $this->parseTranslation($tokens);
+
+                if ($translation === null) {
+                    return false;
+                }
 
                 $node = $this->parseNode($tokens, $translation);
                 if ($node !== null) {
@@ -269,7 +277,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                 if ($locale !== null && $locale != '') {
                     return Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->findOneByLocale($locale);
+                        ->findOneByLocaleAndAvailable($locale);
                 }
             }
         }

@@ -66,6 +66,9 @@ class NodeSourceApi extends AbstractApi
         if (empty($criteria['node.status'])) {
             $criteria['node.status'] = array('<=', Node::PUBLISHED);
         }
+        // if (!in_array('translation.available', $criteria, true)) {
+        //     $criteria['translation.available'] = true;
+        // }
 
         $rep = $this->getRepositoryName($criteria);
 
@@ -86,6 +89,9 @@ class NodeSourceApi extends AbstractApi
         if (empty($criteria['node.status'])) {
             $criteria['node.status'] = array('<=', Node::PUBLISHED);
         }
+        // if (!in_array('translation.available', $criteria, true)) {
+        //     $criteria['translation.available'] = true;
+        // }
 
         $rep = $this->getRepositoryName($criteria);
 
@@ -102,6 +108,10 @@ class NodeSourceApi extends AbstractApi
         if (empty($criteria['node.status'])) {
             $criteria['node.status'] = array('<=', Node::PUBLISHED);
         }
+        // if (!in_array('translation.available', $criteria, true)) {
+        //     $criteria['translation.available'] = true;
+        // }
+
         $rep = $this->getRepositoryName($criteria);
 
         return $this->container['em']
