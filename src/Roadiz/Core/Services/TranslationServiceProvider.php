@@ -64,7 +64,7 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
         $container['translator'] = function ($c) {
             $c['stopwatch']->start('initTranslations');
 
-            $translator = new Translator($c['translator.locale']);
+            $translator = new Translator($c['translator.locale'], null, ROADIZ_ROOT.'/cache/translations', (boolean) $c['config']['devMode']);
             $translator->addLoader('xlf', new XliffFileLoader());
 
             $CMSMsgPath = ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/translations/messages.'.$c['translator.locale'].'.xlf';
