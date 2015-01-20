@@ -54,13 +54,11 @@
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
-        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
-        {% if splash %}
         <script>
-            var splash = {'url' : '{{ splash.url }}'};
+            window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>');
+            var splashRequest = "{{ path('loginImagePage') }}";
         </script>
         <script src="{{ head.resourcesUrl }}js/login/login.js"></script>
-        {% endif %}
         {% block customScripts %}{% endblock %}
     </body>
 </html>

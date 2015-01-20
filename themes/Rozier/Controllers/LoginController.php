@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Utils\SplashbasePictureFinder;
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\SecurityContext;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -57,9 +58,6 @@ class LoginController extends RozierApp
         $form = $this->buildLoginForm();
 
         $this->assignation['form'] = $form->createView();
-
-        $splash = new SplashbasePictureFinder();
-        $this->assignation['splash'] = $splash->getRandom();
 
         $session = $this->getService('session');
         // get the login error if there is one
@@ -105,6 +103,24 @@ class LoginController extends RozierApp
             Response::HTTP_OK,
             array('content-type' => 'text/html')
         );
+    }
+
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function imageAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $splash = new SplashbasePictureFinder();
+            $response = new JsonResponse();
+            $response->setData($splash->getRandom());
+
+            return $response;
+        } else {
+            return $this->throw404();
+        }
     }
 
     /**
