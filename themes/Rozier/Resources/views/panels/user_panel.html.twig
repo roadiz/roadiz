@@ -32,7 +32,11 @@
                 <a title="{% trans %}delete.generated_images.cache{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-flash-images" href="{{ path('deleteSLIRCache') }}"><span class="user-action-label">{% trans %}delete.generated_images.cache{% endtrans %}</span></a>
             {% endif %}
             <a class="uk-icon-button uk-icon-rz-user" href="{{ path('usersEditPage', {'userId':session.user.getId }) }}"><span class="user-action-label">{% trans %}edit.account{% endtrans %}</span></a>
-            <a title="{% trans %}logout{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-turn-off rz-no-ajax-link" href="{{ path('logoutPage') }}"><span class="user-action-label">{% trans %}logout{% endtrans %}</span></a>
+            {% if securityContext.Granted('ROLE_PREVIOUS_ADMIN') %}
+                <a title="{% trans %}stop.test.user.right{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-turn-off rz-no-ajax-link" href="?_su=_exit"><span class="user-action-label">{% trans %}stop.test.user.right{% endtrans %}</span></a>
+            {% else %}
+                <a title="{% trans %}logout{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-turn-off rz-no-ajax-link" href="{{ path('logoutPage') }}"><span class="user-action-label">{% trans %}logout{% endtrans %}</span></a>
+            {% endif %}
             {% if head.devMode %}
             <p class="dev-mode"><i class="uk-icon-rz-devmode"></i> {% trans %}dev_mode.activated{% endtrans %}</p>
             {% endif %}

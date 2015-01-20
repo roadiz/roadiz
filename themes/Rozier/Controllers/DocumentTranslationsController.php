@@ -100,8 +100,7 @@ class DocumentTranslationsController extends RozierApp
                 $msg = $this->getTranslator()->trans('document.translation.%name%.updated', array(
                     '%name%'=>$document->getFilename()
                 ));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -183,8 +182,7 @@ class DocumentTranslationsController extends RozierApp
                     $this->getService('em')->flush();
 
                     $msg = $this->getTranslator()->trans('document.translation.%name%.deleted', array('%name%'=>$document->getFilename()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (\Exception $e) {
                     $msg = $this->getTranslator()->trans('document.translation.%name%.cannot_delete', array('%name%'=>$document->getFilename()));

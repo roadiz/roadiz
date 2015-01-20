@@ -15,7 +15,12 @@
             <span class="label"><span class="label-text">{% trans %}delete{% endtrans %}</span></span>
         </a>
         {% endif %}
-
+        {% if node.nodeSources|length > 1 %}
+        <a class="uk-button uk-button-primary uk-button-danger" href="{{ path('nodesDeleteSourcePage', { nodeSourceId: source.id}) }}">
+            <span class="icon-container"><i class="uk-icon-rz-trash"></i></span>
+            <span class="label"><span class="label-text">{% trans %}delete.translation{% endtrans %}</span></span>
+        </a>
+        {% endif %}
     {% endif %}
 
     {% if not node.isDeleted %}

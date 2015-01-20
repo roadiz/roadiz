@@ -142,8 +142,7 @@ class NodesUtilsController extends RozierApp
                 '%name%' => $existingNode->getNodeName()
             ));
 
-            $request->getSession()->getFlashBag()->add('confirm', $msg);
-            $this->getService('logger')->info($msg);
+            $this->publishConfirmMessage($request, $msg);
 
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')
@@ -169,9 +168,8 @@ class NodesUtilsController extends RozierApp
                         array("nodeId" => $existingNode->getId())
                     )
             );
-        } finally {
-            $response->prepare($request);
-            return $response->send();
         }
+        $response->prepare($request);
+        return $response->send();
     }
 }

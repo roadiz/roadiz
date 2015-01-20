@@ -142,8 +142,7 @@ class RolesUtilsController extends RozierApp
                 if (null !== json_decode($serializedData)) {
                     if (RolesImporter::importJsonFile($serializedData)) {
                         $msg = $this->getTranslator()->trans('role.imported');
-                        $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getService('logger')->info($msg);
+                        $this->publishConfirmMessage($request, $msg);
 
                         $this->getService('em')->flush();
 

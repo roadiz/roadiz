@@ -64,6 +64,11 @@
                 <target state="translated">Envoyer</target>
             </trans-unit>
 
+            <trans-unit xml:space="preserve" id="file.not.accepted">
+                <source>file.not.accepted</source>
+                <target>Le fichier joint n’a pas été accepté.</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

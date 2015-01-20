@@ -37,6 +37,8 @@ Rozier.mainContentScrollableWidth = null;
 Rozier.mainContentScrollableOffsetLeft = null;
 Rozier.$backTopBtn = null;
 
+Rozier.entriesPanel = null;
+
 
 Rozier.onDocumentReady = function(event) {
 
@@ -48,6 +50,7 @@ Rozier.onDocumentReady = function(event) {
 	}
 
 	Rozier.lazyload = new Lazyload();
+	Rozier.entriesPanel = new EntriesPanel();
 
 	Rozier.$window = $(window);
 	Rozier.$body = $('body');
@@ -98,7 +101,7 @@ Rozier.onDocumentReady = function(event) {
 	Rozier.$window.on('resize', $.proxy(Rozier.resize, Rozier));
 	Rozier.$window.trigger('resize');
 
-	
+
 	Rozier.lazyload.generalBind();
 	Rozier.bindMainNodeTreeLangs();
 };
@@ -667,7 +670,9 @@ Rozier.resize = function(){
 	_this.windowHeight = _this.$window.height();
 
 	// Close tree panel if small screen & first resize
-	if(_this.windowWidth > 768 && _this.windowWidth <= 1200 && _this.resizeFirst){
+	if(_this.windowWidth > 768 &&
+		_this.windowWidth <= 1200 &&
+		_this.resizeFirst) {
 		_this.$mainTrees[0].style.display = 'none';
 		_this.$minifyTreePanelButton.trigger('click');
 		setTimeout(function(){
@@ -705,6 +710,7 @@ Rozier.resize = function(){
 	_this.mainContentScrollableOffsetLeft = _this.windowWidth - _this.mainContentScrollableWidth;
 
 	_this.lazyload.resize();
+	_this.entriesPanel.replaceSubNavs();
 
 	// Documents list
 	if(_this.lazyload !== null && !_this.resizeFirst) _this.lazyload.documentsList.resize();

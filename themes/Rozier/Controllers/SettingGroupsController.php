@@ -106,11 +106,9 @@ class SettingGroupsController extends RozierApp
                         'settingGroup.%name%.updated',
                         array('%name%'=>$settingGroup->getName())
                     );
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -164,12 +162,10 @@ class SettingGroupsController extends RozierApp
                         'settingGroup.%name%.created',
                         array('%name%'=>$settingGroup->getName())
                     );
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
                 }
 
                 /*
@@ -224,8 +220,7 @@ class SettingGroupsController extends RozierApp
                     'settingGroup.%name%.deleted',
                     array('%name%'=>$settingGroup->getName())
                 );
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                  * Force redirect to avoid resending form when refreshing page

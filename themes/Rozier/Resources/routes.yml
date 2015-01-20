@@ -12,13 +12,13 @@ rozierRemoveTrailingSlash:
 adminHomePage:
     path:     /rz-admin
     defaults: { _controller: Themes\Rozier\Controllers\DashboardController::indexAction }
-adminHomePageSlash:
-    path:     /rz-admin/
-    defaults: { _controller: Themes\Rozier\Controllers\DashboardController::indexAction }
 
 loginPage:
     path:     /login
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
+loginImagePage:
+    path:     /login/image
+    defaults: { _controller: Themes\Rozier\Controllers\LoginController::imageAction }
 logoutPage:
     path:     /rz-admin/logout
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::logoutAction }
@@ -64,6 +64,10 @@ nodesEditSourcePage:
     path:     /rz-admin/nodes/edit/{nodeId}/source/{translationId}
     defaults: { _controller: Themes\Rozier\Controllers\NodesSourcesController::editSourceAction }
     requirements: { nodeId : "[0-9]+", translationId : "[0-9]+" }
+nodesDeleteSourcePage:
+    path:     /rz-admin/nodes/source/delete/{nodeSourceId}
+    defaults: { _controller : Themes\Rozier\Controllers\NodesSourcesController::removeAction }
+    requirements: {nodeSourceId : "[0-9]+"}
 nodesEditTagsPage:
     path:     /rz-admin/nodes/edit/{nodeId}/tags
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::editTagsAction }
@@ -622,6 +626,38 @@ searchNodeSourcePage:
     defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeSourceAction }
     requirements: { nodetypeId : "[0-9]+" }
 
+#NEWSLETTERS
+newslettersIndexPage:
+    path:     /rz-admin/newsletter
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::listAction }
+newslettersAddPage:
+    path:     /rz-admin/newsletter/add/{nodeTypeId}/{translationId}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::addAction }
+    requirements:
+        nodetypeId : "[0-9]+"
+        translationId : "[0-9]+"
+newslettersEditPage:
+    path:     /rz-admin/newsletter/edit/{newsletterId}/{translationId}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::editAction }
+    requirements:
+        newsletterId : "[0-9]+"
+        translationId : "[0-9]+"
+newslettersPreviewPage:
+    path:     /rz-admin/newsletter/preview/{newsletterId}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::previewAction }
+    requirements:
+        newsletterId : "[0-9]+"
+newslettersDuplicatePage:
+    path:     /rz-admin/newsletter/duplicate/{newsletterId}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::duplicateAction }
+    requirements:
+        newsletterId : "[0-9]+"
+newslettersExportPage:
+    path:     /rz-admin/newsletter/export/{newsletterId}/{inline}
+    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::exportAction }
+    requirements:
+        newsletterId : "[0-9]+"
+        inline: 0|1
 # CSS to style with main color
 cssMainColor:
     path : /rz-admin/css/main-color.css

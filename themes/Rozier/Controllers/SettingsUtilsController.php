@@ -116,8 +116,7 @@ class SettingsUtilsController extends RozierApp
                 if (null !== json_decode($serializedData)) {
                     if (SettingsImporter::importJsonFile($serializedData)) {
                         $msg = $this->getTranslator()->trans('setting.imported');
-                        $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getService('logger')->info($msg);
+                        $this->publishConfirmMessage($request, $msg);
 
                         $this->getService('em')->flush();
 

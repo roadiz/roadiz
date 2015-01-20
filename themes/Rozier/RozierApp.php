@@ -290,7 +290,7 @@ class RozierApp extends BackendController
                     ),
                     'manage.newsletters' => array(
                         'name' => 'manage.newsletters',
-                        'path' => null,
+                        'path' => $c['urlGenerator']->generate('newslettersIndexPage'),
                         'icon' => 'uk-icon-rz-newsletters',
                         'roles' => array('ROLE_ACCESS_NEWSLETTERS')
                     ),

@@ -10,3 +10,4 @@ report.txt
 /build
 .htpasswd
 .htaccess
+*.htc

@@ -59,6 +59,7 @@ module.exports = function(grunt) {
 					'js/node-type-fields/nodeTypeFieldEdit.js',
 					'js/custom-form-fields/customFormFieldsPosition.js',
 					'js/custom-form-fields/customFormFieldEdit.js',
+					'js/panels/entriesPanel.js',
 
 					'js/rozierMobile.js',
 					'js/lazyload.js',
@@ -86,7 +87,7 @@ module.exports = function(grunt) {
 				compress: true,
 				yuicompress: true,
 				optimization: 3,
-				sourceMap: true
+				sourceMap: false
 			},
 			rozier:
 			{

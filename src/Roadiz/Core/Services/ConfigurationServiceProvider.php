@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use Pimple\Container;
 
 /**
@@ -49,7 +50,7 @@ class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
             if (file_exists($configFile)) {
                 return json_decode(file_get_contents($configFile), true);
             } else {
-                return null;
+                throw new NoConfigurationFoundException();
             }
         };
 

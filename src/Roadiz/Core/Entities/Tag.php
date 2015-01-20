@@ -37,7 +37,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Tags are hierarchical entities used
- * to qualify Nodes, Documents, Subscribers.
+ * to qualify Nodes.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\TagRepository")
  * @ORM\HasLifecycleCallbacks
@@ -133,20 +133,6 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\ManyToMany(targetEntity="Subscriber", mappedBy="tags")
-     * @ORM\JoinTable(name="subscribers_tags")
-     * @var ArrayCollection
-     */
-    private $subscribers = null;
-    /**
-     * @return ArrayCollection
-     */
-    public function getSubscribers()
-    {
-        return $this->subscribers;
-    }
-
-    /**
      * @ORM\ManyToOne(targetEntity="Tag", inversedBy="children", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="parent_tag_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Tag
@@ -231,8 +217,6 @@ class Tag extends AbstractDateTimedPositioned
     public function __construct()
     {
         $this->nodes =          new ArrayCollection();
-        $this->subscribers =    new ArrayCollection();
-        $this->documents =      new ArrayCollection();
         $this->translatedTags = new ArrayCollection();
         $this->children =       new ArrayCollection();
     }

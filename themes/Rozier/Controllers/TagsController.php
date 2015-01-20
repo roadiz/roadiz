@@ -140,8 +140,7 @@ class TagsController extends RozierApp
                     $msg = $this->getTranslator()->trans('tag.%name%.updated', array(
                         '%name%'=>$tag->getTranslatedTags()->first()->getName()
                     ));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
@@ -234,8 +233,7 @@ class TagsController extends RozierApp
                 $this->addTag($form->getData(), $tag, $translation);
 
                 $msg = $this->getTranslator()->trans('tag.%name%.created', array('%name%'=>$tag->getTagName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -287,8 +285,7 @@ class TagsController extends RozierApp
                 $this->editTagSettings($form->getData(), $tag);
 
                 $msg = $this->getTranslator()->trans('tag.%name%.updated', array('%name%'=>$tag->getTagName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -382,8 +379,7 @@ class TagsController extends RozierApp
                 $form->getData()['tagId'] == $tag->getId()) {
                 $this->deleteTag($form->getData(), $tag);
                 $msg = $this->getTranslator()->trans('tag.%name%.deleted', array('%name%'=>$tag->getTranslatedTags()->first()->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -442,8 +438,7 @@ class TagsController extends RozierApp
                     $tag = $this->addChildTag($form->getData(), $parentTag, $translation);
 
                     $msg = $this->getTranslator()->trans('child.tag.%name%.created', array('%name%'=>$tag->getTagName()));
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
@@ -455,8 +450,7 @@ class TagsController extends RozierApp
 
                     return $response->send();
                 } catch (EntityAlreadyExistsException $e) {
-                    $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                    $this->getService('logger')->warning($e->getMessage());
+                    $this->publishErrorMessage($request, $e->getMessage());
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(

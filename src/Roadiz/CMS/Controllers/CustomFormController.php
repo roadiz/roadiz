@@ -29,19 +29,17 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
+use RZ\Roadiz\CMS\Forms\CustomFormsType;
+use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Entities\CustomFormAnswer;
+use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use RZ\Roadiz\Core\Entities\CustomForm;
-use RZ\Roadiz\Core\Entities\CustomFormField;
-use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
-use RZ\Roadiz\Core\Entities\CustomFormAnswer;
-use RZ\Roadiz\CMS\Forms\CustomFormsType;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Config\FileLocator;
-
-use RZ\Roadiz\Core\Bags\SettingsBag;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use \InlineStyle\InlineStyle;
 
 class CustomFormController extends AppController
@@ -53,7 +51,7 @@ class CustomFormController extends AppController
      */
     public static function getResourcesFolder()
     {
-        return ROADIZ_ROOT.'/src/Roadiz/CMS/Resources';
+        return ROADIZ_ROOT . '/src/Roadiz/CMS/Resources';
     }
 
     /**
@@ -62,10 +60,10 @@ class CustomFormController extends AppController
     public static function getRoutes()
     {
         $locator = new FileLocator(array(
-            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources'
+        ROADIZ_ROOT . '/src/Roadiz/CMS/Resources',
         ));
 
-        if (file_exists(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
+        if (file_exists(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
 
             return $loader->load('entryPointsRoutes.yml');
@@ -77,7 +75,7 @@ class CustomFormController extends AppController
     public function addAction(Request $request, $customFormId)
     {
         $customForm = $this->getService('em')
-                        ->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
+                           ->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
 
         if (null !== $customForm) {
             $closeDate = $customForm->getCloseDate();
@@ -87,9 +85,9 @@ class CustomFormController extends AppController
                 $this->assignation['customForm'] = $customForm;
                 $this->assignation['fields'] = $customForm->getFields();
 
-                /*
-                 * form
-                 */
+             /*
+              * form
+              */
                 $form = $this->buildForm($request, $customForm);
                 $form->handleRequest();
                 if ($form->isValid()) {
@@ -98,13 +96,13 @@ class CustomFormController extends AppController
                         $data["ip"] = $request->getClientIp();
                         $this->addCustomFormAnswer($data, $customForm);
 
-                        $msg = $this->getTranslator()->trans('customForm.%name%.send', array('%name%'=>$customForm->getName()));
+                        $msg = $this->getTranslator()->trans('customForm.%name%.send', array('%name%' => $customForm->getName()));
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
                         $this->getService('logger')->info($msg);
 
                         $this->assignation['title'] = $this->getTranslator()->trans(
                             'new.answer.form.%site%',
-                            array('%site%'=>$customForm->getDisplayName())
+                            array('%site%' => $customForm->getDisplayName())
                         );
 
                         $this->assignation['mailContact'] = SettingsBag::get('email_sender');
@@ -112,8 +110,8 @@ class CustomFormController extends AppController
                         $this->sendAnswer($this->assignation, $customForm->getEmail());
 
                         /*
-                         * Redirect to update schema page
-                         */
+                   * Redirect to update schema page
+                   */
                         $response = new RedirectResponse(
                             $this->getService('urlGenerator')->generate(
                                 'customFormSendAction',
@@ -160,31 +158,31 @@ class CustomFormController extends AppController
     protected function sendAnswer($assignation, $receiver)
     {
         $emailBody = $this->getTwig()->render('forms/answerForm.html.twig', $assignation);
-        /*
-         * inline CSS
-         */
+     /*
+      * inline CSS
+      */
         $htmldoc = new InlineStyle($emailBody);
         $htmldoc->applyStylesheet(file_get_contents(
-            ROADIZ_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
+            ROADIZ_ROOT . "/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
         ));
 
         if (empty($receiver)) {
             $receiver = SettingsBag::get('email_sender');
         }
-        // Create the message}
+     // Create the message}
         $message = \Swift_Message::newInstance()
-            // Give the message a subject
-            ->setSubject($this->assignation['title'])
-            // Set the From address with an associative array
-            ->setFrom(array(SettingsBag::get('email_sender')))
-            // Set the To addresses with an associative array
-            ->setTo(array($receiver))
-            // Give it a body
-            ->setBody($htmldoc->getHTML(), 'text/html');
-        // Create the Transport
+     // Give the message a subject
+        ->setSubject($this->assignation['title'])
+                          // Set the From address with an associative array
+                          ->setFrom(array(SettingsBag::get('email_sender')))
+                          // Set the To addresses with an associative array
+                          ->setTo(array($receiver))
+                          // Give it a body
+                          ->setBody($htmldoc->getHTML(), 'text/html');
+     // Create the Transport
         $transport = \Swift_MailTransport::newInstance();
         $mailer = \Swift_Mailer::newInstance($transport);
-        // Send the message
+     // Send the message
         return $mailer->send($message);
     }
 
@@ -202,9 +200,9 @@ class CustomFormController extends AppController
         $answer->setCustomForm($customForm);
 
         $this->assignation["fields"] = array(
-                array("name" => "ip", "value" => $data["ip"]),
-                array("name" => "submittedAt", "value" => new \DateTime('NOW'))
-            );
+        array("name" => "ip", "value" => $data["ip"]),
+        array("name" => "submittedAt", "value" => new \DateTime('NOW')),
+        );
 
         $this->getService('em')->persist($answer);
 
@@ -247,7 +245,7 @@ class CustomFormController extends AppController
     {
         $defaults = $request->query->all();
         $form = $this->getService('formFactory')
-                    ->create(new CustomFormsType($customForm), $defaults);
+                     ->create(new CustomFormsType($customForm), $defaults);
 
         return $form;
     }

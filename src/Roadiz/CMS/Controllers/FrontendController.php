@@ -29,19 +29,17 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use Pimple\Container;
-
+use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestMatcher;
-
-use Symfony\Component\Security\Http\Firewall;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 
@@ -55,11 +53,11 @@ class FrontendController extends AppController
     /**
      * {@inheritdoc}
      */
-    protected static $themeName =      'Default theme';
+    protected static $themeName = 'Default theme';
     /**
      * {@inheritdoc}
      */
-    protected static $themeAuthor =    'Ambroise Maupate';
+    protected static $themeAuthor = 'Ambroise Maupate';
     /**
      * {@inheritdoc}
      */
@@ -67,11 +65,11 @@ class FrontendController extends AppController
     /**
      * {@inheritdoc}
      */
-    protected static $themeDir =       'DefaultTheme';
+    protected static $themeDir = 'DefaultTheme';
     /**
      * {@inheritdoc}
      */
-    protected static $backendTheme =    false;
+    protected static $backendTheme = false;
 
     /**
      * Put here your node which need a specific controller
@@ -88,12 +86,13 @@ class FrontendController extends AppController
     protected $themeContainer = null;
 
     /**
-     * Make translation variable with the good localization
+     * Make translation variable with the good localization.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param string                                   $_locale
      *
      * @return Symfony\Component\HttpFoundation\Response
+     * @throws RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException
      */
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
     {
@@ -106,16 +105,20 @@ class FrontendController extends AppController
         if (null !== $_locale) {
             $request->setLocale($_locale);
             $translation = $this->getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->findOneBy(
-                            array(
-                                'locale'=>$_locale
-                            )
-                        );
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findOneBy(
+                                    array(
+                                        'locale' => $_locale,
+                                        'available' => true,
+                                    )
+                                );
+            if ($translation === null) {
+                throw new NoTranslationAvailableException();
+            }
         } else {
             $translation = $this->getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->findDefault();
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findDefault();
             $request->setLocale($translation->getLocale());
         }
         return $translation;
@@ -159,29 +162,29 @@ class FrontendController extends AppController
         if (null !== $_locale) {
             $request->setLocale($_locale);
             $translation = $this->getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->findOneBy(
-                            array(
-                                'locale'=>$_locale
-                            )
-                        );
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findOneBy(
+                                    array(
+                                        'locale' => $_locale,
+                                    )
+                                );
         } else {
             $translation = $this->getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->findDefault();
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findDefault();
         }
 
         /*
          * Grab home flagged node
          */
         $node = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findOneBy(
-                    array('home'=>true),
-                    null,
-                    $translation,
-                    $this->getSecurityContext()
-                );
+                     ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                     ->findOneBy(
+                         array('home' => true),
+                         null,
+                         $translation,
+                         $this->getSecurityContext()
+                     );
 
         $this->prepareThemeAssignation($node, $translation);
 
@@ -249,12 +252,12 @@ class FrontendController extends AppController
                 return $this->throw404();
             }
 
-            $nodeController = $namespace.'\\'.
-                              StringHandler::classify($this->getRequestedNode()->getNodeName()).
-                              'Controller';
-            $nodeTypeController = $namespace.'\\'.
-                                  StringHandler::classify($this->getRequestedNode()->getNodeType()->getName()).
-                                  'Controller';
+            $nodeController = $namespace . '\\' .
+            StringHandler::classify($this->getRequestedNode()->getNodeName()) .
+            'Controller';
+            $nodeTypeController = $namespace . '\\' .
+            StringHandler::classify($this->getRequestedNode()->getNodeType()->getName()) .
+            'Controller';
 
             if (in_array($this->getRequestedNode()->getNodeName(), static::$specificNodesControllers) &&
                 class_exists($nodeController) &&
@@ -267,10 +270,10 @@ class FrontendController extends AppController
 
             } else {
                 return $this->throw404(
-                    "No front-end controller found for '".
-                    $this->getRequestedNode()->getNodeName().
-                    "' node. Need a ".$nodeController." or ".
-                    $nodeTypeController." controller."
+                    "No front-end controller found for '" .
+                    $this->getRequestedNode()->getNodeName() .
+                    "' node. Need a " . $nodeController . " or " .
+                    $nodeTypeController . " controller."
                 );
             }
 
@@ -301,7 +304,6 @@ class FrontendController extends AppController
         }
     }
 
-
     /**
      * @return RZ\Roadiz\Core\Entities\Node
      */
@@ -317,11 +319,11 @@ class FrontendController extends AppController
         return $this->translation;
     }
 
-    /*
-     * {@inheritdoc}
+    /**
+     * Add a default translation locale for static routes and
+     * node SEO data.
      *
-     * Add a default translation locale for static routes.
-     *
+     * * [parent assignations…]
      * * **_default_locale**
      * * meta
      *     * siteName
@@ -338,9 +340,9 @@ class FrontendController extends AppController
 
         $this->assignation['_default_locale'] = $translation->getLocale();
         $this->assignation['meta'] = array(
-            'siteName' =>        SettingsBag::get('site_name'),
-            'siteCopyright' =>   SettingsBag::get('site_copyright'),
-            'siteDescription' => SettingsBag::get('seo_description')
+            'siteName' => SettingsBag::get('site_name'),
+            'siteCopyright' => SettingsBag::get('site_copyright'),
+            'siteDescription' => SettingsBag::get('seo_description'),
         );
 
         return $this;
@@ -359,8 +361,8 @@ class FrontendController extends AppController
         $this->storeNodeAndTranslation($node, $translation);
 
         $this->assignation['home'] = $this->getService('em')
-                                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                          ->findHomeWithTranslation($translation);
+             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+             ->findHomeWithTranslation($translation);
 
         /*
          * Use a DI container to delay API requuests
@@ -383,12 +385,12 @@ class FrontendController extends AppController
             if (null !== $ns) {
                 return array(
                     'title' => ($ns->getMetaTitle() != "") ?
-                                        $ns->getMetaTitle() :
-                                        $ns->getTitle().' – '.SettingsBag::get('site_name'),
+                    $ns->getMetaTitle() :
+                    $ns->getTitle() . ' – ' . SettingsBag::get('site_name'),
                     'description' => ($ns->getMetaDescription() != "") ?
-                                        $ns->getMetaDescription() :
-                                        $ns->getTitle().', '.SettingsBag::get('seo_description'),
-                    'keywords' => $ns->getMetaKeywords()
+                    $ns->getMetaDescription() :
+                    $ns->getTitle() . ', ' . SettingsBag::get('seo_description'),
+                    'keywords' => $ns->getMetaKeywords(),
                 );
             }
         }
@@ -396,12 +398,12 @@ class FrontendController extends AppController
         if (null !== $fallbackNodeSource) {
             return array(
                 'title' => ($fallbackNodeSource->getMetaTitle() != "") ?
-                                    $fallbackNodeSource->getMetaTitle() :
-                                    $fallbackNodeSource->getTitle().' – '.SettingsBag::get('site_name'),
+                $fallbackNodeSource->getMetaTitle() :
+                $fallbackNodeSource->getTitle() . ' – ' . SettingsBag::get('site_name'),
                 'description' => ($fallbackNodeSource->getMetaDescription() != "") ?
-                                    $fallbackNodeSource->getMetaDescription() :
-                                    $fallbackNodeSource->getTitle().', '.SettingsBag::get('seo_description'),
-                'keywords' => $fallbackNodeSource->getMetaKeywords()
+                $fallbackNodeSource->getMetaDescription() :
+                $fallbackNodeSource->getTitle() . ', ' . SettingsBag::get('seo_description'),
+                'keywords' => $fallbackNodeSource->getMetaKeywords(),
             );
         }
 
@@ -425,7 +427,8 @@ class FrontendController extends AppController
                 // manages the SecurityContext persistence through a session
                 $c['contextListener'],
                 // automatically adds a Token if none is already present.
-                new AnonymousAuthenticationListener($c['securityContext'], '') // $key
+                new AnonymousAuthenticationListener($c['securityContext'], ''), // $key
+                $c["switchUser"],
             );
 
             /*

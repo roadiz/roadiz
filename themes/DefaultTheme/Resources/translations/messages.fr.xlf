@@ -43,6 +43,10 @@
     <source>send.contact.form</source>
     <target>Envoyer le formulaire</target>
    </trans-unit>
+   <trans-unit id="document">
+    <source>document</source>
+    <target><![CDATA[Joindre une image ou un PDF (< 5 Mo)]]></target>
+   </trans-unit>
   </body>
  </file>
 </xliff>

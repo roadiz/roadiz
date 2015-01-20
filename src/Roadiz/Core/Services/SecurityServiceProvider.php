@@ -34,6 +34,8 @@ use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
+use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
+
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -139,6 +141,20 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['roleHierarchyVoter'] = function ($c) {
             return new RoleHierarchyVoter($c['roleHierarchy']);
+        };
+
+        $container["switchUser"] = function ($c) {
+            return new SwitchUserListener(
+                $c['securityContext'],
+                $c['userProvider'],
+                $c['userChecker'],
+                $c['config']["security"]['secret'],
+                $c['accessDecisionManager'],
+                $c['logger'],
+                '_su',
+                'ROLE_SUPERADMIN',
+                $c['dispatcher']
+            );
         };
 
         $container['firewallMap'] = function ($c) {

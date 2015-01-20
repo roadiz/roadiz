@@ -1,0 +1,37 @@
+{% if source.getTitle %}
+{% set currentTitle = source.getTitle %}
+{% else %}
+{% set currentTitle = node.getNodeName %}
+{% endif %}
+
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global">
+
+	<header class="content-header header-node header-node-edit-source">
+		<h1 class="content-title node-edit-source-title">
+			{{ "edit.newsletter.%name%"|trans({'%name%': currentTitle})|truncate(25, false, '[…]') }}
+            {% include 'nodes/nodeTypeCircle.html.twig' %}
+		</h1>
+		{% include 'newsletters/navBack.html.twig' %}
+	</header>
+
+	<article class="content content-node-edit-source">
+		{% form_theme form 'forms.html.twig' %}
+		<form id="edit-node-source-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+		    <fieldset data-uk-margin>
+		    	{% spaceless %}
+		    	<button data-action-save="#edit-node-source-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+		    		<span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+			    	<span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+		    	</button>
+		    	{% endspaceless %}
+	   		</fieldset>
+		</form>
+	</article>
+
+	{% include 'newsletters/actionsMenu.html.twig' %}
+</section>
+{% endblock %}

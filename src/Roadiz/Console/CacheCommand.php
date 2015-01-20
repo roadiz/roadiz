@@ -78,10 +78,16 @@ class CacheCommand extends Command
                 'Clear compiled Twig templates.'
             )
             ->addOption(
+                'clear-translations',
+                null,
+                InputOption::VALUE_NONE,
+                'Clear compiled translations catalogues.'
+            )
+            ->addOption(
                 'clear-all',
                 null,
                 InputOption::VALUE_NONE,
-                'Clear all caches (Doctrine, proxies, routes, templates, assets)'
+                'Clear all caches (Doctrine, proxies, routes, templates, assets and translations)'
             )
             ;
     }
@@ -97,6 +103,7 @@ class CacheCommand extends Command
             $text .= static::clearRouteCollections();
             $text .= static::clearCachedAssets();
             $text .= static::clearTemplates();
+            $text .= static::clearTranslations();
 
             $text .= '<info>All caches have been been purged…</info>'.PHP_EOL;
         } else {
@@ -114,6 +121,10 @@ class CacheCommand extends Command
 
             if ($input->getOption('clear-templates')) {
                 $text .= static::clearTemplates();
+            }
+
+            if ($input->getOption('clear-translations')) {
+                $text .= static::clearTranslations();
             }
         }
 
@@ -253,6 +264,25 @@ class CacheCommand extends Command
         $fs->remove($finder);
 
         $text .= '<info>Compiled Twig templates have been purged…</info>'.PHP_EOL;
+
+        return $text;
+    }
+
+    /**
+     * Clear compiled translation catalogues.
+     *
+     * @return string
+     */
+    public static function clearTranslations()
+    {
+        $text = '';
+
+        $fs = new Filesystem();
+        $finder = new Finder();
+        $finder->in(ROADIZ_ROOT . '/cache/translations');
+        $fs->remove($finder);
+
+        $text .= '<info>Compiled translation catalogues have been purged…</info>'.PHP_EOL;
 
         return $text;
     }

@@ -27,27 +27,34 @@
  * @file index.php
  * @author Ambroise Maupate
  */
+use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
 
 require 'bootstrap.php';
 
 if (php_sapi_name() == 'cli') {
-    echo 'Use "bin/roadiz" as an executable instead of calling index.php'.PHP_EOL;
+    echo 'Use "bin/roadiz" as an executable instead of calling index.php' . PHP_EOL;
 } else {
-    $request = Kernel::getInstance()->getRequest();
+    try {
+        $request = Kernel::getInstance()->getRequest();
 
-    /*
-     * Bypass Roadiz kernel to directly serve SLIR assets
-     */
-    if (0 === strpos($request->getPathInfo(), '/assets') &&
-        preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
-    ) {
-        $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
-        $ctrl->slirAction($matches['queryString'], $matches['filename']);
-    } else {
+        Kernel::getInstance()->boot();
         /*
-         * Start Roadiz App handling
+         * Bypass Roadiz kernel to directly serve SLIR assets
          */
-        Kernel::getInstance()->runApp();
+        if (0 === strpos($request->getPathInfo(), '/assets') &&
+            preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
+        ) {
+            $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
+            $ctrl->slirAction($matches['queryString'], $matches['filename']);
+        } else {
+            /*
+             * Start Roadiz App handling
+             */
+            Kernel::getInstance()->runApp();
+        }
+    } catch (NoConfigurationFoundException $e) {
+        $response = Kernel::getInstance()->getEmergencyResponse($e);
+        $response->send();
     }
 }

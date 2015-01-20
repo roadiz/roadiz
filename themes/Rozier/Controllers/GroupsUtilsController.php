@@ -142,8 +142,7 @@ class GroupsUtilsController extends RozierApp
                     GroupsImporter::importJsonFile($serializedData);
 
                     $msg = $this->getTranslator()->trans('group.imported.updated');
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
                      // redirect even if its null
                     $response = new RedirectResponse(

@@ -102,8 +102,7 @@ class CustomFormFieldsController extends RozierApp
                 $this->editCustomFormField($form->getData(), $field);
 
                 $msg = $this->getTranslator()->trans('customFormField.%name%.updated', array('%name%'=>$field->getName()));
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                  * Redirect to update schema page
@@ -164,8 +163,7 @@ class CustomFormFieldsController extends RozierApp
                         'customFormField.%name%.created',
                         array('%name%'=>$field->getName())
                     );
-                    $request->getSession()->getFlashBag()->add('confirm', $msg);
-                    $this->getService('logger')->info($msg);
+                    $this->publishConfirmMessage($request, $msg);
 
 
                     /*
@@ -245,8 +243,7 @@ class CustomFormFieldsController extends RozierApp
                     'customFormField.%name%.deleted',
                     array('%name%'=>$field->getName())
                 );
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
-                $this->getService('logger')->info($msg);
+                $this->publishConfirmMessage($request, $msg);
 
                 /*
                  * Redirect to update schema page

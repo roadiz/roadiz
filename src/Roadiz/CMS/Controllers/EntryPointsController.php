@@ -120,6 +120,15 @@ class EntryPointsController extends AppController
     /**
      * Handles contact forms requests.
      *
+     * File upload are allowed if file size is less than 5MB and mimeType
+     * is PDF or image.
+     *
+     * * application/pdf
+     * * application/x-pdf
+     * * image/jpeg
+     * * image/png
+     * * image/gif
+     *
      * @param  Symfony\Component\HttpFoundation\Request $request
      *
      * @return Symfony\Component\HttpFoundation\Response
@@ -171,6 +180,39 @@ class EntryPointsController extends AppController
             $canSend = false;
         }
 
+        $allowedMimeTypes = [
+            'application/pdf',
+            'application/x-pdf',
+            'image/jpeg',
+            'image/png',
+            'image/gif'
+        ];
+        $maxFileSize = 1024 * 1024 * 5; // 5MB
+        $uploadedFiles = [];
+        /*
+         * Files values
+         */
+        foreach ($request->files as $files) {
+            foreach ($files as $name => $uploadedFile) {
+                if (!$uploadedFile->isValid() ||
+                    !in_array($uploadedFile->getMimeType(), $allowedMimeTypes) ||
+                    $uploadedFile->getClientSize() > $maxFileSize) {
+                    $responseArray['statusCode'] = Response::HTTP_FORBIDDEN;
+                    $responseArray['status'] = 'danger';
+                    $responseArray['field_error'] = $name;
+                    $responseArray['message'] = $this->getTranslator()->trans(
+                        'file.not.accepted'
+                    );
+
+                    $request->getSession()->getFlashBag()->add('error', $responseArray['message']);
+                    $this->getService('logger')->error($responseArray['message']);
+                    $canSend = false;
+                } else {
+                    $uploadedFiles[$name] = $uploadedFile;
+                }
+            }
+        }
+
         /*
          * if no error, create Email
          */
@@ -187,6 +229,9 @@ class EntryPointsController extends AppController
                 'fields' => array()
             );
 
+            /*
+             * text values
+             */
             foreach ($request->get('form') as $key => $value) {
                 if ($key[0] == '_') {
                     continue;
@@ -197,6 +242,17 @@ class EntryPointsController extends AppController
                     );
                 }
             }
+
+            /*
+             * Files values
+             */
+            foreach ($uploadedFiles as $key => $uploadedFile) {
+                $assignation['fields'][] = array(
+                    'name' => strip_tags($key),
+                    'value' => (strip_tags($uploadedFile->getClientOriginalName()) .' ['. $uploadedFile->guessExtension().']')
+                );
+            }
+
             /*
              *  Date
              */
@@ -216,7 +272,10 @@ class EntryPointsController extends AppController
              * Custom receiver
              */
             if (!empty($request->get('form')['_emailReceiver'])) {
-                $email = StringHandler::decodeWithSecret($request->get('form')['_emailReceiver'], $this->getService('config')['security']['secret']);
+                $email = StringHandler::decodeWithSecret(
+                    $request->get('form')['_emailReceiver'],
+                    $this->getService('config')['security']['secret']
+                );
                 if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     $receiver = $email;
                 }
@@ -226,7 +285,10 @@ class EntryPointsController extends AppController
              * Custom subject
              */
             if (!empty($request->get('form')['_emailSubject'])) {
-                $subject = StringHandler::decodeWithSecret($request->get('form')['_emailSubject'], $this->getService('config')['security']['secret']);
+                $subject = StringHandler::decodeWithSecret(
+                    $request->get('form')['_emailSubject'],
+                    $this->getService('config')['security']['secret']
+                );
             } else {
                 $subject = null;
             }
@@ -234,7 +296,7 @@ class EntryPointsController extends AppController
             /*
              * Send contact form email
              */
-            $this->sendContactForm($assignation, $receiver, $subject);
+            $this->sendContactForm($assignation, $receiver, $subject, $uploadedFiles);
 
             $responseArray['message'] = $this->getTranslator()->trans(
                 'form.successfully.sent'
@@ -398,10 +460,11 @@ class EntryPointsController extends AppController
      * @param array $assignation
      * @param string $receiver
      * @param string|null $subject
+     * @param array $files
      *
      * @return boolean
      */
-    protected function sendContactForm($assignation, $receiver, $subject = null)
+    protected function sendContactForm($assignation, $receiver, $subject = null, $files = null)
     {
         $emailBody = $this->getTwig()->render('forms/contactForm.html.twig', $assignation);
         /*
@@ -431,6 +494,15 @@ class EntryPointsController extends AppController
             ->setTo(array($receiver))
             // Give it a body
             ->setBody($htmldoc->getHTML(), 'text/html');
+
+        /*
+         * Attach files
+         */
+        foreach ($files as $uploadedFile) {
+            $attachment = \Swift_Attachment::fromPath($uploadedFile->getRealPath())
+                                            ->setFilename($uploadedFile->getClientOriginalName());
+            $message->attach($attachment);
+        }
 
         // Create the Transport
         $transport = \Swift_MailTransport::newInstance();

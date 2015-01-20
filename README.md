@@ -1,8 +1,8 @@
 # Roadiz CMS
 
 [![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=master)](https://travis-ci.org/roadiz/roadiz)
-[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=master)](https://coveralls.io/r/roadiz/roadiz?branch=develop)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=master)](https://coveralls.io/r/roadiz/roadiz?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d/mini.png)](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d)
 
 Roadiz is a polymorphic CMS based on a node system which can handle many types of services.
@@ -15,6 +15,15 @@ It’s based on Symfony components and Doctrine ORM for maximum performances and
 * *API* documentation can be found at http://api.roadiz.io
 
 ### Installation
+
+#### Requirements
+
+* *Nginx* or *Apache* server
+* PHP 5.4.3+
+* ``php5-gd`` extension
+* ``php5-intl`` extension
+* ``php5-curl`` extension
+* PHP cache (APC/XCache) + Var cache (strongly recommended)
 
 #### From bundle
 
@@ -97,7 +106,7 @@ Add this to your `config.json` to link your Roadiz install to your Solr server:
 * Install *dev* dependencies: `composer update --dev`
 * *PHPUnit tests*:
 ```
-./vendor/bin/phpunit -v --bootstrap=bootstrap.php tests/
+./vendor/bin/phpunit -v --bootstrap=tests/bootstrap.php tests/
 ```
 * *Code quality*, use PHP_CodeSniffer with *PSR2 standard*:
 

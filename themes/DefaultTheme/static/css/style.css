@@ -945,6 +945,40 @@ body {
 #main-content .uk-thumbnail iframe {
   max-width: 100%;
 }
+#contactForm {
+  text-align: center;
+}
+#contactForm input[type="text"],
+#contactForm input[type="file"],
+#contactForm textarea,
+#contactForm input[type="email"],
+#contactForm input[type="number"] {
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  font-size: 13px;
+}
+#contactForm input[type="text"],
+#contactForm textarea,
+#contactForm input[type="email"] {
+  width: 300px;
+}
+#contactForm .form-col-checkbox label,
+#contactForm .form-col-checkbox input {
+  display: inline-block;
+  margin: 0px 5px;
+}
+#contactForm button {
+  margin: 20px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+}
+#contactForm button,
+#contactForm label {
+  font-size: 14px;
+  font-family: 'Roadiz', Helvetica, sans-serif;
+}
 #rz-debug-panel {
   width: 200px;
   font-size: 11px;

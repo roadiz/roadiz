@@ -46,12 +46,10 @@
         font-size:28px;
     }
 
-    .children-nodes-quick-creation{
-        margin:11px 0;
-    }
 
     .uk-navbar-content {
-        padding: 0 10px;
+        padding: 11px 10px;
+        height: auto;
     }
 
     .uk-button{
@@ -70,7 +68,52 @@
             color: darken(@children-nodes-btn-color, 15%);
         }
     }
+    .children-nodes-quick-creation{
+        margin: 0;
 
+        &.uk-dropdown {
+            top: auto;
+            background: @children-nodes-btn-bg;
+            margin-top: -1px;
+            margin-right: 10px;
+            padding:0px;
+
+            .uk-button {
+                display: block;
+                text-align: left;
+                margin: 0px;
+                border: none;
+                border-bottom: 1px solid @children-nodes-btn-border;
+
+
+                &:last-child{
+                    margin-right:0;
+                    border-bottom: none;
+                }
+            }
+        }
+    }
+
+    [data-uk-dropdown] {
+        & > .uk-button {
+            margin: 0px;
+            z-index: 1030;
+            position: relative;
+
+            i {
+                margin: 0px;
+            }
+        }
+
+        &.uk-open {
+            & > .uk-button {
+                background-color: #F7F7F7;
+                border-bottom: 1px dashed @children-nodes-btn-border;;
+            }
+        }
+
+        margin: 10px;
+    }
 }
 
 .children-nodes-tree{

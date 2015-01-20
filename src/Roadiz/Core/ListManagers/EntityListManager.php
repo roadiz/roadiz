@@ -29,9 +29,12 @@
  */
 namespace RZ\Roadiz\Core\ListManagers;
 
-use RZ\Roadiz\Core\Utils\Paginator;
+use RZ\Roadiz\Core\ListManagers\Paginator;
+use RZ\Roadiz\Core\ListManagers\NodePaginator;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\SecurityContext;
+use RZ\Roadiz\Core\Entities\Translation;
 
 use Doctrine\ORM\EntityManager;
 
@@ -57,6 +60,9 @@ class EntityListManager
 
     protected $assignation = null;
     protected $itemPerPage = null;
+
+    protected $translation = null;
+    protected $securityContext = null;
 
     /**
      * @param Symfony\Component\HttpFoundation\Request $request
@@ -112,6 +118,78 @@ class EntityListManager
         $this->pagination = false;
     }
 
+
+    /**
+     * @return RZ\Roadiz\Core\Entities\Translation
+     */
+    public function getTranslation()
+    {
+        return $this->translation;
+    }
+    /**
+     * @param RZ\Roadiz\Core\Entities\Translation $newtranslation
+     */
+    public function setTranslation(Translation $newtranslation = null)
+    {
+        $this->translation = $newtranslation;
+
+        return $this;
+    }
+
+
+    /**
+     * @return Symfony\Component\Security\Core\SecurityContext
+     */
+    public function getSecurityContext()
+    {
+        return $this->securityContext;
+    }
+    /**
+     * @param Symfony\Component\Security\Core\SecurityContext $newsecurityContext
+     */
+    public function setSecurityContext(SecurityContext $newsecurityContext = null)
+    {
+        $this->securityContext = $newsecurityContext;
+
+        return $this;
+    }
+
+    protected function createPaginator()
+    {
+        if ($this->entityName == "RZ\Roadiz\Core\Entities\Node" ||
+            $this->entityName == "\RZ\Roadiz\Core\Entities\Node" ||
+            $this->entityName == "Node") {
+            $this->paginator = new NodePaginator(
+                $this->_em,
+                $this->entityName,
+                $this->itemPerPage,
+                $this->filteringArray
+            );
+            $this->paginator->setTranslation($this->translation);
+            $this->paginator->setSecurityContext($this->securityContext);
+
+        } elseif ($this->entityName == "RZ\Roadiz\Core\Entities\NodesSources" ||
+            $this->entityName == "\RZ\Roadiz\Core\Entities\NodesSources" ||
+            $this->entityName == "NodesSources" ||
+            strpos($this->entityName, "GeneratedNodeSources") !== false) {
+            $this->paginator = new NodesSourcesPaginator(
+                $this->_em,
+                $this->entityName,
+                $this->itemPerPage,
+                $this->filteringArray
+            );
+
+            $this->paginator->setSecurityContext($this->securityContext);
+        } else {
+            $this->paginator = new Paginator(
+                $this->_em,
+                $this->entityName,
+                $this->itemPerPage,
+                $this->filteringArray
+            );
+        }
+    }
+
     /**
      * Handle request to find filter to apply to entity listing.
      *
@@ -121,12 +199,7 @@ class EntityListManager
      */
     public function handle($disabled = false)
     {
-        $this->paginator = new Paginator(
-            $this->_em,
-            $this->entityName,
-            $this->itemPerPage,
-            $this->filteringArray
-        );
+        $this->createPaginator();
 
         if (false === $disabled) {
             if ($this->request->query->get('field') &&

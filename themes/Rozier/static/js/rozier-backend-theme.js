@@ -1863,7 +1863,8 @@ NodeTree.prototype.dropdownFlip = function(){
 NodeTree.prototype.resize = function(){
     var _this = this;
 
-};;var NodeStatuses = function () {
+};
+;var NodeStatuses = function () {
     var _this = this;
 
     _this.$containers = $(".node-statuses");
@@ -2226,6 +2227,7 @@ var ChildrenNodesField = function () {
     //_this.$switchLangButtons = _this.$fields.find('.nodetree-langs');
 
     _this.init();
+    _this.dropDownize();
 };
 ChildrenNodesField.prototype.$fields = null;
 ChildrenNodesField.prototype.$quickAddNodeButtons = null;
@@ -2303,6 +2305,26 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
     }
 
     return false;
+};
+
+ChildrenNodesField.prototype.dropDownize = function() {
+    var _this = this;
+
+    for (var i = _this.$fields.length - 1; i >= 0; i--) {
+        var $quickAddNode = $(_this.$fields[i]).find('.children-nodes-quick-creation');
+
+        if(!$quickAddNode.hasClass('uk-dropdown') &&
+            $quickAddNode.find('a').length > 2){
+            console.log("Need to convert buttons to dropdown");
+
+            $quickAddNode.addClass('uk-dropdown uk-dropdown-navbar uk-dropdown-flip');
+            $quickAddNode.removeClass('uk-button-group');
+            $quickAddNode.wrap('<div data-uk-dropdown="{mode:\'click\'}"></div>');
+            $quickAddNode.before('<a class="uk-button"><i class="uk-icon-rz-plus-simple"></i></a>');
+
+            $($quickAddNode.parents('.uk-navbar-content')[0]).removeClass('uk-navbar-content');
+        }
+    }
 };
 
 ChildrenNodesField.prototype.refreshNodeTree = function( $nodeTree, rootNodeId, translationId ) {
@@ -3366,7 +3388,33 @@ CustomFormFieldEdit.prototype.resize = function(){
     var _this = this;
 
 };
-;/**
+;var EntriesPanel = function () {
+    var _this = this;
+
+    _this.$adminMenuNav = $('#admin-menu-nav');
+
+    _this.replaceSubNavs();
+};
+
+EntriesPanel.prototype.$adminMenuNav = null;
+
+EntriesPanel.prototype.replaceSubNavs = function() {
+    var _this = this;
+
+    _this.$adminMenuNav.find('.uk-nav-sub').each(function (index, element) {
+
+        var subMenu = $(element);
+
+        subMenu.attr('style','display:block;');
+        var top = subMenu.offset().top;
+        var height = subMenu.height();
+        subMenu.removeAttr('style');
+
+        if((top + height + 20) > $(window).height()){
+            subMenu.parent().addClass('reversed-nav');
+        }
+    });
+};;/**
  * Rozier Mobile
  */
 
@@ -4257,6 +4305,8 @@ Rozier.mainContentScrollableWidth = null;
 Rozier.mainContentScrollableOffsetLeft = null;
 Rozier.$backTopBtn = null;
 
+Rozier.entriesPanel = null;
+
 
 Rozier.onDocumentReady = function(event) {
 
@@ -4268,6 +4318,7 @@ Rozier.onDocumentReady = function(event) {
 	}
 
 	Rozier.lazyload = new Lazyload();
+	Rozier.entriesPanel = new EntriesPanel();
 
 	Rozier.$window = $(window);
 	Rozier.$body = $('body');
@@ -4318,7 +4369,7 @@ Rozier.onDocumentReady = function(event) {
 	Rozier.$window.on('resize', $.proxy(Rozier.resize, Rozier));
 	Rozier.$window.trigger('resize');
 
-	
+
 	Rozier.lazyload.generalBind();
 	Rozier.bindMainNodeTreeLangs();
 };
@@ -4887,7 +4938,9 @@ Rozier.resize = function(){
 	_this.windowHeight = _this.$window.height();
 
 	// Close tree panel if small screen & first resize
-	if(_this.windowWidth > 768 && _this.windowWidth <= 1200 && _this.resizeFirst){
+	if(_this.windowWidth > 768 &&
+		_this.windowWidth <= 1200 &&
+		_this.resizeFirst) {
 		_this.$mainTrees[0].style.display = 'none';
 		_this.$minifyTreePanelButton.trigger('click');
 		setTimeout(function(){
@@ -4925,6 +4978,7 @@ Rozier.resize = function(){
 	_this.mainContentScrollableOffsetLeft = _this.windowWidth - _this.mainContentScrollableWidth;
 
 	_this.lazyload.resize();
+	_this.entriesPanel.replaceSubNavs();
 
 	// Documents list
 	if(_this.lazyload !== null && !_this.resizeFirst) _this.lazyload.documentsList.resize();
