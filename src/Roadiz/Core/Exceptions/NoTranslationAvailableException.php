@@ -34,5 +34,5 @@ namespace RZ\Roadiz\Core\Exceptions;
  */
 class NoTranslationAvailableException extends \Exception
 {
-
+    protected $message = 'No translation is available with your requested locale. Try an another locale or verify that your site has at least one available translation.';
 }

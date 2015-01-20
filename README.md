@@ -16,6 +16,15 @@ It’s based on Symfony components and Doctrine ORM for maximum performances and
 
 ### Installation
 
+#### Requirements
+
+* *Nginx* or *Apache* server
+* PHP 5.4.3+
+* ``php5-gd`` extension
+* ``php5-intl`` extension
+* ``php5-curl`` extension
+* PHP cache (APC/XCache) + Var cache (strongly recommended)
+
 #### From bundle
 
 Here is a simple install process if you already have a ready webserver.

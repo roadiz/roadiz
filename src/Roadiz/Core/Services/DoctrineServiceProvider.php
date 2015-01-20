@@ -108,9 +108,6 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                 } catch (\PDOException $e) {
                     $c['session']->getFlashBag()->add('error', $e->getMessage());
                     return null;
-                } catch (\Exception $e) {
-                    $c['session']->getFlashBag()->add('error', $e->getMessage());
-                    return null;
                 }
             };
         }

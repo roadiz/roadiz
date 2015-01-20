@@ -27,16 +27,18 @@
  * @file index.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
+use RZ\Roadiz\Core\Kernel;
 
 require 'bootstrap.php';
 
 if (php_sapi_name() == 'cli') {
-    echo 'Use "bin/roadiz" as an executable instead of calling index.php'.PHP_EOL;
+    echo 'Use "bin/roadiz" as an executable instead of calling index.php' . PHP_EOL;
 } else {
     try {
         $request = Kernel::getInstance()->getRequest();
+
+        Kernel::getInstance()->boot();
         /*
          * Bypass Roadiz kernel to directly serve SLIR assets
          */
@@ -52,6 +54,7 @@ if (php_sapi_name() == 'cli') {
             Kernel::getInstance()->runApp();
         }
     } catch (NoConfigurationFoundException $e) {
-        echo $e->getMessage().PHP_EOL;
+        $response = Kernel::getInstance()->getEmergencyResponse($e);
+        $response->send();
     }
 }

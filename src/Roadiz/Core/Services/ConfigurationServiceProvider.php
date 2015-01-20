@@ -50,10 +50,7 @@ class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
             if (file_exists($configFile)) {
                 return json_decode(file_get_contents($configFile), true);
             } else {
-                throw new NoConfigurationFoundException(
-                    "No configuration file was found. Make sure that conf/config.json exists.",
-                    1
-                );
+                throw new NoConfigurationFoundException();
             }
         };
 
