@@ -24,51 +24,15 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ConfigurationServiceProvider.php
+ * @file bootstrap.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Services;
 
-use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
-use Pimple\Container;
+use RZ\Roadiz\Core\Kernel;
 
-/**
- * Register configuration services for dependency injection container.
- */
-class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
-{
-    /**
-     * @param Pimple\Container $container [description]
-     */
-    public function register(Container $container)
-    {
-        /*
-         * Inject app config
-         */
-        $container['config'] = function ($c) {
-            $configFile = ROADIZ_ROOT.'/conf/config.json';
-            if (file_exists($configFile)) {
-                return json_decode(file_get_contents($configFile), true);
-            } else {
-                throw new NoConfigurationFoundException();
-            }
-        };
+define('ROADIZ_ROOT', dirname(__FILE__) . '/..');
 
-        /*
-         * Every path to parse to find doctrine entities
-         */
-        $container['entitiesPaths'] = function ($c) {
-            if (isset($c['config']['entities'])) {
-                return $c['config']['entities'];
-            } else {
-                return array(
-                    "src/Roadiz/Core/Entities",
-                    "src/Roadiz/Core/AbstractEntities",
-                    "gen-src/GeneratedNodeSources"
-                );
-            }
-        };
+// Include Composer Autoload (relative to project root).
+require ROADIZ_ROOT . "/vendor/autoload.php";
 
-        return $container;
-    }
-}
+Kernel::getInstance()->boot();

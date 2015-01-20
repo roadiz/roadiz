@@ -33,14 +33,12 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Utils\SplashbasePictureFinder;
-
-use Themes\Rozier\RozierApp;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
-
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\RozierApp;
 
 /**
  * Login controller
@@ -131,18 +129,18 @@ class LoginController extends RozierApp
         $defaults = array();
 
         $builder = $this->getService('formFactory')
-            ->createNamedBuilder(null, 'form', $defaults, array())
-            ->add('_username', 'text', array(
-                'label' => $this->getTranslator()->trans('username'),
-                'constraints' => array(
-                    new NotBlank()
-                )
-            ))
+                        ->createNamedBuilder(null, 'form', $defaults, array())
+                        ->add('_username', 'text', array(
+                            'label' => $this->getTranslator()->trans('username'),
+                            'constraints' => array(
+                                new NotBlank(),
+                            ),
+                        ))
             ->add('_password', 'password', array(
                 'label' => $this->getTranslator()->trans('password'),
                 'constraints' => array(
-                    new NotBlank()
-                )
+                    new NotBlank(),
+                ),
             ));
 
         return $builder->getForm();

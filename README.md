@@ -16,6 +16,15 @@ It’s based on Symfony components and Doctrine ORM for maximum performances and
 
 ### Installation
 
+#### Requirements
+
+* *Nginx* or *Apache* server
+* PHP 5.4.3+
+* ``php5-gd`` extension
+* ``php5-intl`` extension
+* ``php5-curl`` extension
+* PHP cache (APC/XCache) + Var cache (strongly recommended)
+
 #### From bundle
 
 Here is a simple install process if you already have a ready webserver.
@@ -97,7 +106,7 @@ Add this to your `config.json` to link your Roadiz install to your Solr server:
 * Install *dev* dependencies: `composer update --dev`
 * *PHPUnit tests*:
 ```
-./vendor/bin/phpunit -v --bootstrap=bootstrap.php tests/
+./vendor/bin/phpunit -v --bootstrap=tests/bootstrap.php tests/
 ```
 * *Code quality*, use PHP_CodeSniffer with *PSR2 standard*:
 

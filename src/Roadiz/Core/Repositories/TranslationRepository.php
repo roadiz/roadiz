@@ -91,6 +91,8 @@ class TranslationRepository extends EntityRepository
             WHERE t.locale = :locale
         ')->setParameter('locale', $locale);
 
+        $query->useResultCache(true, 60, 'RZTranslationExists-' . $locale);
+
         try {
             return (boolean) $query->getSingleScalarResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -99,17 +101,19 @@ class TranslationRepository extends EntityRepository
     }
 
     /**
-    * Get all available translations filter by locale.
-    *
-    * @return ArrayCollection
-    */
+     * Get all available translations by locale.
+     *
+     * @return ArrayCollection
+     */
     public function findByLocaleAndAvailable($locale)
     {
         $query = $this->_em->createQuery('
         SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
         WHERE t.available = true
         AND t.locale = :locale
-        ');
+        ')->setParameter('locale', $locale);
+
+        $query->useResultCache(true, 60, 'RZTranslationAllByLocaleAndAvailable-' . $locale);
 
         try {
             return $query->getResult();
@@ -119,17 +123,19 @@ class TranslationRepository extends EntityRepository
     }
 
     /**
-    * Get one available translations filter by locale.
-    *
-    * @return RZ\Roadiz\Core\Entities\Translation
-    */
+     * Get one available translation by locale.
+     *
+     * @return RZ\Roadiz\Core\Entities\Translation
+     */
     public function findOneByLocaleAndAvailable($locale)
     {
         $query = $this->_em->createQuery('
         SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
         WHERE t.available = true
         AND t.locale = :locale
-        ');
+        ')->setParameter('locale', $locale);
+
+        $query->useResultCache(true, 60, 'RZTranslationOneByLocaleAndAvailable-' . $locale);
 
         try {
             return $query->getSingleResult();

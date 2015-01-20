@@ -34,5 +34,5 @@ namespace RZ\Roadiz\Core\Exceptions;
  */
 class NoConfigurationFoundException extends \Exception
 {
-
+    protected $message = "No configuration file was found. Make sure that conf/config.json exists.";
 }

@@ -32,26 +32,26 @@
 
 namespace Themes\DefaultTheme;
 
+use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Pimple\Container;
+use \RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 
 /**
-* DefaultThemeApp class
-*/
+ * DefaultThemeApp class
+ */
 class DefaultThemeApp extends FrontendController
 {
     const USE_GRUNT = false;
 
-    protected static $themeName =      'Default theme';
-    protected static $themeAuthor =    'Ambroise Maupate';
+    protected static $themeName = 'Default theme';
+    protected static $themeAuthor = 'Ambroise Maupate';
     protected static $themeCopyright = 'REZO ZERO';
-    protected static $themeDir =       'DefaultTheme';
-    protected static $backendTheme =    false;
+    protected static $themeDir = 'DefaultTheme';
+    protected static $backendTheme = false;
 
     protected static $specificNodesControllers = array(
         // Put here your nodes which need a specific controller
@@ -62,16 +62,23 @@ class DefaultThemeApp extends FrontendController
         Request $request,
         $_locale = null
     ) {
+        /*
+         * You must catch NoTranslationAvailableException if
+         * user visit a non-available translation.
+         */
+        try {
+            $translation = $this->bindLocaleFromRoute($request, $_locale);
 
-        $translation = $this->bindLocaleFromRoute($request, $_locale);
+            $home = $this->getService('em')
+                         ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                         ->findHomeWithTranslation($translation);
 
-        $home = $this->getService('em')
-                     ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                     ->findHomeWithTranslation($translation);
+            $this->prepareThemeAssignation($home, $translation);
 
-        $this->prepareThemeAssignation($home, $translation);
-
-        return $this->handle($request);
+            return $this->handle($request);
+        } catch (NoTranslationAvailableException $e) {
+            return $this->throw404();
+        }
     }
 
     /**
@@ -91,13 +98,13 @@ class DefaultThemeApp extends FrontendController
              * Common image format for pages headers
              */
             $array['headerImage'] = array(
-                'width'=>1600
+                'width' => 1600,
             );
             $array['thumbnail'] = array(
-                "width"=>200,
-                "crop"=>"1:1",
-                "controls"=>true,
-                "embed"=>true
+                "width" => 200,
+                "crop" => "1:1",
+                "controls" => true,
+                "embed" => true,
             );
 
             return $array;
@@ -115,12 +122,12 @@ class DefaultThemeApp extends FrontendController
          * Use Grunt to generate unique asset files for CSS and JS
          */
         $this->themeContainer['grunt'] = function ($c) {
-            return include(dirname(__FILE__).'/static/public/config/assets.config.php');
+            return include dirname(__FILE__) . '/static/public/config/assets.config.php';
         };
 
         $this->assignation['home'] = $this->getService('em')
-                                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                          ->findHomeWithTranslation($translation);
+             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+             ->findHomeWithTranslation($translation);
 
         $this->assignation['themeServices'] = $this->themeContainer;
         // Get session messages
@@ -134,10 +141,10 @@ class DefaultThemeApp extends FrontendController
     {
         if ($this->translation === null) {
             $this->translation = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                ->findOneBy(
-                    array('defaultTranslation'=>true)
-                );
+                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                 ->findOneBy(
+                     array('defaultTranslation' => true)
+                 );
         }
         $parent = $this->getService('em')
                        ->getRepository('RZ\Roadiz\Core\Entities\Node')
@@ -148,10 +155,10 @@ class DefaultThemeApp extends FrontendController
                         ->getBy(
                             array(
                                 'parent' => $parent,
-                                'translation' => $this->translation
+                                'translation' => $this->translation,
                             ),
                             array(
-                                'position' => 'ASC'
+                                'position' => 'ASC',
                             )
                         );
         }
@@ -200,7 +207,7 @@ class DefaultThemeApp extends FrontendController
                 'path' => $c['urlGenerator']->generate('adminTestPage'),
                 'icon' => 'uk-icon-cube',
                 'roles' => null,
-                'subentries' => null
+                'subentries' => null,
             );
 
             return $entries;
