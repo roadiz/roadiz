@@ -464,6 +464,7 @@ class InstallApp extends AppController
                     $config->writeConfiguration();
 
                     \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
+                    \RZ\Roadiz\Console\CacheCommand::clearTranslations();
 
                     /*
                      * Close Session for security and temp translation
