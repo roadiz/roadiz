@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\DefaultTheme\DefaultThemeApp;
+use \RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 
 /**
  * Contact form page.
@@ -51,52 +52,60 @@ class ContactController extends DefaultThemeApp
         $_locale = null,
         $_route = null
     ) {
-        $translation = $this->bindLocaleFromRoute($request, $_locale);
-        $this->prepareThemeAssignation($node, $translation);
-
-     /*
-      * Create a custom contact form
-      */
-        $formBuilder = EntryPointsController::getContactFormBuilder(
-            $request,
-            true,
-            null,
-            null,
-            null
-        );
-        $formBuilder->add('email', 'email', array(
-                        'label' => $this->getTranslator()->trans('your.email'),
-                    ))
-                    ->add('name', 'text', array(
-                        'label' => $this->getTranslator()->trans('your.name'),
-                    ))
-                    ->add('message', 'textarea', array(
-                        'label' => $this->getTranslator()->trans('your.message'),
-                    ))
-                    ->add('callMeBack', 'checkbox', array(
-                        'label' => $this->getTranslator()->trans('call.me.back'),
-                        'required' => false,
-                    ))
-                    ->add('document', 'file', array(
-                        'label' => $this->getTranslator()->trans('document'),
-                        'required' => false,
-                    ))
-                    ->add('send', 'submit', array(
-                        'label' => $this->getTranslator()->trans('send.contact.form'),
-                    ));
-        $form = $formBuilder->getForm();
-
-        $this->assignation['contactForm'] = $form->createView();
-
         /*
-		 * Assign route to check current menu entry in navigation.html.twig
-		 */
-        $this->assignation['route'] = $_route;
+         * You must catch NoTranslationAvailableException if
+         * user visit a non-available translation.
+         */
+        try {
+            $translation = $this->bindLocaleFromRoute($request, $_locale);
+            $this->prepareThemeAssignation($node, $translation);
 
-        return new Response(
-            $this->getTwig()->render('contact.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
+            /*
+             * Create a custom contact form
+             */
+            $formBuilder = EntryPointsController::getContactFormBuilder(
+                $request,
+                true,
+                null,
+                null,
+                null
+            );
+            $formBuilder->add('email', 'email', array(
+                            'label' => $this->getTranslator()->trans('your.email'),
+                        ))
+                        ->add('name', 'text', array(
+                            'label' => $this->getTranslator()->trans('your.name'),
+                        ))
+                        ->add('message', 'textarea', array(
+                            'label' => $this->getTranslator()->trans('your.message'),
+                        ))
+                        ->add('callMeBack', 'checkbox', array(
+                            'label' => $this->getTranslator()->trans('call.me.back'),
+                            'required' => false,
+                        ))
+                        ->add('document', 'file', array(
+                            'label' => $this->getTranslator()->trans('document'),
+                            'required' => false,
+                        ))
+                        ->add('send', 'submit', array(
+                            'label' => $this->getTranslator()->trans('send.contact.form'),
+                        ));
+            $form = $formBuilder->getForm();
+
+            $this->assignation['contactForm'] = $form->createView();
+
+            /*
+             * Assign route to check current menu entry in navigation.html.twig
+             */
+            $this->assignation['route'] = $_route;
+
+            return new Response(
+                $this->getTwig()->render('contact.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                array('content-type' => 'text/html')
+            );
+        } catch (NoTranslationAvailableException $e) {
+            return $this->throw404();
+        }
     }
 }

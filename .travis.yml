@@ -27,7 +27,7 @@ before_script:
   - php bin/roadiz install -n --with-theme="Themes\\DefaultTheme\\DefaultThemeApp"
 
 script:
-  - ENABLE_SECOND_LEVEL_CACHE=0 ./vendor/bin/phpunit -v --bootstrap=bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
+  - ENABLE_SECOND_LEVEL_CACHE=0 ./vendor/bin/phpunit -v --bootstrap=tests/bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
   - ./vendor/bin/phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/Tests/* -p ./
 
 after_script:
