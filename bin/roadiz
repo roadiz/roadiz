@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Kernel;
 require dirname(__FILE__).'/../bootstrap.php';
 
 if (php_sapi_name() == 'cli') {
+    Kernel::getInstance()->boot();
     Kernel::getInstance()->runConsole();
 }
 
