@@ -353,7 +353,7 @@ class InstallApp extends AppController
         $this->assignation["cms"] = array("version" => Kernel::$cmsVersion);
         $this->assignation["status"] = array();
 
-        $this->assignation["status"]["version"] = (version_compare($data["versionRequire"], Kernel::$cmsVersion) == 0) ? true : false;
+        $this->assignation["status"]["version"] = (version_compare($data["versionRequire"], Kernel::$cmsVersion) >= 0) ? true : false;
 
         $this->assignation["cms"]["locale"] = $request->getLocale();
         $this->assignation["status"]["locale"] = in_array($request->getLocale(), $data["supportedLocale"]);
