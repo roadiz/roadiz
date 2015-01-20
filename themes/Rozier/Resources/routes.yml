@@ -16,6 +16,9 @@ adminHomePage:
 loginPage:
     path:     /login
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
+loginImagePage:
+    path:     /login/image
+    defaults: { _controller: Themes\Rozier\Controllers\LoginController::imageAction }
 logoutPage:
     path:     /rz-admin/logout
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::logoutAction }

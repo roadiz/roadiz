@@ -1,17 +1,32 @@
 (function () {
 
-    var onLoad = function (event) {
+    var onLoad = function (data, event) {
         $("#splash-container").css({
-            'background-image':'url('+splash.url+')'
+            'background-image':'url('+data.url+')'
         });
         $("#splash-container").addClass('visible');
     };
 
-    if(typeof splash != 'undefined'){
+    var requestImage = function () {
+        $.ajax({
+            url: splashRequest,
+            type: 'GET',
+            dataType: 'json'
+        })
+        .done(function(data) {
+            if (false === data) {
+                requestImage();
+            } else if(typeof data.url != 'undefined'){
 
-        var myImage = new Image(window.width, window.height);
-        myImage.src = splash.url;
-        // console.log(myImage);
-        myImage.onload = onLoad;
+                var myImage = new Image(window.width, window.height);
+                myImage.src = data.url;
+                myImage.onload = $.proxy(onLoad, this, data);
+            }
+        });
+    };
+
+    if(typeof splashRequest !== 'undefined'){
+        requestImage();
     }
+
 })();
