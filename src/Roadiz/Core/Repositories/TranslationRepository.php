@@ -39,7 +39,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get single default translation.
      *
-     * @return Translation
+     * @return RZ\Roadiz\Core\Entities\Translation
      */
     public function findDefault()
     {
@@ -121,7 +121,7 @@ class TranslationRepository extends EntityRepository
     /**
     * Get one available translations filter by locale.
     *
-    * @return ArrayCollection
+    * @return RZ\Roadiz\Core\Entities\Translation
     */
     public function findOneByLocaleAndAvailable($locale)
     {
