@@ -102,6 +102,7 @@ class NodeSourceApi extends AbstractApi
         if (empty($criteria['node.status'])) {
             $criteria['node.status'] = array('<=', Node::PUBLISHED);
         }
+
         $rep = $this->getRepositoryName($criteria);
 
         return $this->container['em']

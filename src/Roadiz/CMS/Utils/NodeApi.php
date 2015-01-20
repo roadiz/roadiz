@@ -51,6 +51,9 @@ class NodeApi extends AbstractApi
         if (empty($criteria['status'])) {
             $criteria['status'] = array('<=', Node::PUBLISHED);
         }
+        if (!in_array('translation.available', $criteria, true)) {
+            $criteria['translation.available'] = true;
+        }
 
         return $this->container['em']
                     ->getRepository("RZ\Roadiz\Core\Entities\Node")
@@ -69,6 +72,9 @@ class NodeApi extends AbstractApi
         if (empty($criteria['status'])) {
             $criteria['status'] = array('<=', Node::PUBLISHED);
         }
+        if (!in_array('translation.available', $criteria, true)) {
+            $criteria['translation.available'] = true;
+        }
 
         return $this->container['em']
                     ->getRepository("RZ\Roadiz\Core\Entities\Node")
@@ -83,6 +89,9 @@ class NodeApi extends AbstractApi
     {
         if (empty($criteria['status'])) {
             $criteria['status'] = array('<=', Node::PUBLISHED);
+        }
+        if (!in_array('translation.available', $criteria, true)) {
+            $criteria['translation.available'] = true;
         }
 
         return $this->container['em']

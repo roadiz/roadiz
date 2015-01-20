@@ -39,7 +39,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get single default translation.
      *
-     * @return Translation
+     * @return RZ\Roadiz\Core\Entities\Translation
      */
     public function findDefault()
     {
@@ -95,6 +95,46 @@ class TranslationRepository extends EntityRepository
             return (boolean) $query->getSingleScalarResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
             return false;
+        }
+    }
+
+    /**
+    * Get all available translations filter by locale.
+    *
+    * @return ArrayCollection
+    */
+    public function findByLocaleAndAvailable($locale)
+    {
+        $query = $this->_em->createQuery('
+        SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
+        WHERE t.available = true
+        AND t.locale = :locale
+        ');
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+    * Get one available translations filter by locale.
+    *
+    * @return RZ\Roadiz\Core\Entities\Translation
+    */
+    public function findOneByLocaleAndAvailable($locale)
+    {
+        $query = $this->_em->createQuery('
+        SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
+        WHERE t.available = true
+        AND t.locale = :locale
+        ');
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
         }
     }
 }

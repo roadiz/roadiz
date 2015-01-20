@@ -235,7 +235,8 @@ class NodeRepository extends EntityRepository
     {
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
-            isset($criteria['translation.id'])) {
+            isset($criteria['translation.id']) ||
+            isset($criteria['translation.available'])) {
             $qb->innerJoin('n.nodeSources', 'ns');
             $qb->innerJoin('ns.translation', 't');
 
