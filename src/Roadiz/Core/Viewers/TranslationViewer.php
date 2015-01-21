@@ -34,7 +34,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 
 /**
-* DocumentViewer
+* TranslationViewer
 */
 class TranslationViewer implements ViewableInterface
 {
