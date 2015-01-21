@@ -86,7 +86,7 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                     $rCollection->addCollection(
                         $cmsCollection,
                         '/rz-admin',
-                        array('_scheme' => 'https')
+                        ['_scheme' => 'https']
                     );
                 }
 

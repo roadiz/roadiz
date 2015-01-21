@@ -60,7 +60,7 @@ class Document extends AbstractDateTimed
      *
      * @var array
      */
-    public static $mimeToIcon = array(
+    public static $mimeToIcon = [
         'text/html' => 'code',
         'application/javascript' => 'code',
         'text/css' => 'code',
@@ -107,7 +107,7 @@ class Document extends AbstractDateTimed
         'application/vnd.ms-fontobject' => 'font',
         'font/opentype' => 'font',
         'font/ttf' => 'font',
-    );
+    ];
 
     /**
      * @ORM\Column(type="string", nullable=true)

@@ -57,7 +57,7 @@ class NodeTypeField extends AbstractField
      *
      * @var array
      */
-    public static $typeToHuman = array(
+    public static $typeToHuman = [
         AbstractField::STRING_T =>      'string.type',
         AbstractField::DATETIME_T =>    'date-time.type',
         AbstractField::TEXT_T =>        'text.type',
@@ -74,13 +74,13 @@ class NodeTypeField extends AbstractField
         AbstractField::COLOUR_T =>      'colour.type',
         AbstractField::GEOTAG_T =>      'geographic.coordinates.type',
         AbstractField::CUSTOM_FORMS_T => 'custom-forms.type'
-    );
+    ];
     /**
      * Associates node-type field type to a Doctrine type.
      *
      * @var array
      */
-    public static $typeToDoctrine = array(
+    public static $typeToDoctrine = [
         AbstractField::STRING_T =>      'string',
         AbstractField::DATETIME_T =>    'datetime',
         AbstractField::RICHTEXT_T =>    'text',
@@ -98,13 +98,13 @@ class NodeTypeField extends AbstractField
         AbstractField::COLOUR_T =>      'string',
         AbstractField::GEOTAG_T =>      'string',
         AbstractField::CUSTOM_FORMS_T => null
-    );
+    ];
     /**
      * Associates node-type field type to a Symfony Form type.
      *
      * @var array
      */
-    public static $typeToForm = array(
+    public static $typeToForm = [
         AbstractField::STRING_T =>      'text',
         AbstractField::DATETIME_T =>    'datetime',
         AbstractField::RICHTEXT_T =>    'textarea',
@@ -122,19 +122,19 @@ class NodeTypeField extends AbstractField
         AbstractField::COLOUR_T =>      'text',
         AbstractField::GEOTAG_T =>      'text',
         AbstractField::CUSTOM_FORMS_T => 'custom_forms'
-    );
+    ];
 
     /**
      * List searchable fields types in a searchEngine such as Solr.
      *
      * @var array
      */
-    protected static $searchableTypes = array(
+    protected static $searchableTypes = [
         AbstractField::STRING_T,
         AbstractField::RICHTEXT_T,
         AbstractField::TEXT_T,
         AbstractField::MARKDOWN_T,
-    );
+    ];
 
     /**
      * @ORM\ManyToOne(targetEntity="NodeType", inversedBy="fields")

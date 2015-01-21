@@ -113,19 +113,19 @@ class NodesCommand extends Command
         ) {
             $type = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                ->findOneBy(array('name'=>$typeName));
+                ->findOneBy(['name'=>$typeName]);
             $translation = null;
 
             if ($locale) {
                 $translation = Kernel::getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findOneBy(array('locale'=>$locale));
+                    ->findOneBy(['locale'=>$locale]);
             }
 
             if ($translation === null) {
                 $translation = Kernel::getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findOneBy(array(), array('id'=> 'ASC'));
+                    ->findOneBy([], ['id'=> 'ASC']);
             }
 
             if ($type !== null &&
@@ -138,7 +138,7 @@ class NodesCommand extends Command
         } elseif ($nodeName) {
             $node = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findOneBy(array('nodeName'=>$nodeName));
+                ->findOneBy(['nodeName'=>$nodeName]);
 
             if ($node !== null) {
                 $text .= $node->getOneLineSummary().$node->getOneLineSourceSummary();

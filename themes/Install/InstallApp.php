@@ -63,9 +63,9 @@ class InstallApp extends AppController
      */
     public function prepareBaseAssignation()
     {
-        $this->assignation = array(
+        $this->assignation = [
             'request' => $this->kernel->getRequest(),
-            'head' => array(
+            'head' => [
                 'ajax' => $this->kernel->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
@@ -80,11 +80,11 @@ class InstallApp extends AppController
                                     ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
                 'fontToken' => $this->getService('csrfProvider')
                                     ->generateCsrfToken(static::FONT_TOKEN_INTENTION)
-            ),
-            'session' => array(
+            ],
+            'session' => [
                 'id' => $this->kernel->getRequest()->getSession()->getId()
-            )
-        );
+            ]
+        ];
 
         $this->assignation['head']['grunt'] = include(dirname(__FILE__).'/static/public/config/assets.config.php');
 
@@ -138,7 +138,7 @@ class InstallApp extends AppController
         return new Response(
             $this->getTwig()->render('steps/hello.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -183,7 +183,7 @@ class InstallApp extends AppController
         return new Response(
             $this->getTwig()->render('steps/requirements.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -209,7 +209,7 @@ class InstallApp extends AppController
         return new Response(
             $this->getTwig()->render('steps/importTheme.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -239,12 +239,12 @@ class InstallApp extends AppController
                      */
                     $user = $this->getService('em')
                                  ->getRepository('RZ\Roadiz\Core\Entities\User')
-                                 ->findOneBy(array('username' => $userForm->getData()['username']));
+                                 ->findOneBy(['username' => $userForm->getData()['username']]);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'installUserSummaryPage',
-                            array("userId" => $user->getId())
+                            ["userId" => $user->getId()]
                         )
                     );
                     $response->prepare($request);
@@ -262,7 +262,7 @@ class InstallApp extends AppController
         return new Response(
             $this->getTwig()->render('steps/user.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -282,7 +282,7 @@ class InstallApp extends AppController
         return new Response(
             $this->getTwig()->render('steps/userSummary.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -323,7 +323,7 @@ class InstallApp extends AppController
         $response = new RedirectResponse(
             $this->getService('urlGenerator')->generate(
                 'installImportThemePage',
-                array("id" => $theme->getId())
+                ["id" => $theme->getId()]
             )
         );
         $response->prepare($request);
@@ -343,22 +343,22 @@ class InstallApp extends AppController
         $array = explode('\\', $request->get("classname"));
         $data = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/". $array[2] . "/config.json"), true);
 
-        $this->assignation["theme"] = array(
+        $this->assignation["theme"] = [
             "name" => $data["name"],
             "version" => $data["versionRequire"],
             "supportedLocale" => $data["supportedLocale"],
             "imports" => $data["importFiles"]
-        );
+        ];
 
-        $this->assignation["cms"] = array("version" => Kernel::$cmsVersion);
-        $this->assignation["status"] = array();
+        $this->assignation["cms"] = ["version" => Kernel::$cmsVersion];
+        $this->assignation["status"] = [];
 
         $this->assignation["status"]["version"] = (version_compare($data["versionRequire"], Kernel::$cmsVersion) <= 0) ? true : false;
 
         $this->assignation["cms"]["locale"] = $request->getLocale();
         $this->assignation["status"]["locale"] = in_array($request->getLocale(), $data["supportedLocale"]);
 
-        $this->assignation["status"]["import"] = array();
+        $this->assignation["status"]["import"] = [];
 
         foreach ($data["importFiles"] as $name => $filenames) {
             foreach ($filenames as $filename) {
@@ -371,7 +371,7 @@ class InstallApp extends AppController
         return new Response(
             $this->getTwig()->render('steps/themeSummary.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -432,7 +432,7 @@ class InstallApp extends AppController
         return new Response(
             $this->getTwig()->render('steps/themes.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -494,7 +494,7 @@ class InstallApp extends AppController
         return new Response(
             $this->getTwig()->render('steps/done.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -509,20 +509,20 @@ class InstallApp extends AppController
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('language', 'choice', array(
-                'choices' => array(
+            ->add('language', 'choice', [
+                'choices' => [
                     'en'=>'English',
                     'fr'=>'Français'
-                ),
-                'constraints' => array(
+                ],
+                'constraints' => [
                     new NotBlank()
-                ),
+                ],
                 'label'=>'choose.a.language',
-                'attr' => array(
+                'attr' => [
                     "id" => "language"
-                ),
+                ],
                 'data' => $request->getLocale()
-            ));
+            ]);
 
         return $builder->getForm();
     }
@@ -539,30 +539,30 @@ class InstallApp extends AppController
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('username', 'text', array(
+            ->add('username', 'text', [
                 'required' => true,
                 'label' => $this->getTranslator()->trans('username'),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ))
-            ->add('email', 'email', array(
+                ]
+            ])
+            ->add('email', 'email', [
                 'required' => true,
                 'label' => $this->getTranslator()->trans('email'),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ))
-            ->add('password', 'repeated', array(
+                ]
+            ])
+            ->add('password', 'repeated', [
                 'type' => 'password',
                 'invalid_message' => 'password.must_match',
-                'first_options'  => array('label' => 'password'),
-                'second_options' => array('label' => 'password.verify'),
+                'first_options'  => ['label' => 'password'],
+                'second_options' => ['label' => 'password.verify'],
                 'required' => true,
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ));
+                ]
+            ]);
 
         return $builder->getForm();
     }
@@ -585,68 +585,68 @@ class InstallApp extends AppController
         $timeZoneList = include(dirname(__FILE__).'/Resources/import/timezones.php');
 
 
-        $defaults = array(
+        $defaults = [
             'site_name' => $siteName != '' ? $siteName : "My website",
             'meta_description' => $metaDescription != '' ? $metaDescription : "My website is beautiful!",
             'email_sender' => $emailSender != '' ? $emailSender : "",
             'email_sender_name' => $emailSenderName != '' ? $emailSenderName : "",
             'install_frontend' => true,
             'timezone' => $timeZone != '' ? $timeZone : "Europe/Paris"
-        );
+        ];
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
-            ->add('site_name', 'text', array(
+            ->add('site_name', 'text', [
                 'required' => true,
                 'label' => $this->getTranslator()->trans('site_name'),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ))
-            ->add('email_sender', 'email', array(
+                ]
+            ])
+            ->add('email_sender', 'email', [
                 'required' => true,
                 'label' => $this->getTranslator()->trans('email_sender'),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ))
-            ->add('email_sender_name', 'text', array(
+                ]
+            ])
+            ->add('email_sender_name', 'text', [
                 'required' => true,
                 'label' => $this->getTranslator()->trans('email_sender_name'),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ))
-            ->add('meta_description', 'text', array(
+                ]
+            ])
+            ->add('meta_description', 'text', [
                 'required' => false,
                 'label' => $this->getTranslator()->trans('meta_description'),
-            ))
-            ->add('timezone', 'choice', array(
+            ])
+            ->add('timezone', 'choice', [
                 'choices' => $timeZoneList,
                 'label' => $this->getTranslator()->trans('timezone'),
                 'required' => true
-            ));
+            ]);
 
         $themesType = new \RZ\Roadiz\CMS\Forms\ThemesType();
 
         if ($themesType->getSize() > 0) {
-            $builder->add('separator_1', new SeparatorType(), array(
+            $builder->add('separator_1', new SeparatorType(), [
                 'label' => $this->getTranslator()->trans('themes.frontend.description')
-            ))
-            ->add('install_theme', 'checkbox', array(
+            ])
+            ->add('install_theme', 'checkbox', [
                 'required' => false,
                 'label' => $this->getTranslator()->trans('install_theme')
-            ))
+            ])
             ->add(
                 'className',
                 $themesType,
-                array(
+                [
                     'label' => $this->getTranslator()->trans('theme.selector'),
                     'required' => true,
-                    'constraints' => array(
+                    'constraints' => [
                         new \Symfony\Component\Validator\Constraints\NotNull(),
                         new \Symfony\Component\Validator\Constraints\Type('string'),
-                    )
-                )
+                    ]
+                ]
             );
         }
 
@@ -663,9 +663,9 @@ class InstallApp extends AppController
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('action', 'hidden', array(
+            ->add('action', 'hidden', [
                 'data' => 'quit_install'
-            ));
+            ]);
 
         return $builder->getForm();
     }

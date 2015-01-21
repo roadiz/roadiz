@@ -59,16 +59,16 @@ class TagsType extends AbstractType
             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
             ->findAllWithDefaultTranslation();
 
-        $choices = array();
+        $choices = [];
         foreach ($tags as $tag) {
             if (!$this->tags->contains($tag)) {
                 $choices[$tag->getId()] = $tag->getTranslatedTags()->first()->getName();
             }
         }
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices' => $choices
-        ));
+        ]);
     }
 
     /**

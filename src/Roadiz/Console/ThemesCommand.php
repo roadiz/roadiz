@@ -84,7 +84,7 @@ class ThemesCommand extends Command
         if ($name) {
             $theme = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                ->findOneBy(array('className'=>$name));
+                ->findOneBy(['className'=>$name]);
 
             if ($theme !== null) {
                 if ($input->getOption('enable')) {

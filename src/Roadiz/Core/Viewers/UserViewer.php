@@ -94,11 +94,11 @@ class UserViewer implements ViewableInterface
             $siteName = "Unnamed site";
         }
 
-        $assignation = array(
+        $assignation = [
             'user' => $this->user,
             'site' => $siteName,
             'mailContact' => $emailContact,
-        );
+        ];
         $emailBody = $this->getTwig()->render('users/newUser_email.html.twig', $assignation);
 
         /*
@@ -114,12 +114,12 @@ class UserViewer implements ViewableInterface
             // Give the message a subject
             ->setSubject($this->getTranslator()->trans(
                 'welcome.user.email.%site%',
-                array('%site%'=>$siteName)
+                ['%site%'=>$siteName]
             ))
             // Set the From address with an associative array
-            ->setFrom(array($emailContact => $siteName))
+            ->setFrom([$emailContact => $siteName])
             // Set the To addresses with an associative array
-            ->setTo(array($this->user->getEmail()))
+            ->setTo([$this->user->getEmail()])
             // Give it a body
             ->setBody($htmldoc->getHTML(), 'text/html');
 

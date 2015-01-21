@@ -55,7 +55,7 @@ trait NodesTrait
         if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
                 'node.%name%.no_creation.urlAlias.alreadyExists',
-                array('%name%' => $data['nodeName'])
+                ['%name%' => $data['nodeName']]
             );
 
             throw new EntityAlreadyExistsException($msg, 1);
@@ -63,7 +63,7 @@ trait NodesTrait
         if ($this->nodeNameExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
                 'node.%name%.no_creation.already_exists',
-                array('%name%' => $data['nodeName'])
+                ['%name%' => $data['nodeName']]
             );
 
             throw new EntityAlreadyExistsException($msg, 1);
@@ -85,7 +85,7 @@ trait NodesTrait
         } catch (\Exception $e) {
             $msg = $this->getTranslator()->trans(
                 'node.%name%.noCreation.alreadyExists',
-                array('%name%' => $node->getNodeName())
+                ['%name%' => $node->getNodeName()]
             );
             throw new EntityAlreadyExistsException($msg, 1);
         }
@@ -103,7 +103,7 @@ trait NodesTrait
         if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
                 'node.%name%.no_creation.url_alias.already_exists',
-                array('%name%' => $data['nodeName'])
+                ['%name%' => $data['nodeName']]
             );
 
             throw new EntityAlreadyExistsException($msg, 1);
@@ -111,7 +111,7 @@ trait NodesTrait
         if ($this->nodeNameExists(StringHandler::slugify($data['nodeName']))) {
             $msg = $this->getTranslator()->trans(
                 'node.%name%.no_creation.already_exists',
-                array('%name%' => $data['nodeName'])
+                ['%name%' => $data['nodeName']]
             );
 
             throw new EntityAlreadyExistsException($msg, 1);
@@ -182,7 +182,7 @@ trait NodesTrait
         if ($testingNodeName != $node->getNodeName() &&
             ($this->nodeNameExists($testingNodeName) ||
                 $this->urlAliasExists($testingNodeName))) {
-            $msg = $this->getTranslator()->trans('node.%name%.noUpdate.alreadyExists', array('%name%' => $data['nodeName']));
+            $msg = $this->getTranslator()->trans('node.%name%.noUpdate.alreadyExists', ['%name%' => $data['nodeName']]);
             throw new EntityAlreadyExistsException($msg, 1);
         }
         foreach ($data as $key => $value) {
@@ -326,7 +326,7 @@ trait NodesTrait
     protected function buildTranslateForm(Node $node)
     {
         $translations = $node->getHandler()->getUnavailableTranslations();
-        $choices = array();
+        $choices = [];
 
         foreach ($translations as $translation) {
             $choices[$translation->getId()] = $translation->getName();
@@ -335,17 +335,17 @@ trait NodesTrait
         if ($translations !== null && count($choices) > 0) {
             $builder = $this->getService('formFactory')
                             ->createBuilder('form')
-                            ->add('nodeId', 'hidden', array(
+                            ->add('nodeId', 'hidden', [
                                 'data' => $node->getId(),
-                                'constraints' => array(
+                                'constraints' => [
                                     new NotBlank(),
-                                ),
-                            ))
-                ->add('translationId', 'choice', array(
+                                ],
+                            ])
+                ->add('translationId', 'choice', [
                     'label' => $this->getTranslator()->trans('translation'),
                     'choices' => $choices,
                     'required' => true,
-                ));
+                ]);
 
             return $builder->getForm();
         } else {
@@ -360,16 +360,16 @@ trait NodesTrait
     public function buildStackTypesForm(Node $node)
     {
         if ($node->isHidingChildren()) {
-            $defaults = array();
+            $defaults = [];
 
             $builder = $this->getService('formFactory')
                             ->createBuilder('form', $defaults)
-                            ->add('nodeId', 'hidden', array(
+                            ->add('nodeId', 'hidden', [
                                 'data' => (int) $node->getId(),
-                            ))
-                            ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), array(
+                            ])
+                            ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), [
                                 'label' => $this->getTranslator()->trans('nodeType'),
-                            ));
+                            ]);
 
             return $builder->getForm();
         } else {
@@ -384,27 +384,27 @@ trait NodesTrait
      */
     protected function buildAddChildForm(Node $parentNode = null)
     {
-        $defaults = array();
+        $defaults = [];
 
         $builder = $this->getService('formFactory')
                         ->createBuilder('form', $defaults)
-                        ->add('nodeName', 'text', array(
+                        ->add('nodeName', 'text', [
                             'label' => $this->getTranslator()->trans('nodeName'),
-                            'constraints' => array(
+                            'constraints' => [
                                 new NotBlank(),
-                            ),
-                        ))
-            ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), array(
+                            ],
+                        ])
+            ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), [
                 'label' => $this->getTranslator()->trans('nodeType'),
-            ));
+            ]);
 
         if (null !== $parentNode) {
-            $builder->add('parentId', 'hidden', array(
+            $builder->add('parentId', 'hidden', [
                 'data' => (int) $parentNode->getId(),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank(),
-                ),
-            ));
+                ],
+            ]);
         }
 
         return $builder->getForm();
@@ -417,47 +417,47 @@ trait NodesTrait
      */
     protected function buildEditForm(Node $node)
     {
-        $defaults = array(
+        $defaults = [
             'nodeName' => $node->getNodeName(),
             'home' => $node->isHome(),
             'priority' => $node->getPriority(),
             'dynamicNodeName' => $node->isDynamicNodeName(),
-        );
+        ];
         $builder = $this->getService('formFactory')
                         ->createBuilder('form', $defaults)
                         ->add(
                             'nodeName',
                             'text',
-                            array(
+                            [
                                 'label' => $this->getTranslator()->trans('nodeName'),
-                                'constraints' => array(new NotBlank()),
-                            )
+                                'constraints' => [new NotBlank()],
+                            ]
                         )
             ->add(
                 'priority',
                 'number',
-                array(
+                [
                     'label' => $this->getTranslator()->trans('priority'),
-                    'constraints' => array(new NotBlank()),
-                )
+                    'constraints' => [new NotBlank()],
+                ]
             )
             ->add(
                 'home',
                 'checkbox',
-                array(
+                [
                     'label' => $this->getTranslator()->trans('node.isHome'),
                     'required' => false,
-                    'attr' => array('class' => 'rz-boolean-checkbox'),
-                )
+                    'attr' => ['class' => 'rz-boolean-checkbox'],
+                ]
             )
             ->add(
                 'dynamicNodeName',
                 'checkbox',
-                array(
+                [
                     'label' => $this->getTranslator()->trans('node.dynamicNodeName'),
                     'required' => false,
-                    'attr' => array('class' => 'rz-boolean-checkbox'),
-                )
+                    'attr' => ['class' => 'rz-boolean-checkbox'],
+                ]
             );
 
         return $builder->getForm();
@@ -470,25 +470,25 @@ trait NodesTrait
      */
     protected function buildEditTagsForm(Node $node)
     {
-        $defaults = array(
+        $defaults = [
             'nodeId' => $node->getId(),
-        );
+        ];
         $builder = $this->getService('formFactory')
                         ->createBuilder('form', $defaults)
-                        ->add('nodeId', 'hidden', array(
+                        ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
-                            'constraints' => array(
+                            'constraints' => [
                                 new NotBlank(),
-                            ),
-                        ))
-            ->add('tagPaths', 'text', array(
+                            ],
+                        ])
+            ->add('tagPaths', 'text', [
                 'label' => $this->getTranslator()->trans('list.tags.to_link'),
-                'attr' => array('class' => 'rz-tag-autocomplete'),
-            ))
-            ->add('separator_1', new SeparatorType(), array(
+                'attr' => ['class' => 'rz-tag-autocomplete'],
+            ])
+            ->add('separator_1', new SeparatorType(), [
                 'label' => $this->getTranslator()->trans('use.new_or_existing.tags_with_hierarchy'),
-                'attr' => array('class' => 'form-help-static uk-alert uk-alert-large'),
-            ));
+                'attr' => ['class' => 'form-help-static uk-alert uk-alert-large'],
+            ]);
 
         return $builder->getForm();
     }
@@ -502,12 +502,12 @@ trait NodesTrait
     {
         $builder = $this->getService('formFactory')
                         ->createBuilder('form')
-                        ->add('nodeId', 'hidden', array(
+                        ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
-                            'constraints' => array(
+                            'constraints' => [
                                 new NotBlank(),
-                            ),
-                        ));
+                            ],
+                        ]);
 
         return $builder->getForm();
     }
@@ -533,18 +533,18 @@ trait NodesTrait
     {
         $builder = $this->getService('formFactory')
                         ->createBuilder('form')
-                        ->add('nodeId', 'hidden', array(
+                        ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
-                            'constraints' => array(
+                            'constraints' => [
                                 new NotBlank(),
-                            ),
-                        ))
-            ->add('tagId', 'hidden', array(
+                            ],
+                        ])
+            ->add('tagId', 'hidden', [
                 'data' => $tag->getId(),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank(),
-                ),
-            ));
+                ],
+            ]);
 
         return $builder->getForm();
     }

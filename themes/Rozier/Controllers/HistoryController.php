@@ -45,7 +45,7 @@ use Symfony\Component\HttpFoundation\Request;
 class HistoryController extends RozierApp
 {
 
-    public static $levelToHuman = array(
+    public static $levelToHuman = [
         Log::EMERGENCY => "emergency",
         Log::CRITICAL => "critical",
         Log::ALERT => "alert",
@@ -55,7 +55,7 @@ class HistoryController extends RozierApp
         Log::INFO => "info",
         Log::DEBUG => "debug",
         Log::LOG => "log"
-    );
+    ];
 
     /**
      * List all logs action.
@@ -73,8 +73,8 @@ class HistoryController extends RozierApp
             $request,
             $this->em(),
             'RZ\Roadiz\Core\Entities\Log',
-            array(),
-            array('datetime'=> 'DESC')
+            [],
+            ['datetime'=> 'DESC']
         );
         $listManager->setItemPerPage(30);
         $listManager->handle();
@@ -86,7 +86,7 @@ class HistoryController extends RozierApp
         return new Response(
             $this->getTwig()->render('history/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -111,8 +111,8 @@ class HistoryController extends RozierApp
                 $request,
                 $this->em(),
                 'RZ\Roadiz\Core\Entities\Log',
-                array('user'=>$user),
-                array('datetime'=> 'DESC')
+                ['user'=>$user],
+                ['datetime'=> 'DESC']
             );
             $listManager->setItemPerPage(30);
             $listManager->handle();
@@ -125,7 +125,7 @@ class HistoryController extends RozierApp
             return new Response(
                 $this->getTwig()->render('history/list.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
 
         } else {

@@ -43,7 +43,7 @@ class RolesBag
      *
      * @var array
      */
-    protected static $roles = array();
+    protected static $roles = [];
 
     /**
      * Get role by name or create it if non-existant.
@@ -58,7 +58,7 @@ class RolesBag
             static::$roles[$roleName] =
                     Kernel::getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Role')
-                    ->findOneBy(array('name'=>$roleName));
+                    ->findOneBy(['name'=>$roleName]);
 
             if (null === static::$roles[$roleName]) {
                 static::$roles[$roleName] = new Role();

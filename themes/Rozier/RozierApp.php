@@ -79,27 +79,27 @@ class RozierApp extends BackendController
 
         $this->assignation['settingGroups'] = $this->getService('em')
                                                    ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-                                                   ->findBy(array('inMenu' => true), array('name'=>'ASC'));
+                                                   ->findBy(['inMenu' => true], ['name'=>'ASC']);
 
         /*
          * Get admin image
          */
         $adminImage = $this->getService('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
-                           ->findOneBy(array(
+                           ->findOneBy([
                                 'name' => '_admin_image_'
-                            ));
+                            ]);
         if (null !== $adminImage) {
             $this->assignation['adminImage'] = $adminImage->getDocument();
         }
 
-        $this->assignation['nodeStatuses'] = array(
+        $this->assignation['nodeStatuses'] = [
             'draft' => Node::DRAFT,
             'pending' => Node::PENDING,
             'published' => Node::PUBLISHED,
             'archived' => Node::ARCHIVED,
             'deleted' => Node::DELETED
-        );
+        ];
 
         return $this;
     }
@@ -114,7 +114,7 @@ class RozierApp extends BackendController
         return new Response(
             $this->getTwig()->render('index.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -131,7 +131,7 @@ class RozierApp extends BackendController
         return new Response(
             $this->getTwig()->render('css/mainColor.css.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/css')
+            ['content-type' => 'text/css']
         );
     }
 
@@ -146,198 +146,198 @@ class RozierApp extends BackendController
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
 
-            $entries['dashboard'] = array(
+            $entries['dashboard'] = [
                 'name' => 'dashboard',
                 'path' => $c['urlGenerator']->generate('adminHomePage'),
                 'icon' => 'uk-icon-rz-dashboard',
                 'roles' => null,
                 'subentries' => null
-            );
-            $entries['nodes'] = array(
+            ];
+            $entries['nodes'] = [
                 'name' => 'nodes',
                 'path' => null,
                 'icon' => 'uk-icon-rz-global-nodes',
-                'roles' => array('ROLE_ACCESS_NODES'),
-                'subentries' => array(
-                    'all.nodes' => array(
+                'roles' => ['ROLE_ACCESS_NODES'],
+                'subentries' => [
+                    'all.nodes' => [
                         'name' => 'all.nodes',
                         'path' => $c['urlGenerator']->generate('nodesHomePage'),
                         'icon' => 'uk-icon-rz-all-nodes',
                         'roles' => null
-                    ),
-                    'draft.nodes' => array(
+                    ],
+                    'draft.nodes' => [
                         'name' => 'draft.nodes',
                         'path' => $c['urlGenerator']->generate('nodesHomeDraftPage'),
                         'icon' => 'uk-icon-rz-draft-nodes',
                         'roles' => null
-                    ),
-                    'pending.nodes' => array(
+                    ],
+                    'pending.nodes' => [
                         'name' => 'pending.nodes',
                         'path' => $c['urlGenerator']->generate('nodesHomePendingPage'),
                         'icon' => 'uk-icon-rz-pending-nodes',
                         'roles' => null
-                    ),
-                    'archived.nodes' => array(
+                    ],
+                    'archived.nodes' => [
                         'name' => 'archived.nodes',
                         'path' => $c['urlGenerator']->generate('nodesHomeArchivedPage'),
                         'icon' => 'uk-icon-rz-archives-nodes',
                         'roles' => null
-                    ),
-                    'deleted.nodes' => array(
+                    ],
+                    'deleted.nodes' => [
                         'name' => 'deleted.nodes',
                         'path' => $c['urlGenerator']->generate('nodesHomeDeletedPage'),
                         'icon' => 'uk-icon-rz-deleted-nodes',
                         'roles' => null
-                    ),
-                    'search.nodes' => array(
+                    ],
+                    'search.nodes' => [
                         'name' => 'search.nodes',
                         'path' => $c['urlGenerator']->generate('searchNodePage'),
                         'icon' => 'uk-icon-search',
                         'roles' => null
-                    ),
-                )
-            );
-            $entries['manage.documents'] = array(
+                    ],
+                ]
+            ];
+            $entries['manage.documents'] = [
                 'name' => 'manage.documents',
                 'path' => $c['urlGenerator']->generate('documentsHomePage'),
                 'icon' => 'uk-icon-rz-documents',
-                'roles' => array('ROLE_ACCESS_DOCUMENTS'),
+                'roles' => ['ROLE_ACCESS_DOCUMENTS'],
                 'subentries' => null
-            );
-            $entries['manage.tags'] = array(
+            ];
+            $entries['manage.tags'] = [
                 'name' => 'manage.tags',
                 'path' => $c['urlGenerator']->generate('tagsHomePage'),
                 'icon' => 'uk-icon-rz-tags',
-                'roles' => array('ROLE_ACCESS_TAGS'),
+                'roles' => ['ROLE_ACCESS_TAGS'],
                 'subentries' => null
-            );
-            $entries['construction'] = array(
+            ];
+            $entries['construction'] = [
                 'name' => 'construction',
                 'path' => null,
                 'icon' => 'uk-icon-rz-construction',
-                'roles' => array('ROLE_ACCESS_NODETYPES', 'ROLE_ACCESS_TRANSLATIONS', 'ROLE_ACCESS_THEMES', 'ROLE_ACCESS_FONTS'),
-                'subentries' => array(
-                    'manage.nodeTypes' => array(
+                'roles' => ['ROLE_ACCESS_NODETYPES', 'ROLE_ACCESS_TRANSLATIONS', 'ROLE_ACCESS_THEMES', 'ROLE_ACCESS_FONTS'],
+                'subentries' => [
+                    'manage.nodeTypes' => [
                         'name' => 'manage.nodeTypes',
                         'path' => $c['urlGenerator']->generate('nodeTypesHomePage'),
                         'icon' => 'uk-icon-rz-manage-nodes',
-                        'roles' => array('ROLE_ACCESS_NODETYPES')
-                    ),
-                    'manage.translations' => array(
+                        'roles' => ['ROLE_ACCESS_NODETYPES']
+                    ],
+                    'manage.translations' => [
                         'name' => 'manage.translations',
                         'path' => $c['urlGenerator']->generate('translationsHomePage'),
                         'icon' => 'uk-icon-rz-translate',
-                        'roles' => array('ROLE_ACCESS_TRANSLATIONS')
-                    ),
-                    'manage.themes' => array(
+                        'roles' => ['ROLE_ACCESS_TRANSLATIONS']
+                    ],
+                    'manage.themes' => [
                         'name' => 'manage.themes',
                         'path' => $c['urlGenerator']->generate('themesHomePage'),
                         'icon' => 'uk-icon-rz-themes',
-                        'roles' => array('ROLE_ACCESS_THEMES')
-                    ),
-                    'manage.fonts' => array(
+                        'roles' => ['ROLE_ACCESS_THEMES']
+                    ],
+                    'manage.fonts' => [
                         'name' => 'manage.fonts',
                         'path' => $c['urlGenerator']->generate('fontsHomePage'),
                         'icon' => 'uk-icon-rz-fontes',
-                        'roles' => array('ROLE_ACCESS_FONTS')
-                    ),
-                )
-            );
+                        'roles' => ['ROLE_ACCESS_FONTS']
+                    ],
+                ]
+            ];
 
-            $entries['user.system'] = array(
+            $entries['user.system'] = [
                 'name' => 'user.system',
                 'path' => null,
                 'icon' => 'uk-icon-rz-users',
-                'roles' => array('ROLE_ACCESS_USERS', 'ROLE_ACCESS_ROLES', 'ROLE_ACCESS_GROUPS'),
-                'subentries' => array(
-                    'manage.users' => array(
+                'roles' => ['ROLE_ACCESS_USERS', 'ROLE_ACCESS_ROLES', 'ROLE_ACCESS_GROUPS'],
+                'subentries' => [
+                    'manage.users' => [
                         'name' => 'manage.users',
                         'path' => $c['urlGenerator']->generate('usersHomePage'),
                         'icon' => 'uk-icon-rz-user',
-                        'roles' => array('ROLE_ACCESS_USERS')
-                    ),
-                    'manage.roles' => array(
+                        'roles' => ['ROLE_ACCESS_USERS']
+                    ],
+                    'manage.roles' => [
                         'name' => 'manage.roles',
                         'path' => $c['urlGenerator']->generate('rolesHomePage'),
                         'icon' => 'uk-icon-rz-roles',
-                        'roles' => array('ROLE_ACCESS_ROLES')
-                    ),
-                    'manage.groups' => array(
+                        'roles' => ['ROLE_ACCESS_ROLES']
+                    ],
+                    'manage.groups' => [
                         'name' => 'manage.groups',
                         'path' => $c['urlGenerator']->generate('groupsHomePage'),
                         'icon' => 'uk-icon-rz-groups',
-                        'roles' => array('ROLE_ACCESS_GROUPS')
-                    )
-                )
-            );
+                        'roles' => ['ROLE_ACCESS_GROUPS']
+                    ]
+                ]
+            ];
 
-            $entries['interactions'] = array(
+            $entries['interactions'] = [
                 'name' => 'interactions',
                 'path' => null,
                 'icon' => 'uk-icon-rz-interactions',
-                'roles' => array(
+                'roles' => [
                     'ROLE_ACCESS_CUSTOMFORMS',
                     'ROLE_ACCESS_NEWSLETTERS',
                     'ROLE_ACCESS_MANAGE_SUBSCRIBERS',
                     'ROLE_ACCESS_COMMENTS'
-                ),
-                'subentries' => array(
-                    'manage.customForms' => array(
+                ],
+                'subentries' => [
+                    'manage.customForms' => [
                         'name' => 'manage.customForms',
                         'path' => $c['urlGenerator']->generate('customFormsHomePage'),
                         'icon' => 'uk-icon-rz-surveys',
-                        'roles' => array('ROLE_ACCESS_CUSTOMFORMS')
-                    ),
-                    'manage.newsletters' => array(
+                        'roles' => ['ROLE_ACCESS_CUSTOMFORMS']
+                    ],
+                    'manage.newsletters' => [
                         'name' => 'manage.newsletters',
                         'path' => $c['urlGenerator']->generate('newslettersIndexPage'),
                         'icon' => 'uk-icon-rz-newsletters',
-                        'roles' => array('ROLE_ACCESS_NEWSLETTERS')
-                    ),
-                    'manage.subscribers' => array(
+                        'roles' => ['ROLE_ACCESS_NEWSLETTERS']
+                    ],
+                    'manage.subscribers' => [
                         'name' => 'manage.subscribers',
                         'path' => null,
                         'icon' => 'uk-icon-rz-subscribers',
-                        'roles' => array('ROLE_ACCESS_MANAGE_SUBSCRIBERS')
-                    ),
-                    'manage.comments' => array(
+                        'roles' => ['ROLE_ACCESS_MANAGE_SUBSCRIBERS']
+                    ],
+                    'manage.comments' => [
                         'name' => 'manage.comments',
                         'path' => null,
                         'icon' => 'uk-icon-rz-comments',
-                        'roles' => array('ROLE_ACCESS_COMMENTS')
-                    ),
-                )
-            );
+                        'roles' => ['ROLE_ACCESS_COMMENTS']
+                    ],
+                ]
+            ];
 
-            $entries['settings'] = array(
+            $entries['settings'] = [
                 'name' => 'settings',
                 'path' => null,
                 'icon' => 'uk-icon-rz-settings',
-                'roles' => array('ROLE_ACCESS_SETTINGS'),
-                'subentries' => array(
-                    'all.settings' => array(
+                'roles' => ['ROLE_ACCESS_SETTINGS'],
+                'subentries' => [
+                    'all.settings' => [
                         'name' => 'all.settings',
                         'path' => $c['urlGenerator']->generate('settingsHomePage'),
                         'icon' => 'uk-icon-rz-settings-general',
                         'roles' => null
-                    ),
+                    ],
                     /*
                      * This entry is dynamic
                      */
-                    'setting.groups.dynamic' => array(
+                    'setting.groups.dynamic' => [
                         'name' => 'setting.groups.dynamic',
                         'path' => 'settingGroupsSettingsPage',
                         'icon' => 'uk-icon-rz-settings-group',
                         'roles' => null
-                    ),
-                    'setting.groups' => array(
+                    ],
+                    'setting.groups' => [
                         'name' => 'setting.groups',
                         'path' => $c['urlGenerator']->generate('settingGroupsHomePage'),
                         'icon' => 'uk-icon-rz-settings-groups',
                         'roles' => null
-                    )
-                )
-            );
+                    ]
+                ]
+            ];
 
             return $entries;
         });

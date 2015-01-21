@@ -66,12 +66,12 @@ class FontHandler
     {
         return Kernel::getService('urlGenerator')->generate(
             'FontFile',
-            array(
+            [
                 'filename'  => $this->font->getHash(),
                 'variant'   => $this->font->getVariant(),
                 'extension' => $extension,
                 'token'     => $token
-            )
+            ]
         );
     }
 }

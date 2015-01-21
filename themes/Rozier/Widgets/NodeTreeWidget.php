@@ -127,11 +127,11 @@ class NodeTreeWidget extends AbstractWidget
 
     protected function getListManager(Node $parent = null)
     {
-        $criteria = array(
+        $criteria = [
             'parent' =>      $parent,
             'translation' => $this->translation,
-            'status' =>      array('<=', Node::PUBLISHED)
-        );
+            'status' =>      ['<=', Node::PUBLISHED]
+        ];
 
         if (null !== $this->tag) {
             $criteria['tags'] = $this->tag;
@@ -145,7 +145,7 @@ class NodeTreeWidget extends AbstractWidget
             $this->controller->getService('em'),
             'RZ\Roadiz\Core\Entities\Node',
             $criteria,
-            array('position'=>'ASC')
+            ['position'=>'ASC']
         );
 
         if (true === $this->stackTree) {

@@ -64,8 +64,8 @@ class SettingGroupsController extends RozierApp
             $request,
             $this->getService('em'),
             'RZ\Roadiz\Core\Entities\SettingGroup',
-            array(),
-            array('name'=>'ASC')
+            [],
+            ['name'=>'ASC']
         );
         $listManager->handle();
 
@@ -75,7 +75,7 @@ class SettingGroupsController extends RozierApp
         return new Response(
             $this->getTwig()->render('settingGroups/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -104,7 +104,7 @@ class SettingGroupsController extends RozierApp
                     $this->editSettingGroup($form->getData(), $settingGroup);
                     $msg = $this->getTranslator()->trans(
                         'settingGroup.%name%.updated',
-                        array('%name%'=>$settingGroup->getName())
+                        ['%name%'=>$settingGroup->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
@@ -116,7 +116,7 @@ class SettingGroupsController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'settingGroupsEditPage',
-                        array('settingGroupId' => $settingGroup->getId())
+                        ['settingGroupId' => $settingGroup->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -129,7 +129,7 @@ class SettingGroupsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('settingGroups/edit.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -160,7 +160,7 @@ class SettingGroupsController extends RozierApp
                     $this->addSettingGroup($form->getData(), $settingGroup);
                     $msg = $this->getTranslator()->trans(
                         'settingGroup.%name%.created',
-                        array('%name%'=>$settingGroup->getName())
+                        ['%name%'=>$settingGroup->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
@@ -184,7 +184,7 @@ class SettingGroupsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('settingGroups/add.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -218,7 +218,7 @@ class SettingGroupsController extends RozierApp
 
                 $msg = $this->getTranslator()->trans(
                     'settingGroup.%name%.deleted',
-                    array('%name%'=>$settingGroup->getName())
+                    ['%name%'=>$settingGroup->getName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
 
@@ -238,7 +238,7 @@ class SettingGroupsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('settingGroups/delete.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -263,7 +263,7 @@ class SettingGroupsController extends RozierApp
                 ->exists($data['name'])) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans(
                     'settingGroup.%name%.no_update.already_exists',
-                    array('%name%'=>$settingGroup->getName())
+                    ['%name%'=>$settingGroup->getName()]
                 ), 1);
             }
             try {
@@ -284,7 +284,7 @@ class SettingGroupsController extends RozierApp
             } catch (\Exception $e) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans(
                     'settingGroup.%name%.no_update.already_exists',
-                    array('%name%'=>$settingGroup->getName())
+                    ['%name%'=>$settingGroup->getName()]
                 ), 1);
             }
         }
@@ -303,7 +303,7 @@ class SettingGroupsController extends RozierApp
             ->exists($data['name'])) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans(
                 'settingGroup.%name%.no_creation.already_exists',
-                array('%name%'=>$settingGroup->getName())
+                ['%name%'=>$settingGroup->getName()]
             ), 1);
         }
 
@@ -320,7 +320,7 @@ class SettingGroupsController extends RozierApp
         } catch (\Exception $e) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans(
                 'settingGroup.%name%.no_creation.already_exists',
-                array('%name%'=>$settingGroup->getName())
+                ['%name%'=>$settingGroup->getName()]
             ), 1);
         }
     }
@@ -346,22 +346,22 @@ class SettingGroupsController extends RozierApp
      */
     private function buildAddForm(SettingGroup $settingGroup)
     {
-        $defaults = array(
+        $defaults = [
             'name' =>    $settingGroup->getName(),
             'inMenu' =>  $settingGroup->isInMenu()
-        );
+        ];
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
-            ->add('name', 'text', array(
+            ->add('name', 'text', [
                 'label' => $this->getTranslator()->trans('name'),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ))
-            ->add('inMenu', 'checkbox', array(
+                ]
+            ])
+            ->add('inMenu', 'checkbox', [
                 'label' => $this->getTranslator()->trans('settingGroup.in.menu'),
                 'required' => false
-            ))
+            ])
             ;
 
         return $builder->getForm();
@@ -375,37 +375,37 @@ class SettingGroupsController extends RozierApp
      */
     private function buildEditForm(SettingGroup $settingGroup)
     {
-        $defaults = array(
+        $defaults = [
             'id' =>      $settingGroup->getId(),
             'name' =>    $settingGroup->getName(),
             'inMenu' =>  $settingGroup->isInMenu()
-        );
+        ];
 
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add(
                 'name',
                 'text',
-                array(
+                [
                     'label' => $this->getTranslator()->trans('name'),
-                    'constraints' => array(new NotBlank())
-                )
+                    'constraints' => [new NotBlank()]
+                ]
             )
             ->add(
                 'id',
                 'hidden',
-                array(
+                [
                     'data'=>$settingGroup->getId(),
                     'required' => true
-                )
+                ]
             )
             ->add(
                 'inMenu',
                 'checkbox',
-                array(
+                [
                     'label' => $this->getTranslator()->trans('settingGroup.in.menu'),
                     'required' => false
-                )
+                ]
             );
 
         return $builder->getForm();
@@ -420,12 +420,12 @@ class SettingGroupsController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('settingGroupId', 'hidden', array(
+            ->add('settingGroupId', 'hidden', [
                 'data' => $settingGroup->getId(),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ));
+                ]
+            ]);
 
         return $builder->getForm();
     }

@@ -60,7 +60,7 @@ class AjaxFoldersController extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
@@ -82,31 +82,31 @@ class AjaxFoldersController extends AbstractAjaxController
             }
 
             if ($responseArray === null) {
-                $responseArray = array(
+                $responseArray = [
                     'statusCode' => '200',
                     'status' => 'success',
                     'responseText' => ('Folder '.$folderId.' edited ')
-                );
+                ];
             }
 
             return new Response(
                 json_encode($responseArray),
                 Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
 
-        $responseArray = array(
+        $responseArray = [
             'statusCode' => '403',
             'status'    => 'danger',
             'responseText' => 'Folder '.$folderId.' does not exists'
-        );
+        ];
 
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 
@@ -119,28 +119,28 @@ class AjaxFoldersController extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $responseArray = array(
+        $responseArray = [
             'statusCode' => Response::HTTP_NOT_FOUND,
             'status'    => 'danger',
             'responseText' => 'No tags found'
-        );
+        ];
 
         if (!empty($request->get('search'))) {
-            $responseArray = array();
+            $responseArray = [];
 
             $pattern = strip_tags($request->get('search'));
             $folders = $this->getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                         ->searchBy(
                             $pattern,
-                            array(),
-                            array(),
+                            [],
+                            [],
                             10
                         );
 
@@ -152,7 +152,7 @@ class AjaxFoldersController extends AbstractAjaxController
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 

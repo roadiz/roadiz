@@ -59,9 +59,9 @@ class CustomFormController extends AppController
      */
     public static function getRoutes()
     {
-        $locator = new FileLocator(array(
+        $locator = new FileLocator([
         ROADIZ_ROOT . '/src/Roadiz/CMS/Resources',
-        ));
+        ]);
 
         if (file_exists(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
@@ -96,13 +96,13 @@ class CustomFormController extends AppController
                         $data["ip"] = $request->getClientIp();
                         $this->addCustomFormAnswer($data, $customForm);
 
-                        $msg = $this->getTranslator()->trans('customForm.%name%.send', array('%name%' => $customForm->getName()));
+                        $msg = $this->getTranslator()->trans('customForm.%name%.send', ['%name%' => $customForm->getName()]);
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
                         $this->getService('logger')->info($msg);
 
                         $this->assignation['title'] = $this->getTranslator()->trans(
                             'new.answer.form.%site%',
-                            array('%site%' => $customForm->getDisplayName())
+                            ['%site%' => $customForm->getDisplayName()]
                         );
 
                         $this->assignation['mailContact'] = SettingsBag::get('email_sender');
@@ -115,7 +115,7 @@ class CustomFormController extends AppController
                         $response = new RedirectResponse(
                             $this->getService('urlGenerator')->generate(
                                 'customFormSendAction',
-                                array("customFormId" => $customFormId)
+                                ["customFormId" => $customFormId]
                             )
                         );
 
@@ -125,7 +125,7 @@ class CustomFormController extends AppController
                         $response = new RedirectResponse(
                             $this->getService('urlGenerator')->generate(
                                 'customFormSendAction',
-                                array("customFormId" => $customFormId)
+                                ["customFormId" => $customFormId]
                             )
                         );
                     }
@@ -139,7 +139,7 @@ class CustomFormController extends AppController
                 return new Response(
                     $this->getTwig()->render('forms/customForm.html.twig', $this->assignation),
                     Response::HTTP_OK,
-                    array('content-type' => 'text/html')
+                    ['content-type' => 'text/html']
                 );
             }
         }
@@ -174,9 +174,9 @@ class CustomFormController extends AppController
      // Give the message a subject
         ->setSubject($this->assignation['title'])
                           // Set the From address with an associative array
-                          ->setFrom(array(SettingsBag::get('email_sender')))
+                          ->setFrom([SettingsBag::get('email_sender')])
                           // Set the To addresses with an associative array
-                          ->setTo(array($receiver))
+                          ->setTo([$receiver])
                           // Give it a body
                           ->setBody($htmldoc->getHTML(), 'text/html');
      // Create the Transport
@@ -199,10 +199,10 @@ class CustomFormController extends AppController
         $answer->setSubmittedAt(new \DateTime('NOW'));
         $answer->setCustomForm($customForm);
 
-        $this->assignation["fields"] = array(
-        array("name" => "ip", "value" => $data["ip"]),
-        array("name" => "submittedAt", "value" => new \DateTime('NOW')),
-        );
+        $this->assignation["fields"] = [
+        ["name" => "ip", "value" => $data["ip"]],
+        ["name" => "submittedAt", "value" => new \DateTime('NOW')],
+        ];
 
         $this->getService('em')->persist($answer);
 
@@ -212,7 +212,7 @@ class CustomFormController extends AppController
             $fieldAttr->setCustomFormField($field);
 
             if (is_array($data[$field->getName()])) {
-                $values = array();
+                $values = [];
 
                 foreach ($data[$field->getName()] as $value) {
                     $choices = explode(',', $field->getDefaultValues());
@@ -221,11 +221,11 @@ class CustomFormController extends AppController
 
                 $val = implode(',', $values);
                 $fieldAttr->setValue($val);
-                $this->assignation["fields"][] = array("name" => $field->getName(), "value" => $val);
+                $this->assignation["fields"][] = ["name" => $field->getName(), "value" => $val];
 
             } else {
                 $fieldAttr->setValue($data[$field->getName()]);
-                $this->assignation["fields"][] = array("name" => $field->getName(), "value" => $data[$field->getName()]);
+                $this->assignation["fields"][] = ["name" => $field->getName(), "value" => $data[$field->getName()]];
 
             }
             $this->getService('em')->persist($fieldAttr);

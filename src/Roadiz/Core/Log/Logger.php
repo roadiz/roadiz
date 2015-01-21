@@ -68,7 +68,7 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function emergency($message, array $context = array())
+    public function emergency($message, array $context = [])
     {
         $this->log(Log::EMERGENCY, $message, $context);
     }
@@ -82,7 +82,7 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function alert($message, array $context = array())
+    public function alert($message, array $context = [])
     {
         $this->log(Log::ALERT, $message, $context);
     }
@@ -95,7 +95,7 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function critical($message, array $context = array())
+    public function critical($message, array $context = [])
     {
         $this->log(Log::CRITICAL, $message, $context);
     }
@@ -107,7 +107,7 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function error($message, array $context = array())
+    public function error($message, array $context = [])
     {
         $this->log(Log::ERROR, $message, $context);
     }
@@ -121,7 +121,7 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function warning($message, array $context = array())
+    public function warning($message, array $context = [])
     {
         $this->log(Log::WARNING, $message, $context);
     }
@@ -132,7 +132,7 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function notice($message, array $context = array())
+    public function notice($message, array $context = [])
     {
         $this->log(Log::NOTICE, $message, $context);
     }
@@ -145,7 +145,7 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function info($message, array $context = array())
+    public function info($message, array $context = [])
     {
         $this->log(Log::INFO, $message, $context);
     }
@@ -156,7 +156,7 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function debug($message, array $context = array())
+    public function debug($message, array $context = [])
     {
         return;
     }
@@ -168,7 +168,7 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         if (Kernel::getService('em')->isOpen()) {
             $log = new Log($level, $message, $context);

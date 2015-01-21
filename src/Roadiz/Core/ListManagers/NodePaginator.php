@@ -87,7 +87,7 @@ class NodePaginator extends Paginator
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
-    public function findByAtPage(array $order = array(), $page = 1)
+    public function findByAtPage(array $order = [], $page = 1)
     {
         if (null !== $this->searchPattern) {
             return $this->searchByAtPage($order, $page);

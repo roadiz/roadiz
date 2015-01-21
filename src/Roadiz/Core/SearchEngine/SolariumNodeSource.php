@@ -129,8 +129,8 @@ class SolariumNodeSource
      */
     public function getFieldsAssoc()
     {
-        $assoc = array();
-        $collection = array();
+        $assoc = [];
+        $collection = [];
 
         // Need a documentType field
         $assoc['document_type_s'] = static::DOCUMENT_TYPE;

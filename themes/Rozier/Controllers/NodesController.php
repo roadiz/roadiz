@@ -76,33 +76,33 @@ class NodesController extends RozierApp
         switch ($filter) {
             case 'draft':
                 $this->assignation['mainFilter'] = $filter;
-                $arrayFilter = array(
+                $arrayFilter = [
                     'status' => Node::DRAFT
-                );
+                ];
                 break;
             case 'pending':
                 $this->assignation['mainFilter'] = $filter;
-                $arrayFilter = array(
+                $arrayFilter = [
                     'status' => Node::PENDING
-                );
+                ];
                 break;
             case 'archived':
                 $this->assignation['mainFilter'] = $filter;
-                $arrayFilter = array(
+                $arrayFilter = [
                     'status' => Node::ARCHIVED
-                );
+                ];
                 break;
             case 'deleted':
                 $this->assignation['mainFilter'] = $filter;
-                $arrayFilter = array(
+                $arrayFilter = [
                     'status' => Node::DELETED
-                );
+                ];
                 break;
 
             default:
 
                 $this->assignation['mainFilter'] = 'all';
-                $arrayFilter = array();
+                $arrayFilter = [];
                 break;
         }
         /*
@@ -120,16 +120,16 @@ class NodesController extends RozierApp
         $this->assignation['nodes'] = $listManager->getEntities();
         $this->assignation['nodeTypes'] = $this->getService('em')
                                                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                                               ->findBy(array(
+                                               ->findBy([
                                                     'newsletterType' => false,
                                                     'visible' => true
-                                                ));
+                                                ]);
         $this->assignation['translation'] = $translation;
 
         return new Response(
             $this->getTwig()->render('nodes/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -169,9 +169,9 @@ class NodesController extends RozierApp
                 if ($translationForm->isValid()) {
                     try {
                         $this->translateNode($translationForm->getData(), $node);
-                        $msg = $this->getTranslator()->trans('node.%name%.translated', array(
+                        $msg = $this->getTranslator()->trans('node.%name%.translated', [
                             '%name%'=>$node->getNodeName()
-                        ));
+                        ]);
                         $this->publishConfirmMessage($request, $msg);
                     } catch (EntityAlreadyExistsException $e) {
                         $this->publishErrorMessage($request, $e->getMessage());
@@ -180,7 +180,7 @@ class NodesController extends RozierApp
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesEditSourcePage',
-                            array('nodeId' => $node->getId(), 'translationId'=>$translationForm->getData()['translationId'])
+                            ['nodeId' => $node->getId(), 'translationId'=>$translationForm->getData()['translationId']]
                         )
                     );
                     $response->prepare($request);
@@ -202,10 +202,10 @@ class NodesController extends RozierApp
                         $type = $this->addStackType($stackTypesForm->getData(), $node);
                         $msg = $this->getTranslator()->trans(
                             'stack_node.%name%.has_new_type.%type%',
-                            array(
+                            [
                                 '%name%'=>$node->getNodeName(),
                                 '%type%'=>$type->getDisplayName()
-                            )
+                            ]
                         );
                         $this->publishConfirmMessage($request, $msg);
 
@@ -216,7 +216,7 @@ class NodesController extends RozierApp
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesEditPage',
-                            array('nodeId' => $node->getId())
+                            ['nodeId' => $node->getId()]
                         )
                     );
                     $response->prepare($request);
@@ -236,9 +236,9 @@ class NodesController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $this->editNode($form->getData(), $node);
-                    $msg = $this->getTranslator()->trans('node.%name%.updated', array(
+                    $msg = $this->getTranslator()->trans('node.%name%.updated', [
                         '%name%'=>$node->getNodeName()
-                    ));
+                    ]);
                     $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
@@ -247,7 +247,7 @@ class NodesController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'nodesEditPage',
-                        array('nodeId' => $node->getId())
+                        ['nodeId' => $node->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -259,7 +259,7 @@ class NodesController extends RozierApp
             return new Response(
                 $this->getTwig()->render('nodes/edit.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         }
 
@@ -285,10 +285,10 @@ class NodesController extends RozierApp
         if (null !== $translation) {
             $source = $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                ->findOneBy(array(
+                ->findOneBy([
                     'translation'=>$translation,
                     'node.id'=>(int) $nodeId
-                ));
+                ]);
 
             if (null !== $source &&
                 null !== $translation) {
@@ -305,15 +305,15 @@ class NodesController extends RozierApp
                 if ($form->isValid()) {
                     $this->addNodeTag($form->getData(), $node);
 
-                    $msg = $this->getTranslator()->trans('node.%node%.linked.tags', array(
+                    $msg = $this->getTranslator()->trans('node.%node%.linked.tags', [
                         '%node%'=>$node->getNodeName()
-                    ));
+                    ]);
                     $this->publishConfirmMessage($request, $msg);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesEditTagsPage',
-                            array('nodeId' => $node->getId())
+                            ['nodeId' => $node->getId()]
                         )
                     );
                     $response->prepare($request);
@@ -326,7 +326,7 @@ class NodesController extends RozierApp
                 return new Response(
                     $this->getTwig()->render('nodes/editTags.html.twig', $this->assignation),
                     Response::HTTP_OK,
-                    array('content-type' => 'text/html')
+                    ['content-type' => 'text/html']
                 );
             }
         }
@@ -363,14 +363,14 @@ class NodesController extends RozierApp
                 $this->removeNodeTag($form->getData(), $node, $tag);
                 $msg = $this->getTranslator()->trans(
                     'tag.%name%.removed',
-                    array('%name%' => $tag->getTranslatedTags()->first()->getName())
+                    ['%name%' => $tag->getTranslatedTags()->first()->getName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
 
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'nodesEditTagsPage',
-                        array('nodeId' => $node->getId())
+                        ['nodeId' => $node->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -383,7 +383,7 @@ class NodesController extends RozierApp
             return new Response(
                 $this->getTwig()->render('nodes/removeTag.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -419,12 +419,12 @@ class NodesController extends RozierApp
             $translation !== null) {
             $form = $this->getService('formFactory')
                 ->createBuilder()
-                ->add('nodeName', 'text', array(
+                ->add('nodeName', 'text', [
                     'label' => $this->getTranslator()->trans('nodeName'),
-                    'constraints' => array(
+                    'constraints' => [
                         new NotBlank()
-                    )
-                ))
+                    ]
+                ])
                 ->getForm();
             $form->handleRequest();
 
@@ -434,14 +434,14 @@ class NodesController extends RozierApp
 
                     $msg = $this->getTranslator()->trans(
                         'node.%name%.created',
-                        array('%name%'=>$node->getNodeName())
+                        ['%name%'=>$node->getNodeName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesEditPage',
-                            array('nodeId' => $node->getId())
+                            ['nodeId' => $node->getId()]
                         )
                     );
                     $response->prepare($request);
@@ -453,7 +453,7 @@ class NodesController extends RozierApp
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesAddPage',
-                            array('nodeTypeId' => $nodeTypeId, 'translationId' => $translationId)
+                            ['nodeTypeId' => $nodeTypeId, 'translationId' => $translationId]
                         )
                     );
                     $response->prepare($request);
@@ -470,7 +470,7 @@ class NodesController extends RozierApp
             return new Response(
                 $this->getTwig()->render('nodes/add.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -496,7 +496,7 @@ class NodesController extends RozierApp
 
         $nodeTypesCount = $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                ->countBy(array());
+                ->countBy([]);
 
         if (null !== $translationId) {
             $translation = $this->getService('em')
@@ -520,14 +520,14 @@ class NodesController extends RozierApp
 
                     $msg = $this->getTranslator()->trans(
                         'node.%name%.created',
-                        array('%name%'=>$node->getNodeName())
+                        ['%name%'=>$node->getNodeName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesEditPage',
-                            array('nodeId' => $node->getId())
+                            ['nodeId' => $node->getId()]
                         )
                     );
                     $response->prepare($request);
@@ -539,7 +539,7 @@ class NodesController extends RozierApp
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesAddChildPage',
-                            array('nodeId' => $nodeId, 'translationId' => $translationId)
+                            ['nodeId' => $nodeId, 'translationId' => $translationId]
                         )
                     );
                     $response->prepare($request);
@@ -556,7 +556,7 @@ class NodesController extends RozierApp
             return new Response(
                 $this->getTwig()->render('nodes/add.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -605,7 +605,7 @@ class NodesController extends RozierApp
 
                 $msg = $this->getTranslator()->trans(
                     'node.%name%.deleted',
-                    array('%name%'=>$node->getNodeName())
+                    ['%name%'=>$node->getNodeName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
                 /*
@@ -624,7 +624,7 @@ class NodesController extends RozierApp
             return new Response(
                 $this->getTwig()->render('nodes/delete.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -642,9 +642,9 @@ class NodesController extends RozierApp
         if ($form->isValid()) {
             $nodes = $this->getService('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                          ->findBy(array(
+                          ->findBy([
                              'status' => Node::DELETED
-                          ));
+                          ]);
 
             foreach ($nodes as $node) {
                 $node->getHandler()->removeWithChildrenAndAssociations();
@@ -666,7 +666,7 @@ class NodesController extends RozierApp
         return new Response(
             $this->getTwig()->render('nodes/emptyTrash.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
     /**
@@ -710,16 +710,16 @@ class NodesController extends RozierApp
 
                 $msg = $this->getTranslator()->trans(
                     'node.%name%.undeleted',
-                    array('%name%'=>$node->getNodeName())
+                    ['%name%'=>$node->getNodeName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('nodesEditPage', array(
+                    $this->getService('urlGenerator')->generate('nodesEditPage', [
                         'nodeId' => $node->getId()
-                    ))
+                    ])
                 );
                 $response->prepare($request);
 
@@ -731,7 +731,7 @@ class NodesController extends RozierApp
             return new Response(
                 $this->getTwig()->render('nodes/undelete.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();

@@ -49,7 +49,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($nodeSource)
     {
-        $data = array();
+        $data = [];
 
         $data['translation'] = $nodeSource->getTranslation()->getLocale();
         $data['title'] = $nodeSource->getTitle();
@@ -59,7 +59,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
 
         $data = array_merge($data, static::getSourceFields($nodeSource));
 
-        $data['url_aliases'] = array();
+        $data['url_aliases'] = [];
 
         foreach ($nodeSource->getUrlAliases() as $alias) {
             $data['url_aliases'][] = UrlAliasJsonSerializer::toArray($alias);
@@ -76,7 +76,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
         /*
          * Create nodeSource default values
          */
-        $sourceDefaults = array();
+        $sourceDefaults = [];
         foreach ($fields as $field) {
             if (!$field->isVirtual()) {
                 $getter = $field->getGetterName();
@@ -115,12 +115,12 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
         /*
          * Create source default values
          */
-        $sourceDefaults = array(
+        $sourceDefaults = [
             "title",
             "meta_title",
             "meta_keywords",
             "meta_description"
-        );
+        ];
 
         foreach ($fields as $field) {
             if (!$field->isVirtual()) {
@@ -132,7 +132,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
         $normalizer = new GetSetMethodNormalizer();
         $normalizer->setCamelizedAttributes($sourceDefaults);
 
-        $serializer = new Serializer(array($normalizer), array($encoder));
+        $serializer = new Serializer([$normalizer], [$encoder]);
         $node = $serializer->deserialize(
             $string,
             NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName(),

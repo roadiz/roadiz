@@ -86,7 +86,7 @@ class NodeHandler
     {
         $nodesCustomForms = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
-                ->findBy(array('node'=>$this->node, 'field'=>$field));
+                ->findBy(['node'=>$this->node, 'field'=>$field]);
 
         foreach ($nodesCustomForms as $ncf) {
             Kernel::getService('em')->remove($ncf);
@@ -145,7 +145,7 @@ class NodeHandler
     {
         $nodesToNodes = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
-                ->findBy(array('nodeA'=>$this->node, 'field'=>$field));
+                ->findBy(['nodeA'=>$this->node, 'field'=>$field]);
 
         foreach ($nodesToNodes as $ntn) {
             Kernel::getService('em')->remove($ntn);
@@ -373,7 +373,7 @@ class NodeHandler
                         ->setParameter('node_id', $this->node->getId());
 
         try {
-            $simpleArray = array();
+            $simpleArray = [];
             $complexArray = $query->getScalarResult();
             foreach ($complexArray as $subArray) {
                 $simpleArray[] = $subArray['id'];
@@ -381,7 +381,7 @@ class NodeHandler
 
             return $simpleArray;
         } catch (\Doctrine\ORM\NoResultException $e) {
-            return array();
+            return [];
         }
     }
 
@@ -413,7 +413,7 @@ class NodeHandler
                         ->setParameter('translations_id', $this->getAvailableTranslationsId());
 
         try {
-            $simpleArray = array();
+            $simpleArray = [];
             $complexArray = $query->getScalarResult();
             foreach ($complexArray as $subArray) {
                 $simpleArray[] = $subArray['id'];
@@ -431,7 +431,7 @@ class NodeHandler
      */
     public function getParents()
     {
-        $parentsArray = array();
+        $parentsArray = [];
         $parent = $this->node;
 
         do {
@@ -488,7 +488,7 @@ class NodeHandler
     {
         $nodes = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findBy(array('parent' => null), array('position'=>'ASC'));
+            ->findBy(['parent' => null], ['position'=>'ASC']);
 
         $i = 1;
         foreach ($nodes as $child) {
@@ -510,7 +510,7 @@ class NodeHandler
     {
         $defaults = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findBy(array('home'=>true));
+            ->findBy(['home'=>true]);
 
         foreach ($defaults as $default) {
             $default->setHome(false);
@@ -523,8 +523,8 @@ class NodeHandler
 
     private function duplicateRec(Node $node, $level)
     {
-        $childrenArray = array();
-        $sourceArray = array();
+        $childrenArray = [];
+        $sourceArray = [];
         $childs = new ArrayCollection($node->getChildren()->toArray());
         $node->getChildren()->clear();
         foreach ($childs as $child) {

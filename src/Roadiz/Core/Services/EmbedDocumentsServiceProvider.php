@@ -47,12 +47,12 @@ class EmbedDocumentsServiceProvider implements \Pimple\ServiceProviderInterface
     public function register(Container $container)
     {
         $container['document.platforms'] = function ($c) {
-            return array(
+            return [
                 'youtube' =>     '\RZ\Roadiz\Core\Utils\YoutubeEmbedFinder',
                 'vimeo' =>       '\RZ\Roadiz\Core\Utils\VimeoEmbedFinder',
                 'dailymotion' => '\RZ\Roadiz\Core\Utils\DailymotionEmbedFinder',
                 'soundcloud' =>  '\RZ\Roadiz\Core\Utils\SoundcloudEmbedFinder'
-            );
+            ];
         };
 
         return $container;

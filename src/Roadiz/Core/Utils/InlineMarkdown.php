@@ -49,8 +49,8 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
     public $no_entities = false;
 
     # Predefined urls and titles for reference links and images.
-    public $predef_urls = array();
-    public $predef_titles = array();
+    public $predef_urls = [];
+    public $predef_titles = [];
 
     # Optional filter function for URLs
     public $url_filter_func = null;
@@ -96,9 +96,9 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
 
 
     # Internal hashes used during transformation.
-    protected $urls        = array();
-    protected $titles      = array();
-    protected $html_hashes = array();
+    protected $urls        = [];
+    protected $titles      = [];
+    protected $html_hashes = [];
 
     # Status flag to avoid invalid nesting.
     protected $in_anchor   = false;
@@ -113,7 +113,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
         # Clear global hashes.
         $this->urls = $this->predef_urls;
         $this->titles = $this->predef_titles;
-        $this->html_hashes = array();
+        $this->html_hashes = [];
 
         $this->in_anchor = false;
     }
@@ -124,9 +124,9 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
         # Called after the transformation process to clear any variable
         # which may be taking up memory unnecessarly.
         #
-        $this->urls        = array();
-        $this->titles      = array();
-        $this->html_hashes = array();
+        $this->urls        = [];
+        $this->titles      = [];
+        $this->html_hashes = [];
     }
 
 
@@ -170,12 +170,12 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
         return $text . "\n";
     }
 
-    protected $document_gamut = array(
+    protected $document_gamut = [
         # Strip link definitions, store in hashes.
         "stripLinkDefinitions" => 20,
 
         "runBasicBlockGamut"   => 30,
-    );
+    ];
 
 
     protected function stripLinkDefinitions($text)
@@ -210,7 +210,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
                 )?  # title is optional
                 (?:\n+|\Z)
             }xm',
-            array($this, 'stripLinkDefinitionsCallback'),
+            [$this, 'stripLinkDefinitionsCallback'],
             $text
         );
 
@@ -363,7 +363,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
 
             )
             )}Sxmi',
-            array($this, 'hashHTMLBlocksCallback'),
+            [$this, 'hashHTMLBlocksCallback'],
             $text
         );
 
@@ -412,7 +412,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
     }
 
 
-    protected $block_gamut = array(
+    protected $block_gamut = [
         #
         # These are all the transformations that form block-level
         # tags like paragraphs, headers, and list items.
@@ -423,7 +423,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
         //"doLists"           => 40,
         //"doCodeBlocks"      => 50,
         //"doBlockQuotes"     => 60,
-    );
+    ];
 
     protected function runBlockGamut($text)
     {
@@ -478,7 +478,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
     }
 
 
-    protected $span_gamut = array(
+    protected $span_gamut = [
         #
         # These are all the transformations that occur *within* block-level
         # tags like paragraphs, headers, and list items.
@@ -500,7 +500,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
 
         "doItalicsAndBold"    =>  50,
         "doHardBreaks"        =>  60,
-    );
+    ];
 
     protected function runSpanGamut($text)
     {
@@ -520,7 +520,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
         # Do hard breaks:
         return preg_replace_callback(
             '/ {2,}\n/',
-            array($this, 'doHardBreaksCallback'),
+            [$this, 'doHardBreaksCallback'],
             $text
         );
     }
@@ -558,7 +558,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
               \]
             )
             }xs',
-            array($this, 'doAnchorsReferenceCallback'),
+            [$this, 'doAnchorsReferenceCallback'],
             $text
         );
 
@@ -588,7 +588,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
               \)
             )
             }xs',
-            array($this, 'doAnchorsInlineCallback'),
+            [$this, 'doAnchorsInlineCallback'],
             $text
         );
 
@@ -605,7 +605,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
               \]
             )
             }xs',
-            array($this, 'doAnchorsReferenceCallback'),
+            [$this, 'doAnchorsReferenceCallback'],
             $text
         );
 
@@ -700,7 +700,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
 
             )
             }xs',
-            array($this, 'doImagesReferenceCallback'),
+            [$this, 'doImagesReferenceCallback'],
             $text
         );
 
@@ -732,7 +732,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
               \)
             )
             }xs',
-            array($this, 'doImagesInlineCallback'),
+            [$this, 'doImagesInlineCallback'],
             $text
         );
 
@@ -796,7 +796,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
         #
         $text = preg_replace_callback(
             '{ ^(.+?)[ ]*\n(=+|-+)[ ]*\n+ }mx',
-            array($this, 'doHeadersCallbackSetext'),
+            [$this, 'doHeadersCallbackSetext'],
             $text
         );
 
@@ -816,7 +816,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
                 \#*         # optional closing #\'s (not counted)
                 \n+
             }xm',
-            array($this, 'doHeadersCallbackAtx'),
+            [$this, 'doHeadersCallbackAtx'],
             $text
         );
 
@@ -854,10 +854,10 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
         $marker_ul_re  = '[*+-]';
         $marker_ol_re  = '\d+[\.]';
 
-        $markers_relist = array(
+        $markers_relist = [
             $marker_ul_re => $marker_ol_re,
             $marker_ol_re => $marker_ul_re,
-        );
+        ];
 
         foreach ($markers_relist as $marker_re => $other_marker_re) {
             # Re-usable pattern to match any entirel ul or ol list:
@@ -897,7 +897,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
                         ^
                         '.$whole_list_re.'
                     }mx',
-                    array($this, 'doListsCallback'),
+                    [$this, 'doListsCallback'],
                     $text
                 );
             } else {
@@ -906,7 +906,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
                         (?:(?<=\n)\n|\A\n?) # Must eat the newline
                         '.$whole_list_re.'
                     }mx',
-                    array($this, 'doListsCallback'),
+                    [$this, 'doListsCallback'],
                     $text
                 );
             }
@@ -979,7 +979,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
             (?:(\n+(?=\n))|\n)              # tailing blank line = $5
             (?= \n* (\z | \2 ('.$marker_any_re.') (?:[ ]+|(?=\n))))
             }xm',
-            array($this, 'processListItemsCallback'),
+            [$this, 'processListItemsCallback'],
             $list_str
         );
 
@@ -1030,7 +1030,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
                 )
                 ((?=^[ ]{0,'.$this->tab_width.'}\S)|\Z) # Lookahead for non-space at line-start, or end of doc
             }xm',
-            array($this, 'doCodeBlocksCallback'),
+            [$this, 'doCodeBlocksCallback'],
             $text
         );
 
@@ -1063,21 +1063,21 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
     }
 
 
-    protected $em_relist = array(
+    protected $em_relist = [
         ''  => '(?:(?<!\*)\*(?!\*)|(?<!_)_(?!_))(?![\.,:;]?\s)',
         '*' => '(?<![\s*])\*(?!\*)',
         '_' => '(?<![\s_])_(?!_)',
-    );
-    protected $strong_relist = array(
+    ];
+    protected $strong_relist = [
         ''   => '(?:(?<!\*)\*\*(?!\*)|(?<!_)__(?!_))(?![\.,:;]?\s)',
         '**' => '(?<![\s*])\*\*(?!\*)',
         '__' => '(?<![\s_])__(?!_)',
-    );
-    protected $em_strong_relist = array(
+    ];
+    protected $em_strong_relist = [
         ''    => '(?:(?<!\*)\*\*\*(?!\*)|(?<!_)___(?!_))(?![\.,:;]?\s)',
         '***' => '(?<![\s*])\*\*\*(?!\*)',
         '___' => '(?<![\s_])___(?!_)',
-    );
+    ];
     protected $em_strong_prepared_relist;
 
     protected function prepareItalicsAndBold()
@@ -1089,7 +1089,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
         foreach ($this->em_relist as $em => $em_re) {
             foreach ($this->strong_relist as $strong => $strong_re) {
                 # Construct list of allowed token expressions.
-                $token_relist = array();
+                $token_relist = [];
                 if (isset($this->em_strong_relist["$em$strong"])) {
                     $token_relist[] = $this->em_strong_relist["$em$strong"];
                 }
@@ -1105,8 +1105,8 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
 
     protected function doItalicsAndBold($text)
     {
-        $token_stack = array('');
-        $text_stack = array('');
+        $token_stack = [''];
+        $text_stack = [''];
         $em = '';
         $strong = '';
         $tree_char_em = false;
@@ -1253,7 +1253,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
                 )+
               )
             /xm',
-            array($this, 'doBlockQuotesCallback'),
+            [$this, 'doBlockQuotesCallback'],
             $text
         );
 
@@ -1271,7 +1271,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
         # so we need to fix that:
         $bq = preg_replace_callback(
             '{(\s*<pre>.+?</pre>)}sx',
-            array($this, 'doBlockQuotesCallback2'),
+            [$this, 'doBlockQuotesCallback2'],
             $bq
         );
 
@@ -1383,7 +1383,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
     {
         $text = preg_replace_callback(
             '{<((https?|ftp|dict|tel):[^\'">\s]+)>}i',
-            array($this, 'doAutoLinksUrlCallback'),
+            [$this, 'doAutoLinksUrlCallback'],
             $text
         );
 
@@ -1407,7 +1407,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
             )
             >
             }xi',
-            array($this, 'doAutoLinksEmailCallback'),
+            [$this, 'doAutoLinksEmailCallback'],
             $text
         );
 
@@ -1593,7 +1593,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
 
         $text = preg_replace_callback(
             '/^.*\t.*$/m',
-            array($this, 'detabCallback'),
+            [$this, 'detabCallback'],
             $text
         );
 
@@ -1643,7 +1643,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
         #
         return preg_replace_callback(
             '/(.)\x1A[0-9]+\1/',
-            array($this, 'unhashCallback'),
+            [$this, 'unhashCallback'],
             $text
         );
     }

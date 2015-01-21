@@ -105,10 +105,10 @@ class DocumentViewer implements ViewableInterface
      */
     public function getDocumentByArray($args = null)
     {
-        $assignation = array(
+        $assignation = [
             'document' => $this->document,
             'url' => $this->getDocumentUrlByArray($args)
-        );
+        ];
 
         if (!empty($args['width'])) {
             $assignation['width'] = (int) $args['width'];
@@ -220,35 +220,35 @@ class DocumentViewer implements ViewableInterface
         $basename = pathinfo($this->document->getFileName());
         $basename = $basename['filename'];
 
-        $sources = array();
+        $sources = [];
 
         if ($this->document->isVideo()) {
-            $sourcesDocsName = array(
+            $sourcesDocsName = [
                 $basename . '.ogg',
                 $basename . '.ogv',
                 $basename . '.mp4',
                 $basename . '.mov',
                 $basename . '.webm'
-            );
+            ];
         } elseif ($this->document->isAudio()) {
-            $sourcesDocsName = array(
+            $sourcesDocsName = [
                 $basename . '.mp3',
                 $basename . '.ogg',
                 $basename . '.wav'
-            );
+            ];
         } else {
             return false;
         }
 
         $sourcesDocs = Kernel::getService('em')
             ->getRepository("RZ\Roadiz\Core\Entities\Document")
-            ->findBy(array("filename" => $sourcesDocsName));
+            ->findBy(["filename" => $sourcesDocsName]);
 
         foreach ($sourcesDocs as $source) {
-            $sources[] = array(
+            $sources[] = [
                 'mime' => $source->getMimeType(),
                 'url' => Kernel::getInstance()->getRequest()->getBaseUrl().'/files/'.$source->getRelativeUrl()
-            );
+            ];
         }
 
         return $sources;
@@ -278,7 +278,7 @@ class DocumentViewer implements ViewableInterface
             return Kernel::getInstance()->getRequest()
                                         ->getBaseUrl().'/files/'.$this->document->getRelativeUrl();
         } else {
-            $slirArgs = array();
+            $slirArgs = [];
 
             if (!empty($args['width'])) {
                 $slirArgs['w'] = 'w'.(int) $args['width'];
@@ -303,10 +303,10 @@ class DocumentViewer implements ViewableInterface
                 $slirArgs['p'] = 'p1';
             }
 
-            return Kernel::getService('urlGenerator')->generate('SLIRProcess', array(
+            return Kernel::getService('urlGenerator')->generate('SLIRProcess', [
                 'queryString' => implode('-', $slirArgs),
                 'filename' => $this->document->getRelativeUrl()
-            ));
+            ]);
         }
     }
 }

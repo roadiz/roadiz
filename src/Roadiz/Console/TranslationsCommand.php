@@ -100,7 +100,7 @@ class TranslationsCommand extends Command
         if ($name) {
             $translation = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                ->findOneBy(array('name'=>$name));
+                ->findOneBy(['name'=>$name]);
 
             if ($translation !== null) {
                 $text = $translation->getOneLineSummary();

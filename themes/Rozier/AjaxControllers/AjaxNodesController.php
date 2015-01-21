@@ -60,7 +60,7 @@ class AjaxNodesController extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_FORBIDDEN,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
@@ -82,35 +82,35 @@ class AjaxNodesController extends AbstractAjaxController
             }
 
             if ($responseArray === null) {
-                $responseArray = array(
+                $responseArray = [
                     'statusCode' => '200',
                     'status' => 'success',
-                    'responseText' => $this->getTranslator()->trans('node.%name%.updated', array(
+                    'responseText' => $this->getTranslator()->trans('node.%name%.updated', [
                         '%name%' => $node->getNodeName()
-                    ))
-                );
+                    ])
+                ];
             }
 
             return new Response(
                 json_encode($responseArray),
                 Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
 
-        $responseArray = array(
+        $responseArray = [
             'statusCode' => '403',
             'status'    => 'danger',
-            'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', array(
+            'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', [
                 '%nodeId%' => $nodeId
-            ))
-        );
+            ])
+        ];
 
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 
@@ -182,7 +182,7 @@ class AjaxNodesController extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_FORBIDDEN,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
@@ -190,13 +190,13 @@ class AjaxNodesController extends AbstractAjaxController
 
         $responseArray = null;
 
-        $availableStatuses = array(
+        $availableStatuses = [
             'visible' => 'setVisible',
             'status' => 'setStatus',
             'locked' => 'setLocked',
             'hideChildren' => 'setHidingChildren',
             'sterile' => 'setSterile'
-        );
+        ];
 
         if ("nodeChangeStatus" == $request->get('_action') &&
             "" != $request->get('statusName')) {
@@ -204,11 +204,11 @@ class AjaxNodesController extends AbstractAjaxController
             if ($request->get('statusName') == 'status' &&
                 $request->get('statusValue') > Node::PENDING &&
                 !$this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_STATUS')) {
-                $responseArray = array(
+                $responseArray = [
                     'statusCode' => Response::HTTP_FORBIDDEN,
                     'status'    => 'danger',
                     'responseText' => $this->getTranslator()->trans('role.cannot.update.status')
-                );
+                ];
 
             } else {
                 if ($request->get('nodeId') > 0) {
@@ -240,69 +240,69 @@ class AjaxNodesController extends AbstractAjaxController
                                     }
                                 }
 
-                                $responseArray = array(
+                                $responseArray = [
                                     'statusCode' => Response::HTTP_OK,
                                     'status'    => 'success',
-                                    'responseText' => $this->getTranslator()->trans('node.%name%.%field%.updated', array(
+                                    'responseText' => $this->getTranslator()->trans('node.%name%.%field%.updated', [
                                         '%name%' => $node->getNodeName(),
                                         '%field%' => $request->get('statusName')
-                                    )),
+                                    ]),
                                     'name' => $request->get('statusName'),
                                     'value' => $value
-                                );
+                                ];
                             } else {
-                                $responseArray = array(
+                                $responseArray = [
                                     'statusCode' => Response::HTTP_FORBIDDEN,
                                     'status'    => 'danger',
                                     'responseText' => $this->getTranslator()->trans('role.cannot.update.status')
-                                );
+                                ];
                             }
 
 
                         } else {
-                            $responseArray = array(
+                            $responseArray = [
                                 'statusCode' => Response::HTTP_FORBIDDEN,
                                 'status'    => 'danger',
-                                'responseText' => $this->getTranslator()->trans('node.has_no.field.%field%', array(
+                                'responseText' => $this->getTranslator()->trans('node.has_no.field.%field%', [
                                     '%field%' => $request->get('statusName')
-                                ))
-                            );
+                                ])
+                            ];
                         }
 
                     } else {
-                        $responseArray = array(
+                        $responseArray = [
                             'statusCode' => Response::HTTP_FORBIDDEN,
                             'status'    => 'danger',
-                            'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', array(
+                            'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', [
                                 '%nodeId%' => $request->get('nodeId')
-                            ))
-                        );
+                            ])
+                        ];
                     }
 
                 } else {
-                    $responseArray = array(
+                    $responseArray = [
                         'statusCode' => Response::HTTP_FORBIDDEN,
                         'status'    => 'danger',
                         'responseText' => $this->getTranslator()->trans('node.id.not_specified')
-                    );
+                    ];
                 }
             }
 
 
         } else {
-            $responseArray = array(
+            $responseArray = [
                 'statusCode' => Response::HTTP_FORBIDDEN,
                 'status'    => 'danger',
-                'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', array(
+                'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', [
                     '%nodeId%' => $request->get('nodeId')
-                ))
-            );
+                ])
+            ];
         }
 
         return new Response(
             json_encode($responseArray),
             $responseArray['statusCode'],
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 
@@ -315,13 +315,13 @@ class AjaxNodesController extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_FORBIDDEN,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        $responseArray = array();
+        $responseArray = [];
 
         if ($request->get('nodeTypeId') > 0 &&
             $request->get('parentNodeId') > 0) {
@@ -382,48 +382,48 @@ class AjaxNodesController extends AbstractAjaxController
                     $this->getService('em')->persist($source);
                     $this->getService('em')->flush();
 
-                    $responseArray = array(
+                    $responseArray = [
                         'statusCode' => Response::HTTP_OK,
                         'status'    => 'success',
                         'responseText' => $this->getTranslator()->trans(
                             'added.node.%name%',
-                            array(
+                            [
                                 '%name%' => $source->getTitle()
-                            )
+                            ]
                         )
-                    );
+                    ];
 
                 } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('node.%name%.noCreation.alreadyExists', array('%name%'=>$node->getNodeName()));
+                    $msg = $this->getTranslator()->trans('node.%name%.noCreation.alreadyExists', ['%name%'=>$node->getNodeName()]);
 
-                    $responseArray = array(
+                    $responseArray = [
                         'statusCode' => Response::HTTP_FORBIDDEN,
                         'status'    => 'danger',
                         'responseText' => $msg
-                    );
+                    ];
                 }
 
 
             } else {
-                $responseArray = array(
+                $responseArray = [
                     'statusCode' => Response::HTTP_FORBIDDEN,
                     'status'    => 'danger',
                     'responseText' => $this->getTranslator()->trans('bad.request')
-                );
+                ];
             }
 
         } else {
-            $responseArray = array(
+            $responseArray = [
                 'statusCode' => Response::HTTP_FORBIDDEN,
                 'status'    => 'danger',
                 'responseText' => $this->getTranslator()->trans('bad.request')
-            );
+            ];
         }
 
         return new Response(
             json_encode($responseArray),
             $responseArray['statusCode'],
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 }

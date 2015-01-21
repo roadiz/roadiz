@@ -70,7 +70,7 @@ class CustomFormFieldsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('custom-form-fields/list.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -101,7 +101,7 @@ class CustomFormFieldsController extends RozierApp
             if ($form->isValid()) {
                 $this->editCustomFormField($form->getData(), $field);
 
-                $msg = $this->getTranslator()->trans('customFormField.%name%.updated', array('%name%'=>$field->getName()));
+                $msg = $this->getTranslator()->trans('customFormField.%name%.updated', ['%name%'=>$field->getName()]);
                 $this->publishConfirmMessage($request, $msg);
 
                 /*
@@ -110,9 +110,9 @@ class CustomFormFieldsController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'customFormFieldsListPage',
-                        array(
+                        [
                             'customFormId' => $field->getCustomForm()->getId()
-                        )
+                        ]
                     )
                 );
                 $response->prepare($request);
@@ -125,7 +125,7 @@ class CustomFormFieldsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('custom-form-fields/edit.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -161,7 +161,7 @@ class CustomFormFieldsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans(
                         'customFormField.%name%.created',
-                        array('%name%'=>$field->getName())
+                        ['%name%'=>$field->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
@@ -172,9 +172,9 @@ class CustomFormFieldsController extends RozierApp
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'customFormFieldsListPage',
-                            array(
+                            [
                                 'customFormId' => $customFormId
-                            )
+                            ]
                         )
                     );
 
@@ -188,7 +188,7 @@ class CustomFormFieldsController extends RozierApp
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'customFormFieldsAddPage',
-                            array('customFormId' => $customFormId)
+                            ['customFormId' => $customFormId]
                         )
                     );
                 }
@@ -202,7 +202,7 @@ class CustomFormFieldsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('custom-form-fields/add.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -241,7 +241,7 @@ class CustomFormFieldsController extends RozierApp
                  */
                 $msg = $this->getTranslator()->trans(
                     'customFormField.%name%.deleted',
-                    array('%name%'=>$field->getName())
+                    ['%name%'=>$field->getName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
 
@@ -251,9 +251,9 @@ class CustomFormFieldsController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'customFormFieldsListPage',
-                        array(
+                        [
                             'customFormId' => $customFormId
-                        )
+                        ]
                     )
                 );
                 $response->prepare($request);
@@ -266,7 +266,7 @@ class CustomFormFieldsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('custom-form-fields/delete.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -304,7 +304,7 @@ class CustomFormFieldsController extends RozierApp
         if (in_array(strtolower($data['name']), CustomFormField::$forbiddenNames)) {
             throw new ReservedSQLWordException($this->getTranslator()->trans(
                 "%field%.is.reserved.word",
-                array('%field%' => $data['name'])
+                ['%field%' => $data['name']]
             ), 1);
         }
 
@@ -313,14 +313,14 @@ class CustomFormFieldsController extends RozierApp
          */
         $existing = $this->getService('em')
                          ->getRepository('RZ\Roadiz\Core\Entities\CustomFormField')
-                         ->findOneBy(array(
+                         ->findOneBy([
                             'name' => $data['name'],
                             'customForm' => $customForm
-                         ));
+                         ]);
         if (null !== $existing) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans(
                 "%field%.already_exists",
-                array('%field%' => $data['name'])
+                ['%field%' => $data['name']]
             ), 1);
         }
 
@@ -343,51 +343,51 @@ class CustomFormFieldsController extends RozierApp
      */
     private function buildEditForm(CustomFormField $field)
     {
-        $defaults = array(
+        $defaults = [
             'name' =>           $field->getName(),
             'label' =>          $field->getLabel(),
             'type' =>           $field->getType(),
             'description' =>    $field->getDescription(),
             'required' =>        $field->isRequired(),
             'defaultValues' =>  $field->getDefaultValues(),
-        );
+        ];
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
-                    ->add('name', 'text', array(
+                    ->add('name', 'text', [
                         'label' => $this->getTranslator()->trans('name'),
-                        'constraints' => array(
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ))
-                    ->add('label', 'text', array(
+                        ]
+                    ])
+                    ->add('label', 'text', [
                         'label' => $this->getTranslator()->trans('label'),
-                        'constraints' => array(
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ))
-                    ->add('type', 'choice', array(
+                        ]
+                    ])
+                    ->add('type', 'choice', [
                         'label' => $this->getTranslator()->trans('type'),
                         'required' => true,
                         'choices' => CustomFormField::$typeToHuman
-                    ))
-                    ->add('description', 'text', array(
+                    ])
+                    ->add('description', 'text', [
                         'label' => $this->getTranslator()->trans('description'),
                         'required' => false
-                    ))
-                    ->add('required', 'checkbox', array(
+                    ])
+                    ->add('required', 'checkbox', [
                         'label' => $this->getTranslator()->trans('required'),
                         'required' => false
-                    ))
+                    ])
                     ->add(
                         'defaultValues',
                         'text',
-                        array(
+                        [
                             'label' => $this->getTranslator()->trans('defaultValues'),
                             'required' => false,
-                            'attr' => array(
+                            'attr' => [
                                 'placeholder' => $this->getTranslator()->trans('enter_values_comma_separated')
-                            )
-                        )
+                            ]
+                        ]
                     );
 
         return $builder->getForm();
@@ -402,12 +402,12 @@ class CustomFormFieldsController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('customFormFieldId', 'hidden', array(
+            ->add('customFormFieldId', 'hidden', [
                 'data' => $field->getId(),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ));
+                ]
+            ]);
 
         return $builder->getForm();
     }

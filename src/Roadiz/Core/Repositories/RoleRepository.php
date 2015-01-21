@@ -85,7 +85,7 @@ class RoleRepository extends EntityRepository
      */
     public function getAllBasicRoleName()
     {
-        $names = array();
+        $names = [];
 
         $query = $this->_em->createQuery('
             SELECT r.name FROM RZ\Roadiz\Core\Entities\Role r

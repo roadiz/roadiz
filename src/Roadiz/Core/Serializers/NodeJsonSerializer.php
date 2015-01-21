@@ -50,10 +50,10 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($nodes)
     {
-        $array = array();
+        $array = [];
 
         foreach ($nodes as $node) {
-            $data = array();
+            $data = [];
 
             $data['node_name'] =                $node->getNodeName();
             $data['node_type'] =                $node->getNodeType()->getName();
@@ -68,9 +68,9 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             $data['children_order'] =           $node->getChildrenOrder();
             $data['children_order_direction'] = $node->getChildrenOrderDirection();
 
-            $data['children'] =  array();
-            $data['nodes_sources'] = array();
-            $data['tags'] = array();
+            $data['children'] =  [];
+            $data['nodes_sources'] = [];
+            $data['tags'] = [];
 
             foreach ($node->getNodeSources() as $source) {
                 $data['nodes_sources'][] = NodeSourceJsonSerializer::toArray($source);
@@ -83,7 +83,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
              * Recursivity !! Be careful
              */
             foreach ($node->getChildren() as $child) {
-                $data['children'][] = static::toArray(array($child))[0];
+                $data['children'][] = static::toArray([$child])[0];
             }
             $array[] = $data;
         }
@@ -152,7 +152,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         foreach ($data["tags"] as $tag) {
             $tmp = Kernel::getInstance()->getService('em')
                                         ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                                        ->findOneBy(array("tagName" => $tag));
+                                        ->findOneBy(["tagName" => $tag]);
             $node->getTags()->add($tmp);
         }
         foreach ($data['children'] as $child) {
@@ -172,7 +172,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     public static function deserialize($string)
     {
         $datas = json_decode($string, true);
-        $array = array();
+        $array = [];
 
         foreach ($datas as $data) {
             $array[] = static::makeNodeRec($data);

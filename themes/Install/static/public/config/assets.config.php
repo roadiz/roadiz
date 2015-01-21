@@ -1,13 +1,13 @@
 <?php
-return array(
-    'staticAssets' => array(
-        'global' => array(
-            'css' => array(
+return [
+    'staticAssets' => [
+        'global' => [
+            'css' => [
                 '/style.ef635d66.css',
-            ),
-            'js' => array(
+            ],
+            'js' => [
                 '/install-theme.8747d161.min.js',
-            ),
-        ),
-    )
-);
+            ],
+        ],
+    ]
+];

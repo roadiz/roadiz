@@ -43,7 +43,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      *
      * @var array
      */
-    protected $searchableTypes = array('string', 'text');
+    protected $searchableTypes = ['string', 'text'];
 
     /**
      * Build a query comparison.
@@ -319,7 +319,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
          * query
          */
         $metadatas = $this->_em->getClassMetadata($this->getEntityName());
-        $criteriaFields = array();
+        $criteriaFields = [];
         $cols = $metadatas->getColumnNames();
         foreach ($cols as $col) {
             $field = $metadatas->getFieldName($col);
@@ -349,7 +349,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = array(),
+        array $criteria = [],
         $alias = "obj"
     ) {
 
@@ -383,8 +383,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      */
     public function searchBy(
         $pattern,
-        array $criteria = array(),
-        array $orders = array(),
+        array $criteria = [],
+        array $orders = [],
         $limit = null,
         $offset = null
     ) {
@@ -423,7 +423,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
-    public function countSearchBy($pattern, array $criteria = array())
+    public function countSearchBy($pattern, array $criteria = [])
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(distinct obj.id)')

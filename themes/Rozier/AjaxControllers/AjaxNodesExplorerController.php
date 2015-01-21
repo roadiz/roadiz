@@ -55,13 +55,13 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        $arrayFilter = array();
+        $arrayFilter = [];
         /*
          * Manage get request to filter list
          */
@@ -76,27 +76,27 @@ class AjaxNodesExplorerController extends AbstractAjaxController
 
         $nodes = $listManager->getEntities();
 
-        $nodesArray = array();
+        $nodesArray = [];
         foreach ($nodes as $node) {
-            $nodesArray[] = array(
+            $nodesArray[] = [
                 'id' => $node->getId(),
                 'filename'=>$node->getNodeName(),
-                'html' => $this->getTwig()->render('widgets/nodeSmallThumbnail.html.twig', array('node'=>$node)),
-            );
+                'html' => $this->getTwig()->render('widgets/nodeSmallThumbnail.html.twig', ['node'=>$node]),
+            ];
         }
 
-        $responseArray = array(
+        $responseArray = [
             'status' => 'confirm',
             'statusCode' => 200,
             'nodes' => $nodesArray,
             'nodesCount' => count($nodes),
             'filters' => $listManager->getAssignation()
-        );
+        ];
 
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 }

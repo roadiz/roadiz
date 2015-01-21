@@ -77,7 +77,7 @@ class UsersController extends RozierApp
         return new Response(
             $this->getTwig()->render('users/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -110,7 +110,7 @@ class UsersController extends RozierApp
                     $this->editUser($form->getData(), $user);
                     $msg = $this->getTranslator()->trans(
                         'user.%name%.updated',
-                        array('%name%'=>$user->getUsername())
+                        ['%name%'=>$user->getUsername()]
                     );
                     $this->publishConfirmMessage($request, $msg);
                 } catch (FacebookUsernameNotFoundException $e) {
@@ -124,7 +124,7 @@ class UsersController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'usersEditPage',
-                        array('userId' => $user->getId())
+                        ['userId' => $user->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -137,7 +137,7 @@ class UsersController extends RozierApp
             return new Response(
                 $this->getTwig()->render('users/edit.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -167,10 +167,10 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
                 $role = $this->addUserRole($form->getData(), $user);
 
-                $msg = $this->getTranslator()->trans('user.%user%.role.%role%.linked', array(
+                $msg = $this->getTranslator()->trans('user.%user%.role.%role%.linked', [
                             '%user%'=>$user->getUserName(),
                             '%role%'=>$role->getName()
-                        ));
+                        ]);
 
                 $this->publishConfirmMessage($request, $msg);
 
@@ -180,7 +180,7 @@ class UsersController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'usersEditRolesPage',
-                        array('userId' => $user->getId())
+                        ['userId' => $user->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -193,7 +193,7 @@ class UsersController extends RozierApp
             return new Response(
                 $this->getTwig()->render('users/roles.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -229,7 +229,7 @@ class UsersController extends RozierApp
                 $this->removeUserRole($form->getData(), $user);
                 $msg = $this->getTranslator()->trans(
                     'user.%name%.role_removed',
-                    array('%name%'=>$role->getName())
+                    ['%name%'=>$role->getName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
 
@@ -239,7 +239,7 @@ class UsersController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'usersEditRolesPage',
-                        array('userId' => $user->getId())
+                        ['userId' => $user->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -252,7 +252,7 @@ class UsersController extends RozierApp
             return new Response(
                 $this->getTwig()->render('users/removeRole.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -281,10 +281,10 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
                 $group = $this->addUserGroup($form->getData(), $user);
 
-                $msg = $this->getTranslator()->trans('user.%user%.group.%group%.linked', array(
+                $msg = $this->getTranslator()->trans('user.%user%.group.%group%.linked', [
                             '%user%'=>$user->getUserName(),
                             '%group%'=>$group->getName()
-                        ));
+                        ]);
                 $this->publishConfirmMessage($request, $msg);
 
                 /*
@@ -293,7 +293,7 @@ class UsersController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'usersEditGroupsPage',
-                        array('userId' => $user->getId())
+                        ['userId' => $user->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -306,7 +306,7 @@ class UsersController extends RozierApp
             return new Response(
                 $this->getTwig()->render('users/groups.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -341,10 +341,10 @@ class UsersController extends RozierApp
             if ($form->isValid()) {
                 $group = $this->removeUserGroup($form->getData(), $user);
 
-                $msg = $this->getTranslator()->trans('user.%user%.group.%group%.removed', array(
+                $msg = $this->getTranslator()->trans('user.%user%.group.%group%.removed', [
                             '%user%'=>$user->getUserName(),
                             '%group%'=>$group->getName()
-                        ));
+                        ]);
                 $this->publishConfirmMessage($request, $msg);
 
                 /*
@@ -353,7 +353,7 @@ class UsersController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'usersEditGroupsPage',
-                        array('userId' => $user->getId())
+                        ['userId' => $user->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -366,7 +366,7 @@ class UsersController extends RozierApp
             return new Response(
                 $this->getTwig()->render('users/removeGroup.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -397,7 +397,7 @@ class UsersController extends RozierApp
                     $this->addUser($form->getData(), $user);
                     $user->getViewer()->sendSignInConfirmation();
 
-                    $msg = $this->getTranslator()->trans('user.%name%.created', array('%name%'=>$user->getUsername()));
+                    $msg = $this->getTranslator()->trans('user.%name%.created', ['%name%'=>$user->getUsername()]);
                     $this->publishConfirmMessage($request, $msg);
 
                 } catch (FacebookUsernameNotFoundException $e) {
@@ -419,7 +419,7 @@ class UsersController extends RozierApp
             return new Response(
                 $this->getTwig()->render('users/add.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -455,7 +455,7 @@ class UsersController extends RozierApp
 
                     $msg = $this->getTranslator()->trans(
                         'user.%name%.deleted',
-                        array('%name%'=>$user->getUsername())
+                        ['%name%'=>$user->getUsername()]
                     );
                     $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
@@ -477,7 +477,7 @@ class UsersController extends RozierApp
             return new Response(
                 $this->getTwig()->render('users/delete.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -497,7 +497,7 @@ class UsersController extends RozierApp
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'user.%name%.cannot_update.name_already_exists',
-                    array('%name%'=>$data['username'])
+                    ['%name%'=>$data['username']]
                 ),
                 1
             );
@@ -509,7 +509,7 @@ class UsersController extends RozierApp
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'user.%name%.cannot_update.email_already_exists',
-                    array('%email%'=>$data['email'])
+                    ['%email%'=>$data['email']]
                 ),
                 1
             );
@@ -539,7 +539,7 @@ class UsersController extends RozierApp
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'user.%name%.cannot_create_already_exists',
-                    array('%name%'=>$data['username'])
+                    ['%name%'=>$data['username']]
                 ),
                 1
             );
@@ -573,7 +573,7 @@ class UsersController extends RozierApp
                 throw new FacebookUsernameNotFoundException(
                     $this->getTranslator()->trans(
                         'user.facebook_name.%name%._does_not_exist',
-                        array('%name%'=>$user->getFacebookName())
+                        ['%name%'=>$user->getFacebookName()]
                     ),
                     1
                 );
@@ -708,25 +708,25 @@ class UsersController extends RozierApp
      */
     private function buildEditRolesForm(User $user)
     {
-        $defaults = array(
+        $defaults = [
             'userId' =>  $user->getId()
-        );
+        ];
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add(
                 'userId',
                 'hidden',
-                array(
+                [
                     'data' => $user->getId(),
-                    'constraints' => array(
+                    'constraints' => [
                         new NotBlank()
-                    )
-                )
+                    ]
+                ]
             )
             ->add(
                 'roleId',
                 new \RZ\Roadiz\CMS\Forms\RolesType($user->getRolesEntities()),
-                array('label' => 'Role')
+                ['label' => 'Role']
             );
 
         return $builder->getForm();
@@ -739,7 +739,7 @@ class UsersController extends RozierApp
      */
     private function buildEditForm(User $user)
     {
-        $defaults = array(
+        $defaults = [
             'email' => $user->getEmail(),
             'username' => $user->getUsername(),
             'firstName' => $user->getFirstName(),
@@ -748,7 +748,7 @@ class UsersController extends RozierApp
             'job' => $user->getJob(),
             'birthday' => $user->getBirthday(),
             'facebookName' => $user->getFacebookName(),
-        );
+        ];
 
         $builder = $this->getService('formFactory')
                         ->createBuilder('form', $defaults);
@@ -764,54 +764,54 @@ class UsersController extends RozierApp
      */
     private function buildCommonFormFields(&$builder)
     {
-        $builder->add('email', 'email', array(
+        $builder->add('email', 'email', [
             'label'=>$this->getTranslator()->trans('email'),
-            'constraints' => array(
+            'constraints' => [
                 new NotBlank()
-            )
-        ))
-        ->add('username', 'text', array(
+            ]
+        ])
+        ->add('username', 'text', [
             'label'=>$this->getTranslator()->trans('username'),
-            'constraints' => array(
+            'constraints' => [
                 new NotBlank()
-            )
-        ))
-        ->add('plainPassword', 'repeated', array(
+            ]
+        ])
+        ->add('plainPassword', 'repeated', [
             'type' => 'password',
             'invalid_message' => $this->getTranslator()->trans('password.must.match'),
-            'first_options'  => array(
+            'first_options'  => [
                 'label'=>$this->getTranslator()->trans('password'),
-            ),
-            'second_options' => array(
+            ],
+            'second_options' => [
                 'label'=>$this->getTranslator()->trans('passwordVerify'),
-            ),
+            ],
             'required' => false
-        ))
-        ->add('firstName', 'text', array(
+        ])
+        ->add('firstName', 'text', [
             'label'=>$this->getTranslator()->trans('firstName'),
             'required' => false
-        ))
-        ->add('lastName', 'text', array(
+        ])
+        ->add('lastName', 'text', [
             'label'=>$this->getTranslator()->trans('lastName'),
             'required' => false
-        ))
-        ->add('company', 'text', array(
+        ])
+        ->add('company', 'text', [
             'label'=>$this->getTranslator()->trans('company'),
             'required' => false
-        ))
-        ->add('job', 'text', array(
+        ])
+        ->add('job', 'text', [
             'label'=>$this->getTranslator()->trans('job'),
             'required' => false
-        ))
-        ->add('birthday', 'date', array(
+        ])
+        ->add('birthday', 'date', [
             'label'=>$this->getTranslator()->trans('birthday'),
             'required' => false,
             'years'=> range(1920, date('Y')-6)
-        ))
-        ->add('facebookName', 'text', array(
+        ])
+        ->add('facebookName', 'text', [
             'label'=>$this->getTranslator()->trans('facebookName'),
             'required' => false
-        ));
+        ]);
 
         return $builder;
     }
@@ -828,12 +828,12 @@ class UsersController extends RozierApp
             ->add(
                 'userId',
                 'hidden',
-                array(
+                [
                     'data' => $user->getId(),
-                    'constraints' => array(
+                    'constraints' => [
                         new NotBlank()
-                    )
-                )
+                    ]
+                ]
             );
 
         return $builder->getForm();
@@ -852,22 +852,22 @@ class UsersController extends RozierApp
             ->add(
                 'userId',
                 'hidden',
-                array(
+                [
                     'data' => $user->getId(),
-                    'constraints' => array(
+                    'constraints' => [
                         new NotBlank()
-                    )
-                )
+                    ]
+                ]
             )
             ->add(
                 'roleId',
                 'hidden',
-                array(
+                [
                     'data' => $role->getId(),
-                    'constraints' => array(
+                    'constraints' => [
                         new NotBlank()
-                    )
-                )
+                    ]
+                ]
             );
 
         return $builder->getForm();
@@ -880,25 +880,25 @@ class UsersController extends RozierApp
      */
     private function buildEditGroupsForm(User $user)
     {
-        $defaults = array(
+        $defaults = [
             'userId' =>  $user->getId()
-        );
+        ];
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
                     ->add(
                         'userId',
                         'hidden',
-                        array(
+                        [
                             'data' => $user->getId(),
-                            'constraints' => array(
+                            'constraints' => [
                                 new NotBlank()
-                            )
-                        )
+                            ]
+                        ]
                     )
                     ->add(
                         'group',
                         new \RZ\Roadiz\CMS\Forms\GroupsType($user->getGroups()),
-                        array('label' => 'Group')
+                        ['label' => 'Group']
                     );
 
         return $builder->getForm();
@@ -917,22 +917,22 @@ class UsersController extends RozierApp
             ->add(
                 'userId',
                 'hidden',
-                array(
+                [
                     'data' => $user->getId(),
-                    'constraints' => array(
+                    'constraints' => [
                         new NotBlank()
-                    )
-                )
+                    ]
+                ]
             )
             ->add(
                 'groupId',
                 'hidden',
-                array(
+                [
                     'data' => $group->getId(),
-                    'constraints' => array(
+                    'constraints' => [
                         new NotBlank()
-                    )
-                )
+                    ]
+                ]
             );
 
         return $builder->getForm();

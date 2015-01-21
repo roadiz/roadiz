@@ -216,7 +216,7 @@ class AppController implements ViewableInterface
      *
      * @var array
      */
-    protected $assignation = array();
+    protected $assignation = [];
 
     /**
      * @var Symfony\Component\Translation\Translator
@@ -261,9 +261,9 @@ class AppController implements ViewableInterface
      */
     public static function getRoutes()
     {
-        $locator = new FileLocator(array(
+        $locator = new FileLocator([
             static::getResourcesFolder()
-        ));
+        ]);
 
         if (file_exists(static::getResourcesFolder().'/routes.yml')) {
             $loader = new YamlFileLoader($locator);
@@ -335,7 +335,7 @@ class AppController implements ViewableInterface
 
             try {
                 $fs = new Filesystem();
-                $fs->remove(array(Kernel::getService('twig.cacheFolder')));
+                $fs->remove([Kernel::getService('twig.cacheFolder')]);
             } catch (IOExceptionInterface $e) {
                 echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
             }
@@ -396,9 +396,9 @@ class AppController implements ViewableInterface
      */
     public function prepareBaseAssignation()
     {
-        $this->assignation = array(
+        $this->assignation = [
             'request' => $this->kernel->getRequest(),
-            'head' => array(
+            'head' => [
                 'ajax' => $this->kernel->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
@@ -415,11 +415,11 @@ class AppController implements ViewableInterface
                                     ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
                 'fontToken' => $this->getService('csrfProvider')
                                     ->generateCsrfToken(static::FONT_TOKEN_INTENTION)
-            ),
-            'session' => array(
+            ],
+            'session' => [
                 'id' => $this->kernel->getRequest()->getSession()->getId()
-            )
-        );
+            ]
+        ];
 
         if ($this->getService('securityContext') !== null &&
             $this->getService('securityContext')->getToken() !== null ) {
@@ -446,7 +446,7 @@ class AppController implements ViewableInterface
         return new Response(
             $this->getTwig()->render('404.html.twig', $this->assignation),
             Response::HTTP_NOT_FOUND,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -460,7 +460,7 @@ class AppController implements ViewableInterface
         $className = get_called_class();
         $theme = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(array('className'=>$className));
+            ->findOneBy(['className'=>$className]);
 
         if ($theme === null) {
             $theme = new Theme();
@@ -487,7 +487,7 @@ class AppController implements ViewableInterface
         $className = get_called_class();
         $theme = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(array('className'=>$className));
+            ->findOneBy(['className'=>$className]);
 
         if ($theme !== null) {
             $theme->setAvailable(true);
@@ -508,7 +508,7 @@ class AppController implements ViewableInterface
         $className = get_called_class();
         $theme = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(array('className'=>$className));
+            ->findOneBy(['className'=>$className]);
 
         if ($theme !== null) {
             $theme->setAvailable(false);

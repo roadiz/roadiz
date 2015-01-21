@@ -61,9 +61,9 @@ class TagApi extends AbstractApi
     ) {
 
         if (null === $order) {
-            $order = array(
+            $order = [
                 'position' => 'ASC',
-            );
+            ];
         }
 
         return $this->getRepository()

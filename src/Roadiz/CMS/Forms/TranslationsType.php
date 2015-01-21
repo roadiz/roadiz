@@ -47,14 +47,14 @@ class TranslationsType extends AbstractType
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findAll();
 
-        $choices = array();
+        $choices = [];
         foreach ($translations as $translation) {
             $choices[$translation->getId()] = $translation->getName();
         }
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices' => $choices
-        ));
+        ]);
     }
     /**
      * {@inheritdoc}

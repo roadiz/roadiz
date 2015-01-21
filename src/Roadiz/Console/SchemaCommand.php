@@ -113,7 +113,7 @@ class SchemaCommand extends Command
                      * Print changes
                      */
                     $text .= '<info>'.$count.'</info> change(s) in your database schema… Use <info>--execute</info> to apply only new changes with no deletions:'.PHP_EOL;
-                    $deletions = array();
+                    $deletions = [];
                     for ($i=0; $i<$count; $i++) {
                         if (substr($sql[$i], 0, 6) == 'DELETE' ||
                             strpos($sql[$i], 'DROP')) {
@@ -154,7 +154,7 @@ class SchemaCommand extends Command
         $meta = Kernel::getService('em')->getMetadataFactory()->getAllMetadata();
 
         $sql = $tool->getUpdateSchemaSql($meta, true);
-        $deletions = array();
+        $deletions = [];
 
         foreach ($sql as $statement) {
             if (substr($statement, 0, 6) == 'DELETE' ||

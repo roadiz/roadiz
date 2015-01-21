@@ -51,7 +51,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_FORBIDDEN,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
@@ -129,16 +129,16 @@ class AjaxNodeTreeController extends AbstractAjaxController
         }
 
 
-        $responseArray = array(
+        $responseArray = [
             'statusCode' => '200',
             'status' => 'success',
             'nodeTree' => $this->getTwig()->render('widgets/nodeTree/nodeTree.html.twig', $this->assignation),
-        );
+        ];
 
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 }

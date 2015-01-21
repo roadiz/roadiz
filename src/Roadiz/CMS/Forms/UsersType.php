@@ -57,16 +57,16 @@ class UsersType extends AbstractType
             ->getRepository('RZ\Roadiz\Core\Entities\User')
             ->findAll();
 
-        $choices = array();
+        $choices = [];
         foreach ($users as $user) {
             if (!$this->users->contains($user)) {
                 $choices[$user->getId()] = $user->getUserName();
             }
         }
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices' => $choices
-        ));
+        ]);
     }
     /**
      * {@inheritdoc}

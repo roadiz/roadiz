@@ -52,7 +52,7 @@ class GroupsImporter implements ImporterInterface
         foreach ($groups as $group) {
             $existingGroup = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Group')
-                ->findOneBy(array('name'=>$group->getName()));
+                ->findOneBy(['name'=>$group->getName()]);
 
             if (null === $existingGroup) {
                 foreach ($group->getRolesEntities() as $role) {

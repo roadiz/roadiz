@@ -52,7 +52,7 @@ class FullTextSearchHandler
             foreach ($args as $key => $value) {
                 if (is_array($value)) {
                     foreach ($value as $k => $v) {
-                        $query->addFilterQuery(array("key" => "fq" . $k, "query" => $v));
+                        $query->addFilterQuery(["key" => "fq" . $k, "query" => $v]);
                     }
                 } else {
                     $query->addParam($key, $value);
@@ -66,13 +66,13 @@ class FullTextSearchHandler
             $doc = array_map(
                 function ($n) use ($reponse) {
                     if (isset($reponse["highlighting"])) {
-                        return array(
+                        return [
                             "nodeSource" => Kernel::getInstance()->getService('em')->find(
                                 'RZ\Roadiz\Core\Entities\NodesSources',
                                 (int) $n["node_source_id_i"]
                             ),
                             "highlighting" => $reponse["highlighting"][$n['id']],
-                        );
+                        ];
                     }
                     return Kernel::getInstance()->getService('em')->find(
                         'RZ\Roadiz\Core\Entities\NodesSources',
@@ -91,7 +91,7 @@ class FullTextSearchHandler
     private function argFqProcess(&$args)
     {
         if (!isset($args["fq"])) {
-            $args["fq"] = array();
+            $args["fq"] = [];
         }
         if (isset($args['visible'])) {
             $tmp = "node_visible_b:" . (($args['visible']) ? 'true' : 'false');
@@ -152,11 +152,11 @@ class FullTextSearchHandler
      *
      * @return array
      */
-    public function searchWithHighlight($q, $args = array())
+    public function searchWithHighlight($q, $args = [])
     {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:NodesSources";
-        $tmp = array();
+        $tmp = [];
         $tmp["hl"] = true;
         $tmp["hl.fl"] = "*";
         $tmp["hl.simple.pre"] = '<span class="solr-highlight">';
@@ -193,11 +193,11 @@ class FullTextSearchHandler
      *
      * @return array
      */
-    public function search($q, $args = array())
+    public function search($q, $args = [])
     {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:NodesSources";
-        $tmp = array();
+        $tmp = [];
         $args = array_merge($tmp, $args);
         return $this->solrSearch($q, $args);
     }

@@ -59,12 +59,12 @@ class TagsUtilsController extends RozierApp
         $existingTag = $this->getService('em')
                               ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
         $this->getService('em')->refresh($existingTag);
-        $tag = TagJsonSerializer::serialize(array($existingTag));
+        $tag = TagJsonSerializer::serialize([$existingTag]);
 
         $response =  new Response(
             $tag,
             Response::HTTP_OK,
-            array()
+            []
         );
 
         $response->headers->set(
@@ -94,7 +94,7 @@ class TagsUtilsController extends RozierApp
 
         $existingTags = $this->getService('em')
                               ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                              ->findBy(array("parent" => null));
+                              ->findBy(["parent" => null]);
         foreach ($existingTags as $existingTag) {
             $this->getService('em')->refresh($existingTag);
         }
@@ -103,7 +103,7 @@ class TagsUtilsController extends RozierApp
         $response =  new Response(
             $tag,
             Response::HTTP_OK,
-            array()
+            []
         );
 
         $response->headers->set(

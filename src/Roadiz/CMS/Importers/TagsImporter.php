@@ -64,8 +64,8 @@ class TagsImporter implements ImporterInterface
 
     protected static function browseTree($tag)
     {
-        $childObj = array();
-        $sourceObj = array();
+        $childObj = [];
+        $sourceObj = [];
         foreach ($tag->getChildren() as $child) {
             $childObj[] = static::browseTree($child);
         }

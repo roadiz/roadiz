@@ -75,7 +75,7 @@ class DocumentTranslationsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
         $documentTr = $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
-            ->findOneBy(array('document'=>(int) $documentId, 'translation'=>(int) $translationId));
+            ->findOneBy(['document'=>(int) $documentId, 'translation'=>(int) $translationId]);
 
         if ($documentTr === null &&
             $document !== null &&
@@ -97,9 +97,9 @@ class DocumentTranslationsController extends RozierApp
 
             if ($form->isValid()) {
                 $this->editDocument($form->getData(), $documentTr);
-                $msg = $this->getTranslator()->trans('document.translation.%name%.updated', array(
+                $msg = $this->getTranslator()->trans('document.translation.%name%.updated', [
                     '%name%'=>$document->getFilename()
-                ));
+                ]);
                 $this->publishConfirmMessage($request, $msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -107,10 +107,10 @@ class DocumentTranslationsController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'documentsMetaPage',
-                        array(
+                        [
                             'documentId' => $document->getId(),
                             'translationId' => $translationId
-                        )
+                        ]
                     )
                 );
                 $response->prepare($request);
@@ -123,7 +123,7 @@ class DocumentTranslationsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('document-translations/edit.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -164,7 +164,7 @@ class DocumentTranslationsController extends RozierApp
 
         $documentTr = $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
-            ->findOneBy(array('document'=>(int) $documentId, 'translation'=>(int) $translationId));
+            ->findOneBy(['document'=>(int) $documentId, 'translation'=>(int) $translationId]);
         $document = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
@@ -181,11 +181,11 @@ class DocumentTranslationsController extends RozierApp
                     $this->getService('em')->remove($documentTr);
                     $this->getService('em')->flush();
 
-                    $msg = $this->getTranslator()->trans('document.translation.%name%.deleted', array('%name%'=>$document->getFilename()));
+                    $msg = $this->getTranslator()->trans('document.translation.%name%.deleted', ['%name%'=>$document->getFilename()]);
                     $this->publishConfirmMessage($request, $msg);
 
                 } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('document.translation.%name%.cannot_delete', array('%name%'=>$document->getFilename()));
+                    $msg = $this->getTranslator()->trans('document.translation.%name%.cannot_delete', ['%name%'=>$document->getFilename()]);
                     $request->getSession()->getFlashBag()->add('error', $msg);
                     $this->getService('logger')->warning($msg);
                 }
@@ -195,7 +195,7 @@ class DocumentTranslationsController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'documentsEditPage',
-                        array('documentId' => $document->getId())
+                        ['documentId' => $document->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -208,7 +208,7 @@ class DocumentTranslationsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('document-translations/delete.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -222,17 +222,17 @@ class DocumentTranslationsController extends RozierApp
      */
     private function buildDeleteForm(DocumentTranslation $doc)
     {
-        $defaults = array(
+        $defaults = [
             'documentTranslationId' => $doc->getId()
-        );
+        ];
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
-                    ->add('documentTranslationId', 'hidden', array(
+                    ->add('documentTranslationId', 'hidden', [
                         'data' => $doc->getId(),
-                        'constraints' => array(
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ));
+                        ]
+                    ]);
 
         return $builder->getForm();
     }
@@ -243,26 +243,26 @@ class DocumentTranslationsController extends RozierApp
      */
     private function buildEditForm(DocumentTranslation $document)
     {
-        $defaults = array(
+        $defaults = [
             'name' => $document->getName(),
             'description' => $document->getDescription(),
             'copyright' => $document->getCopyright()
-        );
+        ];
 
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
-                    ->add('name', 'text', array(
+                    ->add('name', 'text', [
                         'label' => $this->getTranslator()->trans('name'),
                         'required' => false
-                    ))
-                    ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), array(
+                    ])
+                    ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
                         'label' => $this->getTranslator()->trans('description'),
                         'required' => false
-                    ))
-                    ->add('copyright', 'text', array(
+                    ])
+                    ->add('copyright', 'text', [
                         'label' => $this->getTranslator()->trans('copyright'),
                         'required' => false
-                    ));
+                    ]);
 
         return $builder->getForm();
     }

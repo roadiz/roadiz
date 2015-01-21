@@ -64,7 +64,7 @@ class PageController extends DefaultThemeApp
         return new Response(
             $this->getTwig()->render('types/page.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 }

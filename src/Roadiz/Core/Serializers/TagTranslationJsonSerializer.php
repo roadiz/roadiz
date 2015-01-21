@@ -43,7 +43,7 @@ class TagTranslationJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($tt)
     {
-        $data = array();
+        $data = [];
 
         $data['translation'] = $tt->getTranslation()->getLocale();
         $data['title'] = $tt->getname();

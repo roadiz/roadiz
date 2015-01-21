@@ -42,9 +42,9 @@ class XlsxExporter
                                      ->setCategory("");
 
         $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
-        $cacheSettings = array(
+        $cacheSettings = [
             'memoryCacheSize' => '8MB'
-        );
+        ];
         \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 
         $objPHPExcel->setActiveSheetIndex(0);

@@ -65,7 +65,7 @@ class SearchController extends RozierApp
     public function processCriteria($data, $prefix = "")
     {
         if (!empty($data[$prefix."nodeName"])) {
-            $data[$prefix."nodeName"] = array("LIKE", "%" . $data[$prefix."nodeName"] . "%");
+            $data[$prefix."nodeName"] = ["LIKE", "%" . $data[$prefix."nodeName"] . "%"];
         }
 
         if (isset($data[$prefix.'parent']) && !$this->isBlank($data[$prefix."parent"])) {
@@ -79,17 +79,17 @@ class SearchController extends RozierApp
         }
 
         if (isset($data[$prefix.'createdAt'])) {
-            $data[$prefix."createdAt"] = array(
+            $data[$prefix."createdAt"] = [
                 $data[$prefix.'createdAt']['compareOp'],
                 $data[$prefix.'createdAt']['compareDatetime']
-            );
+            ];
         }
 
         if (isset($data[$prefix.'updatedAt'])) {
-            $data[$prefix."updatedAt"] = array(
+            $data[$prefix."updatedAt"] = [
                 $data[$prefix.'updatedAt']['compareOp'],
                 $data[$prefix.'updatedAt']['compareDatetime']
-            );
+            ];
         }
 
         if (isset($data[$prefix."limitResult"])) {
@@ -122,7 +122,7 @@ class SearchController extends RozierApp
                         || $field->getType() === NodeTypeField::STRING_T
                         || $field->getType() === NodeTypeField::TEXT_T
                         || $field->getType() === NodeTypeField::EMAIL_T) {
-                        $data[$key] = array("LIKE", "%" . $value . "%");
+                        $data[$key] = ["LIKE", "%" . $value . "%"];
                     }
                     if ($field->getType() === NodeTypeField::BOOLEAN_T) {
                         $data[$key] = (bool) $value;
@@ -131,10 +131,10 @@ class SearchController extends RozierApp
                         $data[$key] = implode(",", $value);
                     }
                     if ($field->getType() == NodeTypeField::DATETIME_T) {
-                        $data[$key] = array(
+                        $data[$key] = [
                             $data[$key]['compareOp'],
                             $data[$key]['compareDatetime']
-                        );
+                        ];
                     }
                 }
             }
@@ -145,10 +145,10 @@ class SearchController extends RozierApp
     public function searchNodeAction(Request $request)
     {
 
-        $form = $this->buildSimpleForm("")->add("searchANode", "submit", array(
+        $form = $this->buildSimpleForm("")->add("searchANode", "submit", [
             "label" => $this->getTranslator()->trans("search.a.node"),
-            "attr" => array("class" => "uk-button uk-button-primary")
-        ))->getForm();
+            "attr" => ["class" => "uk-button uk-button-primary"]
+        ])->getForm();
         $form->handleRequest();
 
         $builderNodeType = $this->buildNodeTypeForm();
@@ -162,7 +162,7 @@ class SearchController extends RozierApp
         }
 
         if ($form->isValid()) {
-            $data = array();
+            $data = [];
             foreach ($form->getData() as $key => $value) {
                 if ((!is_array($value) && $this->notBlank($value)) ||
                     (is_array($value) && isset($value["compareDatetime"]))) {
@@ -194,7 +194,7 @@ class SearchController extends RozierApp
         return new Response(
             $this->getTwig()->render('search/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -206,14 +206,14 @@ class SearchController extends RozierApp
 
         $builder = $this->buildSimpleForm("__node__");
         $builder = $this->extendForm($builder, $nodetype);
-        $builder->add("searchANode", "submit", array(
+        $builder->add("searchANode", "submit", [
             "label" => $this->getTranslator()->trans("search.a.node"),
-            "attr" => array("class" => "uk-button uk-button-primary")
-        ));
-        $builder->add("exportNodesSources", "submit", array(
+            "attr" => ["class" => "uk-button uk-button-primary"]
+        ]);
+        $builder->add("exportNodesSources", "submit", [
             "label" => $this->getTranslator()->trans("export.all.nodesSource"),
-            "attr" => array("class" => "uk-button rz-no-ajax")
-        ));
+            "attr" => ["class" => "uk-button rz-no-ajax"]
+        ]);
         $form = $builder->getForm();
         $form->handleRequest();
 
@@ -228,11 +228,11 @@ class SearchController extends RozierApp
         }
 
         if ($form->isValid()) {
-            $data = array();
+            $data = [];
             foreach ($form->getData() as $key => $value) {
                 if ((!is_array($value) && $this->notBlank($value))
                     || (is_array($value) && isset($value["compareDatetime"]))
-                    || (is_array($value) && $value != array() && !isset($value["compareOp"]))) {
+                    || (is_array($value) && $value != [] && !isset($value["compareOp"]))) {
                     if (strstr($key, "__node__") == 0) {
                         $data[str_replace("__node__", "node.", $key)] = $value;
                     } else {
@@ -257,7 +257,7 @@ class SearchController extends RozierApp
             $listManager->handle();
             $this->assignation['filters'] = $listManager->getAssignation();
             $this->assignation['nodesSources'] = $listManager->getEntities();
-            $nodes = array();
+            $nodes = [];
             foreach ($listManager->getEntities() as $nodesSource) {
                 $nodes[] = $nodesSource->getNode();
             }
@@ -265,8 +265,8 @@ class SearchController extends RozierApp
 
             if ($form->get('exportNodesSources')->isClicked()) {
                 $fields = $nodetype->getFields();
-                $keys = array();
-                $answers = array();
+                $keys = [];
+                $answers = [];
                 $keys[] = "title";
                 foreach ($fields as $field) {
                     if (!$field->isVirtual()) {
@@ -274,7 +274,7 @@ class SearchController extends RozierApp
                     }
                 }
                 foreach ($listManager->getEntities() as $idx => $nodesSource) {
-                    $array = array();
+                    $array = [];
                     foreach ($keys as $key) {
                         $getter = 'get'.str_replace('_', '', ucwords($key));
                         $tmp = $nodesSource->$getter();
@@ -290,7 +290,7 @@ class SearchController extends RozierApp
                 $response = new Response(
                     $xlsx,
                     Response::HTTP_OK,
-                    array()
+                    []
                 );
 
                 $response->headers->set(
@@ -317,7 +317,7 @@ class SearchController extends RozierApp
         return new Response(
             $this->getTwig()->render('search/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -332,22 +332,22 @@ class SearchController extends RozierApp
                                 ->createNamedBuilder(
                                     'nodeTypeForm',
                                     "form",
-                                    array(),
-                                    array("method" => "get")
+                                    [],
+                                    ["method" => "get"]
                                 );
         $builderNodeType->add(
             "nodetype",
             new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-            array(
+            [
                   'empty_value' => "",
                   'required' => false,
                   'data' => $nodetypeId
-            )
+            ]
         )
-        ->add("nodetypeSubmit", "submit", array(
+        ->add("nodetypeSubmit", "submit", [
             "label" => $this->getTranslator()->trans("select.nodetype"),
-            "attr" => array("class" => "uk-button uk-button-primary")
-        ));
+            "attr" => ["class" => "uk-button uk-button-primary"]
+        ]);
 
         return $builderNodeType;
     }
@@ -363,9 +363,9 @@ class SearchController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'searchNodeSourcePage',
-                        array(
+                        [
                             "nodetypeId" => $nodeTypeForm->getData()['nodetype']
-                        )
+                        ]
                     )
                 );
             }
@@ -381,77 +381,77 @@ class SearchController extends RozierApp
         $builder = $this->getService('formFactory')
             ->createBuilder(
                 'form',
-                array(),
-                array("method" => "get")
+                [],
+                ["method" => "get"]
             )
-            ->add($prefix.'status', new NodeStatesType(), array(
+            ->add($prefix.'status', new NodeStatesType(), [
                 'label' => $this->getTranslator()->trans('node.status'),
                 'required' => false
-            ))
-            ->add($prefix.'visible', 'choice', array(
+            ])
+            ->add($prefix.'visible', 'choice', [
                 'label' => $this->getTranslator()->trans('visible'),
-                'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
+                'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
                 'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
-            ))
-            ->add($prefix.'locked', 'choice', array(
+            ])
+            ->add($prefix.'locked', 'choice', [
                 'label' => $this->getTranslator()->trans('locked'),
-                'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
+                'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
                 'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
-            ))
-            ->add($prefix.'sterile', 'choice', array(
+            ])
+            ->add($prefix.'sterile', 'choice', [
                 'label' => $this->getTranslator()->trans('sterile-status'),
-                'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
+                'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
                 'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
-            ))
-            ->add($prefix.'hideChildren', 'choice', array(
+            ])
+            ->add($prefix.'hideChildren', 'choice', [
                 'label' => $this->getTranslator()->trans('hiding-children'),
-                'choices' => array(true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')),
+                'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
                 'empty_value' => $this->getTranslator()->trans('ignore'),
                 'required' => false,
                 'expanded' => true
-            ))
-            ->add($prefix.'nodeName', 'text', array(
+            ])
+            ->add($prefix.'nodeName', 'text', [
                 'label' => $this->getTranslator()->trans('nodeName'),
                 'required' => false
-            ))
-            ->add($prefix.'parent', 'text', array(
+            ])
+            ->add($prefix.'parent', 'text', [
                 'label' => $this->getTranslator()->trans('node.id.parent'),
                 'required' => false
-            ))
-            ->add($prefix."createdAt", new CompareDatetimeType($this->getTranslator()), array(
+            ])
+            ->add($prefix."createdAt", new CompareDatetimeType($this->getTranslator()), [
                 'label' => $this->getTranslator()->trans('created.at'),
                 'virtual' => false,
                 'required' => false
-            ))
-            ->add($prefix."updatedAt", new CompareDatetimeType($this->getTranslator()), array(
+            ])
+            ->add($prefix."updatedAt", new CompareDatetimeType($this->getTranslator()), [
                 'label' => $this->getTranslator()->trans('updated.at'),
                 'virtual' => false,
                 'required' => false
-            ))
-            ->add($prefix."limitResult", "number", array(
+            ])
+            ->add($prefix."limitResult", "number", [
                 'label' => $this->getTranslator()->trans('node.limit.result'),
                 'required' => false,
-                'constraints' => array(
+                'constraints' => [
                            new GreaterThan(0)
-                       ),
-            ))
+                       ],
+            ])
             // No need to prefix tags
-            ->add('tags', 'text', array(
+            ->add('tags', 'text', [
                 'label' => $this->getTranslator()->trans('node.tags'),
                 'required' => false,
-                'attr' => array ("class" => "rz-tag-autocomplete")
-            ))
+                'attr' => ["class" => "rz-tag-autocomplete"]
+            ])
             // No need to prefix tags
-            ->add('tagExclusive', 'checkbox', array(
+            ->add('tagExclusive', 'checkbox', [
                 'label' => $this->getTranslator()->trans('node.tag.exclusive'),
                 'required' => false
-            ));
+            ]);
 
 
         return $builder;
@@ -464,14 +464,14 @@ class SearchController extends RozierApp
         $builder->add(
             "nodetypefield",
             new \RZ\Roadiz\CMS\Forms\SeparatorType(),
-            array(
+            [
                 'label' => $this->getTranslator()->trans('nodetypefield'),
-                'attr' => array("class" => "label-separator")
-            )
+                'attr' => ["class" => "label-separator"]
+            ]
         );
 
         foreach ($fields as $field) {
-            $option = array("label" => $field->getLabel());
+            $option = ["label" => $field->getLabel()];
             $type = null;
             $option['required'] = false;
             if ($field->isVirtual()) {

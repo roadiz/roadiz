@@ -67,11 +67,11 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             $vendorTwigBridgeDir =
                 $vendorDir . '/symfony/twig-bridge/Symfony/Bridge/Twig';
 
-            return new \Twig_Loader_Filesystem(array(
+            return new \Twig_Loader_Filesystem([
                 // Default Form extension templates
                 $vendorTwigBridgeDir.'/Resources/views/Form',
                 ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/views',
-            ));
+            ]);
         };
 
         /*
@@ -83,10 +83,10 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                         true :
                         false;
 
-            $twig = new \Twig_Environment($c['twig.loaderFileSystem'], array(
+            $twig = new \Twig_Environment($c['twig.loaderFileSystem'], [
                 'debug' => $devMode,
                 'cache' => $c['twig.cacheFolder'],
-            ));
+            ]);
 
             $c['twig.formRenderer']->setEnvironment($twig);
 
@@ -124,9 +124,9 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
          */
         $container['twig.formRenderer'] = function ($c) {
 
-            return new TwigRendererEngine(array(
+            return new TwigRendererEngine([
                 'form_div_layout.html.twig'
-            ));
+            ]);
         };
 
         /*
@@ -144,7 +144,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
 
             return new \Twig_SimpleFilter('markdown', function ($object) {
                 return Markdown::defaultTransform($object);
-            }, array('is_safe' => array('html')));
+            }, ['is_safe' => ['html']]);
         };
 
         /*
@@ -154,7 +154,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
 
             return new \Twig_SimpleFilter('inlineMarkdown', function ($object) {
                 return InlineMarkdown::defaultTransform($object);
-            }, array('is_safe' => array('html')));
+            }, ['is_safe' => ['html']]);
         };
 
         /*

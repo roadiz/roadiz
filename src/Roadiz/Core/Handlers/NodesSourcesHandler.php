@@ -86,7 +86,7 @@ class NodesSourcesHandler
     {
         $nsDocuments = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
-                ->findBy(array('nodeSource'=>$this->nodeSource, 'field'=>$field));
+                ->findBy(['nodeSource'=>$this->nodeSource, 'field'=>$field]);
 
         if (count($nsDocuments) > 0) {
             foreach ($nsDocuments as $nsDoc) {
@@ -155,7 +155,7 @@ class NodesSourcesHandler
             }
         }
 
-        $urlTokens = array();
+        $urlTokens = [];
         $urlTokens[] = $this->getIdentifier();
 
         $parent = $this->getParent();
@@ -244,27 +244,27 @@ class NodesSourcesHandler
      * @return array
      */
     public function getParents(
-        array $criteria = array(),
+        array $criteria = [],
         SecurityContext $securityContext = null
     ) {
         if (null === $this->parentsNodeSources) {
-            $this->parentsNodeSources = array();
+            $this->parentsNodeSources = [];
 
             $parent = $this->nodeSource;
 
             while (null !== $parent) {
                 $criteria = array_merge(
                     $criteria,
-                    array(
+                    [
                         'node'=>$parent->getNode()->getParent(),
                         'translation' => $this->nodeSource->getTranslation()
-                    )
+                    ]
                 );
                 $currentParent = Kernel::getService('em')
                                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                                 ->findOneBy(
                                     $criteria,
-                                    array(),
+                                    [],
                                     $securityContext
                                 );
 
@@ -294,18 +294,18 @@ class NodesSourcesHandler
         SecurityContext $securityContext = null
     ) {
 
-        $defaultCrit = array(
+        $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
-            'node.status' => array('<=', Node::PUBLISHED),
+            'node.status' => ['<=', Node::PUBLISHED],
             'translation' => $this->nodeSource->getTranslation()
-        );
+        ];
 
         if (null !== $order) {
             $defaultOrder = $order;
         } else {
-            $defaultOrder = array (
+            $defaultOrder = [
                 'node.position' => 'ASC'
-            );
+            ];
         }
 
         if (null !== $criteria) {
@@ -334,10 +334,10 @@ class NodesSourcesHandler
      */
     public function getTags()
     {
-        $tags = Kernel::getService('tagApi')->getBy(array(
+        $tags = Kernel::getService('tagApi')->getBy([
             "nodes" => $this->nodeSource->getNode(),
             "translation" => $this->nodeSource->getTranslation()
-        ));
+        ]);
 
         return $tags;
     }

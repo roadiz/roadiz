@@ -57,7 +57,7 @@ class SettingsImporter implements ImporterInterface
                   ->getRepository('RZ\Roadiz\Core\Entities\Setting')
                   ->findAllNames();
 
-        $newSettings = array();
+        $newSettings = [];
 
         foreach ($settingGroups as $index => $settingGroup) {
             /*
@@ -75,7 +75,7 @@ class SettingsImporter implements ImporterInterface
                  * Set array with setting and the deserialize setting's group
                  * to don't take the existing setting's group
                  */
-                $newSettings[] = array($setting, $settingGroup);
+                $newSettings[] = [$setting, $settingGroup];
                 $settingGroup->getSettings()->clear();
             }
         }

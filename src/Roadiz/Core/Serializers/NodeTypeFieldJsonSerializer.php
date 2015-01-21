@@ -49,7 +49,7 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($nodeTypeField)
     {
-        $data = array();
+        $data = [];
 
         $data['name'] =           $nodeTypeField->getName();
         $data['label'] =          $nodeTypeField->getLabel();
@@ -74,7 +74,7 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
     {
         $encoder = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes(array(
+        $normalizer->setCamelizedAttributes([
             'name',
             'label',
             'description',
@@ -83,9 +83,9 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
             'indexed',
             'virtual',
             'default_values'
-        ));
+        ]);
 
-        $serializer = new Serializer(array($normalizer), array($encoder));
+        $serializer = new Serializer([$normalizer], [$encoder]);
 
         return $serializer->deserialize($jsonString, 'RZ\Roadiz\Core\Entities\NodeTypeField', 'json');
     }

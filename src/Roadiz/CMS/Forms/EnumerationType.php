@@ -51,7 +51,7 @@ class EnumerationType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $choices = array();
+        $choices = [];
         $values = explode(',', $this->field->getDefaultValues());
 
         foreach ($values as $value) {
@@ -59,9 +59,9 @@ class EnumerationType extends AbstractType
             $choices[$value] = $value;
         }
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices' => $choices
-        ));
+        ]);
     }
     /**
      * {@inheritdoc}

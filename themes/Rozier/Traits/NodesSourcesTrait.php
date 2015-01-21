@@ -110,9 +110,9 @@ trait NodesSourcesTrait
         /*
          * Create source default values
          */
-        $sourceDefaults = array(
+        $sourceDefaults = [
             'title' => $source->getTitle()
-        );
+        ];
         foreach ($fields as $field) {
             if (!$field->isVirtual()) {
                 $getter = $field->getGetterName();
@@ -133,13 +133,13 @@ trait NodesSourcesTrait
             ->add(
                 'title',
                 'text',
-                array(
+                [
                     'label' => $this->getTranslator()->trans('title'),
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'data-desc' => ''
-                    )
-                )
+                    ]
+                ]
             );
         foreach ($fields as $field) {
             $sourceBuilder->add(
@@ -206,97 +206,97 @@ trait NodesSourcesTrait
     ) {
         switch ($field->getType()) {
             case NodeTypeField::ENUM_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'empty_value' => $translator->trans('choose.value'),
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'data-desc' => $field->getDescription()
-                    )
-                );
+                    ]
+                ];
             case NodeTypeField::DATETIME_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'years' => range(date('Y')-10, date('Y')+10),
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'data-desc' => $field->getDescription(),
                         'class' => 'rz-datetime-field'
-                    )
-                );
+                    ]
+                ];
             case NodeTypeField::INTEGER_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'constraints' => array(
+                    'constraints' => [
                         new Type('integer')
-                    ),
-                    'attr' => array(
+                    ],
+                    'attr' => [
                         'data-desc' => $field->getDescription()
-                    )
-                );
+                    ]
+                ];
             case NodeTypeField::EMAIL_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'constraints' => array(
+                    'constraints' => [
                         new \Symfony\Component\Validator\Constraints\Email()
-                    ),
-                    'attr' => array(
+                    ],
+                    'attr' => [
                         'data-desc' => $field->getDescription()
-                    )
-                );
+                    ]
+                ];
             case NodeTypeField::DECIMAL_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'constraints' => array(
+                    'constraints' => [
                         new Type('double')
-                    ),
-                    'attr' => array(
+                    ],
+                    'attr' => [
                         'data-desc' => $field->getDescription()
-                    )
-                );
+                    ]
+                ];
             case NodeTypeField::COLOUR_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'data-desc' => $field->getDescription(),
                         'class' => 'colorpicker-input'
-                    )
-                );
+                    ]
+                ];
             case NodeTypeField::GEOTAG_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'data-desc' => $field->getDescription(),
                         'class' => 'rz-geotag-field'
-                    )
-                );
+                    ]
+                ];
             case NodeTypeField::MARKDOWN_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'class'           => 'markdown_textarea',
                         'data-desc'       => $field->getDescription(),
                         'data-min-length' => $field->getMinLength(),
                         'data-max-length' => $field->getMaxLength()
-                    )
-                );
+                    ]
+                ];
 
             default:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'data-desc'       => $field->getDescription(),
                         'data-min-length' => $field->getMinLength(),
                         'data-max-length' => $field->getMaxLength()
-                    )
-                );
+                    ]
+                ];
         }
     }
 

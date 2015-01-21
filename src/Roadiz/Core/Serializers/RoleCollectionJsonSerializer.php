@@ -47,7 +47,7 @@ class RoleCollectionJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($roles)
     {
-        $data = array();
+        $data = [];
 
         foreach ($roles as $role) {
             $data[] = RoleJsonSerializer::toArray($role);

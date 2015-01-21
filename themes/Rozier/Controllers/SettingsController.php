@@ -68,7 +68,7 @@ class SettingsController extends RozierApp
         return new Response(
             $this->getTwig()->render('settings/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -95,7 +95,7 @@ class SettingsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('settings/list.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
 
         } else {
@@ -105,9 +105,9 @@ class SettingsController extends RozierApp
 
     protected function commonSettingList(Request $request, $settingGroup = null)
     {
-        $criteria = array();
+        $criteria = [];
         if (null !== $settingGroup) {
-            $criteria = array('settingGroup'=>$settingGroup);
+            $criteria = ['settingGroup'=>$settingGroup];
         }
         /*
          * Manage get request to filter list
@@ -117,13 +117,13 @@ class SettingsController extends RozierApp
             $this->getService('em'),
             'RZ\Roadiz\Core\Entities\Setting',
             $criteria,
-            array('name'=>'ASC')
+            ['name'=>'ASC']
         );
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
         $settings = $listManager->getEntities();
-        $this->assignation['settings'] = array();
+        $this->assignation['settings'] = [];
 
         foreach ($settings as $setting) {
             $form = $this->buildShortEditForm($setting);
@@ -134,7 +134,7 @@ class SettingsController extends RozierApp
                     $this->editSetting($form->getData(), $setting);
                     $msg = $this->getTranslator()->trans(
                         'setting.%name%.updated',
-                        array('%name%'=>$setting->getName())
+                        ['%name%'=>$setting->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
@@ -146,7 +146,7 @@ class SettingsController extends RozierApp
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'settingGroupsSettingsPage',
-                            array('settingGroupId' => $settingGroup->getId())
+                            ['settingGroupId' => $settingGroup->getId()]
                         )
                     );
                 } else {
@@ -161,10 +161,10 @@ class SettingsController extends RozierApp
 
                 return $response;
             }
-            $this->assignation['settings'][] = array(
+            $this->assignation['settings'][] = [
                 'setting' => $setting,
                 'form' => $form->createView()
-            );
+            ];
         }
 
         return null;
@@ -194,7 +194,7 @@ class SettingsController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $this->editSetting($form->getData(), $setting);
-                    $msg = $this->getTranslator()->trans('setting.%name%.updated', array('%name%'=>$setting->getName()));
+                    $msg = $this->getTranslator()->trans('setting.%name%.updated', ['%name%'=>$setting->getName()]);
                     $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
@@ -205,7 +205,7 @@ class SettingsController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'settingsEditPage',
-                        array('settingId' => $setting->getId())
+                        ['settingId' => $setting->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -218,7 +218,7 @@ class SettingsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('settings/edit.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -247,7 +247,7 @@ class SettingsController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $this->addSetting($form->getData(), $setting);
-                    $msg = $this->getTranslator()->trans('setting.%name%.created', array('%name%'=>$setting->getName()));
+                    $msg = $this->getTranslator()->trans('setting.%name%.created', ['%name%'=>$setting->getName()]);
                     $this->publishConfirmMessage($request, $msg);
 
                 } catch (EntityAlreadyExistsException $e) {
@@ -270,7 +270,7 @@ class SettingsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('settings/add.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -302,7 +302,7 @@ class SettingsController extends RozierApp
                 $form->getData()['settingId'] == $setting->getId() ) {
                 $this->deleteSetting($form->getData(), $setting);
 
-                $msg = $this->getTranslator()->trans('setting.%name%.deleted', array('%name%'=>$setting->getName()));
+                $msg = $this->getTranslator()->trans('setting.%name%.deleted', ['%name%'=>$setting->getName()]);
                 $this->publishConfirmMessage($request, $msg);
 
                 /*
@@ -321,7 +321,7 @@ class SettingsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('settings/delete.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -344,7 +344,7 @@ class SettingsController extends RozierApp
                 $this->getService('em')
                      ->getRepository('RZ\Roadiz\Core\Entities\Setting')
                      ->exists($data['name'])) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
+                throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_update.already_exists', ['%name%'=>$setting->getName()]), 1);
             }
             try {
                 foreach ($data as $key => $value) {
@@ -368,7 +368,7 @@ class SettingsController extends RozierApp
 
                 return true;
             } catch (\Exception $e) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_update.already_exists', array('%name%'=>$setting->getName())), 1);
+                throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_update.already_exists', ['%name%'=>$setting->getName()]), 1);
             }
         }
     }
@@ -384,7 +384,7 @@ class SettingsController extends RozierApp
         if ($this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Setting')
             ->exists($data['name'])) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_creation.already_exists', array('%name%'=>$setting->getName())), 1);
+            throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_creation.already_exists', ['%name%'=>$setting->getName()]), 1);
         }
 
         try {
@@ -404,7 +404,7 @@ class SettingsController extends RozierApp
 
             return true;
         } catch (\Exception $e) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_creation.already_exists', array('%name%'=>$setting->getName())), 1);
+            throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_creation.already_exists', ['%name%'=>$setting->getName()]), 1);
         }
     }
 
@@ -429,39 +429,39 @@ class SettingsController extends RozierApp
      */
     private function buildAddForm(Setting $setting)
     {
-        $defaults = array(
+        $defaults = [
             'name' =>    $setting->getName(),
             'value' =>   $setting->getValue(),
             'visible' => $setting->isVisible(),
             'type' =>    $setting->getType()
-        );
+        ];
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
-            ->add('name', 'text', array(
+            ->add('name', 'text', [
                 'label' => $this->getTranslator()->trans('name'),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ))
-            ->add('value', NodeTypeField::$typeToForm[$setting->getType()], array(
+                ]
+            ])
+            ->add('value', NodeTypeField::$typeToForm[$setting->getType()], [
                 'label' => $this->getTranslator()->trans('value'),
                 'required' => false
-            ))
-            ->add('visible', 'checkbox', array(
+            ])
+            ->add('visible', 'checkbox', [
                 'label' => $this->getTranslator()->trans('visible'),
                 'required' => false
-            ))
-            ->add('type', 'choice', array(
+            ])
+            ->add('type', 'choice', [
                 'label' => $this->getTranslator()->trans('type'),
                 'required' => true,
                 'choices' => NodeTypeField::$typeToHuman
-            ))
+            ])
             ->add(
                 'settingGroup',
                 new \RZ\Roadiz\CMS\Forms\SettingGroupType(),
-                array(
+                [
                     'label' => $this->getTranslator()->trans('setting.group')
-                )
+                ]
             );
 
         return $builder->getForm();
@@ -475,13 +475,13 @@ class SettingsController extends RozierApp
      */
     private function buildEditForm(Setting $setting)
     {
-        $defaults = array(
+        $defaults = [
             'id' =>      $setting->getId(),
             'name' =>    $setting->getName(),
             'value' =>   $setting->getValue(),
             'visible' => $setting->isVisible(),
             'type' =>    $setting->getType()
-        );
+        ];
 
         if (null !== $setting->getSettingGroup()) {
             $defaults['settingGroup'] = $setting->getSettingGroup()->getId();
@@ -492,18 +492,18 @@ class SettingsController extends RozierApp
             ->add(
                 'name',
                 'text',
-                array(
+                [
                     'label' => $this->getTranslator()->trans('name'),
-                    'constraints' => array(new NotBlank())
-                )
+                    'constraints' => [new NotBlank()]
+                ]
             )
             ->add(
                 'id',
                 'hidden',
-                array(
+                [
                     'data'=>$setting->getId(),
                     'required' => true
-                )
+                ]
             )
             ->add(
                 'value',
@@ -513,26 +513,26 @@ class SettingsController extends RozierApp
             ->add(
                 'visible',
                 'checkbox',
-                array(
+                [
                     'label' => $this->getTranslator()->trans('visible'),
                     'required' => false
-                )
+                ]
             )
             ->add(
                 'type',
                 'choice',
-                array(
+                [
                     'label' => $this->getTranslator()->trans('type'),
                     'required' => true,
                     'choices' => NodeTypeField::$typeToHuman
-                )
+                ]
             )
             ->add(
                 'settingGroup',
                 new \RZ\Roadiz\CMS\Forms\SettingGroupType(),
-                array(
+                [
                     'label' => $this->getTranslator()->trans('setting.group')
-                )
+                ]
             );
 
         return $builder->getForm();
@@ -545,16 +545,16 @@ class SettingsController extends RozierApp
      */
     private function buildShortEditForm(Setting $setting)
     {
-        $defaults = array(
+        $defaults = [
             'id' =>      $setting->getId(),
             'value' =>   $setting->getValue()
-        );
+        ];
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
-            ->add('id', 'hidden', array(
+            ->add('id', 'hidden', [
                 'data'=>$setting->getId(),
                 'required' => true
-            ))
+            ])
             ->add(
                 'value',
                 NodeTypeField::$typeToForm[$setting->getType()],
@@ -573,12 +573,12 @@ class SettingsController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('settingId', 'hidden', array(
+            ->add('settingId', 'hidden', [
                 'data' => $setting->getId(),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ));
+                ]
+            ]);
 
         return $builder->getForm();
     }
@@ -603,47 +603,47 @@ class SettingsController extends RozierApp
 
         switch ($setting->getType()) {
             case NodeTypeField::ENUM_T:
-                return array(
+                return [
                     'label' => $label,
                     'empty_value' => $translator->trans('choose.value'),
                     'required' => false
-                );
+                ];
             case NodeTypeField::DATETIME_T:
-                return array(
+                return [
                     'label' => $label,
                     'years' => range(date('Y')-10, date('Y')+10),
                     'required' => false
-                );
+                ];
             case NodeTypeField::INTEGER_T:
-                return array(
+                return [
                     'label' => $label,
                     'required' => false,
-                    'constraints' => array(
+                    'constraints' => [
                         new Type('integer')
-                    )
-                );
+                    ]
+                ];
             case NodeTypeField::DECIMAL_T:
-                return array(
+                return [
                     'label' => $label,
                     'required' => false,
-                    'constraints' => array(
+                    'constraints' => [
                         new Type('double')
-                    )
-                );
+                    ]
+                ];
             case NodeTypeField::COLOUR_T:
-                return array(
+                return [
                     'label' => $label,
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'class' => 'colorpicker-input'
-                    )
-                );
+                    ]
+                ];
 
             default:
-                return array(
+                return [
                     'label' => $label,
                     'required' => false
-                );
+                ];
         }
     }
 }

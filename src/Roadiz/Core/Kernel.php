@@ -135,10 +135,10 @@ class Kernel implements \Pimple\ServiceProviderInterface
             $dispatcher->addSubscriber(new RouterListener($c['urlMatcher']));
             $dispatcher->addListener(
                 KernelEvents::CONTROLLER,
-                array(
+                [
                     new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this),
                     'onControllerMatched',
-                )
+                ]
             );
 
             return $dispatcher;
@@ -195,12 +195,12 @@ class Kernel implements \Pimple\ServiceProviderInterface
         }
 
         $application = new Application('Roadiz Console Application', '0.1');
-        $helperSet = new HelperSet(array(
+        $helperSet = new HelperSet([
             'db' => new ConnectionHelper($this->container['em']->getConnection()),
             'em' => new EntityManagerHelper($this->container['em']),
             'dialog' => new DialogHelper(),
             'progress' => new ProgressHelper(),
-        ));
+        ]);
         $application->setHelperSet($helperSet);
 
         $application->add(new \RZ\Roadiz\Console\TranslationsCommand);
@@ -309,7 +309,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         return new Response(
             $html,
             Response::HTTP_SERVICE_UNAVAILABLE,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -326,18 +326,18 @@ class Kernel implements \Pimple\ServiceProviderInterface
          * Generate custom UrlMatcher
          */
         $dumper = new PhpMatcherDumper($this->container['routeCollection']);
-        $class = $dumper->dump(array(
+        $class = $dumper->dump([
             'class' => 'GlobalUrlMatcher',
-        ));
+        ]);
         file_put_contents(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php', $class);
 
         /*
          * Generate custom UrlGenerator
          */
         $dumper = new PhpGeneratorDumper($this->container['routeCollection']);
-        $class = $dumper->dump(array(
+        $class = $dumper->dump([
             'class' => 'GlobalUrlGenerator',
-        ));
+        ]);
         file_put_contents(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php', $class);
     }
 
@@ -378,34 +378,34 @@ class Kernel implements \Pimple\ServiceProviderInterface
          */
         $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
-            array(
+            [
                 $this,
                 'onStartKernelRequest',
-            )
+            ]
         );
         $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
-            array(
+            [
                 $this->container['firewall'],
                 'onKernelRequest',
-            )
+            ]
         );
         /*
          * Register after controller matched listener
          */
         $this->container['dispatcher']->addListener(
             KernelEvents::CONTROLLER,
-            array(
+            [
                 $this,
                 'onControllerMatched',
-            )
+            ]
         );
         $this->container['dispatcher']->addListener(
             KernelEvents::TERMINATE,
-            array(
+            [
                 $this,
                 'onKernelTerminate',
-            )
+            ]
         );
 
         /*
