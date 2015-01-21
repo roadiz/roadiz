@@ -48,12 +48,12 @@ class CustomFormsType extends AbstractType
         $fields = $this->customForm->getFields();
 
         foreach ($fields as $field) {
-            $option = array("label" => $field->getLabel());
+            $option = ["label" => $field->getLabel()];
 
             if ($field->isRequired()) {
-                $option['constraints'] = array(
+                $option['constraints'] = [
                     new NotBlank()
-                );
+                ];
             } else {
                 $option['required'] = false;
             }

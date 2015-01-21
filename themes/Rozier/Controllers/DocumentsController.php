@@ -51,11 +51,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class DocumentsController extends RozierApp
 {
-    protected $thumbnailFormat = array(
+    protected $thumbnailFormat = [
         'width' =>   128,
         'quality' => 50,
         'crop' =>    '1x1'
-    );
+    ];
 
     /**
      * @param Symfony\Component\HttpFoundation\Request $request
@@ -66,14 +66,14 @@ class DocumentsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $prefilters = array();
+        $prefilters = [];
 
         if (null !== $folderId &&
             $folderId > 0) {
             $folder = $this->getService('em')
                            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
-            $prefilters['folders'] = array($folder);
+            $prefilters['folders'] = [$folder];
             $this->assignation['folder'] = $folder;
         }
 
@@ -98,7 +98,7 @@ class DocumentsController extends RozierApp
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')->generate(
                     'documentsHomePage',
-                    array('folderId' => $folderId)
+                    ['folderId' => $folderId]
                 )
             );
             $response->prepare($request);
@@ -115,7 +115,7 @@ class DocumentsController extends RozierApp
             $this->getService('em'),
             'RZ\Roadiz\Core\Entities\Document',
             $prefilters,
-            array('createdAt'=> 'DESC')
+            ['createdAt'=> 'DESC']
         );
         $listManager->setItemPerPage(28);
         $listManager->handle();
@@ -127,7 +127,7 @@ class DocumentsController extends RozierApp
         return new Response(
             $this->getTwig()->render('documents/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -161,15 +161,15 @@ class DocumentsController extends RozierApp
                     $data["filename"] = $document->getFilename();
                     unset($data['newDocument']);
 
-                    $msg = $this->getTranslator()->trans('document.file.%name%.updated', array(
+                    $msg = $this->getTranslator()->trans('document.file.%name%.updated', [
                         '%name%'=>$document->getFilename()
-                    ));
+                    ]);
                     $this->publishConfirmMessage($request, $msg);
                 }
                 $this->editDocument($data, $document);
-                $msg = $this->getTranslator()->trans('document.%name%.updated', array(
+                $msg = $this->getTranslator()->trans('document.%name%.updated', [
                     '%name%'=>$document->getFilename()
-                ));
+                ]);
                 $this->publishConfirmMessage($request, $msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -177,7 +177,7 @@ class DocumentsController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'documentsEditPage',
-                        array('documentId' => $document->getId())
+                        ['documentId' => $document->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -190,7 +190,7 @@ class DocumentsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('documents/edit.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -212,15 +212,15 @@ class DocumentsController extends RozierApp
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
-            $this->assignation['thumbnailFormat'] = array(
+            $this->assignation['thumbnailFormat'] = [
                 'width' => 500,
                 'quality' => 70
-            );
+            ];
 
             return new Response(
                 $this->getTwig()->render('documents/preview.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -251,11 +251,11 @@ class DocumentsController extends RozierApp
                 $form->getData()['documentId'] == $document->getId()) {
                 try {
                     $document->getHandler()->removeWithAssets();
-                    $msg = $this->getTranslator()->trans('document.%name%.deleted', array('%name%'=>$document->getFilename()));
+                    $msg = $this->getTranslator()->trans('document.%name%.deleted', ['%name%'=>$document->getFilename()]);
                     $this->publishConfirmMessage($request, $msg);
 
                 } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('document.%name%.cannot_delete', array('%name%'=>$document->getFilename()));
+                    $msg = $this->getTranslator()->trans('document.%name%.cannot_delete', ['%name%'=>$document->getFilename()]);
                     $this->publishErrorMessage($request, $msg);
                 }
                 /*
@@ -274,7 +274,7 @@ class DocumentsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('documents/delete.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -297,9 +297,9 @@ class DocumentsController extends RozierApp
 
         $documents = $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
-            ->findBy(array(
+            ->findBy([
                 'id' => $documentsIds
-            ));
+            ]);
 
         if ($documents !== null &&
             count($documents) > 0) {
@@ -314,7 +314,7 @@ class DocumentsController extends RozierApp
                         $document->getHandler()->removeWithAssets();
                         $msg = $this->getTranslator()->trans(
                             'document.%name%.deleted',
-                            array('%name%'=>$document->getFilename())
+                            ['%name%'=>$document->getFilename()]
                         );
                         $this->publishConfirmMessage($request, $msg);
                     }
@@ -333,13 +333,13 @@ class DocumentsController extends RozierApp
             }
 
             $this->assignation['form'] = $form->createView();
-            $this->assignation['action'] = '?'. http_build_query(array('documents'=>$documentsIds));
+            $this->assignation['action'] = '?'. http_build_query(['documents'=>$documentsIds]);
             $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
             return new Response(
                 $this->getTwig()->render('documents/bulkDelete.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -362,9 +362,9 @@ class DocumentsController extends RozierApp
 
         $documents = $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
-            ->findBy(array(
+            ->findBy([
                 'id' => $documentsIds
-            ));
+            ]);
 
         if ($documents !== null &&
             count($documents) > 0) {
@@ -391,13 +391,13 @@ class DocumentsController extends RozierApp
             }
 
             $this->assignation['form'] = $form->createView();
-            $this->assignation['action'] = '?'. http_build_query(array('documents'=>$documentsIds));
+            $this->assignation['action'] = '?'. http_build_query(['documents'=>$documentsIds]);
             $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
             return new Response(
                 $this->getTwig()->render('documents/bulkDownload.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -433,9 +433,9 @@ class DocumentsController extends RozierApp
             try {
                 $document = $this->embedDocument($form->getData(), $folderId);
 
-                $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
+                $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
                     '%name%'=>$document->getFilename()
-                ));
+                ]);
                 $this->publishConfirmMessage($request, $msg);
 
             } catch (\Exception $e) {
@@ -445,7 +445,7 @@ class DocumentsController extends RozierApp
              * Force redirect to avoid resending form when refreshing page
              */
             $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate('documentsHomePage', array('folderId'=>$folderId))
+                $this->getService('urlGenerator')->generate('documentsHomePage', ['folderId'=>$folderId])
             );
             $response->prepare($request);
 
@@ -458,7 +458,7 @@ class DocumentsController extends RozierApp
         return new Response(
             $this->getTwig()->render('documents/embed.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -476,9 +476,9 @@ class DocumentsController extends RozierApp
         try {
             $document = $this->randomDocument($folderId);
 
-            $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
+            $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
                 '%name%'=>$document->getFilename()
-            ));
+            ]);
             $this->publishConfirmMessage($request, $msg);
 
         } catch (\Exception $e) {
@@ -491,7 +491,7 @@ class DocumentsController extends RozierApp
          * Force redirect to avoid resending form when refreshing page
          */
         $response = new RedirectResponse(
-            $this->getService('urlGenerator')->generate('documentsHomePage', array('folderId'=>$folderId))
+            $this->getService('urlGenerator')->generate('documentsHomePage', ['folderId'=>$folderId])
         );
         $response->prepare($request);
 
@@ -525,24 +525,24 @@ class DocumentsController extends RozierApp
             $document = $this->uploadDocument($form, $folderId);
 
             if (false !== $document) {
-                $msg = $this->getTranslator()->trans('document.%name%.uploaded', array(
+                $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
                     '%name%'=>$document->getFilename()
-                ));
+                ]);
                 $this->publishConfirmMessage($request, $msg);
 
                 return new Response(
-                    json_encode(array(
+                    json_encode([
                         'success' => true,
                         'documentId' => $document->getId(),
-                        'thumbnail' => array(
+                        'thumbnail' => [
                             'id' => $document->getId(),
                             'filename'=>$document->getFilename(),
                             'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                            'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', array('document'=>$document)),
-                        )
-                    )),
+                            'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document'=>$document]),
+                        ]
+                    ]),
                     Response::HTTP_OK,
-                    array('content-type' => 'application/javascript')
+                    ['content-type' => 'application/javascript']
                 );
 
             } else {
@@ -550,11 +550,11 @@ class DocumentsController extends RozierApp
                 $this->publishErrorMessage($request, $msg);
 
                 return new Response(
-                    json_encode(array(
+                    json_encode([
                         "error" => $msg
-                    )),
+                    ]),
                     Response::HTTP_NOT_FOUND,
-                    array('content-type' => 'application/javascript')
+                    ['content-type' => 'application/javascript']
                 );
             }
         }
@@ -564,7 +564,7 @@ class DocumentsController extends RozierApp
         return new Response(
             $this->getTwig()->render('documents/upload.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -590,7 +590,7 @@ class DocumentsController extends RozierApp
             return new Response(
                 $this->getTwig()->render('documents/usage.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -604,17 +604,17 @@ class DocumentsController extends RozierApp
      */
     private function buildDeleteForm(Document $doc)
     {
-        $defaults = array(
+        $defaults = [
             'documentId' => $doc->getId()
-        );
+        ];
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
-                    ->add('documentId', 'hidden', array(
+                    ->add('documentId', 'hidden', [
                         'data' => $doc->getId(),
-                        'constraints' => array(
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ));
+                        ]
+                    ]);
 
         return $builder->getForm();
     }
@@ -625,15 +625,15 @@ class DocumentsController extends RozierApp
      */
     private function buildBulkDeleteForm($documentsIds)
     {
-        $defaults = array();
+        $defaults = [];
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
-                    ->add('checksum', 'hidden', array(
+                    ->add('checksum', 'hidden', [
                         'data' => md5(serialize($documentsIds)),
-                        'constraints' => array(
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ));
+                        ]
+                    ]);
 
         return $builder->getForm();
     }
@@ -645,15 +645,15 @@ class DocumentsController extends RozierApp
      */
     private function buildBulkDownloadForm($documentsIds)
     {
-        $defaults = array();
+        $defaults = [];
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
-                    ->add('checksum', 'hidden', array(
+                    ->add('checksum', 'hidden', [
                         'data' => md5(serialize($documentsIds)),
-                        'constraints' => array(
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ));
+                        ]
+                    ]);
 
         return $builder->getForm();
     }
@@ -665,26 +665,26 @@ class DocumentsController extends RozierApp
      */
     private function buildEditForm(Document $document)
     {
-        $defaults = array(
+        $defaults = [
             'private' => $document->isPrivate(),
             'filename' => $document->getFilename(),
             'newDocument' => null
-        );
+        ];
 
         $builder = $this->getService('formFactory')
                     ->createBuilder('form', $defaults)
-                    ->add('filename', 'text', array(
+                    ->add('filename', 'text', [
                         'label' => $this->getTranslator()->trans('filename'),
                         'required' => false
-                    ))
-                    ->add('private', 'checkbox', array(
+                    ])
+                    ->add('private', 'checkbox', [
                         'label' => $this->getTranslator()->trans('private'),
                         'required' => false
-                    ))
-                    ->add('newDocument', 'file', array(
+                    ])
+                    ->add('newDocument', 'file', [
                         'label' => $this->getTranslator()->trans('overwrite.document'),
                         'required' => false
-                    ));
+                    ]);
 
         return $builder->getForm();
     }
@@ -695,21 +695,21 @@ class DocumentsController extends RozierApp
     private function buildUploadForm($folderId = null)
     {
         $builder = $this->getService('formFactory')
-                    ->createBuilder('form', array(), array(
+                    ->createBuilder('form', [], [
                         'csrf_protection' => false,
                         'csrf_field_name' => '_token',
                         // a unique key to help generate the secret token
                         'intention'       => static::AJAX_TOKEN_INTENTION,
-                    ))
-                    ->add('attachment', 'file', array(
+                    ])
+                    ->add('attachment', 'file', [
                         'label' => $this->getTranslator()->trans('choose.documents.to_upload')
-                    ));
+                    ]);
 
         if (null !== $folderId &&
             $folderId > 0) {
-            $builder->add('folderId', 'hidden', array(
+            $builder->add('folderId', 'hidden', [
                 'data' => $folderId
-            ));
+            ]);
         }
 
         return $builder->getForm();
@@ -720,20 +720,20 @@ class DocumentsController extends RozierApp
      */
     private function buildEmbedForm()
     {
-        $services = array();
+        $services = [];
         foreach (array_keys($this->getService('document.platforms')) as $value) {
             $services[$value] = ucwords($value);
         }
 
         $builder = $this->getService('formFactory')
                     ->createBuilder('form')
-                    ->add('embedId', 'text', array(
+                    ->add('embedId', 'text', [
                         'label' => $this->getTranslator()->trans('document.embedId')
-                    ))
-                    ->add('embedPlatform', 'choice', array(
+                    ])
+                    ->add('embedPlatform', 'choice', [
                         'label' => $this->getTranslator()->trans('document.platform'),
                         'choices' => $services
-                    ));
+                    ]);
 
         return $builder->getForm();
     }
@@ -747,38 +747,38 @@ class DocumentsController extends RozierApp
     {
         $builder = $this->getService('formFactory')
                     ->createNamedBuilder('folderForm')
-                    ->add('documentsId', 'hidden', array(
-                        'attr' => array('class' => 'document-id-bulk-folder'),
-                        'constraints' => array(
+                    ->add('documentsId', 'hidden', [
+                        'attr' => ['class' => 'document-id-bulk-folder'],
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ))
-                    ->add('folderPaths', 'text', array(
+                        ]
+                    ])
+                    ->add('folderPaths', 'text', [
                         'label' => false,
-                        'attr' => array(
+                        'attr' => [
                             'class' => 'rz-folder-autocomplete',
                             'placeholder' => $this->getTranslator()->trans('list.folders.to_link')
-                        ),
-                        'constraints' => array(
+                        ],
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ))
-                    ->add('submitFolder', 'submit', array(
+                        ]
+                    ])
+                    ->add('submitFolder', 'submit', [
                         'label' => $this->getTranslator()->trans('link.folders'),
-                        'attr' => array(
+                        'attr' => [
                             'class' => 'uk-button uk-button-primary',
                             'title' => $this->getTranslator()->trans('link.folders'),
                             'data-uk-tooltip' => "{animation:true}"
-                        )
-                    ))
-                    ->add('submitUnfolder', 'submit', array(
+                        ]
+                    ])
+                    ->add('submitUnfolder', 'submit', [
                         'label' => $this->getTranslator()->trans('unlink.folders'),
-                        'attr' => array(
+                        'attr' => [
                             'class' => 'uk-button',
                             'title' => $this->getTranslator()->trans('unlink.folders'),
                             'data-uk-tooltip' => "{animation:true}"
-                        )
-                    ));
+                        ]
+                    ]);
 
         return $builder->getForm();
     }
@@ -798,9 +798,9 @@ class DocumentsController extends RozierApp
 
             $documents = $this->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Document')
-                    ->findBy(array(
+                    ->findBy([
                         'id' => $documentsIds
-                    ));
+                    ]);
 
             $folderPaths = explode(',', $data['folderPaths']);
             $folderPaths = array_filter($folderPaths);
@@ -841,9 +841,9 @@ class DocumentsController extends RozierApp
 
             $documents = $this->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Document')
-                    ->findBy(array(
+                    ->findBy([
                         'id' => $documentsIds
-                    ));
+                    ]);
 
             $folderPaths = explode(',', $data['folderPaths']);
             $folderPaths = array_filter($folderPaths);
@@ -891,12 +891,12 @@ class DocumentsController extends RozierApp
             $response = new Response(
                 file_get_contents($tmpFileName),
                 Response::HTTP_OK,
-                array(
+                [
                     'content-control' => 'private',
                     'content-type' => 'application/zip',
                     'content-length' => filesize($tmpFileName),
                     'content-disposition' => 'attachment; filename=documents_archive.zip'
-                )
+                ]
             );
 
             unlink($tmpFileName);

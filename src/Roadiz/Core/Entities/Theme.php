@@ -136,12 +136,12 @@ class Theme extends AbstractEntity
     {
         $class = $this->getClassName();
 
-        return array(
+        return [
             'name'=> $class::getThemeName(),
             'author'=> $class::getThemeAuthor(),
             'copyright'=> $class::getThemeCopyright(),
             'dir'=> $class::getThemeDir()
-        );
+        ];
     }
 
     /**

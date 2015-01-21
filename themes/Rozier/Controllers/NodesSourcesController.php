@@ -83,7 +83,7 @@ class NodesSourcesController extends RozierApp
 
             $source = $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                ->findOneBy(array('translation'=>$translation, 'node'=>$gnode));
+                ->findOneBy(['translation'=>$translation, 'node'=>$gnode]);
 
             if (null !== $source) {
                 $node = $source->getNode();
@@ -102,17 +102,17 @@ class NodesSourcesController extends RozierApp
                 if ($form->isValid()) {
                     $this->editNodeSource($form->getData(), $source);
 
-                    $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', array(
+                    $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
                         '%node_source%'=>$source->getNode()->getNodeName(),
                         '%translation%'=>$source->getTranslation()->getName()
-                    ));
+                    ]);
 
                     $this->publishConfirmMessage($request, $msg);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesEditSourcePage',
-                            array('nodeId' => $node->getId(), 'translationId'=>$translation->getId())
+                            ['nodeId' => $node->getId(), 'translationId'=>$translation->getId()]
                         )
                     );
                     $response->prepare($request);
@@ -125,7 +125,7 @@ class NodesSourcesController extends RozierApp
                 return new Response(
                     $this->getTwig()->render('nodes/editSource.html.twig', $this->assignation),
                     Response::HTTP_OK,
-                    array('content-type' => 'text/html')
+                    ['content-type' => 'text/html']
                 );
             }
         }
@@ -144,12 +144,12 @@ class NodesSourcesController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('nodeId', 'hidden', array(
+            ->add('nodeId', 'hidden', [
                 'data' => $nodeSourceId,
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ));
+                ]
+            ]);
 
         $form = $builder->getForm();
 
@@ -160,10 +160,10 @@ class NodesSourcesController extends RozierApp
         if ($form->isValid()) {
             $node = $ns->getNode();
             if ($node->getNodeSources()->count() <= 1) {
-                $msg = $this->getTranslator()->trans('node_source.%node_source%.%translation%.cant.deleted', array(
+                $msg = $this->getTranslator()->trans('node_source.%node_source%.%translation%.cant.deleted', [
                     '%node_source%'=>$node->getNodeName(),
                     '%translation%'=>$ns->getTranslation()->getName()
-                ));
+                ]);
 
                 $this->publishErrorMessage($request, $msg);
             } else {
@@ -172,17 +172,17 @@ class NodesSourcesController extends RozierApp
 
                 $ns = $node->getNodeSources()->first();
 
-                $msg = $this->getTranslator()->trans('node_source.%node_source%.deleted.%translation%', array(
+                $msg = $this->getTranslator()->trans('node_source.%node_source%.deleted.%translation%', [
                     '%node_source%'=>$node->getNodeName(),
                     '%translation%'=>$ns->getTranslation()->getName()
-                ));
+                ]);
 
                 $this->publishConfirmMessage($request, $msg);
             }
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')->generate(
                     'nodesEditSourcePage',
-                    array('nodeId' => $node->getId(), "translationId" => $ns->getTranslation()->getId())
+                    ['nodeId' => $node->getId(), "translationId" => $ns->getTranslation()->getId()]
                 )
             );
 
@@ -197,7 +197,7 @@ class NodesSourcesController extends RozierApp
         return new Response(
             $this->getTwig()->render('nodes/deleteSource.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 }

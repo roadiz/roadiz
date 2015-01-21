@@ -64,7 +64,7 @@ class SettingsUtilsController extends RozierApp
                   ->findAll();
         $lonelySettings = $this->getService('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Setting')
-                          ->findBy(array('settingGroup' => null));
+                          ->findBy(['settingGroup' => null]);
 
         $tmpGroup = new SettingGroup();
         $tmpGroup->setName('__default__');
@@ -75,7 +75,7 @@ class SettingsUtilsController extends RozierApp
         $response =  new Response(
             $data,
             Response::HTTP_OK,
-            array()
+            []
         );
 
         $response->headers->set(
@@ -170,7 +170,7 @@ class SettingsUtilsController extends RozierApp
         return new Response(
             $this->getTwig()->render('settings/import.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -181,9 +181,9 @@ class SettingsUtilsController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('setting_file', 'file', array(
+            ->add('setting_file', 'file', [
                 'label' => $this->getTranslator()->trans('settingFile')
-            ));
+            ]);
 
         return $builder->getForm();
     }

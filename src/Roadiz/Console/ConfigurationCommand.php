@@ -117,7 +117,7 @@ class ConfigurationCommand extends Command
         if ($input->getOption('generateHtaccess')) {
             $text .= '<info>Generating .htaccess files…</info>'.PHP_EOL;
             // Simple deny access files
-            $paths = array(
+            $paths = [
                 "/conf",
                 "/src",
                 "/samples",
@@ -126,7 +126,7 @@ class ConfigurationCommand extends Command
                 "/bin",
                 "/tests",
                 "/cache",
-            );
+            ];
 
             foreach ($paths as $path) {
                 $filePath = ROADIZ_ROOT . $path . "/.htaccess";

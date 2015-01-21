@@ -71,7 +71,7 @@ class CustomFormAnswersController extends RozierApp
             $request,
             $this->getService('em'),
             'RZ\Roadiz\Core\Entities\CustomFormAnswer',
-            array("customForm" => $customForm)
+            ["customForm" => $customForm]
         );
         $listManager->handle();
         $this->assignation['filters'] = $listManager->getAssignation();
@@ -80,7 +80,7 @@ class CustomFormAnswersController extends RozierApp
         return new Response(
             $this->getTwig()->render('custom-form-answers/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -109,7 +109,7 @@ class CustomFormAnswersController extends RozierApp
                 $form->getData()['customFormAnswerId'] == $customFormAnswer->getId() ) {
                 $this->getService("em")->remove($customFormAnswer);
 
-                $msg = $this->getTranslator()->trans('customFormAnswer.%id%.deleted', array('%id%'=>$customFormAnswer->getId()));
+                $msg = $this->getTranslator()->trans('customFormAnswer.%id%.deleted', ['%id%'=>$customFormAnswer->getId()]);
                 $this->publishConfirmMessage($request, $msg);
                 /*
                  * Redirect to update schema page
@@ -117,7 +117,7 @@ class CustomFormAnswersController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'customFormAnswersHomePage',
-                        array("customFormId" => $customFormAnswer->getCustomForm()->getId())
+                        ["customFormId" => $customFormAnswer->getCustomForm()->getId()]
                     )
                 );
                 $response->prepare($request);
@@ -130,7 +130,7 @@ class CustomFormAnswersController extends RozierApp
             return new Response(
                 $this->getTwig()->render('custom-form-answers/delete.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -146,12 +146,12 @@ class CustomFormAnswersController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('customFormAnswerId', 'hidden', array(
+            ->add('customFormAnswerId', 'hidden', [
                 'data' => $customFormAnswer->getId(),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank()
-                )
-            ));
+                ]
+            ]);
 
         return $builder->getForm();
     }

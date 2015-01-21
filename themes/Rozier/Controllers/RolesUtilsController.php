@@ -65,7 +65,7 @@ class RolesUtilsController extends RozierApp
         $response =  new Response(
             $role,
             Response::HTTP_OK,
-            array()
+            []
         );
 
         $response->headers->set(
@@ -96,12 +96,12 @@ class RolesUtilsController extends RozierApp
         $existingRole= $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
 
-        $role = RoleCollectionJsonSerializer::serialize(array($existingRole));
+        $role = RoleCollectionJsonSerializer::serialize([$existingRole]);
 
         $response =  new Response(
             $role,
             Response::HTTP_OK,
-            array()
+            []
         );
 
         $response->headers->set(
@@ -205,7 +205,7 @@ class RolesUtilsController extends RozierApp
         return new Response(
             $this->getTwig()->render('roles/import.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -216,9 +216,9 @@ class RolesUtilsController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('role_file', 'file', array(
+            ->add('role_file', 'file', [
                  'label' => $this->getTranslator()->trans('role.file')
-            ));
+            ]);
 
         return $builder->getForm();
     }

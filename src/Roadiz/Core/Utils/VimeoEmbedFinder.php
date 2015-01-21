@@ -106,7 +106,7 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
-    public function getSource($args = array())
+    public function getSource($args = [])
     {
         $uri = '//player.vimeo.com/video/'.$this->embedId.'?api=1';
 

@@ -63,19 +63,19 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
             }
 
             if ($responseArray === null) {
-                $responseArray = array(
+                $responseArray = [
                     'statusCode' => '200',
                     'status' => 'success',
-                    'responseText' => $this->getTranslator()->trans('field.%name%.updated', array(
+                    'responseText' => $this->getTranslator()->trans('field.%name%.updated', [
                         '%name%' => $field->getName()
-                    ))
-                );
+                    ])
+                ];
             }
 
             return new Response(
                 json_encode($responseArray),
                 Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 

@@ -66,7 +66,7 @@ class NodesType extends AbstractType
             if (is_array($object)) {
                 $nodes = Kernel::getService('em')
                                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                ->findBy(array('id'=>$object));
+                                ->findBy(['id'=>$object]);
 
                 foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
@@ -74,7 +74,7 @@ class NodesType extends AbstractType
                         $context->addViolationAt(
                             null,
                             'Node #'.$value.' does not exists',
-                            array(),
+                            [],
                             null
                         );
                     }
@@ -89,21 +89,21 @@ class NodesType extends AbstractType
                     $context->addViolationAt(
                         null,
                         'Node '.$object.' does not exists',
-                        array(),
+                        [],
                         null
                     );
                 }
             }
         };
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'class' => '\RZ\Roadiz\Core\Entities\Node',
             'multiple' => true,
             'property' => 'id',
-            'constraints' => array(
+            'constraints' => [
                 new Callback($callback)
-            )
-        ));
+            ]
+        ]);
     }
 
     /**

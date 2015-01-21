@@ -120,7 +120,7 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
      * * show_reposts
      * * visual
      */
-    public function getSource($args = array())
+    public function getSource($args = [])
     {
         $uri = '//w.soundcloud.com/player/?url='.
                 'https://api.soundcloud.com/tracks/'.

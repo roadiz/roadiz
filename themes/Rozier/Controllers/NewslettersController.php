@@ -68,8 +68,8 @@ class NewslettersController extends RozierApp
             $request,
             $this->getService('em'),
             'RZ\Roadiz\Core\Entities\Newsletter',
-            array(),
-            array("id" => "DESC")
+            [],
+            ["id" => "DESC"]
         );
         $listManager->handle();
 
@@ -77,13 +77,13 @@ class NewslettersController extends RozierApp
         $this->assignation['newsletters'] = $listManager->getEntities();
         $this->assignation['nodeTypes'] = $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-            ->findBy(array('newsletterType' => true));
+            ->findBy(['newsletterType' => true]);
         $this->assignation['translation'] = $translation;
 
         return new Response(
             $this->getTwig()->render('newsletters/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -116,12 +116,12 @@ class NewslettersController extends RozierApp
             $trans !== null) {
             $form = $this->getService('formFactory')
                 ->createBuilder()
-                ->add('nodeName', 'text', array(
+                ->add('nodeName', 'text', [
                     'label' => $this->getTranslator()->trans('nodeName'),
-                    'constraints' => array(
+                    'constraints' => [
                         new NotBlank()
-                    )
-                ))
+                    ]
+                ])
                 ->getForm();
             $form->handleRequest();
 
@@ -138,7 +138,7 @@ class NewslettersController extends RozierApp
 
                     $msg = $this->getTranslator()->trans(
                         'newsletter.%name%.created',
-                        array('%name%'=>$node->getNodeName())
+                        ['%name%'=>$node->getNodeName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
@@ -156,7 +156,7 @@ class NewslettersController extends RozierApp
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'newsletterAddPage',
-                            array('nodeTypeId' => $nodeTypeId, 'translationId' => $translationId)
+                            ['nodeTypeId' => $nodeTypeId, 'translationId' => $translationId]
                         )
                     );
                     $response->prepare($request);
@@ -173,7 +173,7 @@ class NewslettersController extends RozierApp
             return new Response(
                 $this->getTwig()->render('newsletters/add.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -207,7 +207,7 @@ class NewslettersController extends RozierApp
 
             $source = $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                ->findOneBy(array('translation'=>$translation, 'node'=>$newsletter->getNode()));
+                ->findOneBy(['translation'=>$translation, 'node'=>$newsletter->getNode()]);
 
             if (null !== $source) {
                 $node = $source->getNode();
@@ -227,17 +227,17 @@ class NewslettersController extends RozierApp
                 if ($form->isValid()) {
                     $this->editNodeSource($form->getData(), $source);
 
-                    $msg = $this->getTranslator()->trans('newsletter.%newsletter%.updated.%translation%', array(
+                    $msg = $this->getTranslator()->trans('newsletter.%newsletter%.updated.%translation%', [
                         '%newsletter%'=>$source->getNode()->getNodeName(),
                         '%translation%'=>$source->getTranslation()->getName()
-                    ));
+                    ]);
 
                     $this->publishConfirmMessage($request, $msg);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'newslettersEditPage',
-                            array('newsletterId' => $newsletterId, 'translationId'=>$translationId)
+                            ['newsletterId' => $newsletterId, 'translationId'=>$translationId]
                         )
                     );
                     $response->prepare($request);
@@ -250,7 +250,7 @@ class NewslettersController extends RozierApp
                 return new Response(
                     $this->getTwig()->render('newsletters/edit.html.twig', $this->assignation),
                     Response::HTTP_OK,
-                    array('content-type' => 'text/html')
+                    ['content-type' => 'text/html']
                 );
             }
         }

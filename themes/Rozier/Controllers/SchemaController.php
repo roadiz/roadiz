@@ -90,9 +90,9 @@ class SchemaController extends RozierApp
         $response = new RedirectResponse(
             $this->getService('urlGenerator')->generate(
                 'nodeTypeFieldsListPage',
-                array(
+                [
                     'nodeTypeId' => $nodeTypeId
-                )
+                ]
             )
         );
         $response->prepare($request);

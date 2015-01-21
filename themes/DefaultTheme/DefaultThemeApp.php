@@ -53,10 +53,10 @@ class DefaultThemeApp extends FrontendController
     protected static $themeDir = 'DefaultTheme';
     protected static $backendTheme = false;
 
-    protected static $specificNodesControllers = array(
+    protected static $specificNodesControllers = [
         // Put here your nodes which need a specific controller
         // instead of a node-type controller
-    );
+    ];
 
     public function homeAction(
         Request $request,
@@ -92,20 +92,20 @@ class DefaultThemeApp extends FrontendController
         parent::prepareThemeAssignation($node, $translation);
 
         $this->themeContainer['imageFormats'] = function ($c) {
-            $array = array();
+            $array = [];
 
             /*
              * Common image format for pages headers
              */
-            $array['headerImage'] = array(
+            $array['headerImage'] = [
                 'width' => 1600,
-            );
-            $array['thumbnail'] = array(
+            ];
+            $array['thumbnail'] = [
                 "width" => 200,
                 "crop" => "1:1",
                 "controls" => true,
                 "embed" => true,
-            );
+            ];
 
             return $array;
         };
@@ -143,7 +143,7 @@ class DefaultThemeApp extends FrontendController
             $this->translation = $this->getService('em')
                  ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                  ->findOneBy(
-                     array('defaultTranslation' => true)
+                     ['defaultTranslation' => true]
                  );
         }
         $parent = $this->getService('em')
@@ -153,13 +153,13 @@ class DefaultThemeApp extends FrontendController
         if ($parent !== null) {
             return $this->getService('nodeApi')
                         ->getBy(
-                            array(
+                            [
                                 'parent' => $parent,
                                 'translation' => $this->translation,
-                            ),
-                            array(
+                            ],
+                            [
                                 'position' => 'ASC',
-                            )
+                            ]
                         );
         }
 
@@ -182,7 +182,7 @@ class DefaultThemeApp extends FrontendController
         return new Response(
             $this->getTwig()->render('404.html.twig', $this->assignation),
             Response::HTTP_NOT_FOUND,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -202,13 +202,13 @@ class DefaultThemeApp extends FrontendController
              * Remove this in your theme if you don’t
              * want to extend Back-office
              */
-            $entries['test'] = array(
+            $entries['test'] = [
                 'name' => 'test',
                 'path' => $c['urlGenerator']->generate('adminTestPage'),
                 'icon' => 'uk-icon-cube',
                 'roles' => null,
                 'subentries' => null,
-            );
+            ];
 
             return $entries;
         });

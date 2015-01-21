@@ -46,7 +46,7 @@ class AdminController extends RozierApp
         return new Response(
             $this->getTwig()->render('admin/test.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 }

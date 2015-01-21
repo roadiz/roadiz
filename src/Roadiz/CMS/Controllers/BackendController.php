@@ -69,10 +69,10 @@ class BackendController extends AppController
              */
             $requestMatcher = new RequestMatcher('^/rz-admin');
             // allows configuration of different access control rules for specific parts of the website.
-            $accessMap = new AccessMap($requestMatcher, array(
+            $accessMap = new AccessMap($requestMatcher, [
                 Role::ROLE_BACKEND_USER,
                 Role::ROLE_SUPERADMIN
-            ));
+            ]);
 
             /*
              * Listener
@@ -81,14 +81,14 @@ class BackendController extends AppController
                 $c['securityContext'],
                 $c['httpUtils'],
                 new DefaultLogoutSuccessHandler($c['httpUtils'], '/login'),
-                array(
+                [
                     'logout_path'    => '/rz-admin/logout',
-                )
+                ]
             );
             //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
             $logoutListener->addHandler(new \Symfony\Component\Security\Http\Logout\SessionLogoutHandler());
 
-            $listeners = array(
+            $listeners = [
                 // manages the SecurityContext persistence through a session
                 $c['contextListener'],
                 // logout users
@@ -100,22 +100,22 @@ class BackendController extends AppController
                     new SessionAuthenticationStrategy(SessionAuthenticationStrategy::INVALIDATE),
                     $c['httpUtils'],
                     Kernel::SECURITY_DOMAIN,
-                    new AuthenticationSuccessHandler($c['httpUtils'], array(
+                    new AuthenticationSuccessHandler($c['httpUtils'], [
                         'always_use_default_target_path' => false,
                         'default_target_path'            => '/rz-admin',
                         'login_path'                     => '/login',
                         'target_path_parameter'          => '_target_path',
                         'use_referer'                    => true,
-                    )),
-                    new DefaultAuthenticationFailureHandler($c['httpKernel'], $c['httpUtils'], array(
+                    ]),
+                    new DefaultAuthenticationFailureHandler($c['httpKernel'], $c['httpUtils'], [
                         'failure_path'           => '/login',
                         'failure_forward'        => false,
                         'login_path'             => '/login',
                         'failure_path_parameter' => '_failure_path'
-                    ), $c['logger']),
-                    array(
+                    ], $c['logger']),
+                    [
                         'check_path' => '/rz-admin/login_check',
-                    ),
+                    ],
                     $c['logger'], // A LoggerInterface instance
                     $c['dispatcher'],
                     null//$c['csrfProvider'] //csrfTokenManager
@@ -128,7 +128,7 @@ class BackendController extends AppController
                     $c['authentificationManager']
                 ),
                 $c["switchUser"],
-            );
+            ];
 
             $map->add($requestMatcher, $listeners, $c['firewallExceptionListener']);
 

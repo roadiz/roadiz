@@ -50,7 +50,7 @@ class DashboardController extends RozierApp
         return new Response(
             $this->getTwig()->render('dashboard/index.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 }

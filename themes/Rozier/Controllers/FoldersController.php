@@ -71,7 +71,7 @@ class FoldersController extends RozierApp
         return new Response(
             $this->getTwig()->render('folders/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -94,7 +94,7 @@ class FoldersController extends RozierApp
 
                 $msg = $this->getTranslator()->trans(
                     'folder.%name%.created',
-                    array('%name%'=>$folder->getName())
+                    ['%name%'=>$folder->getName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
 
@@ -117,7 +117,7 @@ class FoldersController extends RozierApp
         return new Response(
             $this->getTwig()->render('folders/add.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -145,7 +145,7 @@ class FoldersController extends RozierApp
                     $this->deleteFolder($form->getData(), $folder);
                     $msg = $this->getTranslator()->trans(
                         'folder.%name%.deleted',
-                        array('%name%'=>$folder->getName())
+                        ['%name%'=>$folder->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
@@ -169,7 +169,7 @@ class FoldersController extends RozierApp
             return new Response(
                 $this->getTwig()->render('folders/delete.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -200,7 +200,7 @@ class FoldersController extends RozierApp
                     $this->editFolder($form, $folder); // only pass form for file handling
                     $msg = $this->getTranslator()->trans(
                         'folder.%name%.updated',
-                        array('%name%'=>$folder->getName())
+                        ['%name%'=>$folder->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
@@ -224,7 +224,7 @@ class FoldersController extends RozierApp
             return new Response(
                 $this->getTwig()->render('folders/edit.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -271,11 +271,11 @@ class FoldersController extends RozierApp
             $response = new Response(
                 file_get_contents($file),
                 Response::HTTP_OK,
-                array(
+                [
                     'content-type' => 'application/zip',
                     'content-length' => filesize($file),
                     'content-disposition' => 'attachment; filename='.$filename
-                )
+                ]
             );
             unlink($file);
 
@@ -294,9 +294,9 @@ class FoldersController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('name', 'text', array(
+            ->add('name', 'text', [
                 'label' => $this->getTranslator()->trans('folder.name'),
-            ));
+            ]);
 
         return $builder->getForm();
     }
@@ -311,9 +311,9 @@ class FoldersController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('folder_id', 'hidden', array(
+            ->add('folder_id', 'hidden', [
                 'data'=>$folder->getId()
-            ));
+            ]);
 
         return $builder->getForm();
     }
@@ -326,17 +326,17 @@ class FoldersController extends RozierApp
      */
     protected function buildEditForm(Folder $folder)
     {
-        $defaults = array(
+        $defaults = [
             'name'=>$folder->getName()
-        );
+        ];
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
-            ->add('folder_id', 'hidden', array(
+            ->add('folder_id', 'hidden', [
                 'data'=>$folder->getId()
-            ))
-            ->add('name', 'text', array(
+            ])
+            ->add('name', 'text', [
                 'label' => $this->getTranslator()->trans('folder.name'),
-            ));
+            ]);
 
         return $builder->getForm();
     }
@@ -354,7 +354,7 @@ class FoldersController extends RozierApp
         if (isset($data['name'])) {
             $existing = $this->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                    ->findOneBy(array('name' => $data['name']));
+                    ->findOneBy(['name' => $data['name']]);
 
             if ($existing !== null) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans("folder.already_exists"), 1);
@@ -387,7 +387,7 @@ class FoldersController extends RozierApp
         if (isset($data['name'])) {
             $existing = $this->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                    ->findOneBy(array('name' => $data['name']));
+                    ->findOneBy(['name' => $data['name']]);
             if ($existing !== null &&
                 $existing->getId() != $folder->getId()) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans("folder.name.already_exists"), 1);

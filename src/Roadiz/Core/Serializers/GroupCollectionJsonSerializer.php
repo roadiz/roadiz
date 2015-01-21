@@ -48,7 +48,7 @@ class GroupCollectionJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($groups)
     {
-        $data = array();
+        $data = [];
 
         foreach ($groups as $group) {
             $data[] = GroupJsonSerializer::toArray($group);

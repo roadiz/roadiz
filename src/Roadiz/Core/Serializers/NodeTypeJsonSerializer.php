@@ -47,7 +47,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($nodeType)
     {
-        $data = array();
+        $data = [];
 
         $data['name'] =           $nodeType->getName();
         $data['displayName'] =    $nodeType->getDisplayName();
@@ -55,7 +55,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
         $data['visible'] =        $nodeType->isVisible();
         $data['newsletterType'] = $nodeType->isNewsletterType();
         $data['hidingNodes'] =    $nodeType->isHidingNodes();
-        $data['fields'] =         array();
+        $data['fields'] =         [];
 
         foreach ($nodeType->getFields() as $nodeTypeField) {
             $nodeTypeFieldData = NodeTypeFieldJsonSerializer::toArray($nodeTypeField);
@@ -77,7 +77,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
     {
         $encoder = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes(array(
+        $normalizer->setCamelizedAttributes([
             'name',
             'displayName',
             'display_name',
@@ -85,9 +85,9 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
             'visible',
             'newsletterType',
             'hidingNodes'
-        ));
+        ]);
 
-        $serializer = new Serializer(array($normalizer), array($encoder));
+        $serializer = new Serializer([$normalizer], [$encoder]);
         $nodeType = $serializer->deserialize($string, 'RZ\Roadiz\Core\Entities\NodeType', 'json');
 
         /*

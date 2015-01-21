@@ -108,7 +108,7 @@ class Group extends AbstractEntity
     public function getRoles()
     {
         if ($this->rolesNames === null) {
-            $this->rolesNames = array();
+            $this->rolesNames = [];
             foreach ($this->getRolesEntities() as $role) {
                 $this->rolesNames[] = $role->getName();
             }

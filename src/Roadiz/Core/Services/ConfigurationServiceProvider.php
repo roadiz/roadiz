@@ -61,11 +61,11 @@ class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
             if (isset($c['config']['entities'])) {
                 return $c['config']['entities'];
             } else {
-                return array(
+                return [
                     "src/Roadiz/Core/Entities",
                     "src/Roadiz/Core/AbstractEntities",
                     "gen-src/GeneratedNodeSources"
-                );
+                ];
             }
         };
 

@@ -49,10 +49,10 @@ class EntryPointsController extends AppController
 {
     const CONTACT_FORM_TOKEN_INTENTION = 'contact_form';
 
-    protected static $mandatoryContactFields = array(
+    protected static $mandatoryContactFields = [
         'email',
         'message'
-    );
+    ];
 
     /**
      * Initialize controller with NO twig environment.
@@ -76,9 +76,9 @@ class EntryPointsController extends AppController
      */
     public static function getRoutes()
     {
-        $locator = new FileLocator(array(
+        $locator = new FileLocator([
             ROADIZ_ROOT.'/src/Roadiz/CMS/Resources'
-        ));
+        ]);
 
         if (file_exists(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
@@ -99,19 +99,19 @@ class EntryPointsController extends AppController
     {
         if ($request->getMethod() != $method ||
             !is_array($request->get('form'))) {
-            return array(
+            return [
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
                 'responseText' => 'Wrong request'
-            );
+            ];
         }
         if (!$this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::CONTACT_FORM_TOKEN_INTENTION, $request->get('form')['_token'])) {
-            return array(
+            return [
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
                 'responseText' => 'Bad token'
-            );
+            ];
         }
 
         return true;
@@ -139,15 +139,15 @@ class EntryPointsController extends AppController
             return new Response(
                 json_encode($validation),
                 Response::HTTP_FORBIDDEN,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
         $canSend = true;
-        $responseArray = array(
+        $responseArray = [
             'statusCode'   => Response::HTTP_OK,
             'status'       => 'success',
             'field_error'  => null
-        );
+        ];
 
         foreach (static::$mandatoryContactFields as $mandatoryField) {
             if (empty($request->get('form')[$mandatoryField])) {
@@ -156,7 +156,7 @@ class EntryPointsController extends AppController
                 $responseArray['field_error'] = $mandatoryField;
                 $responseArray['message'] = $this->getTranslator()->trans(
                     '%field%.is.mandatory',
-                    array('%field%' => ucwords($mandatoryField))
+                    ['%field%' => ucwords($mandatoryField)]
                 );
 
                 $request->getSession()->getFlashBag()->add('error', $responseArray['message']);
@@ -219,15 +219,15 @@ class EntryPointsController extends AppController
         if ($canSend) {
             $receiver = SettingsBag::get('email_sender');
 
-            $assignation = array(
+            $assignation = [
                 'mailContact' => SettingsBag::get('email_sender'),
                 'title' => $this->getTranslator()->trans(
                     'new.contact.form.%site%',
-                    array('%site%'=>SettingsBag::get('site_name'))
+                    ['%site%'=>SettingsBag::get('site_name')]
                 ),
                 'email' => $request->get('form')['email'],
-                'fields' => array()
-            );
+                'fields' => []
+            ];
 
             /*
              * text values
@@ -236,10 +236,10 @@ class EntryPointsController extends AppController
                 if ($key[0] == '_') {
                     continue;
                 } elseif (!empty($value)) {
-                    $assignation['fields'][] = array(
+                    $assignation['fields'][] = [
                         'name' => strip_tags($key),
                         'value' => (strip_tags($value))
-                    );
+                    ];
                 }
             }
 
@@ -247,26 +247,26 @@ class EntryPointsController extends AppController
              * Files values
              */
             foreach ($uploadedFiles as $key => $uploadedFile) {
-                $assignation['fields'][] = array(
+                $assignation['fields'][] = [
                     'name' => strip_tags($key),
                     'value' => (strip_tags($uploadedFile->getClientOriginalName()) .' ['. $uploadedFile->guessExtension().']')
-                );
+                ];
             }
 
             /*
              *  Date
              */
-            $assignation['fields'][] = array(
+            $assignation['fields'][] = [
                 'name' => $this->getTranslator()->trans('date'),
                 'value' => (new \DateTime())->format('Y-m-d H:i:s')
-            );
+            ];
             /*
              *  IP
              */
-            $assignation['fields'][] = array(
+            $assignation['fields'][] = [
                 'name' => $this->getTranslator()->trans('ip.address'),
                 'value' => $request->getClientIp()
-            );
+            ];
 
             /*
              * Custom receiver
@@ -320,7 +320,7 @@ class EntryPointsController extends AppController
             return new Response(
                 json_encode($responseArray),
                 Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
     }
@@ -408,47 +408,47 @@ class EntryPointsController extends AppController
         $customEmailSubject = null
     ) {
         $action = Kernel::getService('urlGenerator')
-                        ->generate('contactFormLocaleAction', array(
+                        ->generate('contactFormLocaleAction', [
                             '_locale' => $request->getLocale()
-                        ));
+                        ]);
 
 
         $builder = Kernel::getService('formFactory')
-            ->createBuilder('form', null, array(
+            ->createBuilder('form', null, [
                 'csrf_provider' => Kernel::getService('csrfProvider'),
                 'intention' => static::CONTACT_FORM_TOKEN_INTENTION,
-                'attr' => array(
+                'attr' => [
                     'id' => 'contactForm'
-                )
-            ))
+                ]
+            ])
             ->setMethod('POST')
             ->setAction($action)
-            ->add('_action', 'hidden', array(
+            ->add('_action', 'hidden', [
                 'data' => 'contact'
-            ));
+            ]);
 
         if (true === $redirect) {
             if (null !== $customRedirectUrl) {
-                $builder->add('_redirect', 'hidden', array(
+                $builder->add('_redirect', 'hidden', [
                     'data' => strip_tags($customRedirectUrl)
-                ));
+                ]);
             } else {
-                $builder->add('_redirect', 'hidden', array(
+                $builder->add('_redirect', 'hidden', [
                     'data' => strip_tags($request->getURI())
-                ));
+                ]);
             }
         }
 
         if (null !== $customEmailReceiver) {
-            $builder->add('_emailReceiver', 'hidden', array(
+            $builder->add('_emailReceiver', 'hidden', [
                 'data' => StringHandler::encodeWithSecret($customEmailReceiver, Kernel::getService('config')['security']['secret'])
-            ));
+            ]);
         }
 
         if (null !== $customEmailSubject) {
-            $builder->add('_emailSubject', 'hidden', array(
+            $builder->add('_emailSubject', 'hidden', [
                 'data' => StringHandler::encodeWithSecret($customEmailSubject, Kernel::getService('config')['security']['secret'])
-            ));
+            ]);
         }
 
         return $builder;
@@ -480,7 +480,7 @@ class EntryPointsController extends AppController
         } else {
             $subject = $this->getTranslator()->trans(
                 'new.contact.form.%site%',
-                array('%site%'=>SettingsBag::get('site_name'))
+                ['%site%'=>SettingsBag::get('site_name')]
             );
         }
 
@@ -489,9 +489,9 @@ class EntryPointsController extends AppController
             // Give the message a subject
             ->setSubject($subject)
             // Set the From address with an associative array
-            ->setFrom(array($assignation['email']))
+            ->setFrom([$assignation['email']])
             // Set the To addresses with an associative array
-            ->setTo(array($receiver))
+            ->setTo([$receiver])
             // Give it a body
             ->setBody($htmldoc->getHTML(), 'text/html');
 

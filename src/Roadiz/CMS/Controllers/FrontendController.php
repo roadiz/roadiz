@@ -77,9 +77,9 @@ class FrontendController extends AppController
      *
      * @var array
      */
-    protected static $specificNodesControllers = array(
+    protected static $specificNodesControllers = [
         'home',
-    );
+    ];
 
     protected $node = null;
     protected $translation = null;
@@ -107,10 +107,10 @@ class FrontendController extends AppController
             $translation = $this->getService('em')
                                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                 ->findOneBy(
-                                    array(
+                                    [
                                         'locale' => $_locale,
                                         'available' => true,
-                                    )
+                                    ]
                                 );
             if ($translation === null) {
                 throw new NoTranslationAvailableException();
@@ -164,9 +164,9 @@ class FrontendController extends AppController
             $translation = $this->getService('em')
                                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                 ->findOneBy(
-                                    array(
+                                    [
                                         'locale' => $_locale,
-                                    )
+                                    ]
                                 );
         } else {
             $translation = $this->getService('em')
@@ -180,7 +180,7 @@ class FrontendController extends AppController
         $node = $this->getService('em')
                      ->getRepository('RZ\Roadiz\Core\Entities\Node')
                      ->findOneBy(
-                         array('home' => true),
+                         ['home' => true],
                          null,
                          $translation,
                          $this->getSecurityContext()
@@ -191,7 +191,7 @@ class FrontendController extends AppController
         return new Response(
             $this->getTwig()->render('home.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -339,11 +339,11 @@ class FrontendController extends AppController
                             ->findDefault();
 
         $this->assignation['_default_locale'] = $translation->getLocale();
-        $this->assignation['meta'] = array(
+        $this->assignation['meta'] = [
             'siteName' => SettingsBag::get('site_name'),
             'siteCopyright' => SettingsBag::get('site_copyright'),
             'siteDescription' => SettingsBag::get('seo_description'),
-        );
+        ];
 
         return $this;
     }
@@ -383,7 +383,7 @@ class FrontendController extends AppController
             $ns = $this->node->getNodeSources()->first();
 
             if (null !== $ns) {
-                return array(
+                return [
                     'title' => ($ns->getMetaTitle() != "") ?
                     $ns->getMetaTitle() :
                     $ns->getTitle() . ' – ' . SettingsBag::get('site_name'),
@@ -391,12 +391,12 @@ class FrontendController extends AppController
                     $ns->getMetaDescription() :
                     $ns->getTitle() . ', ' . SettingsBag::get('seo_description'),
                     'keywords' => $ns->getMetaKeywords(),
-                );
+                ];
             }
         }
 
         if (null !== $fallbackNodeSource) {
-            return array(
+            return [
                 'title' => ($fallbackNodeSource->getMetaTitle() != "") ?
                 $fallbackNodeSource->getMetaTitle() :
                 $fallbackNodeSource->getTitle() . ' – ' . SettingsBag::get('site_name'),
@@ -404,10 +404,10 @@ class FrontendController extends AppController
                 $fallbackNodeSource->getMetaDescription() :
                 $fallbackNodeSource->getTitle() . ', ' . SettingsBag::get('seo_description'),
                 'keywords' => $fallbackNodeSource->getMetaKeywords(),
-            );
+            ];
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -423,13 +423,13 @@ class FrontendController extends AppController
              */
             $requestMatcher = new RequestMatcher('^/');
 
-            $listeners = array(
+            $listeners = [
                 // manages the SecurityContext persistence through a session
                 $c['contextListener'],
                 // automatically adds a Token if none is already present.
                 new AnonymousAuthenticationListener($c['securityContext'], ''), // $key
                 $c["switchUser"],
-            );
+            ];
 
             /*
              * Inject a new firewall map element

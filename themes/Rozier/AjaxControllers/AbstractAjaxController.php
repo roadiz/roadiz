@@ -49,26 +49,26 @@ abstract class AbstractAjaxController extends RozierApp
     protected function validateRequest(Request $request, $method = 'POST')
     {
         if ($request->get('_action') == "") {
-            return array(
+            return [
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
                 'responseText' => 'Wrong request'
-            );
+            ];
         }
         if (!$this->getService('csrfProvider')
                 ->isCsrfTokenValid(static::AJAX_TOKEN_INTENTION, $request->get('_token'))) {
-            return array(
+            return [
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
                 'responseText' => 'Bad token'
-            );
+            ];
         }
         if ($request->getMethod() != $method) {
-            return array(
+            return [
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',
                 'responseText' => 'Bad method'
-            );
+            ];
         }
 
         return true;

@@ -51,7 +51,7 @@ class MultipleEnumerationType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $choices = array();
+        $choices = [];
         $values = explode(',', $this->field->getDefaultValues());
 
         foreach ($values as $value) {
@@ -59,10 +59,10 @@ class MultipleEnumerationType extends AbstractType
             $choices[$value] = $value;
         }
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices' => $choices,
             'multiple' => true
-        ));
+        ]);
     }
     /**
      * {@inheritdoc}

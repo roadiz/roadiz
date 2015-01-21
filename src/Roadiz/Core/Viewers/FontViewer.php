@@ -76,12 +76,12 @@ class FontViewer implements ViewableInterface
      */
     public function getCSSFontFace(SessionCsrfProvider $csrfProvider)
     {
-        $assignation = array(
+        $assignation = [
             'font' => $this->font,
             'site' => SettingsBag::get('site_name'),
             'fontFolder' => '/'.Font::getFilesFolderName(),
             'csrfProvider' => $csrfProvider
-        );
+        ];
 
         return $this->getTwig()->render('fonts/fontfamily.css.twig', $assignation);
     }

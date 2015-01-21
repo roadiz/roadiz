@@ -103,7 +103,7 @@ class NodeRepository extends EntityRepository
         }
         $results = $query->getResult();
         $count = count($tags);
-        $nodes = array();
+        $nodes = [];
         foreach ($results as $key => $result) {
             if ($count === (int) $result["num"]) {
                 $nodes[] = $result["id"];
@@ -923,7 +923,7 @@ class NodeRepository extends EntityRepository
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = array(),
+        array $criteria = [],
         $alias = "obj"
     ) {
 

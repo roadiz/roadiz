@@ -308,7 +308,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     public function getRoles()
     {
 
-        $this->rolesNames = array();
+        $this->rolesNames = [];
         foreach ($this->getRolesEntities() as $role) {
             $this->rolesNames[] = $role->getName();
         }
@@ -420,7 +420,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      */
     public function getGroupNames()
     {
-        $names = array();
+        $names = [];
         foreach ($this->getGroups() as $group) {
             $names[] = $group->getName();
         }

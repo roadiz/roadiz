@@ -99,7 +99,7 @@ class DocumentRepository extends EntityRepository
         }
         $results = $query->getResult();
         $count = count($folders);
-        $documents = array();
+        $documents = [];
         foreach ($results as $key => $result) {
             if ($count === (int) $result["num"]) {
                 $documents[] = $result["id"];
@@ -182,7 +182,7 @@ class DocumentRepository extends EntityRepository
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = array(),
+        array $criteria = [],
         $alias = "obj"
     ) {
 
@@ -192,7 +192,7 @@ class DocumentRepository extends EntityRepository
          * Search in translations
          */
         $qb->leftJoin($alias.'.documentTranslations', 'dt');
-        $criteriaFields = array();
+        $criteriaFields = [];
         $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\DocumentTranslation');
         $cols = $metadatas->getColumnNames();
         foreach ($cols as $col) {

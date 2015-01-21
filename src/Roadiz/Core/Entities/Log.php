@@ -56,7 +56,7 @@ class Log extends AbstractEntity
      * @param string $message
      * @param array  $context
      */
-    public function __construct($level, $message, array $context = array())
+    public function __construct($level, $message, array $context = [])
     {
         $this->level = $level;
         $this->message = $message;

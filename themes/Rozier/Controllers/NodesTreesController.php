@@ -65,7 +65,7 @@ class NodesTreesController extends RozierApp
         if (null !== $translationId) {
             $translation = $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                ->findOneBy(array('id'=>(int) $translationId));
+                ->findOneBy(['id'=>(int) $translationId]);
         } else {
             $translation = $this->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Translation')
@@ -115,7 +115,7 @@ class NodesTreesController extends RozierApp
                 $response = new RedirectResponse(
                     $this->getService('urlGenerator')->generate(
                         'nodesTreePage',
-                        array('nodeId' => $nodeId, 'translationId' => $translationId)
+                        ['nodeId' => $nodeId, 'translationId' => $translationId]
                     )
                 );
                 $response->prepare($request);
@@ -145,7 +145,7 @@ class NodesTreesController extends RozierApp
             return new Response(
                 $this->getTwig()->render('nodes/tree.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } else {
             return $this->throw404();
@@ -168,9 +168,9 @@ class NodesTreesController extends RozierApp
 
             $nodes = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findBy(array(
+                            ->findBy([
                                 'id' => $nodesIds
-                            ));
+                            ]);
 
             if (count($nodes) > 0) {
                 $form = $this->buildBulkDeleteForm(
@@ -206,7 +206,7 @@ class NodesTreesController extends RozierApp
                 return new Response(
                     $this->getTwig()->render('nodes/bulkDelete.html.twig', $this->assignation),
                     Response::HTTP_OK,
-                    array('content-type' => 'text/html')
+                    ['content-type' => 'text/html']
                 );
             }
         }
@@ -230,9 +230,9 @@ class NodesTreesController extends RozierApp
 
             $nodes = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findBy(array(
+                            ->findBy([
                                 'id' => $nodesIds
-                            ));
+                            ]);
 
             if (count($nodes) > 0) {
                 $form = $this->buildBulkStatusForm(
@@ -272,7 +272,7 @@ class NodesTreesController extends RozierApp
                 return new Response(
                     $this->getTwig()->render('nodes/bulkStatus.html.twig', $this->assignation),
                     Response::HTTP_OK,
-                    array('content-type' => 'text/html')
+                    ['content-type' => 'text/html']
                 );
             }
         }
@@ -286,22 +286,22 @@ class NodesTreesController extends RozierApp
      */
     private function buildBulkDeleteForm(
         $referer = false,
-        $nodesIds = array()
+        $nodesIds = []
     ) {
         $builder = $this->getService('formFactory')
                     ->createNamedBuilder('deleteForm')
-                    ->add('nodesIds', 'hidden', array(
+                    ->add('nodesIds', 'hidden', [
                         'data' => implode(',', $nodesIds),
-                        'attr' => array('class' => 'nodes-id-bulk-tags'),
-                        'constraints' => array(
+                        'attr' => ['class' => 'nodes-id-bulk-tags'],
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ));
+                        ]
+                    ]);
 
         if (false !== $referer) {
-            $builder->add('referer', 'hidden', array(
+            $builder->add('referer', 'hidden', [
                 'data' => $referer,
-            ));
+            ]);
         }
 
         return $builder->getForm();
@@ -320,9 +320,9 @@ class NodesTreesController extends RozierApp
 
             $nodes = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findBy(array(
+                            ->findBy([
                                 'id' => $nodesIds
-                            ));
+                            ]);
 
             foreach ($nodes as $node) {
                 $node->getHandler()->softRemoveWithChildren();
@@ -350,9 +350,9 @@ class NodesTreesController extends RozierApp
 
             $nodes = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findBy(array(
+                            ->findBy([
                                 'id' => $nodesIds
-                            ));
+                            ]);
 
             foreach ($nodes as $node) {
                 $node->setStatus($data['status']);
@@ -373,38 +373,38 @@ class NodesTreesController extends RozierApp
     {
         $builder = $this->getService('formFactory')
                     ->createNamedBuilder('tagForm')
-                    ->add('nodesIds', 'hidden', array(
-                        'attr' => array('class' => 'nodes-id-bulk-tags'),
-                        'constraints' => array(
+                    ->add('nodesIds', 'hidden', [
+                        'attr' => ['class' => 'nodes-id-bulk-tags'],
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ))
-                    ->add('tagsPaths', 'text', array(
+                        ]
+                    ])
+                    ->add('tagsPaths', 'text', [
                         'label' => false,
-                        'attr' => array(
+                        'attr' => [
                             'class' => 'rz-tag-autocomplete',
                             'placeholder' => $this->getTranslator()->trans('list.tags.to_link.or_unlink')
-                        ),
-                        'constraints' => array(
+                        ],
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ))
-                    ->add('submitTag', 'submit', array(
+                        ]
+                    ])
+                    ->add('submitTag', 'submit', [
                         'label' => $this->getTranslator()->trans('link.tags'),
-                        'attr' => array(
+                        'attr' => [
                             'class' => 'uk-button uk-button-primary',
                             'title' => $this->getTranslator()->trans('link.tags'),
                             'data-uk-tooltip' => "{animation:true}"
-                        )
-                    ))
-                    ->add('submitUntag', 'submit', array(
+                        ]
+                    ])
+                    ->add('submitUntag', 'submit', [
                         'label' => $this->getTranslator()->trans('unlink.tags'),
-                        'attr' => array(
+                        'attr' => [
                             'class' => 'uk-button',
                             'title' => $this->getTranslator()->trans('unlink.tags'),
                             'data-uk-tooltip' => "{animation:true}"
-                        )
-                    ));
+                        ]
+                    ]);
 
         return $builder->getForm();
     }
@@ -425,9 +425,9 @@ class NodesTreesController extends RozierApp
 
             $nodes = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findBy(array(
+                            ->findBy([
                                 'id' => $nodesIds
-                            ));
+                            ]);
 
 
             $paths = explode(',', $data['tagsPaths']);
@@ -467,9 +467,9 @@ class NodesTreesController extends RozierApp
 
             $nodes = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findBy(array(
+                            ->findBy([
                                 'id' => $nodesIds
-                            ));
+                            ]);
 
 
             $paths = explode(',', $data['tagsPaths']);
@@ -500,47 +500,47 @@ class NodesTreesController extends RozierApp
      */
     private function buildBulkStatusForm(
         $referer = false,
-        $nodesIds = array(),
+        $nodesIds = [],
         $status = Node::DRAFT,
         $submit = true
     ) {
         $builder = $this->getService('formFactory')
                     ->createNamedBuilder('statusForm')
-                    ->add('nodesIds', 'hidden', array(
-                        'attr' => array('class' => 'nodes-id-bulk-status'),
+                    ->add('nodesIds', 'hidden', [
+                        'attr' => ['class' => 'nodes-id-bulk-status'],
                         'data' => implode(',', $nodesIds),
-                        'constraints' => array(
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ))
-                    ->add('status', 'choice', array(
+                        ]
+                    ])
+                    ->add('status', 'choice', [
                         'label' => false,
                         'data' => $status,
-                        'choices' => array(
+                        'choices' => [
                             Node::DRAFT => $this->getTranslator()->trans('draft'),
                             Node::PENDING => $this->getTranslator()->trans('pending'),
                             Node::PUBLISHED => $this->getTranslator()->trans('published'),
                             Node::ARCHIVED => $this->getTranslator()->trans('archived')
-                        ),
-                        'constraints' => array(
+                        ],
+                        'constraints' => [
                             new NotBlank()
-                        )
-                    ));
+                        ]
+                    ]);
 
         if (false !== $referer) {
-            $builder->add('referer', 'hidden', array(
+            $builder->add('referer', 'hidden', [
                 'data' => $referer,
-            ));
+            ]);
         }
         if (true === $submit) {
-            $builder->add('submitStatus', 'submit', array(
+            $builder->add('submitStatus', 'submit', [
                 'label' => $this->getTranslator()->trans('change.nodes.status'),
-                'attr' => array(
+                'attr' => [
                     'class' => 'uk-button uk-button-primary',
                     'title' => $this->getTranslator()->trans('change.nodes.status'),
                     'data-uk-tooltip' => "{animation:true}"
-                )
-            ));
+                ]
+            ]);
         }
 
         return $builder->getForm();

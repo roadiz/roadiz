@@ -63,9 +63,9 @@ class AssetsController extends AppController
      */
     public static function getRoutes()
     {
-        $locator = new FileLocator(array(
+        $locator = new FileLocator([
             ROADIZ_ROOT.'/src/Roadiz/CMS/Resources'
-        ));
+        ]);
 
         if (file_exists(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/assetsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
@@ -108,7 +108,7 @@ class AssetsController extends AppController
     {
         $font = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Font')
-            ->findOneBy(array('hash'=>$filename, 'variant'=>$variant));
+            ->findOneBy(['hash'=>$filename, 'variant'=>$variant]);
 
         if (null !== $font) {
             if ($this->getService('csrfProvider')->isCsrfTokenValid($font->getHash().$font->getVariant(), $token)) {
@@ -144,14 +144,14 @@ class AssetsController extends AppController
                     return new Response(
                         file_get_contents($fontpath),
                         Response::HTTP_OK,
-                        array('content-type' => $mime)
+                        ['content-type' => $mime]
                     );
                 }
             } else {
                 return new Response(
                     "Font Fail ".$token,
                     Response::HTTP_NOT_FOUND,
-                    array('content-type' => 'text/html')
+                    ['content-type' => 'text/html']
                 );
             }
 
@@ -159,7 +159,7 @@ class AssetsController extends AppController
             return new Response(
                 "Font doesn't exist ".$filename,
                 Response::HTTP_NOT_FOUND,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         }
     }
@@ -183,14 +183,14 @@ class AssetsController extends AppController
             $response = new Response(
                 '',
                 Response::HTTP_NOT_MODIFIED,
-                array('content-type' => 'text/css')
+                ['content-type' => 'text/css']
             );
-            $response->setCache(array(
+            $response->setCache([
                 'last_modified' => new \DateTime($lastMod),
                 'max_age'       => 1800,
                 's_maxage'      => 600,
                 'public'        => true
-            ));
+            ]);
 
             if ($response->isNotModified($request)) {
                 return $response;
@@ -201,7 +201,7 @@ class AssetsController extends AppController
                 ->findAll();
 
 
-            $fontOutput = array();
+            $fontOutput = [];
 
             foreach ($fonts as $font) {
                 $fontOutput[] = $font->getViewer()->getCSSFontFace($this->getService('csrfProvider'));
@@ -215,7 +215,7 @@ class AssetsController extends AppController
             return new Response(
                 "Font Fail",
                 Response::HTTP_NOT_FOUND,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         }
     }

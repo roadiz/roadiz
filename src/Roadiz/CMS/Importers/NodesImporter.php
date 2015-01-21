@@ -64,8 +64,8 @@ class NodesImporter implements ImporterInterface
 
     protected static function browseTree($node)
     {
-        $childObj = array();
-        $sourceObj = array();
+        $childObj = [];
+        $sourceObj = [];
         foreach ($node->getChildren() as $child) {
             $childObj[] = static::browseTree($child);
         }

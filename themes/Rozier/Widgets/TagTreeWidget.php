@@ -68,14 +68,14 @@ class TagTreeWidget extends AbstractWidget
         if ($this->translation === null) {
             $this->translation = $this->getController()->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findOneBy(array('defaultTranslation'=>true));
+                    ->findOneBy(['defaultTranslation'=>true]);
         }
 
         $this->tags = $this->getController()->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                 ->findBy(
-                    array('parent'=>$this->parentTag, 'translation'=>$this->translation),
-                    array('position'=>'ASC')
+                    ['parent'=>$this->parentTag, 'translation'=>$this->translation],
+                    ['position'=>'ASC']
                 );
     }
 
@@ -89,12 +89,12 @@ class TagTreeWidget extends AbstractWidget
         if ($this->translation === null) {
             $this->translation = $this->getController()->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findOneBy(array('defaultTranslation'=>true));
+                    ->findOneBy(['defaultTranslation'=>true]);
         }
         if ($parent !== null) {
             return $this->tags = $this->getController()->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                    ->findBy(array('parent'=>$parent), array('position'=>'ASC'));
+                    ->findBy(['parent'=>$parent], ['position'=>'ASC']);
         }
 
         return null;

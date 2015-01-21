@@ -58,7 +58,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
@@ -77,23 +77,23 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
                                      ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                                      ->searchBy(
                                          strip_tags($request->get('searchTerms')),
-                                         array(),
-                                         array(),
+                                         [],
+                                         [],
                                          static::RESULT_COUNT
                                      );
             }
 
             if (null !== $nodesSources &&
                 count($nodesSources) > 0) {
-                $responseArray = array(
+                $responseArray = [
                     'statusCode' => '200',
                     'status' => 'success',
-                    'data' => array(),
+                    'data' => [],
                     'responseText' => count($nodesSources) . ' results found.',
-                );
+                ];
 
                 foreach ($nodesSources as $source) {
-                    $responseArray['data'][] = array(
+                    $responseArray['data'][] = [
                         'title' => "" != $source->getTitle() ? $source->getTitle() : $source->getNode()->getNodeName(),
                         'nodeId' => $source->getNode()->getId(),
                         'translationId' => $source->getTranslation()->getId(),
@@ -101,32 +101,32 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
                         'typeColor' => $source->getNode()->getNodeType()->getColor(),
                         'url' => $this->getService('urlGenerator')->generate(
                             'nodesEditSourcePage',
-                            array(
+                            [
                                 'nodeId' => $source->getNode()->getId(),
                                 'translationId' => $source->getTranslation()->getId(),
-                            )
+                            ]
                         ),
-                    );
+                    ];
                 }
 
                 return new Response(
                     json_encode($responseArray),
                     Response::HTTP_OK,
-                    array('content-type' => 'application/javascript')
+                    ['content-type' => 'application/javascript']
                 );
             }
         }
 
-        $responseArray = array(
+        $responseArray = [
             'statusCode' => '403',
             'status' => 'danger',
             'responseText' => 'No results found.',
-        );
+        ];
 
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 }

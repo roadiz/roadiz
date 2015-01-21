@@ -55,7 +55,7 @@ class UserProvider implements UserProviderInterface
     {
         $user = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\User')
-            ->findOneBy(array('username' => $username));
+            ->findOneBy(['username' => $username]);
 
         if ($user !== null) {
             return $user;

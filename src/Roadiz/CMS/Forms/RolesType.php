@@ -57,7 +57,7 @@ class RolesType extends AbstractType
             ->getRepository('RZ\Roadiz\Core\Entities\Role')
             ->findAll();
 
-        $choices = array();
+        $choices = [];
 
         foreach ($roles as $role) {
             if (!$this->roles->contains($role)) {
@@ -65,9 +65,9 @@ class RolesType extends AbstractType
             }
         }
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices' => $choices
-        ));
+        ]);
     }
     /**
      * {@inheritdoc}

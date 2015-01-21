@@ -150,7 +150,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
      *
      * @var array
      */
-    public static $typeToHuman = array(
+    public static $typeToHuman = [
         AbstractField::STRING_T =>   'string.type',
         AbstractField::DATETIME_T => 'date-time.type',
         AbstractField::TEXT_T =>     'text.type',
@@ -162,13 +162,13 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::ENUM_T =>     'single-choice.type',
         AbstractField::MULTIPLE_T => 'multiple-choice.type',
         AbstractField::DOCUMENTS_T =>'documents.type',
-    );
+    ];
     /**
      * Associates node-type field type to a Doctrine type.
      *
      * @var array
      */
-    public static $typeToDoctrine = array(
+    public static $typeToDoctrine = [
         AbstractField::STRING_T =>   'string',
         AbstractField::DATETIME_T => 'datetime',
         AbstractField::RICHTEXT_T => 'text',
@@ -181,13 +181,13 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::ENUM_T =>     'string',
         AbstractField::MULTIPLE_T => 'simple_array',
         AbstractField::DOCUMENTS_T => null,
-    );
+    ];
     /**
      * Associates node-type field type to a Symfony Form type.
      *
      * @var array
      */
-    public static $typeToForm = array(
+    public static $typeToForm = [
         AbstractField::STRING_T =>   'text',
         AbstractField::DATETIME_T => 'datetime',
         AbstractField::RICHTEXT_T => 'textarea',
@@ -200,19 +200,19 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::ENUM_T =>     'enumeration',
         AbstractField::MULTIPLE_T => 'multiple_enumeration',
         AbstractField::DOCUMENTS_T =>'documents',
-    );
+    ];
 
     /**
      * List searchable fields types in a searchEngine such as Solr.
      *
      * @var array
      */
-    protected static $searchableTypes = array(
+    protected static $searchableTypes = [
         AbstractField::STRING_T,
         AbstractField::RICHTEXT_T,
         AbstractField::TEXT_T,
         AbstractField::MARKDOWN_T,
-    );
+    ];
 
     /**
      * List of forbidden field names.
@@ -221,7 +221,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
      *
      * @var array
      */
-    public static $forbiddenNames = array(
+    public static $forbiddenNames = [
         'title', 'id', 'translation', 'node', 'urlAliases', 'documentsByFields',
         'metaTitle', 'metaKeywords', 'metaDescription', 'order', 'integer', 'int', 'float', 'join',
         'inner', 'select', 'from', 'where', 'by', 'varchar',
@@ -266,7 +266,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         'use', 'using', 'utc_date', 'utc_time', 'utc_timestamp', 'values',
         'varbinary', 'varchar', 'varcharacter', 'varying', 'when', 'where',
         'while', 'with', 'write', 'xor', 'year_month', 'zerofill'
-    );
+    ];
 
     /**
      * @ORM\Id

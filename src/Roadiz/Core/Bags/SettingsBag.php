@@ -41,7 +41,7 @@ class SettingsBag
      *
      * @var array
      */
-    protected static $settings = array();
+    protected static $settings = [];
 
     /**
      * Get a setting value from its name.

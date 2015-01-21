@@ -184,7 +184,7 @@ class ImportController extends InstallApp
      */
     public static function importContent($pathFile, $classImporter, $themeId)
     {
-        $data = array();
+        $data = [];
         $data['status'] = false;
         try {
             if (null === $themeId) {
@@ -212,14 +212,14 @@ class ImportController extends InstallApp
             return new Response(
                 json_encode($data),
                 Response::HTTP_NOT_FOUND,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
         $data['status'] = true;
         return new Response(
             json_encode($data),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 
@@ -228,14 +228,14 @@ class ImportController extends InstallApp
      */
     public function throw404($message = '')
     {
-        $data = array();
+        $data = [];
         $data['status'] = false;
         $data['error'] = 'File to import not found.';
 
         return new Response(
             json_encode($data),
             Response::HTTP_NOT_FOUND,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 }

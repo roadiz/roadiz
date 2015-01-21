@@ -75,8 +75,8 @@ class EntityListManager
         Request $request,
         EntityManager $_em,
         $entityName,
-        $preFilters = array(),
-        $preOrdering = array()
+        $preFilters = [],
+        $preOrdering = []
     ) {
         $this->request =    $request;
         $this->entityName = $entityName;
@@ -84,7 +84,7 @@ class EntityListManager
 
         $this->orderingArray = $preOrdering;
         $this->filteringArray = $preFilters;
-        $this->assignation = array();
+        $this->assignation = [];
         $this->queryArray = $request->query->all();
 
         $this->itemPerPage = static::ITEM_PER_PAGE;
@@ -240,7 +240,7 @@ class EntityListManager
      */
     public function getAssignation()
     {
-        $assign = array(
+        $assign = [
             'description'       => '',
             'search'            => $this->searchPattern,
             'currentPage'       => $this->currentPage,
@@ -251,7 +251,7 @@ class EntityListManager
                                         ->countBy($this->filteringArray),
             'nextPageQuery'     => null,
             'previousPageQuery' => null
-        );
+        ];
 
         // Edit item count after a search
         if ($this->searchPattern != '') {

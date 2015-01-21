@@ -69,12 +69,12 @@ class Fixtures
      */
     public function createFolders()
     {
-        $folders = array(
+        $folders = [
             ROADIZ_ROOT . '/cache',
             ROADIZ_ROOT . '/sources/Compiled',
             ROADIZ_ROOT . '/sources/Proxies',
             ROADIZ_ROOT . '/sources/GeneratedNodeSources',
-        );
+        ];
 
         foreach ($folders as $folder) {
             if (!file_exists($folder)) {
@@ -92,7 +92,7 @@ class Fixtures
     {
         $existing = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(array('backendTheme'=>true, 'available'=>true));
+            ->findOneBy(['backendTheme'=>true, 'available'=>true]);
 
         if (null === $existing) {
             $beTheme = new Theme();
@@ -111,7 +111,7 @@ class Fixtures
     {
         $existing = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findOneBy(array('defaultTranslation'=>true, 'available'=>true));
+            ->findOneBy(['defaultTranslation'=>true, 'available'=>true]);
 
         if (null === $existing) {
             $translation = new Translation();
@@ -146,7 +146,7 @@ class Fixtures
     {
         $existing = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\User')
-            ->findOneBy(array('username'=>$data['username'], 'email'=>$data['email']));
+            ->findOneBy(['username'=>$data['username'], 'email'=>$data['email']]);
 
         if ($existing === null) {
             $user = new User();
@@ -182,7 +182,7 @@ class Fixtures
     {
         $role = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Role')
-                ->findOneBy(array('name'=>$roleName));
+                ->findOneBy(['name'=>$roleName]);
 
         if ($role === null) {
             $role = new Role($roleName);
@@ -202,7 +202,7 @@ class Fixtures
     {
         $setting = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Setting')
-            ->findOneBy(array('name'=>$name));
+            ->findOneBy(['name'=>$name]);
 
         if (null === $setting) {
             $setting = new Setting();

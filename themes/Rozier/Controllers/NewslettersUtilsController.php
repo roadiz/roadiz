@@ -67,9 +67,9 @@ class NewslettersUtilsController extends RozierApp
 
             $newNewsletter = $existingNewsletter->getHandler()->duplicate();
 
-            $msg = $this->getTranslator()->trans("duplicated.newsletter.%name%", array(
+            $msg = $this->getTranslator()->trans("duplicated.newsletter.%name%", [
                 '%name%' => $existingNewsletter->getNode()->getNodeName()
-            ));
+            ]);
 
             $this->publishConfirmMessage($request, $msg);
 
@@ -77,19 +77,19 @@ class NewslettersUtilsController extends RozierApp
                 $this->getService('urlGenerator')
                     ->generate(
                         'newslettersEditPage',
-                        array(
+                        [
                             "newsletterId" => $newNewsletter->getId(),
                             "translationId" => $translation->getId()
-                        )
+                        ]
                     )
             );
 
         } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add(
                 'error',
-                $this->getTranslator()->trans("impossible.duplicate.newsletter.%name%", array(
+                $this->getTranslator()->trans("impossible.duplicate.newsletter.%name%", [
                     '%name%' => $existingNewsletter->getNode()->getNodeName()
-                ))
+                ])
             );
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
 
@@ -97,10 +97,10 @@ class NewslettersUtilsController extends RozierApp
                 $this->getService('urlGenerator')
                      ->generate(
                          'newslettersEditPage',
-                         array(
+                         [
                             "newsletterId" => $existingNewsletter->getId(),
                             "translationId" => $translation->getId()
-                         )
+                         ]
                      )
             );
         }
@@ -161,7 +161,7 @@ class NewslettersUtilsController extends RozierApp
         return new Response(
             $this->getNewsletterHTML($request, $newsletter),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 

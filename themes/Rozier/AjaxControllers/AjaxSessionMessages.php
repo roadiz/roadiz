@@ -53,22 +53,22 @@ class AjaxSessionMessages extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_FORBIDDEN,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
         $this->validateAccessForRole('ROLE_BACKEND_USER');
 
-        $responseArray = array(
+        $responseArray = [
             'statusCode' => Response::HTTP_OK,
             'status'    => 'success',
             'messages' => $request->getSession()->getFlashBag()->all()
-        );
+        ];
 
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 }
