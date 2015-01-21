@@ -29,15 +29,14 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
-
-use Symfony\Component\Security\Core\SecurityContext;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * NodeRepository
@@ -95,12 +94,12 @@ class NodeRepository extends EntityRepository
            ->from("RZ\Roadiz\Core\Entities\Tag", "t")
            ->leftJoin("t.nodes", "nj");
         foreach ($tags as $key => $tag) {
-            $qb->orWhere($qb->expr()->eq('t.id', ':tag'.$key));
+            $qb->orWhere($qb->expr()->eq('t.id', ':tag' . $key));
         }
         $qb->groupBy("nj.id");
         $query = $qb->getQuery();
         foreach ($tags as $key => $tag) {
-            $query->setParameter("tag".$key, $tag);
+            $query->setParameter("tag" . $key, $tag);
         }
         $results = $query->getResult();
         $count = count($tags);
@@ -158,7 +157,7 @@ class NodeRepository extends EntityRepository
                 $prefix = 't.';
                 $key = str_replace('translation.', '', $key);
             }
-             /*
+            /*
              * Search in nodeSource fields
              */
             if ($key == 'translation') {
@@ -314,11 +313,10 @@ class NodeRepository extends EntityRepository
         $this->filterByCriteria($criteria, $qb);
         $this->filterBySecurityContext($criteria, $qb, $securityContext);
 
-
         // Add ordering
         if (null !== $orderBy) {
             foreach ($orderBy as $key => $value) {
-                $qb->addOrderBy('n.'.$key, $value);
+                $qb->addOrderBy('n.' . $key, $value);
             }
         }
 
@@ -365,6 +363,28 @@ class NodeRepository extends EntityRepository
     }
     /**
      * Just like the findBy method but with relational criteria.
+     *
+     * Reimplementing findBy features… with extra things:
+     *
+     * * key => array('<=', $value)
+     * * key => array('<', $value)
+     * * key => array('>=', $value)
+     * * key => array('>', $value)
+     * * key => array('BETWEEN', $value, $value)
+     * * key => array('LIKE', $value)
+     * * key => array('NOT IN', $array)
+     * * key => 'NOT NULL'
+     *
+     * You can filter with translations relation, examples:
+     *
+     * * `translation => $object`
+     * * `translation.locale => 'fr_FR'`
+     *
+     * Or filter by tags:
+     *
+     * * `tags => $tag1`
+     * * `tags => [$tag1, $tag2]`
+     * * `tags => [$tag1, $tag2], tagExclusive => true`
      *
      * @param array                                   $criteria
      * @param array|null                              $orderBy
@@ -554,12 +574,12 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
+            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
-                           ->setParameter('nodeId', (int) $nodeId)
-                           ->setParameter('translation', $translation);
+                      ->setParameter('nodeId', (int) $nodeId)
+                      ->setParameter('translation', $translation);
 
         try {
             return $query->getSingleResult();
@@ -588,11 +608,11 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
+            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
-                           ->setParameter('nodeId', (int) $nodeId);
+                      ->setParameter('nodeId', (int) $nodeId);
 
         try {
             return $query->getSingleResult();
@@ -621,12 +641,12 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
+            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
-                           ->setParameter('nodeName', $nodeName)
-                           ->setParameter('translation', $translation);
+                      ->setParameter('nodeName', $nodeName)
+                      ->setParameter('translation', $translation);
 
         try {
             return $query->getSingleResult();
@@ -655,11 +675,11 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
+            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
-                           ->setParameter('nodeName', $nodeName);
+                      ->setParameter('nodeName', $nodeName);
 
         try {
             return $query->getSingleResult();
@@ -691,11 +711,11 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
+            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
-                           ->setParameter('translation', $translation);
+                      ->setParameter('translation', $translation);
 
         try {
             return $query->getSingleResult();
@@ -722,7 +742,7 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
+            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
         }
 
         $query = $this->_em->createQuery($txtQuery);
@@ -753,12 +773,12 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
+            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
-                           ->setParameter('node', $node)
-                           ->setParameter('translation', $translation);
+                      ->setParameter('node', $node)
+                      ->setParameter('translation', $translation);
 
         try {
             return $query->getResult();
@@ -786,27 +806,27 @@ class NodeRepository extends EntityRepository
                      INNER JOIN ns.translation t';
 
         if ($parent === null) {
-            $txtQuery .= PHP_EOL.'WHERE n.parent IS NULL';
+            $txtQuery .= PHP_EOL . 'WHERE n.parent IS NULL';
         } else {
-            $txtQuery .= PHP_EOL.'WHERE n.parent = :parent';
+            $txtQuery .= PHP_EOL . 'WHERE n.parent = :parent';
         }
 
         $txtQuery .= ' AND t.id = :translation_id';
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
+            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
         }
 
         $txtQuery .= ' ORDER BY n.position ASC';
 
         if ($parent === null) {
             $query = $this->_em->createQuery($txtQuery)
-                               ->setParameter('translation_id', (int) $translation->getId());
+                          ->setParameter('translation_id', (int) $translation->getId());
         } else {
             $query = $this->_em->createQuery($txtQuery)
-                               ->setParameter('parent', $parent)
-                               ->setParameter('translation_id', (int) $translation->getId());
+                          ->setParameter('parent', $parent)
+                          ->setParameter('translation_id', (int) $translation->getId());
         }
 
         try {
@@ -833,16 +853,16 @@ class NodeRepository extends EntityRepository
                      INNER JOIN ns.translation t';
 
         if ($parent === null) {
-            $txtQuery .= PHP_EOL.'WHERE n.parent IS NULL';
+            $txtQuery .= PHP_EOL . 'WHERE n.parent IS NULL';
         } else {
-            $txtQuery .= PHP_EOL.'WHERE n.parent = :parent';
+            $txtQuery .= PHP_EOL . 'WHERE n.parent = :parent';
         }
 
         $txtQuery .= ' AND t.defaultTranslation = true';
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
+            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
         }
 
         $txtQuery .= ' ORDER BY n.position ASC';
@@ -851,7 +871,7 @@ class NodeRepository extends EntityRepository
             $query = $this->_em->createQuery($txtQuery);
         } else {
             $query = $this->_em->createQuery($txtQuery)
-                               ->setParameter('parent', $parent);
+                          ->setParameter('parent', $parent);
         }
 
         try {
@@ -877,11 +897,11 @@ class NodeRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \''.Node::PUBLISHED.'\'';
+            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
         }
 
         $query = $this->_em->createQuery($txtQuery)
-                           ->setParameter('urlalias_id', (int) $urlAlias->getId());
+                      ->setParameter('urlalias_id', (int) $urlAlias->getId());
 
         try {
             return $query->getSingleResult();
@@ -891,15 +911,15 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-    * Create a Criteria object from a search pattern and additionnal fields.
-    *
-    * @param string                  $pattern  Search pattern
-    * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-    * @param array                   $criteria Additionnal criteria
-    * @param string                  $alias    SQL query table alias
-    *
-    * @return \Doctrine\ORM\QueryBuilder
-    */
+     * Create a Criteria object from a search pattern and additionnal fields.
+     *
+     * @param string                  $pattern  Search pattern
+     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
+     * @param array                   $criteria Additionnal criteria
+     * @param string                  $alias    SQL query table alias
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
@@ -914,11 +934,11 @@ class NodeRepository extends EntityRepository
          */
         if (isset($criteria['tags'])) {
             if (is_object($criteria['tags'])) {
-                $qb->innerJoin($alias.'.tags', 'tg', Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']->getId()));
+                $qb->innerJoin($alias . '.tags', 'tg', Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']->getId()));
             } elseif (is_array($criteria['tags'])) {
-                $qb->innerJoin($alias.'.tags', 'tg', Expr\Join::WITH, $qb->expr()->in('tg.id', $criteria['tags']));
+                $qb->innerJoin($alias . '.tags', 'tg', Expr\Join::WITH, $qb->expr()->in('tg.id', $criteria['tags']));
             } elseif (is_integer($criteria['tags'])) {
-                $qb->innerJoin($alias.'.tags', 'tg', Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']));
+                $qb->innerJoin($alias . '.tags', 'tg', Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']));
             }
 
             unset($criteria['tags']);
@@ -939,7 +959,7 @@ class NodeRepository extends EntityRepository
         $query = $this->_em->createQuery('
             SELECT COUNT(n.nodeName) FROM RZ\Roadiz\Core\Entities\Node n
             WHERE n.nodeName = :node_name')
-            ->setParameter('node_name', $nodeName);
+                      ->setParameter('node_name', $nodeName);
 
         try {
             return (boolean) $query->getSingleScalarResult();
@@ -947,8 +967,6 @@ class NodeRepository extends EntityRepository
             return false;
         }
     }
-
-
 
     /**
      * @param RZ\Roadiz\Core\Entities\Node          $node
@@ -963,8 +981,8 @@ class NodeRepository extends EntityRepository
             INNER JOIN n.aNodes ntn
             WHERE ntn.field = :field AND ntn.nodeA = :nodeA
             ORDER BY ntn.position ASC')
-                        ->setParameter('field', $field)
-                        ->setParameter('nodeA', $node);
+                      ->setParameter('field', $field)
+                      ->setParameter('nodeA', $node);
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -986,8 +1004,8 @@ class NodeRepository extends EntityRepository
             INNER JOIN ntn.field f
             WHERE f.name = :name AND ntn.nodeA = :nodeA
             ORDER BY ntn.position ASC')
-                        ->setParameter('name', (string) $fieldName)
-                        ->setParameter('nodeA', $node);
+                      ->setParameter('name', (string) $fieldName)
+                      ->setParameter('nodeA', $node);
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
