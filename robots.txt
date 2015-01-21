@@ -1,3 +1,10 @@
 User-agent: *
 Allow: /
 Disallow: /src
+Disallow: /vendor
+Disallow: /gen-src
+Disallow: /conf
+Disallow: /cache
+Disallow: /bin
+Disallow: /samples
+Disallow: /tests
