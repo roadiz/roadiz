@@ -411,7 +411,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param integer                            $tagId
+     * @param integer                             $tagId
      * @param RZ\Roadiz\Core\Entities\Translation $translation
      *
      * @return RZ\Roadiz\Core\Entities\Tag

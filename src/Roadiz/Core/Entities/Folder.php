@@ -69,7 +69,7 @@ class Folder extends AbstractDateTimedPositioned
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Folder", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $parent = null;
 
@@ -91,7 +91,10 @@ class Folder extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="parent", orphanRemoval=true)
+     * @ORM\OrderBy({"position" = "ASC"})
+     * @var ArrayCollection
+     *
      */
     protected $children;
 

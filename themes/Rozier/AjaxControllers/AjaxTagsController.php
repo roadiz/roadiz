@@ -32,10 +32,10 @@ namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Handlers\TagHandler;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-
-use Symfony\Component\HttpFoundation\Response;
+use RZ\Roadiz\Core\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}
@@ -67,7 +67,7 @@ class AjaxTagsController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $tag = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+                    ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
             $responseArray = null;
@@ -85,7 +85,7 @@ class AjaxTagsController extends AbstractAjaxController
                 $responseArray = array(
                     'statusCode' => '200',
                     'status' => 'success',
-                    'responseText' => ('Tag '.$tagId.' edited ')
+                    'responseText' => ('Tag ' . $tagId . ' edited '),
                 );
             }
 
@@ -96,11 +96,10 @@ class AjaxTagsController extends AbstractAjaxController
             );
         }
 
-
         $responseArray = array(
             'statusCode' => '403',
-            'status'    => 'danger',
-            'responseText' => 'Tag '.$tagId.' does not exists'
+            'status' => 'danger',
+            'responseText' => 'Tag ' . $tagId . ' does not exists',
         );
 
         return new Response(
@@ -127,21 +126,28 @@ class AjaxTagsController extends AbstractAjaxController
 
         $responseArray = array(
             'statusCode' => Response::HTTP_NOT_FOUND,
-            'status'    => 'danger',
-            'responseText' => 'No tags found'
+            'status' => 'danger',
+            'responseText' => 'No tags found',
         );
 
         if (!empty($request->get('search'))) {
             $responseArray = array();
 
             $pattern = strip_tags($request->get('search'));
+
             $tags = $this->getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                        ->findBy(
-                            array('translatedTag.name' => array('LIKE', '%'.$pattern.'%')),
-                            null,
-                            10
-                        );
+                         ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                         ->searchBy($pattern, array(), array(), 10);
+
+            if (0 === count($tags)) {
+                /*
+                 * Try again using tag slug
+                 */
+                $pattern = StringHandler::slugify($pattern);
+                $tags = $this->getService('em')
+                             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                             ->searchBy($pattern, array(), array(), 10);
+            }
 
             foreach ($tags as $tag) {
                 $responseArray[] = $tag->getHandler()->getFullPath();
@@ -169,7 +175,7 @@ class AjaxTagsController extends AbstractAjaxController
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
             $parent = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['newParent']);
+                           ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $tag->setParent($parent);
@@ -184,14 +190,14 @@ class AjaxTagsController extends AbstractAjaxController
         if (!empty($parameters['nextTagId']) &&
             $parameters['nextTagId'] > 0) {
             $nextTag = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['nextTagId']);
+                            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['nextTagId']);
             if ($nextTag !== null) {
                 $tag->setPosition($nextTag->getPosition() - 0.5);
             }
         } elseif (!empty($parameters['prevTagId']) &&
             $parameters['prevTagId'] > 0) {
             $prevTag = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['prevTagId']);
+                            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['prevTagId']);
             if ($prevTag !== null) {
                 $tag->setPosition($prevTag->getPosition() + 0.5);
             }

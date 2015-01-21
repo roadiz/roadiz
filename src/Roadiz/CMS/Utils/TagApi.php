@@ -31,22 +31,41 @@ namespace RZ\Roadiz\CMS\Utils;
 
 use RZ\Roadiz\CMS\Utils\AbstractApi;
 
-/**
- *
- */
 class TagApi extends AbstractApi
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getRepository()
     {
         return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Tag");
     }
 
+    /**
+     * Get tags using criteria, orders, limit and offset.
+     *
+     * When no order is defined, tags are ordered by position.
+     *
+     * @param  array      $criteria
+     * @param  array|null $order
+     * @param  int        $limit
+     * @param  int        $offset
+     *
+     * @return array
+     */
     public function getBy(
         array $criteria,
         array $order = null,
         $limit = null,
         $offset = null
     ) {
+
+        if (null === $order) {
+            $order = array(
+                'position' => 'ASC',
+            );
+        }
+
         return $this->getRepository()
                     ->findBy(
                         $criteria,
@@ -56,7 +75,9 @@ class TagApi extends AbstractApi
                         null
                     );
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function countBy(array $criteria)
     {
         return $this->getRepository()
@@ -65,7 +86,9 @@ class TagApi extends AbstractApi
                         null
                     );
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getOneBy(array $criteria, array $order = null)
     {
         return $this->getRepository()

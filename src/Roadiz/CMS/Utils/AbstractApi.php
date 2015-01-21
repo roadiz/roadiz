@@ -50,9 +50,37 @@ abstract class AbstractApi
         $this->container = $container;
     }
 
+    /**
+     * Return entity path for current API.
+     *
+     * @return string
+     */
     abstract public function getRepository();
 
+    /**
+     * Return an array of entities matching criteria array.
+     *
+     * @param array $criteria
+     *
+     * @return array
+     */
     abstract public function getBy(array $criteria);
 
+    /**
+     * Return one entity matching criteria array.
+     *
+     * @param array $criteria
+     *
+     * @return mixed
+     */
     abstract public function getOneBy(array $criteria);
+
+    /**
+     * Count entities matching criteria array.
+     *
+     * @param array $criteria
+     *
+     * @return int
+     */
+    abstract public function countBy(array $criteria);
 }

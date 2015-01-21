@@ -29,34 +29,46 @@
  */
 namespace RZ\Roadiz\CMS\Utils;
 
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\CMS\Utils\AbstractApi;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 
 /**
  *
  */
 class NodeSourceApi extends AbstractApi
 {
-    public function getRepository()
-    {
-        return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\NodesSources");
-    }
+    protected $repository = "RZ\Roadiz\Core\Entities\NodesSources";
 
-    private function getRepositoryName($criteria)
+    /**
+     * {@inheritdoc}
+     */
+    protected function getRepositoryName(array $criteria = null)
     {
         if (isset($criteria['node.nodeType'])) {
-            $rep = NodeType::getGeneratedEntitiesNamespace().
-                   "\\".
-                   $criteria['node.nodeType']->getSourceEntityClassName();
+            $rep = NodeType::getGeneratedEntitiesNamespace() .
+            "\\" .
+            $criteria['node.nodeType']->getSourceEntityClassName();
 
             unset($criteria['node.nodeType']);
         } else {
             $rep = "RZ\Roadiz\Core\Entities\NodesSources";
         }
+
+        $this->repository = $rep;
+
         return $rep;
     }
-
+    /**
+     * {@inheritdoc}
+     */
+    public function getRepository()
+    {
+        return $this->container['em']->getRepository($this->repository);
+    }
+    /**
+     * {@inheritdoc}
+     */
     public function getBy(
         array $criteria,
         array $order = null,
@@ -67,10 +79,9 @@ class NodeSourceApi extends AbstractApi
             $criteria['node.status'] = array('<=', Node::PUBLISHED);
         }
 
-        $rep = $this->getRepositoryName($criteria);
+        $this->getRepositoryName($criteria);
 
-        return $this->container['em']
-                    ->getRepository($rep)
+        return $this->getRepository()
                     ->findBy(
                         $criteria,
                         $order,
@@ -79,7 +90,9 @@ class NodeSourceApi extends AbstractApi
                         $this->container['securityContext']
                     );
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function countBy(
         array $criteria
     ) {
@@ -87,26 +100,26 @@ class NodeSourceApi extends AbstractApi
             $criteria['node.status'] = array('<=', Node::PUBLISHED);
         }
 
-        $rep = $this->getRepositoryName($criteria);
+        $this->getRepositoryName($criteria);
 
-        return $this->container['em']
-                    ->getRepository($rep)
+        return $this->getRepository()
                     ->countBy(
                         $criteria,
                         $this->container['securityContext']
                     );
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getOneBy(array $criteria, array $order = null)
     {
         if (empty($criteria['node.status'])) {
             $criteria['node.status'] = array('<=', Node::PUBLISHED);
         }
 
-        $rep = $this->getRepositoryName($criteria);
+        $this->getRepositoryName($criteria);
 
-        return $this->container['em']
-                    ->getRepository($rep)
+        return $this->getRepository()
                     ->findOneBy(
                         $criteria,
                         $order,

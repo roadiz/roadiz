@@ -37,11 +37,16 @@ use RZ\Roadiz\Core\Entities\Node;
  */
 class NodeApi extends AbstractApi
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getRepository()
     {
         return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node");
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getBy(
         array $criteria,
         array $order = null,
@@ -55,8 +60,7 @@ class NodeApi extends AbstractApi
             $criteria['translation.available'] = true;
         }
 
-        return $this->container['em']
-                    ->getRepository("RZ\Roadiz\Core\Entities\Node")
+        return $this->getRepository()
                     ->findBy(
                         $criteria,
                         $order,
@@ -66,7 +70,9 @@ class NodeApi extends AbstractApi
                         $this->container['securityContext']
                     );
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function countBy(array $criteria)
     {
         if (empty($criteria['status'])) {
@@ -76,15 +82,16 @@ class NodeApi extends AbstractApi
             $criteria['translation.available'] = true;
         }
 
-        return $this->container['em']
-                    ->getRepository("RZ\Roadiz\Core\Entities\Node")
+        return $this->getRepository()
                     ->countBy(
                         $criteria,
                         null,
                         $this->container['securityContext']
                     );
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getOneBy(array $criteria, array $order = null)
     {
         if (empty($criteria['status'])) {
@@ -94,8 +101,7 @@ class NodeApi extends AbstractApi
             $criteria['translation.available'] = true;
         }
 
-        return $this->container['em']
-                    ->getRepository("RZ\Roadiz\Core\Entities\Node")
+        return $this->getRepository()
                     ->findOneBy(
                         $criteria,
                         $order,
