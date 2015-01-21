@@ -375,11 +375,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     /**
      * @param string  $pattern  Search pattern
      * @param array   $criteria Additionnal criteria
-     * @param array   $orders   [description]
-     * @param integer $limit    [description]
-     * @param integer $offset   [description]
+     * @param array   $orders
+     * @param integer $limit
+     * @param integer $offset
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return array
      */
     public function searchBy(
         $pattern,

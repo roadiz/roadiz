@@ -136,12 +136,8 @@ class AjaxTagsController extends AbstractAjaxController
 
             $pattern = strip_tags($request->get('search'));
             $tags = $this->getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                        ->findBy(
-                            array('translatedTag.name' => array('LIKE', '%'.$pattern.'%')),
-                            null,
-                            10
-                        );
+                         ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                         ->searchBy($pattern, array(), array(), 10);
 
             foreach ($tags as $tag) {
                 $responseArray[] = $tag->getHandler()->getFullPath();
