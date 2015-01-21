@@ -36,23 +36,33 @@ use RZ\Roadiz\CMS\Utils\AbstractApi;
  */
 class NodeTypeApi extends AbstractApi
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getRepository()
     {
         return $this->container['em']
                     ->getRepository("RZ\Roadiz\Core\Entities\NodeType");
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getBy(array $criteria, array $order = null)
     {
-        return $this->container['em']
-                    ->getRepository("RZ\Roadiz\Core\Entities\NodeType")
-                    ->findBy($criteria, $order);
+        return $this->getRepository()->findBy($criteria, $order);
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getOneBy(array $criteria, array $order = null)
     {
-        return $this->container['em']
-                     ->getRepository("RZ\Roadiz\Core\Entities\NodeType")
-                     ->findOneBy($criteria, $order);
+        return $this->getRepository()->findOneBy($criteria, $order);
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function countBy(array $criteria)
+    {
+        return $this->getRepository()->countBy($criteria);
     }
 }
