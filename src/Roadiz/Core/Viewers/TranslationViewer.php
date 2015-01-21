@@ -38,25 +38,30 @@ use RZ\Roadiz\Core\Kernel;
 */
 class TranslationViewer implements ViewableInterface
 {
-    public function getTranslationMenuAssignation($routeInfo = null)
+    protected $translation;
+
+    public function __construct(Translation $translation) {
+        $this->translation = $translation;
+    }
+
+    public function getTranslationMenuAssignation($routeInfo)
     {
         $translations = Kernel::getService('em')
             ->getRepository("Rz\Roadiz\Core\Entities\Translation")
-            ->getAllAvailable();
-        $return = ["availableLanguages" => []];
+            ->findAllAvailable();
+        $return = [];
         foreach ($translations as $translation) {
-            if (!$translation->isDefault()) {
-                $routeInfo["_route"] = $routeInfo["_route"] . "Locale"
-                $routeInfo["params"] = $routeInfo["params"]["_locale"] = $translation->getLocale();
+            if (!$translation->isDefaultTranslation()) {
+                $routeInfo["_route"] = $routeInfo["_route"] . "Locale";
+                $routeInfo["params"]["_locale"] = $translation->getLocale();
             }
-            $return["availableLanguages"][$translation->getLocale()] = [
+            $return[$translation->getLocale()] = [
                 'name' => $routeInfo["_route"],
                 'url' => Kernel::getService("urlGenerator")->generate(
-                    [
-                        $routeInfo["_route"],
-                        $routeInfo["params"]
-                    ]
-                )
+                    $routeInfo["_route"],
+                    $routeInfo["params"]
+                ),
+                'actif' => ($this->translation == $translation) ? true : false
             ];
         }
         return $return;

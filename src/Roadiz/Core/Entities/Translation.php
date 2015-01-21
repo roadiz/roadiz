@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\TranslationHandler;
+use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -283,6 +284,14 @@ class Translation extends AbstractDateTimed
     public function getHandler()
     {
         return new TranslationHandler($this);
+    }
+
+    /**
+    * @return TranslationViewer
+    */
+    public function getViewer()
+    {
+        return new TranslationViewer($this);
     }
 
     /**
