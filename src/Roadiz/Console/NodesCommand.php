@@ -106,8 +106,7 @@ class NodesCommand extends Command
         $typeName = $input->getArgument('node-type');
         $locale = $input->getArgument('locale');
 
-        if (
-            $nodeName &&
+        if ($nodeName &&
             $typeName &&
             $input->getOption('create')
         ) {
