@@ -995,8 +995,7 @@ class InlineMarkdown implements \Michelf\MarkdownInterface
         $marker_space       = $matches[3];
         $tailing_blank_line =& $matches[5];
 
-        if (
-            $leading_line ||
+        if ($leading_line ||
             $tailing_blank_line ||
             preg_match('/\n{2,}/', $item)
         ) {

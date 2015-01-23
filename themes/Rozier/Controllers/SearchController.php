@@ -507,8 +507,7 @@ class SearchController extends RozierApp
                 $type = NodeTypeField::$typeToForm[$field->getType()];
             }
 
-            if (
-                $field->getType() === NodeTypeField::MARKDOWN_T ||
+            if ($field->getType() === NodeTypeField::MARKDOWN_T ||
                 $field->getType() === NodeTypeField::STRING_T ||
                 $field->getType() === NodeTypeField::TEXT_T ||
                 $field->getType() === NodeTypeField::EMAIL_T

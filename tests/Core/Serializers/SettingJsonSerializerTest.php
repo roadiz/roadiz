@@ -3,6 +3,7 @@
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
 use RZ\Roadiz\Core\Kernel;
+
 /**
  * Description.
  */

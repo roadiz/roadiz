@@ -49,7 +49,6 @@ class NodeHandlerTest extends PHPUnit_Framework_TestCase
 
         if (null !== $nodeType &&
             null !== $tran) {
-
             $node = new Node($nodeType);
             $node->setNodeName("testNode" . uniqid());
             $node->setPublished(true);
@@ -75,8 +74,11 @@ class NodeHandlerTest extends PHPUnit_Framework_TestCase
         static::$runtimeCollection = array();
 
         date_default_timezone_set('Europe/Paris');
-        ImportController::importContent(ROADIZ_ROOT . '/tests/Fixtures/Handlers/Page.json',
-                                        "RZ\Roadiz\CMS\Importers\NodeTypesImporter", null);
+        ImportController::importContent(
+            ROADIZ_ROOT . '/tests/Fixtures/Handlers/Page.json',
+            "RZ\Roadiz\CMS\Importers\NodeTypesImporter",
+            null
+        );
     }
 
     /**

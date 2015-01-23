@@ -114,7 +114,7 @@ Add this to your `config.json` to link your Roadiz install to your Solr server:
 ./vendor/bin/phpcs --report=full --report-file=./report.txt \
                 --extensions=php --warning-severity=0 \
                 --standard=PSR2 \
-                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/Tests/* \
+                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/* \
                 -p ./
 ```
 

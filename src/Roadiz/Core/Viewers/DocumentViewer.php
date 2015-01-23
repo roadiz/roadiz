@@ -130,8 +130,7 @@ class DocumentViewer implements ViewableInterface
         }
         if (!empty($args['alt'])) {
             $assignation['alt'] = $args['alt'];
-        } elseif (
-            $this->document->getDocumentTranslations()->count() &&
+        } elseif ($this->document->getDocumentTranslations()->count() &&
             "" != $this->document->getDocumentTranslations()->first()->getName()
         ) {
             $assignation['alt'] = $this->document->getDocumentTranslations()->first()->getName();

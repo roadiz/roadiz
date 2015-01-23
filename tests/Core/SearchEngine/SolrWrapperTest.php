@@ -19,7 +19,6 @@ class SolrWrapperTest extends PHPUnit_Framework_TestCase
         $solr = Kernel::getService('solr');
 
         if (null !== $solr) {
-
             $testTitle = "Roadiz first test";
 
             // create a ping query
@@ -85,7 +84,6 @@ class SolrWrapperTest extends PHPUnit_Framework_TestCase
         $solr = Kernel::getService('solr');
 
         if (null !== $solr) {
-
             try {
                 // get an update query instance
                 $update = $solr->createUpdate();

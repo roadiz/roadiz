@@ -7,6 +7,7 @@ use RZ\Roadiz\Core\Kernel;
 
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
 use Solarium\Exception\HttpException;
+
 /**
  * SolariumNodeSourceTest.
  */
@@ -15,7 +16,8 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
     private static $entityCollection;
     private static $documentCollection;
 
-    public function testIndex() {
+    public function testIndex()
+    {
         $testTitle = "Ipsum Lorem Vehicula";
 
         $nodeSource = Kernel::getService('em')
@@ -24,7 +26,6 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
 
         if (null !== $nodeSource) {
             try {
-
                 $solrDoc = new SolariumNodeSource(
                     $nodeSource,
                     Kernel::getService('solr')
@@ -49,7 +50,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
                     // Assert
                     $this->assertEquals($document->node_source_id_i, $nodeSource->getId());
                 }
-            } catch (SolrServerNotAvailableException $e){
+            } catch (SolrServerNotAvailableException $e) {
                 echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
                 return;
             }
@@ -74,7 +75,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
 
                 $this->assertTrue($solrDoc->getDocumentFromIndex());
 
-            } catch (SolrServerNotAvailableException $e){
+            } catch (SolrServerNotAvailableException $e) {
                 echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
                 return;
             }
@@ -91,7 +92,6 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
 
         if (null !== $nodeSource) {
             try {
-
                 $solrDoc = new SolariumNodeSource(
                     $nodeSource,
                     Kernel::getService('solr')
@@ -101,9 +101,8 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
 
                 $this->assertFalse($solrDoc->getDocumentFromIndex());
 
-            } catch (SolrServerNotAvailableException $e){
-
-            } catch(HttpException $e) {
+            } catch (SolrServerNotAvailableException $e) {
+            } catch (HttpException $e) {
                 echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
                 return;
             }
@@ -126,11 +125,9 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         try {
-
             $solr = Kernel::getService('solr');
 
             if (null !== $solr) {
-
                 // get an update query instance
                 $update = $solr->createUpdate();
 
@@ -144,7 +141,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
                 // this executes the query and returns the result
                 $result = $solr->update($update);
             }
-        } catch(HttpException $e) {
+        } catch (HttpException $e) {
             echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
             return;
         }
