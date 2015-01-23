@@ -29,6 +29,7 @@
  * @author Ambroise Maupate
  */
 use RZ\Roadiz\Core\Entities\Node;
+
 /**
  * Test Node features
  */
