@@ -204,6 +204,8 @@ class NewslettersUtilsController extends RozierApp
             $htmldoc = $htmldoc->getHtml();
 
             $filename .= "-inlined";
+
+            $content = $htmldoc;
         }
 
         // Remove all link element and add style balise with all css file content
