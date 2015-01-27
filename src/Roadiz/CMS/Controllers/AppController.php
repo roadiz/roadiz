@@ -367,6 +367,7 @@ class AppController implements ViewableInterface
     {
         return $this->getService('twig.environment');
     }
+
     /**
      * Prepare base informations to be rendered in twig templates.
      *

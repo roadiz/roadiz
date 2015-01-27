@@ -209,6 +209,20 @@ class NodeHandler
     }
 
     /**
+     * Get node source by translation.
+     *
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     *
+     * @return RZ\Roadiz\Core\Entities\NodesSources
+     */
+    public function getNodeSourceByTranslation($translation)
+    {
+        return Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                ->findOneBy(["node" => $this->node ,"translation" => $translation]);
+    }
+
+    /**
      * Remove only current node children.
      *
      * @return $this

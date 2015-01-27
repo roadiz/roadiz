@@ -178,4 +178,22 @@ class StringHandler
             throw new EmptySaltException("You cannot encode with an empty salt. Did you enter a secret security phrase in your conf/config.json file?", 1);
         }
     }
+
+
+    public static function endsWith($haystack, $needle)
+    {
+        // search forward starting from end minus needle length characters
+        return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== false;
+    }
+
+    public static function replaceLast($search, $replace, $subject)
+    {
+        $pos = strrpos($subject, $search);
+
+        if ($pos !== false) {
+            $subject = substr_replace($subject, $replace, $pos, strlen($search));
+        }
+
+        return $subject;
+    }
 }
