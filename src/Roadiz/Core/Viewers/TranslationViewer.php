@@ -58,19 +58,19 @@ class TranslationViewer implements ViewableInterface
      *         array (size=4)
      *             'name' => string 'newsPage' (length=8)
      *             'url' => string 'http://localhost/news/test' (length=26)
-     *             'actif' => boolean false
+     *             'active' => boolean false
      *             'translation' => string 'English' (length=7)
      *       'fr' =>
      *         array (size=4)
      *             'name' => string 'newsPageLocale' (length=14)
      *             'url' => string 'http://localhost/fr/news/test' (length=29)
-     *             'actif' => boolean true
+     *             'active' => boolean true
      *             'translation' => string 'French' (length=6)
      *       'es' =>
      *         array (size=4)
      *             'name' => string 'newsPageLocale' (length=14)
      *             'url' => string 'http://localhost/es/news/test' (length=29)
-     *             'actif' => boolean false
+     *             'active' => boolean false
      *             'translation' => string 'Spanish' (length=2)
      *
      * @return $this
@@ -133,7 +133,7 @@ class TranslationViewer implements ViewableInterface
             $return[$translation->getLocale()] = [
                 'name' => $name,
                 'url' => $url,
-                'actif' => ($this->translation == $translation) ? true : false,
+                'active' => ($this->translation == $translation) ? true : false,
                 'translation' => $translation->getName()
             ];
         }
