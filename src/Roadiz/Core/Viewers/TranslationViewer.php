@@ -31,7 +31,11 @@
 namespace RZ\Roadiz\Core\Viewers;
 
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Routing\RouteHandler;
+
+use Symfony\Component\HttpFoundation\Request;
 
 /**
 * TranslationViewer
@@ -44,24 +48,93 @@ class TranslationViewer implements ViewableInterface
         $this->translation = $translation;
     }
 
-    public function getTranslationMenuAssignation($routeInfo)
+    /**
+     * Return available page translation information
+     *
+     * ## example return value
+     *
+     *     array (size=3)
+     *       'en' =>
+     *         array (size=4)
+     *             'name' => string 'newsPage' (length=8)
+     *             'url' => string 'http://localhost/news/test' (length=26)
+     *             'actif' => boolean false
+     *             'translation' => string 'English' (length=7)
+     *       'fr' =>
+     *         array (size=4)
+     *             'name' => string 'newsPageLocale' (length=14)
+     *             'url' => string 'http://localhost/fr/news/test' (length=29)
+     *             'actif' => boolean true
+     *             'translation' => string 'French' (length=6)
+     *       'es' =>
+     *         array (size=4)
+     *             'name' => string 'newsPageLocale' (length=14)
+     *             'url' => string 'http://localhost/es/news/test' (length=29)
+     *             'actif' => boolean false
+     *             'translation' => string 'Spanish' (length=2)
+     *
+     * @return $this
+     */
+    public function getTranslationMenuAssignation(Request $request)
     {
-        $translations = Kernel::getService('em')
-            ->getRepository("Rz\Roadiz\Core\Entities\Translation")
-            ->findAllAvailable();
+        $attr = $request->attributes->all();
+        $query = $request->query->all();
+
+        if (in_array("node", array_keys($attr), true)) {
+            $node = $attr["node"];
+        } else {
+            $node = null;
+        }
+
+        if ($node === null) {
+            $translations = Kernel::getService('em')
+                ->getRepository("Rz\Roadiz\Core\Entities\Translation")
+                ->findAllAvailable();
+            $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
+        } else {
+            $translations = $node->getHandler()->getAvailableTranslations();
+            $translations = array_filter(
+                $translations,
+                function ($x) {
+                    if ($x->isAvailable()) {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+            $name = "node";
+        }
+
         $return = [];
+
         foreach ($translations as $translation) {
-            if (!$translation->isDefaultTranslation()) {
-                $routeInfo["_route"] = $routeInfo["_route"] . "Locale";
-                $routeInfo["params"]["_locale"] = $translation->getLocale();
+            if ($node) {
+                $url = $node->getHandler()->getNodeSourceByTranslation($translation)->getHandler()->getUrl();
+                if (!empty($query)) {
+                    $url .= "?" . http_build_query($query);
+                }
+
+            } else {
+                if (!$translation->isDefaultTranslation()) {
+                    $name = $attr["_route"] . "Locale";
+                    $attr["_route_params"]["_locale"] = $translation->getLocale();
+                } else {
+                    $name = $attr["_route"];
+                    if (in_array("_locale", array_keys($attr["_route_params"]), true)) {
+                        unset($attr["_route_params"]["_locale"]);
+                    }
+                }
+                $url = Kernel::getService("urlGenerator")->generate(
+                    $name,
+                    array_merge($attr["_route_params"], $query)
+                );
             }
+
             $return[$translation->getLocale()] = [
-                'name' => $routeInfo["_route"],
-                'url' => Kernel::getService("urlGenerator")->generate(
-                    $routeInfo["_route"],
-                    $routeInfo["params"]
-                ),
-                'actif' => ($this->translation == $translation) ? true : false
+                'name' => $name,
+                'url' => $url,
+                'actif' => ($this->translation == $translation) ? true : false,
+                'translation' => $translation->getName()
             ];
         }
         return $return;
