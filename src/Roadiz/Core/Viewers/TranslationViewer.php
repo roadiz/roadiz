@@ -31,7 +31,6 @@
 namespace RZ\Roadiz\Core\Viewers;
 
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\RouteHandler;
 
@@ -44,8 +43,7 @@ class TranslationViewer implements ViewableInterface
 {
     protected $translation;
 
-    public function __construct(Translation $translation)
-    {
+    public function __construct(Translation $translation) {
         $this->translation = $translation;
     }
 
@@ -80,6 +78,7 @@ class TranslationViewer implements ViewableInterface
     {
         $attr = $request->attributes->all();
         $query = $request->query->all();
+        $name = "";
 
         if (in_array("node", array_keys($attr), true)) {
             $node = $attr["node"];
@@ -156,4 +155,5 @@ class TranslationViewer implements ViewableInterface
     {
         return Kernel::getService('twig.environment');
     }
+
 }
