@@ -37,6 +37,50 @@ use RZ\Roadiz\Core\Utils\StringHandler;
 class StringHandlerTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @dataProvider endsWithProvider
+     */
+    public function testEndsWith($input, $wanted, $expected)
+    {
+        $this->assertEquals($expected, StringHandler::endsWith($input, $wanted));
+    }
+
+    public function endsWithProvider()
+    {
+        return array(
+            array("testPage", "Locale", false),
+            array("localePage", "Locale", false),
+            array("testLocalePage", "Locale", false),
+            array("testPageLocale", "Locale", true),
+            array("testPagelocale", "Locale", false),
+            array("testPageGateau", "Locale", false),
+            array("testPage", "", true),
+            array("LocaletestPage", "Locale", false)
+        );
+    }
+
+    /**
+    * @dataProvider replaceLastProvider
+    */
+    public function testReplaceLast($input, $wanted, $expected)
+    {
+        $this->assertEquals($expected, StringHandler::replaceLast($wanted, "", $input));
+    }
+
+    public function replaceLastProvider()
+    {
+        return array(
+            array("testPage", "Locale", "testPage"),
+            array("localePage", "Locale", "localePage"),
+            array("testLocalePage", "Locale", "testPage"),
+            array("testPageLocale", "Locale", "testPage"),
+            array("testPagelocale", "Locale", "testPagelocale"),
+            array("testPageGateau", "Locale", "testPageGateau"),
+            array("testPage", "", "testPage"),
+            array("LocalePage", "Locale", "Page")
+        );
+    }
+
+    /**
      * @dataProvider removeDiacriticsProvider
      */
     public function testRemoveDiacritics($input, $expected)
