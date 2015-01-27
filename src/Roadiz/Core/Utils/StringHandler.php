@@ -180,17 +180,17 @@ class StringHandler
     }
 
 
-    public static function endsWith($haystack, $needle) {
+    public static function endsWith($haystack, $needle)
+    {
         // search forward starting from end minus needle length characters
-        return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== FALSE;
+        return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== false;
     }
 
     public static function replaceLast($search, $replace, $subject)
     {
         $pos = strrpos($subject, $search);
 
-        if($pos !== false)
-        {
+        if ($pos !== false) {
             $subject = substr_replace($subject, $replace, $pos, strlen($search));
         }
 
