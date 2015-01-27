@@ -43,7 +43,8 @@ class TranslationViewer implements ViewableInterface
 {
     protected $translation;
 
-    public function __construct(Translation $translation) {
+    public function __construct(Translation $translation)
+    {
         $this->translation = $translation;
     }
 
@@ -155,5 +156,4 @@ class TranslationViewer implements ViewableInterface
     {
         return Kernel::getService('twig.environment');
     }
-
 }
