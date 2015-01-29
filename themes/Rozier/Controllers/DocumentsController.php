@@ -214,7 +214,8 @@ class DocumentsController extends RozierApp
             $this->assignation['document'] = $document;
             $this->assignation['thumbnailFormat'] = [
                 'width' => 500,
-                'quality' => 70
+                'quality' => 70,
+                'controls' => true
             ];
 
             return new Response(

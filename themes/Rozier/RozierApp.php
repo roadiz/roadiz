@@ -66,6 +66,7 @@ class RozierApp extends BackendController
             $this->assignation['tagTree'] = new TagTreeWidget($this->getKernel()->getRequest(), $this);
             $this->assignation['folderTree'] = new FolderTreeWidget($this->getKernel()->getRequest(), $this);
             $this->assignation['backofficeEntries'] = $this->getService('backoffice.entries');
+            $this->assignation['maxFilesize'] = min(intval(ini_get('post_max_size')), intval(ini_get('upload_max_filesize')));
         }
 
         //Settings
