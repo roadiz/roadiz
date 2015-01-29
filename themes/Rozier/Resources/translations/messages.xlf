@@ -4849,8 +4849,8 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days</source>
           <target></target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib">
-          <source>file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib</source>
+      <trans-unit xml:space="preserve" id="file.is.too.big.({{filesize}}mib).max.filesize.{{maxFilesize}}.mib">
+          <source>file.is.too.big.({{filesize}}mib).max.filesize.{{maxFilesize}}.mib</source>
           <target></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="you.cant.upload.files.of.this.type">

@@ -4854,9 +4854,9 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days</source>
           <target state="translated">Veuillez utiliser le formulaire classique ci-dessous pour téléverser vos fichiers comme à l’ancien temps.</target>
       <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib" approved="yes">
-          <source>file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib</source>
-          <target state="translated">Le fichier est trop lourd ({{filesize}} Mo). La taille maximale est de {{maxfilesize}} Mo.</target>
+      <trans-unit xml:space="preserve" id="file.is.too.big.({{filesize}}mib).max.filesize.{{maxFilesize}}.mib" approved="yes">
+          <source>file.is.too.big.({{filesize}}mib).max.filesize.{{maxFilesize}}.mib</source>
+          <target state="translated">Le fichier est trop lourd ({{filesize}} Mo). La taille maximale est de {{maxFilesize}} Mo.</target>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="you.cant.upload.files.of.this.type" approved="yes">
           <source>you.cant.upload.files.of.this.type</source>
