@@ -31,6 +31,7 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Utils\DomHandler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -180,21 +181,10 @@ class NewslettersUtilsController extends RozierApp
         );
 
         $filename = $newsletter->getNode()->getNodeName();
+        $content = $this->getNewsletterHTML($request, $newsletter);
 
         // Get all css link in the newsletter
-
-        $content = $this->getNewsletterHTML($request, $newsletter);
-        preg_match_all('/href="([^"]+\.css)"/', $content, $out);
-
-        // Concat all css-file in one string
-        $cssContent = "";
-        foreach ($out[1] as $css) {
-            if (file_exists($css)) {
-                $cssContent .= file_get_contents($css) . PHP_EOL;
-            } elseif (file_exists(ROADIZ_ROOT . $css)) {
-                $cssContent .= file_get_contents(ROADIZ_ROOT . $css) . PHP_EOL;
-            }
-        }
+        $cssContent = DomHandler::getExternalStyles($content);
 
         if ((boolean) $inline === true) {
             // inline newsletter html with css
@@ -209,12 +199,7 @@ class NewslettersUtilsController extends RozierApp
         }
 
         // Remove all link element and add style balise with all css file content
-        $content = preg_replace('/<link[^>]+>/', '', $content);
-        $htmldoc = str_replace(
-            "</head>",
-            "<style type=\"text/css\">" . PHP_EOL . $cssContent . PHP_EOL . "</style>" . PHP_EOL . "</head>",
-            $content
-        );
+        $htmldoc = DomHandler::replaceExternalStylesheetsWithStyle($content, $cssContent);
 
         // Generate response
         $response = new Response();
