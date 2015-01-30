@@ -29,14 +29,15 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Doctrine\Common\Collections\ArrayCollection;
+use RZ\Roadiz\Core\Kernel;
+use \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 
 /**
  * Handle operations with nodes entities.
@@ -85,8 +86,8 @@ class NodeHandler
     public function cleanCustomFormsFromField(NodeTypeField $field)
     {
         $nodesCustomForms = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
-                ->findBy(['node'=>$this->node, 'field'=>$field]);
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
+            ->findBy(['node' => $this->node, 'field' => $field]);
 
         foreach ($nodesCustomForms as $ncf) {
             Kernel::getService('em')->remove($ncf);
@@ -109,8 +110,8 @@ class NodeHandler
         $ncf = new NodesCustomForms($this->node, $customForm, $field);
 
         $latestPosition = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
-                ->getLatestPosition($this->node, $field);
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
+            ->getLatestPosition($this->node, $field);
 
         $ncf->setPosition($latestPosition + 1);
 
@@ -130,8 +131,8 @@ class NodeHandler
     public function getCustomFormsFromFieldName($fieldName)
     {
         return Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
-                ->findByNodeAndFieldName($this->node, $fieldName);
+            ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
+            ->findByNodeAndFieldName($this->node, $fieldName);
     }
 
     /**
@@ -144,8 +145,8 @@ class NodeHandler
     public function cleanNodesFromField(NodeTypeField $field)
     {
         $nodesToNodes = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
-                ->findBy(['nodeA'=>$this->node, 'field'=>$field]);
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
+            ->findBy(['nodeA' => $this->node, 'field' => $field]);
 
         foreach ($nodesToNodes as $ntn) {
             Kernel::getService('em')->remove($ntn);
@@ -168,8 +169,8 @@ class NodeHandler
         $ntn = new NodesToNodes($this->node, $node, $field);
 
         $latestPosition = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
-                ->getLatestPosition($this->node, $field);
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
+            ->getLatestPosition($this->node, $field);
 
         $ntn->setPosition($latestPosition + 1);
 
@@ -189,8 +190,8 @@ class NodeHandler
     public function getNodesFromFieldName($fieldName)
     {
         return Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findByNodeAndFieldName($this->node, $fieldName);
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findByNodeAndFieldName($this->node, $fieldName);
     }
 
     /**
@@ -218,8 +219,8 @@ class NodeHandler
     public function getNodeSourceByTranslation($translation)
     {
         return Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                ->findOneBy(["node" => $this->node ,"translation" => $translation]);
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->findOneBy(["node" => $this->node, "translation" => $translation]);
     }
 
     /**
@@ -247,12 +248,16 @@ class NodeHandler
         foreach ($this->node->getNodeSources() as $ns) {
             // Update Solr Search engine if setup
             if (true === $ping) {
-                $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
-                    $ns,
-                    Kernel::getService('solr')
-                );
-                $solrSource->getDocumentFromIndex();
-                $solrSource->cleanAndCommit();
+                try {
+                    $solrSource = new SolariumNodeSource(
+                        $ns,
+                        Kernel::getService('solr')
+                    );
+                    $solrSource->getDocumentFromIndex();
+                    $solrSource->cleanAndCommit();
+                } catch (\Exception $e) {
+                    // Do nothing
+                }
             }
 
             Kernel::getService('em')->remove($ns);
@@ -352,20 +357,19 @@ class NodeHandler
         return $this;
     }
 
-
     /**
      * @return ArrayCollection
      */
     public function getAvailableTranslations()
     {
         $query = Kernel::getService('em')
-                        ->createQuery('
+            ->createQuery('
             SELECT t
             FROM RZ\Roadiz\Core\Entities\Translation t
             INNER JOIN t.nodeSources ns
             INNER JOIN ns.node n
             WHERE n.id = :node_id')
-                        ->setParameter('node_id', $this->node->getId());
+            ->setParameter('node_id', $this->node->getId());
 
         try {
             return $query->getResult();
@@ -379,12 +383,12 @@ class NodeHandler
     public function getAvailableTranslationsId()
     {
         $query = Kernel::getService('em')
-                        ->createQuery('
+            ->createQuery('
             SELECT t.id FROM RZ\Roadiz\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             INNER JOIN ns.translation t
             WHERE n.id = :node_id')
-                        ->setParameter('node_id', $this->node->getId());
+            ->setParameter('node_id', $this->node->getId());
 
         try {
             $simpleArray = [];
@@ -405,9 +409,9 @@ class NodeHandler
     public function getUnavailableTranslations()
     {
         $query = Kernel::getService('em')
-                        ->createQuery('SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
+            ->createQuery('SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
                                        WHERE t.id NOT IN (:translations_id)')
-                        ->setParameter('translations_id', $this->getAvailableTranslationsId());
+            ->setParameter('translations_id', $this->getAvailableTranslationsId());
 
         try {
             return $query->getResult();
@@ -422,9 +426,9 @@ class NodeHandler
     public function getUnavailableTranslationsId()
     {
         $query = Kernel::getService('em')
-                        ->createQuery('SELECT t.id FROM RZ\Roadiz\Core\Entities\Translation t
+            ->createQuery('SELECT t.id FROM RZ\Roadiz\Core\Entities\Translation t
                                        WHERE t.id NOT IN (:translations_id)')
-                        ->setParameter('translations_id', $this->getAvailableTranslationsId());
+            ->setParameter('translations_id', $this->getAvailableTranslationsId());
 
         try {
             $simpleArray = [];
@@ -502,7 +506,7 @@ class NodeHandler
     {
         $nodes = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findBy(['parent' => null], ['position'=>'ASC']);
+            ->findBy(['parent' => null], ['position' => 'ASC']);
 
         $i = 1;
         foreach ($nodes as $child) {
@@ -524,7 +528,7 @@ class NodeHandler
     {
         $defaults = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findBy(['home'=>true]);
+            ->findBy(['home' => true]);
 
         foreach ($defaults as $default) {
             $default->setHome(false);

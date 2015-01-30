@@ -631,7 +631,13 @@ class NodesController extends RozierApp
         }
     }
 
-
+    /**
+     * Empty trash action.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function emptyTrashAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES_DELETE');
