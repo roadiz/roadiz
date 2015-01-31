@@ -107,7 +107,7 @@ class DocumentViewer implements ViewableInterface
     {
         $assignation = [
             'document' => $this->document,
-            'url' => $this->getDocumentUrlByArray($args)
+            'url' => $this->getDocumentUrlByArray($args),
         ];
 
         if (!empty($args['width'])) {
@@ -227,13 +227,13 @@ class DocumentViewer implements ViewableInterface
                 $basename . '.ogv',
                 $basename . '.mp4',
                 $basename . '.mov',
-                $basename . '.webm'
+                $basename . '.webm',
             ];
         } elseif ($this->document->isAudio()) {
             $sourcesDocsName = [
                 $basename . '.mp3',
                 $basename . '.ogg',
-                $basename . '.wav'
+                $basename . '.wav',
             ];
         } else {
             return false;
@@ -246,7 +246,7 @@ class DocumentViewer implements ViewableInterface
         foreach ($sourcesDocs as $source) {
             $sources[] = [
                 'mime' => $source->getMimeType(),
-                'url' => Kernel::getInstance()->getRequest()->getBaseUrl().'/files/'.$source->getRelativeUrl()
+                'url' => Kernel::getInstance()->getRequest()->getBaseUrl() . '/files/' . $source->getRelativeUrl(),
             ];
         }
 
@@ -260,7 +260,7 @@ class DocumentViewer implements ViewableInterface
      * - height
      * - crop ({w}x{h}, for example : 100x200)
      * - grayscale / greyscale (boolean)
-     * - quality (1-100)
+     * - quality (1-100) - default: 90
      * - background (hexadecimal color without #)
      * - progressive (boolean)
      * - noProcess (boolean) : Disable SLIR resample
@@ -275,28 +275,30 @@ class DocumentViewer implements ViewableInterface
             (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
             return Kernel::getInstance()->getRequest()
-                                        ->getBaseUrl().'/files/'.$this->document->getRelativeUrl();
+                                        ->getBaseUrl() . '/files/' . $this->document->getRelativeUrl();
         } else {
             $slirArgs = [];
 
             if (!empty($args['width'])) {
-                $slirArgs['w'] = 'w'.(int) $args['width'];
+                $slirArgs['w'] = 'w' . (int) $args['width'];
             }
             if (!empty($args['height'])) {
-                $slirArgs['h'] = 'h'.(int) $args['height'];
+                $slirArgs['h'] = 'h' . (int) $args['height'];
             }
             if (!empty($args['crop'])) {
-                $slirArgs['c'] = 'c'.strip_tags($args['crop']);
+                $slirArgs['c'] = 'c' . strip_tags($args['crop']);
             }
             if ((!empty($args['grayscale']) && $args['grayscale'] === true) ||
                 (!empty($args['greyscale']) && $args['greyscale'] === true)) {
                 $slirArgs['g'] = 'g1';
             }
             if (!empty($args['quality'])) {
-                $slirArgs['q'] = 'q'.(int) $args['quality'];
+                $slirArgs['q'] = 'q' . (int) $args['quality'];
+            } else {
+                $slirArgs['q'] = 'q90'; // Set default quality to 90%
             }
             if (!empty($args['background'])) {
-                $slirArgs['b'] = 'b'.strip_tags($args['background']);
+                $slirArgs['b'] = 'b' . strip_tags($args['background']);
             }
             if (!empty($args['progressive']) && $args['progressive'] === true) {
                 $slirArgs['p'] = 'p1';
@@ -304,7 +306,7 @@ class DocumentViewer implements ViewableInterface
 
             return Kernel::getService('urlGenerator')->generate('SLIRProcess', [
                 'queryString' => implode('-', $slirArgs),
-                'filename' => $this->document->getRelativeUrl()
+                'filename' => $this->document->getRelativeUrl(),
             ]);
         }
     }
