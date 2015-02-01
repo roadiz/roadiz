@@ -146,7 +146,8 @@ class NodesSources extends AbstractEntity
      *
      * @return ArrayCollection
      */
-    public function getLogs() {
+    public function getLogs()
+    {
         return $this->logs;
     }
 

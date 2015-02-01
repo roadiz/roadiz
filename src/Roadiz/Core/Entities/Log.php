@@ -138,14 +138,16 @@ class Log extends AbstractEntity
      *
      * @return RZ\Roadiz\Core\Entities\NodesSources
      */
-    public function getNodeSource() {
+    public function getNodeSource()
+    {
         return $this->nodeSource;
     }
 
     /**
      * @param RZ\Roadiz\Core\Entities\NodesSources $newnodeSource
      */
-    public function setNodeSource($newnodeSource) {
+    public function setNodeSource($newnodeSource)
+    {
         $this->nodeSource = $newnodeSource;
 
         return $this;
