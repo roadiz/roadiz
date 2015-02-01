@@ -136,6 +136,22 @@ class NodesSources extends AbstractEntity
     }
 
     /**
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Log", mappedBy="nodeSource")
+     * @ORM\OrderBy({"datetime" = "DESC"})
+     */
+    protected $logs;
+
+    /**
+     * Logs related to this node-source.
+     *
+     * @return ArrayCollection
+     */
+    public function getLogs() {
+        return $this->logs;
+    }
+
+
+    /**
      * @ORM\Column(type="string", name="title", unique=false, nullable=true)
      */
     protected $title = '';
@@ -256,8 +272,16 @@ class NodesSources extends AbstractEntity
         $this->translation = $translation;
         $this->urlAliases = new ArrayCollection();
         $this->documentsByFields = new ArrayCollection();
+        $this->logs = new ArrayCollection();
     }
 
+    /**
+     * Before clone method.
+     *
+     * Be carful not to persist nor flush current entity after
+     * calling clone as it empties its relations.
+     *
+     */
     public function __clone()
     {
         $this->setId(null);
@@ -270,8 +294,13 @@ class NodesSources extends AbstractEntity
                 $cloneDocumentsByField->setNodeSource($this);
             }
         }
+        // Clear url-aliases before cloning.
         if ($this->urlAliases !== null) {
             $this->urlAliases->clear();
+        }
+        // Clear logs before cloning.
+        if ($this->logs !== null) {
+            $this->logs->clear();
         }
     }
 }

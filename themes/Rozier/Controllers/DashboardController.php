@@ -47,6 +47,10 @@ class DashboardController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        $this->assignation['latestSources'] = $this->getService('em')
+                                                   ->getRepository("RZ\Roadiz\Core\Entities\NodesSources")
+                                                   ->findByLatestUpdated(4);
+
         return new Response(
             $this->getTwig()->render('dashboard/index.html.twig', $this->assignation),
             Response::HTTP_OK,

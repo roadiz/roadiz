@@ -30,28 +30,25 @@
 
 namespace RZ\Roadiz\CMS\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Entities\Document;
-
-use RZ\Roadiz\Core\Bags\SettingsBag;
-
 use Pimple\Container;
-
+use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Viewers\ViewableInterface;
-
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Translation\Translator;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Base class for Roadiz themes.
@@ -61,7 +58,6 @@ class AppController implements ViewableInterface
     const AJAX_TOKEN_INTENTION = 'ajax';
     const SCHEMA_TOKEN_INTENTION = 'update_schema';
     const FONT_TOKEN_INTENTION = 'font_request';
-
 
     protected $kernel = null;
     /**
@@ -262,10 +258,10 @@ class AppController implements ViewableInterface
     public static function getRoutes()
     {
         $locator = new FileLocator([
-            static::getResourcesFolder()
+            static::getResourcesFolder(),
         ]);
 
-        if (file_exists(static::getResourcesFolder().'/routes.yml')) {
+        if (file_exists(static::getResourcesFolder() . '/routes.yml')) {
             $loader = new YamlFileLoader($locator);
 
             return $loader->load('routes.yml');
@@ -279,22 +275,22 @@ class AppController implements ViewableInterface
      */
     public static function getResourcesFolder()
     {
-        return ROADIZ_ROOT.'/themes/'.static::$themeDir.'/Resources';
+        return ROADIZ_ROOT . '/themes/' . static::$themeDir . '/Resources';
     }
     /**
      * @return string
      */
     public static function getViewsFolder()
     {
-        return static::getResourcesFolder().'/views';
+        return static::getResourcesFolder() . '/views';
     }
     /**
      * @return string
      */
     public function getStaticResourcesUrl()
     {
-        return $this->kernel->getRequest()->getBaseUrl().
-            '/themes/'.static::$themeDir.'/static/';
+        return $this->kernel->getRequest()->getBaseUrl() .
+        '/themes/' . static::$themeDir . '/static/';
     }
 
     /**
@@ -337,7 +333,7 @@ class AppController implements ViewableInterface
                 $fs = new Filesystem();
                 $fs->remove([Kernel::getService('twig.cacheFolder')]);
             } catch (IOExceptionInterface $e) {
-                echo "An error occurred while deleting backend twig cache directory: ".$e->getPath();
+                echo "An error occurred while deleting backend twig cache directory: " . $e->getPath();
             }
 
             /*
@@ -351,7 +347,7 @@ class AppController implements ViewableInterface
                 // force compilation
                 if ($file->isFile() &&
                     $file->getExtension() == 'twig') {
-                    $ctrl->getTwig()->loadTemplate(str_replace(static::getViewsFolder().'/', '', $file));
+                    $ctrl->getTwig()->loadTemplate(str_replace(static::getViewsFolder() . '/', '', $file));
                 }
             }
 
@@ -407,27 +403,27 @@ class AppController implements ViewableInterface
                 'devMode' => (boolean) $this->kernel->container['config']['devMode'],
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
-                'baseUrl' => $this->kernel->getResolvedBaseUrl(),//$this->kernel->getRequest()->getBaseUrl(),
+                'baseUrl' => $this->kernel->getResolvedBaseUrl(), //$this->kernel->getRequest()->getBaseUrl(),
                 'filesUrl' => $this->kernel
                                    ->getRequest()
-                                   ->getBaseUrl().'/'.Document::getFilesFolderName(),
+                                   ->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->getService('csrfProvider')
                                     ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
                 'fontToken' => $this->getService('csrfProvider')
-                                    ->generateCsrfToken(static::FONT_TOKEN_INTENTION)
+                                    ->generateCsrfToken(static::FONT_TOKEN_INTENTION),
             ],
             'session' => [
-                'id' => $this->kernel->getRequest()->getSession()->getId()
-            ]
+                'id' => $this->kernel->getRequest()->getSession()->getId(),
+            ],
         ];
 
         if ($this->getService('securityContext') !== null &&
-            $this->getService('securityContext')->getToken() !== null ) {
+            $this->getService('securityContext')->getToken() !== null) {
             $this->assignation['securityContext'] = $this->getService('securityContext');
             $this->assignation['session']['user'] = $this->getService('securityContext')
-                                                         ->getToken()
-                                                         ->getUser();
+                 ->getToken()
+                 ->getUser();
         }
 
         return $this;
@@ -461,7 +457,7 @@ class AppController implements ViewableInterface
         $className = get_called_class();
         $theme = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(['className'=>$className]);
+            ->findOneBy(['className' => $className]);
 
         if ($theme === null) {
             $theme = new Theme();
@@ -488,7 +484,7 @@ class AppController implements ViewableInterface
         $className = get_called_class();
         $theme = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(['className'=>$className]);
+            ->findOneBy(['className' => $className]);
 
         if ($theme !== null) {
             $theme->setAvailable(true);
@@ -509,7 +505,7 @@ class AppController implements ViewableInterface
         $className = get_called_class();
         $theme = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(['className'=>$className]);
+            ->findOneBy(['className' => $className]);
 
         if ($theme !== null) {
             $theme->setAvailable(false);
@@ -538,17 +534,18 @@ class AppController implements ViewableInterface
      * @param Request $request
      * @param string  $msg
      * @param string  $level
+     * @param RZ\Roadiz\Core\Entities\NodesSources $source
      */
-    protected function publishMessage(Request $request, $msg, $level = "confirm")
+    protected function publishMessage(Request $request, $msg, $level = "confirm", NodesSources $source = null)
     {
         $request->getSession()->getFlashBag()->add($level, $msg);
 
         switch ($level) {
             case 'error':
-                $this->getService('logger')->error($msg);
+                $this->getService('logger')->error($msg, [], $source);
                 break;
             default:
-                $this->getService('logger')->info($msg);
+                $this->getService('logger')->info($msg, [], $source);
                 break;
         }
     }
@@ -558,10 +555,11 @@ class AppController implements ViewableInterface
      *
      * @param Request $request
      * @param string  $msg
+     * @param RZ\Roadiz\Core\Entities\NodesSources $source
      */
-    public function publishConfirmMessage(Request $request, $msg)
+    public function publishConfirmMessage(Request $request, $msg, NodesSources $source = null)
     {
-        $this->publishMessage($request, $msg, 'confirm');
+        $this->publishMessage($request, $msg, 'confirm', $source);
     }
     /**
      * Publish an error message in Session flash bag and
@@ -569,10 +567,11 @@ class AppController implements ViewableInterface
      *
      * @param Request $request
      * @param string  $msg
+     * @param RZ\Roadiz\Core\Entities\NodesSources $source
      */
-    public function publishErrorMessage(Request $request, $msg)
+    public function publishErrorMessage(Request $request, $msg, NodesSources $source = null)
     {
-        $this->publishMessage($request, $msg, 'error');
+        $this->publishMessage($request, $msg, 'error', $source);
     }
 
     /**

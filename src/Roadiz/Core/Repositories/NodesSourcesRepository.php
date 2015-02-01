@@ -499,4 +499,26 @@ class NodesSourcesRepository extends EntityRepository
 
         return null;
     }
+
+    /**
+     * Find latest updated NodesSources using Log table.
+     *
+     * @param integer $maxResult
+     *
+     * @return array|null
+     */
+    public function findByLatestUpdated($maxResult = 5)
+    {
+         $query = $this->_em->createQuery('
+            SELECT DISTINCT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
+            INNER JOIN ns.logs log
+            ORDER BY log.datetime DESC')
+                    ->setMaxResults($maxResult);
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
 }
