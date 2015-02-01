@@ -29,10 +29,11 @@
  */
 namespace RZ\Roadiz\Core\Log;
 
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\Kernel;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use RZ\Roadiz\Core\Entities\NodesSources;
 
 /**
  * A log system which store message in database.
@@ -68,9 +69,9 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function emergency($message, array $context = [])
+    public function emergency($message, array $context = [], NodesSources $source = null)
     {
-        $this->log(Log::EMERGENCY, $message, $context);
+        $this->log(Log::EMERGENCY, $message, $context, $source);
     }
 
     /**
@@ -82,9 +83,9 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function alert($message, array $context = [])
+    public function alert($message, array $context = [], NodesSources $source = null)
     {
-        $this->log(Log::ALERT, $message, $context);
+        $this->log(Log::ALERT, $message, $context, $source);
     }
 
     /**
@@ -95,9 +96,9 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function critical($message, array $context = [])
+    public function critical($message, array $context = [], NodesSources $source = null)
     {
-        $this->log(Log::CRITICAL, $message, $context);
+        $this->log(Log::CRITICAL, $message, $context, $source);
     }
 
     /**
@@ -107,9 +108,9 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function error($message, array $context = [])
+    public function error($message, array $context = [], NodesSources $source = null)
     {
-        $this->log(Log::ERROR, $message, $context);
+        $this->log(Log::ERROR, $message, $context, $source);
     }
 
     /**
@@ -121,9 +122,9 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function warning($message, array $context = [])
+    public function warning($message, array $context = [], NodesSources $source = null)
     {
-        $this->log(Log::WARNING, $message, $context);
+        $this->log(Log::WARNING, $message, $context, $source);
     }
 
     /**
@@ -132,9 +133,9 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function notice($message, array $context = [])
+    public function notice($message, array $context = [], NodesSources $source = null)
     {
-        $this->log(Log::NOTICE, $message, $context);
+        $this->log(Log::NOTICE, $message, $context, $source);
     }
 
     /**
@@ -145,9 +146,9 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function info($message, array $context = [])
+    public function info($message, array $context = [], NodesSources $source = null)
     {
-        $this->log(Log::INFO, $message, $context);
+        $this->log(Log::INFO, $message, $context, $source);
     }
 
     /**
@@ -156,7 +157,7 @@ class Logger implements LoggerInterface
      * @param string $message
      * @param array  $context
      */
-    public function debug($message, array $context = [])
+    public function debug($message, array $context = [], NodesSources $source = null)
     {
         return;
     }
@@ -167,8 +168,9 @@ class Logger implements LoggerInterface
      * @param mixed  $level
      * @param string $message
      * @param array  $context
+     * @param RZ\Roadiz\Core\Entities\NodesSources $source
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = [], NodesSources $source = null)
     {
         if (Kernel::getService('em')->isOpen()) {
             $log = new Log($level, $message, $context);
@@ -185,6 +187,13 @@ class Logger implements LoggerInterface
              */
             if (null !== Kernel::getInstance()->getRequest()) {
                 $log->setClientIp(Kernel::getInstance()->getRequest()->getClientIp());
+            }
+
+            /*
+             * Add a related node-source entity
+             */
+            if (null !== $source) {
+                $log->setNodeSource($source);
             }
 
             Kernel::getService('em')->persist($log);

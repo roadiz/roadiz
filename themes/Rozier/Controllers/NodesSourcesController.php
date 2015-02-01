@@ -107,7 +107,7 @@ class NodesSourcesController extends RozierApp
                         '%translation%'=>$source->getTranslation()->getName()
                     ]);
 
-                    $this->publishConfirmMessage($request, $msg);
+                    $this->publishConfirmMessage($request, $msg, $source);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(

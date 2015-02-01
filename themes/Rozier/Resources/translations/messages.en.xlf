@@ -5698,6 +5698,11 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>delete.nodesource</source>
           <target state="translated">Delete node source</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="latest.node-sources.updates">
+          <source>latest.node-sources.updates</source>
+          <target state="translated">Latest updated node-sources</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

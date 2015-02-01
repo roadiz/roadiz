@@ -128,6 +128,32 @@ class Log extends AbstractEntity
     }
 
     /**
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="logs")
+     * @ORM\JoinColumn(name="node_source_id", referencedColumnName="id")
+     */
+    protected $nodeSource;
+
+    /**
+     * Get log related node-source.
+     *
+     * @return RZ\Roadiz\Core\Entities\NodesSources
+     */
+    public function getNodeSource()
+    {
+        return $this->nodeSource;
+    }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\NodesSources $newnodeSource
+     */
+    public function setNodeSource($newnodeSource)
+    {
+        $this->nodeSource = $newnodeSource;
+
+        return $this;
+    }
+
+    /**
      * @ORM\Column(type="string", name="client_ip", unique=false, nullable=true)
      */
     protected $clientIp = null;

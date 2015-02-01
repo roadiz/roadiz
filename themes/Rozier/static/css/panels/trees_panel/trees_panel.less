@@ -31,6 +31,10 @@
     & > div {
         background-color: @maintree-global-bg;
     }
+
+    .root-tree {
+        padding-bottom: 1em;
+    }
 }
 
 #tree-container{
@@ -95,7 +99,7 @@
         &:first-child a{
             border-left: 0 none;
         }
-        
+
         &.active a{
             cursor: default;
 
@@ -121,7 +125,7 @@
             position: absolute;
             display: block;
             content: '';
-            right:8px; bottom: -1px; left: 8px; 
+            right:8px; bottom: -1px; left: 8px;
             height: 2px;
             background-color: transparent;
             .transition(0.4s background-color @easeOutExpo);
