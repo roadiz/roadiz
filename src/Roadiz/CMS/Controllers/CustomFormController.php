@@ -230,7 +230,10 @@ class CustomFormController extends AppController
 
             if ($data[$field->getName()] instanceof \DateTime) {
 
-                $fieldAttr->setValue($data[$field->getName()]->format('Y-m-d H:i:s'));
+                $strDate = $data[$field->getName()]->format('Y-m-d H:i:s');
+
+                $fieldAttr->setValue($strDate);
+                $fieldsData[] = ["name" => $field->getName(), "value" => $strDate];
 
             } else if (is_array($data[$field->getName()])) {
                 $values = [];

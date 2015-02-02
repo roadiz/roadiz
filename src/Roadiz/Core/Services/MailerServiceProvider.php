@@ -57,7 +57,6 @@ class MailerServiceProvider implements \Pimple\ServiceProviderInterface
      */
     public function register(Container $container)
     {
-
         $container['mailer.transport'] = function ($c) {
 
             if (isset($c['config']['mailer']) &&
@@ -78,7 +77,9 @@ class MailerServiceProvider implements \Pimple\ServiceProviderInterface
                     $transport->setPort(25);
                 }
 
-                if (!empty($c['config']['mailer']['encryption'])) {
+                if (!empty($c['config']['mailer']['encryption']) &&
+                    (strtolower($c['config']['mailer']['encryption']) == "tls" ||
+                        strtolower($c['config']['mailer']['encryption']) == "ssl")) {
                     $transport->setEncryption($c['config']['mailer']['encryption']);
                 }
 
