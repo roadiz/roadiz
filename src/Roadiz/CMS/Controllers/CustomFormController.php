@@ -127,7 +127,7 @@ class CustomFormController extends AppController
                          */
                         $response = new RedirectResponse(
                             $this->getService('urlGenerator')->generate(
-                                'customFormSendAction',
+                                'customFormSentAction',
                                 ["customFormId" => $customFormId]
                             )
                         );
@@ -155,6 +155,25 @@ class CustomFormController extends AppController
                     ['content-type' => 'text/html']
                 );
             }
+        }
+
+        return $this->throw404();
+    }
+
+    public function sentAction(Request $request, $customFormId)
+    {
+        $customForm = $this->getService('em')
+                           ->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
+
+        if (null !== $customForm) {
+
+            $this->assignation['customForm'] = $customForm;
+
+            return new Response(
+                $this->getTwig()->render('forms/customFormSent.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                ['content-type' => 'text/html']
+            );
         }
 
         return $this->throw404();
@@ -211,14 +230,15 @@ class CustomFormController extends AppController
      */
     public static function addCustomFormAnswer($data, CustomForm $customForm, EntityManager $em)
     {
+        $now = new \DateTime('NOW');
         $answer = new CustomFormAnswer();
         $answer->setIp($data["ip"]);
-        $answer->setSubmittedAt(new \DateTime('NOW'));
+        $answer->setSubmittedAt($now);
         $answer->setCustomForm($customForm);
 
         $fieldsData = [
-            ["name" => "ip", "value" => $data["ip"]],
-            ["name" => "submittedAt", "value" => new \DateTime('NOW')],
+            ["name" => "ip.address", "value" => $data["ip"]],
+            ["name" => "submittedAt", "value" => $now]
         ];
 
         $em->persist($answer);
@@ -233,7 +253,7 @@ class CustomFormController extends AppController
                 $strDate = $data[$field->getName()]->format('Y-m-d H:i:s');
 
                 $fieldAttr->setValue($strDate);
-                $fieldsData[] = ["name" => $field->getName(), "value" => $strDate];
+                $fieldsData[] = ["name" => $field->getLabel(), "value" => $strDate];
 
             } else if (is_array($data[$field->getName()])) {
                 $values = [];
@@ -245,11 +265,11 @@ class CustomFormController extends AppController
 
                 $val = implode(',', $values);
                 $fieldAttr->setValue(strip_tags($val));
-                $fieldsData[] = ["name" => $field->getName(), "value" => $val];
+                $fieldsData[] = ["name" => $field->getLabel(), "value" => $val];
 
             } else {
                 $fieldAttr->setValue(strip_tags($data[$field->getName()]));
-                $fieldsData[] = ["name" => $field->getName(), "value" => $data[$field->getName()]];
+                $fieldsData[] = ["name" => $field->getLabel(), "value" => $data[$field->getName()]];
             }
             $em->persist($fieldAttr);
         }
