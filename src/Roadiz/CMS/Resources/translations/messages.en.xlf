@@ -58,6 +58,10 @@
                 <source>ip.address</source>
                 <target state="translated">IP address</target>
             </trans-unit>
+            <trans-unit id="submittedAt" approved="yes">
+                <source>submittedAt</source>
+                <target state="translated">Submitted on</target>
+            </trans-unit>
 
             <trans-unit id="form.submit" approved="yes">
                 <source>form.submit</source>
@@ -81,7 +85,10 @@
                 <source>file.not.accepted</source>
                 <target>Attached file could not be accepted.</target>
             </trans-unit>
-
+            <trans-unit xml:space="preserve" id="customForm.answer.sent">
+                <source>customForm.answer.sent</source>
+                <target>Your answer has been successfully sent.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

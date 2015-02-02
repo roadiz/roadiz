@@ -59,6 +59,11 @@
                 <target state="translated">Adresse IP</target>
             </trans-unit>
 
+            <trans-unit id="submittedAt" approved="yes">
+                <source>submittedAt</source>
+                <target state="translated">Envoyé le</target>
+            </trans-unit>
+
             <trans-unit id="form.submit" approved="yes">
                 <source>form.submit</source>
                 <target state="translated">Envoyer</target>
@@ -67,6 +72,11 @@
             <trans-unit xml:space="preserve" id="file.not.accepted">
                 <source>file.not.accepted</source>
                 <target>Le fichier joint n’a pas été accepté.</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="customForm.answer.sent">
+                <source>customForm.answer.sent</source>
+                <target>Votre réponse a bien été envoyée.</target>
             </trans-unit>
 
         </body>

@@ -36,16 +36,15 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Themes\Rozier\RozierApp;
-
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\RozierApp;
 
 /**
-* CustomForm controller
-*/
+ * CustomForm controller
+ */
 class CustomFormAnswersController extends RozierApp
 {
     /**
@@ -71,7 +70,8 @@ class CustomFormAnswersController extends RozierApp
             $request,
             $this->getService('em'),
             'RZ\Roadiz\Core\Entities\CustomFormAnswer',
-            ["customForm" => $customForm]
+            ["customForm" => $customForm],
+            ["submittedAt" => "DESC"]
         );
         $listManager->handle();
         $this->assignation['filters'] = $listManager->getAssignation();
@@ -96,7 +96,7 @@ class CustomFormAnswersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $customFormAnswer = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\CustomFormAnswer', (int) $customFormAnswerId);
+                                 ->find('RZ\Roadiz\Core\Entities\CustomFormAnswer', (int) $customFormAnswerId);
 
         if (null !== $customFormAnswer) {
             $this->assignation['customFormAnswer'] = $customFormAnswer;
@@ -106,10 +106,10 @@ class CustomFormAnswersController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid() &&
-                $form->getData()['customFormAnswerId'] == $customFormAnswer->getId() ) {
+                $form->getData()['customFormAnswerId'] == $customFormAnswer->getId()) {
                 $this->getService("em")->remove($customFormAnswer);
 
-                $msg = $this->getTranslator()->trans('customFormAnswer.%id%.deleted', ['%id%'=>$customFormAnswer->getId()]);
+                $msg = $this->getTranslator()->trans('customFormAnswer.%id%.deleted', ['%id%' => $customFormAnswer->getId()]);
                 $this->publishConfirmMessage($request, $msg);
                 /*
                  * Redirect to update schema page
@@ -145,13 +145,13 @@ class CustomFormAnswersController extends RozierApp
     private function buildDeleteForm(CustomFormAnswer $customFormAnswer)
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add('customFormAnswerId', 'hidden', [
-                'data' => $customFormAnswer->getId(),
-                'constraints' => [
-                    new NotBlank()
-                ]
-            ]);
+                        ->createBuilder('form')
+                        ->add('customFormAnswerId', 'hidden', [
+                            'data' => $customFormAnswer->getId(),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ]);
 
         return $builder->getForm();
     }

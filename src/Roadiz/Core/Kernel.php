@@ -41,6 +41,7 @@ use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
 use RZ\Roadiz\Core\Services\FormServiceProvider;
+use RZ\Roadiz\Core\Services\MailerServiceProvider;
 use RZ\Roadiz\Core\Services\RoutingServiceProvider;
 use RZ\Roadiz\Core\Services\SecurityServiceProvider;
 use RZ\Roadiz\Core\Services\SolrServiceProvider;
@@ -178,6 +179,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $container->register(new BackofficeServiceProvider());
         $container->register(new ThemeServiceProvider());
         $container->register(new TranslationServiceProvider());
+        $container->register(new MailerServiceProvider());
+
     }
 
     /**

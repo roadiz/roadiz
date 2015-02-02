@@ -19,8 +19,8 @@
 			        <tr>
                         <th class="mobile-hidden">{% trans %}ip{% endtrans %}</th>
 			            <th>{% trans %}submitted.date{% endtrans %}</th>
-			            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
-			            {# <th></th> #}
+
+
 			            <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -30,11 +30,9 @@
 
 							<td class="mobile-hidden">{{ type.ip }}</td>
                             <td>{{ type.submittedAt|localizeddate('short') }}</td>
-							{# <td>{{ type.getSourceEntityClassName }}</td> #}
-{# 							<td><div class="uk-badge">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormield|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td> #}
 							<td>
-                            {% spaceless %}                                
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormFieldAttributesHomePage', { customFormAnswerId: type.getId }) }}" title="{% trans %}customFormAnswer.answers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>                         
+                            {% spaceless %}
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormFieldAttributesHomePage', { customFormAnswerId: type.getId }) }}" title="{% trans %}customFormAnswer.answers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
                                 <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('customFormAnswersDeletePage', { customFormAnswerId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}">
                                     <i class="uk-icon-rz-trash-o"></i>
                                 </a>

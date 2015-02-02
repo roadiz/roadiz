@@ -466,7 +466,7 @@ class EntryPointsController extends AppController
      */
     protected function sendContactForm($assignation, $receiver, $subject = null, $files = null)
     {
-        $emailBody = $this->getTwig()->render('forms/contactForm.html.twig', $assignation);
+        $emailBody = $this->getService('twig.environment')->render('forms/contactForm.html.twig', $assignation);
         /*
          * inline CSS
          */
@@ -504,11 +504,7 @@ class EntryPointsController extends AppController
             $message->attach($attachment);
         }
 
-        // Create the Transport
-        $transport = \Swift_MailTransport::newInstance();
-        $mailer = \Swift_Mailer::newInstance($transport);
         // Send the message
-
-        return $mailer->send($message);
+        return $this->getService('mailer')->send($message);
     }
 }
