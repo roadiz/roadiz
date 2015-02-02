@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\ListManagers\NodePaginator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\Node;
 
 use Doctrine\ORM\EntityManager;
 
@@ -88,6 +89,32 @@ class EntityListManager
         $this->queryArray = $request->query->all();
 
         $this->itemPerPage = static::ITEM_PER_PAGE;
+
+        if (array_key_exists('chroot', $preFilters)) {
+            if ($preFilters["chroot"] instanceof Node) {
+                $ids = $preFilters["chroot"]->getHandler()->getAllOffspringId();
+                if (array_key_exists('parent', $preFilters)) {
+                    if (is_array($preFilters["parent"])) {
+                        if (count(array_intersect($preFilters["parent"], $ids))
+                            != count($preFilters["parent"])) {
+                            $this->filteringArray["parent"] = -1;
+                        }
+                    } else {
+                        if ($preFilters["parent"] instanceof Node) {
+                            $parent = $preFilters["parent"]->getId();
+                        } else {
+                            $parent = (int) $preFilters["parent"];
+                        }
+                        if (!in_array($parent, $ids, true)) {
+                            $this->filteringArray["parent"] = -1;
+                        }
+                    }
+                } else {
+                    $this->filteringArray["parent"] = $ids;
+                }
+            }
+            unset($this->filteringArray["chroot"]);
+        }
     }
 
     /**

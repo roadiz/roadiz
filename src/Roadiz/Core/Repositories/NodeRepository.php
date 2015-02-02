@@ -1012,4 +1012,32 @@ class NodeRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\Node $node
+     *
+     * @return array
+     */
+    public function findAllOffspringIdByNode(Node $node)
+    {
+        $theOffprings = [];
+
+        $in = [$node->getId()];
+
+        do {
+            $theOffprings = array_merge($theOffprings, $in);
+            $query = $this->_em->createQuery('
+                SELECT n.id FROM RZ\Roadiz\Core\Entities\Node n
+                WHERE n.parent IN (:tab)')
+                          ->setParameter('tab', $in);
+            $result = $query->getScalarResult();
+            $in = [];
+
+            //For memory optimizations
+            foreach($result as $item) {
+              $in[] = (int)$item['id'];
+            }
+        } while (!empty($in));
+        return $theOffprings;
+    }
 }

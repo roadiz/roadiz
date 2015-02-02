@@ -519,6 +519,12 @@ class NodeHandler
         return $i;
     }
 
+    public function getAllOffspringId()
+    {
+        return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+                                       ->findAllOffspringIdByNode($this->node);
+    }
+
     /**
      * Set current node as the Home node.
      *

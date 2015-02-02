@@ -67,6 +67,8 @@ class NodesController extends RozierApp
                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                             ->findDefault();
 
+        $user = $this->getService("securityContext")->getToken()->getUser();
+
         switch ($filter) {
             case 'draft':
                 $this->assignation['mainFilter'] = $filter;
@@ -99,6 +101,11 @@ class NodesController extends RozierApp
                 $arrayFilter = [];
                 break;
         }
+
+        if ($user->getChroot() !== null) {
+            $arrayFilter["chroot"] = $user->getChroot();
+        }
+
         /*
          * Manage get request to filter list
          */
