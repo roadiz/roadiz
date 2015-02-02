@@ -33,6 +33,7 @@
 
 namespace Themes\Rozier\Controllers;
 
+use \RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
@@ -323,7 +324,7 @@ class CustomFormsController extends RozierApp
                     new NotBlank()
                 ]
             ])
-            ->add('description', 'text', [
+            ->add('description', new MarkdownType(), [
                 'label' => $this->getTranslator()->trans('description'),
                 'required' => false
             ])
