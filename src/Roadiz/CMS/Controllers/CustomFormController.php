@@ -166,7 +166,6 @@ class CustomFormController extends AppController
                            ->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
 
         if (null !== $customForm) {
-
             $this->assignation['customForm'] = $customForm;
 
             return new Response(
@@ -249,7 +248,6 @@ class CustomFormController extends AppController
             $fieldAttr->setCustomFormField($field);
 
             if ($data[$field->getName()] instanceof \DateTime) {
-
                 $strDate = $data[$field->getName()]->format('Y-m-d H:i:s');
 
                 $fieldAttr->setValue($strDate);

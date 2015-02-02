@@ -62,7 +62,6 @@ class MailerServiceProvider implements \Pimple\ServiceProviderInterface
             if (isset($c['config']['mailer']) &&
                 isset($c['config']['mailer']['type']) &&
                 strtolower($c['config']['mailer']['type']) == "smtp") {
-
                 $transport = \Swift_SmtpTransport::newInstance();
 
                 if (!empty($c['config']['mailer']['host'])) {
