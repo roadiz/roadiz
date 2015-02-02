@@ -39,13 +39,61 @@ class MailerServiceProvider implements \Pimple\ServiceProviderInterface
     /**
      * Initialize Mailer objects.
      *
+     * To use a SMTP mailer, enter your server config in
+     * `conf/config.json` file, for example:
+     *
+     *     - mailer
+     *         - type: "smtp"
+     *         - host: "smtp.example.org"
+     *         - port: 587
+     *         - encryption: "ssl"
+     *         - username: "username"
+     *         - password: "password"
+     *
+     * Just set `type` to false or remove `mailer` section
+     * to enable simple `sendmail` transport.
+     *
      * @param Pimple\Container $container
      */
     public function register(Container $container)
     {
 
         $container['mailer.transport'] = function ($c) {
-            return \Swift_MailTransport::newInstance();
+
+            if (isset($c['config']['mailer']) &&
+                isset($c['config']['mailer']['type']) &&
+                strtolower($c['config']['mailer']['type']) == "smtp") {
+
+                $transport = \Swift_SmtpTransport::newInstance();
+
+                if (!empty($c['config']['mailer']['host'])) {
+                    $transport->setHost($c['config']['mailer']['host']);
+                } else {
+                    $transport->setHost('localhost');
+                }
+
+                if (!empty($c['config']['mailer']['port'])) {
+                    $transport->setPort((int) $c['config']['mailer']['port']);
+                } else {
+                    $transport->setPort(25);
+                }
+
+                if (!empty($c['config']['mailer']['encryption'])) {
+                    $transport->setEncryption($c['config']['mailer']['encryption']);
+                }
+
+                if (!empty($c['config']['mailer']['username'])) {
+                    $transport->setUsername($c['config']['mailer']['username']);
+                }
+
+                if (!empty($c['config']['mailer']['password'])) {
+                    $transport->setPassword($c['config']['mailer']['password']);
+                }
+
+                return $transport;
+            } else {
+                return \Swift_MailTransport::newInstance();
+            }
         };
 
         $container['mailer'] = function ($c) {
