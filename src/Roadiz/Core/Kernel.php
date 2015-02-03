@@ -197,7 +197,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
             date_default_timezone_set("Europe/Paris");
         }
 
-        $application = new Application('Roadiz Console Application', '0.1');
+        $application = new Application('Roadiz Console Application', static::$cmsVersion);
         $helperSet = new HelperSet([
             'db' => new ConnectionHelper($this->container['em']->getConnection()),
             'em' => new EntityManagerHelper($this->container['em']),
