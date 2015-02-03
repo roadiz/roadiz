@@ -5702,6 +5702,27 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>latest.node-sources.updates</source>
           <target state="translated">Dernières sources modifiées</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="customForm.%name%.updated">
+          <source>customForm.%name%.updated</source>
+          <target>Le formulaire personnalisé « %name% » a bien été mis à jour.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.created">
+          <source>customForm.%name%.created</source>
+          <target>Le formulaire personnalisé « %name% » a bien été créé.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.deleted">
+          <source>customForm.%name%.deleted</source>
+          <target>Le formulaire personnalisé « %name% » a bien été supprimé.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.cannot_rename_already_exists">
+          <source>customForm.%name%.cannot_rename_already_exists</source>
+          <target>Le formulaire personnalisé « %name% » ne peut être renommé, un autre existe déjà.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.already_exists">
+          <source>customForm.%name%.already_exists</source>
+          <target>Le formulaire personnalisé « %name% » existe déjà.</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>

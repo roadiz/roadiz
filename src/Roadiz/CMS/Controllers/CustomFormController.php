@@ -101,7 +101,7 @@ class CustomFormController extends AppController
                          */
                         $this->assignation["fields"] = static::addCustomFormAnswer($data, $customForm, $this->getService('em'));
 
-                        $msg = $this->getTranslator()->trans('customForm.%name%.send', ['%name%' => $customForm->getName()]);
+                        $msg = $this->getTranslator()->trans('customForm.%name%.send', ['%name%' => $customForm->getDisplayName()]);
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
                         $this->getService('logger')->info($msg);
 

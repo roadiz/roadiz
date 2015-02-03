@@ -5704,6 +5704,27 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="customForm.%name%.updated">
+          <source>customForm.%name%.updated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.created">
+          <source>customForm.%name%.created</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.deleted">
+          <source>customForm.%name%.deleted</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.cannot_rename_already_exists">
+          <source>customForm.%name%.cannot_rename_already_exists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.already_exists">
+          <source>customForm.%name%.already_exists</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
