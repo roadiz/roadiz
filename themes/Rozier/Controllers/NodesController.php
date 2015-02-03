@@ -647,11 +647,22 @@ class NodesController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
+            $user = $this->getService("securityContext")->getToken()->getUser();
+            $chroot = $user->getChroot();
+            $criteria = ['status' => Node::DELETED];
+            if ($chroot ==! null) {
+                $ids = $chroot->getHandler()->getAllOffspringId();
+                $criteria["parent"] = $ids;
+            }
             $nodes = $this->getService('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
+<<<<<<< 6af4fbedac56d0a790a8a4c1dff4295582add41f
                           ->findBy([
                               'status' => Node::DELETED,
                           ]);
+=======
+                          ->findBy($criteria);
+>>>>>>> 2be29b16db0951f252c4fba17b6e5bdb9c88514f
 
             foreach ($nodes as $node) {
                 $node->getHandler()->removeWithChildrenAndAssociations();

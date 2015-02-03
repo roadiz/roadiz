@@ -90,17 +90,18 @@ class EntityListManager
 
         $this->itemPerPage = static::ITEM_PER_PAGE;
 
+        // transform the key chroot in parent
         if (array_key_exists('chroot', $preFilters)) {
             if ($preFilters["chroot"] instanceof Node) {
-                $ids = $preFilters["chroot"]->getHandler()->getAllOffspringId();
-                if (array_key_exists('parent', $preFilters)) {
-                    if (is_array($preFilters["parent"])) {
+                $ids = $preFilters["chroot"]->getHandler()->getAllOffspringId(); // get all offspringId
+                if (array_key_exists('parent', $preFilters)) { // test if parent key exist
+                    if (is_array($preFilters["parent"])) { // test if multiple parent id
                         if (count(array_intersect($preFilters["parent"], $ids))
-                            != count($preFilters["parent"])) {
-                            $this->filteringArray["parent"] = -1;
+                            != count($preFilters["parent"])) {  // test if all parent are in the chroot
+                            $this->filteringArray["parent"] = -1; // -1 for make the search return []
                         }
                     } else {
-                        if ($preFilters["parent"] instanceof Node) {
+                        if ($preFilters["parent"] instanceof Node) { // make transforme all id in int
                             $parent = $preFilters["parent"]->getId();
                         } else {
                             $parent = (int) $preFilters["parent"];
@@ -113,7 +114,7 @@ class EntityListManager
                     $this->filteringArray["parent"] = $ids;
                 }
             }
-            unset($this->filteringArray["chroot"]);
+            unset($this->filteringArray["chroot"]); // remove placeholder
         }
     }
 
