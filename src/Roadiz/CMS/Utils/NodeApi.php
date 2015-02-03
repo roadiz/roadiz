@@ -54,7 +54,7 @@ class NodeApi extends AbstractApi
         $offset = null
     ) {
         if (empty($criteria['status'])) {
-            $criteria['status'] = array('<=', Node::PUBLISHED);
+            $criteria['status'] = ['<=', Node::PUBLISHED];
         }
         if (!in_array('translation.available', $criteria, true)) {
             $criteria['translation.available'] = true;
@@ -76,7 +76,7 @@ class NodeApi extends AbstractApi
     public function countBy(array $criteria)
     {
         if (empty($criteria['status'])) {
-            $criteria['status'] = array('<=', Node::PUBLISHED);
+            $criteria['status'] = ['<=', Node::PUBLISHED];
         }
         if (!in_array('translation.available', $criteria, true)) {
             $criteria['translation.available'] = true;
@@ -95,7 +95,7 @@ class NodeApi extends AbstractApi
     public function getOneBy(array $criteria, array $order = null)
     {
         if (empty($criteria['status'])) {
-            $criteria['status'] = array('<=', Node::PUBLISHED);
+            $criteria['status'] = ['<=', Node::PUBLISHED];
         }
         if (!in_array('translation.available', $criteria, true)) {
             $criteria['translation.available'] = true;

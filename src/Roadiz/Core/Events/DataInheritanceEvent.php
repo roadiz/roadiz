@@ -76,7 +76,7 @@ class DataInheritanceEvent
                     ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                     ->findAll();
 
-                $map = array();
+                $map = [];
                 foreach ($nodeTypes as $type) {
                     $map[strtolower($type->getName())] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
                 }
@@ -108,7 +108,7 @@ class DataInheritanceEvent
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                 ->findAll();
 
-            $map = array();
+            $map = [];
             foreach ($nodeTypes as $type) {
                 $map[strtolower($type->getName())] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
             }

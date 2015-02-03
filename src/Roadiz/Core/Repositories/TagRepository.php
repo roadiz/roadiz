@@ -576,7 +576,7 @@ class TagRepository extends EntityRepository
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = array(),
+        array $criteria = [],
         $alias = "obj"
     ) {
 
@@ -586,7 +586,7 @@ class TagRepository extends EntityRepository
          * Search in translations
          */
         $qb->leftJoin('obj.translatedTags', 'tt');
-        $criteriaFields = array();
+        $criteriaFields = [];
         $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\TagTranslation');
         $cols = $metadatas->getColumnNames();
         foreach ($cols as $col) {
@@ -611,7 +611,7 @@ class TagRepository extends EntityRepository
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
-    public function countSearchBy($pattern, array $criteria = array())
+    public function countSearchBy($pattern, array $criteria = [])
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(t)')

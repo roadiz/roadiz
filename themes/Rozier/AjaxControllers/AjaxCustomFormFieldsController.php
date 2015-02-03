@@ -58,7 +58,7 @@ class AjaxCustomFormFieldsController extends AjaxAbstractFieldsController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_FORBIDDEN,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
@@ -71,21 +71,21 @@ class AjaxCustomFormFieldsController extends AjaxAbstractFieldsController
             return $response;
         }
 
-        $responseArray = array(
+        $responseArray = [
             'statusCode' => '403',
             'status'    => 'danger',
             'responseText' => $this->getTranslator()->trans(
                 'field.%customFormFieldId%.not_exists',
-                array(
+                [
                     '%customFormFieldId%' => $customFormFieldId
-                )
+                ]
             )
-        );
+        ];
 
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 }

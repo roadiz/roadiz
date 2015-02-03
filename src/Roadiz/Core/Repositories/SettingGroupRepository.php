@@ -65,7 +65,7 @@ class SettingGroupRepository extends EntityRepository
         try {
             $result = $query->getScalarResult();
 
-            $ids = array();
+            $ids = [];
             foreach ($result as $item) {
                 $ids[] = $item['name'];
             }

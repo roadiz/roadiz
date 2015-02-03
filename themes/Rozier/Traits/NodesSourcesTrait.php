@@ -31,16 +31,15 @@
 
 namespace Themes\Rozier\Traits;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\NodesSources;
-
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Utils\StringHandler;
-
-use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Validator\Constraints\Type;
+use \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 
 trait NodesSourcesTrait
 {
@@ -74,6 +73,9 @@ trait NodesSourcesTrait
                     $nodeSource->getNode()->setNodeName($data['title']);
                 }
             }
+        } else {
+            // empty title
+            $nodeSource->setTitle("");
         }
 
         $fields = $nodeSource->getNode()->getNodeType()->getFields();
@@ -89,7 +91,7 @@ trait NodesSourcesTrait
 
         // Update Solr Serach engine if setup
         if (true === $this->getKernel()->pingSolrServer()) {
-            $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
+            $solrSource = new SolariumNodeSource(
                 $nodeSource,
                 $this->getService('solr')
             );
@@ -110,9 +112,9 @@ trait NodesSourcesTrait
         /*
          * Create source default values
          */
-        $sourceDefaults = array(
-            'title' => $source->getTitle()
-        );
+        $sourceDefaults = [
+            'title' => $source->getTitle(),
+        ];
         foreach ($fields as $field) {
             if (!$field->isVirtual()) {
                 $getter = $field->getGetterName();
@@ -120,7 +122,7 @@ trait NodesSourcesTrait
                 if (method_exists($source, $getter)) {
                     $sourceDefaults[$field->getName()] = $source->$getter();
                 } else {
-                    throw new \Exception($getter.' method does not exist in '.$node->getNodeType()->getName());
+                    throw new \Exception($getter . ' method does not exist in ' . $node->getNodeType()->getName());
                 }
             }
         }
@@ -129,18 +131,18 @@ trait NodesSourcesTrait
          * Create subform for source
          */
         $sourceBuilder = $this->getService('formFactory')
-            ->createNamedBuilder('source', 'form', $sourceDefaults)
-            ->add(
-                'title',
-                'text',
-                array(
-                    'label' => $this->getTranslator()->trans('title'),
-                    'required' => false,
-                    'attr' => array(
-                        'data-desc' => ''
-                    )
-                )
-            );
+                              ->createNamedBuilder('source', 'form', $sourceDefaults)
+                              ->add(
+                                  'title',
+                                  'text',
+                                  [
+                                      'label' => $this->getTranslator()->trans('title'),
+                                      'required' => false,
+                                      'attr' => [
+                                          'data-desc' => '',
+                                      ],
+                                  ]
+                              );
         foreach ($fields as $field) {
             $sourceBuilder->add(
                 $field->getName(),
@@ -164,24 +166,24 @@ trait NodesSourcesTrait
         switch ($field->getType()) {
             case NodeTypeField::DOCUMENTS_T:
                 $documents = $nodeSource->getHandler()
-                                ->getDocumentsFromFieldName($field->getName());
+                                        ->getDocumentsFromFieldName($field->getName());
 
                 return new \RZ\Roadiz\CMS\Forms\DocumentsType($documents);
             case NodeTypeField::NODES_T:
                 $nodes = $nodeSource->getNode()->getHandler()
-                                ->getNodesFromFieldName($field->getName());
+                                    ->getNodesFromFieldName($field->getName());
 
                 return new \RZ\Roadiz\CMS\Forms\NodesType($nodes);
             case NodeTypeField::CUSTOM_FORMS_T:
                 $customForms = $nodeSource->getNode()->getHandler()
-                                ->getCustomFormsFromFieldName($field->getName());
+                                          ->getCustomFormsFromFieldName($field->getName());
 
                 return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms);
             case NodeTypeField::CHILDREN_T:
                 /*
-                 * NodeTreeType is a virtual type which is only available
-                 * with Rozier backend theme.
-                 */
+             * NodeTreeType is a virtual type which is only available
+             * with Rozier backend theme.
+             */
                 return new \Themes\Rozier\Forms\NodeTreeType(
                     $nodeSource,
                     $field,
@@ -206,97 +208,97 @@ trait NodesSourcesTrait
     ) {
         switch ($field->getType()) {
             case NodeTypeField::ENUM_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'empty_value' => $translator->trans('choose.value'),
                     'required' => false,
-                    'attr' => array(
-                        'data-desc' => $field->getDescription()
-                    )
-                );
+                    'attr' => [
+                        'data-desc' => $field->getDescription(),
+                    ],
+                ];
             case NodeTypeField::DATETIME_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
-                    'years' => range(date('Y')-10, date('Y')+10),
+                    'years' => range(date('Y') - 10, date('Y') + 10),
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'data-desc' => $field->getDescription(),
-                        'class' => 'rz-datetime-field'
-                    )
-                );
+                        'class' => 'rz-datetime-field',
+                    ],
+                ];
             case NodeTypeField::INTEGER_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'constraints' => array(
-                        new Type('integer')
-                    ),
-                    'attr' => array(
-                        'data-desc' => $field->getDescription()
-                    )
-                );
+                    'constraints' => [
+                        new Type('integer'),
+                    ],
+                    'attr' => [
+                        'data-desc' => $field->getDescription(),
+                    ],
+                ];
             case NodeTypeField::EMAIL_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'constraints' => array(
-                        new \Symfony\Component\Validator\Constraints\Email()
-                    ),
-                    'attr' => array(
-                        'data-desc' => $field->getDescription()
-                    )
-                );
+                    'constraints' => [
+                        new \Symfony\Component\Validator\Constraints\Email(),
+                    ],
+                    'attr' => [
+                        'data-desc' => $field->getDescription(),
+                    ],
+                ];
             case NodeTypeField::DECIMAL_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'constraints' => array(
-                        new Type('double')
-                    ),
-                    'attr' => array(
-                        'data-desc' => $field->getDescription()
-                    )
-                );
+                    'constraints' => [
+                        new Type('double'),
+                    ],
+                    'attr' => [
+                        'data-desc' => $field->getDescription(),
+                    ],
+                ];
             case NodeTypeField::COLOUR_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'data-desc' => $field->getDescription(),
-                        'class' => 'colorpicker-input'
-                    )
-                );
+                        'class' => 'colorpicker-input',
+                    ],
+                ];
             case NodeTypeField::GEOTAG_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'data-desc' => $field->getDescription(),
-                        'class' => 'rz-geotag-field'
-                    )
-                );
+                        'class' => 'rz-geotag-field',
+                    ],
+                ];
             case NodeTypeField::MARKDOWN_T:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'attr' => array(
-                        'class'           => 'markdown_textarea',
-                        'data-desc'       => $field->getDescription(),
+                    'attr' => [
+                        'class' => 'markdown_textarea',
+                        'data-desc' => $field->getDescription(),
                         'data-min-length' => $field->getMinLength(),
-                        'data-max-length' => $field->getMaxLength()
-                    )
-                );
+                        'data-max-length' => $field->getMaxLength(),
+                    ],
+                ];
 
             default:
-                return array(
+                return [
                     'label' => $field->getLabel(),
                     'required' => false,
-                    'attr' => array(
-                        'data-desc'       => $field->getDescription(),
+                    'attr' => [
+                        'data-desc' => $field->getDescription(),
                         'data-min-length' => $field->getMinLength(),
-                        'data-max-length' => $field->getMaxLength()
-                    )
-                );
+                        'data-max-length' => $field->getMaxLength(),
+                    ],
+                ];
         }
     }
 
@@ -317,7 +319,7 @@ trait NodesSourcesTrait
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $documentId) {
                         $tempDoc = Kernel::getService('em')
-                                        ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+                            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
                         if ($tempDoc !== null) {
                             $hdlr->addDocumentForField($tempDoc, $field);
                         }
@@ -330,7 +332,7 @@ trait NodesSourcesTrait
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $customFormId) {
                         $tempCForm = Kernel::getService('em')
-                                        ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                            ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
                         if ($tempCForm !== null) {
                             $hdlr->addCustomFormForField($tempCForm, $field);
                         }
@@ -344,7 +346,7 @@ trait NodesSourcesTrait
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $nodeId) {
                         $tempNode = Kernel::getService('em')
-                                        ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+                            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
                         if ($tempNode !== null) {
                             $hdlr->addNodeForField($tempNode, $field);
                         }

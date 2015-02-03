@@ -64,7 +64,7 @@ class GroupsUtilsController extends RozierApp
         $response =  new Response(
             $group,
             Response::HTTP_OK,
-            array()
+            []
         );
 
         $response->headers->set(
@@ -95,12 +95,12 @@ class GroupsUtilsController extends RozierApp
         $existingGroup = $this->getService('em')
                               ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
 
-        $group = GroupCollectionJsonSerializer::serialize(array($existingGroup));
+        $group = GroupCollectionJsonSerializer::serialize([$existingGroup]);
 
         $response =  new Response(
             $group,
             Response::HTTP_OK,
-            array()
+            []
         );
 
         $response->headers->set(
@@ -181,7 +181,7 @@ class GroupsUtilsController extends RozierApp
         return new Response(
             $this->getTwig()->render('groups/import.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -192,9 +192,9 @@ class GroupsUtilsController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('group_file', 'file', array(
+            ->add('group_file', 'file', [
                 'label' => $this->getTranslator()->trans('group.file')
-            ));
+            ]);
 
         return $builder->getForm();
     }

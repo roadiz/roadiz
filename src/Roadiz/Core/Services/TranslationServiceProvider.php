@@ -84,7 +84,7 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
                 );
             }
 
-            $classes = array($c['backendTheme']);
+            $classes = [$c['backendTheme']];
             $classes = array_merge($classes, $c['frontendThemes']);
 
             foreach ($classes as $theme) {

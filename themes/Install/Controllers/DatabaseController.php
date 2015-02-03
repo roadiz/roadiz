@@ -113,7 +113,7 @@ class DatabaseController extends InstallApp
         return new Response(
             $this->getTwig()->render('steps/database.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -169,7 +169,7 @@ class DatabaseController extends InstallApp
         return new Response(
             $this->getTwig()->render('steps/databaseError.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -194,7 +194,7 @@ class DatabaseController extends InstallApp
         return new Response(
             $this->getTwig()->render('steps/databaseFixtures.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -208,9 +208,9 @@ class DatabaseController extends InstallApp
     {
         \RZ\Roadiz\Console\SchemaCommand::updateSchema();
         return new Response(
-            json_encode(array('status' => true)),
+            json_encode(['status' => true]),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 
@@ -226,84 +226,84 @@ class DatabaseController extends InstallApp
         if (isset($conf->getConfiguration()['doctrine'])) {
             $defaults = $conf->getConfiguration()['doctrine'];
         } else {
-            $defaults = array();
+            $defaults = [];
         }
 
         $builder = $this->getService('formFactory')
                         ->createBuilder('form', $defaults)
-                        ->add('driver', 'choice', array(
-                            'choices' => array(
+                        ->add('driver', 'choice', [
+                            'choices' => [
                                 'pdo_mysql' => 'pdo_mysql',
                                 'pdo_pgsql' => 'pdo_pgsql',
                                 'pdo_sqlite' => 'pdo_sqlite',
                                 'oci8' => 'oci8',
-                            ),
+                            ],
                             'label' => $this->getTranslator()->trans('driver'),
-                            'constraints' => array(
+                            'constraints' => [
                                 new NotBlank(),
-                            ),
-                            'attr' => array(
+                            ],
+                            'attr' => [
                                 "id" => "choice",
-                            ),
-                        ))
-            ->add('host', 'text', array(
+                            ],
+                        ])
+            ->add('host', 'text', [
                 "required" => false,
                 'label' => $this->getTranslator()->trans('host'),
-                'attr' => array(
+                'attr' => [
                     "autocomplete" => "off",
                     'id' => "host",
-                ),
-            ))
-            ->add('port', 'integer', array(
+                ],
+            ])
+            ->add('port', 'integer', [
                 "required" => false,
                 'label' => $this->getTranslator()->trans('port'),
-                'attr' => array(
+                'attr' => [
                     "autocomplete" => "off",
                     'id' => "port",
-                ),
-            ))
-            ->add('unix_socket', 'text', array(
+                ],
+            ])
+            ->add('unix_socket', 'text', [
                 "required" => false,
                 'label' => $this->getTranslator()->trans('unix_socket'),
-                'attr' => array(
+                'attr' => [
                     "autocomplete" => "off",
                     'id' => "unix_socket",
-                ),
-            ))
-            ->add('path', 'text', array(
+                ],
+            ])
+            ->add('path', 'text', [
                 "required" => false,
                 'label' => $this->getTranslator()->trans('path'),
-                'attr' => array(
+                'attr' => [
                     "autocomplete" => "off",
                     'id' => "path",
-                ),
-            ))
-            ->add('user', 'text', array(
-                'attr' => array(
+                ],
+            ])
+            ->add('user', 'text', [
+                'attr' => [
                     "autocomplete" => "off",
                     'id' => "user",
-                ),
+                ],
                 'label' => $this->getTranslator()->trans('username'),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank(),
-                ),
-            ))
-            ->add('password', 'password', array(
+                ],
+            ])
+            ->add('password', 'password', [
                 "required" => false,
                 'label' => $this->getTranslator()->trans('password'),
-                'attr' => array(
+                'attr' => [
                     "autocomplete" => "off",
                     'id' => 'password',
-                ),
-            ))
-            ->add('dbname', 'text', array(
+                ],
+            ])
+            ->add('dbname', 'text', [
                 "required" => false,
                 'label' => $this->getTranslator()->trans('dbname'),
-                'attr' => array(
+                'attr' => [
                     "autocomplete" => "off",
                     'id' => 'dbname',
-                ),
-            ));
+                ],
+            ]);
 
         return $builder->getForm();
     }

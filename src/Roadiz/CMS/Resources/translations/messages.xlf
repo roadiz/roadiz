@@ -58,6 +58,10 @@
                 <source>ip.address</source>
                 <target/>
             </trans-unit>
+            <trans-unit id="submittedAt">
+                <source>submittedAt</source>
+                <target/>
+            </trans-unit>
 
             <trans-unit id="form.submit">
                 <source>form.submit</source>
@@ -79,6 +83,15 @@
 
             <trans-unit xml:space="preserve" id="file.not.accepted">
                 <source>file.not.accepted</source>
+                <target></target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="customForm.answer.sent">
+                <source>customForm.answer.sent</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="none">
+                <source>none</source>
                 <target></target>
             </trans-unit>
 

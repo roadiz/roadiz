@@ -28,14 +28,14 @@ class CustomFormsUtilsController extends RozierApp
 
 
         foreach ($answers as $key => $answer) {
-            $array = array($answer->getIp(), $answer->getSubmittedAt());
+            $array = [$answer->getIp(), $answer->getSubmittedAt()];
             foreach ($answer->getAnswers() as $obj) {
                 $array[] = $obj->getValue();
             }
             $answers[$key] = $array;
         }
 
-        $keys = array("ip", "submittedDate");
+        $keys = ["ip", "submittedDate"];
 
         $fields = $customForm->getFieldsLabels();
 
@@ -46,7 +46,7 @@ class CustomFormsUtilsController extends RozierApp
         $response =  new Response(
             $xlsx,
             Response::HTTP_OK,
-            array()
+            []
         );
 
         $response->headers->set(

@@ -29,12 +29,12 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**
@@ -157,7 +157,6 @@ class NodesSourcesRepository extends EntityRepository
                 $key = str_replace('node.', '', $key);
             }
 
-
             $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
         }
     }
@@ -209,7 +208,7 @@ class NodesSourcesRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $qb->innerJoin('ns.node', 'n', 'WITH', 'n.status = \''.Node::PUBLISHED.'\'');
+            $qb->innerJoin('ns.node', 'n', 'WITH', 'n.status = \'' . Node::PUBLISHED . '\'');
 
             $joinedNode = true;
         }
@@ -230,10 +229,10 @@ class NodesSourcesRepository extends EntityRepository
                     }
                     $simpleKey = str_replace('node.', '', $key);
 
-                    $qb->addOrderBy('n.'.$simpleKey, $value);
+                    $qb->addOrderBy('n.' . $simpleKey, $value);
 
                 } else {
-                    $qb->addOrderBy('ns.'.$key, $value);
+                    $qb->addOrderBy('ns.' . $key, $value);
                 }
             }
         }
@@ -271,7 +270,7 @@ class NodesSourcesRepository extends EntityRepository
 
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $qb->innerJoin('ns.node', 'n', 'WITH', 'n.status = \''.Node::PUBLISHED.'\'');
+            $qb->innerJoin('ns.node', 'n', 'WITH', 'n.status = \'' . Node::PUBLISHED . '\'');
 
             $joinedNode = true;
         }
@@ -316,6 +315,28 @@ class NodesSourcesRepository extends EntityRepository
     /**
      * A secure findBy with which user must be a backend user
      * to see unpublished nodes.
+     *
+     * Reimplementing findBy features… with extra things.
+     *
+     * * key => array('<=', $value)
+     * * key => array('<', $value)
+     * * key => array('>=', $value)
+     * * key => array('>', $value)
+     * * key => array('BETWEEN', $value, $value)
+     * * key => array('LIKE', $value)
+     * * key => array('NOT IN', $array)
+     * * key => 'NOT NULL'
+     *
+     * You even can filter with node fields, examples:
+     *
+     * * `node.published => true`
+     * * `node.nodeName => 'page1'`
+     *
+     * Or filter by tags:
+     *
+     * * `tags => $tag1`
+     * * `tags => [$tag1, $tag2]`
+     * * `tags => [$tag1, $tag2], tagExclusive => true`
      *
      * @param array           $criteria
      * @param array           $orderBy
@@ -381,7 +402,6 @@ class NodesSourcesRepository extends EntityRepository
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
 
-
         try {
             return $finalQuery->getSingleResult();
         } catch (\Doctrine\ORM\Query\QueryException $e) {
@@ -395,10 +415,11 @@ class NodesSourcesRepository extends EntityRepository
      * Search nodes sources by using Solr search engine.
      *
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
+     * @param integer $limit Result number to fetch (default: all)
      *
      * @return ArrayCollection | null
      */
-    public function findBySearchQuery($query)
+    public function findBySearchQuery($query, $limit = 0)
     {
         // Update Solr Serach engine if setup
         if (true === Kernel::getInstance()->pingSolrServer()) {
@@ -406,8 +427,12 @@ class NodesSourcesRepository extends EntityRepository
 
             $queryObj = $service->createSelect();
 
-            $queryObj->setQuery('collection_txt:'.$query);
+            $queryObj->setQuery('collection_txt:' . $query);
             $queryObj->addSort('score', $queryObj::SORT_DESC);
+
+            if ($limit > 0) {
+                $queryObj->setRows((int) $limit);
+            }
 
             // this executes the query and returns the result
             $resultset = $service->select($queryObj);
@@ -448,9 +473,9 @@ class NodesSourcesRepository extends EntityRepository
 
             $queryObj = $service->createSelect();
 
-            $queryObj->setQuery('collection_txt:'.$query);
+            $queryObj->setQuery('collection_txt:' . $query);
             // create a filterquery
-            $queryObj->createFilterQuery('translation')->setQuery('locale_s:'.$translation->getLocale());
+            $queryObj->createFilterQuery('translation')->setQuery('locale_s:' . $translation->getLocale());
             $queryObj->addSort('score', $queryObj::SORT_DESC);
 
             // this executes the query and returns the result
@@ -473,5 +498,27 @@ class NodesSourcesRepository extends EntityRepository
         }
 
         return null;
+    }
+
+    /**
+     * Find latest updated NodesSources using Log table.
+     *
+     * @param integer $maxResult
+     *
+     * @return array|null
+     */
+    public function findByLatestUpdated($maxResult = 5)
+    {
+         $query = $this->_em->createQuery('
+            SELECT DISTINCT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
+            INNER JOIN ns.logs log
+            ORDER BY log.datetime DESC')
+                    ->setMaxResults($maxResult);
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
     }
 }

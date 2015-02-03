@@ -31,6 +31,15 @@
 
 @import "dropzone/dropzone.less";
 
+/* -------- ICONS -------- */
+
+@import "icons/icons.less";
+
+
+/* -------- COMMON (styles for all pages : font face, etc.) -------- */
+
+@import "common.less";
+
 /* -------- BUTTONS -------- */
 
 @import "buttons/buttons.less";
@@ -43,23 +52,36 @@
 
 
 #custom-form-front{
+    font-family: @main-font;
+    em {
+        color: #555555;
+    }
 
     #main-content{
-        width:960px;
-        margin:10px auto;
+        max-width:720px;
+        margin: 2em auto;
+        padding: 0px 1em;
+
+    }
+
+    .content-desc{
+        color: #555555;
     }
 
     textarea{
         font-weight: normal;
         min-height:120px;
     }
-
+    .uk-form-label {
+         font-size:16px;
+    }
     .uk-form-description{
         font-size:12px;
+        line-height: 16px;
 
-        p{
-            margin:3px 0;
+        p {
+            margin:5px 0;
+            color: #555555;
         }
     }
-
 }

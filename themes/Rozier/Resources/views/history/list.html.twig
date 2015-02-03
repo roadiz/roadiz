@@ -5,7 +5,7 @@
 
 	<header class="content-header content-header-filters manage-history-header">
 		{% if user %}
-		<h1 class="content-title manage-history-title">{{ "history.for.%name%"|trans({"%name%":user.getUsername}) }}</h1>
+		<h1 class="content-title manage-history-title">{{ "history.for.%name%"|trans({"%name%":user.identifier}) }}</h1>
 		{% else %}
 		<h1 class="content-title manage-history-title">{% trans %}history{% endtrans %}</h1>
 		{% endif %}
@@ -21,22 +21,8 @@
 	{% include 'widgets/filtersBar.html.twig' %}
 
 	<article class="content content-no-action-menu content-manage-history">
-		<!--<div class="content-table-cont">
-	         <table class="history content-table uk-table">
-				<thead>
-			        <tr>
-			            <th colspan="2">{% trans %}datetime{% endtrans %}</th>
-			            {# <th>{% trans %}level{% endtrans %}</th> #}
-			            {% if not user %}
-			            <th>{% trans %}user{% endtrans %}</th>
-			            {% endif %}
-			            <th>{% trans %}message{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody> -->
-
 		{% spaceless %}
-		<div class="history-logs">	
+		<div class="history-logs">
 			{% for log in logs %}
 
 			{% if levels[log.getLevel] == 'error' %}
@@ -46,45 +32,54 @@
 			{% set tdClass = 'class=""' %}
 			{% set icon = 'uk-icon-info-circle' %}
 			{% endif %}
-	
-			<div class="history-log-item">
+
+			<div class="history-log-item {% if log.nodeSource %}has-source {% endif %}{% if log.user %}has-user{% endif %}">
 				<div class="history-log-date">
 					<div class="table">
 						<div class="table-cell">{{ log.getDatetime|localizeddate('medium') }}</div>
 					</div>
 				</div>
+				{% if log.user %}
 				<div class="history-log-user">
-				{% if log.getUser %}
-					<a href="{{ path("usersEditPage", {"userId":log.getUser.getId }) }}"><img width="60" height="60" class="user-image uk-thumbnail" src="{{ log.getUser.getPictureUrl }}" alt="{{ log.getUser.getUsername }}" title="{{ log.getUser.getUsername }}" data-uk-tooltip="{animation:true}"/></a>
-				{% else %}
-				    <div class="user-image user-image-default"><i class="uk-icon-rz-users"></i></div>
-				{% endif %}
+					<a href="{{ path("usersEditPage", {"userId":log.user.id }) }}">
+						<img width="60"
+						     height="60"
+						     class="user-image uk-thumbnail"
+						     src="{{ log.user.getPictureUrl }}"
+						     alt="{{ log.user.identifier }}"
+						     title="{{ log.user.identifier }}"
+						     data-uk-tooltip="{animation:true}"/>
+					</a>
 				</div>
+				{% endif %}
 				<div class="history-log-message">
 					<div class="table">
+						{% if log.nodeSource %}
+						<div class="history-log-source table-cell">
+							<a href="{{ path("nodesEditSourcePage", {"nodeId":log.nodeSource.node.id, "translationId":log.nodeSource.translation.id }) }}">
+								{% set thumbnail = log.nodeSource.getDocumentsByFields.first.getDocument %}
+								{% if thumbnail and thumbnail.image %}
+								<figure>
+									<img src="{{ thumbnail.getViewer.getDocumentUrlByArray({"width":60, "crop":"1x1", "quality":80}) }}"
+										alt="{{ log.nodeSource.title }}"
+                             			title="{{ log.nodeSource.title }}"
+                             			data-uk-tooltip="{animation:true}" />
+								</figure>
+								{% else %}
+								<span class="no-thumb"
+									  title="{{ log.nodeSource.title }}"
+                                      data-uk-tooltip="{animation:true}"></span>
+								{% endif %}
+							</a>
+						</div>
+						{% endif %}
 						<div class="table-cell">{{ log.getMessage }}</div>
 					</div>
 				</div>
 			</div>
-
-			<!-- <tr>
-				<td {{ tdClass|raw }}>{{ log.getDatetime|date }}</td>
-				<td {{ tdClass|raw }}><i class="{{ icon }}"></i>{# {{ levels[log.getLevel] }} #}</td>
-				{% if not user %}
-				<td {{ tdClass|raw }}>{% if log.getUser %}
-					<a href="{{ path("usersEditPage", {"userId":log.getUser.getId }) }}">{{ log.getUser.getUsername }}</a>
-				{% endif %}</td>
-				{% endif %}
-				<td {{ tdClass|raw }}>{{ log.getMessage }}</td>
-			</tr> -->
 			{% endfor %}
 		</div>
 		{% endspaceless %}
-
-				<!-- </tbody>
-			</table>
-		</div> -->
     </article>
-
 </section>
 {% endblock %}

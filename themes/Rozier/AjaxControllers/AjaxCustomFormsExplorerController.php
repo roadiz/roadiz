@@ -55,13 +55,13 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        $arrayFilter = array();
+        $arrayFilter = [];
         /*
          * Manage get request to filter list
          */
@@ -76,27 +76,27 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
 
         $customForms = $listManager->getEntities();
 
-        $customFormsArray = array();
+        $customFormsArray = [];
         foreach ($customForms as $customForm) {
-            $customFormsArray[] = array(
+            $customFormsArray[] = [
                 'id' => $customForm->getId(),
                 'filename'=>$customForm->getName(),
-                'html' => $this->getTwig()->render('widgets/customFormSmallThumbnail.html.twig', array('customForm'=>$customForm)),
-            );
+                'html' => $this->getTwig()->render('widgets/customFormSmallThumbnail.html.twig', ['customForm'=>$customForm]),
+            ];
         }
 
-        $responseArray = array(
+        $responseArray = [
             'status' => 'confirm',
             'statusCode' => 200,
             'customForms' => $customFormsArray,
             'customFormsCount' => count($customForms),
             'filters' => $listManager->getAssignation()
-        );
+        ];
 
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 }

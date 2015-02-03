@@ -43,13 +43,13 @@ class CompareDatetimeType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('compareOp', 'choice', array(
+        $builder->add('compareOp', 'choice', [
             'label' => $this->translator->trans('node.datetime.operator'),
-            'choices' => array('<' => '<', '>' => '>', '<=' => '<=', '>=' => '>=', '=' => '=')
-        ))->add('compareDatetime', 'datetime', array(
+            'choices' => ['<' => '<', '>' => '>', '<=' => '<=', '>=' => '>=', '=' => '=']
+        ])->add('compareDatetime', 'datetime', [
             'label' => $this->translator->trans('node.datetime.value'),
             'required' => false
-        ));
+        ]);
     }
 
     public function getName()

@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -48,16 +49,17 @@ class CustomFormsType extends AbstractType
         $fields = $this->customForm->getFields();
 
         foreach ($fields as $field) {
-            $option = array("label" => $field->getLabel());
+            $option = ["label" => $field->getLabel()];
 
             if ($field->isRequired()) {
-                $option['constraints'] = array(
+                $option['required'] = true;
+                $option['constraints'] = [
                     new NotBlank()
-                );
+                ];
             } else {
                 $option['required'] = false;
             }
-            if (CustomFormField::$typeToForm[$field->getType()] == "enumeration") {
+            if ($field->getType() == AbstractField::ENUM_T) {
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
@@ -65,8 +67,11 @@ class CustomFormsType extends AbstractType
                 if (count($choices) < 4) {
                     $option["expanded"] = true;
                 }
+                if ($field->isRequired() === false) {
+                    $option['empty_value'] = 'none';
+                }
                 $option["choices"] = $choices;
-            } elseif (CustomFormField::$typeToForm[$field->getType()] == "multiple_enumeration") {
+            } elseif ($field->getType() == AbstractField::MULTIPLE_T) {
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
@@ -76,6 +81,11 @@ class CustomFormsType extends AbstractType
                 if (count($choices) < 4) {
                     $option["expanded"] = true;
                 }
+                if ($field->isRequired() === false) {
+                    $option['empty_value'] = 'none';
+                }
+            } elseif ($field->getType() == AbstractField::DOCUMENTS_T) {
+                $option['required'] = false;
             } else {
                 $type = CustomFormField::$typeToForm[$field->getType()];
             }

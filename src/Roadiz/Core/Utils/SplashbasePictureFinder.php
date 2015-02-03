@@ -70,7 +70,7 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
-    public function getSource($args = array())
+    public function getSource($args = [])
     {
 
     }

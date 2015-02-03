@@ -56,7 +56,7 @@ class Log extends AbstractEntity
      * @param string $message
      * @param array  $context
      */
-    public function __construct($level, $message, array $context = array())
+    public function __construct($level, $message, array $context = [])
     {
         $this->level = $level;
         $this->message = $message;
@@ -125,6 +125,32 @@ class Log extends AbstractEntity
     public function getDatetime()
     {
         return $this->datetime;
+    }
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="logs")
+     * @ORM\JoinColumn(name="node_source_id", referencedColumnName="id")
+     */
+    protected $nodeSource;
+
+    /**
+     * Get log related node-source.
+     *
+     * @return RZ\Roadiz\Core\Entities\NodesSources
+     */
+    public function getNodeSource()
+    {
+        return $this->nodeSource;
+    }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\NodesSources $newnodeSource
+     */
+    public function setNodeSource($newnodeSource)
+    {
+        $this->nodeSource = $newnodeSource;
+
+        return $this;
     }
 
     /**

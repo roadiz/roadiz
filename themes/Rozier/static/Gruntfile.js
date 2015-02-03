@@ -83,23 +83,32 @@ module.exports = function(grunt) {
 			}
 		},
 		less: {
-			options: {
-				compress: true,
-				yuicompress: true,
-				optimization: 3,
-				sourceMap: false
+			development: {
+				options: {
+					compress: false,
+					yuicompress: false,
+					optimization: 3,
+					sourceMap: true
+				},
+				files:
+				{
+				 	"css/style.min.css" : "css/style.less",
+				 	"css/custom-forms-front.min.css" : "css/custom-forms-front.less"
+				}
 			},
-			rozier:
-			{
-			 	src : "css/style.less",
-				dest : "css/style.min.css"
-			},
-			customForms:
-			{
-				src : "css/custom-forms-front.less",
-				dest : "css/custom-forms-front.min.css"
+			production: {
+				options: {
+					compress: true,
+					yuicompress: true,
+					optimization: 3,
+					sourceMap: false
+				},
+				files:
+				{
+				 	"css/style.min.css" : "css/style.less",
+				 	"css/custom-forms-front.min.css" : "css/custom-forms-front.less"
+				}
 			}
-
 		},
 		watch: {
 			scripts: {
@@ -110,7 +119,7 @@ module.exports = function(grunt) {
 					'css/**/*.less',
 					'src-img/*.{png,jpg,gif}'
 				],
-				tasks: ['less', 'jshint', 'concat','uglify'],
+				tasks: ['less:development', 'jshint', 'concat','uglify'],
 				options: {
 					event: ['added', 'deleted', 'changed'],
 				},
@@ -199,7 +208,7 @@ module.exports = function(grunt) {
 			grunt.config('watch.scripts.tasks', ['clean','jshint','uglify:rezozero', 'concat:rezozero', 'versioning']); // 'uglify',
 		}
 		else if(filepath.indexOf('.less') > -1 ){
-			grunt.config('watch.scripts.tasks', ['clean','less', 'versioning']);
+			grunt.config('watch.scripts.tasks', ['clean','less:development', 'versioning']);
 		}
 		else if( filepath.indexOf('.png') > -1  ||
 			filepath.indexOf('.jpg') > -1  ||
@@ -216,5 +225,5 @@ module.exports = function(grunt) {
 	// grunt.loadNpmTasks('grunt-contrib-imagemin');
 
 	// Default task(s).
-	grunt.registerTask('default', ['clean','jshint','concat','uglify','less','imagemin','versioning']);
+	grunt.registerTask('default', ['clean','jshint','concat','uglify','less:production','imagemin','versioning']);
 };

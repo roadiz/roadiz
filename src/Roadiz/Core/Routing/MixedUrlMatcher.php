@@ -79,13 +79,13 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                     $ctrl = 'RZ\Roadiz\CMS\Controllers\FrontendController';
                 }
 
-                return array(
+                return [
                     '_controller' => $ctrl.'::throw404',
                     'message'     => 'Unable to find any matching route nor matching node. '.
                                      'Check your `Resources/routes.yml` file.',
                     'node'        => null,
                     'translation' => null
-                );
+                ];
             }
         }
     }
@@ -114,12 +114,12 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                     return false;
                 }
 
-                return array(
+                return [
                     '_controller' => $this->getThemeController().'::indexAction',
                     '_locale'     => $translation->getLocale(), //pass request locale to init translator
                     'node'        => $node,
                     'translation' => $translation
-                );
+                ];
             } else {
                 /*
                  * Try with node name
@@ -135,11 +135,11 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                     /*
                      * Try with nodeName
                      */
-                    $match = array(
+                    $match = [
                         '_controller' => $this->getThemeController().'::indexAction',
                         'node'        => $node,
                         'translation' => $translation
-                    );
+                    ];
 
                     if (null !== $translation) {
                         $match['_locale'] = $translation->getLocale(); //pass request locale to init translator
@@ -243,7 +243,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                 if ($identifier != '') {
                     $ua = Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
-                        ->findOneBy(array('alias'=>$identifier));
+                        ->findOneBy(['alias'=>$identifier]);
 
                     if ($ua !== null) {
                         return Kernel::getService('em')

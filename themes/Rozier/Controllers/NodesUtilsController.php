@@ -60,12 +60,12 @@ class NodesUtilsController extends RozierApp
         $existingNode = $this->getService('em')
                               ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         $this->getService('em')->refresh($existingNode);
-        $node = NodeJsonSerializer::serialize(array($existingNode));
+        $node = NodeJsonSerializer::serialize([$existingNode]);
 
         $response =  new Response(
             $node,
             Response::HTTP_OK,
-            array()
+            []
         );
 
         $response->headers->set(
@@ -94,7 +94,7 @@ class NodesUtilsController extends RozierApp
 
         $existingNodes = $this->getService('em')
                               ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                              ->findBy(array("parent"=>null));
+                              ->findBy(["parent"=>null]);
 
         foreach ($existingNodes as $existingNode) {
             $this->getService('em')->refresh($existingNode);
@@ -105,7 +105,7 @@ class NodesUtilsController extends RozierApp
         $response =  new Response(
             $node,
             Response::HTTP_OK,
-            array()
+            []
         );
 
         $response->headers->set(
@@ -138,9 +138,9 @@ class NodesUtilsController extends RozierApp
                                   ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
             $newNode = $existingNode->getHandler()->duplicate();
 
-            $msg = $this->getTranslator()->trans("duplicated.node.%name%", array(
+            $msg = $this->getTranslator()->trans("duplicated.node.%name%", [
                 '%name%' => $existingNode->getNodeName()
-            ));
+            ]);
 
             $this->publishConfirmMessage($request, $msg);
 
@@ -148,16 +148,16 @@ class NodesUtilsController extends RozierApp
                 $this->getService('urlGenerator')
                     ->generate(
                         'nodesEditPage',
-                        array("nodeId" => $newNode->getId())
+                        ["nodeId" => $newNode->getId()]
                     )
             );
 
         } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add(
                 'error',
-                $this->getTranslator()->trans("impossible.duplicate.node.%name%", array(
+                $this->getTranslator()->trans("impossible.duplicate.node.%name%", [
                     '%name%' => $existingNode->getNodeName()
-                ))
+                ])
             );
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
 
@@ -165,7 +165,7 @@ class NodesUtilsController extends RozierApp
                 $this->getService('urlGenerator')
                     ->generate(
                         'nodesEditPage',
-                        array("nodeId" => $existingNode->getId())
+                        ["nodeId" => $existingNode->getId()]
                     )
             );
         }

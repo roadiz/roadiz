@@ -250,7 +250,7 @@ class InstallCommand extends Command
     {
         $default = Kernel::getService('em')
             ->getRepository("RZ\Roadiz\Core\Entities\Theme")
-            ->findOneBy(array("backendTheme"=>true));
+            ->findOneBy(["backendTheme"=>true]);
 
         return $default !== null ? true : false;
     }
@@ -264,7 +264,7 @@ class InstallCommand extends Command
     {
         $default = Kernel::getService('em')
             ->getRepository("RZ\Roadiz\Core\Entities\Translation")
-            ->findOneBy(array());
+            ->findOneBy([]);
 
         return $default !== null ? true : false;
     }

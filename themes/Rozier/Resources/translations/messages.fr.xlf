@@ -4854,9 +4854,9 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days</source>
           <target state="translated">Veuillez utiliser le formulaire classique ci-dessous pour téléverser vos fichiers comme à l’ancien temps.</target>
       <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib" approved="yes">
-          <source>file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib</source>
-          <target state="translated">Le fichier est trop lourd ({{filesize}} Mo). La taille maximale est de {{maxfilesize}} Mo.</target>
+      <trans-unit xml:space="preserve" id="file.is.too.big.({{filesize}}mib).max.filesize.{{maxFilesize}}.mib" approved="yes">
+          <source>file.is.too.big.({{filesize}}mib).max.filesize.{{maxFilesize}}.mib</source>
+          <target state="translated">Le fichier est trop lourd ({{filesize}} Mo). La taille maximale est de {{maxFilesize}} Mo.</target>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="you.cant.upload.files.of.this.type" approved="yes">
           <source>you.cant.upload.files.of.this.type</source>
@@ -5697,6 +5697,31 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="delete.nodesource">
           <source>delete.nodesource</source>
           <target state="translated">Supprimer la source du noeud</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="latest.node-sources.updates">
+          <source>latest.node-sources.updates</source>
+          <target state="translated">Dernières sources modifiées</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="customForm.%name%.updated">
+          <source>customForm.%name%.updated</source>
+          <target>Le formulaire personnalisé « %name% » a bien été mis à jour.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.created">
+          <source>customForm.%name%.created</source>
+          <target>Le formulaire personnalisé « %name% » a bien été créé.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.deleted">
+          <source>customForm.%name%.deleted</source>
+          <target>Le formulaire personnalisé « %name% » a bien été supprimé.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.cannot_rename_already_exists">
+          <source>customForm.%name%.cannot_rename_already_exists</source>
+          <target>Le formulaire personnalisé « %name% » ne peut être renommé, un autre existe déjà.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.already_exists">
+          <source>customForm.%name%.already_exists</source>
+          <target>Le formulaire personnalisé « %name% » existe déjà.</target>
       </trans-unit>
   </body>
   </file>

@@ -47,7 +47,7 @@ class UrlAliasJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($urlAlias)
     {
-        $data = array();
+        $data = [];
 
         $data['alias'] = $urlAlias->getAlias();
 
@@ -68,11 +68,11 @@ class UrlAliasJsonSerializer extends AbstractJsonSerializer
         }
         $encoder = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes(array(
+        $normalizer->setCamelizedAttributes([
             'alias'
-        ));
+        ]);
 
-        $serializer = new Serializer(array($normalizer), array($encoder));
+        $serializer = new Serializer([$normalizer], [$encoder]);
 
         return $serializer->deserialize($jsonString, 'RZ\Roadiz\Core\Entities\UrlAlias', 'json');
     }

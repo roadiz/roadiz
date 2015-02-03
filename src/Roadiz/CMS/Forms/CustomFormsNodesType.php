@@ -66,7 +66,7 @@ class CustomFormsNodesType extends AbstractType
             if (is_array($object)) {
                 $customForms = Kernel::getService('em')
                                 ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
-                                ->findBy(array('id'=>$object));
+                                ->findBy(['id'=>$object]);
 
                 foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
@@ -74,7 +74,7 @@ class CustomFormsNodesType extends AbstractType
                         $context->addViolationAt(
                             null,
                             'CustomForm #'.$value.' does not exists',
-                            array(),
+                            [],
                             null
                         );
                     }
@@ -89,21 +89,21 @@ class CustomFormsNodesType extends AbstractType
                     $context->addViolationAt(
                         null,
                         'CustomForm '.$object.' does not exists',
-                        array(),
+                        [],
                         null
                     );
                 }
             }
         };
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'class' => '\RZ\Roadiz\Core\Entities\CustomForm',
             'multiple' => true,
             'property' => 'id',
-            'constraints' => array(
+            'constraints' => [
                 new Callback($callback)
-            )
-        ));
+            ]
+        ]);
     }
 
     /**

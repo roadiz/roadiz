@@ -70,26 +70,26 @@ class ContactController extends DefaultThemeApp
                 null,
                 null
             );
-            $formBuilder->add('email', 'email', array(
+            $formBuilder->add('email', 'email', [
                             'label' => $this->getTranslator()->trans('your.email'),
-                        ))
-                        ->add('name', 'text', array(
+                        ])
+                        ->add('name', 'text', [
                             'label' => $this->getTranslator()->trans('your.name'),
-                        ))
-                        ->add('message', 'textarea', array(
+                        ])
+                        ->add('message', 'textarea', [
                             'label' => $this->getTranslator()->trans('your.message'),
-                        ))
-                        ->add('callMeBack', 'checkbox', array(
+                        ])
+                        ->add('callMeBack', 'checkbox', [
                             'label' => $this->getTranslator()->trans('call.me.back'),
                             'required' => false,
-                        ))
-                        ->add('document', 'file', array(
+                        ])
+                        ->add('document', 'file', [
                             'label' => $this->getTranslator()->trans('document'),
                             'required' => false,
-                        ))
-                        ->add('send', 'submit', array(
+                        ])
+                        ->add('send', 'submit', [
                             'label' => $this->getTranslator()->trans('send.contact.form'),
-                        ));
+                        ]);
             $form = $formBuilder->getForm();
 
             $this->assignation['contactForm'] = $form->createView();
@@ -102,7 +102,7 @@ class ContactController extends DefaultThemeApp
             return new Response(
                 $this->getTwig()->render('contact.html.twig', $this->assignation),
                 Response::HTTP_OK,
-                array('content-type' => 'text/html')
+                ['content-type' => 'text/html']
             );
         } catch (NoTranslationAvailableException $e) {
             return $this->throw404();

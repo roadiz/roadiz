@@ -109,7 +109,7 @@ class FolderHandler
      */
     public function getParents()
     {
-        $parentsArray = array();
+        $parentsArray = [];
         $parent = $this->folder;
 
         do {
@@ -132,7 +132,7 @@ class FolderHandler
     public function getFullPath()
     {
         $parents = $this->getParents();
-        $path = array();
+        $path = [];
 
         foreach ($parents as $parent) {
             $path[] = $parent->getName();
@@ -185,7 +185,7 @@ class FolderHandler
     {
         $folders = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-            ->findBy(array('parent' => null), array('position'=>'ASC'));
+            ->findBy(['parent' => null], ['position'=>'ASC']);
 
         $i = 1;
         foreach ($folders as $child) {

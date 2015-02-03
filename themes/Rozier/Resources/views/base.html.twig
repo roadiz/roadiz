@@ -160,10 +160,11 @@
                     'moreNodes':         '{{ 'more.nodes'|trans() }}',
                     'moreCustomForms':   '{{ 'more.custom_forms'|trans() }}',
                     'dropzone' : {
+                        'maxFilesize' :                 {{ maxFilesize }},
                         'dictDefaultMessage':           "{{ 'drop.files.here.to.upload.or.click.to.open.your.explorer'|trans() }}",
                         'dictFallbackMessage':          "{{ 'your.browser.does.not.support.dragndrop.file.uploads'|trans() }}",
                         'dictFallbackText':             "{{ 'please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days'|trans() }}",
-                        'dictFileTooBig':               "{{ 'file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib'|trans() }}",
+                        'dictFileTooBig':               "{{ 'file.is.too.big.({{filesize}}mib).max.filesize.{{maxFilesize}}.mib'|trans() }}",
                         'dictInvalidFileType':          "{{ 'you.cant.upload.files.of.this.type'|trans() }}",
                         'dictResponseError':            "{{ 'server.responded.with.{{statuscode}}.code'|trans() }}",
                         'dictCancelUpload':             "{{ 'cancel.upload'|trans() }}",

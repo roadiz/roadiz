@@ -149,7 +149,7 @@ class TagHandler
                         ->setParameter('tag_id', $this->tag->getId());
 
         try {
-            $simpleArray = array();
+            $simpleArray = [];
             $complexArray = $query->getScalarResult();
             foreach ($complexArray as $subArray) {
                 $simpleArray[] = $subArray['id'];
@@ -157,7 +157,7 @@ class TagHandler
 
             return $simpleArray;
         } catch (\Doctrine\ORM\NoResultException $e) {
-            return array();
+            return [];
         }
     }
 
@@ -191,7 +191,7 @@ class TagHandler
                         ->setParameter('translations_id', $this->getAvailableTranslationsId());
 
         try {
-            $simpleArray = array();
+            $simpleArray = [];
             $complexArray = $query->getScalarResult();
             foreach ($complexArray as $subArray) {
                 $simpleArray[] = $subArray['id'];
@@ -210,7 +210,7 @@ class TagHandler
      */
     public function getParents()
     {
-        $parentsArray = array();
+        $parentsArray = [];
         $parent = $this->tag;
 
         do {
@@ -233,7 +233,7 @@ class TagHandler
     public function getFullPath()
     {
         $parents = $this->getParents();
-        $path = array();
+        $path = [];
 
         foreach ($parents as $parent) {
             $path[] = $parent->getTagName();
@@ -286,7 +286,7 @@ class TagHandler
     {
         $tags = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-            ->findBy(array('parent' => null), array('position'=>'ASC'));
+            ->findBy(['parent' => null], ['position'=>'ASC']);
 
         $i = 1;
         foreach ($tags as $child) {

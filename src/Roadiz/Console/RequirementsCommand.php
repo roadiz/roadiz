@@ -75,7 +75,7 @@ class RequirementsCommand extends Command
 
     protected function testPHPIntValue($name, $expected)
     {
-        $intValue = (int) (str_replace(array('s', 'K', 'M', 'G'), array('', '', '', ''), ini_get($name)));
+        $intValue = (int) (str_replace(['s', 'K', 'M', 'G'], ['', '', '', ''], ini_get($name)));
 
         if ($intValue < $expected) {
             return '<info>' . $name . '</info> : ' . ini_get($name) . '  Excepted : ' . $expected . ' — <error>Fail</error>' . PHP_EOL;

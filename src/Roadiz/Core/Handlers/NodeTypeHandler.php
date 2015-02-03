@@ -103,8 +103,8 @@ class NodeTypeHandler
 
         if (!file_exists($file)) {
             $fields = $this->nodeType->getFields();
-            $fieldsArray = array();
-            $indexes = array();
+            $fieldsArray = [];
+            $indexes = [];
             foreach ($fields as $field) {
                 $fieldsArray[] = $field->getHandler()->generateSourceField();
                 if ($field->isIndexed()) {
@@ -191,9 +191,9 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
          */
         $nodes = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findBy(array(
+            ->findBy([
                 'nodeType' => $this->getNodeType()
-            ));
+            ]);
 
         foreach ($nodes as $node) {
             $node->getHandler()->removeWithChildrenAndAssociations();

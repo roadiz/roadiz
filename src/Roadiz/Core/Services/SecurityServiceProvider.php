@@ -88,9 +88,9 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
             return new ContextListener(
                 $c['securityContext'],
-                array(
+                [
                     $c['userProvider']
-                ),
+                ],
                 Kernel::SECURITY_DOMAIN,
                 $c['logger'],
                 $c['dispatcher']
@@ -116,9 +116,9 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
          */
         $container['accessDecisionManager'] = function ($c) {
             return new AccessDecisionManager(
-                array(
+                [
                     $c['roleHierarchyVoter']
-                )
+                ]
             );
         };
         $container['securityContext'] = function ($c) {
@@ -129,9 +129,9 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['roleHierarchy'] = function ($c) {
-            return new RoleHierarchy(array(
+            return new RoleHierarchy([
                 'ROLE_SUPERADMIN' => $c['allBasicRoles'],
-            ));
+            ]);
         };
 
         $container['allBasicRoles'] = function ($c) {
@@ -189,10 +189,10 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['userEncoderFactory'] = function ($c) {
-            $encoders = array(
+            $encoders = [
                 'Symfony\\Component\\Security\\Core\\User\\User' => $c['passwordEncoder'],
                 'RZ\\Roadiz\\Core\\Entities\\User' => $c['passwordEncoder'],
-            );
+            ];
 
             return new EncoderFactory($encoders);
         };

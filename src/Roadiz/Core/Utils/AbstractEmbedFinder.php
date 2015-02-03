@@ -82,7 +82,7 @@ abstract class AbstractEmbedFinder
      *
      * @return string
      */
-    abstract public function getSource($args = array());
+    abstract public function getSource($args = []);
 
     /**
      * Crawl an embed API to get a Json feed.
@@ -118,7 +118,7 @@ abstract class AbstractEmbedFinder
      */
     public function getIFrame(&$args = null)
     {
-        $attributes = array();
+        $attributes = [];
 
         $attributes['src'] = $this->getSource($this->embedId);
 
@@ -183,13 +183,13 @@ abstract class AbstractEmbedFinder
 
         if (false !== $url) {
             $existingDocument = $container['em']->getRepository('RZ\Roadiz\Core\Entities\Document')
-                                                ->findOneBy(array('filename'=>$url));
+                                                ->findOneBy(['filename'=>$url]);
         } else {
             $existingDocument = $container['em']->getRepository('RZ\Roadiz\Core\Entities\Document')
-                                                ->findOneBy(array(
+                                                ->findOneBy([
                                                     'embedId'=>$this->embedId,
                                                     'embedPlatform'=>static::$platform,
-                                                ));
+                                                ]);
         }
 
         if (null !== $existingDocument) {

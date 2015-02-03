@@ -49,16 +49,16 @@ class SettingGroupType extends AbstractType
             ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
             ->findAll();
 
-        $choices = array();
+        $choices = [];
 
         foreach ($groups as $group) {
             $choices[$group->getId()] = $group->getName();
         }
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices' => $choices,
             'empty_value' => '---------'
-        ));
+        ]);
     }
     /**
      * {@inheritdoc}

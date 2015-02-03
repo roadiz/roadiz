@@ -4854,9 +4854,9 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days</source>
           <target state="translated">Please use the fallback form below to upload your files like in the olden days</target>
       <note/></trans-unit>
-      <trans-unit xml:space="preserve" id="file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib" approved="yes">
-          <source>file.is.too.big.({{filesize}}mib).max.filesize.{{maxfilesize}}.mib</source>
-          <target state="translated">File is too big ({{filesize}}MiB), max filesize {{maxfilesize}} MiB</target>
+      <trans-unit xml:space="preserve" id="file.is.too.big.({{filesize}}mib).max.filesize.{{maxFilesize}}.mib" approved="yes">
+          <source>file.is.too.big.({{filesize}}mib).max.filesize.{{maxFilesize}}.mib</source>
+          <target state="translated">File is too big ({{filesize}}MiB), max filesize {{maxFilesize}} MiB</target>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="you.cant.upload.files.of.this.type" approved="yes">
           <source>you.cant.upload.files.of.this.type</source>
@@ -5697,6 +5697,32 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="delete.nodesource">
           <source>delete.nodesource</source>
           <target state="translated">Delete node source</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="latest.node-sources.updates">
+          <source>latest.node-sources.updates</source>
+          <target state="translated">Latest updated node-sources</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="customForm.%name%.updated">
+          <source>customForm.%name%.updated</source>
+          <target>Custom form “%name%” has been updated.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.created">
+          <source>customForm.%name%.created</source>
+          <target>Custom form “%name%” has been created.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.deleted">
+          <source>customForm.%name%.deleted</source>
+          <target>Custom form “%name%” has been deleted.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.cannot_rename_already_exists">
+          <source>customForm.%name%.cannot_rename_already_exists</source>
+          <target>Custom form “%name%” cannot be renamed, another one already exists.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.already_exists">
+          <source>customForm.%name%.already_exists</source>
+          <target>Custom form “%name%” already exists.</target>
       </trans-unit>
     </body>
   </file>

@@ -55,28 +55,28 @@ class Font extends AbstractDateTimed
      *
      * @var array
      */
-    public static $extensionToMime = array(
+    public static $extensionToMime = [
         'svg'   => 'image/svg+xml',
         'ttf'   => 'application/x-font-truetype',
         'otf'   => 'application/x-font-opentype',
         'woff'  => 'application/font-woff',
         'woff2' => 'application/font-woff2',
         'eot'   => 'application/vnd.ms-fontobject',
-    );
+    ];
 
     /**
      * Get readable variant association
      *
      * @var array
      */
-    protected static $variantToHuman = array(
+    protected static $variantToHuman = [
         Font::REGULAR      => 'Regular',
         Font::ITALIC       => 'Italic',
         Font::BOLD         => 'Bold',
         Font::BOLD_ITALIC  => 'Bold italic',
         Font::LIGHT        => 'Light',
         Font::LIGHT_ITALIC => 'Light italic',
-    );
+    ];
 
     /**
      * Get a readable string to describe current font variant.
@@ -124,40 +124,40 @@ class Font extends AbstractDateTimed
     {
         switch ($this->getVariant()) {
             case static::LIGHT_ITALIC:
-                return array(
+                return [
                     'style' => 'italic',
                     'weight' => 300
-                );
+                ];
             case static::LIGHT:
-                return array(
+                return [
                     'style' => 'normal',
                     'weight' => 300
-                );
+                ];
 
             case static::BOLD_ITALIC:
-                return array(
+                return [
                     'style' => 'italic',
                     'weight' => 'bold'
-                );
+                ];
 
             case static::BOLD:
-                return array(
+                return [
                     'style' => 'normal',
                     'weight' => 'bold'
-                );
+                ];
 
             case static::ITALIC:
-                return array(
+                return [
                     'style' => 'italic',
                     'weight' => 'normal'
-                );
+                ];
 
             case static::REGULAR:
             default:
-                return array(
+                return [
                     'style' => 'normal',
                     'weight' => 'normal'
-                );
+                ];
         }
     }
 

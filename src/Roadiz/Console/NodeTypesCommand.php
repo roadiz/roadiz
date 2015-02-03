@@ -119,7 +119,7 @@ class NodeTypesCommand extends Command
         if ($name) {
             $nodetype = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                ->findOneBy(array('name'=>$name));
+                ->findOneBy(['name'=>$name]);
 
             if ($nodetype !== null) {
                 $text = $nodetype->getOneLineSummary();

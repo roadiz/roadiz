@@ -1,0 +1,15 @@
+{% extends 'base_custom_form.html.twig' %}
+
+{% block content %}
+<section class="content-global">
+
+    <header class="content-header header-custom-form header-custom-form-add">
+        <h1 class="content-title">{{ customForm.displayName }}</h1>
+        <div class="content-desc">{{ customForm.description|markdown }}</div>
+    </header>
+
+    <article class="content">
+        <p><strong>{% trans %}customForm.answer.sent{% endtrans %}</strong></p>
+    </article>
+</section>
+{% endblock %}

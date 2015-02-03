@@ -45,19 +45,19 @@ class NodeTypesType extends AbstractType
     {
         $nodeTypes = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-            ->findBy(array(
+            ->findBy([
                 'newsletterType' => false,
                 'visible' => true
-            ));
+            ]);
 
-        $choices = array();
+        $choices = [];
         foreach ($nodeTypes as $nodeType) {
             $choices[$nodeType->getId()] = $nodeType->getDisplayName();
         }
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices' => $choices
-        ));
+        ]);
     }
     /**
      * {@inheritdoc}

@@ -64,7 +64,7 @@ class CustomFormFieldAttributesController extends RozierApp
             $request,
             $this->getService('em'),
             'RZ\Roadiz\Core\Entities\CustomFormFieldAttribute',
-            array("customFormAnswer" => $customFormAnswer)
+            ["customFormAnswer" => $customFormAnswer]
         );
         $listManager->handle();
 
@@ -77,7 +77,7 @@ class CustomFormFieldAttributesController extends RozierApp
         return new Response(
             $this->getTwig()->render('custom-form-field-attributes/list.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 }

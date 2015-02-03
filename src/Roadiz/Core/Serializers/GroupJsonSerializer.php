@@ -49,10 +49,10 @@ class GroupJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($group)
     {
-        $data = array();
+        $data = [];
 
         $data['name'] = $group->getName();
-        $data['roles'] = array();
+        $data['roles'] = [];
 
         foreach ($group->getRolesEntities() as $role) {
             $data['roles'][] = RoleJsonSerializer::toArray($role);
@@ -74,11 +74,11 @@ class GroupJsonSerializer extends AbstractJsonSerializer
         }
         $encoder = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes(array(
+        $normalizer->setCamelizedAttributes([
             'name',
-        ));
+        ]);
 
-        $serializer = new Serializer(array($normalizer), array($encoder));
+        $serializer = new Serializer([$normalizer], [$encoder]);
         $group = $serializer->deserialize($string, 'RZ\Roadiz\Core\Entities\Group', 'json');
 
         /*
@@ -96,7 +96,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
                                          ->findOneByName($role->getName());
             $group->addRole($role);
         }
-        $data = array();
+        $data = [];
         $data[] = $group;
         return $data;
     }

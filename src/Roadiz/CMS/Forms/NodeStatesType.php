@@ -44,7 +44,7 @@ class NodeStatesType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $choices = array();
+        $choices = [];
 
         $choices[Node::DRAFT] = "draft";
         $choices[Node::PENDING] = "pending";
@@ -52,9 +52,9 @@ class NodeStatesType extends AbstractType
         $choices[Node::ARCHIVED] = "archived";
         $choices[Node::DELETED] = "deleted";
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices' => $choices
-        ));
+        ]);
     }
     /**
      * {@inheritdoc}

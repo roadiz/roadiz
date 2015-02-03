@@ -49,14 +49,14 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($settingGroups)
     {
-        $data = array();
+        $data = [];
 
         foreach ($settingGroups as $group) {
-            $tmpGroup = array();
+            $tmpGroup = [];
 
             $tmpGroup['name'] = $group->getName();
             $tmpGroup['inMenu'] = $group->isInMenu();
-            $tmpGroup['settings'] = array();
+            $tmpGroup['settings'] = [];
 
             foreach ($group->getSettings() as $setting) {
                  $tmpGroup['settings'][] = SettingJsonSerializer::toArray($setting);

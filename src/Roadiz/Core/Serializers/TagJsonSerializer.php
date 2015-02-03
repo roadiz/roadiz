@@ -48,17 +48,17 @@ class TagJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($tags)
     {
-        $array = array();
+        $array = [];
 
         foreach ($tags as $tag) {
-            $data = array();
+            $data = [];
 
             $data['tag_name'] = $tag->getTagName();
             $data['visible'] =  $tag->isVisible();
             $data['locked'] =   $tag->isLocked();
 
-            $data['children'] =  array();
-            $data['tag_translation'] = array();
+            $data['children'] =  [];
+            $data['tag_translation'] = [];
 
             foreach ($tag->getTranslatedTags() as $source) {
                 $data['tag_translation'][] = TagTranslationJsonSerializer::toArray($source);
@@ -67,7 +67,7 @@ class TagJsonSerializer extends AbstractJsonSerializer
              * Recursivity !! Be careful
              */
             foreach ($tag->getChildren() as $child) {
-                $data['children'][] = static::toArray(array($child))[0];
+                $data['children'][] = static::toArray([$child])[0];
             }
             $array[] = $data;
         }
@@ -109,7 +109,7 @@ class TagJsonSerializer extends AbstractJsonSerializer
     public static function deserialize($string)
     {
         $datas = json_decode($string, true);
-        $array = array();
+        $array = [];
         foreach ($datas as $data) {
             $array[] = static::makeTagRec($data);
         }

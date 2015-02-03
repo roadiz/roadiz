@@ -1,5 +1,5 @@
 <?php
-return array("Africa/Abidjan" => "Africa/Abidjan",
+return ["Africa/Abidjan" => "Africa/Abidjan",
 "Africa/Accra" => "Africa/Accra",
 "Africa/Addis_Ababa" => "Africa/Addis_Ababa",
 "Africa/Algiers" => "Africa/Algiers",
@@ -580,4 +580,4 @@ return array("Africa/Abidjan" => "Africa/Abidjan",
 "UTC" => "UTC",
 "W-SU" => "W-SU",
 "WET" => "WET",
-"Zulu" => "Zulu");
+"Zulu" => "Zulu"];

@@ -57,7 +57,7 @@ class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_FORBIDDEN,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
@@ -70,21 +70,21 @@ class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
             return $response;
         }
 
-        $responseArray = array(
+        $responseArray = [
             'statusCode' => '403',
             'status'    => 'danger',
             'responseText' => $this->getTranslator()->trans(
                 'field.%nodeTypeFieldId%.not_exists',
-                array(
+                [
                     '%nodeTypeFieldId%' => $nodeTypeFieldId
-                )
+                ]
             )
-        );
+        ];
 
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 }

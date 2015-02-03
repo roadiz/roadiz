@@ -51,136 +51,136 @@ class Requirements
      */
     public function getRequirements()
     {
-        $checks = array();
+        $checks = [];
 
-        $checks['php_version'] = array(
+        $checks['php_version'] = [
             'status' => $this->testPHPVersion('5.4.3'),
             'version_minimum' => '5.4.3',
             'found' => phpversion(),
             'message' => 'Your PHP version is outdated, you must update it.',
-        );
+        ];
         if ($checks['php_version']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
 
-        $checks['session'] = array(
+        $checks['session'] = [
             'status' => $this->testExtension('session'),
             'extension' => true,
             'message' => 'You must enable PHP sessions.',
-        );
+        ];
         if ($checks['session']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
 
-        $checks['json'] = array(
+        $checks['json'] = [
             'status' => $this->testExtension('json'),
             'extension' => true,
             'message' => 'JSON library is needed for configuration handling.',
-        );
+        ];
 
         if ($checks['json']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
 
-        $checks['zip'] = array(
+        $checks['zip'] = [
             'status' => $this->testExtension('zip'),
             'extension' => true,
             'message' => 'ZIP extension is needed.',
-        );
+        ];
 
         if ($checks['zip']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
 
-        $checks['date'] = array(
+        $checks['date'] = [
             'status' => $this->testExtension('date'),
             'extension' => true,
             'message' => 'Date extension is needed.',
-        );
+        ];
 
         if ($checks['date']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
 
-        $checks['gd'] = array(
+        $checks['gd'] = [
             'status' => $this->testExtension('gd'),
             'extension' => true,
             'message' => 'GD library must be installed.',
-        );
+        ];
 
         if ($checks['gd']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
 
-        $checks['curl'] = array(
+        $checks['curl'] = [
             'status' => $this->testExtension('curl'),
             'extension' => true,
             'message' => 'cUrl extension is needed for API requests.',
-        );
+        ];
 
         if ($checks['curl']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
 
-        $checks['intl'] = array(
+        $checks['intl'] = [
             'status' => $this->testExtension('intl'),
             'extension' => true,
             'message' => 'Intl extension is needed for translations.',
-        );
+        ];
         if ($checks['intl']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
 
-        $checks['memory_limit'] = array(
+        $checks['memory_limit'] = [
             'status' => $this->testPHPIntValue('memory_limit', '64M'),
             'value_minimum' => '64M',
             'found' => ini_get('memory_limit'),
             'message' => 'Your PHP configuration has a too low value for “upload_max_filesize”',
-        );
+        ];
 
         if ($checks['memory_limit']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
 
-        $checks['post_max_size'] = array(
+        $checks['post_max_size'] = [
             'status' => $this->testPHPIntValue('post_max_size', '16M'),
             'value_minimum' => '16M',
             'found' => ini_get('post_max_size'),
             'message' => 'Your PHP configuration has a too low value for “post_max_size”',
-        );
+        ];
 
         if ($checks['post_max_size']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
 
-        $checks['upload_max_filesize'] = array(
+        $checks['upload_max_filesize'] = [
             'status' => $this->testPHPIntValue('upload_max_filesize', '16M'),
             'value_minimum' => '16M',
             'found' => ini_get('upload_max_filesize'),
             'message' => 'Your PHP configuration has a too low value for “upload_max_filesize”',
-        );
+        ];
 
         if ($checks['upload_max_filesize']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
 
-        $checks['files_folder_writable'] = array(
+        $checks['files_folder_writable'] = [
             'status' => $this->folderWritable(ROADIZ_ROOT . '/files'),
             'folder' => ROADIZ_ROOT . '/files',
             'mod' => fileperms(ROADIZ_ROOT . '/files'),
             'message' => 'Storage folder is not writable by PHP, you must change its permissions.',
-        );
+        ];
 
         if ($checks['files_folder_writable']['status']) {
             $this->successChecks++;
@@ -199,7 +199,7 @@ class Requirements
     protected function testPHPIntValue($name, $expected)
     {
 
-        $intValue = (int) (str_replace(array('s', 'K', 'M', 'G'), array('', '', '', ''), ini_get($name)));
+        $intValue = (int) (str_replace(['s', 'K', 'M', 'G'], ['', '', '', ''], ini_get($name)));
         if ($intValue < $expected) {
             return false;
         }

@@ -56,7 +56,7 @@ class DebugPanel implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array('kernel.response' => 'onKernelResponse');
+        return ['kernel.response' => 'onKernelResponse'];
     }
 
     /**
@@ -84,9 +84,9 @@ class DebugPanel implements EventSubscriberInterface
     {
         Kernel::getService('stopwatch')->stopSection('runtime');
 
-        $assignation = array(
+        $assignation = [
             'stopwatch'=>Kernel::getService('stopwatch')
-        );
+        ];
 
         return $this->getTwig()->render('debug-panel.html.twig', $assignation);
     }
@@ -98,13 +98,13 @@ class DebugPanel implements EventSubscriberInterface
     {
         $cacheDir = ROADIZ_ROOT.'/cache/twig_cache';
 
-        $loader = new \Twig_Loader_Filesystem(array(
+        $loader = new \Twig_Loader_Filesystem([
             ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/views', // Theme templates
-        ));
-        $this->twig = new \Twig_Environment($loader, array(
+        ]);
+        $this->twig = new \Twig_Environment($loader, [
             'debug' => Kernel::getInstance()->isDebug(),
             'cache' => $cacheDir
-        ));
+        ]);
 
         //RoutingExtension
         $this->twig->addExtension(

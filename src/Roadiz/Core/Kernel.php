@@ -41,6 +41,7 @@ use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
 use RZ\Roadiz\Core\Services\FormServiceProvider;
+use RZ\Roadiz\Core\Services\MailerServiceProvider;
 use RZ\Roadiz\Core\Services\RoutingServiceProvider;
 use RZ\Roadiz\Core\Services\SecurityServiceProvider;
 use RZ\Roadiz\Core\Services\SolrServiceProvider;
@@ -74,7 +75,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.2.1";
+    public static $cmsVersion = "0.3.0";
     private static $instance = null;
 
     public $container = null;
@@ -135,10 +136,10 @@ class Kernel implements \Pimple\ServiceProviderInterface
             $dispatcher->addSubscriber(new RouterListener($c['urlMatcher']));
             $dispatcher->addListener(
                 KernelEvents::CONTROLLER,
-                array(
+                [
                     new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this),
                     'onControllerMatched',
-                )
+                ]
             );
 
             return $dispatcher;
@@ -178,6 +179,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $container->register(new BackofficeServiceProvider());
         $container->register(new ThemeServiceProvider());
         $container->register(new TranslationServiceProvider());
+        $container->register(new MailerServiceProvider());
+
     }
 
     /**
@@ -194,13 +197,13 @@ class Kernel implements \Pimple\ServiceProviderInterface
             date_default_timezone_set("Europe/Paris");
         }
 
-        $application = new Application('Roadiz Console Application', '0.1');
-        $helperSet = new HelperSet(array(
+        $application = new Application('Roadiz Console Application', static::$cmsVersion);
+        $helperSet = new HelperSet([
             'db' => new ConnectionHelper($this->container['em']->getConnection()),
             'em' => new EntityManagerHelper($this->container['em']),
             'dialog' => new DialogHelper(),
             'progress' => new ProgressHelper(),
-        ));
+        ]);
         $application->setHelperSet($helperSet);
 
         $application->add(new \RZ\Roadiz\Console\TranslationsCommand);
@@ -309,7 +312,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         return new Response(
             $html,
             Response::HTTP_SERVICE_UNAVAILABLE,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -326,18 +329,18 @@ class Kernel implements \Pimple\ServiceProviderInterface
          * Generate custom UrlMatcher
          */
         $dumper = new PhpMatcherDumper($this->container['routeCollection']);
-        $class = $dumper->dump(array(
+        $class = $dumper->dump([
             'class' => 'GlobalUrlMatcher',
-        ));
+        ]);
         file_put_contents(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php', $class);
 
         /*
          * Generate custom UrlGenerator
          */
         $dumper = new PhpGeneratorDumper($this->container['routeCollection']);
-        $class = $dumper->dump(array(
+        $class = $dumper->dump([
             'class' => 'GlobalUrlGenerator',
-        ));
+        ]);
         file_put_contents(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php', $class);
     }
 
@@ -378,34 +381,34 @@ class Kernel implements \Pimple\ServiceProviderInterface
          */
         $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
-            array(
+            [
                 $this,
                 'onStartKernelRequest',
-            )
+            ]
         );
         $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
-            array(
+            [
                 $this->container['firewall'],
                 'onKernelRequest',
-            )
+            ]
         );
         /*
          * Register after controller matched listener
          */
         $this->container['dispatcher']->addListener(
             KernelEvents::CONTROLLER,
-            array(
+            [
                 $this,
                 'onControllerMatched',
-            )
+            ]
         );
         $this->container['dispatcher']->addListener(
             KernelEvents::TERMINATE,
-            array(
+            [
                 $this,
                 'onKernelTerminate',
-            )
+            ]
         );
 
         /*

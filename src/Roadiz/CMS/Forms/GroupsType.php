@@ -55,16 +55,16 @@ class GroupsType extends AbstractType
             ->getRepository('RZ\Roadiz\Core\Entities\Group')
             ->findAll();
 
-        $choices = array();
+        $choices = [];
         foreach ($groups as $group) {
             if (!$this->groups->contains($group)) {
                 $choices[$group->getId()] = $group->getName();
             }
         }
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices' => $choices
-        ));
+        ]);
     }
     /**
      * {@inheritdoc}

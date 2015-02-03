@@ -43,9 +43,9 @@ class SeparatorType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'required' => false
-        ));
+        ]);
     }
     /**
      * {@inheritdoc}

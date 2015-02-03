@@ -12,5 +12,9 @@ customFormSendAction:
     path:     /custom-form/{customFormId}
     defaults: { _controller: \RZ\Roadiz\CMS\Controllers\CustomFormController::addAction }
     requirements:
-        # Use every 2 letter codes (quick and dirty)
+        customFormId: "[0-9]+"
+customFormSentAction:
+    path:     /custom-form/{customFormId}/sent
+    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\CustomFormController::sentAction }
+    requirements:
         customFormId: "[0-9]+"

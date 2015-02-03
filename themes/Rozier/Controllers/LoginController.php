@@ -71,7 +71,7 @@ class LoginController extends RozierApp
         return new Response(
             $this->getTwig()->render('login/login.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -85,7 +85,7 @@ class LoginController extends RozierApp
         return new Response(
             $this->getTwig()->render('login/check.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -99,7 +99,7 @@ class LoginController extends RozierApp
         return new Response(
             $this->getTwig()->render('login/check.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -126,22 +126,22 @@ class LoginController extends RozierApp
      */
     private function buildLoginForm()
     {
-        $defaults = array();
+        $defaults = [];
 
         $builder = $this->getService('formFactory')
-                        ->createNamedBuilder(null, 'form', $defaults, array())
-                        ->add('_username', 'text', array(
+                        ->createNamedBuilder(null, 'form', $defaults, [])
+                        ->add('_username', 'text', [
                             'label' => $this->getTranslator()->trans('username'),
-                            'constraints' => array(
+                            'constraints' => [
                                 new NotBlank(),
-                            ),
-                        ))
-            ->add('_password', 'password', array(
+                            ],
+                        ])
+            ->add('_password', 'password', [
                 'label' => $this->getTranslator()->trans('password'),
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank(),
-                ),
-            ));
+                ],
+            ]);
 
         return $builder->getForm();
     }

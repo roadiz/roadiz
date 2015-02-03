@@ -110,7 +110,7 @@ class UsersCommand extends Command
         if ($name) {
             $user = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\User')
-                ->findOneBy(array('username'=>$name));
+                ->findOneBy(['username'=>$name]);
 
             if ($user !== null) {
                 if ($input->getOption('enable')) {
@@ -228,8 +228,7 @@ class UsersCommand extends Command
                 '<question>Email</question> : ',
                 ''
             );
-        } while (
-            !filter_var($email, FILTER_VALIDATE_EMAIL) ||
+        } while (!filter_var($email, FILTER_VALIDATE_EMAIL) ||
             Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\User')->emailExists($email)
         );
 
@@ -274,7 +273,7 @@ class UsersCommand extends Command
     {
         $role = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Role')
-                ->findOneBy(array('name'=>$roleName));
+                ->findOneBy(['name'=>$roleName]);
 
         if ($role === null) {
             $role = new Role($roleName);

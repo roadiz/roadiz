@@ -77,23 +77,23 @@ class Configuration
      */
     public function getDefaultConfiguration()
     {
-        return array(
+        return [
             "appNamespace" => "chooseAnUniqueNameForYourApp",
             "install" => true,
             "devMode" => true,
-            "doctrine" => array(
+            "doctrine" => [
                 "driver" =>   "pdo_mysql",
                 "host" =>     "localhost"
-            ),
-            "security" => array(
+            ],
+            "security" => [
                 "secret" => "change#this#secret#very#important"
-            ),
-            "entities" => array(
+            ],
+            "entities" => [
                 "src/Roadiz/Core/Entities",
                 "src/Roadiz/Core/AbstractEntities",
                 "sources/GeneratedNodeSources"
-            )
-        );
+            ]
+        ];
     }
 
     /**
@@ -103,10 +103,10 @@ class Configuration
      *
      * @throws \PDOException
      */
-    public function testDoctrineConnexion($connexion = array())
+    public function testDoctrineConnexion($connexion = [])
     {
         $config = Setup::createAnnotationMetadataConfiguration(
-            array(),
+            [],
             true,
             null,
             null,

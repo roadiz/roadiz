@@ -47,6 +47,26 @@ use Doctrine\ORM\Mapping as ORM;
 class CustomFormField extends AbstractField
 {
     /**
+     * Associates custom form field type to a readable string.
+     *
+     * These string will be used as translation key.
+     *
+     * @var array
+     */
+    public static $typeToHuman = [
+        AbstractField::STRING_T =>   'string.type',
+        AbstractField::DATETIME_T => 'date-time.type',
+        AbstractField::TEXT_T =>     'text.type',
+        AbstractField::MARKDOWN_T => 'markdown.type',
+        AbstractField::BOOLEAN_T =>  'boolean.type',
+        AbstractField::INTEGER_T =>  'integer.type',
+        AbstractField::DECIMAL_T =>  'decimal.type',
+        AbstractField::EMAIL_T =>    'email.type',
+        AbstractField::ENUM_T =>     'single-choice.type',
+        AbstractField::MULTIPLE_T => 'multiple-choice.type',
+    ];
+
+    /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="fields")
      * @ORM\JoinColumn(name="custom_form_id", onDelete="CASCADE")
      */

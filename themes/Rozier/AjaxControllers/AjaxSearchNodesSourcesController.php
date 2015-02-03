@@ -30,16 +30,17 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}
  */
 class AjaxSearchNodesSourcesController extends AbstractAjaxController
 {
+    const RESULT_COUNT = 8;
+
     /**
      * Handle AJAX edition requests for Node
      * such as comming from nodetree widgets.
@@ -57,7 +58,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
@@ -65,26 +66,34 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
 
         if ("" != $request->get('searchTerms')) {
             $nodesSources = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                ->findBySearchQuery(strip_tags($request->get('searchTerms')));
+                                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                                 ->findBySearchQuery(
+                                     strip_tags($request->get('searchTerms')),
+                                     static::RESULT_COUNT
+                                 );
 
             if (null === $nodesSources) {
                 $nodesSources = $this->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                    ->searchBy(strip_tags($request->get('searchTerms')));
+                                     ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                                     ->searchBy(
+                                         strip_tags($request->get('searchTerms')),
+                                         [],
+                                         [],
+                                         static::RESULT_COUNT
+                                     );
             }
 
             if (null !== $nodesSources &&
                 count($nodesSources) > 0) {
-                $responseArray = array(
+                $responseArray = [
                     'statusCode' => '200',
                     'status' => 'success',
-                    'data' => array(),
-                    'responseText' => count($nodesSources).' results found.'
-                );
+                    'data' => [],
+                    'responseText' => count($nodesSources) . ' results found.',
+                ];
 
                 foreach ($nodesSources as $source) {
-                    $responseArray['data'][] = array(
+                    $responseArray['data'][] = [
                         'title' => "" != $source->getTitle() ? $source->getTitle() : $source->getNode()->getNodeName(),
                         'nodeId' => $source->getNode()->getId(),
                         'translationId' => $source->getTranslation()->getId(),
@@ -92,33 +101,32 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
                         'typeColor' => $source->getNode()->getNodeType()->getColor(),
                         'url' => $this->getService('urlGenerator')->generate(
                             'nodesEditSourcePage',
-                            array(
+                            [
                                 'nodeId' => $source->getNode()->getId(),
-                                'translationId' => $source->getTranslation()->getId()
-                            )
-                        )
-                    );
+                                'translationId' => $source->getTranslation()->getId(),
+                            ]
+                        ),
+                    ];
                 }
 
                 return new Response(
                     json_encode($responseArray),
                     Response::HTTP_OK,
-                    array('content-type' => 'application/javascript')
+                    ['content-type' => 'application/javascript']
                 );
             }
         }
 
-
-        $responseArray = array(
+        $responseArray = [
             'statusCode' => '403',
-            'status'    => 'danger',
-            'responseText' => 'No results found.'
-        );
+            'status' => 'danger',
+            'responseText' => 'No results found.',
+        ];
 
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 }

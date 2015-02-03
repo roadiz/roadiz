@@ -56,13 +56,13 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             return new Response(
                 json_encode($notValid),
                 Response::HTTP_OK,
-                array('content-type' => 'application/javascript')
+                ['content-type' => 'application/javascript']
             );
         }
 
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $arrayFilter = array();
+        $arrayFilter = [];
         /*
          * Manage get request to filter list
          */
@@ -77,33 +77,33 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
 
         $documents = $listManager->getEntities();
 
-        $documentsArray = array();
+        $documentsArray = [];
         foreach ($documents as $doc) {
-            $documentsArray[] = array(
+            $documentsArray[] = [
                 'id' => $doc->getId(),
                 'filename'=>$doc->getFilename(),
                 'thumbnail' => $doc->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', array('document'=>$doc)),
-            );
+                'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document'=>$doc]),
+            ];
         }
 
-        $responseArray = array(
+        $responseArray = [
             'status' => 'confirm',
             'statusCode' => 200,
             'documents' => $documentsArray,
             'documentsCount' => count($documents),
             'filters' => $listManager->getAssignation()
-        );
+        ];
 
         return new Response(
             json_encode($responseArray),
             Response::HTTP_OK,
-            array('content-type' => 'application/javascript')
+            ['content-type' => 'application/javascript']
         );
     }
 }
-AjaxDocumentsExplorerController::$thumbnailArray = array(
+AjaxDocumentsExplorerController::$thumbnailArray = [
     "width"=>40,
     "crop"=>"1x1",
     "quality"=>50
-);
+];

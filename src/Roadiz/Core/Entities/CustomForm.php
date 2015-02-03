@@ -234,7 +234,7 @@ class CustomForm extends AbstractDateTimed
      */
     public function getFieldsNames()
     {
-        $namesArray = array();
+        $namesArray = [];
 
         foreach ($this->getFields() as $field) {
             $namesArray[] = $field->getName();
@@ -251,7 +251,7 @@ class CustomForm extends AbstractDateTimed
      */
     public function getFieldsLabels()
     {
-        $namesArray = array();
+        $namesArray = [];
 
         foreach ($this->getFields() as $field) {
             $namesArray[] = $field->getLabel();

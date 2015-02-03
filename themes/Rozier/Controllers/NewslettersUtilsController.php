@@ -31,12 +31,11 @@
 
 namespace Themes\Rozier\Controllers;
 
-use Themes\Rozier\RozierApp;
-
+use RZ\Roadiz\Core\Utils\DomHandler;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
+use Themes\Rozier\RozierApp;
 use \InlineStyle\InlineStyle;
 
 /**
@@ -63,33 +62,33 @@ class NewslettersUtilsController extends RozierApp
 
         try {
             $existingNewsletter = $this->getService('em')
-                                  ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
+                                       ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
 
             $newNewsletter = $existingNewsletter->getHandler()->duplicate();
 
-            $msg = $this->getTranslator()->trans("duplicated.newsletter.%name%", array(
-                '%name%' => $existingNewsletter->getNode()->getNodeName()
-            ));
+            $msg = $this->getTranslator()->trans("duplicated.newsletter.%name%", [
+                '%name%' => $existingNewsletter->getNode()->getNodeName(),
+            ]);
 
             $this->publishConfirmMessage($request, $msg);
 
             $response = new RedirectResponse(
                 $this->getService('urlGenerator')
-                    ->generate(
-                        'newslettersEditPage',
-                        array(
-                            "newsletterId" => $newNewsletter->getId(),
-                            "translationId" => $translation->getId()
-                        )
-                    )
+                     ->generate(
+                         'newslettersEditPage',
+                         [
+                             "newsletterId" => $newNewsletter->getId(),
+                             "translationId" => $translation->getId(),
+                         ]
+                     )
             );
 
         } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add(
                 'error',
-                $this->getTranslator()->trans("impossible.duplicate.newsletter.%name%", array(
-                    '%name%' => $existingNewsletter->getNode()->getNodeName()
-                ))
+                $this->getTranslator()->trans("impossible.duplicate.newsletter.%name%", [
+                    '%name%' => $existingNewsletter->getNode()->getNodeName(),
+                ])
             );
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
 
@@ -97,10 +96,10 @@ class NewslettersUtilsController extends RozierApp
                 $this->getService('urlGenerator')
                      ->generate(
                          'newslettersEditPage',
-                         array(
-                            "newsletterId" => $existingNewsletter->getId(),
-                            "translationId" => $translation->getId()
-                         )
+                         [
+                             "newsletterId" => $existingNewsletter->getId(),
+                             "translationId" => $translation->getId(),
+                         ]
                      )
             );
         }
@@ -112,8 +111,8 @@ class NewslettersUtilsController extends RozierApp
     {
         // get first not static frontend
         $theme = $this->getService("em")
-            ->getRepository("RZ\Roadiz\Core\Entities\Theme")
-            ->findFirstAvailableNonStaticFrontend();
+                      ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+                      ->findFirstAvailableNonStaticFrontend();
 
         $baseNamespace = explode("\\", $theme->getClassName());
 
@@ -130,9 +129,9 @@ class NewslettersUtilsController extends RozierApp
 
         // make namespace of the newsletter from the default dynamic theme namespace and newsletter notetype
         $classname = $baseNamespace
-            . "\NewsletterControllers\\"
-            . $newsletter->getNode()->getNodeType()->getName()
-            . "Controller";
+        . "\NewsletterControllers\\"
+        . $newsletter->getNode()->getNodeType()->getName()
+        . "Controller";
         // force the twig path
         $this->getService('twig.loaderFileSystem')->prependPath($classname::getViewsFolder());
 
@@ -161,7 +160,7 @@ class NewslettersUtilsController extends RozierApp
         return new Response(
             $this->getNewsletterHTML($request, $newsletter),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -181,41 +180,33 @@ class NewslettersUtilsController extends RozierApp
             $newsletterId
         );
 
-        //Get all css link in the newsletter
-
+        $filename = $newsletter->getNode()->getNodeName();
         $content = $this->getNewsletterHTML($request, $newsletter);
-        preg_match_all('/href="([^"]+\.css)"/', $content, $out);
 
-        //Concat all cssfile in one string
+        // Get all css link in the newsletter
+        $cssContent = DomHandler::getExternalStyles($content);
 
-        $cssContent = "";
-        foreach ($out[1] as $css) {
-            $cssContent .= file_get_contents(ROADIZ_ROOT.$css) . PHP_EOL;
-        }
-
-        if ($inline != 0) {
+        if ((boolean) $inline === true) {
             // inline newsletter html with css
 
             $htmldoc = new InlineStyle($content);
             $htmldoc->applyStylesheet($cssContent);
             $htmldoc = $htmldoc->getHtml();
-        } else {
-            // Remove all link element and add style balise with all css file content
 
-            $content = preg_replace('/<link[^>]+\/>/', '', $content);
-            $htmldoc = str_replace(
-                "</head>",
-                "<style>\n" . $cssContent . "</style>\n</head>",
-                $content
-            );
+            $filename .= "-inlined";
+
+            $content = $htmldoc;
         }
+
+        // Remove all link element and add style balise with all css file content
+        $htmldoc = DomHandler::replaceExternalStylesheetsWithStyle($content, $cssContent);
 
         // Generate response
         $response = new Response();
 
         // Set headers
         $response->headers->set('Content-type', "text/html");
-        $response->headers->set('Content-Disposition', 'attachment; filename= "' . $newsletter->getNode()->getNodeName() . '";');
+        $response->headers->set('Content-Disposition', 'attachment; filename= "' . $filename . '.html";');
 
         $response->setContent($htmldoc);
 

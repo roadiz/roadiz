@@ -48,7 +48,7 @@ class SettingJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($setting)
     {
-        $data = array();
+        $data = [];
 
         $data['name'] = $setting->getName();
         $data['value'] = $setting->getValue();
@@ -72,14 +72,14 @@ class SettingJsonSerializer extends AbstractJsonSerializer
         }
         $encoder = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes(array(
+        $normalizer->setCamelizedAttributes([
             'name',
             'value',
             'type',
             'visible'
-        ));
+        ]);
 
-        $serializer = new Serializer(array($normalizer), array($encoder));
+        $serializer = new Serializer([$normalizer], [$encoder]);
 
         return $serializer->deserialize($jsonString, 'RZ\Roadiz\Core\Entities\Setting', 'json');
     }

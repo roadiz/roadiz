@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\CustomForm;
@@ -59,9 +60,9 @@ class CustomFormController extends AppController
      */
     public static function getRoutes()
     {
-        $locator = new FileLocator(array(
-        ROADIZ_ROOT . '/src/Roadiz/CMS/Resources',
-        ));
+        $locator = new FileLocator([
+            ROADIZ_ROOT . '/src/Roadiz/CMS/Resources',
+        ]);
 
         if (file_exists(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
@@ -85,37 +86,49 @@ class CustomFormController extends AppController
                 $this->assignation['customForm'] = $customForm;
                 $this->assignation['fields'] = $customForm->getFields();
 
-             /*
-              * form
-              */
+                /*
+                 * form
+                 */
                 $form = $this->buildForm($request, $customForm);
                 $form->handleRequest();
                 if ($form->isValid()) {
                     try {
                         $data = $form->getData();
                         $data["ip"] = $request->getClientIp();
-                        $this->addCustomFormAnswer($data, $customForm);
 
-                        $msg = $this->getTranslator()->trans('customForm.%name%.send', array('%name%' => $customForm->getName()));
+                        /*
+                         * add custom form answer
+                         */
+                        $this->assignation["fields"] = static::addCustomFormAnswer($data, $customForm, $this->getService('em'));
+
+                        $msg = $this->getTranslator()->trans('customForm.%name%.send', ['%name%' => $customForm->getDisplayName()]);
                         $request->getSession()->getFlashBag()->add('confirm', $msg);
                         $this->getService('logger')->info($msg);
 
                         $this->assignation['title'] = $this->getTranslator()->trans(
                             'new.answer.form.%site%',
-                            array('%site%' => $customForm->getDisplayName())
+                            ['%site%' => $customForm->getDisplayName()]
                         );
 
                         $this->assignation['mailContact'] = SettingsBag::get('email_sender');
 
-                        $this->sendAnswer($this->assignation, $customForm->getEmail());
+                        /*
+                         * Send answer notification
+                         */
+                        static::sendAnswer(
+                            $this->assignation,
+                            $customForm->getEmail(),
+                            $this->getService('twig.environment'),
+                            $this->getService('mailer')
+                        );
 
                         /*
-                   * Redirect to update schema page
-                   */
+                         * Redirect to update schema page
+                         */
                         $response = new RedirectResponse(
                             $this->getService('urlGenerator')->generate(
-                                'customFormSendAction',
-                                array("customFormId" => $customFormId)
+                                'customFormSentAction',
+                                ["customFormId" => $customFormId]
                             )
                         );
 
@@ -125,7 +138,7 @@ class CustomFormController extends AppController
                         $response = new RedirectResponse(
                             $this->getService('urlGenerator')->generate(
                                 'customFormSendAction',
-                                array("customFormId" => $customFormId)
+                                ["customFormId" => $customFormId]
                             )
                         );
                     }
@@ -139,7 +152,7 @@ class CustomFormController extends AppController
                 return new Response(
                     $this->getTwig()->render('forms/customForm.html.twig', $this->assignation),
                     Response::HTTP_OK,
-                    array('content-type' => 'text/html')
+                    ['content-type' => 'text/html']
                 );
             }
         }
@@ -147,20 +160,41 @@ class CustomFormController extends AppController
         return $this->throw404();
     }
 
+    public function sentAction(Request $request, $customFormId)
+    {
+        $customForm = $this->getService('em')
+                           ->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
+
+        if (null !== $customForm) {
+            $this->assignation['customForm'] = $customForm;
+
+            return new Response(
+                $this->getTwig()->render('forms/customFormSent.html.twig', $this->assignation),
+                Response::HTTP_OK,
+                ['content-type' => 'text/html']
+            );
+        }
+
+        return $this->throw404();
+    }
+
     /**
-     * Send a answer form by Email.
+     * Send an answer form by Email.
      *
-     * @param  array $assignation
-     * @param  string $receiver
+     * @param  array             $assignation
+     * @param  string            $receiver
+     * @param  \Twig_Environment $twigEnv
+     * @param  \Swift_Mailer     $mailer
      *
      * @return boolean
      */
-    protected function sendAnswer($assignation, $receiver)
+    public static function sendAnswer($assignation, $receiver, \Twig_Environment $twigEnv, \Swift_Mailer $mailer)
     {
-        $emailBody = $this->getTwig()->render('forms/answerForm.html.twig', $assignation);
-     /*
-      * inline CSS
-      */
+        $emailBody = $twigEnv->render('forms/answerForm.html.twig', $assignation);
+
+        /*
+         * inline CSS
+         */
         $htmldoc = new InlineStyle($emailBody);
         $htmldoc->applyStylesheet(file_get_contents(
             ROADIZ_ROOT . "/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
@@ -169,50 +203,58 @@ class CustomFormController extends AppController
         if (empty($receiver)) {
             $receiver = SettingsBag::get('email_sender');
         }
-     // Create the message}
-        $message = \Swift_Message::newInstance()
-     // Give the message a subject
-        ->setSubject($this->assignation['title'])
-                          // Set the From address with an associative array
-                          ->setFrom(array(SettingsBag::get('email_sender')))
-                          // Set the To addresses with an associative array
-                          ->setTo(array($receiver))
-                          // Give it a body
-                          ->setBody($htmldoc->getHTML(), 'text/html');
-     // Create the Transport
-        $transport = \Swift_MailTransport::newInstance();
-        $mailer = \Swift_Mailer::newInstance($transport);
-     // Send the message
+        // Create the message}
+        $message = \Swift_Message::newInstance();
+        // Give the message a subject
+        $message->setSubject($assignation['title']);
+        // Set the From address with an associative array
+        $message->setFrom([SettingsBag::get('email_sender')]);
+        // Set the To addresses with an associative array
+        $message->setTo([$receiver]);
+        // Give it a body
+        $message->setBody($htmldoc->getHTML(), 'text/html');
+
+        // Send the message
         return $mailer->send($message);
     }
 
     /**
-     * @param array                           $data
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * Add a custom form answer into database.
      *
-     * @return boolean
+     * @param array $data Data array from POST form
+     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param Doctrine\ORM\EntityManager $em
+     *
+     * @return array $fieldsData
      */
-    private function addCustomFormAnswer($data, CustomForm $customForm)
+    public static function addCustomFormAnswer($data, CustomForm $customForm, EntityManager $em)
     {
+        $now = new \DateTime('NOW');
         $answer = new CustomFormAnswer();
         $answer->setIp($data["ip"]);
-        $answer->setSubmittedAt(new \DateTime('NOW'));
+        $answer->setSubmittedAt($now);
         $answer->setCustomForm($customForm);
 
-        $this->assignation["fields"] = array(
-        array("name" => "ip", "value" => $data["ip"]),
-        array("name" => "submittedAt", "value" => new \DateTime('NOW')),
-        );
+        $fieldsData = [
+            ["name" => "ip.address", "value" => $data["ip"]],
+            ["name" => "submittedAt", "value" => $now]
+        ];
 
-        $this->getService('em')->persist($answer);
+        $em->persist($answer);
 
         foreach ($customForm->getFields() as $field) {
             $fieldAttr = new CustomFormFieldAttribute();
             $fieldAttr->setCustomFormAnswer($answer);
             $fieldAttr->setCustomFormField($field);
 
-            if (is_array($data[$field->getName()])) {
-                $values = array();
+            if ($data[$field->getName()] instanceof \DateTime) {
+                $strDate = $data[$field->getName()]->format('Y-m-d H:i:s');
+
+                $fieldAttr->setValue($strDate);
+                $fieldsData[] = ["name" => $field->getLabel(), "value" => $strDate];
+
+            } else if (is_array($data[$field->getName()])) {
+                $values = [];
 
                 foreach ($data[$field->getName()] as $value) {
                     $choices = explode(',', $field->getDefaultValues());
@@ -220,20 +262,19 @@ class CustomFormController extends AppController
                 }
 
                 $val = implode(',', $values);
-                $fieldAttr->setValue($val);
-                $this->assignation["fields"][] = array("name" => $field->getName(), "value" => $val);
+                $fieldAttr->setValue(strip_tags($val));
+                $fieldsData[] = ["name" => $field->getLabel(), "value" => $val];
 
             } else {
-                $fieldAttr->setValue($data[$field->getName()]);
-                $this->assignation["fields"][] = array("name" => $field->getName(), "value" => $data[$field->getName()]);
-
+                $fieldAttr->setValue(strip_tags($data[$field->getName()]));
+                $fieldsData[] = ["name" => $field->getLabel(), "value" => $data[$field->getName()]];
             }
-            $this->getService('em')->persist($fieldAttr);
+            $em->persist($fieldAttr);
         }
 
-        $this->getService('em')->flush();
+        $em->flush();
 
-        return true;
+        return $fieldsData;
     }
 
     /**

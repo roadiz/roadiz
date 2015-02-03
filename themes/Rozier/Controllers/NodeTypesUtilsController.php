@@ -62,7 +62,7 @@ class NodeTypesUtilsController extends RozierApp
         $response =  new Response(
             NodeTypeJsonSerializer::serialize($nodeType),
             Response::HTTP_OK,
-            array()
+            []
         );
 
         $response->headers->set(
@@ -104,7 +104,7 @@ class NodeTypesUtilsController extends RozierApp
                     $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
                     $existingNT = $this->getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                        ->findOneBy(array('name'=>$nodeType->getName()));
+                        ->findOneBy(['name'=>$nodeType->getName()]);
 
                     if (null === $existingNT) {
                         /*
@@ -148,9 +148,9 @@ class NodeTypesUtilsController extends RozierApp
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodeTypesSchemaUpdate',
-                            array(
+                            [
                                 '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
-                            )
+                            ]
                         )
                     );
                     $response->prepare($request);
@@ -193,7 +193,7 @@ class NodeTypesUtilsController extends RozierApp
         return new Response(
             $this->getTwig()->render('node-types/import.html.twig', $this->assignation),
             Response::HTTP_OK,
-            array('content-type' => 'text/html')
+            ['content-type' => 'text/html']
         );
     }
 
@@ -205,9 +205,9 @@ class NodeTypesUtilsController extends RozierApp
     {
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
-            ->add('node_type_file', 'file', array(
+            ->add('node_type_file', 'file', [
                 'label' => $this->getTranslator()->trans('nodeType.file'),
-            ));
+            ]);
 
         return $builder->getForm();
     }

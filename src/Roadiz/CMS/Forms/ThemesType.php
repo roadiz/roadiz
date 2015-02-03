@@ -48,7 +48,7 @@ class ThemesType extends AbstractType
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
             ->findAll();
 
-        $choices = array();
+        $choices = [];
 
         $finder = new Finder();
 
@@ -93,9 +93,9 @@ class ThemesType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices' => $this->choices
-        ));
+        ]);
     }
 
     /**

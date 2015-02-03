@@ -44,7 +44,7 @@ class TagListManager extends EntityListManager
      * @param array                                    $preFilters
      * @param array                                    $preOrdering
      */
-    public function __construct(Request $request, EntityManager $_em, $preFilters = array(), $preOrdering = array())
+    public function __construct(Request $request, EntityManager $_em, $preFilters = [], $preOrdering = [])
     {
         parent::__construct($request, $_em, 'RZ\Roadiz\Core\Entities\Tag', $preFilters, $preOrdering);
     }

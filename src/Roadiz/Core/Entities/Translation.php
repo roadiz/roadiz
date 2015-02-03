@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\TranslationHandler;
+use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -51,7 +52,7 @@ class Translation extends AbstractDateTimed
      *
      * @var array
      */
-    public static $availableLocales = array(
+    public static $availableLocales = [
         "fr"         => "French", // France
         "en"         => "English",
         "it"         => "Italian",
@@ -60,13 +61,13 @@ class Translation extends AbstractDateTimed
         "de"         => "German",
         "zh"         => "Chinese (China)",
         "ja"         => "Japanese"
-    );
+    ];
     /**
      * Associates locales to *famfamfam* flag files names.
      *
      * @var array
      */
-    public static $availableLocalesFlags = array(
+    public static $availableLocalesFlags = [
         "fr"         => "fr.png", // France
         "en"         => "us.png",
         "it"         => "it.png",
@@ -75,7 +76,7 @@ class Translation extends AbstractDateTimed
         "de"         => "de.png",
         "zh"         => "cn.png",
         "ja"         => "jp.png"
-    );
+    ];
 
     /**
      * Associates short locales (2 letters)
@@ -83,7 +84,7 @@ class Translation extends AbstractDateTimed
      *
      * @var array
      */
-    public static $availableLocalesShortcut = array(
+    public static $availableLocalesShortcut = [
         'fr' => "fr_FR", // France
         'en' => "en_US",
         'it' => "it_IT",
@@ -95,7 +96,7 @@ class Translation extends AbstractDateTimed
         'hk' => "zh_HK",
         'tw' => "zh_TW",
         'jp' => "ja_JP"
-    );
+    ];
 
 
     /**
@@ -283,6 +284,14 @@ class Translation extends AbstractDateTimed
     public function getHandler()
     {
         return new TranslationHandler($this);
+    }
+
+    /**
+    * @return TranslationViewer
+    */
+    public function getViewer()
+    {
+        return new TranslationViewer($this);
     }
 
     /**

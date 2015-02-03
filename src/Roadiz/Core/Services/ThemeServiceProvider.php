@@ -73,14 +73,14 @@ class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
                     $defaultTheme->setClassName('RZ\Roadiz\CMS\Controllers\FrontendController');
                     $defaultTheme->setAvailable(true);
 
-                    return array(
+                    return [
                         $defaultTheme
-                    );
+                    ];
                 } else {
                     return $themes;
                 }
             } else {
-                return array();
+                return [];
             }
         };
 

@@ -48,7 +48,7 @@ class RoleJsonSerializer extends AbstractJsonSerializer
      */
     public static function toArray($role)
     {
-        $data = array();
+        $data = [];
 
         $data['name'] = $role->getName();
 
@@ -69,9 +69,9 @@ class RoleJsonSerializer extends AbstractJsonSerializer
         }
         $encoder = new JsonEncoder();
         $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes(array('name'));
+        $normalizer->setCamelizedAttributes(['name']);
 
-        $serializer = new Serializer(array($normalizer), array($encoder));
+        $serializer = new Serializer([$normalizer], [$encoder]);
 
         return $serializer->deserialize($jsonString, 'RZ\Roadiz\Core\Entities\Role', 'json');
     }

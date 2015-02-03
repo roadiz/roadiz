@@ -78,7 +78,7 @@ class TranslationHandler
     {
         $defaults = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findBy(array('defaultTranslation'=>true));
+            ->findBy(['defaultTranslation'=>true]);
 
         foreach ($defaults as $default) {
             $default->setDefaultTranslation(false);
