@@ -105,7 +105,6 @@ class DomHandler
         $doc = new \DOMDocument();
         $doc->loadHTML($dom);
 
-        $html = $doc->documentElement;
         $elements = $doc->getElementsByTagName('link');
         $head = $doc->getElementsByTagName('head');
 

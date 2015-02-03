@@ -51,6 +51,7 @@ class CustomFormsType extends AbstractType
             $option = ["label" => $field->getLabel()];
 
             if ($field->isRequired()) {
+                $option['required'] = true;
                 $option['constraints'] = [
                     new NotBlank()
                 ];
@@ -65,7 +66,7 @@ class CustomFormsType extends AbstractType
                 if (count($choices) < 4) {
                     $option["expanded"] = true;
                 }
-                if ($option['required'] == false) {
+                if ($field->isRequired() == false) {
                     $option['empty_value'] = 'none';
                 }
                 $option["choices"] = $choices;
@@ -79,7 +80,7 @@ class CustomFormsType extends AbstractType
                 if (count($choices) < 4) {
                     $option["expanded"] = true;
                 }
-                if ($option['required'] == false) {
+                if ($field->isRequired() == false) {
                     $option['empty_value'] = 'none';
                 }
             } else {

@@ -89,14 +89,14 @@ class TranslationViewer implements ViewableInterface
 
         if ($node === null) {
             $translations = Kernel::getService('em')
-                ->getRepository("Rz\Roadiz\Core\Entities\Translation")
+                ->getRepository("RZ\Roadiz\Core\Entities\Translation")
                 ->findAllAvailable();
             $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
         } else {
             $translations = $node->getHandler()->getAvailableTranslations();
             $translations = array_filter(
                 $translations,
-                function ($x) {
+                function (Translation $x) {
                     if ($x->isAvailable()) {
                         return true;
                     }
