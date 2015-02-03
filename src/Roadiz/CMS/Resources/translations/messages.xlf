@@ -90,6 +90,10 @@
                 <source>customForm.answer.sent</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="none">
+                <source>none</source>
+                <target></target>
+            </trans-unit>
 
         </body>
     </file>

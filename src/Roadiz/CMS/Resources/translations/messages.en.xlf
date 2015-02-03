@@ -89,6 +89,10 @@
                 <source>customForm.answer.sent</source>
                 <target>Your answer has been successfully sent.</target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="none">
+                <source>none</source>
+                <target>None</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

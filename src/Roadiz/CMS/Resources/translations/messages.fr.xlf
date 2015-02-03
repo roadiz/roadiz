@@ -78,7 +78,10 @@
                 <source>customForm.answer.sent</source>
                 <target>Votre réponse a bien été envoyée.</target>
             </trans-unit>
-
+            <trans-unit xml:space="preserve" id="none">
+                <source>none</source>
+                <target>Aucun</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

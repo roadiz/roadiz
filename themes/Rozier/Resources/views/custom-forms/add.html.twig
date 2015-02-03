@@ -1,19 +1,18 @@
 {% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section class="content-global">
+<section class="content-global manage-custom-forms">
 
-    <header class="content-header header-node-types header-node-types-add">
+    <header class="content-header header-custom-forms header-custom-forms-add">
         <h1 class="content-title">{% trans %}add.a.customForm{% endtrans %}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormsHomePage') }}" title="{% trans %}back_to.customForms{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
     </a>
     </header>
 
-    <article class="content">
+    <article class="content content-custom-forms-edit">
         {% form_theme form 'forms.html.twig' %}
-        <form id="add-custom-form-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        <form id="add-custom-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
-
             <fieldset data-uk-margin>
                 {% spaceless %}
                 <button data-action-save="#add-custom-form" class="uk-button uk-button-primary rz-action-save" type="submit">

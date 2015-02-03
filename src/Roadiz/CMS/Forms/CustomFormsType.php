@@ -65,6 +65,9 @@ class CustomFormsType extends AbstractType
                 if (count($choices) < 4) {
                     $option["expanded"] = true;
                 }
+                if ($option['required'] == false) {
+                    $option['empty_value'] = 'none';
+                }
                 $option["choices"] = $choices;
             } elseif (CustomFormField::$typeToForm[$field->getType()] == "multiple_enumeration") {
                 $choices = explode(',', $field->getDefaultValues());
@@ -75,6 +78,9 @@ class CustomFormsType extends AbstractType
                 $option["expanded"] = false;
                 if (count($choices) < 4) {
                     $option["expanded"] = true;
+                }
+                if ($option['required'] == false) {
+                    $option['empty_value'] = 'none';
                 }
             } else {
                 $type = CustomFormField::$typeToForm[$field->getType()];
