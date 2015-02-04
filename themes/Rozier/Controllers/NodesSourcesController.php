@@ -90,7 +90,6 @@ class NodesSourcesController extends RozierApp
             throw new AccessDeniedException("You don't have access to this page");
         }
 
-
         $translation = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 

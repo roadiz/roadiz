@@ -166,12 +166,10 @@ class NodesController extends RozierApp
 
         $isNewsletterFriend = $node->getHandler()->isRelatedToNewsletter();
 
-        var_dump(in_array($user->getChroot(), $parents, true)));
-        exit();
-
         if (!((!$isNewsletterFriend
                 && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_SETTING')
-                && (in_array($user->getChroot(), $parents, true)))
+                && ($user->getChroot() == null
+                    || in_array($user->getChroot(), $parents, true)))
             || ($isNewsletterFriend
                 && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NEWSLETTERS')))) {
             throw new AccessDeniedException("You don't have access to this page");
