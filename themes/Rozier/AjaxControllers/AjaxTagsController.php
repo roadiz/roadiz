@@ -130,7 +130,7 @@ class AjaxTagsController extends AbstractAjaxController
             'responseText' => 'No tags found',
         ];
 
-        if (!empty($request->get('search'))) {
+        if ($request->get('search') != "") {
             $responseArray = [];
 
             $pattern = strip_tags($request->get('search'));

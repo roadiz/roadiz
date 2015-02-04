@@ -371,8 +371,7 @@ class AjaxNodesController extends AbstractAjaxController
                     }
                     $this->getService('em')->persist($node);
 
-                    if (!empty($request->get('pushTop')) &&
-                        $request->get('pushTop') == 1) {
+                    if ($request->get('pushTop') == 1) {
                         $node->setPosition(0.5);
                     }
 
