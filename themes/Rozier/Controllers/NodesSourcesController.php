@@ -45,6 +45,7 @@ use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Translation\Translator;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Nodes sources controller.
@@ -67,7 +68,28 @@ class NodesSourcesController extends RozierApp
      */
     public function editSourceAction(Request $request, $nodeId, $translationId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        //$this->validateAccessForRole('ROLE_ACCESS_NODES');
+
+        $node = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+
+        $this->getService('em')->refresh($node);
+
+        $user = $this->getService("securityContext")->getToken()->getUser();
+
+        $parents = $node->getHandler()->getParents();
+
+        $isNewsletterFriend = $node->getHandler()->isRelatedToNewsletter();
+
+        if (!((!$isNewsletterFriend
+                && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES')
+                && ($user->getChroot() == null
+                    || in_array($user->getChroot(), $parents, true)))
+            || ($isNewsletterFriend
+                && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NEWSLETTERS')))) {
+            throw new AccessDeniedException("You don't have access to this page");
+        }
+
 
         $translation = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);

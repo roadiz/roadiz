@@ -444,6 +444,25 @@ class NodeHandler
     }
 
     /**
+     * Return if is in Newsletter Node
+     * @return bool
+     */
+    public function isRelatedToNewsletter()
+    {
+        $parents = $this->getParents();
+
+        if ($this->node->getNodeType()->isNewsletterType()) {
+            return true;
+        }
+        foreach ($parents as $parent) {
+            if ($parent->getNodeType()->isNewsletterType()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Return every node’s parents
      * @return array
      */

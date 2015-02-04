@@ -35,8 +35,13 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+<<<<<<< b8d2f85f9836d150499f055fd00bc169964e35d1
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+=======
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
+>>>>>>> ade392052becb1f88fc561e3fc4dae03bc08ac8c
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -145,11 +150,32 @@ class NodesController extends RozierApp
      */
     public function editAction(Request $request, $nodeId, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES_SETTING');
-
+        // $this->validateAccessForRole('ROLE_ACCESS_NODES_SETTING');
         $node = $this->getService('em')
+<<<<<<< b8d2f85f9836d150499f055fd00bc169964e35d1
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+=======
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+
+>>>>>>> ade392052becb1f88fc561e3fc4dae03bc08ac8c
         $this->getService('em')->refresh($node);
+
+        $user = $this->getService("securityContext")->getToken()->getUser();
+
+        $parents = $node->getHandler()->getParents();
+
+        $isNewsletterFriend = $node->getHandler()->isRelatedToNewsletter();
+
+        var_dump(in_array($user->getChroot(), $parents, true)));
+        exit();
+
+        if (!((!$isNewsletterFriend
+                && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_SETTING')
+                && (in_array($user->getChroot(), $parents, true)))
+            || ($isNewsletterFriend
+                && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NEWSLETTERS')))) {
+            throw new AccessDeniedException("You don't have access to this page");
+        }
 
         $translation = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
