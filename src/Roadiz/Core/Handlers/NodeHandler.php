@@ -610,4 +610,68 @@ class NodeHandler
 
         return $newNode;
     }
+
+    /**
+     * Get previous node from hierarchy.
+     *
+     * @param  array|null           $criteria        [description]
+     * @param  array|null           $order           [description]
+     * @param  SecurityContext|null $securityContext [description]
+     *
+     * @return RZ\Roadiz\Core\Entities\Node
+     */
+    public function getPrevious(
+        array $criteria = null,
+        array $order = null,
+        SecurityContext $securityContext = null
+    ) {
+        if ($this->node->getPosition() <= 1) {
+            return null;
+        }
+
+        if (null === $criteria) {
+            $criteria = [];
+        }
+
+        $criteria['parent'] = $this->node->getParent();
+        $criteria['position'] = $this->node->getPosition() - 1;
+
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findOneBy(
+                $criteria,
+                $order,
+                $securityContext
+            );
+    }
+
+    /**
+     * Get next node from hierarchy.
+     *
+     * @param  array|null           $criteria        [description]
+     * @param  array|null           $order           [description]
+     * @param  SecurityContext|null $securityContext [description]
+     *
+     * @return RZ\Roadiz\Core\Entities\Node
+     */
+    public function getNext(
+        array $criteria = null,
+        array $order = null,
+        SecurityContext $securityContext = null
+    ) {
+        if (null === $criteria) {
+            $criteria = [];
+        }
+
+        $criteria['parent'] = $this->node->getParent();
+        $criteria['position'] = $this->node->getPosition() + 1;
+
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findOneBy(
+                $criteria,
+                $order,
+                $securityContext
+            );
+    }
 }

@@ -39,4 +39,19 @@
 		</figure>
 	{% endfor %}
 </div>
+
+{% set prev = nodeSource.handler.previous(null,null,securityContext) %}
+{% set next = nodeSource.handler.next(null,null,securityContext) %}
+{% if not node.home and (prev or next) %}
+{% spaceless %}
+<nav class="contextual-menu">
+	{% if prev %}
+		<a class="previous" href="{{ prev.handler.url }}"><i class="uk-icon-arrow-left"></i> {{ prev.title }}</a>
+	{% endif %}
+	{% if next %}
+		<a class="next" href="{{ next.handler.url }}">{{ next.title }} <i class="uk-icon-arrow-right"></i></a>
+	{% endif %}
+</nav>
+{% endspaceless %}
+{% endif %}
 {% endblock %}

@@ -29,9 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
@@ -55,7 +55,6 @@ class NodesSourcesHandler
     {
         $this->nodeSource = $nodeSource;
     }
-
 
     /**
      * @return RZ\Roadiz\Core\Entities\NodesSources
@@ -85,8 +84,8 @@ class NodesSourcesHandler
     public function cleanDocumentsFromField(NodeTypeField $field)
     {
         $nsDocuments = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
-                ->findBy(['nodeSource'=>$this->nodeSource, 'field'=>$field]);
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
+            ->findBy(['nodeSource' => $this->nodeSource, 'field' => $field]);
 
         if (count($nsDocuments) > 0) {
             foreach ($nsDocuments as $nsDoc) {
@@ -111,8 +110,8 @@ class NodesSourcesHandler
         $nsDoc = new NodesSourcesDocuments($this->nodeSource, $document, $field);
 
         $latestPosition = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
-                ->getLatestPosition($this->nodeSource, $field);
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
+            ->getLatestPosition($this->nodeSource, $field);
 
         $nsDoc->setPosition($latestPosition + 1);
 
@@ -132,8 +131,8 @@ class NodesSourcesHandler
     public function getDocumentsFromFieldName($fieldName)
     {
         return Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Document')
-                ->findByNodeSourceAndFieldName($this->nodeSource, $fieldName);
+            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->findByNodeSourceAndFieldName($this->nodeSource, $fieldName);
     }
 
     /**
@@ -148,10 +147,10 @@ class NodesSourcesHandler
 
         if ($this->nodeSource->getNode()->isHome()) {
             if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
-                return $host.'/';
+                return $host . '/';
             } else {
                 return $host .
-                        '/' . $this->nodeSource->getTranslation()->getLocale();
+                '/' . $this->nodeSource->getTranslation()->getLocale();
             }
         }
 
@@ -216,11 +215,11 @@ class NodesSourcesHandler
             $parent = $this->nodeSource->getNode()->getParent();
             if ($parent !== null) {
                 $query = Kernel::getService('em')
-                                ->createQuery('SELECT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
+                    ->createQuery('SELECT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
                                                WHERE ns.node = :node
                                                AND ns.translation = :translation')
-                                ->setParameter('node', $parent)
-                                ->setParameter('translation', $this->nodeSource->getTranslation());
+                    ->setParameter('node', $parent)
+                    ->setParameter('translation', $this->nodeSource->getTranslation());
 
                 try {
                     $this->parentNodeSource = $query->getSingleResult();
@@ -256,17 +255,17 @@ class NodesSourcesHandler
                 $criteria = array_merge(
                     $criteria,
                     [
-                        'node'=>$parent->getNode()->getParent(),
-                        'translation' => $this->nodeSource->getTranslation()
+                        'node' => $parent->getNode()->getParent(),
+                        'translation' => $this->nodeSource->getTranslation(),
                     ]
                 );
                 $currentParent = Kernel::getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                                ->findOneBy(
-                                    $criteria,
-                                    [],
-                                    $securityContext
-                                );
+                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                    ->findOneBy(
+                        $criteria,
+                        [],
+                        $securityContext
+                    );
 
                 if (null !== $currentParent) {
                     $this->parentsNodeSources[] = $currentParent;
@@ -297,14 +296,14 @@ class NodesSourcesHandler
         $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
             'node.status' => ['<=', Node::PUBLISHED],
-            'translation' => $this->nodeSource->getTranslation()
+            'translation' => $this->nodeSource->getTranslation(),
         ];
 
         if (null !== $order) {
             $defaultOrder = $order;
         } else {
             $defaultOrder = [
-                'node.position' => 'ASC'
+                'node.position' => 'ASC',
             ];
         }
 
@@ -317,14 +316,92 @@ class NodesSourcesHandler
         }
 
         return Kernel::getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                            ->findBy(
-                                $defaultCrit,
-                                $defaultOrder,
-                                null,
-                                null,
-                                $securityContext
-                            );
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->findBy(
+                $defaultCrit,
+                $defaultOrder,
+                null,
+                null,
+                $securityContext
+            );
+    }
+
+    /**
+     * Get previous node-source from hierarchy.
+     *
+     * @param  array|null           $criteria
+     * @param  array|null           $order
+     * @param  SecurityContext|null $securityContext
+     *
+     * @return RZ\Roadiz\Core\Entities\NodesSources
+     */
+    public function getPrevious(
+        array $criteria = null,
+        array $order = null,
+        SecurityContext $securityContext = null
+    ) {
+        if ($this->nodeSource->getNode()->getPosition() <= 1) {
+            return null;
+        }
+
+        if (null === $criteria) {
+            $criteria = [];
+        }
+
+        $criteria['node.parent'] = $this->nodeSource
+                                        ->getNode()
+                                        ->getParent();
+
+        $criteria['node.position'] = $this->nodeSource
+                                          ->getNode()
+                                          ->getPosition() - 1;
+
+        $criteria['translation'] = $this->nodeSource->getTranslation();
+
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->findOneBy(
+                $criteria,
+                $order,
+                $securityContext
+            );
+    }
+
+    /**
+     * Get next node-source from hierarchy.
+     *
+     * @param  array|null           $criteria
+     * @param  array|null           $order
+     * @param  SecurityContext|null $securityContext
+     *
+     * @return RZ\Roadiz\Core\Entities\NodesSources
+     */
+    public function getNext(
+        array $criteria = null,
+        array $order = null,
+        SecurityContext $securityContext = null
+    ) {
+        if (null === $criteria) {
+            $criteria = [];
+        }
+
+        $criteria['node.parent'] = $this->nodeSource
+                                        ->getNode()
+                                        ->getParent();
+
+        $criteria['node.position'] = $this->nodeSource
+                                          ->getNode()
+                                          ->getPosition() + 1;
+
+        $criteria['translation'] = $this->nodeSource->getTranslation();
+
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->findOneBy(
+                $criteria,
+                $order,
+                $securityContext
+            );
     }
 
     /**
@@ -336,7 +413,7 @@ class NodesSourcesHandler
     {
         $tags = Kernel::getService('tagApi')->getBy([
             "nodes" => $this->nodeSource->getNode(),
-            "translation" => $this->nodeSource->getTranslation()
+            "translation" => $this->nodeSource->getTranslation(),
         ]);
 
         return $tags;
