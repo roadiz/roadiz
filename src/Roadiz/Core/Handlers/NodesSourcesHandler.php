@@ -347,14 +347,26 @@ class NodesSourcesHandler
         if (null === $criteria) {
             $criteria = [];
         }
+        if (null === $order) {
+            $order = [];
+        }
 
         $criteria['node.parent'] = $this->nodeSource
                                         ->getNode()
                                         ->getParent();
 
-        $criteria['node.position'] = $this->nodeSource
-                                          ->getNode()
-                                          ->getPosition() - 1;
+        /*
+         * Use < operator to get first previous nodeSource
+         * even if it’s not the previous position index
+         */
+        $criteria['node.position'] = [
+            '<',
+            $this->nodeSource
+                 ->getNode()
+                 ->getPosition(),
+        ];
+
+        $order['node.position'] = 'DESC';
 
         $criteria['translation'] = $this->nodeSource->getTranslation();
 
@@ -385,13 +397,26 @@ class NodesSourcesHandler
             $criteria = [];
         }
 
+        if (null === $order) {
+            $order = [];
+        }
+
         $criteria['node.parent'] = $this->nodeSource
                                         ->getNode()
                                         ->getParent();
 
-        $criteria['node.position'] = $this->nodeSource
-                                          ->getNode()
-                                          ->getPosition() + 1;
+        /*
+         * Use > operator to get first next nodeSource
+         * even if it’s not the next position index
+         */
+        $criteria['node.position'] = [
+            '>',
+            $this->nodeSource
+                 ->getNode()
+                 ->getPosition(),
+        ];
+
+        $order['node.position'] = 'ASC';
 
         $criteria['translation'] = $this->nodeSource->getTranslation();
 
