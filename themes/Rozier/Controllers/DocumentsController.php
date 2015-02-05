@@ -1008,41 +1008,36 @@ class DocumentsController extends RozierApp
             if ($uploadedFile !== null &&
                 $uploadedFile->getError() == UPLOAD_ERR_OK &&
                 $uploadedFile->isValid()) {
-                try {
-                    /*
-                     * In case file already exists
-                     */
-                    if (file_exists($document->getAbsolutePath())) {
-                        $fs->remove($document->getAbsolutePath());
-                    }
+                /*
+                 * In case file already exists
+                 */
+                if (file_exists($document->getAbsolutePath())) {
+                    $fs->remove($document->getAbsolutePath());
+                }
 
-                    if (StringHandler::cleanForFilename($uploadedFile->getClientOriginalName()) == $document->getFilename()) {
-                        $finder = new \Symfony\Component\Finder\Finder();
-                        $finder->files()->in(
-                            $document->getFilesFolder() . '/'
-                            . $document->getFolder()
-                        );
+                if (StringHandler::cleanForFilename($uploadedFile->getClientOriginalName()) == $document->getFilename()) {
+                    $finder = new \Symfony\Component\Finder\Finder();
 
+                    $previousFolder = $document->getFilesFolder() . '/' . $document->getFolder();
+
+                    if (file_exists($previousFolder)) {
+                        $finder->files()->in($previousFolder);
                         // Remove Precious folder if it's empty
                         if ($finder->count() == 0) {
-                            $fs->remove(
-                                $document->getFilesFolder() . '/' . $document->getFolder()
-                            );
+                            $fs->remove($previousFolder);
                         }
-
-                        $document->setFolder(substr(hash("crc32b", date('YmdHi')), 0, 12));
                     }
 
-                    $document->setFilename($uploadedFile->getClientOriginalName());
-                    $document->setMimeType($uploadedFile->getMimeType());
-                    $this->getService('em')->flush();
-
-                    $uploadedFile->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
-
-                    return $document;
-                } catch (\Exception $e) {
-                    return false;
+                    $document->setFolder(substr(hash("crc32b", date('YmdHi')), 0, 12));
                 }
+
+                $document->setFilename($uploadedFile->getClientOriginalName());
+                $document->setMimeType($uploadedFile->getMimeType());
+                $this->getService('em')->flush();
+
+                $uploadedFile->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
+
+                return $document;
             }
         }
 
