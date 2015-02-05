@@ -628,13 +628,25 @@ class NodeHandler
         if ($this->node->getPosition() <= 1) {
             return null;
         }
+        if (null === $order) {
+            $order = [];
+        }
 
         if (null === $criteria) {
             $criteria = [];
         }
 
         $criteria['parent'] = $this->node->getParent();
-        $criteria['position'] = $this->node->getPosition() - 1;
+        /*
+         * Use < operator to get first previous nodeSource
+         * even if it’s not the previous position index
+         */
+        $criteria['position'] = [
+            '<',
+            $this->node->getPosition(),
+        ];
+
+        $order['position'] = 'DESC';
 
         return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
@@ -662,9 +674,21 @@ class NodeHandler
         if (null === $criteria) {
             $criteria = [];
         }
+        if (null === $order) {
+            $order = [];
+        }
 
         $criteria['parent'] = $this->node->getParent();
-        $criteria['position'] = $this->node->getPosition() + 1;
+
+        /*
+         * Use > operator to get first next nodeSource
+         * even if it’s not the next position index
+         */
+        $criteria['position'] = [
+            '>',
+            $this->node->getPosition(),
+        ];
+        $order['position'] = 'ASC';
 
         return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
