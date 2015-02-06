@@ -129,7 +129,7 @@ class Log extends AbstractEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="logs")
-     * @ORM\JoinColumn(name="node_source_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="node_source_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $nodeSource;
 
