@@ -90,7 +90,6 @@ class DocumentHandler
         $dir = dirname($this->document->getAbsolutePath());
 
         if (file_exists($dir)) {
-
             $finder = new Finder();
             $finder->files()->in($dir);
 

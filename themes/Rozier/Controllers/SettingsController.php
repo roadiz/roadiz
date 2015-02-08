@@ -409,7 +409,6 @@ class SettingsController extends RozierApp
                 if ($uploadedFile !== null &&
                     $uploadedFile->getError() == UPLOAD_ERR_OK &&
                     $uploadedFile->isValid()) {
-
                     $document = new Document();
                     $document->setFilename($uploadedFile->getClientOriginalName());
                     $document->setMimeType($uploadedFile->getMimeType());
