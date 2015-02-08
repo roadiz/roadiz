@@ -36,9 +36,12 @@
 			    </thead>
 				<tbody>
 					{% for setting in settings %}
-					<tr>
+					<tr class="setting-row">
 						<td><a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">{{ setting.setting.getName|trans() }}</a></td>
 						<td class="mobile-hidden">
+                            {% if setting.document %}
+                            <figure>{{ setting.document.viewer.documentByArray({height:30})|raw }}</figure>
+                            {% endif %}
 							{% form_theme setting.form 'horizontalForms.html.twig' %}
 							<form class="uk-form uk-form-settings uk-form-horizontal" action="#" method="post" {{ form_enctype(setting.form) }}>
 							    {{ form_widget(setting.form) }}

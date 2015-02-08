@@ -107,16 +107,7 @@ class RozierApp extends BackendController
             /*
              * Get admin image
              */
-            $adminImage = $this->getService('em')
-                               ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
-                               ->findOneBy([
-                                    'name' => '_admin_image_'
-                                ]);
-            if (null !== $adminImage) {
-                return $adminImage->getDocument();
-            } else {
-                return null;
-            }
+            return SettingsBag::getDocument('admin_image');
         };
 
 

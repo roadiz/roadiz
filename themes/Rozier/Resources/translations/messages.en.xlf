@@ -141,7 +141,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="12" approved="yes">
         <source>name</source>
-        <target state="translated">Nom</target>
+        <target state="translated">Name</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
           <context context-type="linenumber">284</context>
@@ -5740,6 +5740,11 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="history.for.%name%">
           <source>history.for.%name%</source>
           <target>%name% history</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="admin_image">
+          <source>admin_image</source>
+          <target>Back-office main picture or brand</target>
       </trans-unit>
     </body>
   </file>
