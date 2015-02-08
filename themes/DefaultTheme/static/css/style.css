@@ -917,9 +917,17 @@ body {
   color: #666666;
   margin: 20px auto 40px;
 }
-#main-content .content p {
+#main-content .content p,
+#main-content .content li {
   font-size: 13px;
   line-height: 22px;
+}
+#main-content .content ul {
+  padding: 0;
+}
+#main-content .content li {
+  list-style: none;
+  border-bottom: 1px solid #EFEFEF;
 }
 #main-content .pictures {
   width: 90%;
@@ -945,6 +953,11 @@ body {
 }
 #main-content .uk-thumbnail iframe {
   max-width: 100%;
+}
+#main-content .uk-thumbnail figcaption {
+  font-size: 13px;
+  line-height: 22px;
+  margin: 10px 0px;
 }
 .contextual-menu {
   display: inline-block;

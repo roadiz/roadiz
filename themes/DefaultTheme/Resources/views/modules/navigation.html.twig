@@ -29,7 +29,7 @@
     {#
      # Main navigation
      #}
-	<ul class="uk-navbar-nav uk-hidden-small">
+	<ul class="uk-navbar-nav">
 		{% for cnode in themeServices.navigation %}
 			{% set source = cnode.nodeSources.first %}
             {% set level = 0 %}
@@ -50,7 +50,6 @@
         <li class="{% if route == 'contactPage' %}uk-active{% endif %}"><a href="{{ path('contactPage') }}">{% trans %}contact{% endtrans %}</a></li>
         {% endif %}
 	</ul>
-    <a href="#my-id" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
 {% endif %}
     <div class="uk-navbar-flip">
         <ul class="uk-navbar-nav">
