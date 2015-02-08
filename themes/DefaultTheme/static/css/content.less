@@ -142,9 +142,17 @@ body {
         color: @text-grey;
         margin: 20px auto 40px;
 
-        p {
+        p, li {
             font-size: 13px;
             line-height: 22px;
+        }
+        ul {
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+            border-bottom: 1px solid #EFEFEF;
         }
     }
 
@@ -172,6 +180,12 @@ body {
 
         iframe {
             max-width: 100%;
+        }
+
+        figcaption {
+            font-size: 13px;
+            line-height: 22px;
+            margin: 10px 0px;
         }
     }
 }

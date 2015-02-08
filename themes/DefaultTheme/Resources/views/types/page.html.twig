@@ -34,7 +34,7 @@
 		<figure class="uk-thumbnail">
 			{{ document.viewer.documentByArray(themeServices.imageFormats.thumbnail)|raw }}
 			{% if imageMetas.name or imageMetas.copyright %}
-			<figcaption>{{ imageMetas.name }} — {{ imageMetas.copyright }}</figcaption>
+			<figcaption>{{ imageMetas.name }} {{ imageMetas.copyright }}</figcaption>
 			{% endif %}
 		</figure>
 	{% endfor %}

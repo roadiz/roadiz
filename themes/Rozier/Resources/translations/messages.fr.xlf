@@ -5723,6 +5723,23 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>customForm.%name%.already_exists</source>
           <target>Le formulaire personnalisé « %name% » existe déjà.</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="select.all">
+          <source>select.all</source>
+          <target>Tout sélectionner</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="deselect.all">
+          <source>deselect.all</source>
+          <target>Tout désélectionner</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user.%name%.roles">
+          <source>edit.user.%name%.roles</source>
+          <target>Rôles de %name%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="history.for.%name%">
+          <source>history.for.%name%</source>
+          <target>Historique de %name%</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>

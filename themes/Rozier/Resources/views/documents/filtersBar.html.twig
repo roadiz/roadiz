@@ -10,6 +10,8 @@
                     <input id="uk-form-filter-input-search" type="text" name="search" placeholder="{% trans %}search{% endtrans %}" value="{{ filters.search }}">
                 </div>
             </form>
+
+            <a class="uk-button uk-button-select-all uk-button-bulk-select-documents" href="#" title="{% trans %}select.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-check-square-o"></i> {% trans %}select.all{% endtrans %}</a>
         </div>
 
         {% if filters.itemCount > filters.itemPerPage %}
@@ -37,6 +39,8 @@
             </div>
 
             {% spaceless %}
+                <a class="uk-button uk-button-bulk uk-button-bulk-deselect uk-button-bulk-deselect-documents" href="#" title="{% trans %}deselect.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-square-o"></i></a>
+
                 <a class="uk-button uk-button-bulk uk-button-danger uk-button-bulk-delete uk-button-bulk-delete-documents" href="#" title="{% trans %}bulk.delete.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
 
                 <a class="uk-button uk-button-bulk uk-button-bulk-download uk-button-bulk-download-documents" href="#" title="{% trans %}bulk.download.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
@@ -48,7 +52,7 @@
                     <form class="uk-form uk-form-horizontal document-bulk-folder-form" action="#" method="post" {{ form_enctype(joinFolderForm) }}>
                         {{ form_widget(joinFolderForm) }}
                     </form>
-                </div>            
+                </div>
             {% endspaceless %}
 
         </nav>
