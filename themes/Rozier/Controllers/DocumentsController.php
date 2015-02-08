@@ -305,19 +305,13 @@ class DocumentsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-                try {
-                    foreach ($documents as $document) {
-                        $document->getHandler()->removeWithAssets();
-                        $msg = $this->getTranslator()->trans(
-                            'document.%name%.deleted',
-                            ['%name%' => $document->getFilename()]
-                        );
-                        $this->publishConfirmMessage($request, $msg);
-                    }
-
-                } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('documents.cannot_delete');
-                    $this->publishErrorMessage($request, $msg);
+                foreach ($documents as $document) {
+                    $document->getHandler()->removeWithAssets();
+                    $msg = $this->getTranslator()->trans(
+                        'document.%name%.deleted',
+                        ['%name%' => $document->getFilename()]
+                    );
+                    $this->publishConfirmMessage($request, $msg);
                 }
 
                 $response = new RedirectResponse(

@@ -89,17 +89,20 @@ class DocumentHandler
     {
         $dir = dirname($this->document->getAbsolutePath());
 
-        $finder = new Finder();
-        $finder->files()->in($dir);
+        if (file_exists($dir)) {
 
-        if (count($finder) <= 0) {
-            /*
-             * Directory is empty
-             */
-            if (rmdir($dir)) {
-                return true;
-            } else {
-                throw new \Exception("document.cannot_delete.parent_folder", 1);
+            $finder = new Finder();
+            $finder->files()->in($dir);
+
+            if (count($finder) <= 0) {
+                /*
+                 * Directory is empty
+                 */
+                if (rmdir($dir)) {
+                    return true;
+                } else {
+                    throw new \Exception("document.cannot_delete.parent_folder", 1);
+                }
             }
         }
 
