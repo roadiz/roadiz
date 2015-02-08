@@ -473,7 +473,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="38" approved="yes">
         <source>user.%user%.role.%role%.linked</source>
-        <target state="translated">User %name% has been granted to role "%role%".</target>
+        <target state="translated">User %user% has been granted to role "%role%".</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">154</context>
@@ -5723,6 +5723,23 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.already_exists">
           <source>customForm.%name%.already_exists</source>
           <target>Custom form “%name%” already exists.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="select.all">
+          <source>select.all</source>
+          <target>Select all</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="deselect.all">
+          <source>deselect.all</source>
+          <target>Deselect all</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user.%name%.roles">
+          <source>edit.user.%name%.roles</source>
+          <target>%name% roles</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="history.for.%name%">
+          <source>history.for.%name%</source>
+          <target>%name% history</target>
       </trans-unit>
     </body>
   </file>
