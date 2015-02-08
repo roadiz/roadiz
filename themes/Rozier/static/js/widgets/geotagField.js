@@ -71,7 +71,8 @@ GeotagField.prototype.bindSingleField = function(element) {
     var metaDOM = [
         '<nav class="geotag-widget-nav uk-navbar rz-geotag-meta">',
             '<ul class="uk-navbar-nav">',
-                '<li class="uk-navbar-brand"><i class="uk-icon-rz-map-marker"></i><label class="geotag-label">'+labelText+'</li>',
+                '<li class="uk-navbar-brand"><i class="uk-icon-rz-map-marker"></i>',
+                '<li class="uk-navbar-brand label">'+labelText+'</li>',
             '</ul>',
             '<div class="uk-navbar-content uk-navbar-flip">',
                 '<div class="geotag-widget-quick-creation uk-button-group">',

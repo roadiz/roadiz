@@ -15,10 +15,14 @@
 {% block documents_widget %}
     {% spaceless %}
     <div class="uk-form-row uk-margin-small-top documents-widget" data-document-widget>
-        {{- form_label(form) -}}
+        {% if label is empty -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+
         <nav class="documents-widget-nav uk-navbar">
             <ul class="uk-navbar-nav">
                 <li class="uk-navbar-brand"><i class="uk-icon-rz-documents"></i></li>
+                <li class="uk-navbar-brand label">{{ label }}</li>
             </ul>
             <div class="uk-navbar-content uk-navbar-flip">
                 <div class="documents-widget-quick-creation uk-button-group">
@@ -48,10 +52,13 @@
 {% block nodes_widget %}
     {% spaceless %}
     <div class="uk-form-row uk-margin-small-top nodes-widget" data-node-widget>
-        {{- form_label(form) -}}
+        {% if label is empty -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
         <nav class="nodes-widget-nav uk-navbar">
             <ul class="uk-navbar-nav">
                 <li class="uk-navbar-brand"><i class="uk-icon-rz-global-nodes"></i></li>
+                <li class="uk-navbar-brand label">{{ label }}</li>
             </ul>
             <div class="uk-navbar-content uk-navbar-flip">
                 <div class="nodes-widget-quick-creation uk-button-group">
@@ -79,10 +86,13 @@
 {% block custom_forms_widget %}
     {% spaceless %}
     <div class="uk-form-row uk-margin-small-top custom-forms-widget" data-custom-form-widget>
-        {{- form_label(form) -}}
+        {% if label is empty -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
         <nav class="custom-forms-widget-nav uk-navbar">
             <ul class="uk-navbar-nav">
                 <li class="uk-navbar-brand"><i class="uk-icon-rz-surveys-big"></i></li>
+                <li class="uk-navbar-brand label">{{ label }}</li>
             </ul>
             <div class="uk-navbar-content uk-navbar-flip">
                 <div class="custom-forms-widget-quick-creation uk-button-group">
@@ -149,10 +159,13 @@
 {% block childrennodes_widget %}
     {% spaceless %}
     <div class="uk-form-row uk-margin-small-top children-nodes-widget" data-children-nodes-widget>
-        {{- form_label(form) -}}
+        {% if label is empty -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
         <nav class="children-nodes-nav uk-navbar">
             <ul class="uk-navbar-nav">
                 <li class="uk-navbar-brand"><i class="uk-icon-rz-node-tree"></i></li>
+                <li class="uk-navbar-brand label">{{ label }}</li>
             </ul>
             <div class="uk-navbar-content uk-navbar-flip">
                 <div class="children-nodes-quick-creation uk-button-group">

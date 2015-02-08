@@ -87,19 +87,19 @@ class RozierApp extends BackendController
             return min(intval(ini_get('post_max_size')), intval(ini_get('upload_max_filesize')));
         };
 
-        $this->themeContainer['grunt'] = function ($c){
+        $this->themeContainer['grunt'] = function ($c) {
             return include(dirname(__FILE__).'/static/public/config/assets.config.php');
         };
 
-        $this->themeContainer['grunt'] = function ($c){
+        $this->themeContainer['grunt'] = function ($c) {
             return include(dirname(__FILE__).'/static/public/config/assets.config.php');
         };
 
-        $this->themeContainer['settingGroups'] = function ($c){
+        $this->themeContainer['settingGroups'] = function ($c) {
             return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                                           ->findBy(
-                                            ['inMenu' => true],
-                                            ['name'=>'ASC']
+                                              ['inMenu' => true],
+                                              ['name'=>'ASC']
                                           );
         };
 
@@ -107,16 +107,7 @@ class RozierApp extends BackendController
             /*
              * Get admin image
              */
-            $adminImage = $this->getService('em')
-                               ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
-                               ->findOneBy([
-                                    'name' => '_admin_image_'
-                                ]);
-            if (null !== $adminImage) {
-                return $adminImage->getDocument();
-            } else {
-                return null;
-            }
+            return SettingsBag::getDocument('admin_image');
         };
 
 

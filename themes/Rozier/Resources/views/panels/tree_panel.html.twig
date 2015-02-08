@@ -1,9 +1,25 @@
+{% set tabCount = 0 %}
+
+{% if securityContext.isGranted('ROLE_ACCESS_NODES')%}
+{% set tabCount = tabCount + 1 %}
+{% endif %}
+
+{% if securityContext.isGranted('ROLE_ACCESS_TAGS')%}
+{% set tabCount = tabCount + 1 %}
+{% endif %}
+
+{% if securityContext.isGranted('ROLE_ACCESS_DOCUMENTS')%}
+{% set tabCount = tabCount + 1 %}
+{% endif %}
+
 <div>
     <div id="search-button" class="mobile-button"><i class="uk-icon-search"></i></div>
     {% include 'widgets/nodesSourcesSearch.html.twig' %}
     <div id="tree-button" class="mobile-button"><i class="uk-icon-rz-node-tree"></i></div>
     <div id="tree-wrapper">
-         <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
+        {# Only display tabs if there are more than 1 available tree #}
+        {% if tabCount > 1 %}
+        <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
             {% if securityContext.isGranted('ROLE_ACCESS_NODES')%}
             <li class="tabs uk-active"><a class="tab-link" href="#"><i class="uk-icon-rz-node-tree"></i><span class="label">{% trans %}nodes{% endtrans %}</span></a></li>
             {% endif %}
@@ -14,6 +30,7 @@
             <li class="tabs"><a class="tab-link" href="#"><i class="uk-icon-rz-folder-tree"></i><span class="label">{% trans %}folders{% endtrans %}</span></a></li>
             {% endif %}
         </ul>
+        {% endif %}
         <!-- This is the container of the content items -->
         <ul id="tree-container" class="uk-switcher uk-margin">
             {% if securityContext.isGranted('ROLE_ACCESS_NODES')%}

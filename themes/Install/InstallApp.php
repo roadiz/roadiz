@@ -577,7 +577,7 @@ class InstallApp extends AppController
     protected function buildInformationsForm(Request $request)
     {
         $siteName = \RZ\Roadiz\Core\Bags\SettingsBag::get('site_name');
-        $metaDescription = \RZ\Roadiz\Core\Bags\SettingsBag::get('meta_description');
+        $metaDescription = \RZ\Roadiz\Core\Bags\SettingsBag::get('seo_description');
         $emailSender = \RZ\Roadiz\Core\Bags\SettingsBag::get('email_sender');
         $emailSenderName = \RZ\Roadiz\Core\Bags\SettingsBag::get('email_sender_name');
         $timeZone = $this->getService('config')['timezone'];
@@ -587,7 +587,7 @@ class InstallApp extends AppController
 
         $defaults = [
             'site_name' => $siteName != '' ? $siteName : "My website",
-            'meta_description' => $metaDescription != '' ? $metaDescription : "My website is beautiful!",
+            'seo_description' => $metaDescription != '' ? $metaDescription : "My website is beautiful!",
             'email_sender' => $emailSender != '' ? $emailSender : "",
             'email_sender_name' => $emailSenderName != '' ? $emailSenderName : "",
             'install_frontend' => true,
@@ -616,7 +616,7 @@ class InstallApp extends AppController
                     new NotBlank()
                 ]
             ])
-            ->add('meta_description', 'text', [
+            ->add('seo_description', 'text', [
                 'required' => false,
                 'label' => $this->getTranslator()->trans('meta_description'),
             ])

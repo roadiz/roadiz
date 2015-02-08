@@ -31,8 +31,10 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Themes\Rozier\RozierApp;
 
@@ -161,10 +163,19 @@ class SettingsController extends RozierApp
 
                 return $response;
             }
+
+            $document = null;
+            if ($setting->getType() == NodeTypeField::DOCUMENTS_T) {
+                $document = SettingsBag::getDocument($setting->getName());
+            }
+
+
             $this->assignation['settings'][] = [
                 'setting' => $setting,
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'document' => $document
             ];
+
         }
 
         return null;
@@ -348,7 +359,9 @@ class SettingsController extends RozierApp
             }
             try {
                 foreach ($data as $key => $value) {
-                    if ($key != 'settingGroup') {
+                    if ($key == 'value') {
+                        $this->setSettingValue($value, $setting);
+                    } elseif ($key != 'settingGroup') {
                         $setter = 'set'.ucwords($key);
                         $setting->$setter( $value );
                     } else {
@@ -374,6 +387,46 @@ class SettingsController extends RozierApp
     }
 
     /**
+     * Set setting value according to its type.
+     *
+     * @param string  $value
+     * @param Setting $setting
+     */
+    protected function setSettingValue($value, Setting $setting)
+    {
+        switch ($setting->getType()) {
+
+            case NodeTypeField::DOCUMENTS_T:
+
+                $uploadedFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
+                    $value['tmp_name'],
+                    $value['name'],
+                    $value['type'],
+                    $value['size'],
+                    $value['error']
+                );
+
+                if ($uploadedFile !== null &&
+                    $uploadedFile->getError() == UPLOAD_ERR_OK &&
+                    $uploadedFile->isValid()) {
+                    $document = new Document();
+                    $document->setFilename($uploadedFile->getClientOriginalName());
+                    $document->setMimeType($uploadedFile->getMimeType());
+                    $this->getService('em')->persist($document);
+                    $this->getService('em')->flush();
+
+                    $uploadedFile->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
+
+                    $setting->setValue($document->getId());
+                }
+                break;
+            default:
+                $setting->setValue($value);
+                break;
+        }
+    }
+
+    /**
      * @param array                          $data
      * @param RZ\Roadiz\Core\Entities\Setting $setting
      *
@@ -389,9 +442,11 @@ class SettingsController extends RozierApp
 
         try {
             foreach ($data as $key => $value) {
-                if ($key != 'settingGroup') {
+                if ($key == 'value') {
+                    $this->setSettingValue($value, $setting);
+                } elseif ($key != 'settingGroup') {
                     $setter = 'set'.ucwords($key);
-                    $setting->$setter( $value );
+                    $setting->$setter($value);
                 } else {
                     $group = $this->getService('em')
                              ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $value);
@@ -435,6 +490,7 @@ class SettingsController extends RozierApp
             'visible' => $setting->isVisible(),
             'type' =>    $setting->getType()
         ];
+
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('name', 'text', [
@@ -454,7 +510,7 @@ class SettingsController extends RozierApp
             ->add('type', 'choice', [
                 'label' => $this->getTranslator()->trans('type'),
                 'required' => true,
-                'choices' => NodeTypeField::$typeToHuman
+                'choices' => Setting::$typeToHuman
             ])
             ->add(
                 'settingGroup',
@@ -483,6 +539,10 @@ class SettingsController extends RozierApp
             'type' =>    $setting->getType()
         ];
 
+        if ($setting->getType() == NodeTypeField::DOCUMENTS_T) {
+            $defaults['value'] = null;
+        }
+
         if (null !== $setting->getSettingGroup()) {
             $defaults['settingGroup'] = $setting->getSettingGroup()->getId();
         }
@@ -507,7 +567,7 @@ class SettingsController extends RozierApp
             )
             ->add(
                 'value',
-                NodeTypeField::$typeToForm[$setting->getType()],
+                Setting::$typeToForm[$setting->getType()],
                 static::getFormOptionsForSetting($setting, $this->getTranslator())
             )
             ->add(
@@ -524,7 +584,7 @@ class SettingsController extends RozierApp
                 [
                     'label' => $this->getTranslator()->trans('type'),
                     'required' => true,
-                    'choices' => NodeTypeField::$typeToHuman
+                    'choices' => Setting::$typeToHuman
                 ]
             )
             ->add(
@@ -549,6 +609,10 @@ class SettingsController extends RozierApp
             'id' =>      $setting->getId(),
             'value' =>   $setting->getValue()
         ];
+
+        if ($setting->getType() == NodeTypeField::DOCUMENTS_T) {
+            $defaults['value'] = null;
+        }
         $builder = $this->getService('formFactory')
             ->createBuilder('form', $defaults)
             ->add('id', 'hidden', [
@@ -557,7 +621,7 @@ class SettingsController extends RozierApp
             ])
             ->add(
                 'value',
-                NodeTypeField::$typeToForm[$setting->getType()],
+                Setting::$typeToForm[$setting->getType()],
                 static::getFormOptionsForSetting($setting, $this->getTranslator(), true)
             );
 

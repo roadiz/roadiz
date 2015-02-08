@@ -236,8 +236,8 @@ class Fixtures
         $set2->setValue($data['email_sender_name']);
         $set2->setType(NodeTypeField::STRING_T);
 
-        $set2 = $this->getSetting('meta_description');
-        $set2->setValue($data['meta_description']);
+        $set2 = $this->getSetting('seo_description');
+        $set2->setValue($data['seo_description']);
         $set2->setType(NodeTypeField::TEXT_T);
 
         $set2 = $this->getSetting('display_debug_panel');

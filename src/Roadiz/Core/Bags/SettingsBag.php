@@ -66,4 +66,31 @@ class SettingsBag
 
         return isset(static::$settings[$settingName]) ? static::$settings[$settingName] : false;
     }
+
+    /**
+     * Get a document from its setting name.
+     *
+     * @param string $settingName
+     *
+     * @return RZ\Roadiz\Core\Entities\Document|null
+     */
+    public static function getDocument($settingName)
+    {
+        if (!isset(static::$settings[$settingName]) &&
+            Kernel::getService('em') !== null) {
+            try {
+                $id = Kernel::getService('em')
+                            ->getRepository('RZ\Roadiz\Core\Entities\Setting')
+                            ->getValue($settingName);
+
+                static::$settings[$settingName] = Kernel::getService('em')
+                            ->find('RZ\Roadiz\Core\Entities\Document', (int) $id);
+
+            } catch (\Exception $e) {
+                return false;
+            }
+        }
+
+        return isset(static::$settings[$settingName]) ? static::$settings[$settingName] : false;
+    }
 }

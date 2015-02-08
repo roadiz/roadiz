@@ -5740,6 +5740,11 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>history.for.%name%</source>
           <target>Historique de %name%</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="admin_image">
+          <source>admin_image</source>
+          <target>Image/Logo de l’administration</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>

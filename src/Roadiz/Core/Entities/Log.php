@@ -64,7 +64,7 @@ class Log extends AbstractEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="SET NULL")
      */
     protected $user = null;
 
