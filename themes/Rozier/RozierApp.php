@@ -53,6 +53,7 @@ class RozierApp extends BackendController
     protected static $themeDir =       'Rozier';
 
     protected $formFactory = null;
+    protected $themeContainer = null;
 
     /**
      * @return array $assignation
@@ -61,38 +62,63 @@ class RozierApp extends BackendController
     {
         parent::prepareBaseAssignation();
 
-        if (!$this->getKernel()->getRequest()->isXmlHttpRequest()) {
-            $this->assignation['nodeTree'] = new NodeTreeWidget($this->getKernel()->getRequest(), $this);
-            $this->assignation['tagTree'] = new TagTreeWidget($this->getKernel()->getRequest(), $this);
-            $this->assignation['folderTree'] = new FolderTreeWidget($this->getKernel()->getRequest(), $this);
-            $this->assignation['backofficeEntries'] = $this->getService('backoffice.entries');
-            $this->assignation['maxFilesize'] = min(intval(ini_get('post_max_size')), intval(ini_get('upload_max_filesize')));
-        }
+        /*
+         * Use kernel DI container to delay API requuests
+         */
+        $this->themeContainer = $this->getService();
+        $this->assignation['themeServices'] = $this->themeContainer;
 
         //Settings
         $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' backstage';
         $this->assignation['head']['mapsStyle'] = SettingsBag::get('maps_style');
-
         $this->assignation['head']['mainColor'] = SettingsBag::get('main_color');
         $this->assignation['head']['googleClientId'] = SettingsBag::get('google_client_id') ? SettingsBag::get('google_client_id') : "";
 
-        $this->assignation['head']['grunt'] = include(dirname(__FILE__).'/static/public/config/assets.config.php');
+        $this->themeContainer['nodeTree'] = function ($c) {
+            return new NodeTreeWidget($this->getKernel()->getRequest(), $this);
+        };
+        $this->themeContainer['tagTree'] = function ($c) {
+            return new TagTreeWidget($this->getKernel()->getRequest(), $this);
+        };
+        $this->themeContainer['folderTree'] = function ($c) {
+            return new FolderTreeWidget($this->getKernel()->getRequest(), $this);
+        };
+        $this->themeContainer['maxFilesize'] = function ($c) {
+            return min(intval(ini_get('post_max_size')), intval(ini_get('upload_max_filesize')));
+        };
 
-        $this->assignation['settingGroups'] = $this->getService('em')
-                                                   ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-                                                   ->findBy(['inMenu' => true], ['name'=>'ASC']);
+        $this->themeContainer['grunt'] = function ($c){
+            return include(dirname(__FILE__).'/static/public/config/assets.config.php');
+        };
 
-        /*
-         * Get admin image
-         */
-        $adminImage = $this->getService('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
-                           ->findOneBy([
-                                'name' => '_admin_image_'
-                            ]);
-        if (null !== $adminImage) {
-            $this->assignation['adminImage'] = $adminImage->getDocument();
-        }
+        $this->themeContainer['grunt'] = function ($c){
+            return include(dirname(__FILE__).'/static/public/config/assets.config.php');
+        };
+
+        $this->themeContainer['settingGroups'] = function ($c){
+            return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+                                          ->findBy(
+                                            ['inMenu' => true],
+                                            ['name'=>'ASC']
+                                          );
+        };
+
+        $this->themeContainer['adminImage'] = function ($c) {
+            /*
+             * Get admin image
+             */
+            $adminImage = $this->getService('em')
+                               ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
+                               ->findOneBy([
+                                    'name' => '_admin_image_'
+                                ]);
+            if (null !== $adminImage) {
+                return $adminImage->getDocument();
+            } else {
+                return null;
+            }
+        };
+
 
         $this->assignation['nodeStatuses'] = [
             'draft' => Node::DRAFT,
@@ -126,7 +152,6 @@ class RozierApp extends BackendController
      */
     public function cssAction(Request $request)
     {
-
         $this->assignation['mainColor'] = SettingsBag::get('main_color');
 
         return new Response(

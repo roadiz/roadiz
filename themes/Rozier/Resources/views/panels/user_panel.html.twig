@@ -8,8 +8,8 @@
     </div>
 
     <div id="company">
-        {% if adminImage %}
-            <a class="admin-image" href="{{ path('adminHomePage') }}">{{ adminImage.viewer.getDocumentByArray({width:70, crop:'1:1'})|raw }}</a>
+        {% if themeServices.adminImage %}
+            <a class="admin-image" href="{{ path('adminHomePage') }}">{{ themeServices.adminImage.viewer.getDocumentByArray({width:70, crop:'1:1'})|raw }}</a>
         {% else %}
             <a class="uk-icon-rz-roadiz-icon" href="{{ path('adminHomePage') }}"></a>
         {% endif %}
