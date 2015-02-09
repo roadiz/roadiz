@@ -55,7 +55,7 @@ class NodesTreesController extends RozierApp
      */
     public function treeAction(Request $request, $nodeId, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
 
         $node = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);

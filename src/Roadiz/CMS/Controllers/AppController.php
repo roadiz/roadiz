@@ -607,4 +607,30 @@ class AppController implements ViewableInterface
             throw new AccessDeniedException("You don't have access to this page:" . $role);
         }
     }
+    public function validateNodeAccessForRole($role, $nodeId, $includeChroot = false)
+    {
+        $node = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+
+        $this->getService('em')->refresh($node);
+
+        $user = $this->getService("securityContext")->getToken()->getUser();
+
+        $parents = $node->getHandler()->getParents();
+
+        if ($includeChroot) {
+            $parents[] = $node;
+        }
+
+        $isNewsletterFriend = $node->getHandler()->isRelatedToNewsletter();
+
+        if (!((!$isNewsletterFriend
+                && $this->getService('securityContext')->isGranted($role)
+                && ($user->getChroot() == null
+                    || in_array($user->getChroot(), $parents, true)))
+            || ($isNewsletterFriend
+                && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NEWSLETTERS')))) {
+            throw new AccessDeniedException("You don't have access to this page");
+        }
+    }
 }

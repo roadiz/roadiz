@@ -70,25 +70,7 @@ class NodesSourcesController extends RozierApp
     {
         //$this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        $node = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
-
-        $this->getService('em')->refresh($node);
-
-        $user = $this->getService("securityContext")->getToken()->getUser();
-
-        $parents = $node->getHandler()->getParents();
-
-        $isNewsletterFriend = $node->getHandler()->isRelatedToNewsletter();
-
-        if (!((!$isNewsletterFriend
-                && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES')
-                && ($user->getChroot() == null
-                    || in_array($user->getChroot(), $parents, true)))
-            || ($isNewsletterFriend
-                && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NEWSLETTERS')))) {
-            throw new AccessDeniedException("You don't have access to this page");
-        }
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
         $translation = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
@@ -165,6 +147,10 @@ class NodesSourcesController extends RozierApp
     */
     public function removeAction(Request $request, $nodeSourceId)
     {
+        $ns = $this->getService("em")->find("RZ\Roadiz\Core\Entities\NodesSources", $nodeSourceId);
+
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
+
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('nodeId', 'hidden', [
@@ -177,8 +163,6 @@ class NodesSourcesController extends RozierApp
         $form = $builder->getForm();
 
         $form->handleRequest();
-
-        $ns = $this->getService("em")->find("RZ\Roadiz\Core\Entities\NodesSources", $nodeSourceId);
 
         if ($form->isValid()) {
             $node = $ns->getNode();
