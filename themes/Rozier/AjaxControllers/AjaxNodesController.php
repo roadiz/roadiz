@@ -226,6 +226,16 @@ class AjaxNodesController extends AbstractAjaxController
                             if ($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_STATUS') ||
                                 $request->get('statusName') != 'status') {
                                 $node->$setter($value);
+
+                                /*
+                                 * If set locked to true,
+                                 * need to disable dynamic nodeName
+                                 */
+                                if ($request->get('statusName') == 'locked' &&
+                                    $value == true) {
+                                    $node->setDynamicNodeName(false);
+                                }
+
                                 $this->em()->flush();
 
                                 // Update Solr Search engine if setup
