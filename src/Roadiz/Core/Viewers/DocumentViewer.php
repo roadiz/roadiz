@@ -195,7 +195,7 @@ class DocumentViewer implements ViewableInterface
      * @param array|null $args
      *
      * @return string
-     * @see RZ\Roadiz\Core\Utils\AbstractEmbedFinder::getIFrame
+     * @see RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder::getIFrame
      */
     public function getEmbedByArray($args = null)
     {

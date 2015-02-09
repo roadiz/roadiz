@@ -1,6 +1,6 @@
 <?php
 
-namespace RZ\Roadiz\Core\Utils;
+namespace RZ\Roadiz\Utils;
 
 /**
  * Inline Markdown Parser Class.

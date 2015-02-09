@@ -30,22 +30,19 @@
 
 namespace Themes\Rozier\Controllers;
 
-use Themes\Rozier\RozierApp;
+use RZ\Roadiz\CMS\Forms\CompareDatetimeType;
+use RZ\Roadiz\CMS\Forms\NodeStatesType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use RZ\Roadiz\Core\Utils\XlsxExporter;
-
-use RZ\Roadiz\CMS\Forms\NodeStatesType;
-use RZ\Roadiz\CMS\Forms\CompareDatetimeType;
-
+use RZ\Roadiz\Utils\XlsxExporter;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-
 use Symfony\Component\Validator\Constraints\GreaterThan;
+use Themes\Rozier\RozierApp;
 
 class SearchController extends RozierApp
 {
@@ -64,38 +61,38 @@ class SearchController extends RozierApp
 
     public function processCriteria($data, $prefix = "")
     {
-        if (!empty($data[$prefix."nodeName"])) {
-            $data[$prefix."nodeName"] = ["LIKE", "%" . $data[$prefix."nodeName"] . "%"];
+        if (!empty($data[$prefix . "nodeName"])) {
+            $data[$prefix . "nodeName"] = ["LIKE", "%" . $data[$prefix . "nodeName"] . "%"];
         }
 
-        if (isset($data[$prefix.'parent']) && !$this->isBlank($data[$prefix."parent"])) {
-            if ($data[$prefix."parent"] == "null" || $data[$prefix."parent"] == 0) {
-                $data[$prefix."parent"] = null;
+        if (isset($data[$prefix . 'parent']) && !$this->isBlank($data[$prefix . "parent"])) {
+            if ($data[$prefix . "parent"] == "null" || $data[$prefix . "parent"] == 0) {
+                $data[$prefix . "parent"] = null;
             }
         }
 
-        if (isset($data[$prefix.'visible'])) {
-            $data[$prefix.'visible'] = (bool) $data[$prefix.'visible'];
+        if (isset($data[$prefix . 'visible'])) {
+            $data[$prefix . 'visible'] = (bool) $data[$prefix . 'visible'];
         }
 
-        if (isset($data[$prefix.'createdAt'])) {
-            $data[$prefix."createdAt"] = [
-                $data[$prefix.'createdAt']['compareOp'],
-                $data[$prefix.'createdAt']['compareDatetime']
+        if (isset($data[$prefix . 'createdAt'])) {
+            $data[$prefix . "createdAt"] = [
+                $data[$prefix . 'createdAt']['compareOp'],
+                $data[$prefix . 'createdAt']['compareDatetime'],
             ];
         }
 
-        if (isset($data[$prefix.'updatedAt'])) {
-            $data[$prefix."updatedAt"] = [
-                $data[$prefix.'updatedAt']['compareOp'],
-                $data[$prefix.'updatedAt']['compareDatetime']
+        if (isset($data[$prefix . 'updatedAt'])) {
+            $data[$prefix . "updatedAt"] = [
+                $data[$prefix . 'updatedAt']['compareOp'],
+                $data[$prefix . 'updatedAt']['compareDatetime'],
             ];
         }
 
-        if (isset($data[$prefix."limitResult"])) {
+        if (isset($data[$prefix . "limitResult"])) {
             $this->pagination = false;
-            $this->itemPerPage = $data[$prefix."limitResult"];
-            unset($data[$prefix."limitResult"]);
+            $this->itemPerPage = $data[$prefix . "limitResult"];
+            unset($data[$prefix . "limitResult"]);
         }
 
         /*
@@ -133,7 +130,7 @@ class SearchController extends RozierApp
                     if ($field->getType() == NodeTypeField::DATETIME_T) {
                         $data[$key] = [
                             $data[$key]['compareOp'],
-                            $data[$key]['compareDatetime']
+                            $data[$key]['compareDatetime'],
                         ];
                     }
                 }
@@ -147,7 +144,7 @@ class SearchController extends RozierApp
 
         $form = $this->buildSimpleForm("")->add("searchANode", "submit", [
             "label" => $this->getTranslator()->trans("search.a.node"),
-            "attr" => ["class" => "uk-button uk-button-primary"]
+            "attr" => ["class" => "uk-button uk-button-primary"],
         ])->getForm();
         $form->handleRequest();
 
@@ -208,11 +205,11 @@ class SearchController extends RozierApp
         $builder = $this->extendForm($builder, $nodetype);
         $builder->add("searchANode", "submit", [
             "label" => $this->getTranslator()->trans("search.a.node"),
-            "attr" => ["class" => "uk-button uk-button-primary"]
+            "attr" => ["class" => "uk-button uk-button-primary"],
         ]);
         $builder->add("exportNodesSources", "submit", [
             "label" => $this->getTranslator()->trans("export.all.nodesSource"),
-            "attr" => ["class" => "uk-button rz-no-ajax"]
+            "attr" => ["class" => "uk-button rz-no-ajax"],
         ]);
         $form = $builder->getForm();
         $form->handleRequest();
@@ -247,7 +244,7 @@ class SearchController extends RozierApp
             $listManager = new EntityListManager(
                 $request,
                 $this->getService('em'),
-                NodeType::getGeneratedEntitiesNamespace().'\\'.$nodetype->getSourceEntityClassName(),
+                NodeType::getGeneratedEntitiesNamespace() . '\\' . $nodetype->getSourceEntityClassName(),
                 $data
             );
             if ($this->pagination === false) {
@@ -276,7 +273,7 @@ class SearchController extends RozierApp
                 foreach ($listManager->getEntities() as $idx => $nodesSource) {
                     $array = [];
                     foreach ($keys as $key) {
-                        $getter = 'get'.str_replace('_', '', ucwords($key));
+                        $getter = 'get' . str_replace('_', '', ucwords($key));
                         $tmp = $nodesSource->$getter();
                         if (is_array($tmp)) {
                             $tmp = implode(',', $tmp);
@@ -307,8 +304,6 @@ class SearchController extends RozierApp
             }
         }
 
-
-
         $this->assignation['form'] = $form->createView();
         $this->assignation['nodeTypeForm'] = $nodeTypeForm->createView();
 
@@ -336,18 +331,18 @@ class SearchController extends RozierApp
                                     ["method" => "get"]
                                 );
         $builderNodeType->add(
-            "nodetype",
-            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-            [
-                  'empty_value' => "",
-                  'required' => false,
-                  'data' => $nodetypeId
-            ]
-        )
-        ->add("nodetypeSubmit", "submit", [
-            "label" => $this->getTranslator()->trans("select.nodetype"),
-            "attr" => ["class" => "uk-button uk-button-primary"]
-        ]);
+                            "nodetype",
+                            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+                            [
+                                'empty_value' => "",
+                                'required' => false,
+                                'data' => $nodetypeId,
+                            ]
+                        )
+                        ->add("nodetypeSubmit", "submit", [
+                            "label" => $this->getTranslator()->trans("select.nodetype"),
+                            "attr" => ["class" => "uk-button uk-button-primary"],
+                        ]);
 
         return $builderNodeType;
     }
@@ -364,7 +359,7 @@ class SearchController extends RozierApp
                     $this->getService('urlGenerator')->generate(
                         'searchNodeSourcePage',
                         [
-                            "nodetypeId" => $nodeTypeForm->getData()['nodetype']
+                            "nodetypeId" => $nodeTypeForm->getData()['nodetype'],
                         ]
                     )
                 );
@@ -379,80 +374,79 @@ class SearchController extends RozierApp
     public function buildSimpleForm($prefix)
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder(
-                'form',
-                [],
-                ["method" => "get"]
-            )
-            ->add($prefix.'status', new NodeStatesType(), [
-                'label' => $this->getTranslator()->trans('node.status'),
-                'required' => false
-            ])
-            ->add($prefix.'visible', 'choice', [
-                'label' => $this->getTranslator()->trans('visible'),
-                'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
-                'empty_value' => $this->getTranslator()->trans('ignore'),
-                'required' => false,
-                'expanded' => true
-            ])
-            ->add($prefix.'locked', 'choice', [
-                'label' => $this->getTranslator()->trans('locked'),
-                'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
-                'empty_value' => $this->getTranslator()->trans('ignore'),
-                'required' => false,
-                'expanded' => true
-            ])
-            ->add($prefix.'sterile', 'choice', [
-                'label' => $this->getTranslator()->trans('sterile-status'),
-                'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
-                'empty_value' => $this->getTranslator()->trans('ignore'),
-                'required' => false,
-                'expanded' => true
-            ])
-            ->add($prefix.'hideChildren', 'choice', [
-                'label' => $this->getTranslator()->trans('hiding-children'),
-                'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
-                'empty_value' => $this->getTranslator()->trans('ignore'),
-                'required' => false,
-                'expanded' => true
-            ])
-            ->add($prefix.'nodeName', 'text', [
-                'label' => $this->getTranslator()->trans('nodeName'),
-                'required' => false
-            ])
-            ->add($prefix.'parent', 'text', [
-                'label' => $this->getTranslator()->trans('node.id.parent'),
-                'required' => false
-            ])
-            ->add($prefix."createdAt", new CompareDatetimeType($this->getTranslator()), [
-                'label' => $this->getTranslator()->trans('created.at'),
-                'virtual' => false,
-                'required' => false
-            ])
-            ->add($prefix."updatedAt", new CompareDatetimeType($this->getTranslator()), [
-                'label' => $this->getTranslator()->trans('updated.at'),
-                'virtual' => false,
-                'required' => false
-            ])
-            ->add($prefix."limitResult", "number", [
-                'label' => $this->getTranslator()->trans('node.limit.result'),
-                'required' => false,
-                'constraints' => [
-                           new GreaterThan(0)
-                       ],
-            ])
-            // No need to prefix tags
-            ->add('tags', 'text', [
-                'label' => $this->getTranslator()->trans('node.tags'),
-                'required' => false,
-                'attr' => ["class" => "rz-tag-autocomplete"]
-            ])
-            // No need to prefix tags
-            ->add('tagExclusive', 'checkbox', [
-                'label' => $this->getTranslator()->trans('node.tag.exclusive'),
-                'required' => false
-            ]);
-
+                        ->createBuilder(
+                            'form',
+                            [],
+                            ["method" => "get"]
+                        )
+                        ->add($prefix . 'status', new NodeStatesType(), [
+                            'label' => $this->getTranslator()->trans('node.status'),
+                            'required' => false,
+                        ])
+                        ->add($prefix . 'visible', 'choice', [
+                            'label' => $this->getTranslator()->trans('visible'),
+                            'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
+                            'empty_value' => $this->getTranslator()->trans('ignore'),
+                            'required' => false,
+                            'expanded' => true,
+                        ])
+                        ->add($prefix . 'locked', 'choice', [
+                            'label' => $this->getTranslator()->trans('locked'),
+                            'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
+                            'empty_value' => $this->getTranslator()->trans('ignore'),
+                            'required' => false,
+                            'expanded' => true,
+                        ])
+                        ->add($prefix . 'sterile', 'choice', [
+                            'label' => $this->getTranslator()->trans('sterile-status'),
+                            'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
+                            'empty_value' => $this->getTranslator()->trans('ignore'),
+                            'required' => false,
+                            'expanded' => true,
+                        ])
+                        ->add($prefix . 'hideChildren', 'choice', [
+                            'label' => $this->getTranslator()->trans('hiding-children'),
+                            'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
+                            'empty_value' => $this->getTranslator()->trans('ignore'),
+                            'required' => false,
+                            'expanded' => true,
+                        ])
+                        ->add($prefix . 'nodeName', 'text', [
+                            'label' => $this->getTranslator()->trans('nodeName'),
+                            'required' => false,
+                        ])
+                        ->add($prefix . 'parent', 'text', [
+                            'label' => $this->getTranslator()->trans('node.id.parent'),
+                            'required' => false,
+                        ])
+                        ->add($prefix . "createdAt", new CompareDatetimeType($this->getTranslator()), [
+                            'label' => $this->getTranslator()->trans('created.at'),
+                            'virtual' => false,
+                            'required' => false,
+                        ])
+                        ->add($prefix . "updatedAt", new CompareDatetimeType($this->getTranslator()), [
+                            'label' => $this->getTranslator()->trans('updated.at'),
+                            'virtual' => false,
+                            'required' => false,
+                        ])
+                        ->add($prefix . "limitResult", "number", [
+                            'label' => $this->getTranslator()->trans('node.limit.result'),
+                            'required' => false,
+                            'constraints' => [
+                                new GreaterThan(0),
+                            ],
+                        ])
+                        // No need to prefix tags
+                        ->add('tags', 'text', [
+                            'label' => $this->getTranslator()->trans('node.tags'),
+                            'required' => false,
+                            'attr' => ["class" => "rz-tag-autocomplete"],
+                        ])
+                        // No need to prefix tags
+                        ->add('tagExclusive', 'checkbox', [
+                            'label' => $this->getTranslator()->trans('node.tag.exclusive'),
+                            'required' => false,
+                        ]);
 
         return $builder;
     }
@@ -466,7 +460,7 @@ class SearchController extends RozierApp
             new \RZ\Roadiz\CMS\Forms\SeparatorType(),
             [
                 'label' => $this->getTranslator()->trans('nodetypefield'),
-                'attr' => ["class" => "label-separator"]
+                'attr' => ["class" => "label-separator"],
             ]
         );
 

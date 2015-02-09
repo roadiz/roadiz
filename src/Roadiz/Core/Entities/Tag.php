@@ -29,11 +29,11 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\Handlers\TagHandler;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
+use RZ\Roadiz\Core\Handlers\TagHandler;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * Tags are hierarchical entities used
@@ -217,9 +217,9 @@ class Tag extends AbstractDateTimedPositioned
      */
     public function __construct()
     {
-        $this->nodes =          new ArrayCollection();
+        $this->nodes = new ArrayCollection();
         $this->translatedTags = new ArrayCollection();
-        $this->children =       new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -227,8 +227,8 @@ class Tag extends AbstractDateTimedPositioned
      */
     public function getOneLineSummary()
     {
-        return $this->getId()." — ".$this->getName()." — ".$this->getNodeType()->getName().
-            " — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
+        return $this->getId() . " — " . $this->getName() . " — " . $this->getNodeType()->getName() .
+        " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
     }
 
     /**

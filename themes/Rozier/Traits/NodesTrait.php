@@ -37,7 +37,7 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Utils\StringHandler;
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 trait NodesTrait

@@ -24,24 +24,24 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file VimeoEmbedFinder.php
+ * @file YoutubeEmbedFinder.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Utils;
+namespace RZ\Roadiz\Utils\MediaFinders;
 
 /**
- * Vimeo tools class.
+ * Youtube tools class.
  *
  * Manage a youtube video feed
  */
-class VimeoEmbedFinder extends AbstractEmbedFinder
+class YoutubeEmbedFinder extends AbstractEmbedFinder
 {
-    protected static $platform = 'vimeo';
+    protected static $platform = 'youtube';
 
     /**
-     * Create a new Vimeo video handler with its embed id.
+     * Create a new Youtube video handler with its embed id.
      *
-     * @param string $embedId Vimeo video identifier
+     * @param string $embedId Youtube video identifier
      */
     public function __construct($embedId)
     {
@@ -53,14 +53,14 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
      */
     public function getMediaTitle()
     {
-        return $this->getFeed()[0]['title'];
+        return $this->getFeed()['entry']['title']['$t'];
     }
     /**
      * {@inheritdoc}
      */
     public function getMediaDescription()
     {
-        return $this->getFeed()[0]['description'];
+        return $this->getFeed()['entry']['media$group']['media$description']['$t'];
     }
     /**
      * {@inheritdoc}
@@ -74,7 +74,7 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
      */
     public function getThumbnailURL()
     {
-        return $this->getFeed()[0]['thumbnail_large'];
+        return $this->getFeed()['entry']['media$group']['media$thumbnail'][2]['url'];
     }
 
 
@@ -98,7 +98,7 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     {
         // http://gdata.youtube.com/feeds/api/videos/<Code de la vidéo>?v=2&alt=json ---> JSON
         //
-        $url = "http://vimeo.com/api/v2/video/".$this->embedId.".json";
+        $url = "http://gdata.youtube.com/feeds/api/videos/".$this->embedId."?v=2&alt=json";
 
         return $this->downloadFeedFromAPI($url);
     }
@@ -108,21 +108,6 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
      */
     public function getSource($args = [])
     {
-        $uri = '//player.vimeo.com/video/'.$this->embedId.'?api=1';
-
-        if (isset($args['displayTitle'])) {
-            $uri .= '&title='.$args['displayTitle'];
-        }
-        if (isset($args['byline'])) {
-            $uri .= '&byline='.$args['byline'];
-        }
-        if (isset($args['portrait'])) {
-            $uri .= '&portrait='.$args['portrait'];
-        }
-        if (isset($args['color'])) {
-            $uri .= '&color='.$args['color'];
-        }
-
-        return $uri;
+        return '//www.youtube.com/embed/'.$this->embedId.'?rel=0&html5=1&wmode=transparent';
     }
 }

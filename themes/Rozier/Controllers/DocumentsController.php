@@ -32,8 +32,8 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use RZ\Roadiz\Core\Utils\SplashbasePictureFinder;
-use RZ\Roadiz\Core\Utils\StringHandler;
+use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

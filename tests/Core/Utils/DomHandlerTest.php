@@ -29,7 +29,7 @@
  * @author Ambroise Maupate
  */
 
-use RZ\Roadiz\Core\Utils\DomHandler;
+use RZ\Roadiz\Utils\DomHandler;
 
 /**
  *

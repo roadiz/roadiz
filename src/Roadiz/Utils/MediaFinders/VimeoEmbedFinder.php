@@ -24,24 +24,24 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file DailymotionEmbedFinder.php
+ * @file VimeoEmbedFinder.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Utils;
+namespace RZ\Roadiz\Utils\MediaFinders;
 
 /**
- * Dailymotion tools class.
+ * Vimeo tools class.
  *
- * Manage a youtube video feed
+ * Manage a Vimeo video feed
  */
-class DailymotionEmbedFinder extends AbstractEmbedFinder
+class VimeoEmbedFinder extends AbstractEmbedFinder
 {
-    protected static $platform = 'dailymotion';
+    protected static $platform = 'vimeo';
 
     /**
-     * Create a new Dailymotion video handler with its embed id.
+     * Create a new Vimeo video handler with its embed id.
      *
-     * @param string $embedId Dailymotion video identifier
+     * @param string $embedId Vimeo video identifier
      */
     public function __construct($embedId)
     {
@@ -53,14 +53,14 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
      */
     public function getMediaTitle()
     {
-        return $this->getFeed()['title'];
+        return $this->getFeed()[0]['title'];
     }
     /**
      * {@inheritdoc}
      */
     public function getMediaDescription()
     {
-        return "";
+        return $this->getFeed()[0]['description'];
     }
     /**
      * {@inheritdoc}
@@ -74,7 +74,7 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
      */
     public function getThumbnailURL()
     {
-        return $this->getFeed()['thumbnail_url'];
+        return $this->getFeed()[0]['thumbnail_large'];
     }
 
 
@@ -83,7 +83,12 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
      */
     public function getSearchFeed($searchTerm, $author, $maxResults = 15)
     {
-        return null;
+        $url = "http://gdata.youtube.com/feeds/api/videos/?q=".$searchTerm."&v=2&alt=json&max-results=".$maxResults;
+        if (!empty($author)) {
+            $url .= '&author='.$author;
+        }
+
+        return $this->downloadFeedFromAPI($url);
     }
 
     /**
@@ -93,9 +98,7 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
     {
         // http://gdata.youtube.com/feeds/api/videos/<Code de la vidéo>?v=2&alt=json ---> JSON
         //
-        $url = "http://www.dailymotion.com/services/oembed?format=json&url=".
-                "http://www.dailymotion.com/video/".
-                $this->embedId;
+        $url = "http://vimeo.com/api/v2/video/".$this->embedId.".json";
 
         return $this->downloadFeedFromAPI($url);
     }
@@ -105,7 +108,20 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
      */
     public function getSource($args = [])
     {
-        $uri = '//www.dailymotion.com/embed/video/'.$this->embedId;
+        $uri = '//player.vimeo.com/video/'.$this->embedId.'?api=1';
+
+        if (isset($args['displayTitle'])) {
+            $uri .= '&title='.$args['displayTitle'];
+        }
+        if (isset($args['byline'])) {
+            $uri .= '&byline='.$args['byline'];
+        }
+        if (isset($args['portrait'])) {
+            $uri .= '&portrait='.$args['portrait'];
+        }
+        if (isset($args['color'])) {
+            $uri .= '&color='.$args['color'];
+        }
 
         return $uri;
     }

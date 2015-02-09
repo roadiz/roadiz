@@ -29,7 +29,7 @@
  * @author Ambroise Maupate
  */
 
-use RZ\Roadiz\Core\Utils\StringHandler;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  *
@@ -54,13 +54,13 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
             array("testPagelocale", "Locale", false),
             array("testPageGateau", "Locale", false),
             array("testPage", "", true),
-            array("LocaletestPage", "Locale", false)
+            array("LocaletestPage", "Locale", false),
         );
     }
 
     /**
-    * @dataProvider replaceLastProvider
-    */
+     * @dataProvider replaceLastProvider
+     */
     public function testReplaceLast($input, $wanted, $expected)
     {
         $this->assertEquals($expected, StringHandler::replaceLast($wanted, "", $input));
@@ -76,7 +76,7 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
             array("testPagelocale", "Locale", "testPagelocale"),
             array("testPageGateau", "Locale", "testPageGateau"),
             array("testPage", "", "testPage"),
-            array("LocalePage", "Locale", "Page")
+            array("LocalePage", "Locale", "Page"),
         );
     }
 
@@ -99,7 +99,7 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
             array("œ", "oe"),
             array("ç", "c"),
             array("__à", "__a"),
-            array("--é", "--e")
+            array("--é", "--e"),
         );
     }
 
@@ -122,7 +122,7 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
             array("œ", "oe"),
             array("ç", "c"),
             array("__à", "_a"),
-            array("--é", "_e")
+            array("--é", "_e"),
         );
     }
 
@@ -163,7 +163,7 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
             array("Ligula  $* _--Egestas Mattis Nullam", "Commodo Pellentesque Sem Fusce Quam"),
             array("Véèsti buœlum Rïsus ", "  change#this#secret#very#important"),
             array("J'aime les sushis  ", " Fringilla Vulputate Dolor Inceptos"),
-            array("au   ".PHP_EOL."ietaui.\\eauie@auietsrt.trr", "Sit Vestibulum Dolor Ullamcorper Aenean"),
+            array("au   " . PHP_EOL . "ietaui.\\eauie@auietsrt.trr", "Sit Vestibulum Dolor Ullamcorper Aenean"),
             array("JAime les_sushis", "Sit Vestibulum Dolor"),
         );
     }

@@ -30,9 +30,9 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Utils\StringHandler;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * Roles are persisted version of string Symfony's roles.
@@ -42,8 +42,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Role extends AbstractEntity implements \Symfony\Component\Security\Core\Role\RoleInterface
 {
-    const ROLE_DEFAULT =      'ROLE_USER';
-    const ROLE_SUPERADMIN =   'ROLE_SUPERADMIN';
+    const ROLE_DEFAULT = 'ROLE_USER';
+    const ROLE_SUPERADMIN = 'ROLE_SUPERADMIN';
     const ROLE_BACKEND_USER = 'ROLE_BACKEND_USER';
 
     /**

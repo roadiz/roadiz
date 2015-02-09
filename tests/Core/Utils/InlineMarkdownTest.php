@@ -1,6 +1,6 @@
 <?php
 
-use RZ\Roadiz\Core\Utils\InlineMarkdown;
+use RZ\Roadiz\Utils\InlineMarkdown;
 use RZ\Roadiz\Core\Kernel;
 
 class InlineMarkdownTest extends PHPUnit_Framework_TestCase

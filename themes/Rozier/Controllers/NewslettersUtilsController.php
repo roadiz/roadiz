@@ -31,7 +31,7 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Utils\DomHandler;
+use RZ\Roadiz\Utils\DomHandler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

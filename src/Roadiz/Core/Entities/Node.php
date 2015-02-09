@@ -30,12 +30,11 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
-
-use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * Node entities are the central feature of RZ-CMS,
@@ -56,11 +55,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Node extends AbstractDateTimedPositioned
 {
-    const DRAFT =       10;
-    const PENDING =     20;
-    const PUBLISHED =   30;
-    const ARCHIVED =    40;
-    const DELETED =     50;
+    const DRAFT = 10;
+    const PENDING = 20;
+    const PUBLISHED = 30;
+    const ARCHIVED = 40;
+    const DELETED = 50;
 
     protected $handler;
 
@@ -119,7 +118,6 @@ class Node extends AbstractDateTimedPositioned
 
         return $this;
     }
-
 
     /**
      * @ORM\Column(type="boolean", name="home")
@@ -210,7 +208,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return ($this->status === Node::DRAFT);
     }
-     /**
+    /**
      * @return boolean
      */
     public function isDeleted()
@@ -285,7 +283,7 @@ class Node extends AbstractDateTimedPositioned
      */
     public function setPriority($priority)
     {
-        $this->priority = (float)$priority;
+        $this->priority = (float) $priority;
 
         return $this;
     }
@@ -500,8 +498,6 @@ class Node extends AbstractDateTimedPositioned
         return $this;
     }
 
-
-
     /**
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes")
      * @ORM\JoinTable(name="nodes_tags")
@@ -554,7 +550,6 @@ class Node extends AbstractDateTimedPositioned
     {
         return $this->customForms;
     }
-
 
     /**
      * @ORM\ManyToMany(targetEntity="NodeType")
@@ -609,7 +604,6 @@ class Node extends AbstractDateTimedPositioned
         return $this->nodeSources;
     }
 
-
     /**
      * @ORM\OneToMany(targetEntity="NodesToNodes", mappedBy="nodeA")
      * @var ArrayCollection
@@ -662,19 +656,19 @@ class Node extends AbstractDateTimedPositioned
      */
     public function getOneLineSummary()
     {
-        return $this->getId()." — ".$this->getNodeName()." — ".$this->getNodeType()->getName().
-            " — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
+        return $this->getId() . " — " . $this->getNodeName() . " — " . $this->getNodeType()->getName() .
+        " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
     }
     /**
      * @return string
      */
     public function getOneLineSourceSummary()
     {
-        $text = "Source ".$this->getNodeSources()->first()->getId().PHP_EOL;
+        $text = "Source " . $this->getNodeSources()->first()->getId() . PHP_EOL;
 
         foreach ($this->getNodeType()->getFields() as $key => $field) {
             $getterName = $field->getGetterName();
-            $text .= '['.$field->getLabel().']: '.$this->getNodeSources()->first()->$getterName().PHP_EOL;
+            $text .= '[' . $field->getLabel() . ']: ' . $this->getNodeSources()->first()->$getterName() . PHP_EOL;
         }
 
         return $text;
@@ -707,7 +701,7 @@ class Node extends AbstractDateTimedPositioned
     public function __clone()
     {
         $this->setId(null);
-        $this->nodeName .= "-".uniqid();
+        $this->nodeName .= "-" . uniqid();
         $this->home = false;
         $children = $this->getChildren();
         if ($children !== null) {

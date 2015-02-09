@@ -29,17 +29,14 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-use RZ\Roadiz\Core\Utils\StringHandler;
-
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Config\FileLocator;
-
 use \InlineStyle\InlineStyle;
 
 /**
@@ -51,7 +48,7 @@ class EntryPointsController extends AppController
 
     protected static $mandatoryContactFields = [
         'email',
-        'message'
+        'message',
     ];
 
     /**
@@ -68,7 +65,7 @@ class EntryPointsController extends AppController
      */
     public static function getResourcesFolder()
     {
-        return ROADIZ_ROOT.'/src/Roadiz/CMS/Resources';
+        return ROADIZ_ROOT . '/src/Roadiz/CMS/Resources';
     }
 
     /**
@@ -77,10 +74,10 @@ class EntryPointsController extends AppController
     public static function getRoutes()
     {
         $locator = new FileLocator([
-            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources'
+            ROADIZ_ROOT . '/src/Roadiz/CMS/Resources',
         ]);
 
-        if (file_exists(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
+        if (file_exists(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
 
             return $loader->load('entryPointsRoutes.yml');
@@ -100,17 +97,17 @@ class EntryPointsController extends AppController
         if ($request->getMethod() != $method ||
             !is_array($request->get('form'))) {
             return [
-                'statusCode'   => Response::HTTP_FORBIDDEN,
-                'status'       => 'danger',
-                'responseText' => 'Wrong request'
+                'statusCode' => Response::HTTP_FORBIDDEN,
+                'status' => 'danger',
+                'responseText' => 'Wrong request',
             ];
         }
         if (!$this->getService('csrfProvider')
-                ->isCsrfTokenValid(static::CONTACT_FORM_TOKEN_INTENTION, $request->get('form')['_token'])) {
+            ->isCsrfTokenValid(static::CONTACT_FORM_TOKEN_INTENTION, $request->get('form')['_token'])) {
             return [
-                'statusCode'   => Response::HTTP_FORBIDDEN,
-                'status'       => 'danger',
-                'responseText' => 'Bad token'
+                'statusCode' => Response::HTTP_FORBIDDEN,
+                'status' => 'danger',
+                'responseText' => 'Bad token',
             ];
         }
 
@@ -144,9 +141,9 @@ class EntryPointsController extends AppController
         }
         $canSend = true;
         $responseArray = [
-            'statusCode'   => Response::HTTP_OK,
-            'status'       => 'success',
-            'field_error'  => null
+            'statusCode' => Response::HTTP_OK,
+            'status' => 'success',
+            'field_error' => null,
         ];
 
         foreach (static::$mandatoryContactFields as $mandatoryField) {
@@ -185,7 +182,7 @@ class EntryPointsController extends AppController
             'application/x-pdf',
             'image/jpeg',
             'image/png',
-            'image/gif'
+            'image/gif',
         ];
         $maxFileSize = 1024 * 1024 * 5; // 5MB
         $uploadedFiles = [];
@@ -223,10 +220,10 @@ class EntryPointsController extends AppController
                 'mailContact' => SettingsBag::get('email_sender'),
                 'title' => $this->getTranslator()->trans(
                     'new.contact.form.%site%',
-                    ['%site%'=>SettingsBag::get('site_name')]
+                    ['%site%' => SettingsBag::get('site_name')]
                 ),
                 'email' => $request->get('form')['email'],
-                'fields' => []
+                'fields' => [],
             ];
 
             /*
@@ -238,7 +235,7 @@ class EntryPointsController extends AppController
                 } elseif (!empty($value)) {
                     $assignation['fields'][] = [
                         'name' => strip_tags($key),
-                        'value' => (strip_tags($value))
+                        'value' => (strip_tags($value)),
                     ];
                 }
             }
@@ -249,7 +246,7 @@ class EntryPointsController extends AppController
             foreach ($uploadedFiles as $key => $uploadedFile) {
                 $assignation['fields'][] = [
                     'name' => strip_tags($key),
-                    'value' => (strip_tags($uploadedFile->getClientOriginalName()) .' ['. $uploadedFile->guessExtension().']')
+                    'value' => (strip_tags($uploadedFile->getClientOriginalName()) . ' [' . $uploadedFile->guessExtension() . ']'),
                 ];
             }
 
@@ -258,14 +255,14 @@ class EntryPointsController extends AppController
              */
             $assignation['fields'][] = [
                 'name' => $this->getTranslator()->trans('date'),
-                'value' => (new \DateTime())->format('Y-m-d H:i:s')
+                'value' => (new \DateTime())->format('Y-m-d H:i:s'),
             ];
             /*
              *  IP
              */
             $assignation['fields'][] = [
                 'name' => $this->getTranslator()->trans('ip.address'),
-                'value' => $request->getClientIp()
+                'value' => $request->getClientIp(),
             ];
 
             /*
@@ -408,46 +405,45 @@ class EntryPointsController extends AppController
         $customEmailSubject = null
     ) {
         $action = Kernel::getService('urlGenerator')
-                        ->generate('contactFormLocaleAction', [
-                            '_locale' => $request->getLocale()
-                        ]);
-
+            ->generate('contactFormLocaleAction', [
+                '_locale' => $request->getLocale(),
+            ]);
 
         $builder = Kernel::getService('formFactory')
             ->createBuilder('form', null, [
                 'csrf_provider' => Kernel::getService('csrfProvider'),
                 'intention' => static::CONTACT_FORM_TOKEN_INTENTION,
                 'attr' => [
-                    'id' => 'contactForm'
-                ]
+                    'id' => 'contactForm',
+                ],
             ])
             ->setMethod('POST')
             ->setAction($action)
             ->add('_action', 'hidden', [
-                'data' => 'contact'
+                'data' => 'contact',
             ]);
 
         if (true === $redirect) {
             if (null !== $customRedirectUrl) {
                 $builder->add('_redirect', 'hidden', [
-                    'data' => strip_tags($customRedirectUrl)
+                    'data' => strip_tags($customRedirectUrl),
                 ]);
             } else {
                 $builder->add('_redirect', 'hidden', [
-                    'data' => strip_tags($request->getURI())
+                    'data' => strip_tags($request->getURI()),
                 ]);
             }
         }
 
         if (null !== $customEmailReceiver) {
             $builder->add('_emailReceiver', 'hidden', [
-                'data' => StringHandler::encodeWithSecret($customEmailReceiver, Kernel::getService('config')['security']['secret'])
+                'data' => StringHandler::encodeWithSecret($customEmailReceiver, Kernel::getService('config')['security']['secret']),
             ]);
         }
 
         if (null !== $customEmailSubject) {
             $builder->add('_emailSubject', 'hidden', [
-                'data' => StringHandler::encodeWithSecret($customEmailSubject, Kernel::getService('config')['security']['secret'])
+                'data' => StringHandler::encodeWithSecret($customEmailSubject, Kernel::getService('config')['security']['secret']),
             ]);
         }
 
@@ -472,7 +468,7 @@ class EntryPointsController extends AppController
          */
         $htmldoc = new InlineStyle($emailBody);
         $htmldoc->applyStylesheet(file_get_contents(
-            ROADIZ_ROOT."/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
+            ROADIZ_ROOT . "/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
         ));
 
         if (null !== $subject) {
@@ -480,27 +476,27 @@ class EntryPointsController extends AppController
         } else {
             $subject = $this->getTranslator()->trans(
                 'new.contact.form.%site%',
-                ['%site%'=>SettingsBag::get('site_name')]
+                ['%site%' => SettingsBag::get('site_name')]
             );
         }
 
         // Create the message
         $message = \Swift_Message::newInstance()
-            // Give the message a subject
-            ->setSubject($subject)
-            // Set the From address with an associative array
-            ->setFrom([$assignation['email']])
-            // Set the To addresses with an associative array
-            ->setTo([$receiver])
-            // Give it a body
-            ->setBody($htmldoc->getHTML(), 'text/html');
+        // Give the message a subject
+        ->setSubject($subject)
+        // Set the From address with an associative array
+        ->setFrom([$assignation['email']])
+        // Set the To addresses with an associative array
+        ->setTo([$receiver])
+        // Give it a body
+        ->setBody($htmldoc->getHTML(), 'text/html');
 
         /*
          * Attach files
          */
         foreach ($files as $uploadedFile) {
             $attachment = \Swift_Attachment::fromPath($uploadedFile->getRealPath())
-                                            ->setFilename($uploadedFile->getClientOriginalName());
+                ->setFilename($uploadedFile->getClientOriginalName());
             $message->attach($attachment);
         }
 
