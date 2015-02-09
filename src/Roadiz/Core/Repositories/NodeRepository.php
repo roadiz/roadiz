@@ -286,7 +286,7 @@ class NodeRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityContext
+     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param SecurityContext|null                    $securityContext
      *
      * @return QueryBuilder

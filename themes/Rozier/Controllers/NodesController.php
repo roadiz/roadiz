@@ -280,6 +280,7 @@ class NodesController extends RozierApp
                 return $response->send();
             }
             $this->assignation['form'] = $form->createView();
+            $this->assignation['securityContext'] = $this->getService("securityContext");
 
             return new Response(
                 $this->getTwig()->render('nodes/edit.html.twig', $this->assignation),
@@ -778,5 +779,64 @@ class NodesController extends RozierApp
         } else {
             return $this->throw404();
         }
+    }
+
+    public function generateAndAddNodeAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
+        if ($request->get('nodeTypeId') > 0 &&
+            $request->get('parentNodeId') > 0) {
+            $nodeType = $this->getService('em')
+                            ->find(
+                                'RZ\Roadiz\Core\Entities\NodeType',
+                                (int) $request->get('nodeTypeId')
+                            );
+
+            $parent = $this->getService('em')
+                            ->find(
+                                'RZ\Roadiz\Core\Entities\Node',
+                                (int) $request->get('parentNodeId')
+                            );
+
+            if (null !== $nodeType &&
+                null !== $parent) {
+                if ($request->get('translationId') > 0) {
+                    $translation = $this->getService('em')
+                                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $request->get('translationId'));
+
+                } else {
+                    $translation = $parent->getNodeSources()->first()->getTranslation();
+
+                    if (null === $translation) {
+                        $translation = $this->getService('em')
+                                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                            ->findDefault();
+                    }
+                }
+
+                try {
+
+                    $source = static::generateUniqueNodeWithTypeAndTranslation($request, $nodeType, $parent, $translation, null);
+
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'nodesEditSourcePage',
+                            ['nodeId' => $source->getNode()->getId(), 'translationId'=>$translation->getId()]
+                        )
+                    );
+
+                    $response->prepare($request);
+                    return $response->send();
+
+                } catch (\Exception $e) {
+                    $msg = $this->getTranslator()->trans('node.%name%.noCreation.alreadyExists', ['%name%'=>"GeneratedNode"]);
+
+                    return $this->throw404($msg);
+                }
+            }
+        }
+
+        return $this->throw404($this->getTranslator()->trans('bad.request'));
     }
 }

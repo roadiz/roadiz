@@ -34,12 +34,19 @@
         <!-- This is the container of the content items -->
         <ul id="tree-container" class="uk-switcher uk-margin">
             {% if securityContext.isGranted('ROLE_ACCESS_NODES')%}
-            <li class="uk-active">{% include 'widgets/nodeTree/nodeTree.html.twig' with {
+            {% if securityContext.token.user.chroot.hidingChildren %}
+                <li class="uk-active">{% include 'widgets/nodeTree/nodeStackTree.html.twig' with {
+                "node":themeServices.nodeTree.getRootNode,
+                'mainNodeTree':true,
+                "securityContext":securityContext} only %}</li>
+            {% else %}
+                <li class="uk-active">{% include 'widgets/nodeTree/nodeTree.html.twig' with {
                 "nodeTree":themeServices.nodeTree,
                 "node":themeServices.nodeTree.getRootNode,
                 'mainNodeTree':true,
                 "securityContext":securityContext
             } only %}</li>
+            {% endif %}
             {% endif %}
             {% if securityContext.isGranted('ROLE_ACCESS_TAGS')%}
             <li class="">{% include 'widgets/tagTree/tagTree.html.twig' with {
