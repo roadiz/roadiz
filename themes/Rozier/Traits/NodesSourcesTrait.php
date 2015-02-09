@@ -36,7 +36,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Utils\StringHandler;
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\Type;
 use \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;

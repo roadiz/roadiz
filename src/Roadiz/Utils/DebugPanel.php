@@ -27,28 +27,22 @@
  * @file DebugPanel.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Utils;
+namespace RZ\Roadiz\Utils;
 
-use RZ\Roadiz\Core\Kernel;
-
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
  * Event subscriber which append a debug console after any HTML output.
  */
 class DebugPanel implements EventSubscriberInterface
 {
-    private $twig = null;
+    protected $container = null;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getTwig()
+    public function __construct(Container $container)
     {
-        return $this->twig;
+        $this->container = $container;
     }
 
     /**
@@ -65,16 +59,13 @@ class DebugPanel implements EventSubscriberInterface
     public function onKernelResponse(FilterResponseEvent $event)
     {
         $response = $event->getResponse();
-        //
+
         if (false !== strpos($response->getContent(), '<!-- ##debug_panel## -->')) {
-            $this->initializeTwig();
             $content = str_replace('<!-- ##debug_panel## -->', $this->getDebugView(), $response->getContent());
             $response->setContent($content);
             $event->setResponse($response);
-
         } elseif (false !== strpos($response->getContent(), '</body>')) {
-            $this->initializeTwig();
-            $content = str_replace('</body>', $this->getDebugView()."</body>", $response->getContent());
+            $content = str_replace('</body>', $this->getDebugView() . "</body>", $response->getContent());
             $response->setContent($content);
             $event->setResponse($response);
         }
@@ -82,35 +73,12 @@ class DebugPanel implements EventSubscriberInterface
 
     private function getDebugView()
     {
-        Kernel::getService('stopwatch')->stopSection('runtime');
+        $this->container['stopwatch']->stopSection('runtime');
 
         $assignation = [
-            'stopwatch'=>Kernel::getService('stopwatch')
+            'stopwatch' => $this->container['stopwatch'],
         ];
 
-        return $this->getTwig()->render('debug-panel.html.twig', $assignation);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    private function initializeTwig()
-    {
-        $cacheDir = ROADIZ_ROOT.'/cache/twig_cache';
-
-        $loader = new \Twig_Loader_Filesystem([
-            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/views', // Theme templates
-        ]);
-        $this->twig = new \Twig_Environment($loader, [
-            'debug' => Kernel::getInstance()->isDebug(),
-            'cache' => $cacheDir
-        ]);
-
-        //RoutingExtension
-        $this->twig->addExtension(
-            new RoutingExtension(Kernel::getService('urlGenerator'))
-        );
-
-        return $this;
+        return $this->container['twig.environment']->render('debug-panel.html.twig', $assignation);
     }
 }

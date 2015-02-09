@@ -34,7 +34,7 @@ use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\UserHandler;
 use RZ\Roadiz\Core\Bags\RolesBag;
-use RZ\Roadiz\Core\Utils\FacebookPictureFinder;
+use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

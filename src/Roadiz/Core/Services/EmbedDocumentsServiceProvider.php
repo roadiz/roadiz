@@ -48,10 +48,10 @@ class EmbedDocumentsServiceProvider implements \Pimple\ServiceProviderInterface
     {
         $container['document.platforms'] = function ($c) {
             return [
-                'youtube' =>     '\RZ\Roadiz\Core\Utils\YoutubeEmbedFinder',
-                'vimeo' =>       '\RZ\Roadiz\Core\Utils\VimeoEmbedFinder',
-                'dailymotion' => '\RZ\Roadiz\Core\Utils\DailymotionEmbedFinder',
-                'soundcloud' =>  '\RZ\Roadiz\Core\Utils\SoundcloudEmbedFinder'
+                'youtube' =>     '\RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder',
+                'vimeo' =>       '\RZ\Roadiz\Utils\MediaFinders\VimeoEmbedFinder',
+                'dailymotion' => '\RZ\Roadiz\Utils\MediaFinders\DailymotionEmbedFinder',
+                'soundcloud' =>  '\RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder'
             ];
         };
 

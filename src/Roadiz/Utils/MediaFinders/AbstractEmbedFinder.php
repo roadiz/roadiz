@@ -27,7 +27,7 @@
  * @file AbstractEmbedFinder.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Utils;
+namespace RZ\Roadiz\Utils\MediaFinders;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;

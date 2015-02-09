@@ -24,27 +24,24 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file SoundcloudEmbedFinder.php
+ * @file DailymotionEmbedFinder.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Utils;
-
-use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
-use RZ\Roadiz\Core\Bags\SettingsBag;
+namespace RZ\Roadiz\Utils\MediaFinders;
 
 /**
- * Soundcloud tools class.
+ * Dailymotion tools class.
  *
  * Manage a youtube video feed
  */
-class SoundcloudEmbedFinder extends AbstractEmbedFinder
+class DailymotionEmbedFinder extends AbstractEmbedFinder
 {
-    protected static $platform = 'soundcloud';
+    protected static $platform = 'dailymotion';
 
     /**
-     * Create a new Soundcloud video handler with its embed id.
+     * Create a new Dailymotion video handler with its embed id.
      *
-     * @param string $embedId Soundcloud video identifier
+     * @param string $embedId Dailymotion video identifier
      */
     public function __construct($embedId)
     {
@@ -63,7 +60,7 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
      */
     public function getMediaDescription()
     {
-        return $this->getFeed()['description'];
+        return "";
     }
     /**
      * {@inheritdoc}
@@ -77,7 +74,7 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
      */
     public function getThumbnailURL()
     {
-        return $this->getFeed()['artwork_url'];
+        return $this->getFeed()['thumbnail_url'];
     }
 
 
@@ -94,73 +91,21 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
      */
     public function getMediaFeed($search = null)
     {
-        $clientId = SettingsBag::get('soundcloud_client_id');
-
-        if (false === $clientId) {
-            throw new APINeedsAuthentificationException("Soundcloud need a clientId to perform API calls, create a “soundcloud_client_id” setting.", 1);
-        }
-
-        $url = "http://api.soundcloud.com/tracks/".
-                $this->embedId.
-                ".json?client_id=".
-                $clientId;
+        // http://gdata.youtube.com/feeds/api/videos/<Code de la vidéo>?v=2&alt=json ---> JSON
+        //
+        $url = "http://www.dailymotion.com/services/oembed?format=json&url=".
+                "http://www.dailymotion.com/video/".
+                $this->embedId;
 
         return $this->downloadFeedFromAPI($url);
     }
 
     /**
      * {@inheritdoc}
-     *
-     * ## Available fields
-     *
-     * * auto_play
-     * * hide_related
-     * * show_comments
-     * * show_user
-     * * show_reposts
-     * * visual
      */
     public function getSource($args = [])
     {
-        $uri = '//w.soundcloud.com/player/?url='.
-                'https://api.soundcloud.com/tracks/'.
-                $this->embedId;
-
-        if (!empty($args['auto_play'])) {
-            $uri .= '&auto_play='.((boolean) $args['auto_play'] ? 'true': 'false');
-        } else {
-            $uri .= '&auto_play=false';
-        }
-
-        if (!empty($args['hide_related'])) {
-            $uri .= '&hide_related='.((boolean) $args['hide_related'] ? 'true': 'false');
-        } else {
-            $uri .= '&hide_related=true';
-        }
-
-        if (!empty($args['show_comments'])) {
-            $uri .= '&show_comments='.((boolean) $args['show_comments'] ? 'true': 'false');
-        } else {
-            $uri .= '&show_comments=true';
-        }
-
-        if (!empty($args['show_user'])) {
-            $uri .= '&show_user='.((boolean) $args['show_user'] ? 'true': 'false');
-        } else {
-            $uri .= '&show_user=true';
-        }
-
-        if (!empty($args['show_reposts'])) {
-            $uri .= '&show_reposts='.((boolean) $args['show_reposts'] ? 'true': 'false');
-        } else {
-            $uri .= '&show_reposts=false';
-        }
-
-        if (!empty($args['visual'])) {
-            $uri .= '&visual='.((boolean) $args['visual'] ? 'true': 'false');
-        } else {
-            $uri .= '&visual=true';
-        }
+        $uri = '//www.dailymotion.com/embed/video/'.$this->embedId;
 
         return $uri;
     }

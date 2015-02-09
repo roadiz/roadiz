@@ -2,11 +2,11 @@
 
 namespace Themes\Rozier\Controllers;
 
-use Themes\Rozier\RozierApp;
-use RZ\Roadiz\Core\Utils\XlsxExporter;
+use RZ\Roadiz\Utils\XlsxExporter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Themes\Rozier\RozierApp;
 
 /**
  * {@inheritdoc}
@@ -26,7 +26,6 @@ class CustomFormsUtilsController extends RozierApp
 
         $answers = $customForm->getCustomFormAnswers();
 
-
         foreach ($answers as $key => $answer) {
             $array = [$answer->getIp(), $answer->getSubmittedAt()];
             foreach ($answer->getAnswers() as $obj) {
@@ -43,7 +42,7 @@ class CustomFormsUtilsController extends RozierApp
 
         $xlsx = XlsxExporter::exportXlsx($answers, $keys);
 
-        $response =  new Response(
+        $response = new Response(
             $xlsx,
             Response::HTTP_OK,
             []

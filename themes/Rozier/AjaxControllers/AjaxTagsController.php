@@ -32,7 +32,7 @@ namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Handlers\TagHandler;
-use RZ\Roadiz\Core\Utils\StringHandler;
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;

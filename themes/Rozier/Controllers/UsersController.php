@@ -33,7 +33,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Group;
-use RZ\Roadiz\Core\Utils\FacebookPictureFinder;
+use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\FacebookUsernameNotFoundException;
