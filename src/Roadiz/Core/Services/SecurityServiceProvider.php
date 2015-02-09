@@ -30,29 +30,27 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
-use Symfony\Component\Security\Http\Firewall;
-use Symfony\Component\Security\Http\FirewallMap;
-use Symfony\Component\Security\Http\Firewall\ExceptionListener;
-use Symfony\Component\Security\Http\Firewall\ContextListener;
-use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
-
+use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
+use RZ\Roadiz\Core\Handlers\UserProvider;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Log\Logger;
+use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\Security\Core\User\UserChecker;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
-use Symfony\Component\Security\Core\Role\RoleHierarchy;
-
-use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
-
-use Symfony\Component\HttpFoundation\Session\Session;
-
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
-
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Handlers\UserProvider;
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\User\UserChecker;
+use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
+use Symfony\Component\Security\Http\Firewall;
+use Symfony\Component\Security\Http\FirewallMap;
+use Symfony\Component\Security\Http\Firewall\ContextListener;
+use Symfony\Component\Security\Http\Firewall\ExceptionListener;
+use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 
 /**
  * Register security services for dependency injection container.
@@ -76,7 +74,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['logger'] = function ($c) {
-            $logger = new \RZ\Roadiz\Core\Log\Logger();
+            $logger = new Logger();
             $logger->setSecurityContext($c['securityContext']);
 
             return $logger;
@@ -89,7 +87,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             return new ContextListener(
                 $c['securityContext'],
                 [
-                    $c['userProvider']
+                    $c['userProvider'],
                 ],
                 Kernel::SECURITY_DOMAIN,
                 $c['logger'],
@@ -117,7 +115,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         $container['accessDecisionManager'] = function ($c) {
             return new AccessDecisionManager(
                 [
-                    $c['roleHierarchyVoter']
+                    $c['roleHierarchyVoter'],
                 ]
             );
         };
@@ -136,7 +134,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['allBasicRoles'] = function ($c) {
             return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Role')
-                             ->getAllBasicRoleName();
+                           ->getAllBasicRoleName();
         };
 
         $container['roleHierarchyVoter'] = function ($c) {
@@ -163,24 +161,24 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['firewallExceptionListener'] = function ($c) {
 
-            return new \Symfony\Component\Security\Http\Firewall\ExceptionListener(
+            return new ExceptionListener(
                 $c['securityContext'],
-                new \Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver('', ''),
+                new AuthenticationTrustResolver('', ''),
                 $c['httpUtils'],
                 Kernel::SECURITY_DOMAIN,
                 $c['formAuthentificationEntryPoint'],
-                null, //$errorPage
+                null,
                 $c['accessDeniedHandler'],
-                $c['logger'] //LoggerInterface $logger
+                $c['logger']
             );
         };
 
         $container['formAuthentificationEntryPoint'] = function ($c) {
-            return new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint(
+            return new FormAuthenticationEntryPoint(
                 $c['httpKernel'],
                 $c['httpUtils'],
                 '/login',
-                true // bool $useForward
+                true
             );
         };
 
@@ -188,15 +186,16 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             return new MessageDigestPasswordEncoder('sha512', true, 5000);
         };
 
-        $container['userEncoderFactory'] = function ($c) {
-            $encoders = [
+        $container['userImplementations'] = function ($c) {
+            return [
                 'Symfony\\Component\\Security\\Core\\User\\User' => $c['passwordEncoder'],
                 'RZ\\Roadiz\\Core\\Entities\\User' => $c['passwordEncoder'],
             ];
-
-            return new EncoderFactory($encoders);
         };
 
+        $container['userEncoderFactory'] = function ($c) {
+            return new EncoderFactory($c['userImplementations']);
+        };
 
         $container['firewall'] = function ($c) {
 
@@ -218,12 +217,11 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             return $firewall;
         };
 
-
         /*
          * Default denied handler
          */
         $container['accessDeniedHandler'] = function ($c) {
-            return new \RZ\Roadiz\Core\Authorization\AccessDeniedHandler();
+            return new AccessDeniedHandler();
         };
 
         return $container;
