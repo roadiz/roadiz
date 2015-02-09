@@ -331,14 +331,14 @@ class SearchController extends RozierApp
                                     ["method" => "get"]
                                 );
         $builderNodeType->add(
-                            "nodetype",
-                            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-                            [
+            "nodetype",
+            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+            [
                                 'empty_value' => "",
                                 'required' => false,
                                 'data' => $nodetypeId,
                             ]
-                        )
+        )
                         ->add("nodetypeSubmit", "submit", [
                             "label" => $this->getTranslator()->trans("select.nodetype"),
                             "attr" => ["class" => "uk-button uk-button-primary"],
