@@ -652,7 +652,7 @@ class NodesController extends RozierApp
             $user = $this->getService("securityContext")->getToken()->getUser();
             $chroot = $user->getChroot();
             $criteria = ['status' => Node::DELETED];
-            if ($chroot ==! null) {
+            if ($chroot !== null) {
                 $ids = $chroot->getHandler()->getAllOffspringId();
                 $criteria["parent"] = $ids;
             }
