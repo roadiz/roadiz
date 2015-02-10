@@ -233,7 +233,7 @@ class AjaxNodesController extends AbstractAjaxController
                                  * need to disable dynamic nodeName
                                  */
                                 if ($request->get('statusName') == 'locked' &&
-                                    $value == true) {
+                                    $value === true) {
                                     $node->setDynamicNodeName(false);
                                 }
 

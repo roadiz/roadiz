@@ -553,8 +553,8 @@ trait NodesTrait
     }
 
     /**
-     * Generate node with given nodetype and translation 
-     * 
+     * Generate node with given nodetype and translation
+     *
      * @param Symfony\Component\HttpFoundation\Request  $request
      * @param RZ\Roadiz\Core\Entities\NodeType          $nodeType
      * @param RZ\Roadiz\Core\Entities\Node              $parent

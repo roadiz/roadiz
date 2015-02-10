@@ -106,7 +106,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 $twig->addExtension($c['twig.cacheExtension']);
             }
 
-            if (true == $c['config']['devMode']) {
+            if (true === $c['config']['devMode']) {
                 $twig->addExtension(new \Twig_Extension_Debug());
             }
 

@@ -771,18 +771,15 @@ class NodesController extends RozierApp
 
             if (null !== $nodeType &&
                 null !== $parent) {
-                if ($request->get('translationId') > 0) {
+                $translation = ($request->get('translationId') > 0) ? $this->getService('em')->find(
+                    'RZ\Roadiz\Core\Entities\Translation',
+                    (int) $request->get('translationId')
+                )
+                                                                    : $parent->getNodeSources()->first()->getTranslation();
+                if (null === $translation) {
                     $translation = $this->getService('em')
-                                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $request->get('translationId'));
-
-                } else {
-                    $translation = $parent->getNodeSources()->first()->getTranslation();
-
-                    if (null === $translation) {
-                        $translation = $this->getService('em')
-                                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                            ->findDefault();
-                    }
+                                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                        ->findDefault();
                 }
 
                 try {

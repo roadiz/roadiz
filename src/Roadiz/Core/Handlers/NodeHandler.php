@@ -446,7 +446,7 @@ class NodeHandler
 
     /**
      * Return if is in Newsletter Node.
-     * 
+     *
      * @return bool
      */
     public function isRelatedToNewsletter()
@@ -476,7 +476,7 @@ class NodeHandler
         $parent = $this->node;
         $user = null;
 
-        if ($securityContext != null) {
+        if ($securityContext !== null) {
             $user = $securityContext->getToken()->getUser();
         }
 
