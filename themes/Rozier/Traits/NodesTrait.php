@@ -552,6 +552,17 @@ trait NodesTrait
         return $builder->getForm();
     }
 
+    /**
+     * Generate node with given nodetype and translation 
+     * 
+     * @param Symfony\Component\HttpFoundation\Request  $request
+     * @param RZ\Roadiz\Core\Entities\NodeType          $nodeType
+     * @param RZ\Roadiz\Core\Entities\Node              $parent
+     * @param RZ\Roadiz\Core\Entities\Translation       $translation
+     * @param RZ\Roadiz\Core\Entities\Tag               $tag
+     * 
+     * return RZ\Roadiz\Core\Entities\NodeSource
+     */
     public static function generateUniqueNodeWithTypeAndTranslation(
         Request $request,
         NodeType $nodeType,
