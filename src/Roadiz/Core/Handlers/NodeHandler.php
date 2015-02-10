@@ -547,6 +547,11 @@ class NodeHandler
         return $i;
     }
 
+    /**
+     * return all node offspring id
+     *
+     * @return ArrayCollection
+     */
     public function getAllOffspringId()
     {
         return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
