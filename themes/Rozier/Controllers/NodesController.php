@@ -35,13 +35,9 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-<<<<<<< b8d2f85f9836d150499f055fd00bc169964e35d1
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-=======
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
->>>>>>> ade392052becb1f88fc561e3fc4dae03bc08ac8c
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -154,12 +150,7 @@ class NodesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_SETTING', $nodeId);
 
         $node = $this->getService('em')
-<<<<<<< b8d2f85f9836d150499f055fd00bc169964e35d1
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
-=======
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
-
->>>>>>> ade392052becb1f88fc561e3fc4dae03bc08ac8c
         $this->getService('em')->refresh($node);
 
         $translation = $this->getService('em')
@@ -668,14 +659,7 @@ class NodesController extends RozierApp
             }
             $nodes = $this->getService('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
-<<<<<<< 6af4fbedac56d0a790a8a4c1dff4295582add41f
-                          ->findBy([
-                              'status' => Node::DELETED,
-                          ]);
-=======
                           ->findBy($criteria);
->>>>>>> 2be29b16db0951f252c4fba17b6e5bdb9c88514f
-
             foreach ($nodes as $node) {
                 $node->getHandler()->removeWithChildrenAndAssociations();
             }
