@@ -445,7 +445,8 @@ class NodeHandler
     }
 
     /**
-     * Return if is in Newsletter Node
+     * Return if is in Newsletter Node.
+     * 
      * @return bool
      */
     public function isRelatedToNewsletter()
