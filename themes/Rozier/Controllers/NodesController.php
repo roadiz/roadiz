@@ -799,7 +799,7 @@ class NodesController extends RozierApp
                     return $response->send();
 
                 } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('node.%name%.noCreation.alreadyExists', ['%name%'=>"GeneratedNode"]);
+                    $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists');
 
                     return $this->throw404($msg);
                 }
