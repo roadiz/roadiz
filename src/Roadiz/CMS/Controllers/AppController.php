@@ -561,6 +561,7 @@ class AppController implements ViewableInterface
     {
         $this->publishMessage($request, $msg, 'confirm', $source);
     }
+
     /**
      * Publish an error message in Session flash bag and
      * logger interface.
@@ -607,7 +608,7 @@ class AppController implements ViewableInterface
             throw new AccessDeniedException("You don't have access to this page:" . $role);
         }
     }
-    
+
     /**
      * Validate a request against a given ROLE_*
      * and check chroot and newsletter type/accces
@@ -636,7 +637,7 @@ class AppController implements ViewableInterface
 
         if (!((!$isNewsletterFriend
                 && $this->getService('securityContext')->isGranted($role)
-                && ($user->getChroot() == null
+                && ($user->getChroot() === null
                     || in_array($user->getChroot(), $parents, true)))
             || ($isNewsletterFriend
                 && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NEWSLETTERS')))) {
