@@ -68,8 +68,6 @@ class NodesSourcesController extends RozierApp
      */
     public function editSourceAction(Request $request, $nodeId, $translationId)
     {
-        //$this->validateAccessForRole('ROLE_ACCESS_NODES');
-
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
         $translation = $this->getService('em')
