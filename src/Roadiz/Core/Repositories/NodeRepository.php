@@ -1034,8 +1034,8 @@ class NodeRepository extends EntityRepository
             $in = [];
 
             //For memory optimizations
-            foreach($result as $item) {
-              $in[] = (int)$item['id'];
+            foreach ($result as $item) {
+                $in[] = (int)$item['id'];
             }
         } while (!empty($in));
         return $theOffprings;

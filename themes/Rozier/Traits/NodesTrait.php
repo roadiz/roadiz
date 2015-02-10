@@ -552,12 +552,13 @@ trait NodesTrait
         return $builder->getForm();
     }
 
-    public static function generateUniqueNodeWithTypeAndTranslation(Request $request,
-                                                                    NodeType $nodeType,
-                                                                    Node $parent,
-                                                                    Translation $translation,
-                                                                    Tag $tag = null)
-    {
+    public static function generateUniqueNodeWithTypeAndTranslation(
+        Request $request,
+        NodeType $nodeType,
+        Node $parent,
+        Translation $translation,
+        Tag $tag = null
+    ) {
         $name = $nodeType->getDisplayName()." ".uniqid();
 
         $node = new Node($nodeType);

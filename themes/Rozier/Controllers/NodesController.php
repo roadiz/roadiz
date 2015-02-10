@@ -787,7 +787,6 @@ class NodesController extends RozierApp
                 }
 
                 try {
-
                     $source = static::generateUniqueNodeWithTypeAndTranslation($request, $nodeType, $parent, $translation, null);
 
                     $response = new RedirectResponse(

@@ -372,7 +372,6 @@ class AjaxNodesController extends AbstractAjaxController
                 }
 
                 try {
-
                     $source = NodesController::generateUniqueNodeWithTypeAndTranslation($request, $nodeType, $parent, $translation, $tag);
 
                     $responseArray = [
