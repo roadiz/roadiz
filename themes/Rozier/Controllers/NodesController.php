@@ -146,7 +146,6 @@ class NodesController extends RozierApp
      */
     public function editAction(Request $request, $nodeId, $translationId = null)
     {
-        // $this->validateAccessForRole('ROLE_ACCESS_NODES_SETTING');
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_SETTING', $nodeId);
 
         $node = $this->getService('em')
