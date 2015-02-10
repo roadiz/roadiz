@@ -5757,6 +5757,11 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <target>Root node</target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="node.noCreation.alreadyExists">
+          <source>node.noCreation.alreadyExists</source>
+          <target>Node can't be created, a node already exists with its name.</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
