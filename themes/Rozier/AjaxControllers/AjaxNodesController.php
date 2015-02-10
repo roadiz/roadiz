@@ -386,7 +386,7 @@ class AjaxNodesController extends AbstractAjaxController
                     ];
 
                 } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('node.%name%.noCreation.alreadyExists', ['%name%'=>"GeneratedNode"]);
+                    $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists');
 
                     $responseArray = [
                         'statusCode' => Response::HTTP_FORBIDDEN,
