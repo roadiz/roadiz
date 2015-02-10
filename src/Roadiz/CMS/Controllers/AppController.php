@@ -607,6 +607,16 @@ class AppController implements ViewableInterface
             throw new AccessDeniedException("You don't have access to this page:" . $role);
         }
     }
+    
+    /**
+     * Validate a request against a given ROLE_*
+     * and check chroot and newsletter type/accces
+     * and throws an AccessDeniedException exception.
+     *
+     * @param string $role
+     *
+     * @throws AccessDeniedException
+     */
     public function validateNodeAccessForRole($role, $nodeId, $includeChroot = false)
     {
         $node = $this->getService('em')
