@@ -77,12 +77,8 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
          */
         $container['twig.environment'] = function ($c) {
 
-            $devMode = (isset($c['config']['devMode']) && true === (boolean) $c['config']['devMode']) ?
-            true :
-            false;
-
             $twig = new \Twig_Environment($c['twig.loaderFileSystem'], [
-                'debug' => $devMode,
+                'debug' => $c['config']['devMode'],
                 'cache' => $c['twig.cacheFolder'],
             ]);
 
@@ -110,7 +106,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 $twig->addExtension($c['twig.cacheExtension']);
             }
 
-            if ($devMode) {
+            if (true == $c['config']['devMode']) {
                 $twig->addExtension(new \Twig_Extension_Debug());
             }
 

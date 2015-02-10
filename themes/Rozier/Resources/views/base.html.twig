@@ -25,16 +25,18 @@
         <link rel="icon" type="image/png" href="{{ head.resourcesUrl }}img/favicon-32x32.png" sizes="32x32" />
         <meta name="msapplication-TileImage" content="{{ head.resourcesUrl }}img/mstile-144x144.png" />
 
-        {# <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.min.css" /> #}
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/uikit.gradient.min.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/addons/uikit.addons.min.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/bootstrap3/bootstrap-switch.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/jquery.minicolors.css" />
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/codemirror.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ themeServices.grunt.staticAssets.global.css[0] }}" />
+
+        {% for cssMin in themeServices.grunt.staticAssets.global.css %}
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ cssMin }}" />
+        {% endfor %}
         <link rel="stylesheet" href="{{ path('cssMainColor') }}" />
         {% block customStyles %}{% endblock %}
-        <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/modernizr.custom.50380.js"></script>
     </head>
     <body>
         <div id="main-container" >
@@ -80,8 +82,8 @@
                 <!-- ##debug_panel## -->
             </div>
         </div>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.1.1.min.js"><\/script>')</script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.1.3.min.js"><\/script>')</script>
 
         {% if head.devMode %}
         <script src="{{ head.resourcesUrl }}js/vendor/uikit.js"></script>
@@ -135,8 +137,9 @@
         <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
         <script src="{{ head.resourcesUrl }}js/main.js"></script>
         {% else %}
-        <script src="{{ head.resourcesUrl }}public{{ themeServices.grunt.staticAssets.global.js[0] }}"></script>
-        <script src="{{ head.resourcesUrl }}public{{ themeServices.grunt.staticAssets.global.js[1] }}"></script>
+        {% for jsMin in themeServices.grunt.staticAssets.global.js %}
+        <script src="{{ head.resourcesUrl }}public{{ jsMin }}"></script>
+        {% endfor %}
         {% endif %}
 
         <script type="text/javascript">
