@@ -107,7 +107,7 @@ class UsersController extends RozierApp
 
             if ($form->isValid()) {
                 try {
-                    $this->editUser($form->getData(), $user);
+                    $this->editUser($form->getData(), $user, $request);
                     $msg = $this->getTranslator()->trans(
                         'user.%name%.updated',
                         ['%name%'=>$user->getUsername()]
@@ -487,7 +487,7 @@ class UsersController extends RozierApp
      * @param array                       $data
      * @param RZ\Roadiz\Core\Entities\User $user
      */
-    private function editUser($data, User $user)
+    private function editUser($data, User $user, Request $request)
     {
         if ($data['username'] != $user->getUsername() &&
                 $this->getService('em')
@@ -517,7 +517,20 @@ class UsersController extends RozierApp
 
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
-            $user->$setter($value);
+            if ($key == "chroot") {
+                if (count($value) > 1) {
+                    $msg = $this->getTranslator()->trans('chroot.limited.one');
+                    $this->publishErrorMessage($request, $msg);
+                }
+                if ($value !== null) {
+                    $n = $this->getService('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);
+                    $user->$setter($n);
+                } else {
+                    $user->$setter(null);
+                }
+            } else {
+                $user->$setter($value);
+            }
         }
 
         $this->updateProfileImage($user);
@@ -748,11 +761,12 @@ class UsersController extends RozierApp
             'job' => $user->getJob(),
             'birthday' => $user->getBirthday(),
             'facebookName' => $user->getFacebookName(),
+            'chroot' => ($user->getChroot() !== null) ? $user->getChroot()->getId() : null
         ];
 
         $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults);
-        $this->buildCommonFormFields($builder);
+                        ->createNamedBuilder('source', 'form', $defaults);
+        $this->buildCommonFormFields($builder, $user);
 
         return $builder->getForm();
     }
@@ -762,7 +776,7 @@ class UsersController extends RozierApp
      *
      * @param FormBuilder $builder
      */
-    private function buildCommonFormFields(&$builder)
+    private function buildCommonFormFields(&$builder, User $user)
     {
         $builder->add('email', 'email', [
             'label'=>$this->getTranslator()->trans('email'),
@@ -812,6 +826,15 @@ class UsersController extends RozierApp
             'label'=>$this->getTranslator()->trans('facebookName'),
             'required' => false
         ]);
+
+        if ($this->getService('securityContext')->isGranted("ROLE_SUPERADMIN")) {
+            $n = $user->getChroot();
+            $n = ($n !== null)? [$n] : [] ;
+            $builder->add('chroot', new \RZ\Roadiz\CMS\Forms\NodesType($n), [
+                'label'=>$this->getTranslator()->trans('chroot'),
+                'required'=>false
+            ]);
+        }
 
         return $builder;
     }

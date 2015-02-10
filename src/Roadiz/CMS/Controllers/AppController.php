@@ -561,6 +561,7 @@ class AppController implements ViewableInterface
     {
         $this->publishMessage($request, $msg, 'confirm', $source);
     }
+
     /**
      * Publish an error message in Session flash bag and
      * logger interface.
@@ -605,6 +606,42 @@ class AppController implements ViewableInterface
     {
         if (!$this->getService('securityContext')->isGranted($role)) {
             throw new AccessDeniedException("You don't have access to this page:" . $role);
+        }
+    }
+
+    /**
+     * Validate a request against a given ROLE_*
+     * and check chroot and newsletter type/accces
+     * and throws an AccessDeniedException exception.
+     *
+     * @param string $role
+     *
+     * @throws AccessDeniedException
+     */
+    public function validateNodeAccessForRole($role, $nodeId, $includeChroot = false)
+    {
+        $node = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+
+        $this->getService('em')->refresh($node);
+
+        $user = $this->getService("securityContext")->getToken()->getUser();
+
+        $parents = $node->getHandler()->getParents();
+
+        if ($includeChroot) {
+            $parents[] = $node;
+        }
+
+        $isNewsletterFriend = $node->getHandler()->isRelatedToNewsletter();
+
+        if (!((!$isNewsletterFriend
+                && $this->getService('securityContext')->isGranted($role)
+                && ($user->getChroot() === null
+                    || in_array($user->getChroot(), $parents, true)))
+            || ($isNewsletterFriend
+                && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NEWSLETTERS')))) {
+            throw new AccessDeniedException("You don't have access to this page");
         }
     }
 }

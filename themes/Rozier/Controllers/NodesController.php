@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -66,6 +67,8 @@ class NodesController extends RozierApp
         $translation = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                             ->findDefault();
+
+        $user = $this->getService("securityContext")->getToken()->getUser();
 
         switch ($filter) {
             case 'draft':
@@ -99,6 +102,11 @@ class NodesController extends RozierApp
                 $arrayFilter = [];
                 break;
         }
+
+        if ($user->getChroot() !== null) {
+            $arrayFilter["chroot"] = $user->getChroot();
+        }
+
         /*
          * Manage get request to filter list
          */
@@ -138,7 +146,7 @@ class NodesController extends RozierApp
      */
     public function editAction(Request $request, $nodeId, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES_SETTING');
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_SETTING', $nodeId);
 
         $node = $this->getService('em')
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
@@ -249,6 +257,7 @@ class NodesController extends RozierApp
                 return $response->send();
             }
             $this->assignation['form'] = $form->createView();
+            $this->assignation['securityContext'] = $this->getService("securityContext");
 
             return new Response(
                 $this->getTwig()->render('nodes/edit.html.twig', $this->assignation),
@@ -270,7 +279,7 @@ class NodesController extends RozierApp
      */
     public function editTagsAction(Request $request, $nodeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
         $translation = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
@@ -339,7 +348,7 @@ class NodesController extends RozierApp
      */
     public function removeTagAction(Request $request, $nodeId, $tagId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES_DELETE');
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         $node = $this->getService('em')
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
@@ -482,7 +491,7 @@ class NodesController extends RozierApp
      */
     public function addChildAction(Request $request, $nodeId, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
         $translation = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
@@ -567,7 +576,7 @@ class NodesController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES_DELETE');
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         $node = $this->getService('em')
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
@@ -640,12 +649,16 @@ class NodesController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
+            $user = $this->getService("securityContext")->getToken()->getUser();
+            $chroot = $user->getChroot();
+            $criteria = ['status' => Node::DELETED];
+            if ($chroot !== null) {
+                $ids = $chroot->getHandler()->getAllOffspringId();
+                $criteria["parent"] = $ids;
+            }
             $nodes = $this->getService('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                          ->findBy([
-                              'status' => Node::DELETED,
-                          ]);
-
+                          ->findBy($criteria);
             foreach ($nodes as $node) {
                 $node->getHandler()->removeWithChildrenAndAssociations();
             }
@@ -679,7 +692,7 @@ class NodesController extends RozierApp
      */
     public function undeleteAction(Request $request, $nodeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES_DELETE');
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         $node = $this->getService('em')
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
@@ -736,5 +749,60 @@ class NodesController extends RozierApp
         } else {
             return $this->throw404();
         }
+    }
+
+    public function generateAndAddNodeAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
+        if ($request->get('nodeTypeId') > 0 &&
+            $request->get('parentNodeId') > 0) {
+            $nodeType = $this->getService('em')
+                            ->find(
+                                'RZ\Roadiz\Core\Entities\NodeType',
+                                (int) $request->get('nodeTypeId')
+                            );
+
+            $parent = $this->getService('em')
+                            ->find(
+                                'RZ\Roadiz\Core\Entities\Node',
+                                (int) $request->get('parentNodeId')
+                            );
+
+            if (null !== $nodeType &&
+                null !== $parent) {
+                $translation = ($request->get('translationId') > 0) ? $this->getService('em')->find(
+                    'RZ\Roadiz\Core\Entities\Translation',
+                    (int) $request->get('translationId')
+                )
+                                                                    : $parent->getNodeSources()->first()->getTranslation();
+                if (null === $translation) {
+                    $translation = $this->getService('em')
+                                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                        ->findDefault();
+                }
+
+                try {
+                    $source = static::generateUniqueNodeWithTypeAndTranslation($request, $nodeType, $parent, $translation, null);
+
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate(
+                            'nodesEditSourcePage',
+                            ['nodeId' => $source->getNode()->getId(), 'translationId'=>$translation->getId()]
+                        )
+                    );
+
+                    $response->prepare($request);
+                    return $response->send();
+
+                } catch (\Exception $e) {
+                    $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists');
+
+                    return $this->throw404($msg);
+                }
+            }
+        }
+
+        return $this->throw404($this->getTranslator()->trans('bad.request'));
     }
 }

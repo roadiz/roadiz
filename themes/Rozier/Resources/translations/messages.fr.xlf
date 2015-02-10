@@ -5745,6 +5745,21 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>admin_image</source>
           <target>Image/Logo de l’administration</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="chroot.limited.one">
+          <source>chroot.limited.one</source>
+          <target state="translated">Vous ne pouvez choisir qu'un seule nœud racine</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="chroot">
+          <source>chroot</source>
+          <target>Nœud racine</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.noCreation.alreadyExists">
+          <source>node.noCreation.alreadyExists</source>
+          <target>Le nœud n’a pas été créé car il existe déjà.</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>
