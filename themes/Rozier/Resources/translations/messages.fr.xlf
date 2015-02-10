@@ -5745,6 +5745,16 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>admin_image</source>
           <target>Image/Logo de l’administration</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="chroot.limited.one">
+          <source>chroot.limited.one</source>
+          <target state="translated">Vous pouvez choisir qu'un nœud parent</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="chroot">
+          <source>chroot</source>
+          <target>Nœud parent</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>

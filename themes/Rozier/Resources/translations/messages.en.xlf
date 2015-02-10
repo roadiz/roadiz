@@ -5706,46 +5706,57 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
 
       <trans-unit xml:space="preserve" id="customForm.%name%.updated">
           <source>customForm.%name%.updated</source>
-          <target>Custom form “%name%” has been updated.</target>
+          <target state="translated">Custom form “%name%” has been updated.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.created">
           <source>customForm.%name%.created</source>
-          <target>Custom form “%name%” has been created.</target>
+          <target state="translated">Custom form “%name%” has been created.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.deleted">
           <source>customForm.%name%.deleted</source>
-          <target>Custom form “%name%” has been deleted.</target>
+          <target state="translated">Custom form “%name%” has been deleted.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.cannot_rename_already_exists">
           <source>customForm.%name%.cannot_rename_already_exists</source>
-          <target>Custom form “%name%” cannot be renamed, another one already exists.</target>
+          <target state="translated">Custom form “%name%” cannot be renamed, another one already exists.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.already_exists">
           <source>customForm.%name%.already_exists</source>
-          <target>Custom form “%name%” already exists.</target>
+          <target state="translated">Custom form “%name%” already exists.</target>
       </trans-unit>
 
       <trans-unit xml:space="preserve" id="select.all">
           <source>select.all</source>
-          <target>Select all</target>
+          <target state="translated">Select all</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="deselect.all">
           <source>deselect.all</source>
-          <target>Deselect all</target>
+          <target state="translated">Deselect all</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="edit.user.%name%.roles">
           <source>edit.user.%name%.roles</source>
-          <target>%name% roles</target>
+          <target state="translated">%name% roles</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="history.for.%name%">
           <source>history.for.%name%</source>
-          <target>%name% history</target>
+          <target state="translated">%name% history</target>
       </trans-unit>
 
       <trans-unit xml:space="preserve" id="admin_image">
           <source>admin_image</source>
-          <target>Back-office main picture or brand</target>
+          <target state="translated">Back-office main picture or brand</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="chroot.limited.one">
+          <source>chroot.limited.one</source>
+          <target state="translated">You can only choose one root node</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="chroot">
+          <source>chroot</source>
+          <target>Root node</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

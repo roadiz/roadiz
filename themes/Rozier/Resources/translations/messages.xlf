@@ -5746,8 +5746,15 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="chroot.limited.one">
+          <source>chroot.limited.one</source>
+          <target></target>
+      </trans-unit>
 
-
+      <trans-unit xml:space="preserve" id="chroot">
+          <source>chroot</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
