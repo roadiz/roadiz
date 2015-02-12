@@ -32,7 +32,7 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Utils\SplashbasePictureFinder;
+use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

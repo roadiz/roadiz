@@ -87,6 +87,7 @@ body {
 
 #main-content {
     padding: 0px 10% 80px;
+    text-align: center;
 
     h1, h2, h3, h4, h5{
         font-family: @main-font;
@@ -141,9 +142,17 @@ body {
         color: @text-grey;
         margin: 20px auto 40px;
 
-        p {
+        p, li {
             font-size: 13px;
             line-height: 22px;
+        }
+        ul {
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+            border-bottom: 1px solid #EFEFEF;
         }
     }
 
@@ -171,6 +180,45 @@ body {
 
         iframe {
             max-width: 100%;
+        }
+
+        figcaption {
+            font-size: 13px;
+            line-height: 22px;
+            margin: 10px 0px;
+        }
+    }
+}
+
+.contextual-menu {
+    display: inline-block;
+    text-align: center;
+    margin: 1em auto;
+
+    border: 1px solid #D0D0D0;
+    .rounded(5px);
+
+    a {
+        color: @text-grey;
+        display: inline-block;
+        padding: 6px 8px;
+        border-left: 1px solid #D0D0D0;
+        font-size: 12px;
+
+        .transition(background-color 0.3s linear);
+
+        i {
+            margin: 0px 3px;
+            color: lighten(@text-grey, 20%);
+        }
+
+        &:first-child {
+            border-left: none;
+        }
+
+        &:hover {
+            text-decoration: none;
+            background-color: #EEEEEE;
         }
     }
 }

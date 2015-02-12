@@ -5725,6 +5725,41 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="select.all">
+          <source>select.all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="deselect.all">
+          <source>deselect.all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user.%name%.roles">
+          <source>edit.user.%name%.roles</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="history.for.%name%">
+          <source>history.for.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="admin_image">
+          <source>admin_image</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="chroot.limited.one">
+          <source>chroot.limited.one</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="chroot">
+          <source>chroot</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.noCreation.alreadyExists">
+          <source>node.noCreation.alreadyExists</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -32,13 +32,16 @@
 namespace Themes\Rozier\Traits;
 
 use RZ\Roadiz\CMS\Forms\SeparatorType;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Utils\StringHandler;
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraints\NotBlank;
+
+use Symfony\Component\HttpFoundation\Request;
 
 trait NodesTrait
 {
@@ -547,5 +550,46 @@ trait NodesTrait
             ]);
 
         return $builder->getForm();
+    }
+
+    /**
+     * Generate node with given nodetype and translation
+     *
+     * @param Symfony\Component\HttpFoundation\Request  $request
+     * @param RZ\Roadiz\Core\Entities\NodeType          $nodeType
+     * @param RZ\Roadiz\Core\Entities\Node              $parent
+     * @param RZ\Roadiz\Core\Entities\Translation       $translation
+     * @param RZ\Roadiz\Core\Entities\Tag               $tag
+     * 
+     * @return RZ\Roadiz\Core\Entities\NodeSource
+     */
+    public static function generateUniqueNodeWithTypeAndTranslation(
+        Request $request,
+        NodeType $nodeType,
+        Node $parent,
+        Translation $translation,
+        Tag $tag = null
+    ) {
+        $name = $nodeType->getDisplayName()." ".uniqid();
+
+        $node = new Node($nodeType);
+        $node->setParent($parent);
+        $node->setNodeName($name);
+        if (null !== $tag) {
+            $node->addTag($tag);
+        }
+        Kernel::getService('em')->persist($node);
+
+        if ($request->get('pushTop') == 1) {
+            $node->setPosition(0.5);
+        }
+
+        $sourceClass = "GeneratedNodeSources\\".$nodeType->getSourceEntityClassName();
+        $source = new $sourceClass($node, $translation);
+        $source->setTitle($name);
+        Kernel::getService('em')->persist($source);
+        Kernel::getService('em')->flush();
+
+        return $source;
     }
 }

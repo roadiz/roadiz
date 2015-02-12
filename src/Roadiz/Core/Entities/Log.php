@@ -64,7 +64,7 @@ class Log extends AbstractEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="SET NULL")
      */
     protected $user = null;
 
@@ -129,7 +129,7 @@ class Log extends AbstractEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="logs")
-     * @ORM\JoinColumn(name="node_source_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="node_source_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $nodeSource;
 

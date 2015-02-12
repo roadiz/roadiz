@@ -27,7 +27,7 @@
  * @file SplashbasePictureFinder.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Utils;
+namespace RZ\Roadiz\Utils\MediaFinders;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientErrorResponseException;

@@ -29,11 +29,12 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
+use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Utils\StringHandler;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\SettingGroup;
-use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * Settings entity are a simple key-value configuration system.
@@ -43,6 +44,45 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Setting extends AbstractEntity
 {
+
+    /**
+     * Associates custom form field type to a readable string.
+     *
+     * These string will be used as translation key.
+     *
+     * @var array
+     */
+    public static $typeToHuman = [
+        AbstractField::STRING_T => 'string.type',
+        AbstractField::DATETIME_T => 'date-time.type',
+        AbstractField::TEXT_T => 'text.type',
+        AbstractField::MARKDOWN_T => 'markdown.type',
+        AbstractField::BOOLEAN_T => 'boolean.type',
+        AbstractField::INTEGER_T => 'integer.type',
+        AbstractField::DECIMAL_T => 'decimal.type',
+        AbstractField::EMAIL_T => 'email.type',
+        AbstractField::DOCUMENTS_T => 'documents.type',
+        AbstractField::COLOUR_T => 'colour.type',
+    ];
+
+    /**
+     * Associates node-type field type to a Symfony Form type.
+     *
+     * @var array
+     */
+    public static $typeToForm = [
+        AbstractField::STRING_T => 'text',
+        AbstractField::DATETIME_T => 'datetime',
+        AbstractField::TEXT_T => 'textarea',
+        AbstractField::MARKDOWN_T => 'markdown',
+        AbstractField::BOOLEAN_T => 'checkbox',
+        AbstractField::INTEGER_T => 'integer',
+        AbstractField::DECIMAL_T => 'number',
+        AbstractField::EMAIL_T => 'email',
+        AbstractField::DOCUMENTS_T => 'file',
+        AbstractField::COLOUR_T => 'text',
+    ];
+
     /**
      * @ORM\Column(type="string", unique=true)
      */
@@ -82,6 +122,9 @@ class Setting extends AbstractEntity
         }
         if ($this->getType() == NodeTypeField::DATETIME_T) {
             return new \DateTime($this->value);
+        }
+        if ($this->getType() == NodeTypeField::DOCUMENTS_T) {
+            return (int) $this->value;
         }
 
         return $this->value;

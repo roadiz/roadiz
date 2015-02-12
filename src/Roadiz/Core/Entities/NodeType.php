@@ -30,10 +30,10 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * NodeTypes describe each node structure family,
@@ -283,7 +283,7 @@ class NodeType extends AbstractEntity
      */
     public function getSourceEntityClassName()
     {
-        return 'NS'.ucwords($this->getName());
+        return 'NS' . ucwords($this->getName());
     }
 
     /**
@@ -291,7 +291,7 @@ class NodeType extends AbstractEntity
      */
     public function getSourceEntityTableName()
     {
-        return 'ns_'.strtolower($this->getName());
+        return 'ns_' . strtolower($this->getName());
     }
 
     /**
@@ -307,8 +307,8 @@ class NodeType extends AbstractEntity
      */
     public function getOneLineSummary()
     {
-        return $this->getId()." — ".$this->getName().
-            " — Visible : ".($this->isVisible()?'true':'false').PHP_EOL;
+        return $this->getId() . " — " . $this->getName() .
+        " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
     }
 
     /**
@@ -316,9 +316,9 @@ class NodeType extends AbstractEntity
      */
     public function getFieldsSummary()
     {
-        $text = "|".PHP_EOL;
+        $text = "|" . PHP_EOL;
         foreach ($this->getFields() as $field) {
-            $text .= "|--- ".$field->getOneLineSummary();
+            $text .= "|--- " . $field->getOneLineSummary();
         }
 
         return $text;

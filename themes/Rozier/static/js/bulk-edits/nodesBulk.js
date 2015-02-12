@@ -16,6 +16,9 @@ var NodesBulk = function () {
     _this.$nodesStatusButton = $('.uk-button-bulk-status-nodes');
     _this.$nodesStatusCont = $('.nodes-bulk-status-cont');
 
+    _this.$nodesSelectAll = $('.uk-button-select-all');
+    _this.$nodesDeselectAll = $('.uk-button-bulk-deselect');
+
     if (_this.$nodesCheckboxes.length) {
         _this.init();
     }
@@ -33,6 +36,8 @@ NodesBulk.prototype.$nodesStatusButton = null;
 NodesBulk.prototype.$nodesStatusCont = null;
 NodesBulk.prototype.nodesStatusOpen = false;
 NodesBulk.prototype.nodesIds = null;
+NodesBulk.prototype.$nodesSelectAll = null;
+NodesBulk.prototype.$nodesDeselectAll = null;
 
 /**
  * Init
@@ -47,8 +52,34 @@ NodesBulk.prototype.init = function() {
 
     _this.$nodesFolderButton.on('click', $.proxy(_this.nodesFolderButtonClick, _this));
     _this.$nodesStatusButton.on('click', $.proxy(_this.nodesStatusButtonClick, _this));
+
+     var selectAllProxy = $.proxy(_this.onSelectAll, _this);
+    var deselectAllProxy = $.proxy(_this.onDeselectAll, _this);
+
+    _this.$nodesSelectAll.off('click', selectAllProxy);
+    _this.$nodesSelectAll.on('click', selectAllProxy);
+    _this.$nodesDeselectAll.off('click', deselectAllProxy);
+    _this.$nodesDeselectAll.on('click', deselectAllProxy);
 };
 
+
+NodesBulk.prototype.onSelectAll = function(event) {
+    var _this = this;
+
+    _this.$nodesCheckboxes.prop('checked',true);
+    _this.onCheckboxChange(null);
+
+    return false;
+};
+
+NodesBulk.prototype.onDeselectAll = function(event) {
+    var _this = this;
+
+    _this.$nodesCheckboxes.prop('checked', false);
+    _this.onCheckboxChange(null);
+
+    return false;
+};
 
 /**
  * On checkbox change

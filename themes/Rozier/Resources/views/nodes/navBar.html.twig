@@ -1,25 +1,27 @@
 <nav class="node-navbar-navigation navbar-navigation uk-navbar">
 	{% spaceless %}
 	<ul class="uk-navbar-nav">
+		{% if node != securityContext.token.user.chroot %}
 		<li class="uk-navbar-item{% if current == 'source' %} uk-active{% endif %}">
-			<a class="uk-navbar-link" href="{{ path('nodesEditSourcePage', { nodeId: node.getId, translationId:translation.getId }) }}">{% trans %}node.content{% endtrans %}</a>
+			<a class="uk-navbar-link" href="{{ path('nodesEditSourcePage', { nodeId: node.id, translationId:translation.id }) }}">{% trans %}node.content{% endtrans %}</a>
 		</li>
 		{% if (securityContext.Granted('ROLE_ACCESS_NODES_SETTING')) %}
 		<li class="uk-navbar-item{% if current == 'edit' %} uk-active{% endif %}" >
-			<a class="uk-navbar-link" href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{% trans %}node.parameters{% endtrans %}</a>
+			<a class="uk-navbar-link" href="{{ path('nodesEditPage', { nodeId: node.id }) }}">{% trans %}node.parameters{% endtrans %}</a>
 		</li>
 		{% endif %}
 		{% if (securityContext.Granted('ROLE_ACCESS_TAGS')) %}
 		<li class="uk-navbar-item{% if current == 'tags' %} uk-active{% endif %}">
-			<a class="uk-navbar-link" href="{{ path('nodesEditTagsPage', { nodeId: node.getId}) }}">{% trans %}tags{% endtrans %}</a>
+			<a class="uk-navbar-link" href="{{ path('nodesEditTagsPage', { nodeId: node.id}) }}">{% trans %}tags{% endtrans %}</a>
 		</li>
 		{% endif %}
 		<li class="uk-navbar-item{% if current == 'seo' %} uk-active{% endif %}">
-			<a class="uk-navbar-link" href="{{ path('nodesEditSEOPage', { nodeId: node.getId, translationId:translation.getId}) }}">{% trans %}seo{% endtrans %}</a>
+			<a class="uk-navbar-link" href="{{ path('nodesEditSEOPage', { nodeId: node.id, translationId:translation.id}) }}">{% trans %}seo{% endtrans %}</a>
 		</li>
+		{% endif %}
 		{% if node.isHidingChildren %}
 		<li class="uk-navbar-item{% if current == 'tree' %} uk-active{% endif %}">
-			<a class="uk-navbar-link" href="{{ path('nodesTreePage', { nodeId: node.getId}) }}">{% trans %}tree{% endtrans %}</a>
+			<a class="uk-navbar-link" href="{{ path('nodesTreePage', { nodeId: node.id}) }}">{% trans %}tree{% endtrans %}</a>
 		</li>
 		{% endif %}
 	</ul>

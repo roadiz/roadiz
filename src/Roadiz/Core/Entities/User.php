@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\UserHandler;
@@ -553,6 +554,35 @@ class User extends AbstractHuman implements AdvancedUserInterface
     {
         return $this->expiresAt;
     }
+
+    /**
+    * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
+    * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id")
+    *
+    * @var RZ\Roadiz\Core\Entities\Node
+    */
+    private $chroot;
+
+    /**
+    * @param RZ\Roadiz\Core\Entities\Node $chroot
+    *
+    * @return RZ\Roadiz\Core\Entities\Node
+    */
+    public function setChroot(Node $chroot = null)
+    {
+        $this->chroot = $chroot;
+
+        return $this;
+    }
+
+    /**
+    * @return RZ\Roadiz\Core\Entities\Node
+    */
+    public function getChroot()
+    {
+        return $this->chroot;
+    }
+
 
     /**
      * @ORM\PrePersist

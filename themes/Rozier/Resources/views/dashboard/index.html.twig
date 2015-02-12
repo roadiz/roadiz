@@ -32,13 +32,15 @@
                         {% else %}
                         <span class="no-thumb"></span>
                         {% endif %}
+                        {% if log.user %}
                         <img width="60"
                              height="60"
                              class="user-image"
-                             src="{{ log.user.getPictureUrl }}"
+                             src="{{ log.user.pictureUrl }}"
                              alt="{{ log.user.identifier }}"
                              title="{{ log.user.identifier }}"
                              data-uk-tooltip="{animation:true}" />
+                        {% endif %}
                     </figure>
                     <p class="source-title">{{ source.title }}</p>
                     <p class="source-update-date">{{ log.datetime|localizeddate('medium', 'short') }}</p>
@@ -48,8 +50,6 @@
             {% endspaceless %}
         </div>
         {% endif %}
-
     </article>
-
 </section>
 {% endblock %}

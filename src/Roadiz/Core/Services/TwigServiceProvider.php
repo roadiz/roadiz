@@ -29,18 +29,16 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
+use Asm89\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
+use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 use Pimple\Container;
-
+use RZ\Roadiz\Utils\InlineMarkdown;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-
 use \Michelf\Markdown;
-use RZ\Roadiz\Core\Utils\InlineMarkdown;
-use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
-use Asm89\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
-use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 
 /**
  * Register Twig services for dependency injection container.
@@ -53,7 +51,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
     public function register(Container $container)
     {
         $container['twig.cacheFolder'] = function ($c) {
-            return ROADIZ_ROOT.'/cache/twig_cache';
+            return ROADIZ_ROOT . '/cache/twig_cache';
         };
 
         /*
@@ -65,12 +63,12 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             // le chemin vers TwigBridge pour que Twig puisse localiser
             // le fichier form_div_layout.html.twig
             $vendorTwigBridgeDir =
-                $vendorDir . '/symfony/twig-bridge/Symfony/Bridge/Twig';
+            $vendorDir . '/symfony/twig-bridge/Symfony/Bridge/Twig';
 
             return new \Twig_Loader_Filesystem([
                 // Default Form extension templates
-                $vendorTwigBridgeDir.'/Resources/views/Form',
-                ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/views',
+                $vendorTwigBridgeDir . '/Resources/views/Form',
+                ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views',
             ]);
         };
 
@@ -79,12 +77,8 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
          */
         $container['twig.environment'] = function ($c) {
 
-            $devMode = (isset($c['config']['devMode']) && true === (boolean) $c['config']['devMode']) ?
-                        true :
-                        false;
-
             $twig = new \Twig_Environment($c['twig.loaderFileSystem'], [
-                'debug' => $devMode,
+                'debug' => $c['config']['devMode'],
                 'cache' => $c['twig.cacheFolder'],
             ]);
 
@@ -112,7 +106,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 $twig->addExtension($c['twig.cacheExtension']);
             }
 
-            if ($devMode) {
+            if (true === $c['config']['devMode']) {
                 $twig->addExtension(new \Twig_Extension_Debug());
             }
 
@@ -125,7 +119,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         $container['twig.formRenderer'] = function ($c) {
 
             return new TwigRendererEngine([
-                'form_div_layout.html.twig'
+                'form_div_layout.html.twig',
             ]);
         };
 
@@ -166,8 +160,8 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 'centralTruncate',
                 function ($object, $length, $offset = 0, $ellipsis = "[…]") {
                     if (strlen($object) > $length + strlen($ellipsis)) {
-                        $str1 = substr($object, 0, floor($length/2)+ floor($offset/2));
-                        $str2 = substr($object, (floor($length/2)* -1)+ floor($offset/2));
+                        $str1 = substr($object, 0, floor($length / 2) + floor($offset / 2));
+                        $str2 = substr($object, (floor($length / 2) * -1) + floor($offset / 2));
 
                         return $str1 . $ellipsis . $str2;
                     } else {
@@ -184,8 +178,8 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
 
             $resultCacheDriver = $c['em']->getConfiguration()->getResultCacheImpl();
             if ($resultCacheDriver !== null) {
-                $cacheProvider  = new DoctrineCacheAdapter($resultCacheDriver);
-                $cacheStrategy  = new LifetimeCacheStrategy($cacheProvider);
+                $cacheProvider = new DoctrineCacheAdapter($resultCacheDriver);
+                $cacheStrategy = new LifetimeCacheStrategy($cacheProvider);
                 $cacheExtension = new CacheExtension($cacheStrategy);
 
                 return $cacheExtension;

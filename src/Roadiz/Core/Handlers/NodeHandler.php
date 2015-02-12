@@ -37,7 +37,8 @@ use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
-use \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
+use Symfony\Component\Security\Core\SecurityContext;
+use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 
 /**
  * Handle operations with nodes entities.
@@ -444,17 +445,44 @@ class NodeHandler
     }
 
     /**
+     * Return if is in Newsletter Node.
+     *
+     * @return bool
+     */
+    public function isRelatedToNewsletter()
+    {
+        $parents = $this->getParents();
+
+        if ($this->node->getNodeType()->isNewsletterType()) {
+            return true;
+        }
+        foreach ($parents as $parent) {
+            if ($parent->getNodeType()->isNewsletterType()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Return every node’s parents
+     * @param SecurityContext|null                    $securityContext
+     *
      * @return array
      */
-    public function getParents()
+    public function getParents(SecurityContext $securityContext = null)
     {
         $parentsArray = [];
         $parent = $this->node;
+        $user = null;
+
+        if ($securityContext !== null) {
+            $user = $securityContext->getToken()->getUser();
+        }
 
         do {
             $parent = $parent->getParent();
-            if ($parent !== null) {
+            if ($parent !== null && !($user !== null && $parent == $user->getChroot())) {
                 $parentsArray[] = $parent;
             } else {
                 break;
@@ -517,6 +545,17 @@ class NodeHandler
         Kernel::getService('em')->flush();
 
         return $i;
+    }
+
+    /**
+     * return all node offspring id
+     *
+     * @return ArrayCollection
+     */
+    public function getAllOffspringId()
+    {
+        return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+                                       ->findAllOffspringIdByNode($this->node);
     }
 
     /**
@@ -609,5 +648,93 @@ class NodeHandler
         Kernel::getService('em')->refresh($newNode);
 
         return $newNode;
+    }
+
+    /**
+     * Get previous node from hierarchy.
+     *
+     * @param  array|null           $criteria        [description]
+     * @param  array|null           $order           [description]
+     * @param  SecurityContext|null $securityContext [description]
+     *
+     * @return RZ\Roadiz\Core\Entities\Node
+     */
+    public function getPrevious(
+        array $criteria = null,
+        array $order = null,
+        SecurityContext $securityContext = null
+    ) {
+        if ($this->node->getPosition() <= 1) {
+            return null;
+        }
+        if (null === $order) {
+            $order = [];
+        }
+
+        if (null === $criteria) {
+            $criteria = [];
+        }
+
+        $criteria['parent'] = $this->node->getParent();
+        /*
+         * Use < operator to get first previous nodeSource
+         * even if it’s not the previous position index
+         */
+        $criteria['position'] = [
+            '<',
+            $this->node->getPosition(),
+        ];
+
+        $order['position'] = 'DESC';
+
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findOneBy(
+                $criteria,
+                $order,
+                $securityContext
+            );
+    }
+
+    /**
+     * Get next node from hierarchy.
+     *
+     * @param  array|null           $criteria        [description]
+     * @param  array|null           $order           [description]
+     * @param  SecurityContext|null $securityContext [description]
+     *
+     * @return RZ\Roadiz\Core\Entities\Node
+     */
+    public function getNext(
+        array $criteria = null,
+        array $order = null,
+        SecurityContext $securityContext = null
+    ) {
+        if (null === $criteria) {
+            $criteria = [];
+        }
+        if (null === $order) {
+            $order = [];
+        }
+
+        $criteria['parent'] = $this->node->getParent();
+
+        /*
+         * Use > operator to get first next nodeSource
+         * even if it’s not the next position index
+         */
+        $criteria['position'] = [
+            '>',
+            $this->node->getPosition(),
+        ];
+        $order['position'] = 'ASC';
+
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findOneBy(
+                $criteria,
+                $order,
+                $securityContext
+            );
     }
 }

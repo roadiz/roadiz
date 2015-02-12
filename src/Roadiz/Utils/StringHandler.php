@@ -27,7 +27,7 @@
  * @file StringHandler.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Utils;
+namespace RZ\Roadiz\Utils;
 
 use RZ\Roadiz\Core\Exceptions\EmptySaltException;
 

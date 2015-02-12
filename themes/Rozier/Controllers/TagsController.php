@@ -30,20 +30,19 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use Themes\Rozier\RozierApp;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use Themes\Rozier\Widgets\TagTreeWidget;
-
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\RozierApp;
+use Themes\Rozier\Widgets\TagTreeWidget;
 
 /**
  * {@inheritdoc}
@@ -96,11 +95,11 @@ class TagsController extends RozierApp
 
         if (null === $translationId) {
             $translation = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                ->findDefault();
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findDefault();
         } else {
             $translation = $this->getService('em')
-                    ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
 
         if (null !== $translation) {
@@ -110,12 +109,11 @@ class TagsController extends RozierApp
              * that is initialized before calling route method.
              */
             $gtag = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+                         ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
             $tt = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
-                ->findOneBy(['translation'=>$translation, 'tag'=>$gtag]);
-
+                       ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
+                       ->findOneBy(['translation' => $translation, 'tag' => $gtag]);
 
             if (null !== $tt) {
                 /*
@@ -127,8 +125,8 @@ class TagsController extends RozierApp
                 $this->assignation['translatedTag'] = $tt;
                 $this->assignation['translation'] = $translation;
                 $this->assignation['available_translations'] = $this->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findAllAvailable();
+                     ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                     ->findAllAvailable();
 
                 $form = $this->buildEditForm($tag, $tt);
 
@@ -138,7 +136,7 @@ class TagsController extends RozierApp
                     $this->editTag($form->getData(), $tt);
 
                     $msg = $this->getTranslator()->trans('tag.%name%.updated', [
-                        '%name%'=>$tag->getTranslatedTags()->first()->getName()
+                        '%name%' => $tag->getTranslatedTags()->first()->getName(),
                     ]);
                     $this->publishConfirmMessage($request, $msg);
                     /*
@@ -171,7 +169,7 @@ class TagsController extends RozierApp
                     if (false !== $baseTranslation) {
                         $translatedTag->setName($baseTranslation->getName());
                     } else {
-                        $translatedTag->setName('tag_'.$gtag->getId());
+                        $translatedTag->setName('tag_' . $gtag->getId());
                     }
                     $this->getService('em')->persist($translatedTag);
                     $this->getService('em')->flush();
@@ -181,7 +179,7 @@ class TagsController extends RozierApp
                             'tagsEditTranslatedPage',
                             [
                                 'tagId' => $gtag->getId(),
-                                'translationId' => $translation->getId()
+                                'translationId' => $translation->getId(),
                             ]
                         )
                     );
@@ -193,7 +191,6 @@ class TagsController extends RozierApp
                     return $this->throw404();
                 }
             }
-
 
             return new Response(
                 $this->getTwig()->render('tags/edit.html.twig', $this->assignation),
@@ -219,8 +216,8 @@ class TagsController extends RozierApp
         $tag = new Tag();
 
         $translation = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                ->findDefault();
+                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                            ->findDefault();
 
         if ($tag !== null &&
             $translation !== null) {
@@ -232,7 +229,7 @@ class TagsController extends RozierApp
             if ($form->isValid()) {
                 $this->addTag($form->getData(), $tag, $translation);
 
-                $msg = $this->getTranslator()->trans('tag.%name%.created', ['%name%'=>$tag->getTagName()]);
+                $msg = $this->getTranslator()->trans('tag.%name%.created', ['%name%' => $tag->getTagName()]);
                 $this->publishConfirmMessage($request, $msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -270,11 +267,11 @@ class TagsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $translation = $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findDefault();
+                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                            ->findDefault();
 
         $tag = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+                    ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
             $form = $this->buildEditSettingsForm($tag);
@@ -284,7 +281,7 @@ class TagsController extends RozierApp
             if ($form->isValid()) {
                 $this->editTagSettings($form->getData(), $tag);
 
-                $msg = $this->getTranslator()->trans('tag.%name%.updated', ['%name%'=>$tag->getTagName()]);
+                $msg = $this->getTranslator()->trans('tag.%name%.updated', ['%name%' => $tag->getTagName()]);
                 $this->publishConfirmMessage($request, $msg);
 
                 /*
@@ -325,18 +322,18 @@ class TagsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $tag = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+                    ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
         $this->getService('em')->refresh($tag);
 
         $translation = null;
         if (null !== $translationId) {
             $translation = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                ->findOneBy(['id'=>(int) $translationId]);
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findOneBy(['id' => (int) $translationId]);
         } else {
             $translation = $this->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findDefault();
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findDefault();
         }
 
         if (null !== $tag) {
@@ -366,7 +363,7 @@ class TagsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS_DELETE');
 
         $tag = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+                    ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null &&
             !$tag->isLocked()) {
@@ -378,7 +375,7 @@ class TagsController extends RozierApp
             if ($form->isValid() &&
                 $form->getData()['tagId'] == $tag->getId()) {
                 $this->deleteTag($form->getData(), $tag);
-                $msg = $this->getTranslator()->trans('tag.%name%.deleted', ['%name%'=>$tag->getTranslatedTags()->first()->getName()]);
+                $msg = $this->getTranslator()->trans('tag.%name%.deleted', ['%name%' => $tag->getTranslatedTags()->first()->getName()]);
                 $this->publishConfirmMessage($request, $msg);
 
                 /*
@@ -418,15 +415,15 @@ class TagsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $translation = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                ->findDefault();
+                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                            ->findDefault();
 
         if ($translationId !== null) {
             $translation = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
         $parentTag = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+                          ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($translation !== null &&
             $parentTag !== null) {
@@ -437,7 +434,7 @@ class TagsController extends RozierApp
                 try {
                     $tag = $this->addChildTag($form->getData(), $parentTag, $translation);
 
-                    $msg = $this->getTranslator()->trans('child.tag.%name%.created', ['%name%'=>$tag->getTagName()]);
+                    $msg = $this->getTranslator()->trans('child.tag.%name%.created', ['%name%' => $tag->getTagName()]);
                     $this->publishConfirmMessage($request, $msg);
 
                     $response = new RedirectResponse(
@@ -494,8 +491,8 @@ class TagsController extends RozierApp
 
         if (null !== $tag) {
             $translation = $this->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findDefault();
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findDefault();
 
             $this->assignation['tag'] = $tag;
 
@@ -507,7 +504,7 @@ class TagsController extends RozierApp
                 $this->getService('em'),
                 'RZ\Roadiz\Core\Entities\Node',
                 [
-                    'tags' => $tag
+                    'tags' => $tag,
                 ]
             );
             $listManager->handle();
@@ -541,10 +538,10 @@ class TagsController extends RozierApp
             throw new \RuntimeException("Translations don't match.", 1);
         }
         foreach ($data as $key => $value) {
-            $setter = 'set'.ucwords($key);
+            $setter = 'set' . ucwords($key);
 
             if ($key != 'translation') {
-                $translatedTag->$setter( $value );
+                $translatedTag->$setter($value);
             }
         }
 
@@ -564,14 +561,14 @@ class TagsController extends RozierApp
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'tag.%name%.no_update.already_exists',
-                    ['%name%'=>$data['tagName']]
+                    ['%name%' => $data['tagName']]
                 ),
                 1
             );
         }
 
         foreach ($data as $key => $value) {
-            $setter = 'set'.ucwords($key);
+            $setter = 'set' . ucwords($key);
             $tag->$setter($value);
         }
 
@@ -592,7 +589,7 @@ class TagsController extends RozierApp
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'tag.%name%.no_creation.already_exists',
-                    ['%name%'=>$data['name']]
+                    ['%name%' => $data['name']]
                 ),
                 1
             );
@@ -601,10 +598,10 @@ class TagsController extends RozierApp
         $translatedTag = new TagTranslation($tag, $translation);
 
         foreach ($data as $key => $value) {
-            $setter = 'set'.ucwords($key);
+            $setter = 'set' . ucwords($key);
 
             if ($key == 'name' || $key == 'description') {
-                $translatedTag->$setter( $value );
+                $translatedTag->$setter($value);
             } else {
                 $tag->$setter($value);
             }
@@ -633,8 +630,8 @@ class TagsController extends RozierApp
     private function checkExists($name)
     {
         $ttag = $this->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                    ->findOneBy(['tagName'=>StringHandler::slugify($name)]);
+                     ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                     ->findOneBy(['tagName' => StringHandler::slugify($name)]);
 
         return $ttag !== null;
     }
@@ -657,7 +654,7 @@ class TagsController extends RozierApp
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'tag.%name%.already_added',
-                    ['%name%'=>$data['name']]
+                    ['%name%' => $data['name']]
                 ),
                 1
             );
@@ -670,7 +667,7 @@ class TagsController extends RozierApp
         $translatedTag = new TagTranslation($tag, $translation);
 
         foreach ($data as $key => $value) {
-            $setter = 'set'.ucwords($key);
+            $setter = 'set' . ucwords($key);
 
             if ($key == 'name' || $key == 'description') {
                 $translatedTag->$setter($value);
@@ -706,29 +703,29 @@ class TagsController extends RozierApp
     {
         $defaults = [
             'visible' => $tag->isVisible(),
-            'locked' => $tag->isLocked()
+            'locked' => $tag->isLocked(),
         ];
 
         $builder = $this->getService('formFactory')
-                    ->createBuilder('form', $defaults)
-                    ->add('name', 'text', [
-                        'label' => $this->getTranslator()->trans('name'),
-                        'constraints' => [
-                            new NotBlank()
-                        ]
-                    ])
-                    ->add('locked', 'checkbox', [
-                        'label' => $this->getTranslator()->trans('locked'),
-                        'required' => false
-                    ])
-                    ->add('visible', 'checkbox', [
-                        'label' => $this->getTranslator()->trans('visible'),
-                        'required' => false
-                    ])
-                    ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
-                        'label' => $this->getTranslator()->trans('description'),
-                        'required' => false
-                    ]);
+                        ->createBuilder('form', $defaults)
+                        ->add('name', 'text', [
+                            'label' => $this->getTranslator()->trans('name'),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ])
+                        ->add('locked', 'checkbox', [
+                            'label' => $this->getTranslator()->trans('locked'),
+                            'required' => false,
+                        ])
+                        ->add('visible', 'checkbox', [
+                            'label' => $this->getTranslator()->trans('visible'),
+                            'required' => false,
+                        ])
+                        ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
+                            'label' => $this->getTranslator()->trans('description'),
+                            'required' => false,
+                        ]);
 
         return $builder->getForm();
     }
@@ -741,30 +738,30 @@ class TagsController extends RozierApp
     private function buildAddChildForm(Tag $tag)
     {
         $defaults = [
-            'visible' => $tag->isVisible()
+            'visible' => $tag->isVisible(),
         ];
 
         $builder = $this->getService('formFactory')
-                    ->createBuilder('form', $defaults)
-                    ->add('name', 'text', [
-                        'label' => $this->getTranslator()->trans('name'),
-                        'constraints' => [
-                            new NotBlank()
-                        ]
-                    ])
-                    ->add('visible', 'checkbox', [
-                        'label' => $this->getTranslator()->trans('visible'),
-                        'required' => false
-                    ])
-                    ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
-                        'label' => $this->getTranslator()->trans('description'),
-                        'required' => false
-                    ])
-                    ->add('parent_tagId', 'hidden', [
-                        'label' => $this->getTranslator()->trans('parent_tagId'),
-                        "data" => $tag->getId(),
-                        'required' => true
-                    ]);
+                        ->createBuilder('form', $defaults)
+                        ->add('name', 'text', [
+                            'label' => $this->getTranslator()->trans('name'),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ])
+                        ->add('visible', 'checkbox', [
+                            'label' => $this->getTranslator()->trans('visible'),
+                            'required' => false,
+                        ])
+                        ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
+                            'label' => $this->getTranslator()->trans('description'),
+                            'required' => false,
+                        ])
+                        ->add('parent_tagId', 'hidden', [
+                            'label' => $this->getTranslator()->trans('parent_tagId'),
+                            "data" => $tag->getId(),
+                            'required' => true,
+                        ]);
 
         return $builder->getForm();
     }
@@ -784,21 +781,21 @@ class TagsController extends RozierApp
         ];
 
         $builder = $this->getService('formFactory')
-            ->createBuilder('form', $defaults)
-            ->add('name', 'text', [
-                'label' => $this->getTranslator()->trans('name'),
-                'constraints' => [
-                    new NotBlank()
-                ]
-            ])
-            ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
-                'label' => $this->getTranslator()->trans('description'),
-                'required' => false
-            ])
-            ->add('translation', 'hidden', [
-                'label' => false,
-                'data' => $tt->getTranslation()->getId()
-            ]);
+                        ->createBuilder('form', $defaults)
+                        ->add('name', 'text', [
+                            'label' => $this->getTranslator()->trans('name'),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ])
+                        ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
+                            'label' => $this->getTranslator()->trans('description'),
+                            'required' => false,
+                        ])
+                        ->add('translation', 'hidden', [
+                            'label' => false,
+                            'data' => $tt->getTranslation()->getId(),
+                        ]);
 
         return $builder->getForm();
     }
@@ -813,25 +810,25 @@ class TagsController extends RozierApp
         $defaults = [
             'tagName' => $tag->getTagName(),
             'visible' => $tag->isVisible(),
-            'locked' => $tag->isLocked()
+            'locked' => $tag->isLocked(),
         ];
 
         $builder = $this->getService('formFactory')
-            ->createBuilder('form', $defaults)
-            ->add('tagName', 'text', [
-                'label' => $this->getTranslator()->trans('tagName'),
-                'constraints' => [
-                    new NotBlank()
-                ]
-            ])
-            ->add('visible', 'checkbox', [
-                'label' => $this->getTranslator()->trans('visible'),
-                'required' => false
-            ])
-            ->add('locked', 'checkbox', [
-                'label' => $this->getTranslator()->trans('locked'),
-                'required' => false
-            ]);
+                        ->createBuilder('form', $defaults)
+                        ->add('tagName', 'text', [
+                            'label' => $this->getTranslator()->trans('tagName'),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ])
+                        ->add('visible', 'checkbox', [
+                            'label' => $this->getTranslator()->trans('visible'),
+                            'required' => false,
+                        ])
+                        ->add('locked', 'checkbox', [
+                            'label' => $this->getTranslator()->trans('locked'),
+                            'required' => false,
+                        ]);
 
         return $builder->getForm();
     }
@@ -844,13 +841,13 @@ class TagsController extends RozierApp
     private function buildDeleteForm(Tag $tag)
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add('tagId', 'hidden', [
-                'data' => $tag->getId(),
-                'constraints' => [
-                    new NotBlank()
-                ]
-            ]);
+                        ->createBuilder('form')
+                        ->add('tagId', 'hidden', [
+                            'data' => $tag->getId(),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ]);
 
         return $builder->getForm();
     }

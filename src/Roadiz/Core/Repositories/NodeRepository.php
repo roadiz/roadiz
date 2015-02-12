@@ -286,7 +286,7 @@ class NodeRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityContext
+     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param SecurityContext|null                    $securityContext
      *
      * @return QueryBuilder
@@ -1011,5 +1011,33 @@ class NodeRepository extends EntityRepository
         } catch (\Doctrine\ORM\NoResultException $e) {
             return null;
         }
+    }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\Node $node
+     *
+     * @return array
+     */
+    public function findAllOffspringIdByNode(Node $node)
+    {
+        $theOffprings = [];
+
+        $in = [$node->getId()];
+
+        do {
+            $theOffprings = array_merge($theOffprings, $in);
+            $query = $this->_em->createQuery('
+                SELECT n.id FROM RZ\Roadiz\Core\Entities\Node n
+                WHERE n.parent IN (:tab)')
+                          ->setParameter('tab', $in);
+            $result = $query->getScalarResult();
+            $in = [];
+
+            //For memory optimizations
+            foreach ($result as $item) {
+                $in[] = (int)$item['id'];
+            }
+        } while (!empty($in));
+        return $theOffprings;
     }
 }

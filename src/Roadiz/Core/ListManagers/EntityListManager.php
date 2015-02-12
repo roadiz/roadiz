@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\ListManagers\NodePaginator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\Node;
 
 use Doctrine\ORM\EntityManager;
 
@@ -88,6 +89,37 @@ class EntityListManager
         $this->queryArray = $request->query->all();
 
         $this->itemPerPage = static::ITEM_PER_PAGE;
+
+        // transform the key chroot in parent
+        if (array_key_exists('chroot', $preFilters)) {
+            if ($preFilters["chroot"] instanceof Node) {
+                $ids = $preFilters["chroot"]->getHandler()->getAllOffspringId(); // get all offspringId
+                if (array_key_exists('parent', $preFilters)) {
+// test if parent key exist
+                    if (is_array($preFilters["parent"])) {
+// test if multiple parent id
+                        if (count(array_intersect($preFilters["parent"], $ids))
+                            != count($preFilters["parent"])) {
+// test if all parent are in the chroot
+                            $this->filteringArray["parent"] = -1; // -1 for make the search return []
+                        }
+                    } else {
+                        if ($preFilters["parent"] instanceof Node) {
+// make transforme all id in int
+                            $parent = $preFilters["parent"]->getId();
+                        } else {
+                            $parent = (int) $preFilters["parent"];
+                        }
+                        if (!in_array($parent, $ids, true)) {
+                            $this->filteringArray["parent"] = -1;
+                        }
+                    }
+                } else {
+                    $this->filteringArray["parent"] = $ids;
+                }
+            }
+            unset($this->filteringArray["chroot"]); // remove placeholder
+        }
     }
 
     /**

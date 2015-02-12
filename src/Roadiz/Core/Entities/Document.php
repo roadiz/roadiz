@@ -30,11 +30,11 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\Viewers\DocumentViewer;
-use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use RZ\Roadiz\Core\Handlers\DocumentHandler;
+use RZ\Roadiz\Core\Viewers\DocumentViewer;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * Documents entity represent a file on server with datetime and naming.
@@ -80,7 +80,7 @@ class Document extends AbstractDateTimed
         'video/mpeg' => 'video',
         'video/mp4' => 'video',
         'video/quicktime' => 'video',
-        'video/x-flv'=> 'video',
+        'video/x-flv' => 'video',
         'application/gzip' => 'archive',
         'application/zip' => 'archive',
         'application/x-bzip2' => 'archive',
@@ -166,10 +166,10 @@ class Document extends AbstractDateTimed
     }
 
     /**
-    * Get short Mime type.
-    *
-    * @return string
-    */
+     * Get short Mime type.
+     *
+     * @return string
+     */
     public function getShortMimeType()
     {
         $mime = explode('/', $this->getMimeType());
@@ -234,7 +234,7 @@ class Document extends AbstractDateTimed
     public function getRelativeUrl()
     {
         if (null !== $this->filename) {
-            return $this->getFolder().'/'.$this->getFilename();
+            return $this->getFolder() . '/' . $this->getFilename();
         } else {
             return null;
         }
@@ -246,7 +246,7 @@ class Document extends AbstractDateTimed
     public function getAbsolutePath()
     {
         if (null !== $this->filename) {
-            return static::getFilesFolder().'/'.$this->getRelativeUrl();
+            return static::getFilesFolder() . '/' . $this->getRelativeUrl();
         } else {
             return null;
         }
@@ -356,7 +356,6 @@ class Document extends AbstractDateTimed
         return $this->nodesSourcesByFields;
     }
 
-
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
      * @ORM\JoinTable(name="documents_folders")
@@ -414,8 +413,6 @@ class Document extends AbstractDateTimed
         return (boolean) $this->getDocumentTranslations()->count();
     }
 
-
-
     /**
      * Create a new Document.
      */
@@ -432,7 +429,7 @@ class Document extends AbstractDateTimed
      */
     public static function getFilesFolder()
     {
-        return ROADIZ_ROOT.'/'.static::getFilesFolderName();
+        return ROADIZ_ROOT . '/' . static::getFilesFolderName();
     }
     /**
      * @return string

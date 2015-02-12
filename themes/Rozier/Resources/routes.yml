@@ -120,6 +120,9 @@ nodesDuplicatePage:
 nodesEmptyTrashPage:
     path:     /rz-admin/nodes/empty-trash
     defaults: { _controller: Themes\Rozier\Controllers\NodesController::emptyTrashAction }
+nodesGenerateAndAddNodeAction:
+    path:     /rz-admin/nodes/create
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::generateAndAddNodeAction }
 
 ## Ajax
 nodeAjaxEdit:

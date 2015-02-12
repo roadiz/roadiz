@@ -174,49 +174,40 @@ class AssetsController extends AppController
      */
     public function fontFacesAction(Request $request, $token)
     {
-        if ($this->getService('csrfProvider')
-                 ->isCsrfTokenValid(static::FONT_TOKEN_INTENTION, $token)) {
-            $lastMod = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Font')
-                ->getLatestUpdateDate();
+        $lastMod = Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Font')
+            ->getLatestUpdateDate();
 
-            $response = new Response(
-                '',
-                Response::HTTP_NOT_MODIFIED,
-                ['content-type' => 'text/css']
-            );
-            $response->setCache([
-                'last_modified' => new \DateTime($lastMod),
-                'max_age'       => 1800,
-                's_maxage'      => 600,
-                'public'        => true
-            ]);
+        $response = new Response(
+            '',
+            Response::HTTP_NOT_MODIFIED,
+            ['content-type' => 'text/css']
+        );
+        $response->setCache([
+            'last_modified' => new \DateTime($lastMod),
+            'max_age'       => 1800,
+            's_maxage'      => 600,
+            'public'        => true
+        ]);
 
-            if ($response->isNotModified($request)) {
-                return $response;
-            }
-
-            $fonts = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Font')
-                ->findAll();
-
-
-            $fontOutput = [];
-
-            foreach ($fonts as $font) {
-                $fontOutput[] = $font->getViewer()->getCSSFontFace($this->getService('csrfProvider'));
-            }
-
-            $response->setContent(implode(PHP_EOL, $fontOutput));
-            $response->setStatusCode(Response::HTTP_OK);
-
+        if ($response->isNotModified($request)) {
             return $response;
-        } else {
-            return new Response(
-                "Font Fail",
-                Response::HTTP_NOT_FOUND,
-                ['content-type' => 'text/html']
-            );
         }
+
+        $fonts = Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Font')
+            ->findAll();
+
+
+        $fontOutput = [];
+
+        foreach ($fonts as $font) {
+            $fontOutput[] = $font->getViewer()->getCSSFontFace($this->getService('csrfProvider'));
+        }
+
+        $response->setContent(implode(PHP_EOL, $fontOutput));
+        $response->setStatusCode(Response::HTTP_OK);
+
+        return $response;
     }
 }

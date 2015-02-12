@@ -27,7 +27,7 @@
  * @file XlsxExporter.php
  * @author Maxime Constantinian
  */
-namespace RZ\Roadiz\Core\Utils;
+namespace RZ\Roadiz\Utils;
 
 class XlsxExporter
 {

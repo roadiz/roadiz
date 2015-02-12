@@ -130,7 +130,7 @@ class DocumentViewer implements ViewableInterface
         }
         if (!empty($args['alt'])) {
             $assignation['alt'] = $args['alt'];
-        } elseif ($this->document->getDocumentTranslations()->count() &&
+        } elseif (false !== $this->document->getDocumentTranslations()->first() &&
             "" != $this->document->getDocumentTranslations()->first()->getName()
         ) {
             $assignation['alt'] = $this->document->getDocumentTranslations()->first()->getName();
@@ -195,7 +195,7 @@ class DocumentViewer implements ViewableInterface
      * @param array|null $args
      *
      * @return string
-     * @see RZ\Roadiz\Core\Utils\AbstractEmbedFinder::getIFrame
+     * @see RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder::getIFrame
      */
     public function getEmbedByArray($args = null)
     {

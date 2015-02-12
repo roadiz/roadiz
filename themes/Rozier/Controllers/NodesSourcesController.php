@@ -45,6 +45,7 @@ use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Translation\Translator;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Nodes sources controller.
@@ -67,7 +68,7 @@ class NodesSourcesController extends RozierApp
      */
     public function editSourceAction(Request $request, $nodeId, $translationId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
         $translation = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
@@ -84,6 +85,8 @@ class NodesSourcesController extends RozierApp
             $source = $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                 ->findOneBy(['translation'=>$translation, 'node'=>$gnode]);
+
+            $this->assignation['securityContext'] = $this->getService("securityContext");
 
             if (null !== $source) {
                 $node = $source->getNode();
@@ -142,6 +145,10 @@ class NodesSourcesController extends RozierApp
     */
     public function removeAction(Request $request, $nodeSourceId)
     {
+        $ns = $this->getService("em")->find("RZ\Roadiz\Core\Entities\NodesSources", $nodeSourceId);
+
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
+
         $builder = $this->getService('formFactory')
             ->createBuilder('form')
             ->add('nodeId', 'hidden', [
@@ -154,8 +161,6 @@ class NodesSourcesController extends RozierApp
         $form = $builder->getForm();
 
         $form->handleRequest();
-
-        $ns = $this->getService("em")->find("RZ\Roadiz\Core\Entities\NodesSources", $nodeSourceId);
 
         if ($form->isValid()) {
             $node = $ns->getNode();

@@ -33,6 +33,7 @@ namespace Themes\Rozier\AjaxControllers;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
+use Themes\Rozier\Controllers\NodesController;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -226,6 +227,16 @@ class AjaxNodesController extends AbstractAjaxController
                             if ($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_STATUS') ||
                                 $request->get('statusName') != 'status') {
                                 $node->$setter($value);
+
+                                /*
+                                 * If set locked to true,
+                                 * need to disable dynamic nodeName
+                                 */
+                                if ($request->get('statusName') == 'locked' &&
+                                    $value === true) {
+                                    $node->setDynamicNodeName(false);
+                                }
+
                                 $this->em()->flush();
 
                                 // Update Solr Search engine if setup
@@ -361,26 +372,7 @@ class AjaxNodesController extends AbstractAjaxController
                 }
 
                 try {
-                    $name = "Untitled ".uniqid();
-
-                    $node = new Node($nodeType);
-                    $node->setParent($parent);
-                    $node->setNodeName($name);
-                    if (null !== $tag) {
-                        $node->addTag($tag);
-                    }
-                    $this->getService('em')->persist($node);
-
-                    if (!empty($request->get('pushTop')) &&
-                        $request->get('pushTop') == 1) {
-                        $node->setPosition(0.5);
-                    }
-
-                    $sourceClass = "GeneratedNodeSources\\".$nodeType->getSourceEntityClassName();
-                    $source = new $sourceClass($node, $translation);
-                    $source->setTitle($name);
-                    $this->getService('em')->persist($source);
-                    $this->getService('em')->flush();
+                    $source = NodesController::generateUniqueNodeWithTypeAndTranslation($request, $nodeType, $parent, $translation, $tag);
 
                     $responseArray = [
                         'statusCode' => Response::HTTP_OK,
@@ -394,7 +386,7 @@ class AjaxNodesController extends AbstractAjaxController
                     ];
 
                 } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('node.%name%.noCreation.alreadyExists', ['%name%'=>$node->getNodeName()]);
+                    $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists');
 
                     $responseArray = [
                         'statusCode' => Response::HTTP_FORBIDDEN,

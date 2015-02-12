@@ -29,9 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\Utils\StringHandler;
-use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * Fonts are entities which store each webfont file for a
@@ -43,11 +43,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Font extends AbstractDateTimed
 {
-    const REGULAR      = 0;
-    const ITALIC       = 1;
-    const BOLD         = 2;
-    const BOLD_ITALIC  = 3;
-    const LIGHT        = 4;
+    const REGULAR = 0;
+    const ITALIC = 1;
+    const BOLD = 2;
+    const BOLD_ITALIC = 3;
+    const LIGHT = 4;
     const LIGHT_ITALIC = 5;
 
     /**
@@ -56,12 +56,12 @@ class Font extends AbstractDateTimed
      * @var array
      */
     public static $extensionToMime = [
-        'svg'   => 'image/svg+xml',
-        'ttf'   => 'application/x-font-truetype',
-        'otf'   => 'application/x-font-opentype',
-        'woff'  => 'application/font-woff',
+        'svg' => 'image/svg+xml',
+        'ttf' => 'application/x-font-truetype',
+        'otf' => 'application/x-font-opentype',
+        'woff' => 'application/font-woff',
         'woff2' => 'application/font-woff2',
-        'eot'   => 'application/vnd.ms-fontobject',
+        'eot' => 'application/vnd.ms-fontobject',
     ];
 
     /**
@@ -70,11 +70,11 @@ class Font extends AbstractDateTimed
      * @var array
      */
     protected static $variantToHuman = [
-        Font::REGULAR      => 'Regular',
-        Font::ITALIC       => 'Italic',
-        Font::BOLD         => 'Bold',
-        Font::BOLD_ITALIC  => 'Bold italic',
-        Font::LIGHT        => 'Light',
+        Font::REGULAR => 'Regular',
+        Font::ITALIC => 'Italic',
+        Font::BOLD => 'Bold',
+        Font::BOLD_ITALIC => 'Bold italic',
+        Font::LIGHT => 'Light',
         Font::LIGHT_ITALIC => 'Light italic',
     ];
 
@@ -126,41 +126,40 @@ class Font extends AbstractDateTimed
             case static::LIGHT_ITALIC:
                 return [
                     'style' => 'italic',
-                    'weight' => 300
+                    'weight' => 300,
                 ];
             case static::LIGHT:
                 return [
                     'style' => 'normal',
-                    'weight' => 300
+                    'weight' => 300,
                 ];
 
             case static::BOLD_ITALIC:
                 return [
                     'style' => 'italic',
-                    'weight' => 'bold'
+                    'weight' => 'bold',
                 ];
 
             case static::BOLD:
                 return [
                     'style' => 'normal',
-                    'weight' => 'bold'
+                    'weight' => 'bold',
                 ];
 
             case static::ITALIC:
                 return [
                     'style' => 'italic',
-                    'weight' => 'normal'
+                    'weight' => 'normal',
                 ];
 
             case static::REGULAR:
             default:
                 return [
                     'style' => 'normal',
-                    'weight' => 'normal'
+                    'weight' => 'normal',
                 ];
         }
     }
-
 
     /**
      * @ORM\Column(type="string", nullable=true, name="eot_filename")
@@ -277,7 +276,6 @@ class Font extends AbstractDateTimed
         return $this;
     }
 
-
     /**
      * @ORM\Column(type="string", nullable=false, unique=false)
      */
@@ -319,7 +317,7 @@ class Font extends AbstractDateTimed
      */
     public function setHash($secret)
     {
-        $this->hash = substr(hash("crc32b", $this->name.$secret), 0, 12);
+        $this->hash = substr(hash("crc32b", $this->name . $secret), 0, 12);
 
         return $this;
     }
@@ -341,70 +339,70 @@ class Font extends AbstractDateTimed
      */
     public function getEOTRelativeUrl()
     {
-        return $this->getFolder().'/'.$this->getEOTFilename();
+        return $this->getFolder() . '/' . $this->getEOTFilename();
     }
     /**
      * @return string
      */
     public function getEOTAbsolutePath()
     {
-        return static::getFilesFolder().'/'.$this->getEOTRelativeUrl();
+        return static::getFilesFolder() . '/' . $this->getEOTRelativeUrl();
     }
     /**
      * @return string
      */
     public function getWOFFRelativeUrl()
     {
-        return $this->getFolder().'/'.$this->getWOFFFilename();
+        return $this->getFolder() . '/' . $this->getWOFFFilename();
     }
     /**
      * @return string
      */
     public function getWOFFAbsolutePath()
     {
-        return static::getFilesFolder().'/'.$this->getWOFFRelativeUrl();
+        return static::getFilesFolder() . '/' . $this->getWOFFRelativeUrl();
     }
     /**
      * @return string
      */
     public function getWOFF2RelativeUrl()
     {
-        return $this->getFolder().'/'.$this->getWOFF2Filename();
+        return $this->getFolder() . '/' . $this->getWOFF2Filename();
     }
     /**
      * @return string
      */
     public function getWOFF2AbsolutePath()
     {
-        return static::getFilesFolder().'/'.$this->getWOFF2RelativeUrl();
+        return static::getFilesFolder() . '/' . $this->getWOFF2RelativeUrl();
     }
     /**
      * @return string
      */
     public function getOTFRelativeUrl()
     {
-        return $this->getFolder().'/'.$this->getOTFFilename();
+        return $this->getFolder() . '/' . $this->getOTFFilename();
     }
     /**
      * @return string
      */
     public function getOTFAbsolutePath()
     {
-        return static::getFilesFolder().'/'.$this->getOTFRelativeUrl();
+        return static::getFilesFolder() . '/' . $this->getOTFRelativeUrl();
     }
     /**
      * @return string
      */
     public function getSVGRelativeUrl()
     {
-        return $this->getFolder().'/'.$this->getSVGFilename();
+        return $this->getFolder() . '/' . $this->getSVGFilename();
     }
     /**
      * @return string
      */
     public function getSVGAbsolutePath()
     {
-        return static::getFilesFolder().'/'.$this->getSVGRelativeUrl();
+        return static::getFilesFolder() . '/' . $this->getSVGRelativeUrl();
     }
 
     /**
@@ -443,7 +441,7 @@ class Font extends AbstractDateTimed
      */
     public static function getFilesFolder()
     {
-        return ROADIZ_ROOT.'/'.static::getFilesFolderName();
+        return ROADIZ_ROOT . '/' . static::getFilesFolderName();
     }
     /**
      * @return string

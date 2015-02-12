@@ -48,6 +48,7 @@ use RZ\Roadiz\Core\Services\SolrServiceProvider;
 use RZ\Roadiz\Core\Services\ThemeServiceProvider;
 use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
+use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -75,7 +76,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.3.0";
+    public static $cmsVersion = "0.4.0";
     private static $instance = null;
 
     public $container = null;
@@ -415,7 +416,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
          * If debug, alter HTML responses to append Debug panel to view
          */
         if (true === (boolean) SettingsBag::get('display_debug_panel')) {
-            $this->container['dispatcher']->addSubscriber(new \RZ\Roadiz\Core\Utils\DebugPanel());
+            $this->container['dispatcher']->addSubscriber(new DebugPanel($this->container));
         }
     }
     /**

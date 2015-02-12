@@ -6,12 +6,12 @@
 
 {% spaceless %}
 <ul class="uk-breadcrumb content-breadcrumb node-breadcrumb">
-    {% for parent in node.handler.parents %}
+    {% for parent in node.handler.parents(securityContext) %}
 
         {% if parent.nodeSources.first.title %}
             {% set title = parent.nodeSources.first.title %}
         {% else %}
-            {% set title = parent.getNodeName %}
+            {% set title = parent.nodeName %}
         {% endif %}
 
         {# Change URL if root node is a newsletter #}
@@ -41,7 +41,6 @@
                 {% endif %}
             </a>
         </li>
-
     {% endfor %}
     <li class="node-breadcrumb-item uk-active"><span>{{ currentTitle|truncate(25, true, '[…]') }}</span></li>
 </ul>

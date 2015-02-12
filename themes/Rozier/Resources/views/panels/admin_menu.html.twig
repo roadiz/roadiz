@@ -22,8 +22,8 @@
     {% spaceless %}
     <ul class="uk-nav uk-nav-parent-icon">
 
-        {% if backofficeEntries %}
-            {% for mainEntry in backofficeEntries %}
+        {% if themeServices['backoffice.entries'] %}
+            {% for mainEntry in themeServices['backoffice.entries'] %}
                 {% if (not mainEntry.roles or securityContext.Granted(mainEntry.roles)) %}
                 {# Define entry #}
                 <li {% if mainEntry.subentries %}class="uk-parent"{% endif %}>
@@ -38,7 +38,7 @@
                         {% for subEntry in mainEntry.subentries %}
                             {# Exception for settings groups #}
                             {% if subEntry.name == 'setting.groups.dynamic' %}
-                                {% for group in settingGroups %}
+                                {% for group in themeServices.settingGroups %}
                                     <li class="uk-nav-sub-item">
                                         <a href="{{ path('settingGroupsSettingsPage', {'settingGroupId': group.getId}) }}">
                                             <i class="uk-icon-rz-settings-group"></i><span class="info">{{ group.getName }}</span>

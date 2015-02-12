@@ -30,10 +30,10 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\CustomFormHandler;
-use RZ\Roadiz\Core\Utils\StringHandler;
-use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * CustomForms describe each node structure family,
@@ -317,14 +317,13 @@ class CustomForm extends AbstractDateTimed
         $this->nodes = new ArrayCollection();
     }
 
-
     /**
      * @return string
      */
     public function getOneLineSummary()
     {
-        return $this->getId()." — ".$this->getName().
-            " — Open : ".($this->isOpen()?'true':'false').PHP_EOL;
+        return $this->getId() . " — " . $this->getName() .
+        " — Open : " . ($this->isOpen() ? 'true' : 'false') . PHP_EOL;
     }
 
     /**
@@ -332,9 +331,9 @@ class CustomForm extends AbstractDateTimed
      */
     public function getFieldsSummary()
     {
-        $text = "|".PHP_EOL;
+        $text = "|" . PHP_EOL;
         foreach ($this->getFields() as $field) {
-            $text .= "|--- ".$field->getOneLineSummary();
+            $text .= "|--- " . $field->getOneLineSummary();
         }
 
         return $text;

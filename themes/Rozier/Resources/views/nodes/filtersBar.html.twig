@@ -10,6 +10,8 @@
                     <input id="uk-form-filter-input-search" type="text" name="search" placeholder="{% trans %}search{% endtrans %}" value="{{ filters.search }}">
                 </div>
             </form>
+
+            <a class="uk-button uk-button-select-all uk-button-bulk-select-nodes" href="#" title="{% trans %}select.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-check-square-o"></i> {% trans %}select.all{% endtrans %}</a>
         </div>
 
         {% if filters.itemCount > filters.itemPerPage %}
@@ -37,6 +39,8 @@
             </div>
 
             {% spaceless %}
+                <a class="uk-button uk-button-bulk uk-button-bulk-deselect uk-button-bulk-deselect-nodes" href="#" title="{% trans %}deselect.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-square-o"></i></a>
+
                 {% if deleteNodesForm %}
                     {% form_theme deleteNodesForm 'forms.html.twig' %}
                     <form class="uk-form uk-form-horizontal node-bulk-delete-form" action="{{ path('nodesBulkDeletePage') }}" method="get" {{ form_enctype(deleteNodesForm) }}>

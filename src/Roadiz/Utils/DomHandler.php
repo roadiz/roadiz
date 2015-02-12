@@ -27,7 +27,7 @@
  * @file DomHandler.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Utils;
+namespace RZ\Roadiz\Utils;
 
 /**
  * Description.
