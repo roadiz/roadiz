@@ -191,21 +191,23 @@ class EntryPointsController extends AppController
          */
         foreach ($request->files as $files) {
             foreach ($files as $name => $uploadedFile) {
-                if (!$uploadedFile->isValid() ||
-                    !in_array($uploadedFile->getMimeType(), $allowedMimeTypes) ||
-                    $uploadedFile->getClientSize() > $maxFileSize) {
-                    $responseArray['statusCode'] = Response::HTTP_FORBIDDEN;
-                    $responseArray['status'] = 'danger';
-                    $responseArray['field_error'] = $name;
-                    $responseArray['message'] = $this->getTranslator()->trans(
-                        'file.not.accepted'
-                    );
+                if (null !== $uploadedFile) {
+                    if (!$uploadedFile->isValid() ||
+                        !in_array($uploadedFile->getMimeType(), $allowedMimeTypes) ||
+                        $uploadedFile->getClientSize() > $maxFileSize) {
+                        $responseArray['statusCode'] = Response::HTTP_FORBIDDEN;
+                        $responseArray['status'] = 'danger';
+                        $responseArray['field_error'] = $name;
+                        $responseArray['message'] = $this->getTranslator()->trans(
+                            'file.not.accepted'
+                        );
 
-                    $request->getSession()->getFlashBag()->add('error', $responseArray['message']);
-                    $this->getService('logger')->error($responseArray['message']);
-                    $canSend = false;
-                } else {
-                    $uploadedFiles[$name] = $uploadedFile;
+                        $request->getSession()->getFlashBag()->add('error', $responseArray['message']);
+                        $this->getService('logger')->error($responseArray['message']);
+                        $canSend = false;
+                    } else {
+                        $uploadedFiles[$name] = $uploadedFile;
+                    }
                 }
             }
         }
