@@ -560,7 +560,7 @@ trait NodesTrait
      * @param RZ\Roadiz\Core\Entities\Node              $parent
      * @param RZ\Roadiz\Core\Entities\Translation       $translation
      * @param RZ\Roadiz\Core\Entities\Tag               $tag
-     * 
+     *
      * @return RZ\Roadiz\Core\Entities\NodeSource
      */
     public static function generateUniqueNodeWithTypeAndTranslation(
