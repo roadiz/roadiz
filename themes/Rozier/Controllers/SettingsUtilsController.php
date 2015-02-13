@@ -167,11 +167,7 @@ class SettingsUtilsController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('settings/import.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('settings/import.html.twig', $this->assignation);
     }
 
     /**

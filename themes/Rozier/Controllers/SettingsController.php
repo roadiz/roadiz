@@ -67,11 +67,7 @@ class SettingsController extends RozierApp
             return $response->send();
         }
 
-        return new Response(
-            $this->getTwig()->render('settings/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('settings/list.html.twig', $this->assignation);
     }
 
     /**
@@ -94,11 +90,7 @@ class SettingsController extends RozierApp
                 return $response->send();
             }
 
-            return new Response(
-                $this->getTwig()->render('settings/list.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('settings/list.html.twig', $this->assignation);
 
         } else {
             return $this->throw404();
@@ -226,11 +218,7 @@ class SettingsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('settings/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('settings/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -278,11 +266,7 @@ class SettingsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('settings/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('settings/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -329,11 +313,7 @@ class SettingsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('settings/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('settings/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

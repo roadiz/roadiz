@@ -149,11 +149,7 @@ class CustomFormController extends AppController
 
                 $this->assignation['form'] = $form->createView();
 
-                return new Response(
-                    $this->getTwig()->render('forms/customForm.html.twig', $this->assignation),
-                    Response::HTTP_OK,
-                    ['content-type' => 'text/html']
-                );
+                return $this->render('forms/customForm.html.twig', $this->assignation);
             }
         }
 
@@ -168,11 +164,7 @@ class CustomFormController extends AppController
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
 
-            return new Response(
-                $this->getTwig()->render('forms/customFormSent.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('forms/customFormSent.html.twig', $this->assignation);
         }
 
         return $this->throw404();

@@ -134,11 +134,7 @@ class RozierApp extends BackendController
      */
     public function indexAction(Request $request)
     {
-        return new Response(
-            $this->getTwig()->render('index.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('index.html.twig', $this->assignation);
     }
 
     /**

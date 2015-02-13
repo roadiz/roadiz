@@ -74,11 +74,7 @@ class UsersController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['users'] = $listManager->getEntities();
 
-        return new Response(
-            $this->getTwig()->render('users/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('users/list.html.twig', $this->assignation);
     }
 
     /**
@@ -134,11 +130,7 @@ class UsersController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('users/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('users/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -190,11 +182,7 @@ class UsersController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('users/roles.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('users/roles.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -249,11 +237,7 @@ class UsersController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('users/removeRole.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('users/removeRole.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -303,11 +287,7 @@ class UsersController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('users/groups.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('users/groups.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -363,11 +343,7 @@ class UsersController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('users/removeGroup.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('users/removeGroup.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -415,11 +391,7 @@ class UsersController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('users/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('users/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -473,11 +445,7 @@ class UsersController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('users/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('users/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

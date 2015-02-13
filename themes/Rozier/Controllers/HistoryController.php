@@ -83,11 +83,7 @@ class HistoryController extends RozierApp
         $this->assignation['logs'] = $listManager->getEntities();
         $this->assignation['levels'] = static::$levelToHuman;
 
-        return new Response(
-            $this->getTwig()->render('history/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('history/list.html.twig', $this->assignation);
     }
 
     /**
@@ -122,11 +118,7 @@ class HistoryController extends RozierApp
             $this->assignation['levels'] = static::$levelToHuman;
             $this->assignation['user'] = $user;
 
-            return new Response(
-                $this->getTwig()->render('history/list.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('history/list.html.twig', $this->assignation);
 
         } else {
             return $this->throw404();

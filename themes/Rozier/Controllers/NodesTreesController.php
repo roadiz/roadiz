@@ -142,11 +142,7 @@ class NodesTreesController extends RozierApp
             }
 
 
-            return new Response(
-                $this->getTwig()->render('nodes/tree.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('nodes/tree.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -203,11 +199,7 @@ class NodesTreesController extends RozierApp
                     $this->assignation['referer'] = $request->get('deleteForm')['referer'];
                 }
 
-                return new Response(
-                    $this->getTwig()->render('nodes/bulkDelete.html.twig', $this->assignation),
-                    Response::HTTP_OK,
-                    ['content-type' => 'text/html']
-                );
+                return $this->render('nodes/bulkDelete.html.twig', $this->assignation);
             }
         }
 
@@ -269,11 +261,7 @@ class NodesTreesController extends RozierApp
                     $this->assignation['referer'] = $request->get('statusForm')['referer'];
                 }
 
-                return new Response(
-                    $this->getTwig()->render('nodes/bulkStatus.html.twig', $this->assignation),
-                    Response::HTTP_OK,
-                    ['content-type' => 'text/html']
-                );
+                return $this->render('nodes/bulkStatus.html.twig', $this->assignation);
             }
         }
 

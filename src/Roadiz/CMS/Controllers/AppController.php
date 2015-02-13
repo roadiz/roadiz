@@ -375,7 +375,7 @@ class AppController implements ViewableInterface
      *
      * @return Response
      */
-    public function render(string $view, array $parameters = array(), Response $response = null)
+    public function render($view, array $parameters = [], Response $response = null)
     {
         if (null === $response) {
             $response = new Response(

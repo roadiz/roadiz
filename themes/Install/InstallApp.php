@@ -135,11 +135,7 @@ class InstallApp extends AppController
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('steps/hello.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/hello.html.twig', $this->assignation);
     }
 
     /**
@@ -180,11 +176,7 @@ class InstallApp extends AppController
         $requ = new Requirements();
         $this->assignation['requirements'] = $requ->getRequirements();
         $this->assignation['totalSuccess'] = $requ->isTotalSuccess();
-        return new Response(
-            $this->getTwig()->render('steps/requirements.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/requirements.html.twig', $this->assignation);
     }
 
     /**
@@ -206,11 +198,7 @@ class InstallApp extends AppController
         $this->assignation = array_merge($this->assignation, $data["importFiles"]);
         $this->assignation["themeId"] = $id;
 
-        return new Response(
-            $this->getTwig()->render('steps/importTheme.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/importTheme.html.twig', $this->assignation);
     }
 
     /**
@@ -259,11 +247,7 @@ class InstallApp extends AppController
             $this->assignation['userForm'] = $userForm->createView();
         }
 
-        return new Response(
-            $this->getTwig()->render('steps/user.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/user.html.twig', $this->assignation);
     }
 
     /**
@@ -279,11 +263,7 @@ class InstallApp extends AppController
         $user = $this->getService('em')->find('RZ\Roadiz\Core\Entities\User', $userId);
         $this->assignation['name'] = $user->getUsername();
         $this->assignation['email'] = $user->getEmail();
-        return new Response(
-            $this->getTwig()->render('steps/userSummary.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/userSummary.html.twig', $this->assignation);
     }
 
 
@@ -368,11 +348,7 @@ class InstallApp extends AppController
 
         $this->assignation['classname'] = $request->get("classname");
 
-        return new Response(
-            $this->getTwig()->render('steps/themeSummary.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/themeSummary.html.twig', $this->assignation);
     }
 
     /**
@@ -429,11 +405,7 @@ class InstallApp extends AppController
             $this->assignation['infosForm'] = $infosForm->createView();
         }
 
-        return new Response(
-            $this->getTwig()->render('steps/themes.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/themes.html.twig', $this->assignation);
     }
 
     /**
@@ -491,11 +463,7 @@ class InstallApp extends AppController
             $this->assignation['doneForm'] = $doneForm->createView();
         }
 
-        return new Response(
-            $this->getTwig()->render('steps/done.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/done.html.twig', $this->assignation);
     }
 
     /**

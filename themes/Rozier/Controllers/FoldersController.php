@@ -67,11 +67,7 @@ class FoldersController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['folders'] = $listManager->getEntities();
 
-        return new Response(
-            $this->getTwig()->render('folders/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('folders/list.html.twig', $this->assignation);
     }
 
     /**
@@ -113,11 +109,7 @@ class FoldersController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('folders/add.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('folders/add.html.twig', $this->assignation);
     }
 
     /**
@@ -165,11 +157,7 @@ class FoldersController extends RozierApp
             $this->assignation['form'] = $form->createView();
             $this->assignation['folder'] = $folder;
 
-            return new Response(
-                $this->getTwig()->render('folders/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('folders/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -220,11 +208,7 @@ class FoldersController extends RozierApp
             $this->assignation['folder'] = $folder;
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('folders/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('folders/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

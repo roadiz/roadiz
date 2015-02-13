@@ -110,11 +110,7 @@ class DatabaseController extends InstallApp
             $this->assignation['databaseForm'] = $databaseForm->createView();
         }
 
-        return new Response(
-            $this->getTwig()->render('steps/database.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/database.html.twig', $this->assignation);
     }
 
     /**
@@ -166,11 +162,7 @@ class DatabaseController extends InstallApp
             }
         }
 
-        return new Response(
-            $this->getTwig()->render('steps/databaseError.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/databaseError.html.twig', $this->assignation);
     }
 
     /**
@@ -191,11 +183,7 @@ class DatabaseController extends InstallApp
         $installData = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/Install/config.json"), true);
         $this->assignation['imports'] = $installData['importFiles'];
 
-        return new Response(
-            $this->getTwig()->render('steps/databaseFixtures.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/databaseFixtures.html.twig', $this->assignation);
     }
 
     /**
