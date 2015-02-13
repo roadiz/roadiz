@@ -31,9 +31,9 @@ namespace RZ\Roadiz\Core\Log;
 
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Log;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use RZ\Roadiz\Core\Entities\NodesSources;
 
 /**
  * A log system which store message in database.

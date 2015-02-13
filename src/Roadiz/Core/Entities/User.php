@@ -293,6 +293,73 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
+     *
+     * @var string
+     */
+    protected $confirmationToken;
+
+    /**
+     * Get random string sent to the user email address in order to verify it.
+     *
+     * @return string
+     */
+    public function getConfirmationToken()
+    {
+        return $this->confirmationToken;
+    }
+
+    /**
+     * Set random string sent to the user email address in order to verify it.
+     *
+     * @param string $confirmationToken
+     */
+    public function setConfirmationToken($confirmationToken)
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+
+    /**
+     * @var \DateTime
+     */
+    protected $passwordRequestedAt;
+
+    /**
+     * Sets the timestamp that the user requested a password reset.
+     *
+     * @param \DateTime|null $date
+     */
+    public function setPasswordRequestedAt(\DateTime $date = null)
+    {
+        $this->passwordRequestedAt = $date;
+
+        return $this;
+    }
+    /**
+     * Gets the timestamp that the user requested a password reset.
+     *
+     * @return null|\DateTime
+     */
+    public function getPasswordRequestedAt()
+    {
+        return $this->passwordRequestedAt;
+    }
+
+    /**
+     * Check if password reset request has expired.
+     *
+     * @param  int $ttl Password request time to live.
+     *
+     * @return boolean
+     */
+    public function isPasswordRequestNonExpired($ttl)
+    {
+        return $this->getPasswordRequestedAt() instanceof \DateTime &&
+               $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
+    }
+
+    /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role")
      * @ORM\JoinTable(name="users_roles",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")},
