@@ -3,11 +3,11 @@ return array(
     'staticAssets' => array(
         'global' => array(
             'css' => array(
-                '/style.177a334e.css',
+                '/style.8daeb9de.css',
             ),
             'js' => array(
-                '/rozier-backend-theme.8af36066.min.js',
-                '/rozier-backend-theme-vendor.76d83a1e.min.js',
+                '/rozier-backend-theme.ec658367.min.js',
+                '/rozier-backend-theme-vendor.471891f6.min.js',
             ),
         ),
     )
