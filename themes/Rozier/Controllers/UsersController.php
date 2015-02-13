@@ -400,18 +400,17 @@ class UsersController extends RozierApp
                     $msg = $this->getTranslator()->trans('user.%name%.created', ['%name%'=>$user->getUsername()]);
                     $this->publishConfirmMessage($request, $msg);
 
+                    $response = new RedirectResponse(
+                        $this->getService('urlGenerator')->generate('usersHomePage')
+                    );
+                    $response->prepare($request);
+
+                    return $response->send();
                 } catch (FacebookUsernameNotFoundException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
-
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('usersHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
             }
 
             $this->assignation['form'] = $form->createView();
@@ -709,7 +708,7 @@ class UsersController extends RozierApp
         $builder = $this->getService('formFactory')
                         ->createBuilder('form');
 
-        $this->buildCommonFormFields($builder);
+        $this->buildCommonFormFields($builder, $user);
 
         return $builder->getForm();
     }
@@ -775,6 +774,7 @@ class UsersController extends RozierApp
      * Build common fields between add and edit user forms.
      *
      * @param FormBuilder $builder
+     * @param RZ\Roadiz\Core\Entities\User $user
      */
     private function buildCommonFormFields(&$builder, User $user)
     {
