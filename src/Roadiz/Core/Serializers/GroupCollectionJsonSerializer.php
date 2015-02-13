@@ -72,16 +72,18 @@ class GroupCollectionJsonSerializer extends AbstractJsonSerializer
         $array = json_decode($string, true);
 
         foreach ($array as $groupAssoc) {
-            $group = new Group();
-            $group->setName($groupAssoc['name']);
+            if (!empty($groupAssoc["roles"]) &&
+                !empty($groupAssoc["name"])) {
+                $group = new Group();
+                $group->setName($groupAssoc['name']);
 
-            foreach ($groupAssoc["roles"] as $role) {
-                $role = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Role')->findOneByName($role['name']);
-                $group->addRole($role);
+                foreach ($groupAssoc["roles"] as $role) {
+                    $role = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Role')->findOneByName($role['name']);
+                    $group->addRole($role);
+                }
 
+                $collection[] = $group;
             }
-
-            $collection[] = $group;
         }
 
         return $collection;

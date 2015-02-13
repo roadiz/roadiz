@@ -88,16 +88,19 @@ class GroupJsonSerializer extends AbstractJsonSerializer
          * to pass to RoleJsonSerializer.
          */
         $tempArray = json_decode($string, true);
-
-        foreach ($tempArray['roles'] as $roleAssoc) {
-            $role = RoleJsonSerializer::deserialize(json_encode($roleAssoc));
-            $role = Kernel::getService('em')
-                                         ->getRepository('RZ\Roadiz\Core\Entities\Role')
-                                         ->findOneByName($role->getName());
-            $group->addRole($role);
-        }
         $data = [];
-        $data[] = $group;
+
+        if (!empty($tempArray['roles'])) {
+            foreach ($tempArray['roles'] as $roleAssoc) {
+                $role = RoleJsonSerializer::deserialize(json_encode($roleAssoc));
+                $role = Kernel::getService('em')
+                                             ->getRepository('RZ\Roadiz\Core\Entities\Role')
+                                             ->findOneByName($role->getName());
+                $group->addRole($role);
+            }
+            $data[] = $group;
+        }
+
         return $data;
     }
 }

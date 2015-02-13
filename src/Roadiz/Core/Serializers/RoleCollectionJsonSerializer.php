@@ -71,8 +71,10 @@ class RoleCollectionJsonSerializer extends AbstractJsonSerializer
         $roles = json_decode($jsonString, true);
         $data = new ArrayCollection();
         foreach ($roles as $role) {
-            $tmp = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Role')->findOneByName($role['name']);
-            $data[] = $tmp;
+            if (!empty($role['name'])) {
+                $tmp = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Role')->findOneByName($role['name']);
+                $data[] = $tmp;
+            }
         }
         return $data;
     }
