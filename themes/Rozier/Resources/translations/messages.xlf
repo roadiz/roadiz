@@ -5760,6 +5760,12 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>node.noCreation.alreadyExists</source>
           <target></target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="maps_style">
+          <source>maps_style</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

@@ -5760,6 +5760,11 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>node.noCreation.alreadyExists</source>
           <target>Le nœud n’a pas été créé car il existe déjà.</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="maps_style">
+          <source>maps_style</source>
+          <target>Style par défaut Google Maps</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>
