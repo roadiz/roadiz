@@ -65,19 +65,30 @@
             top: 0px; left: 0;
             text-align: center;
 
-            .uk-icon-rz-roadiz-icon {
-                display: table-cell;
-                width: 128px; height: 116px;
-                font-size: 55px;
+            &:before {
+                content: "";
+                display: inline-block;
+                height: 100%;
                 vertical-align: middle;
-                padding-left: 5px;
+
+            }
+
+            .uk-icon-rz-roadiz-icon {
+                vertical-align: middle;
+                display: inline-block;
+                font-size: 55px;
                 -webkit-font-smoothing: subpixel-antialiased;
             }
 
             img{
                 position: relative;
                 display: block;
-                top:23px; left:29px;
+                max-width: 95%;
+                height: auto;
+                max-height: 150px;
+                vertical-align: middle;
+                display: inline-block;
+                width: auto;
             }
         }
 

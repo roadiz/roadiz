@@ -39,7 +39,14 @@
         height: @global-header-height;
         text-align: center;
         .box-sizing();
-        padding: 34px 0 0;
+        padding: 0;
+
+        &:before {
+            content:"";
+            display: inline-block;
+            vertical-align: middle;
+            height: 100%;
+        }
 
         a {
             font-size: 55px;
@@ -49,11 +56,17 @@
             .opacity(0.95);
             .transition(opacity ease 0.5s);
             -webkit-font-smoothing: subpixel-antialiased;
-            padding-left: 8px;
+            padding-left: 0px;
+
+            vertical-align: middle;
 
             img {
                 display: block;
-
+                max-width: 95%;
+                height: auto;
+                width: auto;
+                max-height: 150px;
+                margin: 0 auto;
             }
 
             &:hover {
