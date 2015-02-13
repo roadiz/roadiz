@@ -29,7 +29,7 @@ NodeTree.prototype.$dropdown = null;
 NodeTree.prototype.init = function(){
     var _this = this;
 
-    _this.contentHeight = _this.$content.actual('height');
+    _this.contentHeight = _this.$content.actual('outerHeight');
 
     if(_this.contentHeight >= (Rozier.windowHeight - 400)) _this.dropdownFlip();
 

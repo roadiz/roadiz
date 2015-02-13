@@ -695,8 +695,12 @@ Rozier.resize = function(){
 	_this.$nodeTreeHead = _this.$mainTrees.find('.nodetree-head');
 	_this.$treeScrollCont = _this.$mainTrees.find('.tree-scroll-cont');
 	_this.$treeScroll = _this.$mainTrees.find('.tree-scroll');
-	_this.nodesSourcesSearchHeight = _this.$nodesSourcesSearch.height();
-	_this.nodeTreeHeadHeight = _this.$nodeTreeHead.height();
+
+	/*
+	 * need actual to get tree height even when they are hidden.
+	 */
+	_this.nodesSourcesSearchHeight = _this.$nodesSourcesSearch.actual('outerHeight');
+	_this.nodeTreeHeadHeight = _this.$nodeTreeHead.actual('outerHeight');
 	_this.treeScrollHeight = _this.windowHeight - (_this.nodesSourcesSearchHeight + _this.nodeTreeHeadHeight);
 
 	if(isMobile.any() !== null) _this.treeScrollHeight = _this.windowHeight - (50 + 50 + _this.nodeTreeHeadHeight); // Menu + tree menu + tree head
