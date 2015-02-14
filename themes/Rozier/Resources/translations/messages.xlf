@@ -5766,6 +5766,98 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+
+
+      <trans-unit xml:space="preserve" id="user.status">
+          <source>user.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.enabled">
+          <source>user.enabled</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.disabled">
+          <source>user.disabled</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.locked">
+          <source>user.locked</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.expired">
+          <source>user.expired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit Xml:space="preserve" id="user.expiresAt">
+          <source>user.expiresAt</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.expired">
+          <source>user.force.expired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:Space="Preserve" id="user.credentialsExpiresAt">
+          <source>user.credentialsExpiresAt</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.credentialsExpired">
+          <source>user.force.credentialsExpired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user.%name%.security">
+          <source>edit.user.%name%.security</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.%name%.security.updated">
+          <source>user.%name%.security.updated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.account.has-expired">
+          <source>user.account.has-expired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.crendentials.has-expired">
+          <source>user.crendentials.has-expired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.last-login">
+          <source>user.last-login</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.password-requested-at">
+          <source>user.password-requested-at</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="never.requested">
+          <source>never.requested</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="year">
+          <source>year</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="month">
+          <source>month</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="day">
+          <source>day</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hour">
+          <source>hour</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="minute">
+          <source>minute</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.security">
+          <source>user.security</source>
+          <target></target>
+      </trans-unit>
+
+
     </body>
   </file>
 </xliff>

@@ -5765,6 +5765,95 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>maps_style</source>
           <target>Style par défaut Google Maps</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="user.status">
+          <source>user.status</source>
+          <target>Statut</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.enabled">
+          <source>user.enabled</source>
+          <target>Compte activé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.disabled">
+          <source>user.disabled</source>
+          <target>Compte désactivé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.locked">
+          <source>user.locked</source>
+          <target>Compte verrouillé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.expired">
+          <source>user.expired</source>
+          <target>Compte expiré</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.expiresAt">
+          <source>user.expiresAt</source>
+          <target>Le compte s’expire le :</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.expired">
+          <source>user.force.expired</source>
+          <target>Forcer l’expiration du compte</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.credentialsExpiresAt">
+          <source>user.credentialsExpiresAt</source>
+          <target>Les identifiants du compte s’expirent le :</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.credentialsExpired">
+          <source>user.force.credentialsExpired</source>
+          <target>Forcer l’expiration des identifiants du compte</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user.%name%.security">
+          <source>edit.user.%name%.security</source>
+          <target>Sécurité de “%name%”</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.%name%.security.updated">
+          <source>user.%name%.security.updated</source>
+          <target>Les paramètres de sécurité du compte “%name%” ont été mis à jour.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.account.has-expired">
+          <source>user.account.has-expired</source>
+          <target>Le compte utilisateur a expiré.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.crendentials.has-expired">
+          <source>user.crendentials.has-expired</source>
+          <target>Les identifiants du compte utilisateur ont expiré.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.last-login">
+          <source>user.last-login</source>
+          <target>Date de la dernière connexion</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.password-requested-at">
+          <source>user.password-requested-at</source>
+          <target>Date de la dernière demande de mot de passe</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="never.requested">
+          <source>never.requested</source>
+          <target>Jamais</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="year">
+          <source>year</source>
+          <target>Année</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="month">
+          <source>month</source>
+          <target>Mois</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="day">
+          <source>day</source>
+          <target>Jour</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hour">
+          <source>hour</source>
+          <target>Heure</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="minute">
+          <source>minute</source>
+          <target>Min.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.security">
+          <source>user.security</source>
+          <target>Sécurité</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>
