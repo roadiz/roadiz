@@ -70,7 +70,6 @@ class UsersSecurityController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid()) {
-
                 $this->editUserSecurity($form->getData(), $user, $request);
                 $msg = $this->getTranslator()->trans(
                     'user.%name%.security.updated',

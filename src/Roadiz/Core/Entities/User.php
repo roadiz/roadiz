@@ -524,14 +524,16 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return boolean
      */
-    public function getExpired() {
+    public function getExpired()
+    {
         return $this->expired;
     }
 
     /**
      * @param boolean $expired
      */
-    public function setExpired($expired) {
+    public function setExpired($expired)
+    {
         $this->expired = $expired;
 
         return $this;
@@ -639,14 +641,16 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return boolean
      */
-    public function getCredentialsExpired() {
+    public function getCredentialsExpired()
+    {
         return $this->credentialsExpired;
     }
 
     /**
      * @param boolean $newcredentialsExpired
      */
-    public function setCredentialsExpired($newcredentialsExpired) {
+    public function setCredentialsExpired($newcredentialsExpired)
+    {
         $this->credentialsExpired = $newcredentialsExpired;
 
         return $this;
