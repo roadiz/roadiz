@@ -326,6 +326,11 @@ usersDeletePage:
     defaults: { _controller: Themes\Rozier\Controllers\UsersController::deleteAction }
     requirements: { userId : "[0-9]+" }
 
+usersSecurityPage:
+    path:     /rz-admin/users/edit/{userId}/security
+    defaults: { _controller: Themes\Rozier\Controllers\UsersSecurityController::securityAction }
+    requirements: { userId : "[0-9]+" }
+
 # FONTS
 fontsHomePage:
     path:     /rz-admin/fonts

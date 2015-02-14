@@ -71,11 +71,7 @@ class RolesController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['roles'] = $listManager->getEntities();
 
-        return new Response(
-            $this->getTwig()->render('roles/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('roles/list.html.twig', $this->assignation);
     }
 
     /**
@@ -117,11 +113,7 @@ class RolesController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('roles/add.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('roles/add.html.twig', $this->assignation);
     }
 
     /**
@@ -168,11 +160,7 @@ class RolesController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('roles/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('roles/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -225,11 +213,7 @@ class RolesController extends RozierApp
             $this->assignation['form'] = $form->createView();
             $this->assignation['role'] = $role;
 
-            return new Response(
-                $this->getTwig()->render('roles/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('roles/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

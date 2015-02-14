@@ -67,11 +67,7 @@ class CustomFormFieldsController extends RozierApp
             $this->assignation['customForm'] = $customForm;
             $this->assignation['fields'] = $fields;
 
-            return new Response(
-                $this->getTwig()->render('custom-form-fields/list.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('custom-form-fields/list.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -122,11 +118,7 @@ class CustomFormFieldsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('custom-form-fields/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('custom-form-fields/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -198,11 +190,7 @@ class CustomFormFieldsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('custom-form-fields/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('custom-form-fields/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -262,11 +250,7 @@ class CustomFormFieldsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('custom-form-fields/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('custom-form-fields/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

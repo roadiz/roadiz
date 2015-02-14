@@ -99,11 +99,7 @@ class ContactController extends DefaultThemeApp
              */
             $this->assignation['route'] = $_route;
 
-            return new Response(
-                $this->getTwig()->render('contact.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('contact.html.twig', $this->assignation);
         } catch (NoTranslationAvailableException $e) {
             return $this->throw404();
         }

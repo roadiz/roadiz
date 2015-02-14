@@ -105,11 +105,7 @@ class TranslationsController extends RozierApp
             ];
         }
 
-        return new Response(
-            $this->getTwig()->render('translations/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('translations/list.html.twig', $this->assignation);
     }
 
     /**
@@ -158,11 +154,7 @@ class TranslationsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('translations/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('translations/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -209,11 +201,7 @@ class TranslationsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('translations/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('translations/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -263,11 +251,7 @@ class TranslationsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('translations/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('translations/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

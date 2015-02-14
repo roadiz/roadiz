@@ -68,11 +68,7 @@ class LoginController extends RozierApp
 
         $this->assignation['error'] = $error;
 
-        return new Response(
-            $this->getTwig()->render('login/login.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('login/login.html.twig', $this->assignation);
     }
 
     /**
@@ -82,11 +78,7 @@ class LoginController extends RozierApp
      */
     public function checkAction(Request $request)
     {
-        return new Response(
-            $this->getTwig()->render('login/check.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('login/check.html.twig', $this->assignation);
     }
 
     /**
@@ -96,11 +88,7 @@ class LoginController extends RozierApp
      */
     public function logoutAction(Request $request)
     {
-        return new Response(
-            $this->getTwig()->render('login/check.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('login/check.html.twig', $this->assignation);
     }
 
     /**

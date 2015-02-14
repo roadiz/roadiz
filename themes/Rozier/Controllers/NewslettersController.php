@@ -80,11 +80,7 @@ class NewslettersController extends RozierApp
             ->findBy(['newsletterType' => true]);
         $this->assignation['translation'] = $translation;
 
-        return new Response(
-            $this->getTwig()->render('newsletters/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('newsletters/list.html.twig', $this->assignation);
     }
 
     /**
@@ -170,11 +166,7 @@ class NewslettersController extends RozierApp
             $this->assignation['type'] = $type;
             $this->assignation['nodeTypesCount'] = true;
 
-            return new Response(
-                $this->getTwig()->render('newsletters/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('newsletters/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -247,11 +239,7 @@ class NewslettersController extends RozierApp
 
                 $this->assignation['form'] = $form->createView();
 
-                return new Response(
-                    $this->getTwig()->render('newsletters/edit.html.twig', $this->assignation),
-                    Response::HTTP_OK,
-                    ['content-type' => 'text/html']
-                );
+                return $this->render('newsletters/edit.html.twig', $this->assignation);
             }
         }
 

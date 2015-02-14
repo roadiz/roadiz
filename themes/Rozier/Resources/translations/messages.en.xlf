@@ -2649,7 +2649,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="229" approved="yes">
         <source>user.edit</source>
-        <target state="translated">Edit user</target>
+        <target state="translated">Informations</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/c5/b4/7f47aae97677b34984c549a4f887fee075a59184824c766e5bffe8be2ffc.php</context>
           <context context-type="linenumber">31</context>
@@ -2657,7 +2657,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="230" approved="yes">
         <source>user.roles</source>
-        <target state="translated">User roles</target>
+        <target state="translated">Roles</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/c5/b4/7f47aae97677b34984c549a4f887fee075a59184824c766e5bffe8be2ffc.php</context>
           <context context-type="linenumber">44</context>
@@ -2669,7 +2669,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="231" approved="yes">
         <source>user.groups</source>
-        <target state="translated">User groups</target>
+        <target state="translated">Groups</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/c5/b4/7f47aae97677b34984c549a4f887fee075a59184824c766e5bffe8be2ffc.php</context>
           <context context-type="linenumber">57</context>
@@ -2677,7 +2677,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="232" approved="yes">
         <source>user.history</source>
-        <target state="translated">User history</target>
+        <target state="translated">History</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/c5/b4/7f47aae97677b34984c549a4f887fee075a59184824c766e5bffe8be2ffc.php</context>
           <context context-type="linenumber">70</context>
@@ -5765,6 +5765,95 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="maps_style">
           <source>maps_style</source>
           <target>Default Google Maps styles</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="user.status">
+          <source>user.status</source>
+          <target>Status</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.enabled">
+          <source>user.enabled</source>
+          <target>Enabled account</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.disabled">
+          <source>user.disabled</source>
+          <target>Disabled account</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.locked">
+          <source>user.locked</source>
+          <target>Locked account</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.expired">
+          <source>user.expired</source>
+          <target>Expired account</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.expiresAt">
+          <source>user.expiresAt</source>
+          <target>Account will expire at:</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.expired">
+          <source>user.force.expired</source>
+          <target>Force account expiration</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.credentialsExpiresAt">
+          <source>user.credentialsExpiresAt</source>
+          <target>Account credentials will expire at:</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.credentialsExpired">
+          <source>user.force.credentialsExpired</source>
+          <target>Force account credential expiration</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user.%name%.security">
+          <source>edit.user.%name%.security</source>
+          <target>“%name%” security</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.%name%.security.updated">
+          <source>user.%name%.security.updated</source>
+          <target>“%name%” security settings have been updated.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.account.has-expired">
+          <source>user.account.has-expired</source>
+          <target>User account has expired.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.crendentials.has-expired">
+          <source>user.crendentials.has-expired</source>
+          <target>User account credentials have expired.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.last-login">
+          <source>user.last-login</source>
+          <target>Last login date</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.password-requested-at">
+          <source>user.password-requested-at</source>
+          <target>Last password request date</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="never.requested">
+          <source>never.requested</source>
+          <target>Never</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="year">
+          <source>year</source>
+          <target>Year</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="month">
+          <source>month</source>
+          <target>Month</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="day">
+          <source>day</source>
+          <target>Day</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hour">
+          <source>hour</source>
+          <target>Hour</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="minute">
+          <source>minute</source>
+          <target>Min.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.security">
+          <source>user.security</source>
+          <target>Security</target>
       </trans-unit>
 
     </body>

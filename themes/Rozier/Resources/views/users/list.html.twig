@@ -34,6 +34,7 @@
                             {% endif %}
                         </th>
                         <th class="mobile-hidden">{% trans %}user.roles{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}user.status{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
                 </thead>
@@ -44,6 +45,27 @@
                         <td><a href="{{ path('usersEditPage', { userId: user.getId }) }}">{{ user.getUsername }}</a></td>
                         <td>{{ user.getEmail }}</td>
                         <td class="mobile-hidden">{% transchoice user.getRoles|length %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}</td>
+                        <td class="mobile-hidden user-status">
+                            {% if user.enabled %}
+                            <div class="uk-button-status" title="{% trans %}user.enabled{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                <i class="uk-icon-check"></i>
+                            </div>
+                            {% else %}
+                            <div class="uk-button-status" title="{% trans %}user.disabled{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                <i class="uk-icon-close"></i>
+                            </div>
+                            {% endif %}
+                            {% if not user.accountNonLocked %}
+                            <div class="uk-button-status" title="{% trans %}user.locked{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                <i class="uk-icon-lock"></i>
+                            </div>
+                            {% endif %}
+                            {% if not user.credentialsNonExpired or not user.accountNonExpired %}
+                            <div class="uk-button-status" title="{% trans %}user.expired{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                <i class="uk-icon-bug"></i>
+                            </div>
+                            {% endif %}
+                        </td>
                         <td>
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('usersEditPage', { userId: user.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>

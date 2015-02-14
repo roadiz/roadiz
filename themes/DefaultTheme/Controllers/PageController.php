@@ -61,10 +61,6 @@ class PageController extends DefaultThemeApp
 
         $this->getService('stopwatch')->start('twigRender');
 
-        return new Response(
-            $this->getTwig()->render('types/page.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('types/page.html.twig', $this->assignation);
     }
 }

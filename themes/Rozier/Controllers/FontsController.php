@@ -68,11 +68,7 @@ class FontsController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['fonts'] = $listManager->getEntities();
 
-        return new Response(
-            $this->getTwig()->render('fonts/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('fonts/list.html.twig', $this->assignation);
     }
 
     /**
@@ -114,11 +110,7 @@ class FontsController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('fonts/add.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('fonts/add.html.twig', $this->assignation);
     }
 
     /**
@@ -166,11 +158,7 @@ class FontsController extends RozierApp
             $this->assignation['form'] = $form->createView();
             $this->assignation['font'] = $font;
 
-            return new Response(
-                $this->getTwig()->render('fonts/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('fonts/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -221,11 +209,7 @@ class FontsController extends RozierApp
             $this->assignation['font'] = $font;
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('fonts/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('fonts/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

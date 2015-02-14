@@ -43,10 +43,6 @@ class AdminController extends RozierApp
 
         $this->getService('stopwatch')->start('twigRender');
 
-        return new Response(
-            $this->getTwig()->render('admin/test.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('admin/test.html.twig', $this->assignation);
     }
 }

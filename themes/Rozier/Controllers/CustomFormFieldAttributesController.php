@@ -74,10 +74,6 @@ class CustomFormFieldAttributesController extends RozierApp
         $this->assignation['fields'] = $listManager->getEntities();
         $this->assignation['customFormId'] = $customFormAnswer->getCustomForm()->getId();
 
-        return new Response(
-            $this->getTwig()->render('custom-form-field-attributes/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('custom-form-field-attributes/list.html.twig', $this->assignation);
     }
 }

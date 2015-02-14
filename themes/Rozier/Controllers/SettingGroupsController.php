@@ -72,11 +72,7 @@ class SettingGroupsController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['settingGroups'] = $listManager->getEntities();
 
-        return new Response(
-            $this->getTwig()->render('settingGroups/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('settingGroups/list.html.twig', $this->assignation);
     }
 
     /**
@@ -126,11 +122,7 @@ class SettingGroupsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('settingGroups/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('settingGroups/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -181,11 +173,7 @@ class SettingGroupsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('settingGroups/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('settingGroups/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -235,11 +223,7 @@ class SettingGroupsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('settingGroups/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('settingGroups/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

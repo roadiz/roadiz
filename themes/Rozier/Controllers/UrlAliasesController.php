@@ -216,11 +216,7 @@ class UrlAliasesController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('nodes/editAliases.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('nodes/editAliases.html.twig', $this->assignation);
         }
 
         return $this->throw404();

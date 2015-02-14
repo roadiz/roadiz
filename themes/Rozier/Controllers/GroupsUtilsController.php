@@ -178,11 +178,7 @@ class GroupsUtilsController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('groups/import.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('groups/import.html.twig', $this->assignation);
     }
 
     /**

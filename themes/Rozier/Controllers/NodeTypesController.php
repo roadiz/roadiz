@@ -74,11 +74,7 @@ class NodeTypesController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['node_types'] = $listManager->getEntities();
 
-        return new Response(
-            $this->getTwig()->render('node-types/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('node-types/list.html.twig', $this->assignation);
     }
 
     /**
@@ -129,11 +125,7 @@ class NodeTypesController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('node-types/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('node-types/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -193,11 +185,7 @@ class NodeTypesController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('node-types/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('node-types/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -251,11 +239,7 @@ class NodeTypesController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('node-types/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('node-types/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

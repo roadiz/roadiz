@@ -365,6 +365,32 @@ class AppController implements ViewableInterface
     }
 
     /**
+     * Return a Response from a template string with its rendering assignation.
+     *
+     * @see http://api.symfony.com/2.6/Symfony/Bundle/FrameworkBundle/Controller/Controller.html#method_render
+     *
+     * @param  string        $view       Template file path
+     * @param  array         $parameters Twig assigntion array
+     * @param  Response|null $response   Optional Response object to customize response parameters
+     *
+     * @return Response
+     */
+    public function render($view, array $parameters = [], Response $response = null)
+    {
+        if (null === $response) {
+            $response = new Response(
+                '',
+                Response::HTTP_OK,
+                ['content-type' => 'text/html']
+            );
+        }
+
+        $response->setContent($this->kernel->container['twig.environment']->render($view, $parameters));
+
+        return $response;
+    }
+
+    /**
      * Prepare base informations to be rendered in twig templates.
      *
      * ## Available contents

@@ -225,6 +225,13 @@ trait NodesSourcesTrait
                         'data-desc' => $field->getDescription(),
                         'class' => 'rz-datetime-field',
                     ],
+                    'empty_value' => [
+                        'year' =>   $translator->trans('year'),
+                        'month' =>  $translator->trans('month'),
+                        'day' =>    $translator->trans('day'),
+                        'hour' =>   $translator->trans('hour'),
+                        'minute' => $translator->trans('minute')
+                    ]
                 ];
             case NodeTypeField::INTEGER_T:
                 return [

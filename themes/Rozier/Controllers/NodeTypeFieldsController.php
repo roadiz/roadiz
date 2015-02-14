@@ -68,11 +68,7 @@ class NodeTypeFieldsController extends RozierApp
             $this->assignation['nodeType'] = $nodeType;
             $this->assignation['fields'] = $fields;
 
-            return new Response(
-                $this->getTwig()->render('node-type-fields/list.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('node-type-fields/list.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -126,11 +122,7 @@ class NodeTypeFieldsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('node-type-fields/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('node-type-fields/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -206,11 +198,7 @@ class NodeTypeFieldsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('node-type-fields/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('node-type-fields/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -278,11 +266,7 @@ class NodeTypeFieldsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('node-type-fields/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('node-type-fields/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

@@ -120,11 +120,7 @@ class DocumentTranslationsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('document-translations/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('document-translations/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -205,11 +201,7 @@ class DocumentTranslationsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('document-translations/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('document-translations/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

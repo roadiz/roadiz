@@ -125,11 +125,7 @@ class NodesSourcesController extends RozierApp
 
                 $this->assignation['form'] = $form->createView();
 
-                return new Response(
-                    $this->getTwig()->render('nodes/editSource.html.twig', $this->assignation),
-                    Response::HTTP_OK,
-                    ['content-type' => 'text/html']
-                );
+                return $this->render('nodes/editSource.html.twig', $this->assignation);
             }
         }
         return $this->throw404();
@@ -199,10 +195,6 @@ class NodesSourcesController extends RozierApp
         $this->assignation["nodeSource"] = $ns;
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('nodes/deleteSource.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('nodes/deleteSource.html.twig', $this->assignation);
     }
 }

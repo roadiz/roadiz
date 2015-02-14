@@ -51,10 +51,6 @@ class DashboardController extends RozierApp
                                                    ->getRepository("RZ\Roadiz\Core\Entities\NodesSources")
                                                    ->findByLatestUpdated(4);
 
-        return new Response(
-            $this->getTwig()->render('dashboard/index.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('dashboard/index.html.twig', $this->assignation);
     }
 }

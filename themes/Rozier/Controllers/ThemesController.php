@@ -70,11 +70,7 @@ class ThemesController extends RozierApp
         $themeType = new \RZ\Roadiz\CMS\Forms\ThemesType();
         $this->assignation['availableThemesCount'] = $themeType->getSize();
 
-        return new Response(
-            $this->getTwig()->render('themes/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('themes/list.html.twig', $this->assignation);
     }
 
     /**
@@ -117,11 +113,7 @@ class ThemesController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('themes/add.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('themes/add.html.twig', $this->assignation);
 
     }
 
@@ -169,11 +161,7 @@ class ThemesController extends RozierApp
             $this->assignation['form'] = $form->createView();
             $this->assignation['theme'] = $theme;
 
-            return new Response(
-                $this->getTwig()->render('themes/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('themes/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -225,11 +213,7 @@ class ThemesController extends RozierApp
             $this->assignation['form'] = $form->createView();
             $this->assignation['theme'] = $theme;
 
-            return new Response(
-                $this->getTwig()->render('themes/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('themes/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

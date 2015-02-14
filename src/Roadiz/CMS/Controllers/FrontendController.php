@@ -188,11 +188,7 @@ class FrontendController extends AppController
 
         $this->prepareThemeAssignation($node, $translation);
 
-        return new Response(
-            $this->getTwig()->render('home.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('home.html.twig', $this->assignation);
     }
 
     /**

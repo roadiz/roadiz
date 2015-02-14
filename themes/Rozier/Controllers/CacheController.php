@@ -76,11 +76,7 @@ class CacheController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('cache/deleteDoctrine.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('cache/deleteDoctrine.html.twig', $this->assignation);
     }
 
     /**
@@ -125,11 +121,7 @@ class CacheController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('cache/deleteSLIR.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('cache/deleteSLIR.html.twig', $this->assignation);
     }
 
     /**
