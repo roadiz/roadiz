@@ -293,7 +293,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     *
+     * @ORM\Column(name="confirmation_token", type="string", unique=true, nullable=true)
      * @var string
      */
     protected $confirmationToken;
@@ -321,6 +321,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
+     * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
      * @var \DateTime
      */
     protected $passwordRequestedAt;
@@ -519,7 +520,27 @@ class User extends AbstractHuman implements AdvancedUserInterface
     private $expired = false;
 
     /**
+     * Return strictly forced expiration status.
+     *
+     * @return boolean
+     */
+    public function getExpired() {
+        return $this->expired;
+    }
+
+    /**
+     * @param boolean $expired
+     */
+    public function setExpired($expired) {
+        $this->expired = $expired;
+
+        return $this;
+    }
+
+    /**
      * Checks whether the user's account has expired.
+     *
+     * Combines expiresAt date-time limit AND expired boolean value.
      *
      * Internally, if this method returns false, the authentication system
      * will throw an AccountExpiredException and prevent login.
@@ -530,7 +551,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
      */
     public function isAccountNonExpired()
     {
-
         if ($this->expiresAt !== null &&
             $this->expiresAt->getTimestamp() < time()) {
             return false;
@@ -551,13 +571,20 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * Internally, if this method returns false, the authentication system
      * will throw a LockedException and prevent login.
      *
-     * @return bool    true if the user is not locked, false otherwise
+     * @return bool true if the user is not locked, false otherwise
      *
      * @see LockedException
      */
     public function isAccountNonLocked()
     {
         return !$this->locked;
+    }
+
+    public function setLocked($locked)
+    {
+        $this->locked = (boolean) $locked;
+
+        return $this;
     }
 
     /**
@@ -576,13 +603,59 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
+     * @ORM\Column(name="credentials_expires_at", type="datetime", nullable=true)
+     * @var \DateTime
+     */
+    private $credentialsExpiresAt;
+
+    /**
+     * @param \DateTime $date
+     *
+     * @return User
+     */
+    public function setCredentialsExpiresAt(\DateTime $date = null)
+    {
+        $this->credentialsExpiresAt = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCredentialsExpiresAt()
+    {
+        return $this->credentialsExpiresAt;
+    }
+
+    /**
      * @var boolean
      * @ORM\Column(type="boolean", name="credentials_expired")
      */
     private $credentialsExpired = false;
 
     /**
+     * Return strictly forced credentials expiration status.
+     *
+     * @return boolean
+     */
+    public function getCredentialsExpired() {
+        return $this->credentialsExpired;
+    }
+
+    /**
+     * @param boolean $newcredentialsExpired
+     */
+    public function setCredentialsExpired($newcredentialsExpired) {
+        $this->credentialsExpired = $newcredentialsExpired;
+
+        return $this;
+    }
+
+    /**
      * Checks whether the user's credentials (password) has expired.
+     *
+     * Combines credentialsExpiresAt date-time limit AND credentialsExpired boolean value.
      *
      * Internally, if this method returns false, the authentication system
      * will throw a CredentialsExpiredException and prevent login.
@@ -593,6 +666,11 @@ class User extends AbstractHuman implements AdvancedUserInterface
      */
     public function isCredentialsNonExpired()
     {
+        if ($this->credentialsExpiresAt !== null &&
+            $this->credentialsExpiresAt->getTimestamp() < time()) {
+            return false;
+        }
+
         return !$this->credentialsExpired;
     }
 

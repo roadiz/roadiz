@@ -727,8 +727,7 @@ class UsersController extends RozierApp
             'company' => $user->getCompany(),
             'job' => $user->getJob(),
             'birthday' => $user->getBirthday(),
-            'facebookName' => $user->getFacebookName(),
-            'chroot' => ($user->getChroot() !== null) ? $user->getChroot()->getId() : null
+            'facebookName' => $user->getFacebookName()
         ];
 
         $builder = $this->getService('formFactory')
@@ -794,15 +793,6 @@ class UsersController extends RozierApp
             'label'=>$this->getTranslator()->trans('facebookName'),
             'required' => false
         ]);
-
-        if ($this->getService('securityContext')->isGranted("ROLE_SUPERADMIN")) {
-            $n = $user->getChroot();
-            $n = ($n !== null)? [$n] : [] ;
-            $builder->add('chroot', new \RZ\Roadiz\CMS\Forms\NodesType($n), [
-                'label'=>$this->getTranslator()->trans('chroot'),
-                'required'=>false
-            ]);
-        }
 
         return $builder;
     }

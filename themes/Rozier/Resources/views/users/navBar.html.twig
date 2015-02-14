@@ -5,6 +5,9 @@
 			<a href="{{ path('usersEditPage', { userId: user.getId }) }}">{% trans %}user.edit{% endtrans %}</a>
 		</li>
 		{% if (securityContext.Granted('ROLE_ACCESS_USERS')) %}
+		<li class="{% if current == 'security' %}uk-active{% endif %}">
+			<a href="{{ path('usersSecurityPage', { userId: user.getId }) }}">{% trans %}user.security{% endtrans %}</a>
+		</li>
 		<li class="{% if current == 'roles' %}uk-active{% endif %}">
 			<a href="{{ path('usersEditRolesPage', { userId: user.getId }) }}">{% trans %}user.roles{% endtrans %}</a>
 		</li>
