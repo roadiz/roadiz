@@ -188,8 +188,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['userImplementations'] = function ($c) {
             return [
-                'Symfony\\Component\\Security\\Core\\User\\User' => $c['passwordEncoder'],
-                'RZ\\Roadiz\\Core\\Entities\\User' => $c['passwordEncoder'],
+                'RZ\\Roadiz\\Core\\Entities\\User' => $c['passwordEncoder']
             ];
         };
 
@@ -221,7 +220,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
          * Default denied handler
          */
         $container['accessDeniedHandler'] = function ($c) {
-            return new AccessDeniedHandler();
+            return new AccessDeniedHandler($c['urlGenerator'], $c['logger']);
         };
 
         return $container;

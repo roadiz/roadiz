@@ -304,17 +304,28 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function getEmergencyResponse($e)
     {
-        $html = file_get_contents(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views/emerg.html');
-        $html = str_replace('{{ message }}', $e->getMessage(), $html);
+        if ($this->request->isXmlHttpRequest()) {
+            return new \Symfony\Component\HttpFoundation\JsonResponse(
+                [
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                    'exception' => get_class($e)
+                ],
+                Response::HTTP_SERVICE_UNAVAILABLE
+            );
 
-        $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
+        } else {
+            $html = file_get_contents(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views/emerg.html');
+            $html = str_replace('{{ message }}', $e->getMessage(), $html);
+            $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
+            $html = str_replace('{{ details }}', $trace, $html);
 
-        $html = str_replace('{{ details }}', $trace, $html);
-        return new Response(
-            $html,
-            Response::HTTP_SERVICE_UNAVAILABLE,
-            ['content-type' => 'text/html']
-        );
+            return new Response(
+                $html,
+                Response::HTTP_SERVICE_UNAVAILABLE,
+                ['content-type' => 'text/html']
+            );
+        }
     }
 
     /**

@@ -4009,14 +4009,33 @@ Lazyload.prototype.loadContent = function(state, location) {
         _this.applyContent(data);
         _this.canvasLoader.hide();
     })
-    .fail(function() {
+    .fail(function(data) {
         console.log("error");
-        UIkit.notify({
-            message : Rozier.messages.forbiddenPage,
-            status  : 'danger',
-            timeout : 3000,
-            pos     : 'top-center'
-        });
+        console.log(data);
+
+        if (typeof data.responseText !== "undefined") {
+            try {
+                var exception = JSON.parse(data.responseText);
+                UIkit.notify({
+                    message : exception.message,
+                    status  : 'danger',
+                    timeout : 3000,
+                    pos     : 'top-center'
+                });
+            } catch (e) {
+                // No valid JsonResponse, need to refresh page
+                window.location.href = location.href;
+            }
+        } else {
+            UIkit.notify({
+                message : Rozier.messages.forbiddenPage,
+                status  : 'danger',
+                timeout : 3000,
+                pos     : 'top-center'
+            });
+        }
+
+        _this.canvasLoader.hide();
     });
 };
 
