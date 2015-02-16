@@ -195,4 +195,33 @@ class Theme extends AbstractEntity
 
         return $this;
     }
+
+    /**
+    * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
+    * @ORM\JoinColumn(name="homenode_id", referencedColumnName="id")
+    *
+    * @var RZ\Roadiz\Core\Entities\Node
+    */
+    private $homeNode;
+
+    /**
+    * @param RZ\Roadiz\Core\Entities\Node $chroot
+    *
+    * @return RZ\Roadiz\Core\Entities\Node
+    */
+    public function setHomeNode(Node $homeNode = null)
+    {
+        $this->homeNode = $homeNode;
+
+        return $this;
+    }
+
+    /**
+    * @return RZ\Roadiz\Core\Entities\Node
+    */
+    public function getHomeNode()
+    {
+        return $this->homeNode;
+    }
+
 }

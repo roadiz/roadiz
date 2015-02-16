@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Viewers\ViewableInterface;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -473,6 +474,29 @@ class AppController implements ViewableInterface
         );
     }
 
+    public static function getCalledClass()
+    {
+        $className = get_called_class();
+        if (strpos($className, "\\") != 0) {
+            $className = "\\" . $className;
+        }
+        return $className;
+    }
+
+    /**
+     * Return the current Theme
+     *
+     * @return \RZ\Roadiz\Core\Entities\Theme
+     */
+    public static function getTheme()
+    {
+        $className = static::getCalledClass();
+        $theme = Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+            ->findOneBy(['className' => $className]);
+        return $theme;
+    }
+
     /**
      * Setup current theme class into database.
      *
@@ -480,10 +504,9 @@ class AppController implements ViewableInterface
      */
     public static function setup()
     {
-        $className = get_called_class();
-        $theme = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(['className' => $className]);
+        $theme = static::getTheme();
+
+        $className = static::getCalledClass();
 
         if ($theme === null) {
             $theme = new Theme();
@@ -507,10 +530,7 @@ class AppController implements ViewableInterface
      */
     public static function enable()
     {
-        $className = get_called_class();
-        $theme = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(['className' => $className]);
+        $theme = static::getTheme();
 
         if ($theme !== null) {
             $theme->setAvailable(true);
@@ -528,10 +548,7 @@ class AppController implements ViewableInterface
      */
     public static function disable()
     {
-        $className = get_called_class();
-        $theme = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(['className' => $className]);
+        $theme = static::getTheme();
 
         if ($theme !== null) {
             $theme->setAvailable(false);
@@ -543,6 +560,7 @@ class AppController implements ViewableInterface
         return false;
     }
 
+
     /**
      * Append objects to the global dependency injection container.
      *
@@ -551,6 +569,35 @@ class AppController implements ViewableInterface
     public static function setupDependencyInjection(Container $container)
     {
 
+    }
+
+    protected function getHome(Translation $translation = null)
+    {
+        $theme = static::getTheme();
+
+        if ($theme !== null) {
+            $home = $theme->getHomeNode();
+            if ($home !== null) {
+                if ($translation !== null) {
+                    return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+                                                   ->findWithTranslation($home->getId(),
+                                                                         $translation,
+                                                                         Kernel::getService("securityContext"));
+                } else {
+                    return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+                                                   ->findWithDefaultTranslation($home->getId(),
+                                                                                Kernel::getService("securityContext"));
+                }
+            }
+        }
+        if ($translation !== null) {
+            return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                           ->findHomeWithTranslation($translation,
+                                                                     Kernel::getService("securityContext"));
+        } else {
+            return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                           ->findHomeWithDefaultTranslation(Kernel::getService("securityContext"));
+        }
     }
 
     /**

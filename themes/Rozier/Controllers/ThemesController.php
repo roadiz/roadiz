@@ -268,18 +268,21 @@ class ThemesController extends RozierApp
      */
     protected function buildCommonForm(Theme $theme)
     {
+        $n = $theme->getHomeNode();
+
         $defaults = [
             'available' =>    $theme->isAvailable(),
             'className' =>    $theme->getClassName(),
+            'staticTheme' =>  $theme->isStaticTheme(),
             'hostname' =>     $theme->getHostname(),
-            'backendTheme' => $theme->isBackendTheme()
+            'backendTheme' => $theme->isBackendTheme(),
+            'homeNode' =>  ($n !== null) ? $n->getId() : null
         ];
 
         $builder = $this->getService('formFactory')
-            ->createBuilder('form', $defaults)
+            ->createNamedBuilder('source', 'form', $defaults)
             ->add('available', 'checkbox', [
                 'label' => $this->getTranslator()->trans('available'),
-                'data' => $theme->isAvailable(),
                 'required' => false
             ])
             ->add(
@@ -287,7 +290,6 @@ class ThemesController extends RozierApp
                 'checkbox',
                 [
                     'label' => $this->getTranslator()->trans('staticTheme'),
-                    'data' => $theme->isStaticTheme(),
                     'required' => false,
                     'attr' => [
                         'data-desc' => $this->getTranslator()->trans('staticTheme.does_not.allow.node_url_routes')
@@ -295,14 +297,19 @@ class ThemesController extends RozierApp
                 ]
             )
             ->add('hostname', 'text', [
-                'label' => $this->getTranslator()->trans('hostname'),
-                'data' => $theme->getHostname()
+                'label' => $this->getTranslator()->trans('hostname')
             ])
             ->add('backendTheme', 'checkbox', [
                 'label' => $this->getTranslator()->trans('backendTheme'),
-                'data' => $theme->isBackendTheme(),
                 'required' => false
             ]);
+
+        $d = ($n !== null) ? [$n] : [] ;
+
+        $builder->add('homeNode', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
+                'label' => $this->getTranslator()->trans('homeNode'),
+                'required' => false
+        ]);
 
         return $builder;
     }
@@ -333,7 +340,20 @@ class ThemesController extends RozierApp
     {
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
-            $theme->$setter($value);
+            if ($key == "homeNode") {
+                if (count($value) > 1) {
+                    $msg = $this->getTranslator()->trans('home.node.limited.one');
+                    $this->publishErrorMessage($request, $msg);
+                }
+                if ($value !== null) {
+                    $n = $this->getService('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);
+                    $theme->$setter($n);
+                } else {
+                    $theme->$setter(null);
+                }
+            } else {
+                $theme->$setter($value);
+            }
         }
 
         $existing = $this->getService('em')
@@ -370,7 +390,20 @@ class ThemesController extends RozierApp
     {
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
-            $theme->$setter($value);
+            if ($key == "homeNode") {
+                if (count($value) > 1) {
+                    $msg = $this->getTranslator()->trans('home.node.limited.one');
+                    $this->publishErrorMessage($request, $msg);
+                }
+                if ($value !== null) {
+                    $n = $this->getService('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);
+                    $theme->$setter($n);
+                } else {
+                    $theme->$setter(null);
+                }
+            } else {
+                $theme->$setter($value);
+            }
         }
 
         $this->getService('em')->flush();

@@ -195,7 +195,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
-    private function parseNode(&$tokens, Translation $translation)
+    private function parseNode(array &$tokens, Translation $translation)
     {
         if (!empty($tokens[0])) {
             /*
@@ -203,6 +203,19 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
              */
             if (in_array($tokens[0], Translation::getAvailableLocalesShortcuts()) &&
                 count($tokens) == 1) {
+                if ($this->getThemeController()->getHomeNode() !== null) {
+                    $node = $this->getThemeController()->getHomeNode();
+                    if ($translation !== null) {
+                        return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+                                                       ->findWithTranslation($node->getId(),
+                                                                             $translation,
+                                                                             Kernel::getService("securityContext"));
+                    } else {
+                        return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+                                                       ->findWithDefaultTranslation($node->getId(),
+                                                                                    Kernel::getService("securityContext"));
+                    }
+                }
                 return Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Node')
                         ->findHomeWithTranslation($translation);
