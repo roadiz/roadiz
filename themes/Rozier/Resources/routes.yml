@@ -22,9 +22,12 @@ loginRequestPage:
 loginRequestConfirmPage:
     path:     /login/request/confirm
     defaults: { _controller: Themes\Rozier\Controllers\LoginRequestController::confirmAction }
+loginResetConfirmPage:
+    path:     /login/reset/confirm
+    defaults: { _controller: Themes\Rozier\Controllers\LoginResetController::confirmAction }
 loginResetPage:
     path:     /login/reset/{token}
-    defaults: { _controller: Themes\Rozier\Controllers\LoginResetController::indexAction }
+    defaults: { _controller: Themes\Rozier\Controllers\LoginResetController::resetAction }
     requirements: { token : "[^\/]+" }
 loginImagePage:
     path:     /login/image

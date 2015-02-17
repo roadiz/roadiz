@@ -24,67 +24,56 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file LoginRequestController.php
+ * @file LoginResetController.php
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountEmail;
-use RZ\Roadiz\Utils\TokenGenerator;
+use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountConfirmationToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints\Email;
 use Themes\Rozier\RozierApp;
 
-class LoginRequestController extends RozierApp
+class LoginResetController extends RozierApp
 {
-    /**
-     * Time to live for a confirmation token
-     */
-    const CONFIRMATION_TTL = 300;
-
     /**
      * @param Symfony\Component\HttpFoundation\Request $request
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function resetAction(Request $request, $token)
     {
-        $form = $this->buildLoginRequestForm();
-
-        $form->handleRequest();
-
-        if ($form->isValid()) {
-            $user = $this->getService('em')
+        $user = $this->getService('em')
                          ->getRepository('RZ\Roadiz\Core\Entities\User')
-                         ->findOneByEmail($form->getData()['email']);
+                         ->findOneByConfirmationToken($token);
 
-            if (null !== $user) {
-                if (!$user->isPasswordRequestNonExpired(LoginRequestController::CONFIRMATION_TTL)) {
-                    $tokenGenerator = new TokenGenerator($this->getService('logger'));
-                    $user->setPasswordRequestedAt(new \DateTime());
-                    $user->setConfirmationToken($tokenGenerator->generateToken());
-                    $this->getService('em')->flush();
-                    $user->getViewer()->sendPasswordResetLink($this->getService('urlGenerator'));
+        if (null !== $user) {
+            $form = $this->buildLoginResetForm($token);
+            $form->handleRequest();
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'loginRequestConfirmPage'
-                        )
-                    );
-                    $response->prepare($request);
+            if ($form->isValid()) {
+                $user->setConfirmationToken(null);
+                $user->setPlainPassword($form->getData()['plainPassword']);
 
-                    return $response;
-                } else {
-                    $this->assignation['error'] = $this->getTranslator()->trans('a.confirmation.email.has.already.be.sent');
-                }
+                $this->getService('em')->flush();
+
+                $response = new RedirectResponse(
+                    $this->getService('urlGenerator')->generate(
+                        'loginResetConfirmPage'
+                    )
+                );
+                $response->prepare($request);
+
+                return $response;
             }
+
+            $this->assignation['form'] = $form->createView();
+        } else {
+            $this->assignation['error'] = $this->getTranslator()->trans('confirmation.token.is.invalid');
         }
 
-        $this->assignation['form'] = $form->createView();
-
-        return $this->render('login/request.html.twig', $this->assignation);
+        return $this->render('login/reset.html.twig', $this->assignation);
     }
 
     /**
@@ -94,31 +83,39 @@ class LoginRequestController extends RozierApp
      */
     public function confirmAction(Request $request)
     {
-        return $this->render('login/requestConfirm.html.twig', $this->assignation);
+        return $this->render('login/resetConfirm.html.twig', $this->assignation);
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Group $group
-     * @param RZ\Roadiz\Core\Entities\Role  $role
+     * @param string $token
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildLoginRequestForm()
+    private function buildLoginResetForm($token)
     {
         $builder = $this->getService('formFactory')
                         ->createBuilder('form')
-                        ->add('email', 'email', [
+                        ->add('token', 'hidden', [
                             'required' => true,
-                            'label' => $this->getTranslator()->trans('your.account.email'),
+                            'data' =>$token,
+                            'label' => false,
                             'constraints' => [
-                                new Email([
-                                    'message' => $this->getTranslator()->trans('email.invalid'),
-                                    'checkMX' => true,
-                                ]),
-                                new ValidAccountEmail([
+                                new ValidAccountConfirmationToken([
                                     'entityManager' => $this->getService('em'),
+                                    'ttl' => LoginRequestController::CONFIRMATION_TTL
                                 ]),
                             ],
+                        ])
+                        ->add('plainPassword', 'repeated', [
+                            'type' => 'password',
+                            'invalid_message' => $this->getTranslator()->trans('password.must.match'),
+                            'first_options'  => [
+                                'label'=>$this->getTranslator()->trans('choose.a.new.password'),
+                            ],
+                            'second_options' => [
+                                'label'=>$this->getTranslator()->trans('passwordVerify'),
+                            ],
+                            'required' => true
                         ]);
 
         return $builder->getForm();

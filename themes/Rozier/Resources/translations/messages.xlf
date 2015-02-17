@@ -5863,6 +5863,13 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
       request.new.password
       back_to.login
       a.personal.password.reset.link.has.been.sent.to.your.account.email
+      confirmation.token.is.invalid
+      confirmation.token.has.expired
+      choose.a.new.password
+      save.new.password
+      your.new.password.has.been.saved
+      go_back_to.login.page.to.connect
+      a.confirmation.email.has.already.be.sent
 
     </body>
   </file>

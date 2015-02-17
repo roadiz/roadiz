@@ -17,18 +17,18 @@
     </div>
     <div id="login-formGlobal">
     	<h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
-        <p class="login-desc">{% trans %}to.get.new.password.enter.your.account.email{% endtrans %}</p>
-
-        {% if error %}
-        <div data-uk-alert class="uk-alert uk-alert-danger">{{ error }}</div>
+    	{% if error %}
+    	<div data-uk-alert class="uk-alert uk-alert-danger">{{ error }}</div>
         {% endif %}
-       	{% form_theme form 'forms.html.twig' %}
-        <form method="post" id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" {{ form_enctype(form) }}>
-            {{ form_widget(form) }}
-    	    <fieldset>
-    	    	<button class="uk-button" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}request.new.password{% endtrans %}</button>
-       		</fieldset>
-    	</form>
+        {% if form %}
+           	{% form_theme form 'forms.html.twig' %}
+            <form id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" method="post" {{ form_enctype(form) }}>
+                {{ form_widget(form) }}
+        	    <fieldset>
+        	    	<button class="uk-button" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}save.new.password{% endtrans %}</button>
+           		</fieldset>
+        	</form>
+        {% endif %}
         <div id="login-link">
             <a id="frontend-home-link"
                title="{% trans %}see.website{% endtrans %}" target="_blank" href="{{ path('homePage') }}"><span class="uk-icon-button uk-icon-rz-earth"></span>

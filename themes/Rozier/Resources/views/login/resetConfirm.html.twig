@@ -1,7 +1,7 @@
 {% extends 'simple.html.twig' %}
 
 {% block content %}
-<section id="login" {% if error %}class="uk-animation-shake"{% endif %}>
+<section id="login">
     <div id="login-infos">
         <div id="login-logo">
             {% if themeServices.adminImage %}
@@ -17,18 +17,10 @@
     </div>
     <div id="login-formGlobal">
     	<h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
-        <p class="login-desc">{% trans %}to.get.new.password.enter.your.account.email{% endtrans %}</p>
 
-        {% if error %}
-        <div data-uk-alert class="uk-alert uk-alert-danger">{{ error }}</div>
-        {% endif %}
-       	{% form_theme form 'forms.html.twig' %}
-        <form method="post" id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" {{ form_enctype(form) }}>
-            {{ form_widget(form) }}
-    	    <fieldset>
-    	    	<button class="uk-button" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}request.new.password{% endtrans %}</button>
-       		</fieldset>
-    	</form>
+        <p class="login-desc">{% trans %}your.new.password.has.been.saved{% endtrans %}</p>
+        <p class="login-desc">{% trans %}go_back_to.login.page.to.connect{% endtrans %}</p>
+
         <div id="login-link">
             <a id="frontend-home-link"
                title="{% trans %}see.website{% endtrans %}" target="_blank" href="{{ path('homePage') }}"><span class="uk-icon-button uk-icon-rz-earth"></span>

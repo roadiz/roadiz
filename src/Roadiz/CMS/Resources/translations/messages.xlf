@@ -95,6 +95,12 @@
                 <target></target>
             </trans-unit>
 
+            reset.password.request
+            you.asked.for.a.password.reset.on.%site%
+            you.need.to.choose.a.new.password.using.following.link
+            as.a.reminder.here.are.your.credentials
+            if.you.didnt.request.this.password.reset.ignore.this.email
+
         </body>
     </file>
 </xliff>
