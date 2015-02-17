@@ -16,6 +16,16 @@ adminHomePage:
 loginPage:
     path:     /login
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
+loginRequestPage:
+    path:     /login/request
+    defaults: { _controller: Themes\Rozier\Controllers\LoginRequestController::indexAction }
+loginRequestConfirmPage:
+    path:     /login/request/confirm
+    defaults: { _controller: Themes\Rozier\Controllers\LoginRequestController::confirmAction }
+loginResetPage:
+    path:     /login/reset/{token}
+    defaults: { _controller: Themes\Rozier\Controllers\LoginResetController::indexAction }
+    requirements: { token : "[^\/]+" }
 loginImagePage:
     path:     /login/image
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::imageAction }

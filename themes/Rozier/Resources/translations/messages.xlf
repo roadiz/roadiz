@@ -5857,6 +5857,12 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      your.account.email
+      %email%.email.does.not.exist.in.user.account.database
+      to.get.new.password.enter.your.account.email
+      request.new.password
+      back_to.login
+      a.personal.password.reset.link.has.been.sent.to.your.account.email
 
     </body>
   </file>

@@ -1,7 +1,7 @@
 {% extends 'simple.html.twig' %}
 
 {% block content %}
-<section id="login" {% if error %}class="uk-animation-shake"{% endif %}>
+<section id="login" {% if form.errors %}class="uk-animation-shake"{% endif %}>
     <div id="login-infos">
         <div id="login-logo">
             {% if themeServices.adminImage %}
@@ -17,14 +17,14 @@
     </div>
     <div id="login-formGlobal">
     	<h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
-    	{% if error %}
-    	    <div data-uk-alert class="uk-alert uk-alert-danger">{{ error.message|trans }}</div>
-        {% endif %}
+
+        <div data-uk-alert class="uk-alert">{% trans %}to.get.new.password.enter.your.account.email{% endtrans %}</div>
+
        	{% form_theme form 'forms.html.twig' %}
-        <form id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" action="{{ path('loginCheckPage') }}" method="post" {{ form_enctype(form) }}>
+        <form method="post" id="login-form" class="uk-form uk-form-stacked {% if form.errors %}uk-animation-shake{% endif %}" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
     	    <fieldset>
-    	    	<button class="uk-button" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}login{% endtrans %}</button>
+    	    	<button class="uk-button" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}request.new.password{% endtrans %}</button>
        		</fieldset>
     	</form>
         <div id="login-link">
@@ -32,7 +32,7 @@
                title="{% trans %}see.website{% endtrans %}" target="_blank" href="{{ path('homePage') }}"><span class="uk-icon-button uk-icon-rz-earth"></span>
                <span class="text">{% trans %}view.site{% endtrans %}</span>
             </a>
-            <a href="{{ path('loginRequestPage') }}" class="login-link">{% trans %}forgot.password{% endtrans %}</a>
+            <a href="{{ path('loginPage') }}" class="login-link">{% trans %}back_to.login{% endtrans %}</a>
         </div>
     </div>
 </section>
