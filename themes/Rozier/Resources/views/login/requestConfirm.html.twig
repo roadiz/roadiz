@@ -17,22 +17,15 @@
     </div>
     <div id="login-formGlobal">
     	<h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
-    	{% if error %}
-    	    <div data-uk-alert class="uk-alert uk-alert-danger">{{ error.message|trans }}</div>
-        {% endif %}
-       	{% form_theme form 'forms.html.twig' %}
-        <form id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" action="{{ path('loginCheckPage') }}" method="post" {{ form_enctype(form) }}>
-            {{ form_widget(form) }}
-    	    <fieldset>
-    	    	<button class="uk-button" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}login{% endtrans %}</button>
-       		</fieldset>
-    	</form>
+
+        <p class="login-desc">{% trans %}a.personal.password.reset.link.has.been.sent.to.your.account.email{% endtrans %}</p>
+
         <div id="login-link">
             <a id="frontend-home-link"
                title="{% trans %}see.website{% endtrans %}" target="_blank" href="{{ path('homePage') }}"><span class="uk-icon-button uk-icon-rz-earth"></span>
                <span class="text">{% trans %}view.site{% endtrans %}</span>
             </a>
-            <a href="{{ path('loginRequestPage') }}" class="login-link">{% trans %}forgot.password{% endtrans %}</a>
+            <a href="{{ path('loginPage') }}" class="login-link">{% trans %}back_to.login{% endtrans %}</a>
         </div>
     </div>
 </section>

@@ -36,6 +36,7 @@ namespace RZ\Roadiz\Core\Viewers;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use \InlineStyle\InlineStyle;
 
@@ -75,20 +76,18 @@ class UserViewer implements ViewableInterface
     }
 
     /**
-     * Send an email with credentials details to user
+     * Send an email with credentials details to user.
      *
-     * @return void
+     * @return boolean
      */
     public function sendSignInConfirmation()
     {
         $emailContact = SettingsBag::get('email_sender');
-
         if (empty($emailContact)) {
             $emailContact = "noreply@roadiz.io";
         }
 
         $siteName = SettingsBag::get('site_name');
-
         if (empty($siteName)) {
             $siteName = "Unnamed site";
         }
@@ -114,6 +113,60 @@ class UserViewer implements ViewableInterface
         $message->setSubject(Kernel::getService('translator')->trans(
             'welcome.user.email.%site%',
             ['%site%' => $siteName]
+        ));
+        // Set the From address with an associative array
+        $message->setFrom([$emailContact => $siteName]);
+        // Set the To addresses with an associative array
+        $message->setTo([$this->user->getEmail()]);
+        // Give it a body
+        $message->setBody($htmldoc->getHTML(), 'text/html');
+
+        // Send the message
+        return Kernel::getService('mailer')->send($message);
+    }
+
+    /**
+     * Send an email to reset user password.
+     *
+     * @param  UrlGenerator $urlGenerator
+     *
+     * @return boolean
+     */
+    public function sendPasswordResetLink(UrlGenerator $urlGenerator)
+    {
+        $emailContact = SettingsBag::get('email_sender');
+        if (empty($emailContact)) {
+            $emailContact = "noreply@roadiz.io";
+        }
+
+        $siteName = SettingsBag::get('site_name');
+        if (empty($siteName)) {
+            $siteName = "Unnamed site";
+        }
+
+        $assignation = [
+            'resetLink' => $urlGenerator->generate('loginResetPage', [
+                'token' => $this->user->getConfirmationToken()
+            ]),
+            'user' => $this->user,
+            'site' => $siteName,
+            'mailContact' => $emailContact,
+        ];
+        $emailBody = Kernel::getService('twig.environment')->render('users/reset_password_email.html.twig', $assignation);
+
+        /*
+         * inline CSS
+         */
+        $htmldoc = new InlineStyle($emailBody);
+        $htmldoc->applyStylesheet(file_get_contents(
+            ROADIZ_ROOT . "/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
+        ));
+
+        // Create the message
+        $message = \Swift_Message::newInstance();
+        // Give the message a subject
+        $message->setSubject(Kernel::getService('translator')->trans(
+            'reset.password.request'
         ));
         // Set the From address with an associative array
         $message->setFrom([$emailContact => $siteName]);
