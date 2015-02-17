@@ -43,7 +43,7 @@ class ValidAccountConfirmationTokenValidator extends ConstraintValidator
 
             if (null === $user) {
                 $this->context->addViolation($constraint->message);
-            } elseif(!$user->isPasswordRequestNonExpired($constraint->ttl)) {
+            } elseif (!$user->isPasswordRequestNonExpired($constraint->ttl)) {
                 $this->context->addViolation($constraint->expiredMessage);
             }
         } else {

@@ -145,7 +145,7 @@ class UserViewer implements ViewableInterface
         }
 
         $assignation = [
-            'resetLink' => $urlGenerator->generate('loginResetPage',[
+            'resetLink' => $urlGenerator->generate('loginResetPage', [
                 'token' => $this->user->getConfirmationToken()
             ]),
             'user' => $this->user,
