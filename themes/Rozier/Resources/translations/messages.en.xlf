@@ -5856,6 +5856,65 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <target>Security</target>
       </trans-unit>
 
+
+      <trans-unit xml:space="preserve" id="your.account.email">
+          <source>your.account.email</source>
+          <target>Your account email</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%email%.email.does.not.exist.in.user.account.database">
+          <source>%email%.email.does.not.exist.in.user.account.database</source>
+          <target>“%email%” email does not exist in users database.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="to.get.new.password.enter.your.account.email">
+          <source>to.get.new.password.enter.your.account.email</source>
+          <target>In order to request a new password, just enter the email linked to your account.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="request.new.password">
+          <source>request.new.password</source>
+          <target>Request a new password</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.login">
+          <source>back_to.login</source>
+          <target>Back to login</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.personal.password.reset.link.has.been.sent.to.your.account.email">
+          <source>a.personal.password.reset.link.has.been.sent.to.your.account.email</source>
+          <target>A personal password reset link has been sent to you by email, do not wait too long this link will automatically expire.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.is.invalid">
+          <source>confirmation.token.is.invalid</source>
+          <target>Confirmation token is invalid.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.has.expired">
+          <source>confirmation.token.has.expired</source>
+          <target>Confirmation token has expired.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="choose.a.new.password">
+          <source>choose.a.new.password</source>
+          <target>Choose a new password</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="save.new.password">
+          <source>save.new.password</source>
+          <target>Save new password</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="your.new.password.has.been.saved">
+          <source>your.new.password.has.been.saved</source>
+          <target>Your new password has been saved.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="go_back_to.login.page.to.connect">
+          <source>go_back_to.login.page.to.connect</source>
+          <target>Go back to login page to connect.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.confirmation.email.has.already.be.sent">
+          <source>a.confirmation.email.has.already.be.sent</source>
+          <target>A confirmation email already has been sent to you, check your emails or your spam folder.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="email.invalid">
+          <source>email.invalid</source>
+          <target>Email is invalid or does not exist.</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

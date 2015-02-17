@@ -17,11 +17,15 @@
     </div>
     <div id="login-formGlobal">
     	<h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
+
+        {% if not error and form.vars.valid %}
         <p class="login-desc">{% trans %}to.get.new.password.enter.your.account.email{% endtrans %}</p>
+        {% endif %}
 
         {% if error %}
         <div data-uk-alert class="uk-alert uk-alert-danger">{{ error }}</div>
         {% endif %}
+
        	{% form_theme form 'forms.html.twig' %}
         <form method="post" id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" {{ form_enctype(form) }}>
             {{ form_widget(form) }}

@@ -5857,19 +5857,63 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
-      your.account.email
-      %email%.email.does.not.exist.in.user.account.database
-      to.get.new.password.enter.your.account.email
-      request.new.password
-      back_to.login
-      a.personal.password.reset.link.has.been.sent.to.your.account.email
-      confirmation.token.is.invalid
-      confirmation.token.has.expired
-      choose.a.new.password
-      save.new.password
-      your.new.password.has.been.saved
-      go_back_to.login.page.to.connect
-      a.confirmation.email.has.already.be.sent
+      <trans-unit xml:space="preserve" id="your.account.email">
+          <source>your.account.email</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%email%.email.does.not.exist.in.user.account.database">
+          <source>%email%.email.does.not.exist.in.user.account.database</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="to.get.new.password.enter.your.account.email">
+          <source>to.get.new.password.enter.your.account.email</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="request.new.password">
+          <source>request.new.password</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.login">
+          <source>back_to.login</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.personal.password.reset.link.has.been.sent.to.your.account.email">
+          <source>a.personal.password.reset.link.has.been.sent.to.your.account.email</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.is.invalid">
+          <source>confirmation.token.is.invalid</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.has.expired">
+          <source>confirmation.token.has.expired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="choose.a.new.password">
+          <source>choose.a.new.password</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="save.new.password">
+          <source>save.new.password</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="your.new.password.has.been.saved">
+          <source>your.new.password.has.been.saved</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="go_back_to.login.page.to.connect">
+          <source>go_back_to.login.page.to.connect</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.confirmation.email.has.already.be.sent">
+          <source>a.confirmation.email.has.already.be.sent</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="email.invalid">
+          <source>email.invalid</source>
+          <target></target>
+      </trans-unit>
 
     </body>
   </file>

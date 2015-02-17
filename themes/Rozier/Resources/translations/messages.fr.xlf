@@ -5854,6 +5854,64 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>user.security</source>
           <target>Sécurité</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="your.account.email">
+          <source>your.account.email</source>
+          <target>Email lié à votre compte</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%email%.email.does.not.exist.in.user.account.database">
+          <source>%email%.email.does.not.exist.in.user.account.database</source>
+          <target>L’email “%email%” n’a pas été trouvé dans la base de donnée.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="to.get.new.password.enter.your.account.email">
+          <source>to.get.new.password.enter.your.account.email</source>
+          <target>Pour obtenir un nouveau mot de passe, veuillez entrer l’adresse email liée à votre compte utilisateur.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="request.new.password">
+          <source>request.new.password</source>
+          <target>Envoyer la demande</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.login">
+          <source>back_to.login</source>
+          <target>Revenir à la page de connexion</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.personal.password.reset.link.has.been.sent.to.your.account.email">
+          <source>a.personal.password.reset.link.has.been.sent.to.your.account.email</source>
+          <target>Un lien personnel de réinitialisation de mot de passe vous a été envoyé par email. N’attendez pas trop longtemps, ce lien expirera automatiquement.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.is.invalid">
+          <source>confirmation.token.is.invalid</source>
+          <target>Le jeton de confirmation est invalide.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.has.expired">
+          <source>confirmation.token.has.expired</source>
+          <target>Le jeton de confirmation a expiré.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="choose.a.new.password">
+          <source>choose.a.new.password</source>
+          <target>Choisissez un nouveau mot de passe</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="save.new.password">
+          <source>save.new.password</source>
+          <target>Valider votre mot de passe</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="your.new.password.has.been.saved">
+          <source>your.new.password.has.been.saved</source>
+          <target>Votre noveau mot de passe a bien été enregistré.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="go_back_to.login.page.to.connect">
+          <source>go_back_to.login.page.to.connect</source>
+          <target>Vous pouvez revenir à la page de connexion.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.confirmation.email.has.already.be.sent">
+          <source>a.confirmation.email.has.already.be.sent</source>
+          <target>Un email de confirmation vous a déjà été envoyé par email, veuillez vérifier dans vos courriers indésirables.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="email.invalid">
+          <source>email.invalid</source>
+          <target>L’email est invalide ou n’existe pas.</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>

@@ -95,11 +95,26 @@
                 <target></target>
             </trans-unit>
 
-            reset.password.request
-            you.asked.for.a.password.reset.on.%site%
-            you.need.to.choose.a.new.password.using.following.link
-            as.a.reminder.here.are.your.credentials
-            if.you.didnt.request.this.password.reset.ignore.this.email
+            <trans-unit xml:space="preserve" id="reset.password.request">
+              <source>reset.password.request</source>
+              <target></target>
+          </trans-unit>
+            <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%">
+              <source>you.asked.for.a.password.reset.on.%site%</source>
+              <target></target>
+          </trans-unit>
+            <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link">
+              <source>you.need.to.choose.a.new.password.using.following.link</source>
+              <target></target>
+          </trans-unit>
+            <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials">
+              <source>as.a.reminder.here.are.your.credentials</source>
+              <target></target>
+          </trans-unit>
+            <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
+              <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
+              <target></target>
+          </trans-unit>
 
         </body>
     </file>

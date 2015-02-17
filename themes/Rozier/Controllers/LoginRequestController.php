@@ -117,6 +117,7 @@ class LoginRequestController extends RozierApp
                                 ]),
                                 new ValidAccountEmail([
                                     'entityManager' => $this->getService('em'),
+                                    'message' => $this->getTranslator()->trans('%email%.email.does.not.exist.in.user.account.database')
                                 ]),
                             ],
                         ]);

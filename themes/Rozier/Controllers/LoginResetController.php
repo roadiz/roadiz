@@ -102,7 +102,9 @@ class LoginResetController extends RozierApp
                             'constraints' => [
                                 new ValidAccountConfirmationToken([
                                     'entityManager' => $this->getService('em'),
-                                    'ttl' => LoginRequestController::CONFIRMATION_TTL
+                                    'ttl' => LoginRequestController::CONFIRMATION_TTL,
+                                    'message' => $this->getTranslator()->trans('confirmation.token.is.invalid'),
+                                    'expiredMessage' => $this->getTranslator()->trans('confirmation.token.has.expired')
                                 ]),
                             ],
                         ])
