@@ -43,6 +43,7 @@
     z-index: 100;
 }
 
+#purge-caches,
 #login {
     position: absolute;
     width: @login-W; height: @login-H;
@@ -57,67 +58,67 @@
         position: absolute;
         width: @login-BarW;
 
-        #login-logo {
-            position: absolute;
-            display: table-row;
-            width: 128px; height: 116px;
-            background-color: @contrast-color;
-            top: 0px; left: 0;
-            text-align: center;
+    }
+    #login-logo {
+        position: absolute;
+        display: table-row;
+        width: 128px; height: 116px;
+        background-color: @contrast-color;
+        top: 0px; left: 0;
+        text-align: center;
 
-            &:before {
-                content: "";
-                display: inline-block;
-                height: 100%;
-                vertical-align: middle;
+        &:before {
+            content: "";
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
 
-            }
-
-            .uk-icon-rz-roadiz-icon {
-                vertical-align: middle;
-                display: inline-block;
-                font-size: 55px;
-                -webkit-font-smoothing: subpixel-antialiased;
-            }
-
-            img{
-                position: relative;
-                display: block;
-                max-width: 80%;
-                height: auto;
-                max-height: 100px;
-                vertical-align: middle;
-                display: inline-block;
-                width: auto;
-            }
         }
 
-        #login-credit {
+        .uk-icon-rz-roadiz-icon {
+            vertical-align: middle;
+            display: inline-block;
+            font-size: 55px;
+            -webkit-font-smoothing: subpixel-antialiased;
+        }
+
+        img{
+            position: relative;
+            display: block;
+            max-width: 80%;
+            height: auto;
+            max-height: 100px;
+            vertical-align: middle;
+            display: inline-block;
+            width: auto;
+        }
+    }
+
+    #login-credit {
+        position: absolute;
+        width: @login-BarW; height: (@login-H)-116px;
+        background-color: @grey-interface;
+        top: 116px; left: 0;
+
+        .uk-icon-rz-rezozero {
+            font-size: 18px;
+        }
+
+        .uk-icon-rz-rezozero{
             position: absolute;
-            width: @login-BarW; height: (@login-H)-116px;
-            background-color: @grey-interface;
-            top: 116px; left: 0;
+            color: @grey-medium;
+            bottom: 50px;
+            width: 100%;
+            left: 0px;
+        }
 
-            .uk-icon-rz-rezozero {
-                font-size: 18px;
-            }
-
-            .uk-icon-rz-rezozero{
-                position: absolute;
-                color: @grey-medium;
-                bottom: 50px;
-                width: 100%;
-                left: 0px;
-            }
-
-            #login-version {
-                position: absolute;
-                color: @grey-medium;
-                font-size: 10px;
-                bottom: 26px;
-                width: 100%;
-                left: 0px;
-            }
+        #login-version {
+            position: absolute;
+            color: @grey-medium;
+            font-size: 10px;
+            bottom: 26px;
+            width: 100%;
+            left: 0px;
         }
     }
 
