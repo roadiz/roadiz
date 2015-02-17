@@ -641,33 +641,43 @@ class AppController implements ViewableInterface
      * and throws an AccessDeniedException exception.
      *
      * @param string $role
+     * @param integer|null $nodeId
+     * @param boolean|false $includeChroot
      *
      * @throws AccessDeniedException
      */
-    public function validateNodeAccessForRole($role, $nodeId, $includeChroot = false)
+    public function validateNodeAccessForRole($role, $nodeId = null, $includeChroot = false)
     {
+        $user = $this->getService("securityContext")->getToken()->getUser();
         $node = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
-        $this->getService('em')->refresh($node);
+        if (null !== $node) {
+            $this->getService('em')->refresh($node);
+            $parents = $node->getHandler()->getParents();
 
-        $user = $this->getService("securityContext")->getToken()->getUser();
-
-        $parents = $node->getHandler()->getParents();
-
-        if ($includeChroot) {
-            $parents[] = $node;
+            if ($includeChroot) {
+                $parents[] = $node;
+            }
+            $isNewsletterFriend = $node->getHandler()->isRelatedToNewsletter();
+        } else {
+            $parents = [];
+            $isNewsletterFriend = false;
         }
 
-        $isNewsletterFriend = $node->getHandler()->isRelatedToNewsletter();
 
-        if (!((!$isNewsletterFriend
-                && $this->getService('securityContext')->isGranted($role)
-                && ($user->getChroot() === null
-                    || in_array($user->getChroot(), $parents, true)))
-            || ($isNewsletterFriend
-                && $this->getService('securityContext')->isGranted('ROLE_ACCESS_NEWSLETTERS')))) {
+        if ($isNewsletterFriend &&
+            !$this->getService('securityContext')->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
             throw new AccessDeniedException("You don't have access to this page");
+        } elseif (!$isNewsletterFriend) {
+            if (!$this->getService('securityContext')->isGranted($role)) {
+                throw new AccessDeniedException("You don't have access to this page");
+            }
+
+            if ($user->getChroot() !== null &&
+                !in_array($user->getChroot(), $parents, true)) {
+                throw new AccessDeniedException("You don't have access to this page");
+            }
         }
     }
 }

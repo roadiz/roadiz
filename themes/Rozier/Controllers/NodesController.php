@@ -469,9 +469,10 @@ class NodesController extends RozierApp
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function addChildAction(Request $request, $nodeId, $translationId = null)
+    public function addChildAction(Request $request, $nodeId = null, $translationId = null)
     {
-        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
+        // include CHRoot to enable creating node in it
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
 
         $translation = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')

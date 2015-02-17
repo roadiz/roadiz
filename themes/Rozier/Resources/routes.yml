@@ -109,7 +109,7 @@ nodesAddPage:
     requirements: { nodeTypeId : "[0-9]+", translationId : "[0-9]+" }
 nodesAddChildPage:
     path:     /rz-admin/nodes/add-child/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodesController::addChildAction }
+    defaults: { _controller: Themes\Rozier\Controllers\NodesController::addChildAction, nodeId:null}
     requirements: { nodeId : "[0-9]+" }
 nodesDeletePage:
     path:     /rz-admin/nodes/delete/{nodeId}
