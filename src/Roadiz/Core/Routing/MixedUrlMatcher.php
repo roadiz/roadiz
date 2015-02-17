@@ -46,7 +46,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     public function match($pathinfo)
     {
         Kernel::getService('stopwatch')->start('matchingRoute');
-
         if (isset($container['config']['install']) &&
             true === $container['config']['install']) {
             // No node controller matching in install mode
@@ -115,7 +114,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                 }
 
                 return [
-                    '_controller' => $this->getThemeController().'::indexAction',
+                    '_controller' => $this->getThemeController()->getClassName().'::indexAction',
                     '_locale'     => $translation->getLocale(), //pass request locale to init translator
                     'node'        => $node,
                     'translation' => $translation
@@ -136,7 +135,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                      * Try with nodeName
                      */
                     $match = [
-                        '_controller' => $this->getThemeController().'::indexAction',
+                        '_controller' => $this->getThemeController()->getClassName().'::indexAction',
                         'node'        => $node,
                         'translation' => $translation
                     ];
@@ -181,7 +180,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
         }
 
         if (null !== $theme) {
-            return $theme->getClassName();
+            return $theme;
         } else {
             return null;
         }

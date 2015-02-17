@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Viewers\ViewableInterface;
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -491,6 +492,17 @@ class AppController implements ViewableInterface
     public static function getTheme()
     {
         $className = static::getCalledClass();
+        while (!StringHandler::endsWith($className, "App"))
+        {
+            $className = get_parent_class($className);
+            if ($className === false) {
+                $className = "";
+                break;
+            }
+            if (strpos($className, "\\") != 0) {
+                $className = "\\" . $className;
+            }
+        }
         $theme = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
             ->findOneBy(['className' => $className]);
