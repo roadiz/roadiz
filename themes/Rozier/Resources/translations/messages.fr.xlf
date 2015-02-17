@@ -5912,6 +5912,27 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>email.invalid</source>
           <target>L’email est invalide ou n’existe pas.</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="resultCache">
+          <source>resultCache</source>
+          <target>Cache des résultats</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hydratationCache">
+          <source>hydratationCache</source>
+          <target>Cache d’hydratation</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="queryCache">
+          <source>queryCache</source>
+          <target>Cache de requêtes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="metadataCache">
+          <source>metadataCache</source>
+          <target>Cache des méta-données</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.cache.available">
+          <source>no.cache.available</source>
+          <target>Aucune implémentation de cache trouvée.</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>
