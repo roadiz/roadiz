@@ -5915,6 +5915,27 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="resultCache">
+          <source>resultCache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hydratationCache">
+          <source>hydratationCache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="queryCache">
+          <source>queryCache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="metadataCache">
+          <source>metadataCache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.cache.available">
+          <source>no.cache.available</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

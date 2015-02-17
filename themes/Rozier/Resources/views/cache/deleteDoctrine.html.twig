@@ -1,14 +1,45 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = 'simple.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 
 {% block content %}
+{% if not head.ajax %}
+<section id="purge-caches" {% if error %}class="uk-animation-shake"{% endif %}>
+    <div id="login-infos">
+        <div id="login-logo">
+            {% if themeServices.adminImage %}
+                {{ themeServices.adminImage.viewer.getDocumentByArray({width:150})|raw }}
+            {% else %}
+                <i class="uk-icon-rz-roadiz-icon"></i>
+            {% endif %}
+        </div>
+        <div id="login-credit">
+            <i class="uk-icon-rz-rezozero"></i>
+            <span id="login-version">{{ head.cmsVersion }} {{ head.cmsVersionNumber }}</span>
+        </div>
+    </div>
+    <div id="login-formGlobal">
+
+{% else %}
 <section class="content-global purge-cache">
+{% endif %}
 
     <header class="content-header header-cache header-cache-purge">
         <h1 class="content-title cache-purge-title">{% trans %}purge.cache{% endtrans %}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">
+        <div class="content-table-cont">
+            <table class="content-table uk-table">
+                {% for key, cache in cachesInfo %}
+                <tr>
+                    <td>{{ key|trans }}</td>
+                    <td>{% if cache %}<i class="uk-icon-check"></i> {{ cache }}{% else %}<i class="uk-icon-close"></i> {% trans %}no.cache.available{% endtrans %}{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <hr />
+
         {% form_theme form 'forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
@@ -19,5 +50,11 @@
             </fieldset>
         </form>
     </article>
+
+{% if not head.ajax %}
+    </div>
 </section>
+{% else %}
+</section>
+{% endif %}
 {% endblock %}

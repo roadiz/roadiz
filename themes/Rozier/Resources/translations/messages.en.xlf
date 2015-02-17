@@ -5915,6 +5915,27 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <target>Email is invalid or does not exist.</target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="resultCache">
+          <source>resultCache</source>
+          <target>Result cache</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hydratationCache">
+          <source>hydratationCache</source>
+          <target>Hydratation cache</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="queryCache">
+          <source>queryCache</source>
+          <target>Query cache</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="metadataCache">
+          <source>metadataCache</source>
+          <target>Metadata cache</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.cache.available">
+          <source>no.cache.available</source>
+          <target>No available cache found.</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

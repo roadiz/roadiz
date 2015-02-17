@@ -76,6 +76,21 @@ class CacheController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
+        $this->assignation['cachesInfo'] = [
+            'resultCache' =>      $this->getService('em')->getConfiguration()->getResultCacheImpl(),
+            'hydratationCache' => $this->getService('em')->getConfiguration()->getHydrationCacheImpl(),
+            'queryCache' =>       $this->getService('em')->getConfiguration()->getQueryCacheImpl(),
+            'metadataCache' =>    $this->getService('em')->getConfiguration()->getMetadataCacheImpl()
+        ];
+
+        foreach ($this->assignation['cachesInfo'] as $key => $value) {
+            if (null !== $value) {
+                $this->assignation['cachesInfo'][$key] = get_class($value);
+            } else {
+                $this->assignation['cachesInfo'][$key] = false;
+            }
+        }
+
         return $this->render('cache/deleteDoctrine.html.twig', $this->assignation);
     }
 
