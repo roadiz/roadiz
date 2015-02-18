@@ -5748,7 +5748,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
 
       <trans-unit xml:space="preserve" id="chroot.limited.one">
           <source>chroot.limited.one</source>
-          <target state="translated">Vous ne pouvez choisir qu'un seule nœud racine</target>
+          <target state="translated">Vous ne pouvez choisir qu'un seul nœud racine</target>
       </trans-unit>
 
       <trans-unit xml:space="preserve" id="chroot">
@@ -5936,7 +5936,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
 
       <trans-unit xml:space="preserve" id="home.node.limited.one">
           <source>home.node.limited.one</source>
-          <target state="translated">Vous ne pouvez choisir qu'un seule nœud d'accueil</target>
+          <target state="translated">Vous ne pouvez choisir qu'un seul nœud d'accueil</target>
       </trans-unit>
 
       <trans-unit xml:space="preserve" id="homeNode">
@@ -5946,7 +5946,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
 
       <trans-unit xml:space="preserve" id="theme.root.limited.one">
           <source>theme.root.limited.one</source>
-          <target state="translated">Vous ne pouvez choisir qu'un seule nœud racine</target>
+          <target state="translated">Vous ne pouvez choisir qu'un seul nœud racine</target>
       </trans-unit>
 
       <trans-unit xml:space="preserve" id="themeRoot">
