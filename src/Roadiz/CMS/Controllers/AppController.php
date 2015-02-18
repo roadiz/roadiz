@@ -498,7 +498,7 @@ class AppController implements ViewableInterface
                 $className = "";
                 break;
             }
-            if (strpos($className, "\\") != 0) {
+            if (strpos($className, "\\") !== 0) {
                 $className = "\\" . $className;
             }
         }
