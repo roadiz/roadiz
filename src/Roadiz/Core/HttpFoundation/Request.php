@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Request as BaseRequest;
 use RZ\Roadiz\Core\Entities\Theme;
 
 /**
- * Roadiz Request extending Symfony to be able to store current 
+ * Roadiz Request extending Symfony to be able to store current
  * Theme in it.
  */
 class Request extends BaseRequest
