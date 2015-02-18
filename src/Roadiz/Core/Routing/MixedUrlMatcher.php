@@ -157,7 +157,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     /**
      * Get Theme front controller class FQN.
      *
-     * @return string Full qualified Classname
+     * @return RZ\Roadiz\Core\Entities\Theme
      */
     public function getThemeController()
     {
