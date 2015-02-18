@@ -178,14 +178,6 @@ class FrontendController extends AppController
          * Grab home flagged node
          */
         $node = $this->getHome($translation);
-        // $this->getService('em')
-        //              ->getRepository('RZ\Roadiz\Core\Entities\Node')
-        //              ->findOneBy(
-        //                  ['home' => true],
-        //                  null,
-        //                  $translation,
-        //                  $this->getSecurityContext()
-        //              );
 
         $this->prepareThemeAssignation($node, $translation);
 
@@ -245,7 +237,6 @@ class FrontendController extends AppController
                 /*
                  * Not allowed to see unpublished nodes
                  */
-
                 return $this->throw404();
             }
 
@@ -356,12 +347,7 @@ class FrontendController extends AppController
     protected function prepareThemeAssignation(Node $node = null, Translation $translation = null)
     {
         $this->storeNodeAndTranslation($node, $translation);
-
         $this->assignation['home'] = $this->getHome($translation);
-        // $this->getService('em')
-        //      ->getRepository('RZ\Roadiz\Core\Entities\Node')
-        //      ->findHomeWithTranslation($translation);
-
         /*
          * Use a DI container to delay API requuests
          */
