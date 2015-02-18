@@ -492,8 +492,7 @@ class AppController implements ViewableInterface
     public static function getTheme()
     {
         $className = static::getCalledClass();
-        while (!StringHandler::endsWith($className, "App"))
-        {
+        while (!StringHandler::endsWith($className, "App")) {
             $className = get_parent_class($className);
             if ($className === false) {
                 $className = "";
@@ -592,24 +591,36 @@ class AppController implements ViewableInterface
             if ($home !== null) {
                 if ($translation !== null) {
                     return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                                   ->findWithTranslation($home->getId(),
-                                                                         $translation,
-                                                                         Kernel::getService("securityContext"));
+                                                   ->findWithTranslation(
+                                                       $home->getId(),
+                                                       $translation,
+                                                       Kernel::getService("securityContext")
+                                                   );
                 } else {
                     return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                                   ->findWithDefaultTranslation($home->getId(),
-                                                                                Kernel::getService("securityContext"));
+                                                   ->findWithDefaultTranslation(
+                                                       $home->getId(),
+                                                       Kernel::getService("securityContext")
+                                                   );
                 }
             }
         }
         if ($translation !== null) {
             return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                           ->findHomeWithTranslation($translation,
-                                                                     Kernel::getService("securityContext"));
+                                           ->findHomeWithTranslation(
+                                               $translation,
+                                               Kernel::getService("securityContext")
+                                           );
         } else {
             return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
                                            ->findHomeWithDefaultTranslation(Kernel::getService("securityContext"));
         }
+    }
+
+    protected function getRoot()
+    {
+        $theme = static::getTheme();
+        return $theme->getRoot();
     }
 
     /**

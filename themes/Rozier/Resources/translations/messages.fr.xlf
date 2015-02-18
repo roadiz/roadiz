@@ -5933,6 +5933,26 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>no.cache.available</source>
           <target>Aucune implémentation de cache trouvée.</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="home.node.limited.one">
+          <source>home.node.limited.one</source>
+          <target state="translated">Vous ne pouvez choisir qu'un seule nœud d'accueil</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="homeNode">
+          <source>homeNode</source>
+          <target>Nœud d'accueil</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="theme.root.limited.one">
+          <source>theme.root.limited.one</source>
+          <target state="translated">Vous ne pouvez choisir qu'un seule nœud racine</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="themeRoot">
+          <source>themeRoot</source>
+          <target>Nœud racine</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>

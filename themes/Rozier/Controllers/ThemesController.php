@@ -269,6 +269,7 @@ class ThemesController extends RozierApp
     protected function buildCommonForm(Theme $theme)
     {
         $n = $theme->getHomeNode();
+        $r = $theme->getRoot();
 
         $defaults = [
             'available' =>    $theme->isAvailable(),
@@ -276,7 +277,8 @@ class ThemesController extends RozierApp
             'staticTheme' =>  $theme->isStaticTheme(),
             'hostname' =>     $theme->getHostname(),
             'backendTheme' => $theme->isBackendTheme(),
-            'homeNode' =>  ($n !== null) ? $n->getId() : null
+            'homeNode' =>     ($n !== null) ? $n->getId() : null,
+            'root' =>         ($r !== null) ? $r->getId() : null
         ];
 
         $builder = $this->getService('formFactory')
@@ -311,6 +313,13 @@ class ThemesController extends RozierApp
                 'required' => false
         ]);
 
+        $d = ($r !== null) ? [$r] : [] ;
+
+        $builder->add('root', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
+                'label' => $this->getTranslator()->trans('themeRoot'),
+                'required' => false
+        ]);
+
         return $builder;
     }
 
@@ -340,9 +349,13 @@ class ThemesController extends RozierApp
     {
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
-            if ($key == "homeNode") {
+            if ($key == "homeNode" || $key == "root") {
                 if (count($value) > 1) {
-                    $msg = $this->getTranslator()->trans('home.node.limited.one');
+                    if ($key == "root") {
+                        $msg = $this->getTranslator()->trans('theme.root.limited.one');
+                    } elseif ($key == "homeNode") {
+                        $msg = $this->getTranslator()->trans('home.node.limited.one');
+                    }
                     $this->publishErrorMessage($request, $msg);
                 }
                 if ($value !== null) {
@@ -390,12 +403,16 @@ class ThemesController extends RozierApp
     {
         foreach ($data as $key => $value) {
             $setter = 'set'.ucwords($key);
-            if ($key == "homeNode") {
+            if ($key == "homeNode" || $key == "root") {
                 if (count($value) > 1) {
-                    $msg = $this->getTranslator()->trans('home.node.limited.one');
+                    if ($key == "root") {
+                        $msg = $this->getTranslator()->trans('theme.root.limited.one');
+                    } elseif ($key == "homeNode") {
+                        $msg = $this->getTranslator()->trans('home.node.limited.one');
+                    }
                     $this->publishErrorMessage($request, $msg);
                 }
-                if ($value !== null) {
+                if ($value !== null && !empty($value[0])) {
                     $n = $this->getService('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);
                     $theme->$setter($n);
                 } else {

@@ -206,13 +206,17 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                     $node = $this->getThemeController()->getHomeNode();
                     if ($translation !== null) {
                         return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                                       ->findWithTranslation($node->getId(),
-                                                                             $translation,
-                                                                             Kernel::getService("securityContext"));
+                                                       ->findWithTranslation(
+                                                           $node->getId(),
+                                                           $translation,
+                                                           Kernel::getService("securityContext")
+                                                       );
                     } else {
                         return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                                       ->findWithDefaultTranslation($node->getId(),
-                                                                                    Kernel::getService("securityContext"));
+                                                       ->findWithDefaultTranslation(
+                                                           $node->getId(),
+                                                           Kernel::getService("securityContext")
+                                                       );
                     }
                 }
                 return Kernel::getService('em')

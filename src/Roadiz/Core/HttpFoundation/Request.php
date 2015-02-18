@@ -47,5 +47,4 @@ class Request extends BaseRequest
     {
         return $this->theme;
     }
-
 }
