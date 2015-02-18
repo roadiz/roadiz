@@ -590,30 +590,30 @@ class AppController implements ViewableInterface
             $home = $theme->getHomeNode();
             if ($home !== null) {
                 if ($translation !== null) {
-                    return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+                    return $this->getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
                                                    ->findWithTranslation(
                                                        $home->getId(),
                                                        $translation,
-                                                       Kernel::getService("securityContext")
+                                                       $this->getService("securityContext")
                                                    );
                 } else {
-                    return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+                    return $this->getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
                                                    ->findWithDefaultTranslation(
                                                        $home->getId(),
-                                                       Kernel::getService("securityContext")
+                                                       $this->getService("securityContext")
                                                    );
                 }
             }
         }
         if ($translation !== null) {
-            return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+            return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
                                            ->findHomeWithTranslation(
                                                $translation,
-                                               Kernel::getService("securityContext")
+                                               $this->getService("securityContext")
                                            );
         } else {
-            return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                           ->findHomeWithDefaultTranslation(Kernel::getService("securityContext"));
+            return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                           ->findHomeWithDefaultTranslation($this->getService("securityContext"));
         }
     }
 
