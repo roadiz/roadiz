@@ -57,6 +57,7 @@ class ControllerMatchedEvent extends Event
     public function onControllerMatched(FilterControllerEvent $event)
     {
         $matchedCtrl = $event->getController()[0];
+        $this->kernel->getRequest()->setTheme($matchedCtrl::getTheme());
 
         /*
          * Set request locale if _locale param

@@ -68,11 +68,7 @@ class DefaultThemeApp extends FrontendController
          */
         try {
             $translation = $this->bindLocaleFromRoute($request, $_locale);
-
-            $home = $this->getService('em')
-                         ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                         ->findHomeWithTranslation($translation);
-
+            $home = $this->getHome($translation);
             $this->prepareThemeAssignation($home, $translation);
 
             return $this->handle($request);
@@ -125,10 +121,7 @@ class DefaultThemeApp extends FrontendController
             return include dirname(__FILE__) . '/static/public/config/assets.config.php';
         };
 
-        $this->assignation['home'] = $this->getService('em')
-             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-             ->findHomeWithTranslation($translation);
-
+        $this->assignation['home'] = $this->getHome($translation);
         $this->assignation['themeServices'] = $this->themeContainer;
         // Get session messages
         $this->assignation['session']['messages'] = $this->getService('session')->getFlashBag()->all();
@@ -146,9 +139,7 @@ class DefaultThemeApp extends FrontendController
                      ['defaultTranslation' => true]
                  );
         }
-        $parent = $this->getService('em')
-                       ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                       ->findHomeWithTranslation($this->translation);
+        $parent = $this->getHome($this->translation);
 
         if ($parent !== null) {
             return $this->getService('nodeApi')

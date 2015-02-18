@@ -5936,6 +5936,26 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <target>No available cache found.</target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="home.node.limited.one">
+          <source>home.node.limited.one</source>
+          <target state="translated">You can only choose one home node</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="NodeNode">
+          <source>homeNode</source>
+          <target>Home node</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="theme.root.limited.one">
+          <source>theme.root.limited.one</source>
+          <target state="translated">You can only choose one root node</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="themeRoot">
+          <source>themeRoot</source>
+          <target>Root node</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

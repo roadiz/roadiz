@@ -5931,8 +5931,29 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>metadataCache</source>
           <target></target>
       </trans-unit>
+      
       <trans-unit xml:space="preserve" id="no.cache.available">
           <source>no.cache.available</source>
+          <target></target>
+      </trans-unit>
+      
+      <trans-unit xml:space="preserve" id="homeNode.limited.one">
+          <source>homeNode.limited.one</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="NodeNode">
+          <source>homeNode</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="theme.root.limited.one">
+          <source>theme.root.limited.one</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="themeRoot">
+          <source>themeRoot</source>
           <target></target>
       </trans-unit>
 
