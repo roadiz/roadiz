@@ -80,9 +80,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
             );
 
         } else {
-            $response = new RedirectResponse(
-                $this->urlGenerator->generate('homePage')
-            );
+            $response = new RedirectResponse($request->getBasePath());
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
             $response->prepare($request);
 
