@@ -7,10 +7,10 @@
 {% endif %}
 {% set type = node.getNodeType.getName() %}
 <li data-node-id="{{ node.getId }}"
-	class="nodetree-element uk-nestable-list-item{% if not node.isHidingChildren and not node.nodeType.isHidingNodes and node.getChildren.count > 0 %} has-children{% endif %}">
+	class="{{ type|lower }} nodetree-element uk-nestable-list-item{% if not node.isHidingChildren and not node.nodeType.isHidingNodes and node.getChildren.count > 0 %} has-children{% endif %}">
 
 	{% if not mainNodeTree and not nodeTree.isStackTree %}
-		<span class="nodetree-list-item-color" style="background-color:{{ node.nodeType.color }};"></span>
+	<span class="nodetree-list-item-color"></span>
 	{% endif %}
 
 	<div class="nodetree-element-inner uk-nestable-item
@@ -72,7 +72,7 @@
 		<div class="tree-contextualmenu nodetree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click',boundary:'#root-tree'}">
 		    <a href="#" class="tree-contextualmenu-button uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></a>
 		    <nav class="uk-dropdown uk-dropdown-small uk-dropdown-flip">
-		    	<div class="vertical-nodetype" style="background-color:{{ node.nodeType.color }}"><p class="text">{{ type }}</p></div>
+		    	<div class="vertical-nodetype"><p class="text">{{ type }}</p></div>
 		        <div class="uk-nav uk-nav-dropdown">
 		        	<p class="add-child">
 		        		<a title="{{ "add.node.%name%.child"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}">
