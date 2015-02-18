@@ -23,7 +23,7 @@
 
         <div id="login-link">
             <a id="frontend-home-link"
-               title="{% trans %}see.website{% endtrans %}" target="_blank" href="{{ request.basePath }}"><span class="uk-icon-button uk-icon-rz-earth"></span>
+               title="{% trans %}see.website{% endtrans %}" target="_blank" href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}"><span class="uk-icon-button uk-icon-rz-earth"></span>
                <span class="text">{% trans %}view.site{% endtrans %}</span>
             </a>
             <a href="{{ path('loginPage') }}" class="login-link">{% trans %}back_to.login{% endtrans %}</a>
