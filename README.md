@@ -108,12 +108,19 @@ Add this to your `config.json` to link your Roadiz install to your Solr server:
 * Install *dev* dependencies: `composer update --dev`
 * *PHPUnit tests*:
 ```
-./vendor/bin/phpunit -v --bootstrap=tests/bootstrap.php tests/
+bin/phpunit -v --bootstrap=tests/bootstrap.php tests/
 ```
 * *Code quality*, use PHP_CodeSniffer with *PSR2 standard*:
 
 ```
-./vendor/bin/phpcs --report=full --report-file=./report.txt \
+# Check
+bin/phpcs --report=full --report-file=./report.txt \
+                --extensions=php --warning-severity=0 \
+                --standard=PSR2 \
+                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/* \
+                -p ./
+# … and correct
+bin/phpcbf --report=full --report-file=./report.txt \
                 --extensions=php --warning-severity=0 \
                 --standard=PSR2 \
                 --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/* \
