@@ -68,12 +68,7 @@ class DefaultThemeApp extends FrontendController
          */
         try {
             $translation = $this->bindLocaleFromRoute($request, $_locale);
-
             $home = $this->getHome($translation);
-            // getService('em')
-            //              ->getRepository('RZ\Roadiz\Core\Entities\Node')
-            //              ->findHomeWithTranslation($translation);
-
             $this->prepareThemeAssignation($home, $translation);
 
             return $this->handle($request);
@@ -127,10 +122,6 @@ class DefaultThemeApp extends FrontendController
         };
 
         $this->assignation['home'] = $this->getHome($translation);
-        // $this->getService('em')
-        //      ->getRepository('RZ\Roadiz\Core\Entities\Node')
-        //      ->findHomeWithTranslation($translation);
-
         $this->assignation['themeServices'] = $this->themeContainer;
         // Get session messages
         $this->assignation['session']['messages'] = $this->getService('session')->getFlashBag()->all();
@@ -149,9 +140,6 @@ class DefaultThemeApp extends FrontendController
                  );
         }
         $parent = $this->getHome($this->translation);
-        // $this->getService('em')
-        //                ->getRepository('RZ\Roadiz\Core\Entities\Node')
-        //                ->findHomeWithTranslation($this->translation);
 
         if ($parent !== null) {
             return $this->getService('nodeApi')
