@@ -27,12 +27,15 @@
  * @file Request.php
  * @author Maxime Constantinian
  */
-
 namespace RZ\Roadiz\Core\HttpFoundation;
 
 use Symfony\Component\HttpFoundation\Request as BaseRequest;
 use RZ\Roadiz\Core\Entities\Theme;
 
+/**
+ * Roadiz Request extending Symfony to be able to store current 
+ * Theme in it.
+ */
 class Request extends BaseRequest
 {
     protected $theme = null;
@@ -42,7 +45,10 @@ class Request extends BaseRequest
         $this->theme = $theme;
         return $this;
     }
-
+    
+    /**
+     * @return RZ\Roadiz\Core\Entities\Theme
+     */
     public function getTheme()
     {
         return $this->theme;
