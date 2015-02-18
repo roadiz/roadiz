@@ -478,7 +478,7 @@ class AppController implements ViewableInterface
     public static function getCalledClass()
     {
         $className = get_called_class();
-        if (strpos($className, "\\") != 0) {
+        if (strpos($className, "\\") !== 0) {
             $className = "\\" . $className;
         }
         return $className;
