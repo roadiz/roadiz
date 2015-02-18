@@ -23,12 +23,12 @@ before_script:
   - sh -c "if [ '$DB' = 'mysql' ]; then cp conf/config.mysql.travis.json conf/config.json; fi"
   - sh -c "if [ '$DB' = 'sqlite' ]; then cp conf/config.sqlite.travis.json conf/config.json; fi"
   - composer install --dev --no-interaction
-  - php bin/roadiz orm:schema-tool:create -n
-  - php bin/roadiz install -n --with-theme="Themes\\DefaultTheme\\DefaultThemeApp"
+  - bin/roadiz orm:schema-tool:create -n
+  - bin/roadiz install -n --with-theme="Themes\\DefaultTheme\\DefaultThemeApp"
 
 script:
-  - ENABLE_SECOND_LEVEL_CACHE=0 ./vendor/bin/phpunit -v --bootstrap=tests/bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
-  - ./vendor/bin/phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/* -p ./
+  - ENABLE_SECOND_LEVEL_CACHE=0 bin/phpunit -v --bootstrap=tests/bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
+  - bin/phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/* -p ./
 
 after_script:
-  - php vendor/bin/coveralls -v
+  - php bin/coveralls -v

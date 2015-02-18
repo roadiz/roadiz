@@ -32,7 +32,7 @@ namespace Themes\Rozier\AjaxControllers;
 
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-
+use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -61,7 +61,9 @@ class AjaxNodesExplorerController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        $arrayFilter = [];
+        $arrayFilter = [
+            'status' => ['<', Node::DELETED]
+        ];
         /*
          * Manage get request to filter list
          */

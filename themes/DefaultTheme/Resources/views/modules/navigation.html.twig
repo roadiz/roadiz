@@ -23,7 +23,7 @@
     {# {% if request.locale != _default_locale %}
     <a href="{{ path('homePageLocale', {"_locale":request.locale}) }}" class="uk-navbar-brand"><i class="uk-icon-home"></i> {{ hometitle }}</a>
     {% else %}
-    <a href="{{ path('homePage') }}" class="uk-navbar-brand"><i class="uk-icon-home"></i> {{ hometitle }}</a>
+    <a href="{{ request.basePath }}" class="uk-navbar-brand"><i class="uk-icon-home"></i> {{ hometitle }}</a>
     {% endif %} #}
 
     {#
