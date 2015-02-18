@@ -706,7 +706,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
-    * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id")
+    * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
     *
     * @var RZ\Roadiz\Core\Entities\Node
     */

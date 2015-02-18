@@ -373,7 +373,7 @@ class ThemesController extends RozierApp
      */
     private function addTheme(Request $request, array &$data, Theme $theme)
     {
-        $this->getThemeValue($request, $data, $theme);
+        $this->setThemeValue($request, $data, $theme);
 
         $existing = $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
