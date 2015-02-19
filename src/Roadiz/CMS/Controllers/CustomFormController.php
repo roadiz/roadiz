@@ -89,7 +89,6 @@ class CustomFormController extends AppController
 
         if (null !== $customForm &&
             $customForm->isFormStillOpen()) {
-
             $mixed = static::prepareAndHandleCustomFormAssignation(
                 $request,
                 $customForm,
@@ -361,7 +360,6 @@ class CustomFormController extends AppController
 
                 return $redirection;
             } catch (EntityAlreadyExistsException $e) {
-
                 $request->getSession()->getFlashBag()->add('error', $e->getMessage());
                 if (null !== $logger) {
                     $logger->warning($e->getMessage());
