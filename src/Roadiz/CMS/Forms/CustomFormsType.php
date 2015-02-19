@@ -102,6 +102,6 @@ class CustomFormsType extends AbstractType
 
     public function getName()
     {
-        return 'customForms';
+        return 'custom_form_'.$this->customForm->getId();
     }
 }
