@@ -154,7 +154,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $container['requestContext'] = function ($c) {
             $rc = new RequestContext($this->getResolvedBaseUrl());
             $rc->setHost($this->request->server->get('HTTP_HOST'));
-            $rc->setHttpPort(intval($this->request->server->get('SERVER_PORT')));
+            $rc->setHttpPort((int) $this->request->server->get('SERVER_PORT'));
 
             return $rc;
         };

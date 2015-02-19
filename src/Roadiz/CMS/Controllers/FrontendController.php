@@ -40,6 +40,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 
@@ -216,52 +217,99 @@ class FrontendController extends AppController
     }
 
     /**
-     * Handle node based routing.
+     * Get controller class path for a given node.
+     *
+     * @param RZ\Roadiz\Core\Entities\Node $node
+     *
+     * @return string
+     */
+    public function getControllerForNode(Node $node)
+    {
+        $currentClass = get_class($this);
+        $refl = new \ReflectionClass($currentClass);
+        $namespace = $refl->getNamespaceName() . '\\Controllers';
+
+        /*
+         * Determine if we look for a node-type named controller or
+         * a node-named controller.
+         */
+        if (in_array($this->getRequestedNode()->getNodeName(), static::$specificNodesControllers)) {
+            return $namespace . '\\' .
+            StringHandler::classify($this->getRequestedNode()->getNodeName()) .
+            'Controller';
+        } else {
+            return $namespace . '\\' .
+            StringHandler::classify($this->getRequestedNode()->getNodeType()->getName()) .
+            'Controller';
+        }
+    }
+
+    /**
+     * Return a 404 Response or TRUE if node is viewable.
+     *
+     * @param  RZ\Roadiz\Core\Entities\Node $node
+     * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
+     *
+     * @return boolean|Symfony\Component\HttpFoundation\Response
+     */
+    public function validateAccessForNodeWithStatus(Node $node, SecurityContext $securityContext = null)
+    {
+        if (null !== $securityContext &&
+            !$securityContext->isGranted(Role::ROLE_BACKEND_USER) &&
+            !$node->isPublished()) {
+            /*
+             * Not allowed to see unpublished nodes
+             */
+            return $this->throw404();
+        } elseif (null !== $securityContext &&
+            $securityContext->isGranted(Role::ROLE_BACKEND_USER) &&
+            $node->getStatus() > Node::PUBLISHED) {
+            /*
+             * Not allowed to see deleted and archived nodes
+             * even for Admins
+             */
+            return $this->throw404();
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Handle node based routing, returns a Response object
+     * for a node-based request.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
      */
     protected function handle(Request $request)
     {
         Kernel::getService('stopwatch')->start('handleNodeController');
-        $currentClass = get_class($this);
-        $refl = new \ReflectionClass($currentClass);
-        $namespace = $refl->getNamespaceName() . '\\Controllers';
 
         if ($this->getRequestedNode() !== null) {
-            if (null !== $this->getSecurityContext() &&
-                !$this->getSecurityContext()->isGranted(Role::ROLE_BACKEND_USER) &&
-                !$this->getRequestedNode()->isPublished()) {
-                /*
-                 * Not allowed to see unpublished nodes
-                 */
-                return $this->throw404();
+            if (true !== $resp = $this->validateAccessForNodeWithStatus(
+                $this->getRequestedNode(),
+                $this->getSecurityContext()
+            )) {
+                return $resp;
             }
 
-            $nodeController = $namespace . '\\' .
-            StringHandler::classify($this->getRequestedNode()->getNodeName()) .
-            'Controller';
-            $nodeTypeController = $namespace . '\\' .
-            StringHandler::classify($this->getRequestedNode()->getNodeType()->getName()) .
-            'Controller';
+            /*
+             * Determine if we look for a node-type named controller or
+             * a node-named controller.
+             */
+            $controllerPath = $this->getControllerForNode($this->getRequestedNode());
 
-            if (in_array($this->getRequestedNode()->getNodeName(), static::$specificNodesControllers) &&
-                class_exists($nodeController) &&
-                method_exists($nodeController, 'indexAction')) {
-                $ctrl = new $nodeController();
-
-            } elseif (class_exists($nodeTypeController) &&
-                method_exists($nodeTypeController, 'indexAction')) {
-                $ctrl = new $nodeTypeController();
-
+            if (class_exists($controllerPath) &&
+                method_exists($controllerPath, 'indexAction')) {
+                $ctrl = new $controllerPath();
             } else {
                 return $this->throw404(
                     "No front-end controller found for '" .
                     $this->getRequestedNode()->getNodeName() .
-                    "' node. Need a " . $nodeController . " or " .
-                    $nodeTypeController . " controller."
+                    "' node. You need to create a " . $controllerPath . "."
                 );
             }
 
@@ -397,10 +445,14 @@ class FrontendController extends AppController
     /**
      * Append objects to global container.
      *
+     * Add a request matcher on frontend to make securityContext
+     * available even when no user has logged in.
+     *
      * @param Pimple\Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {
+
         $container->extend('firewallMap', function (FirewallMap $map, Container $c) {
             /*
              * Prepare app firewall
@@ -414,7 +466,6 @@ class FrontendController extends AppController
                 new AnonymousAuthenticationListener($c['securityContext'], ''), // $key
                 $c["switchUser"],
             ];
-
             /*
              * Inject a new firewall map element
              */

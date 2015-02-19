@@ -83,11 +83,7 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                 $beClass = $c['backendClass'];
                 $cmsCollection = $beClass::getRoutes();
                 if ($cmsCollection !== null) {
-                    $rCollection->addCollection(
-                        $cmsCollection,
-                        '/rz-admin',
-                        ['_scheme' => 'https']
-                    );
+                    $rCollection->addCollection($cmsCollection);
                 }
 
                 /*

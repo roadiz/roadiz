@@ -536,7 +536,7 @@ class NodeRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param SecurityContext|null                    $securityContext
+     * @param SecurityContext|null $securityContext
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
@@ -558,7 +558,8 @@ class NodeRepository extends EntityRepository
      *
      * @param integer                            $nodeId
      * @param RZ\Roadiz\Core\Entities\Translation $translation
-     * @param SecurityContext|null               $securityContext
+     * @param SecurityContext|null $securityContext When not null, only PUBLISHED node
+     * will be request or with a lower status
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
@@ -572,14 +573,15 @@ class NodeRepository extends EntityRepository
             INNER JOIN n.nodeSources ns
             WHERE n.id = :nodeId AND ns.translation = :translation';
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
-        }
+        $this->alterQueryWithSecurityContext($txtQuery, $securityContext);
 
         $query = $this->_em->createQuery($txtQuery)
                       ->setParameter('nodeId', (int) $nodeId)
                       ->setParameter('translation', $translation);
+
+        if (null !== $securityContext) {
+            $query->setParameter('status', Node::PUBLISHED);
+        }
 
         try {
             return $query->getSingleResult();
@@ -592,7 +594,8 @@ class NodeRepository extends EntityRepository
      * Find one Node with its Id and the default translation.
      *
      * @param integer              $nodeId
-     * @param SecurityContext|null $securityContext
+     * @param SecurityContext|null $securityContext When not null, only PUBLISHED node
+     * will be request or with a lower status
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
@@ -606,13 +609,14 @@ class NodeRepository extends EntityRepository
             INNER JOIN ns.translation t
             WHERE n.id = :nodeId AND t.defaultTranslation = true';
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
-        }
+        $this->alterQueryWithSecurityContext($txtQuery, $securityContext);
 
         $query = $this->_em->createQuery($txtQuery)
                       ->setParameter('nodeId', (int) $nodeId);
+
+        if (null !== $securityContext) {
+            $query->setParameter('status', Node::PUBLISHED);
+        }
 
         try {
             return $query->getSingleResult();
@@ -626,7 +630,8 @@ class NodeRepository extends EntityRepository
      *
      * @param string                             $nodeName
      * @param RZ\Roadiz\Core\Entities\Translation $translation
-     * @param SecurityContext|null               $securityContext
+     * @param SecurityContext|null $securityContext When not null, only PUBLISHED node
+     * will be request or with a lower status
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
@@ -639,14 +644,15 @@ class NodeRepository extends EntityRepository
             INNER JOIN n.nodeSources ns
             WHERE n.nodeName = :nodeName AND ns.translation = :translation';
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
-        }
+        $this->alterQueryWithSecurityContext($txtQuery, $securityContext);
 
         $query = $this->_em->createQuery($txtQuery)
                       ->setParameter('nodeName', $nodeName)
                       ->setParameter('translation', $translation);
+
+        if (null !== $securityContext) {
+            $query->setParameter('status', Node::PUBLISHED);
+        }
 
         try {
             return $query->getSingleResult();
@@ -659,7 +665,8 @@ class NodeRepository extends EntityRepository
      * Find one Node with its nodeName and the default translation.
      *
      * @param string               $nodeName
-     * @param SecurityContext|null $securityContext
+     * @param SecurityContext|null $securityContext When not null, only PUBLISHED node
+     * will be request or with a lower status
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
@@ -673,13 +680,14 @@ class NodeRepository extends EntityRepository
             INNER JOIN ns.translation t
             WHERE n.nodeName = :nodeName AND t.defaultTranslation = true';
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
-        }
+        $this->alterQueryWithSecurityContext($txtQuery, $securityContext);
 
         $query = $this->_em->createQuery($txtQuery)
                       ->setParameter('nodeName', $nodeName);
+
+        if (null !== $securityContext) {
+            $query->setParameter('status', Node::PUBLISHED);
+        }
 
         try {
             return $query->getSingleResult();
@@ -692,7 +700,8 @@ class NodeRepository extends EntityRepository
      * Find the Home node with a given translation.
      *
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param SecurityContext|null                    $securityContext
+     * @param SecurityContext|null $securityContext When not null, only PUBLISHED node
+     * will be request or with a lower status
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
@@ -709,13 +718,14 @@ class NodeRepository extends EntityRepository
             INNER JOIN n.nodeSources ns
             WHERE n.home = true AND ns.translation = :translation';
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
-        }
+        $this->alterQueryWithSecurityContext($txtQuery, $securityContext);
 
         $query = $this->_em->createQuery($txtQuery)
                       ->setParameter('translation', $translation);
+
+        if (null !== $securityContext) {
+            $query->setParameter('status', Node::PUBLISHED);
+        }
 
         try {
             return $query->getSingleResult();
@@ -727,7 +737,8 @@ class NodeRepository extends EntityRepository
     /**
      * Find the Home node with the default translation.
      *
-     * @param SecurityContext|null $securityContext
+     * @param SecurityContext|null $securityContext When not null, only PUBLISHED node
+     * will be request or with a lower status
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
@@ -740,12 +751,13 @@ class NodeRepository extends EntityRepository
             INNER JOIN ns.translation t
             WHERE n.home = true AND t.defaultTranslation = true';
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
-        }
+        $this->alterQueryWithSecurityContext($txtQuery, $securityContext);
 
         $query = $this->_em->createQuery($txtQuery);
+
+        if (null !== $securityContext) {
+            $query->setParameter('status', Node::PUBLISHED);
+        }
 
         try {
             return $query->getSingleResult();
@@ -757,7 +769,8 @@ class NodeRepository extends EntityRepository
     /**
      * @param RZ\Roadiz\Core\Entities\Node        $node
      * @param RZ\Roadiz\Core\Entities\Translation $translation
-     * @param SecurityContext|null               $securityContext
+     * @param SecurityContext|null               $securityContext When not null, only PUBLISHED node
+     * will be request or with a lower status
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
@@ -771,14 +784,15 @@ class NodeRepository extends EntityRepository
             INNER JOIN n.nodeSources ns
             WHERE n.parent = :node AND ns.translation = :translation';
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
-        }
+        $this->alterQueryWithSecurityContext($txtQuery, $securityContext);
 
         $query = $this->_em->createQuery($txtQuery)
                       ->setParameter('node', $node)
                       ->setParameter('translation', $translation);
+
+        if (null !== $securityContext) {
+            $query->setParameter('status', Node::PUBLISHED);
+        }
 
         try {
             return $query->getResult();
@@ -790,7 +804,8 @@ class NodeRepository extends EntityRepository
     /**
      * @param RZ\Roadiz\Core\Entities\Translation $translation
      * @param RZ\Roadiz\Core\Entities\Node        $parent
-     * @param SecurityContext|null               $securityContext
+     * @param SecurityContext|null               $securityContext When not null, only PUBLISHED node
+     * will be request or with a lower status
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
@@ -813,10 +828,7 @@ class NodeRepository extends EntityRepository
 
         $txtQuery .= ' AND t.id = :translation_id';
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
-        }
+        $this->alterQueryWithSecurityContext($txtQuery, $securityContext);
 
         $txtQuery .= ' ORDER BY n.position ASC';
 
@@ -829,6 +841,10 @@ class NodeRepository extends EntityRepository
                           ->setParameter('translation_id', (int) $translation->getId());
         }
 
+        if (null !== $securityContext) {
+            $query->setParameter('status', Node::PUBLISHED);
+        }
+
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -838,7 +854,8 @@ class NodeRepository extends EntityRepository
 
     /**
      * @param RZ\Roadiz\Core\Entities\Node $parent
-     * @param SecurityContext|null        $securityContext
+     * @param SecurityContext|null        $securityContext When not null, only PUBLISHED node
+     * will be request or with a lower status
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
@@ -860,10 +877,7 @@ class NodeRepository extends EntityRepository
 
         $txtQuery .= ' AND t.defaultTranslation = true';
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
-        }
+        $this->alterQueryWithSecurityContext($txtQuery, $securityContext);
 
         $txtQuery .= ' ORDER BY n.position ASC';
 
@@ -872,6 +886,10 @@ class NodeRepository extends EntityRepository
         } else {
             $query = $this->_em->createQuery($txtQuery)
                           ->setParameter('parent', $parent);
+        }
+
+        if (null !== $securityContext) {
+            $query->setParameter('status', Node::PUBLISHED);
         }
 
         try {
@@ -883,31 +901,63 @@ class NodeRepository extends EntityRepository
 
     /**
      * @param RZ\Roadiz\Core\Entities\UrlAlias $urlAlias
-     * @param SecurityContext|null            $securityContext
+     * @param SecurityContext|null $securityContext When not null, only PUBLISHED node
+     * will be request or with a lower status
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
-    public function findOneWithUrlAlias($urlAlias, SecurityContext $securityContext = null)
-    {
+    public function findOneWithUrlAlias(
+        $urlAlias,
+        SecurityContext $securityContext = null
+    ) {
         $txtQuery = 'SELECT n, ns, t FROM RZ\Roadiz\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             INNER JOIN ns.urlAliases uas
             INNER JOIN ns.translation t
             WHERE uas.id = :urlalias_id';
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = \'' . Node::PUBLISHED . '\'';
-        }
+        $this->alterQueryWithSecurityContext($txtQuery, $securityContext);
 
         $query = $this->_em->createQuery($txtQuery)
                       ->setParameter('urlalias_id', (int) $urlAlias->getId());
+
+        if (null !== $securityContext) {
+            $query->setParameter('status', Node::PUBLISHED);
+        }
 
         try {
             return $query->getSingleResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
             return null;
         }
+    }
+
+    /**
+     * Modify DQL query string to support node status
+     * according to security context.
+     *
+     * A not null securityContext will always filter
+     * node.status to PUBLISHED or lower.
+     *
+     * @param  string               &$txtQuery
+     * @param  SecurityContext|null $securityContext
+     *
+     * @return string
+     */
+    protected function alterQueryWithSecurityContext(
+        &$txtQuery,
+        SecurityContext $securityContext = null
+    ) {
+        if (null !== $securityContext &&
+            (null === $securityContext->getToken() ||
+                !$securityContext->isGranted(Role::ROLE_BACKEND_USER))) {
+            $txtQuery .= ' AND n.status = :status';
+        } elseif (null !== $securityContext &&
+            $securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $txtQuery .= ' AND n.status <= :status';
+        }
+
+        return $txtQuery;
     }
 
     /**
