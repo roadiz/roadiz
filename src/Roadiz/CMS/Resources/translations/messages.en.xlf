@@ -114,6 +114,14 @@
               <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
               <target>If you did’nt ask for this email, just ignore it and your password won’t be changed.</target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
+                <source>you.need.to.fill.this.required.field</source>
+                <target>You need to fill this required field.</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="*.required.fields">
+                <source>*.required.fields</source>
+                <target>* Required fields</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

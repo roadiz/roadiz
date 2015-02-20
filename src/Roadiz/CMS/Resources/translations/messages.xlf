@@ -116,6 +116,15 @@
               <target></target>
           </trans-unit>
 
+            <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
+                <source>you.need.to.fill.this.required.field</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="*.required.fields">
+                <source>*.required.fields</source>
+                <target></target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

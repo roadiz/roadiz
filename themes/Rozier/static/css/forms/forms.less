@@ -297,6 +297,16 @@
 
     .uk-form-row{
         position: relative;
+
+        &.required {
+            & > label {
+                &:after {
+                    content:" *";
+                    font-weight: bold;
+                    color: rgb(173, 0, 0);
+                }
+            }
+        }
     }
 
     &.uk-form-horizontal {
@@ -338,4 +348,11 @@
 
 .uk-form-translation-default{
     display: inline-block;
+}
+
+
+.required-mention {
+    font-size: 13px;
+    color: #969696;
+    line-height: 24px;
 }

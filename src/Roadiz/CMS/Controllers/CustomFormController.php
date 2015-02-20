@@ -219,16 +219,14 @@ class CustomFormController extends AppController
                 $fieldsData[] = ["name" => $field->getLabel(), "value" => $strDate];
 
             } else if (is_array($data[$field->getName()])) {
-                $values = [];
+                $values = $data[$field->getName()];
 
-                foreach ($data[$field->getName()] as $value) {
-                    $choices = explode(',', $field->getDefaultValues());
-                    $values[] = $choices[$value];
-                }
+                $values = array_map('trim', $values);
+                $values = array_map('strip_tags', $values);
 
-                $val = implode(',', $values);
-                $fieldAttr->setValue(strip_tags($val));
-                $fieldsData[] = ["name" => $field->getLabel(), "value" => $val];
+                $displayValues = implode(', ', $values);
+                $fieldAttr->setValue($displayValues);
+                $fieldsData[] = ["name" => $field->getLabel(), "value" => $displayValues];
 
             } else {
                 $fieldAttr->setValue(strip_tags($data[$field->getName()]));

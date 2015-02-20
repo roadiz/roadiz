@@ -103,6 +103,16 @@
               <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
               <target>Si vous n’avez pas sollicité cet email, veuillez l’ignorer, votre mot de passe ne sera pas changé.</target>
             </trans-unit>
+
+            <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
+                <source>you.need.to.fill.this.required.field</source>
+                <target>Vous devez remplir ce champ requis</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="*.required.fields">
+                <source>*.required.fields</source>
+                <target>* Champs requis</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
