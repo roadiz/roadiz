@@ -244,16 +244,18 @@ class CustomFormController extends AppController
      * @param Symfony\Component\HttpFoundation\Request $request
      * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
      * @param Symfony\Component\Form\FormFactoryInterface $formFactory
+     * @param boolean $forceExpanded
      *
      * @return \Symfony\Component\Form\Form
      */
     public static function buildForm(
         Request $request,
         CustomForm $customForm,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        $forceExpanded = false
     ) {
         $defaults = $request->query->all();
-        return $formFactory->create(new CustomFormsType($customForm), $defaults);
+        return $formFactory->create(new CustomFormsType($customForm, $forceExpanded), $defaults);
     }
 
     /**
@@ -265,16 +267,17 @@ class CustomFormController extends AppController
      *     * form
      * * If form is validated, **RedirectResponse** will be returned.
      *
-     * @param  Symfony\Component\HttpFoundation\Request          $request
-     * @param  RZ\Roadiz\Core\Entities\CustomForm                $customFormsEntity
-     * @param  Symfony\Component\Form\FormFactoryInterface       $formFactory
-     * @param  Doctrine\ORM\EntityManager                        $em
-     * @param  \Twig_Environment                                 $twigEnv
-     * @param  \Swift_Mailer                                     $mailer
-     * @param  Symfony\Component\Translation\Translator          $translator
-     * @param  Symfony\Component\HttpFoundation\RedirectResponse $redirection
-     * @param  string|null                                       $emailSender
-     * @param  Psr\Log\LoggerInterface|null                      $logger
+     * @param Symfony\Component\HttpFoundation\Request          $request
+     * @param RZ\Roadiz\Core\Entities\CustomForm                $customFormsEntity
+     * @param Symfony\Component\Form\FormFactoryInterface       $formFactory
+     * @param Doctrine\ORM\EntityManager                        $em
+     * @param \Twig_Environment                                 $twigEnv
+     * @param \Swift_Mailer                                     $mailer
+     * @param Symfony\Component\Translation\Translator          $translator
+     * @param Symfony\Component\HttpFoundation\RedirectResponse $redirection
+     * @param Psr\Log\LoggerInterface|null                      $logger
+     * @param boolean                                           $forceExpanded
+     * @param string|null                                       $emailSender
      *
      * @return array|Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -287,8 +290,9 @@ class CustomFormController extends AppController
         \Swift_Mailer $mailer,
         Translator $translator,
         RedirectResponse $redirection,
-        $emailSender = null,
-        LoggerInterface $logger = null
+        LoggerInterface $logger = null,
+        $forceExpanded = false,
+        $emailSender = null
     ) {
         $assignation = [];
         $assignation['customForm'] = $customFormsEntity;
@@ -297,7 +301,8 @@ class CustomFormController extends AppController
         $form = static::buildForm(
             $request,
             $customFormsEntity,
-            $formFactory
+            $formFactory,
+            $forceExpanded
         );
 
         $form->handleRequest();
