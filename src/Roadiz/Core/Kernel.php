@@ -37,7 +37,7 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Routing\MixedUrlMatcher;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
-use RZ\Roadiz\Core\Services\ConfigurationServiceProvider;
+use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
@@ -168,7 +168,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
             return new HttpUtils($c['urlGenerator'], $c['urlMatcher']);
         };
 
-        $container->register(new ConfigurationServiceProvider());
+        $container->register(new YamlConfigurationServiceProvider());
         $container->register(new SecurityServiceProvider());
         $container->register(new FormServiceProvider());
         $container->register(new RoutingServiceProvider());

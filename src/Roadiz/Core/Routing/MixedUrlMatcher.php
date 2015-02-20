@@ -49,7 +49,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
         if (isset($container['config']['install']) &&
             true === $container['config']['install']) {
             // No node controller matching in install mode
-
             return parent::match($pathinfo);
         }
 

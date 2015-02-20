@@ -34,7 +34,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use RZ\Roadiz\Console\Tools\Configuration;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
@@ -82,7 +82,10 @@ class ConfigurationCommand extends Command
     {
         $text="";
 
-        $configuration = new Configuration();
+        $configuration = new YamlConfiguration();
+        if (false === $configuration->load()) {
+            $configuration->setConfiguration($configuration->getDefaultConfiguration());
+        }
 
         if ($input->getOption('enable-devmode')) {
             $configuration->setDevMode(true);

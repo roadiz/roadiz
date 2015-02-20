@@ -24,51 +24,15 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ConfigurationServiceProvider.php
+ * @file NoYamlConfigurationFoundException.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Services;
-
-use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
-use Pimple\Container;
+namespace RZ\Roadiz\Core\Exceptions;
 
 /**
- * Register configuration services for dependency injection container.
+ * Exception raised when no yaml configuration file has been found.
  */
-class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
+class NoYamlConfigurationFoundException extends NoConfigurationFoundException
 {
-    /**
-     * @param Pimple\Container $container [description]
-     */
-    public function register(Container $container)
-    {
-        /*
-         * Inject app config
-         */
-        $container['config'] = function ($c) {
-            $configFile = ROADIZ_ROOT.'/conf/config.json';
-            if (file_exists($configFile)) {
-                return json_decode(file_get_contents($configFile), true);
-            } else {
-                throw new NoConfigurationFoundException();
-            }
-        };
-
-        /*
-         * Every path to parse to find doctrine entities
-         */
-        $container['entitiesPaths'] = function ($c) {
-            if (isset($c['config']['entities'])) {
-                return $c['config']['entities'];
-            } else {
-                return [
-                    "src/Roadiz/Core/Entities",
-                    "src/Roadiz/Core/AbstractEntities",
-                    "gen-src/GeneratedNodeSources"
-                ];
-            }
-        };
-
-        return $container;
-    }
+    protected $message = "No configuration file was found. Make sure that conf/config.yaml exists.";
 }
