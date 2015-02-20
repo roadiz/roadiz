@@ -1,0 +1,24 @@
+---
+appNamespace: "chooseAnUniqueNameForYourApp"
+install: true
+devMode: true
+timezone: "Europe/Paris"
+doctrine:
+    driver: "pdo_mysql"
+    host: "localhost"
+    user: ""
+    password: ""
+    dbname: ""
+security:
+    secret: "change#this#secret#very#important"
+mailer:
+    type: ""
+    host: "localhost"
+    port: 25
+    encryption: false
+    username: ""
+    password: ""
+entities:
+    - "src/Roadiz/Core/Entities"
+    - "src/Roadiz/Core/AbstractEntities"
+    - "gen-src/GeneratedNodeSources"

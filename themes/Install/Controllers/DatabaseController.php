@@ -30,6 +30,7 @@
 namespace Themes\Install\Controllers;
 
 use RZ\Roadiz\Console\Tools\Configuration;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +52,11 @@ class DatabaseController extends InstallApp
      */
     public function databaseAction(Request $request)
     {
-        $config = new Configuration();
+        $config = new YamlConfiguration();
+        if (false === $config->load()) {
+            $config->setConfiguration($config->getDefaultConfiguration());
+        }
+
         $databaseForm = $this->buildDatabaseForm($request, $config);
 
         if ($databaseForm !== null) {
@@ -205,7 +210,7 @@ class DatabaseController extends InstallApp
     /**
      * Build forms
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param Themes\Install\Controllers\Configuration $conf
+     * @param RZ\Roadiz\Console\Tools\Configuration $conf
      *
      * @return Symfony\Component\Form\Forms
      */

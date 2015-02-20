@@ -39,7 +39,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
-use RZ\Roadiz\Console\Tools\Configuration;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 
 /**
@@ -223,7 +223,10 @@ class InstallCommand extends Command
                 }
             }
 
-            $configuration = new Configuration();
+            $configuration = new YamlConfiguration();
+            if (false === $configuration->load()) {
+                $configuration->setConfiguration($configuration->getDefaultConfiguration());
+            }
             $configuration->setInstall(false);
             $configuration->writeConfiguration();
 

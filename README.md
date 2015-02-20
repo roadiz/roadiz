@@ -43,7 +43,7 @@ This is the recommended method if you are expert.
 
 * Clone current repository to your web root
 * Install dependencies with *Composer*: `composer install -n --no-dev`
-* Copy `conf/config.default.json` to `conf/config.json`. After this command, `bin/roadiz` executable is available.
+* Copy `conf/config.default.yaml` to `conf/config.yaml`. After this command, `bin/roadiz` executable is available.
 * Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
 **If you don’t have any permission to create a virtual host,
 execute `bin/roadiz config --generateHtaccess` to create `.htaccess` files.**
@@ -53,31 +53,30 @@ Once you’ve installed Roadiz, just type `/rz-admin` after your server domain n
 
 #### Database connexion
 
-To connect manually to your database, you can add this to your `config.json`:
+To connect manually to your database, you can add this to your `config.yaml`:
 
 ```
-"doctrine": {
-    "driver": "pdo_mysql",
-    "host": "localhost",
-    "user": "",
-    "password": "",
-    "dbname": ""
-}
+doctrine:
+    driver: pdo_mysql
+    host: localhost
+    user: null
+    password: null
+    dbname: null
+    port: null
 ```
 
 If you prefer socket:
 
 ```
-"doctrine": {
-    "driver": "pdo_mysql",
-    "unix_socket": "",
-    "user": "",
-    "password": "",
-    "dbname": ""
-}
+doctrine:
+    driver: pdo_mysql
+    unix_socket: "/path/to/mysql.socket"
+    user: null
+    password: null
+    dbname: null
 ```
 
-You can specify a table prefix adding `"prefix":"myprefix"` if you can’t create a dedicated database for your project
+You can specify a table prefix adding `prefix:"myprefix"` if you can’t create a dedicated database for your project
 and you need to use Roadiz side by side with other tables. But we strongly recommend you to respect the 1 app = 1 database motto.
 
 For more options you can visit *Doctrine* website: http://doctrine-dbal.readthedocs.org/en/latest/reference/configuration.html
@@ -85,22 +84,19 @@ For more options you can visit *Doctrine* website: http://doctrine-dbal.readthed
 ### Apache Solr
 
 Roadiz can use Apache Solr search-engine to index nodes.
-Add this to your `config.json` to link your Roadiz install to your Solr server:
+Add this to your `config.yaml` to link your Roadiz install to your Solr server:
 
 ```
-"solr": {
-    "endpoint": {
-        "localhost": {
-            "host":"localhost",
-            "port":"8983",
-            "path":"/solr",
-            "core":"mycore",
-            "timeout":3,
-            "username":"",
-            "password":""
-        }
-    }
-}
+solr:
+    endpoint:
+        localhost:
+            host: "localhost"
+            port: "8983"
+            path: "/solr"
+            core: "mycore"
+            timeout: 3
+            username: ""
+            password: ""
 ```
 
 ### Run self tests
@@ -167,13 +163,11 @@ You can create a theme with your own entities. Just add your `Entities` folder
 to the global configuration file.
 
 ```
-"entities": [
-    "src/Roadiz/Core/Entities",
-    "src/Roadiz/Core/AbstractEntities",
-    "gen-src/GeneratedNodeSources",
-    "add/here/your/entities/folder",
-    …
-]
+entities:
+    - src/Roadiz/Core/Entities
+    - src/Roadiz/Core/AbstractEntities
+    - gen-src/GeneratedNodeSources
+    - add/here/your/entities/folder
 ```
 
 Verify if everything is OK by checking migrations:

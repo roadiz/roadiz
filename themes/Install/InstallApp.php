@@ -30,7 +30,7 @@
 
 namespace Themes\Install;
 
-use RZ\Roadiz\Console\Tools\Configuration;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 
@@ -170,9 +170,6 @@ class InstallApp extends AppController
      */
     public function requirementsAction(Request $request)
     {
-        $config = new Configuration();
-        $config->writeConfiguration();
-
         $requ = new Requirements();
         $this->assignation['requirements'] = $requ->getRequirements();
         $this->assignation['totalSuccess'] = $requ->isTotalSuccess();
@@ -428,7 +425,10 @@ class InstallApp extends AppController
                  * Save informations
                  */
                 try {
-                    $config = new Configuration();
+                    $config = new YamlConfiguration();
+                    if (false === $config->load()) {
+                        $config->setConfiguration($config->getDefaultConfiguration());
+                    }
                     $configuration = $config->getConfiguration();
                     $configuration['install'] = false;
                     $config->setConfiguration($configuration);
@@ -467,9 +467,9 @@ class InstallApp extends AppController
     }
 
     /**
-     * Build forms
+     * Build forms.
+     *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param Themes\Install\Controllers\Configuration $conf
      *
      * @return Symfony\Component\Form\Forms
      */
