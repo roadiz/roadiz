@@ -38,7 +38,7 @@ use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use \Michelf\Markdown;
+use \Parsedown;
 
 /**
  * Register Twig services for dependency injection container.
@@ -137,7 +137,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         $container['twig.markdownExtension'] = function ($c) {
 
             return new \Twig_SimpleFilter('markdown', function ($object) {
-                return Markdown::defaultTransform($object);
+                return Parsedown::instance()->text($object);
             }, ['is_safe' => ['html']]);
         };
 
@@ -147,7 +147,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         $container['twig.inlineMarkdownExtension'] = function ($c) {
 
             return new \Twig_SimpleFilter('inlineMarkdown', function ($object) {
-                return InlineMarkdown::defaultTransform($object);
+                return Parsedown::instance()->line($object);
             }, ['is_safe' => ['html']]);
         };
 
