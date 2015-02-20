@@ -74,7 +74,7 @@ class CustomFormsType extends AbstractType
             }
             if ($field->getType() == AbstractField::ENUM_T) {
                 $choices = explode(',', $field->getDefaultValues());
-                $choices = array_map('trim',$choices);
+                $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
                 $option["expanded"] = false;
@@ -87,7 +87,7 @@ class CustomFormsType extends AbstractType
                 $option["choices"] = $choices;
             } elseif ($field->getType() == AbstractField::MULTIPLE_T) {
                 $choices = explode(',', $field->getDefaultValues());
-                $choices = array_map('trim',$choices);
+                $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
                 $option["choices"] = $choices;
