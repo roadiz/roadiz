@@ -264,8 +264,12 @@ class NodeRepository extends EntityRepository
             }
         }
     }
-
-    protected function filterBySecurityContext(&$criteria, &$qb, &$securityContext = null)
+    /**
+     * @param array                &$criteria
+     * @param QueryBuilder         &$qb
+     * @param SecurityContext|null &$securityContext
+     */
+    protected function filterBySecurityContext(&$criteria, &$qb, SecurityContext &$securityContext = null)
     {
         if (null !== $securityContext &&
             !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
@@ -273,6 +277,12 @@ class NodeRepository extends EntityRepository
              * Forbid unpublished node for anonymous and not backend users.
              */
             $qb->andWhere($qb->expr()->eq('n.status', Node::PUBLISHED));
+        } elseif (null !== $securityContext &&
+                $securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            /*
+             * Forbid deleted node for anonymous and not backend users.
+             */
+            $qb->andWhere($qb->expr()->lte('n.status', Node::PUBLISHED));
         }
     }
 

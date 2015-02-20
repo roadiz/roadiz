@@ -182,6 +182,33 @@ class NodesSourcesRepository extends EntityRepository
     }
 
     /**
+     * @param  array                &$criteria
+     * @param  QueryBuilder         &$qb
+     * @param  SecurityContext|null &$securityContext
+     * @return boolean Already Joined Node relation
+     */
+    protected function filterBySecurityContext(&$criteria, &$qb, SecurityContext &$securityContext = null)
+    {
+        if (null !== $securityContext &&
+            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            /*
+             * Forbid unpublished node for anonymous and not backend users.
+             */
+            $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->eq('n.status', Node::PUBLISHED));
+            return true;
+        } elseif (null !== $securityContext &&
+                $securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            /*
+             * Forbid deleted node for backend user when securityContext not null.
+             */
+            $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->lte('n.status', Node::PUBLISHED));
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Create a securized query with node.published = true if user is
      * not a Backend user.
      *
@@ -206,12 +233,7 @@ class NodesSourcesRepository extends EntityRepository
         $qb->add('select', 'ns')
            ->add('from', $this->getEntityName() . ' ns');
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $qb->innerJoin('ns.node', 'n', 'WITH', 'n.status = \'' . Node::PUBLISHED . '\'');
-
-            $joinedNode = true;
-        }
+        $joinedNode = $this->filterBySecurityContext($criteria, $qb, $securityContext);
 
         /*
          * Filtering by tag
@@ -268,12 +290,7 @@ class NodesSourcesRepository extends EntityRepository
         $qb->add('select', 'count(ns.id)')
            ->add('from', $this->getEntityName() . ' ns');
 
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
-            $qb->innerJoin('ns.node', 'n', 'WITH', 'n.status = \'' . Node::PUBLISHED . '\'');
-
-            $joinedNode = true;
-        }
+        $joinedNode = $this->filterBySecurityContext($criteria, $qb, $securityContext);
 
         /*
          * Filtering by tag
