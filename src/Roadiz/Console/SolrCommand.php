@@ -136,13 +136,18 @@ class SolrCommand extends Command
      */
     private function reindexNodeSources(\Solarium\Client $solr, OutputInterface $output)
     {
-        $buffer = $solr->getPlugin('bufferedadd');
-        $buffer->setBufferSize(100);
-
         $update = $solr->createUpdate();
 
         // Empty first
         $update->addDeleteQuery('*:*');
+        $solr->update($update);
+        $update->addCommit();
+
+        /*
+         * Use buffered insertion
+         */
+        $buffer = $solr->getPlugin('bufferedadd');
+        $buffer->setBufferSize(100);
 
         // Then index
         $nSources = Kernel::getService('em')
@@ -161,12 +166,11 @@ class SolrCommand extends Command
             $progress->advance();
         }
 
-        $update->addCommit();
+        $buffer->flush();
 
         // optimize the index
         $update->addOptimize(true, false, 5);
 
-        $solr->update($update);
         $progress->finish();
     }
 }
