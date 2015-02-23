@@ -32,11 +32,13 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Group;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\UserHandler;
 use RZ\Roadiz\Core\Viewers\UserViewer;
+use RZ\Roadiz\Utils\Security\PasswordGenerator;
+use RZ\Roadiz\Utils\Security\SaltGenerator;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
@@ -357,7 +359,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     public function isPasswordRequestNonExpired($ttl)
     {
         return $this->getPasswordRequestedAt() instanceof \DateTime &&
-               $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
+        $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
     }
 
     /**
@@ -705,18 +707,18 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-    * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
-    * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
-    *
-    * @var RZ\Roadiz\Core\Entities\Node
-    */
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
+     * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
+     *
+     * @var RZ\Roadiz\Core\Entities\Node
+     */
     private $chroot;
 
     /**
-    * @param RZ\Roadiz\Core\Entities\Node $chroot
-    *
-    * @return RZ\Roadiz\Core\Entities\Node
-    */
+     * @param RZ\Roadiz\Core\Entities\Node $chroot
+     *
+     * @return RZ\Roadiz\Core\Entities\Node
+     */
     public function setChroot(Node $chroot = null)
     {
         $this->chroot = $chroot;
@@ -725,13 +727,12 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-    * @return RZ\Roadiz\Core\Entities\Node
-    */
+     * @return RZ\Roadiz\Core\Entities\Node
+     */
     public function getChroot()
     {
         return $this->chroot;
     }
-
 
     /**
      * @ORM\PrePersist
@@ -740,12 +741,15 @@ class User extends AbstractHuman implements AdvancedUserInterface
     {
         parent::prePersist();
 
-        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $saltGenerator = new SaltGenerator();
+        $this->salt = $saltGenerator->generateSalt();
+
         /*
          * If no plain password is present, we must generate one
          */
         if ($this->getPlainPassword() == '') {
-            $this->setPlainPassword(UserHandler::generatePassword());
+            $passwordGenerator = new PasswordGenerator();
+            $this->setPlainPassword($passwordGenerator->generatePassword(12));
         }
 
         $this->getHandler()->encodePassword();

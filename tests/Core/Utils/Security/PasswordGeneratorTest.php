@@ -24,46 +24,31 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UserHandlerTest.php
+ * @file PasswordGeneratorTest.php
  * @author Ambroise Maupate
  */
+use RZ\Roadiz\Utils\Security\PasswordGenerator;
 
-use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Kernel;
-
-class UserHandlerTest extends PHPUnit_Framework_TestCase
+class PasswordGeneratorTest extends PHPUnit_Framework_TestCase
 {
-
     /**
-     * @dataProvider encodeUserProvider
+     * @dataProvider generatePasswordProvider
      */
-    public function testEncodeUser($userName, $email, $plainPassword)
+    public function testGeneratePassword($passwordLength)
     {
-        $user = new User();
-        $user->setUserName($userName);
-        $user->setEmail($email);
-        $user->setPlainPassword($plainPassword);
+        $passGen = new PasswordGenerator();
+        $pass = $passGen->generatePassword($passwordLength);
 
-        Kernel::getService("em")->persist($user);
-        Kernel::getService("em")->flush();
-
-        $this->assertTrue($user->getHandler()->isPasswordValid($plainPassword));
-
-        Kernel::getService("em")->remove($user);
-        Kernel::getService("em")->flush();
+        $this->assertEquals($passwordLength, strlen($pass));
     }
-    public function encodeUserProvider()
+
+    public function generatePasswordProvider()
     {
         return [
-            ['phpunitUser001', 'phpunit-user@roadiz.io', 'my-very-very-strong-password'],
-            ['phpunitUser002', 'phpunit-user2@roadiz.io', 'AvbT8jkc0SscLb'],
-            ['phpunitUser003', 'phpunit-user3@roadiz.io', '6dSc4ZRGtJVq0g'],
+            [5],
+            [6],
+            [9],
+            [12]
         ];
-    }
-
-
-    public static function setUpBeforeClass()
-    {
-        date_default_timezone_set('Europe/Paris');
     }
 }

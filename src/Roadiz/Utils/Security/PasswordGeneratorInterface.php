@@ -24,46 +24,17 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UserHandlerTest.php
+ * @file PasswordGeneratorInterface.php
  * @author Ambroise Maupate
  */
+namespace RZ\Roadiz\Utils\Security;
 
-use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Kernel;
-
-class UserHandlerTest extends PHPUnit_Framework_TestCase
+interface PasswordGeneratorInterface
 {
 
     /**
-     * @dataProvider encodeUserProvider
+     * @param  integer $length
+     * @return string
      */
-    public function testEncodeUser($userName, $email, $plainPassword)
-    {
-        $user = new User();
-        $user->setUserName($userName);
-        $user->setEmail($email);
-        $user->setPlainPassword($plainPassword);
-
-        Kernel::getService("em")->persist($user);
-        Kernel::getService("em")->flush();
-
-        $this->assertTrue($user->getHandler()->isPasswordValid($plainPassword));
-
-        Kernel::getService("em")->remove($user);
-        Kernel::getService("em")->flush();
-    }
-    public function encodeUserProvider()
-    {
-        return [
-            ['phpunitUser001', 'phpunit-user@roadiz.io', 'my-very-very-strong-password'],
-            ['phpunitUser002', 'phpunit-user2@roadiz.io', 'AvbT8jkc0SscLb'],
-            ['phpunitUser003', 'phpunit-user3@roadiz.io', '6dSc4ZRGtJVq0g'],
-        ];
-    }
-
-
-    public static function setUpBeforeClass()
-    {
-        date_default_timezone_set('Europe/Paris');
-    }
+    public function generatePassword($length = 9);
 }

@@ -24,46 +24,35 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UserHandlerTest.php
+ * @file RandomGenerator.php
  * @author Ambroise Maupate
  */
+namespace RZ\Roadiz\Utils\Security;
 
-use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Kernel;
+use Psr\Log\LoggerInterface;
 
-class UserHandlerTest extends PHPUnit_Framework_TestCase
+class RandomGenerator
 {
+    protected $logger;
+    protected $useOpenSsl;
 
     /**
-     * @dataProvider encodeUserProvider
+     * @param Psr\Log\LoggerInterface|null $logger
      */
-    public function testEncodeUser($userName, $email, $plainPassword)
+    public function __construct(LoggerInterface $logger = null)
     {
-        $user = new User();
-        $user->setUserName($userName);
-        $user->setEmail($email);
-        $user->setPlainPassword($plainPassword);
+        $this->logger = $logger;
 
-        Kernel::getService("em")->persist($user);
-        Kernel::getService("em")->flush();
-
-        $this->assertTrue($user->getHandler()->isPasswordValid($plainPassword));
-
-        Kernel::getService("em")->remove($user);
-        Kernel::getService("em")->flush();
-    }
-    public function encodeUserProvider()
-    {
-        return [
-            ['phpunitUser001', 'phpunit-user@roadiz.io', 'my-very-very-strong-password'],
-            ['phpunitUser002', 'phpunit-user2@roadiz.io', 'AvbT8jkc0SscLb'],
-            ['phpunitUser003', 'phpunit-user3@roadiz.io', '6dSc4ZRGtJVq0g'],
-        ];
-    }
-
-
-    public static function setUpBeforeClass()
-    {
-        date_default_timezone_set('Europe/Paris');
+        // determine whether to use OpenSSL
+        if (defined('PHP_WINDOWS_VERSION_BUILD') && version_compare(PHP_VERSION, '5.3.4', '<')) {
+            $this->useOpenSsl = false;
+        } elseif (!function_exists('openssl_random_pseudo_bytes')) {
+            if (null !== $this->logger) {
+                $this->logger->notice('It is recommended that you enable the "openssl" extension for random number generation.');
+            }
+            $this->useOpenSsl = false;
+        } else {
+            $this->useOpenSsl = true;
+        }
     }
 }

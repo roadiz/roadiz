@@ -24,46 +24,36 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UserHandlerTest.php
+ * @file SaltGenerator.php
  * @author Ambroise Maupate
  */
+namespace RZ\Roadiz\Utils\Security;
 
-use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Kernel;
-
-class UserHandlerTest extends PHPUnit_Framework_TestCase
+class SaltGenerator extends RandomGenerator implements SaltGeneratorInterface
 {
 
-    /**
-     * @dataProvider encodeUserProvider
-     */
-    public function testEncodeUser($userName, $email, $plainPassword)
+    public function generateSalt()
     {
-        $user = new User();
-        $user->setUserName($userName);
-        $user->setEmail($email);
-        $user->setPlainPassword($plainPassword);
-
-        Kernel::getService("em")->persist($user);
-        Kernel::getService("em")->flush();
-
-        $this->assertTrue($user->getHandler()->isPasswordValid($plainPassword));
-
-        Kernel::getService("em")->remove($user);
-        Kernel::getService("em")->flush();
-    }
-    public function encodeUserProvider()
-    {
-        return [
-            ['phpunitUser001', 'phpunit-user@roadiz.io', 'my-very-very-strong-password'],
-            ['phpunitUser002', 'phpunit-user2@roadiz.io', 'AvbT8jkc0SscLb'],
-            ['phpunitUser003', 'phpunit-user3@roadiz.io', '6dSc4ZRGtJVq0g'],
-        ];
+        return strtr(base64_encode($this->getRandomNumber()), '{}', '-_');
     }
 
-
-    public static function setUpBeforeClass()
+    private function getRandomNumber()
     {
-        date_default_timezone_set('Europe/Paris');
+        $nbBytes = 24;
+
+        // try OpenSSL
+        if ($this->useOpenSsl) {
+            $bytes = openssl_random_pseudo_bytes($nbBytes, $strong);
+
+            if (false !== $bytes && true === $strong) {
+                return $bytes;
+            }
+
+            if (null !== $this->logger) {
+                $this->logger->info('OpenSSL did not produce a secure random number.');
+            }
+        }
+
+        return hash('sha256', uniqid(mt_rand(), true), true);
     }
 }
