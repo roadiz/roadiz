@@ -5956,6 +5956,41 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <target>Root node</target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="about.cms">
+          <source>about.cms</source>
+          <target>About Roadiz</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="new.version.release">
+          <source>new.version.release</source>
+          <target>A new Roadiz version released!</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="lastest.version.installed">
+          <source>lastest.version.installed</source>
+          <target>Roadiz is up-to-date.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="current.version">
+          <source>current.version</source>
+          <target>Current version</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="last.version">
+          <source>last.version</source>
+          <target>Last version</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="changelog">
+          <source>changelog</source>
+          <target>Changelog</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="download">
+          <source>download</source>
+          <target>Download last Roadiz release.</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

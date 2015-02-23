@@ -5931,12 +5931,12 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>metadataCache</source>
           <target></target>
       </trans-unit>
-      
+
       <trans-unit xml:space="preserve" id="no.cache.available">
           <source>no.cache.available</source>
           <target></target>
       </trans-unit>
-      
+
       <trans-unit xml:space="preserve" id="homeNode.limited.one">
           <source>homeNode.limited.one</source>
           <target></target>
@@ -5957,6 +5957,40 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="about.cms">
+          <source>about.cms</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="news.version.release">
+          <source>news.version.release</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="lastest.version.installed">
+          <source>lastest.version.installed</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="current.version">
+          <source>current.version</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="last.version">
+          <source>last.version</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="changelog">
+          <source>changelog</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="download">
+          <source>download</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
