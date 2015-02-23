@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the FOSUserBundle package.
  *
@@ -9,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace RZ\Roadiz\Utils;
+namespace RZ\Roadiz\Utils\Security;
 
 interface TokenGeneratorInterface
 {

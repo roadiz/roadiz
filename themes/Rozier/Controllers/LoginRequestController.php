@@ -30,7 +30,7 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountEmail;
-use RZ\Roadiz\Utils\TokenGenerator;
+use RZ\Roadiz\Utils\Security\TokenGenerator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
