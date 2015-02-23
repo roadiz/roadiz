@@ -38,7 +38,8 @@
 
     </div>
     <footer id="cms-version">
-        <a target="_blank" title="{% trans %}help{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-help" href="http://docs.roadiz.io"></a><a title="{% trans %}about{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-refresh" href="{{path("aboutPage")}}"></a>
+        <a target="_blank" title="{% trans %}help{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-help" href="http://docs.roadiz.io"></a>
+        <a title="{% trans %}about.cms{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-refresh" href="{{ path("aboutPage") }}"></a>
         <p class="cms-version"><i class="uk-icon-rz-rezozero"></i></p>
         <p>{{ head.cmsVersion }} {{ head.cmsVersionNumber }}</p>
     </footer>
