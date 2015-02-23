@@ -153,13 +153,13 @@ class Kernel implements \Pimple\ServiceProviderInterface
         };
 
         /*
-         * Load service providers from conf/services.yaml
+         * Load service providers from conf/services.yml
          *
          * Edit this file if you want to customize Roadiz services
          * behaviour.
          */
         $yaml = new Parser();
-        $services = $yaml->parse(file_get_contents(ROADIZ_ROOT . '/conf/services.yaml'));
+        $services = $yaml->parse(file_get_contents(ROADIZ_ROOT . '/conf/services.yml'));
         foreach ($services['providers'] as $providerClass) {
             $container->register(new $providerClass());
         }

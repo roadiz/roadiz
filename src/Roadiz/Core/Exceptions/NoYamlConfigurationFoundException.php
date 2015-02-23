@@ -34,5 +34,5 @@ namespace RZ\Roadiz\Core\Exceptions;
  */
 class NoYamlConfigurationFoundException extends NoConfigurationFoundException
 {
-    protected $message = "No configuration file was found. Make sure that conf/config.yaml exists.";
+    protected $message = "No configuration file was found. Make sure that conf/config.yml exists.";
 }

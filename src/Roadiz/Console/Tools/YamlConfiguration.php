@@ -46,7 +46,7 @@ class YamlConfiguration extends Configuration
     public function load()
     {
         // Try to load existant configuration
-        return $this->loadFromFile(ROADIZ_ROOT . '/conf/config.yaml');
+        return $this->loadFromFile(ROADIZ_ROOT . '/conf/config.yml');
     }
 
     /**
@@ -77,7 +77,7 @@ class YamlConfiguration extends Configuration
      */
     public function writeConfiguration()
     {
-        $writePath = ROADIZ_ROOT . '/conf/config.yaml';
+        $writePath = ROADIZ_ROOT . '/conf/config.yml';
 
         if (file_exists($writePath)) {
             unlink($writePath);

@@ -2,6 +2,6 @@
 *
 # Except this file
 !.gitignore
-!*.default.yaml
-!services.yaml
-!*.travis.yaml
+!*.default.yml
+!services.yml
+!*.travis.yml

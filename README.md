@@ -43,7 +43,7 @@ This is the recommended method if you are expert.
 
 * Clone current repository to your web root
 * Install dependencies with *Composer*: `composer install -n --no-dev`
-* Copy `conf/config.default.yaml` to `conf/config.yaml`. After this command, `bin/roadiz` executable is available.
+* Copy `conf/config.default.yml` to `conf/config.yml`. After this command, `bin/roadiz` executable is available.
 * Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
 **If you don’t have any permission to create a virtual host,
 execute `bin/roadiz config --generateHtaccess` to create `.htaccess` files.**
@@ -53,7 +53,7 @@ Once you’ve installed Roadiz, just type `/rz-admin` after your server domain n
 
 #### Database connexion
 
-To connect manually to your database, you can add this to your `config.yaml`:
+To connect manually to your database, you can add this to your `config.yml`:
 
 ```
 doctrine:
@@ -84,7 +84,7 @@ For more options you can visit *Doctrine* website: http://doctrine-dbal.readthed
 ### Apache Solr
 
 Roadiz can use Apache Solr search-engine to index nodes.
-Add this to your `config.yaml` to link your Roadiz install to your Solr server:
+Add this to your `config.yml` to link your Roadiz install to your Solr server:
 
 ```
 solr:

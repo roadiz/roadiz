@@ -106,11 +106,11 @@ class SolrCommand extends Command
                 }
             } else {
                 $text .= '<error>Solr search engine server does not respond…</error>' . PHP_EOL;
-                $text .= 'See your config.yaml file to correct your Solr connexion settings.' . PHP_EOL;
+                $text .= 'See your config.yml file to correct your Solr connexion settings.' . PHP_EOL;
             }
         } else {
             $text .= '<error>No Solr search engine server has been configured…</error>' . PHP_EOL;
-            $text .= 'Personnalize your config.yaml file to enable Solr (sample):' . PHP_EOL;
+            $text .= 'Personnalize your config.yml file to enable Solr (sample):' . PHP_EOL;
             $text .=
             'solr:
                 endpoint:
