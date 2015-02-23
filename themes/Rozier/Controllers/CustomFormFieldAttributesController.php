@@ -34,14 +34,12 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
 /**
-* CustomForm controller
-*/
+ * CustomForm controller
+ */
 class CustomFormFieldAttributesController extends RozierApp
 {
     /**
@@ -58,7 +56,7 @@ class CustomFormFieldAttributesController extends RozierApp
          * Manage get request to filter list
          */
 
-         $customFormAnswer = $this->getService("em")->find("RZ\Roadiz\Core\Entities\CustomFormAnswer", $customFormAnswerId);
+        $customFormAnswer = $this->getService("em")->find("RZ\Roadiz\Core\Entities\CustomFormAnswer", $customFormAnswerId);
 
         $listManager = new EntityListManager(
             $request,

@@ -30,18 +30,15 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Themes\Rozier\RozierApp;
-
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Type;
+use Themes\Rozier\RozierApp;
 
 /**
  * {@inheritdoc}
@@ -95,7 +92,7 @@ class ThemesController extends RozierApp
                 $this->addTheme($request, $form->getData(), $theme);
                 $msg = $this->getTranslator()->trans(
                     'theme.%name%.created',
-                    ['%name%'=>$theme->getClassName()]
+                    ['%name%' => $theme->getClassName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
 
@@ -130,7 +127,7 @@ class ThemesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
+                      ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
             $form = $this->buildEditForm($theme);
@@ -141,7 +138,7 @@ class ThemesController extends RozierApp
                     $this->editTheme($request, $form->getData(), $theme);
                     $msg = $this->getTranslator()->trans(
                         'theme.%name%.updated',
-                        ['%name%'=>$theme->getClassName()]
+                        ['%name%' => $theme->getClassName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
@@ -180,7 +177,7 @@ class ThemesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
+                      ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
             $form = $this->buildDeleteForm($theme);
@@ -192,7 +189,7 @@ class ThemesController extends RozierApp
                     $this->deleteTheme($form->getData(), $theme);
                     $msg = $this->getTranslator()->trans(
                         'theme.%name%.deleted',
-                        ['%name%'=>$theme->getClassName()]
+                        ['%name%' => $theme->getClassName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
@@ -242,7 +239,7 @@ class ThemesController extends RozierApp
                 'constraints' => [
                     new \Symfony\Component\Validator\Constraints\NotNull(),
                     new \Symfony\Component\Validator\Constraints\Type('string'),
-                ]
+                ],
             ]
         );
 
@@ -272,52 +269,52 @@ class ThemesController extends RozierApp
         $r = $theme->getRoot();
 
         $defaults = [
-            'available' =>    $theme->isAvailable(),
-            'className' =>    $theme->getClassName(),
-            'staticTheme' =>  $theme->isStaticTheme(),
-            'hostname' =>     $theme->getHostname(),
+            'available' => $theme->isAvailable(),
+            'className' => $theme->getClassName(),
+            'staticTheme' => $theme->isStaticTheme(),
+            'hostname' => $theme->getHostname(),
             'backendTheme' => $theme->isBackendTheme(),
-            'homeNode' =>     ($n !== null) ? $n->getId() : null,
-            'root' =>         ($r !== null) ? $r->getId() : null
+            'homeNode' => ($n !== null) ? $n->getId() : null,
+            'root' => ($r !== null) ? $r->getId() : null,
         ];
 
         $builder = $this->getService('formFactory')
-            ->createNamedBuilder('source', 'form', $defaults)
-            ->add('available', 'checkbox', [
-                'label' => $this->getTranslator()->trans('available'),
-                'required' => false
-            ])
-            ->add(
-                'staticTheme',
-                'checkbox',
-                [
-                    'label' => $this->getTranslator()->trans('staticTheme'),
-                    'required' => false,
-                    'attr' => [
-                        'data-desc' => $this->getTranslator()->trans('staticTheme.does_not.allow.node_url_routes')
-                    ]
-                ]
-            )
-            ->add('hostname', 'text', [
-                'label' => $this->getTranslator()->trans('hostname')
-            ])
-            ->add('backendTheme', 'checkbox', [
-                'label' => $this->getTranslator()->trans('backendTheme'),
-                'required' => false
-            ]);
+                        ->createNamedBuilder('source', 'form', $defaults)
+                        ->add('available', 'checkbox', [
+                            'label' => $this->getTranslator()->trans('available'),
+                            'required' => false,
+                        ])
+                        ->add(
+                            'staticTheme',
+                            'checkbox',
+                            [
+                                'label' => $this->getTranslator()->trans('staticTheme'),
+                                'required' => false,
+                                'attr' => [
+                                    'data-desc' => $this->getTranslator()->trans('staticTheme.does_not.allow.node_url_routes'),
+                                ],
+                            ]
+                        )
+                        ->add('hostname', 'text', [
+                            'label' => $this->getTranslator()->trans('hostname'),
+                        ])
+                        ->add('backendTheme', 'checkbox', [
+                            'label' => $this->getTranslator()->trans('backendTheme'),
+                            'required' => false,
+                        ]);
 
-        $d = ($n !== null) ? [$n] : [] ;
+        $d = ($n !== null) ? [$n] : [];
 
         $builder->add('homeNode', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
-                'label' => $this->getTranslator()->trans('homeNode'),
-                'required' => false
+            'label' => $this->getTranslator()->trans('homeNode'),
+            'required' => false,
         ]);
 
-        $d = ($r !== null) ? [$r] : [] ;
+        $d = ($r !== null) ? [$r] : [];
 
         $builder->add('root', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
-                'label' => $this->getTranslator()->trans('themeRoot'),
-                'required' => false
+            'label' => $this->getTranslator()->trans('themeRoot'),
+            'required' => false,
         ]);
 
         return $builder;
@@ -333,10 +330,10 @@ class ThemesController extends RozierApp
     protected function buildDeleteForm(Theme $theme)
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add('themeId', 'hidden', [
-                'data'=>$theme->getId()
-            ]);
+                        ->createBuilder('form')
+                        ->add('themeId', 'hidden', [
+                            'data' => $theme->getId(),
+                        ]);
 
         return $builder->getForm();
     }
@@ -344,7 +341,7 @@ class ThemesController extends RozierApp
     private function setThemeValue(Request $request, array &$data, Theme $theme)
     {
         foreach ($data as $key => $value) {
-            $setter = 'set'.ucwords($key);
+            $setter = 'set' . ucwords($key);
             if ($key == "homeNode" || $key == "root") {
                 if (count($value) > 1) {
                     if ($key == "root") {
@@ -376,14 +373,14 @@ class ThemesController extends RozierApp
         $this->setThemeValue($request, $data, $theme);
 
         $existing = $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(['className'=>$theme->getClassName()]);
+                         ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                         ->findOneBy(['className' => $theme->getClassName()]);
 
         if ($existing !== null) {
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'theme.%name%.no_creation.already_exists',
-                    ['%name%'=>$theme->getClassName()]
+                    ['%name%' => $theme->getClassName()]
                 ),
                 1
             );

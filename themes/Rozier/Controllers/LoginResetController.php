@@ -32,7 +32,6 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountConfirmationToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 class LoginResetController extends RozierApp

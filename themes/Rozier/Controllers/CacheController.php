@@ -31,11 +31,9 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Console\CacheCommand;
-use Themes\Rozier\RozierApp;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Themes\Rozier\RozierApp;
 
 /**
  * {@inheritdoc}
@@ -77,10 +75,10 @@ class CacheController extends RozierApp
         $this->assignation['form'] = $form->createView();
 
         $this->assignation['cachesInfo'] = [
-            'resultCache' =>      $this->getService('em')->getConfiguration()->getResultCacheImpl(),
+            'resultCache' => $this->getService('em')->getConfiguration()->getResultCacheImpl(),
             'hydratationCache' => $this->getService('em')->getConfiguration()->getHydrationCacheImpl(),
-            'queryCache' =>       $this->getService('em')->getConfiguration()->getQueryCacheImpl(),
-            'metadataCache' =>    $this->getService('em')->getConfiguration()->getMetadataCacheImpl()
+            'queryCache' => $this->getService('em')->getConfiguration()->getQueryCacheImpl(),
+            'metadataCache' => $this->getService('em')->getConfiguration()->getMetadataCacheImpl(),
         ];
 
         foreach ($this->assignation['cachesInfo'] as $key => $value) {
@@ -100,7 +98,7 @@ class CacheController extends RozierApp
     private function buildDeleteDoctrineForm()
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form');
+                        ->createBuilder('form');
 
         return $builder->getForm();
     }
@@ -145,7 +143,7 @@ class CacheController extends RozierApp
     private function buildDeleteSLIRForm()
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form');
+                        ->createBuilder('form');
 
         return $builder->getForm();
     }

@@ -30,12 +30,11 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
-use Themes\DefaultTheme\DefaultThemeApp;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
  * Frontend controller to handle Page node-type request.

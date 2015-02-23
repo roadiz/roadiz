@@ -30,9 +30,8 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
-use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\RozierApp;
 
 class AdminController extends RozierApp
 {

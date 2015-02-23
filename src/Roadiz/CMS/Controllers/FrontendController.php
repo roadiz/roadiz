@@ -39,7 +39,6 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;

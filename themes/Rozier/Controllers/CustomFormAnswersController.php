@@ -38,7 +38,6 @@ use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 

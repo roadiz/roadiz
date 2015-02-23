@@ -37,9 +37,8 @@ use \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use \RZ\Roadiz\Core\Exceptions\ReservedSQLWordException;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
-use \Themes\Rozier\RozierApp;
 use \Symfony\Component\Validator\Constraints\NotBlank;
+use \Themes\Rozier\RozierApp;
 
 /**
  * {@inheritdoc}

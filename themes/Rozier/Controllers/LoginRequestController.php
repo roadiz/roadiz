@@ -33,7 +33,6 @@ use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountEmail;
 use RZ\Roadiz\Utils\Security\TokenGenerator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\Email;
 use Themes\Rozier\RozierApp;
 
@@ -117,7 +116,7 @@ class LoginRequestController extends RozierApp
                                 ]),
                                 new ValidAccountEmail([
                                     'entityManager' => $this->getService('em'),
-                                    'message' => $this->getTranslator()->trans('%email%.email.does.not.exist.in.user.account.database')
+                                    'message' => $this->getTranslator()->trans('%email%.email.does.not.exist.in.user.account.database'),
                                 ]),
                             ],
                         ]);

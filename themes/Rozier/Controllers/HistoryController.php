@@ -34,10 +34,8 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Themes\Rozier\RozierApp;
-
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Themes\Rozier\RozierApp;
 
 /**
  * Display CMS logs.
@@ -54,7 +52,7 @@ class HistoryController extends RozierApp
         Log::NOTICE => "notice",
         Log::INFO => "info",
         Log::DEBUG => "debug",
-        Log::LOG => "log"
+        Log::LOG => "log",
     ];
 
     /**
@@ -74,7 +72,7 @@ class HistoryController extends RozierApp
             $this->em(),
             'RZ\Roadiz\Core\Entities\Log',
             [],
-            ['datetime'=> 'DESC']
+            ['datetime' => 'DESC']
         );
         $listManager->setItemPerPage(30);
         $listManager->handle();
@@ -107,8 +105,8 @@ class HistoryController extends RozierApp
                 $request,
                 $this->em(),
                 'RZ\Roadiz\Core\Entities\Log',
-                ['user'=>$user],
-                ['datetime'=> 'DESC']
+                ['user' => $user],
+                ['datetime' => 'DESC']
             );
             $listManager->setItemPerPage(30);
             $listManager->handle();

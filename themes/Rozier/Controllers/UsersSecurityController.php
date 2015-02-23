@@ -30,19 +30,9 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Entities\Group;
-use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\FacebookUsernameNotFoundException;
-use Themes\Rozier\RozierApp;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Request;
+use Themes\Rozier\RozierApp;
 
 /**
  * Provide user security views and forms.
@@ -61,7 +51,7 @@ class UsersSecurityController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -73,7 +63,7 @@ class UsersSecurityController extends RozierApp
                 $this->editUserSecurity($form->getData(), $user, $request);
                 $msg = $this->getTranslator()->trans(
                     'user.%name%.security.updated',
-                    ['%name%'=>$user->getUsername()]
+                    ['%name%' => $user->getUsername()]
                 );
 
                 $this->publishConfirmMessage($request, $msg);
@@ -115,59 +105,59 @@ class UsersSecurityController extends RozierApp
             'expired' => $user->getExpired(),
             'credentialsExpiresAt' => $user->getCredentialsExpiresAt(),
             'credentialsExpired' => $user->getCredentialsExpired(),
-            'chroot' => ($user->getChroot() !== null) ? $user->getChroot()->getId() : null
+            'chroot' => ($user->getChroot() !== null) ? $user->getChroot()->getId() : null,
         ];
 
         $builder = $this->getService('formFactory')
                         ->createNamedBuilder('source', 'form', $defaults);
 
         $builder->add('enabled', 'checkbox', [
-            'label'=>$this->getTranslator()->trans('user.enabled'),
-            'required' => false
-        ])
-        ->add('locked', 'checkbox', [
-            'label'=>$this->getTranslator()->trans('user.locked'),
-            'required' => false
-        ])
-        ->add('expiresAt', 'datetime', [
-            'label'=>$this->getTranslator()->trans('user.expiresAt'),
-            'required' => false,
-            'years'=> range(date('Y'), date('Y')+2),
-            'empty_value' => [
-                'year' => $this->getTranslator()->trans('year'),
-                'month' =>  $this->getTranslator()->trans('month'),
-                'day' =>    $this->getTranslator()->trans('day'),
-                'hour' =>   $this->getTranslator()->trans('hour'),
-                'minute' => $this->getTranslator()->trans('minute')
-            ]
-        ])
-        ->add('expired', 'checkbox', [
-            'label'=>$this->getTranslator()->trans('user.force.expired'),
-            'required' => false
-        ])
-        ->add('credentialsExpiresAt', 'datetime', [
-            'label'=>$this->getTranslator()->trans('user.credentialsExpiresAt'),
-            'required' => false,
-            'years'=> range(date('Y'), date('Y')+2),
-            'empty_value' => [
-                'year' => $this->getTranslator()->trans('year'),
-                'month' =>  $this->getTranslator()->trans('month'),
-                'day' =>    $this->getTranslator()->trans('day'),
-                'hour' =>   $this->getTranslator()->trans('hour'),
-                'minute' => $this->getTranslator()->trans('minute')
-            ]
-        ])
-        ->add('credentialsExpired', 'checkbox', [
-            'label'=>$this->getTranslator()->trans('user.force.credentialsExpired'),
-            'required' => false
-        ]);
+                    'label' => $this->getTranslator()->trans('user.enabled'),
+                    'required' => false,
+                ])
+                ->add('locked', 'checkbox', [
+                    'label' => $this->getTranslator()->trans('user.locked'),
+                    'required' => false,
+                ])
+                ->add('expiresAt', 'datetime', [
+                    'label' => $this->getTranslator()->trans('user.expiresAt'),
+                    'required' => false,
+                    'years' => range(date('Y'), date('Y') + 2),
+                    'empty_value' => [
+                        'year' => $this->getTranslator()->trans('year'),
+                        'month' => $this->getTranslator()->trans('month'),
+                        'day' => $this->getTranslator()->trans('day'),
+                        'hour' => $this->getTranslator()->trans('hour'),
+                        'minute' => $this->getTranslator()->trans('minute'),
+                    ],
+                ])
+                ->add('expired', 'checkbox', [
+                    'label' => $this->getTranslator()->trans('user.force.expired'),
+                    'required' => false,
+                ])
+                ->add('credentialsExpiresAt', 'datetime', [
+                    'label' => $this->getTranslator()->trans('user.credentialsExpiresAt'),
+                    'required' => false,
+                    'years' => range(date('Y'), date('Y') + 2),
+                    'empty_value' => [
+                        'year' => $this->getTranslator()->trans('year'),
+                        'month' => $this->getTranslator()->trans('month'),
+                        'day' => $this->getTranslator()->trans('day'),
+                        'hour' => $this->getTranslator()->trans('hour'),
+                        'minute' => $this->getTranslator()->trans('minute'),
+                    ],
+                ])
+                ->add('credentialsExpired', 'checkbox', [
+                    'label' => $this->getTranslator()->trans('user.force.credentialsExpired'),
+                    'required' => false,
+                ]);
 
         if ($this->getService('securityContext')->isGranted("ROLE_SUPERADMIN")) {
             $n = $user->getChroot();
-            $n = ($n !== null)? [$n] : [] ;
+            $n = ($n !== null) ? [$n] : [];
             $builder->add('chroot', new \RZ\Roadiz\CMS\Forms\NodesType($n), [
-                'label'=>$this->getTranslator()->trans('chroot'),
-                'required'=>false
+                'label' => $this->getTranslator()->trans('chroot'),
+                'required' => false,
             ]);
         }
 
@@ -177,7 +167,7 @@ class UsersSecurityController extends RozierApp
     protected function editUserSecurity(array $data, User $user, Request $request)
     {
         foreach ($data as $key => $value) {
-            $setter = 'set'.ucwords($key);
+            $setter = 'set' . ucwords($key);
             if ($key == "chroot") {
                 if (count($value) > 1) {
                     $msg = $this->getTranslator()->trans('chroot.limited.one');

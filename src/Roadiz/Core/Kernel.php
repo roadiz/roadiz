@@ -35,19 +35,6 @@ use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Pimple\Container;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\HttpFoundation\Request;
-use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
-use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
-use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
-use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
-use RZ\Roadiz\Core\Services\FormServiceProvider;
-use RZ\Roadiz\Core\Services\MailerServiceProvider;
-use RZ\Roadiz\Core\Services\RoutingServiceProvider;
-use RZ\Roadiz\Core\Services\SecurityServiceProvider;
-use RZ\Roadiz\Core\Services\SolrServiceProvider;
-use RZ\Roadiz\Core\Services\ThemeServiceProvider;
-use RZ\Roadiz\Core\Services\TranslationServiceProvider;
-use RZ\Roadiz\Core\Services\TwigServiceProvider;
-use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\DialogHelper;
@@ -61,7 +48,6 @@ use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
 use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
 /**

@@ -34,7 +34,6 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -123,12 +122,12 @@ class LoginController extends RozierApp
                                 new NotBlank(),
                             ],
                         ])
-            ->add('_password', 'password', [
-                'label' => $this->getTranslator()->trans('password'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ]);
+                        ->add('_password', 'password', [
+                            'label' => $this->getTranslator()->trans('password'),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ]);
 
         return $builder->getForm();
     }

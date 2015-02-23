@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
-use RZ\Roadiz\Core\Exceptions\NoYamlConfigurationFoundException;
 use Pimple\Container;
 
 /**
@@ -53,7 +51,7 @@ abstract class AbstractConfigurationServiceProvider implements \Pimple\ServicePr
                 return [
                     "src/Roadiz/Core/Entities",
                     "src/Roadiz/Core/AbstractEntities",
-                    "gen-src/GeneratedNodeSources"
+                    "gen-src/GeneratedNodeSources",
                 ];
             }
         };
