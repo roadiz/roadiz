@@ -30,16 +30,12 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use Themes\Rozier\RozierApp;
-
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-
-use RZ\Roadiz\Core\Bags\SettingsBag;
-use RZ\Roadiz\Core\Kernel;
-
-use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
 use GuzzleHttp\Subscriber\Cache\CacheStorage;
+use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
+use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\RozierApp;
 
 class AboutController extends RozierApp
 {
@@ -53,7 +49,7 @@ class AboutController extends RozierApp
             // needs a composer require guzzlehttp/cache-subscriber
             CacheSubscriber::attach($client, array(
                 'storage' => new CacheStorage($this->getService('em')->getConfiguration()->getResultCacheImpl(), "rozier_github", 3600),
-                'validate' => false
+                'validate' => false,
             ));
 
             $response = $client->get($url);
@@ -74,11 +70,11 @@ class AboutController extends RozierApp
         $lastRelease = null;
         foreach ($releases as $release) {
             $lastRelease = $release;
-            if ($release->draft == false && $lastRelease->tag_name[0] == 'v') {
+            if ($release->draft === false && $lastRelease->tag_name[0] == 'v') {
                 break;
             }
         }
-        if ($lastRelease != null) {
+        if ($lastRelease !== null) {
             $lastVersion = substr($lastRelease->tag_name, 1);
             $this->assignation["newVersion"] = version_compare(Kernel::$cmsVersion, $lastVersion, "<");
             if (isset($lastRelease->assets[0])) {

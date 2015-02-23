@@ -40,7 +40,6 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 

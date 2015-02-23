@@ -33,7 +33,6 @@ namespace Themes\DefaultTheme\Controllers;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
