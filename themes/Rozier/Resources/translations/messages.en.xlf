@@ -5963,7 +5963,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
 
       <trans-unit xml:space="preserve" id="new.version.release">
           <source>new.version.release</source>
-          <target>A new Roadiz version released!</target>
+          <target>A new Roadiz version is available!</target>
       </trans-unit>
 
       <trans-unit xml:space="preserve" id="lastest.version.installed">
@@ -5978,7 +5978,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
 
       <trans-unit xml:space="preserve" id="last.version">
           <source>last.version</source>
-          <target>Last version</target>
+          <target>Lastest version</target>
       </trans-unit>
 
       <trans-unit xml:space="preserve" id="changelog">
@@ -5988,7 +5988,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
 
       <trans-unit xml:space="preserve" id="download">
           <source>download</source>
-          <target>Download last Roadiz release.</target>
+          <target>Download lastest Roadiz release.</target>
       </trans-unit>
 
     </body>
