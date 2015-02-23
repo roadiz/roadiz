@@ -33,7 +33,7 @@ use RZ\Roadiz\Core\Kernel;
 
 if (version_compare(phpversion(), '5.4.3', '<')) {
     echo 'Your php version is ' . phpversion() . "." . PHP_EOL;
-    echo 'You need a least the version 5.4.3';
+    echo 'You need a least the version 5.4.3.' . PHP_EOL;
     exit(1);
 }
 
