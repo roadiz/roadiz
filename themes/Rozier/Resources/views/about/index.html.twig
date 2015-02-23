@@ -29,7 +29,9 @@
             {% if newVersion %}
                 <h1><i class="uk-icon-file-text-o"></i> {% trans %}changelog{% endtrans %}:</h1>
                 <p>{{ changelog|markdown }}</p>
+                {% if downloadUrl %}
                 <a href="{{ downloadUrl }}" class="uk-button"><i class="uk-icon-download"></i> {% trans %}download{% endtrans %}</a>
+                {% endif %}
             {% endif %}
         </div>
     </article>

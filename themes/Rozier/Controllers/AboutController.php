@@ -81,7 +81,9 @@ class AboutController extends RozierApp
         if ($lastRelease != null) {
             $lastVersion = substr($lastRelease->tag_name, 1);
             $this->assignation["newVersion"] = version_compare(Kernel::$cmsVersion, $lastVersion, "<");
-            $this->assignation["downloadUrl"] = $lastRelease->assets[0]->browser_download_url;
+            if (isset($lastRelease->assets[0])) {
+                $this->assignation["downloadUrl"] = $lastRelease->assets[0]->browser_download_url;
+            }
             $this->assignation["changelog"] = $lastRelease->body;
             $this->assignation["currentVersion"] = Kernel::$cmsVersion;
             $this->assignation["lastVersion"] = $lastVersion;
