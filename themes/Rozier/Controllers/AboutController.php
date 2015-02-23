@@ -46,9 +46,7 @@ class AboutController extends RozierApp
     protected function getGithubLatestRelease()
     {
         try {
-            $url = "https://api.github.com/repos/roadiz/roadiz/releases?access_token=".
-                    SettingsBag::get("github_access_token").
-                    "&token_type=bearer";
+            $url = "https://api.github.com/repos/roadiz/roadiz/releases";
 
             $client = new \GuzzleHttp\Client(['defaults' => ['debug' => false]]);
 
