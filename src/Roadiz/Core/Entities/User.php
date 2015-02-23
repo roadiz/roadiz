@@ -740,6 +740,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     {
         parent::prePersist();
 
+        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
         /*
          * If no plain password is present, we must generate one
          */
@@ -757,8 +758,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
     {
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
-
-        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
     }
 
     /**
