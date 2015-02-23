@@ -5953,6 +5953,41 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>themeRoot</source>
           <target>Nœud racine</target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="about.cms">
+          <source>about.cms</source>
+          <target>À propos de Roadiz</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="new.version.release">
+          <source>new.version.release</source>
+          <target>Une nouvelle version de Roadiz est dans les bacs!</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="lastest.version.installed">
+          <source>lastest.version.installed</source>
+          <target>Roadiz est à jour.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="current.version">
+          <source>current.version</source>
+          <target>Version actuelle</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="last.version">
+          <source>last.version</source>
+          <target>Dernière version</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="changelog">
+          <source>changelog</source>
+          <target>Note de mise à jour</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="download">
+          <source>download</source>
+          <target>Téléchargement de la dernière version.</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>
