@@ -175,6 +175,31 @@
         }
     }
 
+    #cms-version {
+        position: absolute;
+        right:0; bottom: 0; left:0;
+        text-align: center;
+        margin: 0 auto;
+        padding: 30px 0 20px;
+
+        a {
+            vertical-align: middle;
+            margin: 0px 3px 12px;
+        }
+        p {
+            font-size: 10px;
+            color: @grey-medium;
+            margin: 5px 0 0;
+            &.cms-version {
+                padding-top: 10px;
+                border-top: 1px solid @user-panel-border-color;
+            }
+        }
+        .uk-icon-rz-rezozero {
+            font-size: 16px;
+            color: @grey-medium;
+        }
+    }
     &.minified {
 
         p, li, h1, h2, h3, h4, h5, h6 {
@@ -209,30 +234,11 @@
                 margin: 2px 0 0;
             }
         }
-    }
 
-    #cms-version {
-        position: absolute;
-        right:0; bottom: 0; left:0;
-        text-align: center;
-        margin: 0 auto;
-        padding: 30px 0 20px;
-
-        a {
-            margin-bottom: 12px;
-        }
-        p {
-            font-size: 10px;
-            color: @grey-medium;
-            margin: 5px 0 0;
-            &.cms-version {
-                padding-top: 10px;
-                border-top: 1px solid @user-panel-border-color;
+        #cms-version {
+            a {
+                display: block;
             }
-        }
-        .uk-icon-rz-rezozero {
-            font-size: 16px;
-            color: @grey-medium;
         }
     }
 }
