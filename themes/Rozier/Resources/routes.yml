@@ -684,6 +684,10 @@ cssMainColor:
     path : /rz-admin/css/main-color.css
     defaults: { _controller: Themes\Rozier\RozierApp::cssAction }
 
+aboutPage:
+    path: /rz-admin/about
+    defaults: { _controller: Themes\Rozier\Controllers\AboutController::indexAction }
+
 # searchPage:
 #     path:     /rz-admin/search/{q}
 #     defaults: { _controller: RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler::searchAction }

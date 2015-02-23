@@ -32,6 +32,12 @@ use RZ\Roadiz\Core\Kernel;
 
 require 'bootstrap.php';
 
+if (version_compare(phpversion(), '5.4.3', '<')) {
+    echo 'Your php version is ' . phpversion() . ".";
+    echo 'You need a least the version 5.4.3';
+    exit(1);
+}
+
 if (php_sapi_name() == 'cli') {
     echo 'Use "bin/roadiz" as an executable instead of calling index.php' . PHP_EOL;
 } else {
