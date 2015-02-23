@@ -137,7 +137,7 @@ class SolrCommand extends Command
     private function reindexNodeSources(\Solarium\Client $solr, OutputInterface $output)
     {
         $buffer = $solr->getPlugin('bufferedadd');
-        $buffer->setBufferSize(30); // this is quite low, in most cases you can use a much higher value
+        $buffer->setBufferSize(100);
 
         $update = $solr->createUpdate();
 
