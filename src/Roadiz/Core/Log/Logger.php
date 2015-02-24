@@ -69,13 +69,15 @@ class Logger implements LoggerInterface
     /**
      * @return RZ\Roadiz\Core\Entities\User
      */
-    public function getUser() {
+    public function getUser()
+    {
         return $this->user;
     }
     /**
      * @param RZ\Roadiz\Core\Entities\User $user
      */
-    public function setUser(User $user) {
+    public function setUser(User $user)
+    {
         $this->user = $user;
 
         return $this;
