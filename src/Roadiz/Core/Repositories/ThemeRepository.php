@@ -75,7 +75,7 @@ class ThemeRepository extends EntityRepository
             SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
             WHERE t.available = true
             AND t.backendTheme = false
-            ORDER BY t.hostname DESC');
+            ORDER BY t.hostname DESC, t.staticTheme DESC');
 
         $query->useResultCache(true, 3600, 'RZTheme_frontends');
 

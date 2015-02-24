@@ -1,0 +1,19 @@
+---
+name: "Default theme"
+author: "Ambroise Maupate"
+copyright: "Ambroise Maupate and Julien Blanchet"
+themeDir: "DefaultTheme"
+supportedLocale:
+    - "en"
+    - "fr"
+versionRequire: "0.4.1"
+importFiles:
+    roles: []
+    groups: []
+    settings: []
+    nodetypes:
+        - "Resources/import/nodetype/Page.rzt"
+        - "Resources/import/nodetype/Neutral.rzt"
+    tags: []
+    nodes:
+        - "Resources/import/node/node-home.rzn"

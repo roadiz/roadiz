@@ -38,6 +38,15 @@ use Symfony\Component\Yaml\Parser;
  */
 class YamlConfiguration extends Configuration
 {
+
+    public function __construct($path = null)
+    {
+        if ($path === null) {
+            $path = ROADIZ_ROOT.'/conf/config.yml';
+        }
+        $this->path = $path;
+    }
+
     /**
      * Load default configuration file
      *
@@ -46,7 +55,7 @@ class YamlConfiguration extends Configuration
     public function load()
     {
         // Try to load existant configuration
-        return $this->loadFromFile(ROADIZ_ROOT . '/conf/config.yml');
+        return $this->loadFromFile($this->path);
     }
 
     /**
@@ -77,17 +86,15 @@ class YamlConfiguration extends Configuration
      */
     public function writeConfiguration()
     {
-        $writePath = ROADIZ_ROOT . '/conf/config.yml';
-
-        if (file_exists($writePath)) {
-            unlink($writePath);
+        if (file_exists($this->path)) {
+            unlink($this->path);
         }
 
         try {
             $dumper = new Dumper();
             $yaml = $dumper->dump($this->getConfiguration(), 2);
 
-            file_put_contents($writePath, $yaml);
+            file_put_contents($this->path, $yaml);
             return true;
         } catch (ParseException $e) {
             return false;

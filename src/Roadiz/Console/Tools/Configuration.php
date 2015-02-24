@@ -38,6 +38,15 @@ use Doctrine\ORM\Tools\Setup;
 class Configuration
 {
     protected $configuration;
+    protected $path;
+
+    public function __construct($path = null)
+    {
+        if ($path === null) {
+            $path = ROADIZ_ROOT . '/conf/config.json';
+        }
+        $this->path = $path;
+    }
 
     /**
      * Load default configuration file
@@ -47,7 +56,7 @@ class Configuration
     public function load()
     {
         // Try to load existant configuration
-        return $this->loadFromFile(ROADIZ_ROOT . '/conf/config.json');
+        return $this->loadFromFile($this->path);
     }
 
     /**
@@ -183,14 +192,12 @@ class Configuration
      */
     public function writeConfiguration()
     {
-        $writePath = ROADIZ_ROOT . '/conf/config.json';
-
-        if (file_exists($writePath)) {
-            unlink($writePath);
+        if (file_exists($this->path)) {
+            unlink($this->path);
         }
 
         file_put_contents(
-            $writePath,
+            $this->path,
             json_encode(
                 $this->getConfiguration(),
                 JSON_PRETTY_PRINT|JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE

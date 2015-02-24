@@ -67,7 +67,7 @@ class InstallApp extends AppController
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => false,
-                'baseUrl' => $this->kernel->getResolvedBaseUrl(), //$this->kernel->getRequest()->getBaseUrl(),
+                'baseUrl' => $this->kernel->getResolvedBaseUrl(),
                 'filesUrl' => $this->kernel
                                    ->getRequest()
                                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
@@ -172,28 +172,6 @@ class InstallApp extends AppController
     }
 
     /**
-     * Import theme screen.
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $id
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function importThemeAction(Request $request, $id)
-    {
-
-        $result = $this->getService('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
-
-        $array = explode('\\', $result->getClassName());
-        $data = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/" . $array[2] . "/config.json"), true);
-
-        $this->assignation = array_merge($this->assignation, $data["importFiles"]);
-        $this->assignation["themeId"] = $id;
-
-        return $this->render('steps/importTheme.html.twig', $this->assignation);
-    }
-
-    /**
      * User creation screen.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
@@ -256,146 +234,6 @@ class InstallApp extends AppController
         $this->assignation['name'] = $user->getUsername();
         $this->assignation['email'] = $user->getEmail();
         return $this->render('steps/userSummary.html.twig', $this->assignation);
-    }
-
-    public function themeInstallAction(Request $request)
-    {
-        $array = explode('\\', $request->get("classname"));
-        $data = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/" . $array[2] . "/config.json"), true);
-        $fix = new Fixtures();
-        $data["className"] = $request->get("classname");
-        $fix->installTheme($data);
-        $theme = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Theme")
-                      ->findOneByClassName($request->get("classname"));
-
-        $installedLanguage = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Translation")
-                                  ->findAll();
-
-        foreach ($installedLanguage as $key => $locale) {
-            $installedLanguage[$key] = $locale->getLocale();
-        }
-
-        $exist = false;
-        foreach ($data["supportedLocale"] as $locale) {
-            if (in_array($locale, $installedLanguage)) {
-                $exist = true;
-            }
-        }
-
-        if ($exist === false) {
-            $newTranslation = new Translation();
-            $newTranslation->setLocale($data["supportedLocale"][0]);
-            $newTranslation->setName(Translation::$availableLocales[$data["supportedLocale"][0]]);
-            $this->getService('em')->persist($newTranslation);
-            $this->getService('em')->flush();
-        }
-
-        $response = new RedirectResponse(
-            $this->getService('urlGenerator')->generate(
-                'installImportThemePage',
-                ["id" => $theme->getId()]
-            )
-        );
-        $response->prepare($request);
-
-        return $response->send();
-    }
-
-    /**
-     * Theme summary screen
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function themeSummaryAction(Request $request)
-    {
-        $array = explode('\\', $request->get("classname"));
-        $data = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/" . $array[2] . "/config.json"), true);
-
-        $this->assignation["theme"] = [
-            "name" => $data["name"],
-            "version" => $data["versionRequire"],
-            "supportedLocale" => $data["supportedLocale"],
-            "imports" => $data["importFiles"],
-        ];
-
-        $this->assignation["cms"] = ["version" => Kernel::$cmsVersion];
-        $this->assignation["status"] = [];
-
-        $this->assignation["status"]["version"] = (version_compare($data["versionRequire"], Kernel::$cmsVersion) <= 0) ? true : false;
-
-        $this->assignation["cms"]["locale"] = $request->getLocale();
-        $this->assignation["status"]["locale"] = in_array($request->getLocale(), $data["supportedLocale"]);
-
-        $this->assignation["status"]["import"] = [];
-
-        foreach ($data["importFiles"] as $name => $filenames) {
-            foreach ($filenames as $filename) {
-                $this->assignation["status"]["import"][$filename] = file_exists(ROADIZ_ROOT . "/themes/" . $array[2] . "/" . $filename);
-            }
-        }
-
-        $this->assignation['classname'] = $request->get("classname");
-
-        return $this->render('steps/themeSummary.html.twig', $this->assignation);
-    }
-
-    /**
-     * Theme install screen.
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function themesAction(Request $request)
-    {
-        $infosForm = $this->buildInformationsForm($request);
-
-        if ($infosForm !== null) {
-            $infosForm->handleRequest();
-
-            if ($infosForm->isValid()) {
-                /*
-                 * Save informations
-                 */
-                try {
-                    $fixtures = new Fixtures();
-                    $fixtures->saveInformations($infosForm->getData());
-
-                    if (!empty($infosForm->getData()["install_theme"])) {
-                        /*
-                         * Force redirect to avoid resending form when refreshing page
-                         */
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate(
-                                'installThemeSummaryPage'
-                            ) . "?classname=" . urlencode($infosForm->getData()['className'])
-                        );
-                        $response->prepare($request);
-
-                        return $response->send();
-                    } else {
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate(
-                                'installUserPage'
-                            )
-                        );
-                        $response->prepare($request);
-
-                        return $response->send();
-                    }
-
-                } catch (\Exception $e) {
-                    $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
-                }
-
-            }
-            $this->assignation['infosForm'] = $infosForm->createView();
-        }
-
-        return $this->render('steps/themes.html.twig', $this->assignation);
     }
 
     /**
