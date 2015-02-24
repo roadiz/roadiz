@@ -43,7 +43,7 @@ use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 
 /**
- * Command line utils for installing Roadiz from terminal.
+ * Command line utils for installing RZ-CMS v3 from terminal.
  */
 class InstallCommand extends Command
 {
@@ -97,12 +97,7 @@ class InstallCommand extends Command
              * Import default data
              */
             $installRoot = ROADIZ_ROOT . "/themes/Install";
-            $yaml = new YamlConfiguration($installRoot . "/config.yml");
-
-            $yaml->load();
-
-            $data = $yaml->getConfiguration();
-
+            $data = json_decode(file_get_contents($installRoot . "/config.json"), true);
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
@@ -163,8 +158,11 @@ class InstallCommand extends Command
                     // install fixtures
                     $array = explode('\\', $input->getOption('with-theme'));
                     $themeRoot = ROADIZ_ROOT . "/themes/". $array[count($array) - 2];
-                    $data = json_decode(file_get_contents($themeRoot . "/config.json"), true);
+                    $yaml = new YamlConfiguration($themeRoot . "/config.yml");
 
+                    $yaml->load();
+
+                    $data = $yaml->getConfiguration();
                     if (false !== $data && isset($data["importFiles"])) {
                         if (isset($data["importFiles"]['roles'])) {
                             foreach ($data["importFiles"]['roles'] as $filename) {
