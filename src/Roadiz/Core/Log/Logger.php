@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Log;
 
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Log;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -59,6 +60,23 @@ class Logger implements LoggerInterface
     public function setSecurityContext(SecurityContextInterface $securityContext)
     {
         $this->securityContext = $securityContext;
+
+        return $this;
+    }
+
+    private $user = null;
+
+    /**
+     * @return RZ\Roadiz\Core\Entities\User
+     */
+    public function getUser() {
+        return $this->user;
+    }
+    /**
+     * @param RZ\Roadiz\Core\Entities\User $user
+     */
+    public function setUser(User $user) {
+        $this->user = $user;
 
         return $this;
     }
@@ -175,11 +193,20 @@ class Logger implements LoggerInterface
         if (Kernel::getService('em')->isOpen()) {
             $log = new Log($level, $message, $context);
 
+            /*
+             * Use available securityContext to provide a valid user
+             */
             if (null !== $this->getSecurityContext() &&
                 null !== $this->getSecurityContext()->getToken() &&
                 is_object($this->getSecurityContext()->getToken()->getUser()) &&
                 null !== $this->getSecurityContext()->getToken()->getUser()->getId()) {
                 $log->setUser($this->getSecurityContext()->getToken()->getUser());
+            }
+            /*
+             * Use manually set user
+             */
+            if (null !== $this->getUser()) {
+                $log->setUser($this->getUser());
             }
 
             /*

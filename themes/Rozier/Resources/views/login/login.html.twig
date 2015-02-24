@@ -23,6 +23,7 @@
        	{% form_theme form 'forms.html.twig' %}
         <form id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" action="{{ path('loginCheckPage') }}" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
+            {{ form_rest(form) }}
     	    <fieldset>
     	    	<button class="uk-button" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}login{% endtrans %}</button>
        		</fieldset>

@@ -85,6 +85,8 @@ class UsersController extends RozierApp
      */
     public function editAction(Request $request, $userId)
     {
+        $this->validateAccessForRole('ROLE_BACKEND_USER');
+
         if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
             || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
             throw new AccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");

@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\UserProvider;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Log\Logger;
@@ -66,10 +67,9 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['csrfProvider'] = function ($c) {
-            $csrfSecret = $c['config']["security"]['secret'];
             return new SessionCsrfProvider(
                 $c['session'],
-                $csrfSecret
+                $c['config']["security"]['secret']
             );
         };
 
@@ -128,7 +128,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['roleHierarchy'] = function ($c) {
             return new RoleHierarchy([
-                'ROLE_SUPERADMIN' => $c['allBasicRoles'],
+                Role::ROLE_SUPERADMIN => $c['allBasicRoles'],
             ]);
         };
 
@@ -150,7 +150,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 $c['accessDecisionManager'],
                 $c['logger'],
                 '_su',
-                'ROLE_SUPERADMIN',
+                Role::ROLE_SUPERADMIN,
                 $c['dispatcher']
             );
         };
@@ -188,7 +188,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['userImplementations'] = function ($c) {
             return [
-                'RZ\\Roadiz\\Core\\Entities\\User' => $c['passwordEncoder']
+                'RZ\\Roadiz\\Core\\Entities\\User' => $c['passwordEncoder'],
             ];
         };
 
@@ -197,7 +197,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['firewall'] = function ($c) {
-
             // Register back-end security scheme
             $beClass = $c['backendClass'];
             $beClass::setupDependencyInjection($c);
@@ -208,7 +207,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 $feClass::setupDependencyInjection($c);
             }
             $c['stopwatch']->stop('initThemes');
-
             $c['stopwatch']->start('firewall');
             $firewall = new Firewall($c['firewallMap'], $c['dispatcher']);
             $c['stopwatch']->stop('firewall');

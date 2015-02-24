@@ -45,6 +45,8 @@ class DashboardController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_BACKEND_USER');
+
         $this->assignation['latestSources'] = $this->getService('em')
              ->getRepository("RZ\Roadiz\Core\Entities\NodesSources")
              ->findByLatestUpdated(4);

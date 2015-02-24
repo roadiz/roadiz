@@ -24,31 +24,40 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AuthenticationSuccessHandler.php
+ * @file AuthenticationFailureHandler.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Authentification;
 
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 /**
  * {@inheritdoc}
  */
-class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
+class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
     /**
      * {@inheritdoc}
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-            if (null !== $user = $token->getUser()) {
-            $user->setLastLogin(new \DateTime('now'));
-            Kernel::getInstance()->getService('em')->flush();
+        if ($exception instanceof BadCredentialsException) {
+            if (null !== $this->logger) {
+                $username = $request->request->get('_username');
+                $user = Kernel::getInstance()->getService('em')
+                                             ->getRepository('RZ\Roadiz\Core\Entities\User')
+                                             ->findOneByUsername($username);
+                if (null !== $user) {
+                    $this->logger->setUser($user);
+                    $this->logger->error($exception->getMessage());
+                }
+            }
         }
 
-        return parent::onAuthenticationSuccess($request, $token);
+        return parent::onAuthenticationFailure($request, $exception);
     }
 }

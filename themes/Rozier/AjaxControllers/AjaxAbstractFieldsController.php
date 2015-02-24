@@ -50,6 +50,17 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
      */
     protected function handleFieldActions(Request $request, AbstractField $field = null)
     {
+        /*
+         * Validate
+         */
+        if (true !== $notValid = $this->validateRequest($request)) {
+            return new Response(
+                json_encode($notValid),
+                Response::HTTP_OK,
+                ['content-type' => 'application/javascript']
+            );
+        }
+
         if ($field !== null) {
             $responseArray = null;
 

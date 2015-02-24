@@ -66,6 +66,8 @@ class AboutController extends RozierApp
 
     public function indexAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_SUPERADMIN');
+
         $releases = $this->getGithubLatestRelease();
         $lastRelease = null;
         foreach ($releases as $release) {
