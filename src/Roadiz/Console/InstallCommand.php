@@ -37,6 +37,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
@@ -97,7 +98,13 @@ class InstallCommand extends Command
              * Import default data
              */
             $installRoot = ROADIZ_ROOT . "/themes/Install";
-            $data = json_decode(file_get_contents($installRoot . "/config.json"), true);
+            $yaml = new YamlConfiguration($installRoot . "/config.yml");
+
+            $yaml->load();
+
+            $data = $yaml->getConfiguration();
+
+            use RZ\Roadiz\Console\Tools\YamlConfiguration;
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
