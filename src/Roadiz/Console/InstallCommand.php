@@ -158,8 +158,11 @@ class InstallCommand extends Command
                     // install fixtures
                     $array = explode('\\', $input->getOption('with-theme'));
                     $themeRoot = ROADIZ_ROOT . "/themes/". $array[count($array) - 2];
-                    $data = json_decode(file_get_contents($themeRoot . "/config.json"), true);
+                    $yaml = new YamlConfiguration($themeRoot . "/config.yml");
 
+                    $yaml->load();
+
+                    $data = $yaml->getConfiguration();
                     if (false !== $data && isset($data["importFiles"])) {
                         if (isset($data["importFiles"]['roles'])) {
                             foreach ($data["importFiles"]['roles'] as $filename) {
