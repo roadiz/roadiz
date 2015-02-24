@@ -37,14 +37,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
 
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 
 /**
- * Command line utils for installing RZ-CMS v3 from terminal.
+ * Command line utils for installing Roadiz from terminal.
  */
 class InstallCommand extends Command
 {
@@ -104,7 +103,6 @@ class InstallCommand extends Command
 
             $data = $yaml->getConfiguration();
 
-            use RZ\Roadiz\Console\Tools\YamlConfiguration;
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
