@@ -37,7 +37,6 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-
 /**
  * ThemeController
  */
