@@ -5897,7 +5897,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       </trans-unit>
       <trans-unit xml:space="preserve" id="your.new.password.has.been.saved">
           <source>your.new.password.has.been.saved</source>
-          <target>Votre noveau mot de passe a bien été enregistré.</target>
+          <target>Votre nouveau mot de passe a bien été enregistré.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="go_back_to.login.page.to.connect">
           <source>go_back_to.login.page.to.connect</source>
