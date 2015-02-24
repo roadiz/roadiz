@@ -14,6 +14,7 @@
 	{% endif %}
 
 	<div class="nodetree-element-inner uk-nestable-item
+		{% if node.isHome and node.isHidingChildren %}home-stack {% endif %}
 		{% if node.isHome %}home-node {% endif %}
 		{% if node.isHidingChildren %}stack-node {% endif %}
 		{% if not node.isVisible %}hidden-node {% endif %}
@@ -31,17 +32,18 @@
 				{% endif %}
 			{% endif %}
 
-			{% if node.isHidingChildren %}
+			{% if node.isHidingChildren and not node.isHome %}
 				<i class="uk-icon-folder"></i>
 				<span class="icon-stack-folder"></span>
 				<span class="icon-stack-folder icon-stack-folder-final"></span>
 			{% endif %}
+			{% if node.isHome and not node.isHidingChildren %}<i class="uk-icon-rz-home"></i> {% endif %}
+			{% if node.isHome and node.isHidingChildren %}<i class="uk-icon-rz-building"></i> {% endif %}
 		</div>
 
 		{#
 		 # Node statuses
 		 #}
-		{% if node.isHome %}<i class="uk-icon-rz-home"></i> {% endif %}
 		{# {% if not node.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %} #}
 		{% if node.isLocked %}<i class="uk-icon-locked-on"></i> {% endif %}
 		{# {% if not node.isPublished %}<i class="uk-icon-unpublished"></i> {% endif %} #}
