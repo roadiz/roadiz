@@ -84,7 +84,6 @@ class NodeRepository extends EntityRepository
      * @param  array     $tags
      * @return array
      */
-
     public static function getNodeIdsByTagExcl($tags)
     {
         $qb = Kernel::getInstance()->getService('em')->createQueryBuilder();

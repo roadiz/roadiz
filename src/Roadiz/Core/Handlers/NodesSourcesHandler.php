@@ -331,6 +331,8 @@ class NodesSourcesHandler
     /**
      * Get first node-source among current node-source children.
      *
+     * Get non-newsletter nodes-sources by default.
+     *
      * @param  array|null           $criteria
      * @param  array|null           $order
      * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
@@ -346,6 +348,7 @@ class NodesSourcesHandler
             'node.parent' => $this->nodeSource->getNode(),
             'node.status' => ['<=', Node::PUBLISHED],
             'translation' => $this->nodeSource->getTranslation(),
+            'node.nodeType.newsletterType' => false
         ];
 
         if (null !== $order) {
@@ -375,6 +378,8 @@ class NodesSourcesHandler
     /**
      * Get last node-source among current node-source children.
      *
+     * Get non-newsletter nodes-sources by default.
+     *
      * @param  array|null           $criteria
      * @param  array|null           $order
      * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
@@ -390,6 +395,7 @@ class NodesSourcesHandler
             'node.parent' => $this->nodeSource->getNode(),
             'node.status' => ['<=', Node::PUBLISHED],
             'translation' => $this->nodeSource->getTranslation(),
+            'node.nodeType.newsletterType' => false
         ];
 
         if (null !== $order) {
@@ -431,11 +437,18 @@ class NodesSourcesHandler
         array $order = null,
         SecurityContext $securityContext = null
     ) {
-        return $this->getParent()->getHandler()->getFirstChild($criteria, $order, $securityContext);
+        if (null !== $this->getParent()) {
+            return $this->getParent()->getHandler()->getFirstChild($criteria, $order, $securityContext);
+        } else {
+            $criteria['node.parent'] = null;
+            return $this->getFirstChild($criteria, $order, $securityContext);
+        }
     }
 
     /**
      * Get last node-source in the same parent as current node-source.
+     *
+     * Get non-newsletter nodes-sources by default.
      *
      * @param  array|null           $criteria
      * @param  array|null           $order
@@ -448,11 +461,18 @@ class NodesSourcesHandler
         array $order = null,
         SecurityContext $securityContext = null
     ) {
-        return $this->getParent()->getHandler()->getLastChild($criteria, $order, $securityContext);
+        if (null !== $this->getParent()) {
+            return $this->getParent()->getHandler()->getLastChild($criteria, $order, $securityContext);
+        } else {
+            $criteria['node.parent'] = null;
+            return $this->getFirstChild($criteria, $order, $securityContext);
+        }
     }
 
     /**
      * Get previous node-source from hierarchy.
+     *
+     * Get non-newsletter nodes-sources by default.
      *
      * @param  array|null           $criteria
      * @param  array|null           $order
@@ -469,36 +489,35 @@ class NodesSourcesHandler
             return null;
         }
 
-        if (null === $criteria) {
-            $criteria = [];
+        $defaultCrit = [
+            'node.nodeType.newsletterType' => false,
+            /*
+             * Use < operator to get first next nodeSource
+             * even if it’s not the next position index
+             */
+            'node.position' => [
+                '<',
+                $this->nodeSource
+                     ->getNode()
+                     ->getPosition(),
+            ],
+            'node.parent' => $this->nodeSource->getNode()->getParent(),
+            'translation' => $this->nodeSource->getTranslation()
+        ];
+        if (null !== $criteria) {
+            $defaultCrit = array_merge($defaultCrit, $criteria);
         }
+
         if (null === $order) {
             $order = [];
         }
 
-        $criteria['node.parent'] = $this->nodeSource
-                                        ->getNode()
-                                        ->getParent();
-
-        /*
-         * Use < operator to get first previous nodeSource
-         * even if it’s not the previous position index
-         */
-        $criteria['node.position'] = [
-            '<',
-            $this->nodeSource
-                 ->getNode()
-                 ->getPosition(),
-        ];
-
         $order['node.position'] = 'DESC';
-
-        $criteria['translation'] = $this->nodeSource->getTranslation();
 
         return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(
-                $criteria,
+                $defaultCrit,
                 $order,
                 $securityContext
             );
@@ -506,6 +525,8 @@ class NodesSourcesHandler
 
     /**
      * Get next node-source from hierarchy.
+     *
+     * Get non-newsletter nodes-sources by default.
      *
      * @param  array|null           $criteria
      * @param  array|null           $order
@@ -518,37 +539,35 @@ class NodesSourcesHandler
         array $order = null,
         SecurityContext $securityContext = null
     ) {
-        if (null === $criteria) {
-            $criteria = [];
+        $defaultCrit = [
+            'node.nodeType.newsletterType' => false,
+            /*
+             * Use > operator to get first next nodeSource
+             * even if it’s not the next position index
+             */
+            'node.position' => [
+                '>',
+                $this->nodeSource
+                     ->getNode()
+                     ->getPosition(),
+            ],
+            'node.parent' => $this->nodeSource->getNode()->getParent(),
+            'translation' => $this->nodeSource->getTranslation()
+        ];
+        if (null !== $criteria) {
+            $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
         if (null === $order) {
             $order = [];
         }
 
-        $criteria['node.parent'] = $this->nodeSource
-                                        ->getNode()
-                                        ->getParent();
-
-        /*
-         * Use > operator to get first next nodeSource
-         * even if it’s not the next position index
-         */
-        $criteria['node.position'] = [
-            '>',
-            $this->nodeSource
-                 ->getNode()
-                 ->getPosition(),
-        ];
-
         $order['node.position'] = 'ASC';
-
-        $criteria['translation'] = $this->nodeSource->getTranslation();
 
         return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(
-                $criteria,
+                $defaultCrit,
                 $order,
                 $securityContext
             );

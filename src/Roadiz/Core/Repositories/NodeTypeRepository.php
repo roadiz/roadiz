@@ -37,12 +37,30 @@ class NodeTypeRepository extends EntityRepository
     /**
      * Get all node-types names from PARTIAL objects.
      *
-     * @return ArrayCollection
+     * @return array
      */
     public function findAllNames()
     {
         $query = $this->_em->createQuery('
             SELECT partial nt.{id,name} FROM RZ\Roadiz\Core\Entities\NodeType nt');
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get all newsletter node-types.
+     *
+     * @return array
+     */
+    public function findAllNewsletterType()
+    {
+        $query = $this->_em->createQuery('
+            SELECT nt FROM RZ\Roadiz\Core\Entities\NodeType nt
+            WHERE nt.newsletterType == true');
 
         try {
             return $query->getResult();

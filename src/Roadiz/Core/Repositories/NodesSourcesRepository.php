@@ -124,9 +124,15 @@ class NodesSourcesRepository extends EntityRepository
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
+     * @param boolean $joinedNode
+     * @param boolean $joinedNodeType
      */
-    protected function filterByCriteria(&$criteria, &$qb, &$joinedNode = false)
-    {
+    protected function filterByCriteria(
+        &$criteria,
+        &$qb,
+        &$joinedNode = false,
+        &$joinedNodeType = false
+    ) {
         /*
          * Reimplementing findBy features…
          */
@@ -143,6 +149,26 @@ class NodesSourcesRepository extends EntityRepository
 
             // Dots are forbidden in field definitions
             $baseKey = str_replace('.', '_', $key);
+
+            if (false !== strpos($key, 'node.nodeType.')) {
+                if (!$joinedNode) {
+                    $qb->innerJoin(
+                        'ns.node',
+                        'n'
+                    );
+                    $joinedNode = true;
+                }
+                if (!$joinedNodeType) {
+                    $qb->innerJoin(
+                        'n.nodeType',
+                        'nt'
+                    );
+                    $joinedNodeType = true;
+                }
+
+                $prefix = 'nt.';
+                $key = str_replace('node.nodeType.', '', $key);
+            }
 
             if (false !== strpos($key, 'node.')) {
                 if (!$joinedNode) {
@@ -229,6 +255,7 @@ class NodesSourcesRepository extends EntityRepository
     ) {
 
         $joinedNode = false;
+        $joinedNodeType = false;
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'ns')
            ->add('from', $this->getEntityName() . ' ns');
@@ -240,7 +267,7 @@ class NodesSourcesRepository extends EntityRepository
          */
         $this->filterByTag($criteria, $qb, $joinedNode);
 
-        $this->filterByCriteria($criteria, $qb, $joinedNode);
+        $this->filterByCriteria($criteria, $qb, $joinedNode, $joinedNodeType);
 
         // Add ordering
         if (null !== $orderBy) {
