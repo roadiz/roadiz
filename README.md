@@ -113,13 +113,13 @@ bin/phpunit -v --bootstrap=tests/bootstrap.php tests/
 bin/phpcs --report=full --report-file=./report.txt \
                 --extensions=php --warning-severity=0 \
                 --standard=PSR2 \
-                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/* \
+                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/*,*/bin/* \
                 -p ./
 # … and correct
 bin/phpcbf --report=full --report-file=./report.txt \
                 --extensions=php --warning-severity=0 \
                 --standard=PSR2 \
-                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/* \
+                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/*,*/bin/* \
                 -p ./
 ```
 

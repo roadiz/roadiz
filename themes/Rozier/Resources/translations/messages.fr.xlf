@@ -653,7 +653,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="57" approved="yes">
         <source>facebookName</source>
-        <target state="translated">Profil Facebook</target>
+        <target state="translated">Nom du profil Facebook</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">734</context>
@@ -5987,6 +5987,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="download">
           <source>download</source>
           <target>Téléchargement de la dernière version.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="not.valid.facebook.name">
+          <source>not.valid.facebook.name</source>
+          <target>Ce n’est pas un nom Facebook valide, copiez seulement la partie après https://www.facebook.com/</target>
       </trans-unit>
   </body>
   </file>

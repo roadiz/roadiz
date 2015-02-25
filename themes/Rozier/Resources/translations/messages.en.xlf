@@ -5990,7 +5990,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>download</source>
           <target>Download lastest Roadiz release.</target>
       </trans-unit>
-
+      <trans-unit xml:space="preserve" id="not.valid.facebook.name">
+          <source>not.valid.facebook.name</source>
+          <target>This is not a valid Facebook name, just copy the part after https://www.facebook.com/</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

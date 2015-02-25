@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\FacebookUsernameNotFoundException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
+use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -776,6 +777,13 @@ class UsersController extends RozierApp
                     'label' => $this->getTranslator()->trans('lastName'),
                     'required' => false,
                 ])
+                ->add('facebookName', 'text', [
+                    'label' => $this->getTranslator()->trans('facebookName'),
+                    'required' => false,
+                    'constraints' => [
+                        new ValidFacebookName(),
+                    ],
+                ])
                 ->add('company', 'text', [
                     'label' => $this->getTranslator()->trans('company'),
                     'required' => false,
@@ -788,10 +796,6 @@ class UsersController extends RozierApp
                     'label' => $this->getTranslator()->trans('birthday'),
                     'required' => false,
                     'years' => range(1920, date('Y') - 6),
-                ])
-                ->add('facebookName', 'text', [
-                    'label' => $this->getTranslator()->trans('facebookName'),
-                    'required' => false,
                 ]);
 
         return $builder;
