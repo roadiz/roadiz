@@ -3,7 +3,7 @@
     <file source-language="en" datatype="plaintext" original="file.ext" target-language="en">
         <body>
             <!-- welcome.user.email -->
-            <trans-unit id="welcome.user.email" approved="yes">
+            <trans-unit id="welcome.user.email.%site%" approved="yes">
                 <source>welcome.user.email.%site%</source>
                 <target state="translated">A user account have been created for you on %site%.</target>
             </trans-unit>
@@ -92,6 +92,35 @@
             <trans-unit xml:space="preserve" id="none">
                 <source>none</source>
                 <target>None</target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="reset.password.request">
+              <source>reset.password.request</source>
+              <target>Reset password request</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%">
+              <source>you.asked.for.a.password.reset.on.%site%</source>
+              <target>You asked for a password reset on “%site%”</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link">
+              <source>you.need.to.choose.a.new.password.using.following.link</source>
+              <target>You need to create a new password for your account by using the following link.</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials">
+              <source>as.a.reminder.here.are.your.credentials</source>
+              <target>As a reminder, here are your public credentials.</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
+              <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
+              <target>If you did’nt ask for this email, just ignore it and your password won’t be changed.</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
+                <source>you.need.to.fill.this.required.field</source>
+                <target>You need to fill this required field.</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="*.required.fields">
+                <source>*.required.fields</source>
+                <target>* Required fields</target>
             </trans-unit>
         </body>
     </file>

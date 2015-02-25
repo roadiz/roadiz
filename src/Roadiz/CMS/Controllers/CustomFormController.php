@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\CustomForm;
@@ -37,10 +38,11 @@ use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Translation\Translator;
 use \InlineStyle\InlineStyle;
 
 class CustomFormController extends AppController
@@ -73,93 +75,55 @@ class CustomFormController extends AppController
         return null;
     }
 
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int $customFormId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
     public function addAction(Request $request, $customFormId)
     {
         $customForm = $this->getService('em')
                            ->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
 
-        if (null !== $customForm) {
-            $closeDate = $customForm->getCloseDate();
-            $nowDate = new \DateTime();
+        if (null !== $customForm &&
+            $customForm->isFormStillOpen()) {
+            $mixed = static::prepareAndHandleCustomFormAssignation(
+                $request,
+                $customForm,
+                $this->getService('formFactory'),
+                $this->getService('em'),
+                $this->getService('twig.environment'),
+                $this->getService('mailer'),
+                $this->getService('translator'),
+                new RedirectResponse(
+                    $this->getService('urlGenerator')->generate(
+                        'customFormSentAction',
+                        ["customFormId" => $customFormId]
+                    )
+                ),
+                $this->getService('logger')
+            );
 
-            if ($closeDate >= $nowDate) {
-                $this->assignation['customForm'] = $customForm;
-                $this->assignation['fields'] = $customForm->getFields();
+            if ($mixed instanceof RedirectResponse) {
+                $mixed->prepare($request);
+                return $mixed->send();
+            } else {
+                $this->assignation = array_merge($this->assignation, $mixed);
 
-                /*
-                 * form
-                 */
-                $form = $this->buildForm($request, $customForm);
-                $form->handleRequest();
-                if ($form->isValid()) {
-                    try {
-                        $data = $form->getData();
-                        $data["ip"] = $request->getClientIp();
-
-                        /*
-                         * add custom form answer
-                         */
-                        $this->assignation["fields"] = static::addCustomFormAnswer($data, $customForm, $this->getService('em'));
-
-                        $msg = $this->getTranslator()->trans('customForm.%name%.send', ['%name%' => $customForm->getDisplayName()]);
-                        $request->getSession()->getFlashBag()->add('confirm', $msg);
-                        $this->getService('logger')->info($msg);
-
-                        $this->assignation['title'] = $this->getTranslator()->trans(
-                            'new.answer.form.%site%',
-                            ['%site%' => $customForm->getDisplayName()]
-                        );
-
-                        $this->assignation['mailContact'] = SettingsBag::get('email_sender');
-
-                        /*
-                         * Send answer notification
-                         */
-                        static::sendAnswer(
-                            $this->assignation,
-                            $customForm->getEmail(),
-                            $this->getService('twig.environment'),
-                            $this->getService('mailer')
-                        );
-
-                        /*
-                         * Redirect to update schema page
-                         */
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate(
-                                'customFormSentAction',
-                                ["customFormId" => $customFormId]
-                            )
-                        );
-
-                    } catch (EntityAlreadyExistsException $e) {
-                        $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                        $this->getService('logger')->warning($e->getMessage());
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate(
-                                'customFormSendAction',
-                                ["customFormId" => $customFormId]
-                            )
-                        );
-                    }
-                    $response->prepare($request);
-
-                    return $response->send();
-                }
-
-                $this->assignation['form'] = $form->createView();
-
-                return new Response(
-                    $this->getTwig()->render('forms/customForm.html.twig', $this->assignation),
-                    Response::HTTP_OK,
-                    ['content-type' => 'text/html']
-                );
+                return $this->render('forms/customForm.html.twig', $this->assignation);
             }
         }
 
         return $this->throw404();
     }
 
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int  $customFormId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
     public function sentAction(Request $request, $customFormId)
     {
         $customForm = $this->getService('em')
@@ -168,11 +132,7 @@ class CustomFormController extends AppController
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
 
-            return new Response(
-                $this->getTwig()->render('forms/customFormSent.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('forms/customFormSent.html.twig', $this->assignation);
         }
 
         return $this->throw404();
@@ -188,8 +148,12 @@ class CustomFormController extends AppController
      *
      * @return boolean
      */
-    public static function sendAnswer($assignation, $receiver, \Twig_Environment $twigEnv, \Swift_Mailer $mailer)
-    {
+    public static function sendAnswer(
+        $assignation,
+        $receiver,
+        \Twig_Environment $twigEnv,
+        \Swift_Mailer $mailer
+    ) {
         $emailBody = $twigEnv->render('forms/answerForm.html.twig', $assignation);
 
         /*
@@ -227,7 +191,7 @@ class CustomFormController extends AppController
      *
      * @return array $fieldsData
      */
-    public static function addCustomFormAnswer($data, CustomForm $customForm, EntityManager $em)
+    public static function addCustomFormAnswer(array $data, CustomForm $customForm, EntityManager $em)
     {
         $now = new \DateTime('NOW');
         $answer = new CustomFormAnswer();
@@ -237,7 +201,7 @@ class CustomFormController extends AppController
 
         $fieldsData = [
             ["name" => "ip.address", "value" => $data["ip"]],
-            ["name" => "submittedAt", "value" => $now]
+            ["name" => "submittedAt", "value" => $now],
         ];
 
         $em->persist($answer);
@@ -254,16 +218,14 @@ class CustomFormController extends AppController
                 $fieldsData[] = ["name" => $field->getLabel(), "value" => $strDate];
 
             } else if (is_array($data[$field->getName()])) {
-                $values = [];
+                $values = $data[$field->getName()];
 
-                foreach ($data[$field->getName()] as $value) {
-                    $choices = explode(',', $field->getDefaultValues());
-                    $values[] = $choices[$value];
-                }
+                $values = array_map('trim', $values);
+                $values = array_map('strip_tags', $values);
 
-                $val = implode(',', $values);
-                $fieldAttr->setValue(strip_tags($val));
-                $fieldsData[] = ["name" => $field->getLabel(), "value" => $val];
+                $displayValues = implode(', ', $values);
+                $fieldAttr->setValue($displayValues);
+                $fieldsData[] = ["name" => $field->getLabel(), "value" => $displayValues];
 
             } else {
                 $fieldAttr->setValue(strip_tags($data[$field->getName()]));
@@ -278,16 +240,139 @@ class CustomFormController extends AppController
     }
 
     /**
+     * @param Symfony\Component\HttpFoundation\Request $request
      * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param Symfony\Component\Form\FormFactoryInterface $formFactory
+     * @param boolean $forceExpanded
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function buildForm(Request $request, CustomForm $customForm)
-    {
+    public static function buildForm(
+        Request $request,
+        CustomForm $customForm,
+        FormFactoryInterface $formFactory,
+        $forceExpanded = false
+    ) {
         $defaults = $request->query->all();
-        $form = $this->getService('formFactory')
-                     ->create(new CustomFormsType($customForm), $defaults);
+        return $formFactory->create(new CustomFormsType($customForm, $forceExpanded), $defaults);
+    }
 
-        return $form;
+    /**
+     * Prepare and handle a CustomForm Form then send a confirm email.
+     *
+     * * This method will return an assignation **array** if form is not validated.
+     *     * customForm
+     *     * fields
+     *     * form
+     * * If form is validated, **RedirectResponse** will be returned.
+     *
+     * @param Symfony\Component\HttpFoundation\Request          $request
+     * @param RZ\Roadiz\Core\Entities\CustomForm                $customFormsEntity
+     * @param Symfony\Component\Form\FormFactoryInterface       $formFactory
+     * @param Doctrine\ORM\EntityManager                        $em
+     * @param \Twig_Environment                                 $twigEnv
+     * @param \Swift_Mailer                                     $mailer
+     * @param Symfony\Component\Translation\Translator          $translator
+     * @param Symfony\Component\HttpFoundation\RedirectResponse $redirection
+     * @param Psr\Log\LoggerInterface|null                      $logger
+     * @param boolean                                           $forceExpanded
+     * @param string|null                                       $emailSender
+     *
+     * @return array|Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public static function prepareAndHandleCustomFormAssignation(
+        Request $request,
+        CustomForm $customFormsEntity,
+        FormFactoryInterface $formFactory,
+        EntityManager $em,
+        \Twig_Environment $twigEnv,
+        \Swift_Mailer $mailer,
+        Translator $translator,
+        RedirectResponse $redirection,
+        LoggerInterface $logger = null,
+        $forceExpanded = false,
+        $emailSender = null
+    ) {
+        $assignation = [];
+        $assignation['customForm'] = $customFormsEntity;
+        $assignation['fields'] = $customFormsEntity->getFields();
+
+        $form = static::buildForm(
+            $request,
+            $customFormsEntity,
+            $formFactory,
+            $forceExpanded
+        );
+
+        $form->handleRequest();
+
+        if ($form->isValid()) {
+            try {
+                $data = $form->getData();
+                $data["ip"] = $request->getClientIp();
+
+                /*
+                 * add custom form answer
+                 */
+                $assignation["emailFields"] = static::addCustomFormAnswer(
+                    $data,
+                    $customFormsEntity,
+                    $em
+                );
+
+                $msg = $translator->trans(
+                    'customForm.%name%.send',
+                    ['%name%' => $customFormsEntity->getDisplayName()]
+                );
+
+                $request->getSession()->getFlashBag()->add('confirm', $msg);
+
+                if (null !== $logger) {
+                    $logger->info($msg);
+                }
+
+                $assignation['title'] = $translator->trans(
+                    'new.answer.form.%site%',
+                    ['%site%' => $customFormsEntity->getDisplayName()]
+                );
+
+                if (null !== $emailSender &&
+                    false !== filter_var($emailSender, FILTER_VALIDATE_EMAIL)) {
+                    $assignation['mailContact'] = $emailSender;
+                } else {
+                    $assignation['mailContact'] = SettingsBag::get('email_sender');
+                }
+
+                /*
+                 * Send answer notification
+                 */
+                static::sendAnswer(
+                    [
+                        'fields' => $assignation["emailFields"],
+                        'customForm' => $customFormsEntity,
+                        'title' => $translator->trans(
+                            'new.answer.form.%site%',
+                            ['%site%' => $customFormsEntity->getDisplayName()]
+                        ),
+                    ],
+                    $customFormsEntity->getEmail(),
+                    $twigEnv,
+                    $mailer
+                );
+
+                return $redirection;
+            } catch (EntityAlreadyExistsException $e) {
+                $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+                if (null !== $logger) {
+                    $logger->warning($e->getMessage());
+                }
+
+                return $redirection;
+            }
+        }
+
+        $assignation['form'] = $form->createView();
+
+        return $assignation;
     }
 }

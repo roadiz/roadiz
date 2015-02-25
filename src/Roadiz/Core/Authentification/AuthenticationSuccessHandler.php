@@ -29,11 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Authentification;
 
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\Request;
-
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * {@inheritdoc}

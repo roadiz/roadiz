@@ -83,26 +83,34 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
         $collection = new ArrayCollection();
         $groups = json_decode($jsonString, true);
         foreach ($groups as $group) {
-            $newGroup = new SettingGroup();
-            $newGroup->setName($group['name']);
-            $newGroup->setInMenu($group['inMenu']);
+            if (!empty($group['name']) &&
+                isset($group['inMenu'])) {
+                $newGroup = new SettingGroup();
+                $newGroup->setName($group['name']);
+                $newGroup->setInMenu($group['inMenu']);
 
-            foreach ($group['settings'] as $setting) {
-                $newSetting = new Setting();
-                $newSetting->setName($setting['name']);
-                $newSetting->setType($setting['type']);
-                if ($setting['type'] == NodeTypeField::DATETIME_T) {
-                    $dt = new \DateTime($setting['value']['date'], new \DateTimeZone($setting['value']['timezone']));
-                    $newSetting->setValue($dt);
-                } else {
-                    $newSetting->setValue($setting['value']);
+                if (!empty($group['settings'])) {
+                    foreach ($group['settings'] as $setting) {
+                        if (!empty($setting['name']) &&
+                            !empty($setting['type'])) {
+                            $newSetting = new Setting();
+                            $newSetting->setName($setting['name']);
+                            $newSetting->setType($setting['type']);
+                            if ($setting['type'] == NodeTypeField::DATETIME_T) {
+                                $dt = new \DateTime($setting['value']['date'], new \DateTimeZone($setting['value']['timezone']));
+                                $newSetting->setValue($dt);
+                            } else {
+                                $newSetting->setValue($setting['value']);
+                            }
+                            $newSetting->setVisible($setting['visible']);
+
+                            $newGroup->addSetting($newSetting);
+                            $newSetting->setSettingGroup($newGroup);
+                        }
+                    }
                 }
-                $newSetting->setVisible($setting['visible']);
-
-                $newGroup->addSetting($newSetting);
-                $newSetting->setSettingGroup($newGroup);
+                $collection[] = $newGroup;
             }
-            $collection[] = $newGroup;
         }
 
         return $collection;

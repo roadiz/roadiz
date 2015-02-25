@@ -46,11 +46,9 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     public function match($pathinfo)
     {
         Kernel::getService('stopwatch')->start('matchingRoute');
-
         if (isset($container['config']['install']) &&
             true === $container['config']['install']) {
             // No node controller matching in install mode
-
             return parent::match($pathinfo);
         }
 
@@ -115,7 +113,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                 }
 
                 return [
-                    '_controller' => $this->getThemeController().'::indexAction',
+                    '_controller' => $this->getThemeController()->getClassName().'::indexAction',
                     '_locale'     => $translation->getLocale(), //pass request locale to init translator
                     'node'        => $node,
                     'translation' => $translation
@@ -136,7 +134,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                      * Try with nodeName
                      */
                     $match = [
-                        '_controller' => $this->getThemeController().'::indexAction',
+                        '_controller' => $this->getThemeController()->getClassName().'::indexAction',
                         'node'        => $node,
                         'translation' => $translation
                     ];
@@ -158,7 +156,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     /**
      * Get Theme front controller class FQN.
      *
-     * @return string Full qualified Classname
+     * @return RZ\Roadiz\Core\Entities\Theme
      */
     public function getThemeController()
     {
@@ -181,7 +179,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
         }
 
         if (null !== $theme) {
-            return $theme->getClassName();
+            return $theme;
         } else {
             return null;
         }
@@ -190,12 +188,15 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     /**
      * Parse URL searching nodeName.
      *
+     * Cannot use securityContext here as firewall
+     * has not been hit yet.
+     *
      * @param array       &$tokens
      * @param Translation $translation
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
-    private function parseNode(&$tokens, Translation $translation)
+    private function parseNode(array &$tokens, Translation $translation)
     {
         if (!empty($tokens[0])) {
             /*
@@ -203,9 +204,26 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
              */
             if (in_array($tokens[0], Translation::getAvailableLocalesShortcuts()) &&
                 count($tokens) == 1) {
+                if ($this->getThemeController()->getHomeNode() !== null) {
+                    $node = $this->getThemeController()->getHomeNode();
+                    if ($translation !== null) {
+                        return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+                                                       ->findWithTranslation(
+                                                           $node->getId(),
+                                                           $translation
+                                                       );
+                    } else {
+                        return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+                                                       ->findWithDefaultTranslation(
+                                                           $node->getId()
+                                                       );
+                    }
+                }
                 return Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                        ->findHomeWithTranslation($translation);
+                        ->findHomeWithTranslation(
+                            $translation
+                        );
             } else {
                 $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
 
@@ -213,7 +231,10 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                     $identifier != '') {
                     return Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                        ->findByNodeNameWithTranslation($identifier, $translation);
+                        ->findByNodeNameWithTranslation(
+                            $identifier,
+                            $translation
+                        );
                 }
             }
         }
@@ -248,7 +269,9 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
                     if ($ua !== null) {
                         return Kernel::getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findOneWithUrlAlias($ua);
+                            ->findOneWithUrlAlias(
+                                $ua
+                            );
                     }
                 }
             }

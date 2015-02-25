@@ -31,12 +31,11 @@ namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
-
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -49,25 +48,25 @@ class SolrCommand extends Command
     protected function configure()
     {
         $this->setName('solr')
-            ->setDescription('Manage Solr search engine index')
-            ->addOption(
-                'reset',
-                null,
-                InputOption::VALUE_NONE,
-                'Reset Solr search engine index'
-            )
-            ->addOption(
-                'reindex',
-                null,
-                InputOption::VALUE_NONE,
-                'Reindex every NodesSources into Solr'
-            );
+             ->setDescription('Manage Solr search engine index')
+             ->addOption(
+                 'reset',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Reset Solr search engine index'
+             )
+             ->addOption(
+                 'reindex',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Reindex every NodesSources into Solr'
+             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->dialog = $this->getHelperSet()->get('dialog');
-        $text="";
+        $text = "";
 
         $solr = Kernel::getService('solr');
 
@@ -84,7 +83,7 @@ class SolrCommand extends Command
                         $update->addCommit();
                         $solr->update($update);
 
-                        $text = '<info>Solr index resetted…</info>'.PHP_EOL;
+                        $text = '<info>Solr index resetted…</info>' . PHP_EOL;
                     }
 
                 } elseif ($input->getOption('reindex')) {
@@ -100,32 +99,30 @@ class SolrCommand extends Command
 
                         $duration = $stopwatch->getEvent('global')->getDuration();
 
-                        $text = PHP_EOL.sprintf('<info>Node database has been re-indexed in %.2d ms.</info>', $duration).PHP_EOL;
+                        $text = PHP_EOL . sprintf('<info>Node database has been re-indexed in %.2d ms.</info>', $duration) . PHP_EOL;
                     }
                 } else {
-                    $text .= '<info>Solr search engine server is running…</info>'.PHP_EOL;
+                    $text .= '<info>Solr search engine server is running…</info>' . PHP_EOL;
                 }
             } else {
-                $text .= '<error>Solr search engine server does not respond…</error>'.PHP_EOL;
-                $text .= 'See your config.json file to correct your Solr connexion settings.'.PHP_EOL;
+                $text .= '<error>Solr search engine server does not respond…</error>' . PHP_EOL;
+                $text .= 'See your config.yml file to correct your Solr connexion settings.' . PHP_EOL;
             }
         } else {
-            $text .= '<error>No Solr search engine server has been configured…</error>'.PHP_EOL;
-            $text .= 'Personnalize your config.json file to enable Solr (sample):'.PHP_EOL;
+            $text .= '<error>No Solr search engine server has been configured…</error>' . PHP_EOL;
+            $text .= 'Personnalize your config.yml file to enable Solr (sample):' . PHP_EOL;
             $text .=
-            '"solr": {
-                "endpoint": {
-                    "localhost": {
-                        "host":"localhost",
-                        "port":"8983",
-                        "path":"/solr",
-                        "core":"mycore",
-                        "timeout":3,
-                        "username":"",
-                        "password":""
-                    }
-                }
-            }';
+            'solr:
+                endpoint:
+                    localhost:
+                        host:"localhost"
+                        port:"8983"
+                        path:"/solr"
+                        core:"mycore"
+                        timeout:3
+                        username:""
+                        password:""
+            ';
         }
 
         $output->writeln($text);
@@ -143,6 +140,14 @@ class SolrCommand extends Command
 
         // Empty first
         $update->addDeleteQuery('*:*');
+        $solr->update($update);
+        $update->addCommit();
+
+        /*
+         * Use buffered insertion
+         */
+        $buffer = $solr->getPlugin('bufferedadd');
+        $buffer->setBufferSize(100);
 
         // Then index
         $nSources = Kernel::getService('em')
@@ -157,17 +162,15 @@ class SolrCommand extends Command
             $solariumNS = new SolariumNodeSource($ns, $solr);
             $solariumNS->setDocument($update->createDocument());
             $solariumNS->index();
-            $update->addDocument($solariumNS->getDocument());
-
+            $buffer->addDocument($solariumNS->getDocument());
             $progress->advance();
         }
 
-        $update->addCommit();
+        $buffer->flush();
 
         // optimize the index
         $update->addOptimize(true, false, 5);
 
-        $solr->update($update);
         $progress->finish();
     }
 }

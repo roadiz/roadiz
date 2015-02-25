@@ -29,12 +29,14 @@
  */
 namespace RZ\Roadiz\Core\Authorization;
 
+use RZ\Roadiz\Core\Log\Logger;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 
 /**
  * This is used by the ExceptionListener to translate an AccessDeniedException
@@ -42,6 +44,19 @@ use RZ\Roadiz\Core\Kernel;
  */
 class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
+    protected $logger;
+    protected $urlGenerator;
+
+    /**
+     * @param UrlGenerator $urlGenerator
+     * @param Logger       $logger
+     */
+    public function __construct(UrlGenerator $urlGenerator, Logger $logger)
+    {
+        $this->logger = $logger;
+        $this->urlGenerator = $urlGenerator;
+    }
+
     /**
      * Handles an access denied failure redirecting to home page
      *
@@ -52,14 +67,25 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
      */
     public function handle(Request $request, AccessDeniedException $accessDeniedException)
     {
-        Kernel::getService('logger')->error('User tried to access: '.$request->getUri());
+        $this->logger->error('User tried to access: ' . $request->getUri());
 
-        $response = new RedirectResponse(
-            Kernel::getService('urlGenerator')->generate('homePage')
-        );
-        $response->setStatusCode(Response::HTTP_FORBIDDEN);
-        $response->prepare($request);
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(
+                [
+                    'message' => $accessDeniedException->getMessage(),
+                    'trace' => $accessDeniedException->getTraceAsString(),
+                    'exception' => get_class($accessDeniedException),
+                ],
+                Response::HTTP_SERVICE_UNAVAILABLE
+            );
 
-        return $response->send();
+        } else {
+            $url = $request->getBasePath() !== "" ? $request->getBasePath() : "/";
+            $response = new RedirectResponse($url);
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $response->prepare($request);
+
+            return $response->send();
+        }
     }
 }

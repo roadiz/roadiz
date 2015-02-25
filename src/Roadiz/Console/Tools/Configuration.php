@@ -29,27 +29,34 @@
  */
 namespace RZ\Roadiz\Console\Tools;
 
-use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 
 /**
-* Configuration class
-*/
+ * Configuration class
+ */
 class Configuration
 {
     protected $configuration;
+    protected $path;
+
+    public function __construct($path = null)
+    {
+        if ($path === null) {
+            $path = ROADIZ_ROOT . '/conf/config.json';
+        }
+        $this->path = $path;
+    }
 
     /**
-     * Configuration constructor
+     * Load default configuration file
+     *
+     * @return boolean
      */
-    public function __construct()
+    public function load()
     {
         // Try to load existant configuration
-        if (false === $this->loadFromFile(ROADIZ_ROOT . '/conf/config.json')) {
-            if (false === $this->loadFromFile(ROADIZ_ROOT . '/conf/config.default.json')) {
-                $this->setConfiguration($this->getDefaultConfiguration());
-            }
-        }
+        return $this->loadFromFile($this->path);
     }
 
     /**
@@ -82,17 +89,28 @@ class Configuration
             "install" => true,
             "devMode" => true,
             "doctrine" => [
-                "driver" =>   "pdo_mysql",
-                "host" =>     "localhost"
+                "driver" => "pdo_mysql",
+                "host" => "localhost",
+                "user" => "",
+                "password" => "",
+                "dbname" => "",
             ],
             "security" => [
-                "secret" => "change#this#secret#very#important"
+                "secret" => "change#this#secret#very#important",
+            ],
+            "mailer" => [
+                "type" => "",
+                "host" => "localhost",
+                "port" => 25,
+                "encryption" => false,
+                "username" => "",
+                "password" => "",
             ],
             "entities" => [
                 "src/Roadiz/Core/Entities",
                 "src/Roadiz/Core/AbstractEntities",
-                "sources/GeneratedNodeSources"
-            ]
+                "gen-src/GeneratedNodeSources",
+            ],
         ];
     }
 
@@ -174,17 +192,15 @@ class Configuration
      */
     public function writeConfiguration()
     {
-        $writePath = ROADIZ_ROOT . '/conf/config.json';
-
-        if (file_exists($writePath)) {
-            unlink($writePath);
+        if (file_exists($this->path)) {
+            unlink($this->path);
         }
 
         file_put_contents(
-            $writePath,
+            $this->path,
             json_encode(
                 $this->getConfiguration(),
-                JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE
+                JSON_PRETTY_PRINT|JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE
             )
         );
     }

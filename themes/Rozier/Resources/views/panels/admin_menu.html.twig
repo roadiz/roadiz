@@ -6,7 +6,7 @@
                class="uk-icon-button uk-icon-rz-earth"
                data-uk-tooltip="{pos:'right', animation:'true'}"
                target="_blank"
-               href="{{ path('homePage') }}"></a>
+               href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}"></a>
         </div>
         {% if (securityContext.Granted('ROLE_ACCESS_NODES')) %}
         <hr/>

@@ -2649,7 +2649,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="229" approved="yes">
         <source>user.edit</source>
-        <target state="translated">Edit user</target>
+        <target state="translated">Informations</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/c5/b4/7f47aae97677b34984c549a4f887fee075a59184824c766e5bffe8be2ffc.php</context>
           <context context-type="linenumber">31</context>
@@ -2657,7 +2657,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="230" approved="yes">
         <source>user.roles</source>
-        <target state="translated">User roles</target>
+        <target state="translated">Roles</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/c5/b4/7f47aae97677b34984c549a4f887fee075a59184824c766e5bffe8be2ffc.php</context>
           <context context-type="linenumber">44</context>
@@ -2669,7 +2669,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="231" approved="yes">
         <source>user.groups</source>
-        <target state="translated">User groups</target>
+        <target state="translated">Groups</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/c5/b4/7f47aae97677b34984c549a4f887fee075a59184824c766e5bffe8be2ffc.php</context>
           <context context-type="linenumber">57</context>
@@ -2677,7 +2677,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="232" approved="yes">
         <source>user.history</source>
-        <target state="translated">User history</target>
+        <target state="translated">History</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/c5/b4/7f47aae97677b34984c549a4f887fee075a59184824c766e5bffe8be2ffc.php</context>
           <context context-type="linenumber">70</context>
@@ -5762,6 +5762,238 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <target>Node can't be created, a node already exists with its name.</target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="maps_style">
+          <source>maps_style</source>
+          <target>Default Google Maps styles</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="user.status">
+          <source>user.status</source>
+          <target>Status</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.enabled">
+          <source>user.enabled</source>
+          <target>Enabled account</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.disabled">
+          <source>user.disabled</source>
+          <target>Disabled account</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.locked">
+          <source>user.locked</source>
+          <target>Locked account</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.expired">
+          <source>user.expired</source>
+          <target>Expired account</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.expiresAt">
+          <source>user.expiresAt</source>
+          <target>Account will expire at:</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.expired">
+          <source>user.force.expired</source>
+          <target>Force account expiration</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.credentialsExpiresAt">
+          <source>user.credentialsExpiresAt</source>
+          <target>Account credentials will expire at:</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.credentialsExpired">
+          <source>user.force.credentialsExpired</source>
+          <target>Force account credential expiration</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user.%name%.security">
+          <source>edit.user.%name%.security</source>
+          <target>“%name%” security</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.%name%.security.updated">
+          <source>user.%name%.security.updated</source>
+          <target>“%name%” security settings have been updated.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.account.has-expired">
+          <source>user.account.has-expired</source>
+          <target>User account has expired.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.crendentials.has-expired">
+          <source>user.crendentials.has-expired</source>
+          <target>User account credentials have expired.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.last-login">
+          <source>user.last-login</source>
+          <target>Last login date</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.password-requested-at">
+          <source>user.password-requested-at</source>
+          <target>Last password request date</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="never.requested">
+          <source>never.requested</source>
+          <target>Never</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="year">
+          <source>year</source>
+          <target>Year</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="month">
+          <source>month</source>
+          <target>Month</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="day">
+          <source>day</source>
+          <target>Day</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hour">
+          <source>hour</source>
+          <target>Hour</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="minute">
+          <source>minute</source>
+          <target>Min.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.security">
+          <source>user.security</source>
+          <target>Security</target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="your.account.email">
+          <source>your.account.email</source>
+          <target>Your account email</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%email%.email.does.not.exist.in.user.account.database">
+          <source>%email%.email.does.not.exist.in.user.account.database</source>
+          <target>“%email%” email does not exist in users database.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="to.get.new.password.enter.your.account.email">
+          <source>to.get.new.password.enter.your.account.email</source>
+          <target>In order to request a new password, just enter the email linked to your account.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="request.new.password">
+          <source>request.new.password</source>
+          <target>Request a new password</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.login">
+          <source>back_to.login</source>
+          <target>Back to login</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.personal.password.reset.link.has.been.sent.to.your.account.email">
+          <source>a.personal.password.reset.link.has.been.sent.to.your.account.email</source>
+          <target>A personal password reset link has been sent to you by email, do not wait too long this link will automatically expire.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.is.invalid">
+          <source>confirmation.token.is.invalid</source>
+          <target>Confirmation token is invalid.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.has.expired">
+          <source>confirmation.token.has.expired</source>
+          <target>Confirmation token has expired.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="choose.a.new.password">
+          <source>choose.a.new.password</source>
+          <target>Choose a new password</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="save.new.password">
+          <source>save.new.password</source>
+          <target>Save new password</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="your.new.password.has.been.saved">
+          <source>your.new.password.has.been.saved</source>
+          <target>Your new password has been saved.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="go_back_to.login.page.to.connect">
+          <source>go_back_to.login.page.to.connect</source>
+          <target>Go back to login page to connect.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.confirmation.email.has.already.be.sent">
+          <source>a.confirmation.email.has.already.be.sent</source>
+          <target>A confirmation email already has been sent to you, check your emails or your spam folder.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="email.invalid">
+          <source>email.invalid</source>
+          <target>Email is invalid or does not exist.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="resultCache">
+          <source>resultCache</source>
+          <target>Result cache</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hydratationCache">
+          <source>hydratationCache</source>
+          <target>Hydratation cache</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="queryCache">
+          <source>queryCache</source>
+          <target>Query cache</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="metadataCache">
+          <source>metadataCache</source>
+          <target>Metadata cache</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.cache.available">
+          <source>no.cache.available</source>
+          <target>No available cache found.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="home.node.limited.one">
+          <source>home.node.limited.one</source>
+          <target state="translated">You can only choose one home node</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="NodeNode">
+          <source>homeNode</source>
+          <target>Home node</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="theme.root.limited.one">
+          <source>theme.root.limited.one</source>
+          <target state="translated">You can only choose one root node</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="themeRoot">
+          <source>themeRoot</source>
+          <target>Root node</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="about.cms">
+          <source>about.cms</source>
+          <target>About Roadiz</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="new.version.release">
+          <source>new.version.release</source>
+          <target>A new Roadiz version is available!</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="lastest.version.installed">
+          <source>lastest.version.installed</source>
+          <target>Roadiz is up-to-date.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="current.version">
+          <source>current.version</source>
+          <target>Current version</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="last.version">
+          <source>last.version</source>
+          <target>Lastest version</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="changelog">
+          <source>changelog</source>
+          <target>Changelog</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="download">
+          <source>download</source>
+          <target>Download lastest Roadiz release.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="not.valid.facebook.name">
+          <source>not.valid.facebook.name</source>
+          <target>This is not a valid Facebook name, just copy the part after https://www.facebook.com/</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

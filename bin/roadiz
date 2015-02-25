@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 /*
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
@@ -30,6 +30,12 @@
  */
 
 use RZ\Roadiz\Core\Kernel;
+
+if (version_compare(phpversion(), '5.4.3', '<')) {
+    echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
+    echo 'You need a least PHP version 5.4.3.' . PHP_EOL;
+    exit(1);
+}
 
 require dirname(__FILE__).'/../bootstrap.php';
 

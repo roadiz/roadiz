@@ -30,8 +30,12 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
-use Symfony\Component\Routing\RouteCollection;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Routing\MixedUrlMatcher;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Security\Http\HttpUtils;
 
 /**
  * Register routing services for dependency injection container.
@@ -40,6 +44,22 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
 {
     public function register(Container $container)
     {
+        $container['resolver'] = function ($c) {
+            return new ControllerResolver();
+        };
+        $container['httpKernel'] = function ($c) {
+            return new HttpKernel($c['dispatcher'], $c['resolver']);
+        };
+        $container['urlMatcher'] = function ($c) {
+            return new MixedUrlMatcher($c['requestContext']);
+        };
+        $container['urlGenerator'] = function ($c) {
+            return new \GlobalUrlGenerator($c['requestContext']);
+        };
+        $container['httpUtils'] = function ($c) {
+            return new HttpUtils($c['urlGenerator'], $c['urlMatcher']);
+        };
+
         if (isset($container['config']['install']) &&
             true === $container['config']['install']) {
             /*
@@ -83,11 +103,7 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                 $beClass = $c['backendClass'];
                 $cmsCollection = $beClass::getRoutes();
                 if ($cmsCollection !== null) {
-                    $rCollection->addCollection(
-                        $cmsCollection,
-                        '/rz-admin',
-                        ['_scheme' => 'https']
-                    );
+                    $rCollection->addCollection($cmsCollection);
                 }
 
                 /*

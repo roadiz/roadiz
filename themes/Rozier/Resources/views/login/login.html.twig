@@ -5,7 +5,7 @@
     <div id="login-infos">
         <div id="login-logo">
             {% if themeServices.adminImage %}
-                {{ themeServices.adminImage.viewer.getDocumentByArray({width:70, crop:'1:1'})|raw }}
+                {{ themeServices.adminImage.viewer.getDocumentByArray({width:150})|raw }}
             {% else %}
                 <i class="uk-icon-rz-roadiz-icon"></i>
             {% endif %}
@@ -23,16 +23,17 @@
        	{% form_theme form 'forms.html.twig' %}
         <form id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" action="{{ path('loginCheckPage') }}" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
+            {{ form_rest(form) }}
     	    <fieldset>
     	    	<button class="uk-button" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}login{% endtrans %}</button>
        		</fieldset>
     	</form>
         <div id="login-link">
             <a id="frontend-home-link"
-               title="{% trans %}see.website{% endtrans %}" target="_blank" href="{{ path('homePage') }}"><span class="uk-icon-button uk-icon-rz-earth"></span>
+               title="{% trans %}see.website{% endtrans %}" target="_blank" href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}"><span class="uk-icon-button uk-icon-rz-earth"></span>
                <span class="text">{% trans %}view.site{% endtrans %}</span>
             </a>
-            <a href="#" class="login-link">{% trans %}forgot.password{% endtrans %}</a>
+            <a href="{{ path('loginRequestPage') }}" class="login-link">{% trans %}forgot.password{% endtrans %}</a>
         </div>
     </div>
 </section>

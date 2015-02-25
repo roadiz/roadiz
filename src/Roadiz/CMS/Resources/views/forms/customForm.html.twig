@@ -6,6 +6,7 @@
     <header class="content-header header-custom-form header-custom-form-add">
         <h1 class="content-title">{{ customForm.displayName }}</h1>
         <div class="content-desc">{{ customForm.description|markdown }}</div>
+        <p class="required-mention">{% trans %}*.required.fields{% endtrans %}</p>
     </header>
 
     <article class="content">
@@ -14,11 +15,12 @@
 
             {% for form_field in form %}
             <div class="data-uk-margin" {{ block('widget_container_attributes') }}>
-                <div class="uk-form-row form-col form-col-{{ form_field.vars.block_prefixes[1] }} form-col-{{ form_field.vars.name }}">
+                <div class="uk-form-row form-col form-col-{{ form_field.vars.block_prefixes[1] }} form-col-{{ form_field.vars.name }}{% if fields[loop.index0].required  %} required{% endif %}">
                     {{ form_label(form_field) }}
                     <div class="uk-form-description">
                         {{ fields[loop.index0].description|markdown }}
                     </div>
+                    {{ form_errors(form_field) }}
                     {{ form_widget(form_field) }}
                 </div>
             </div>

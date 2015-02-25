@@ -77,6 +77,7 @@
                         {% endif %}
                 </table>
 
+                {% if theme.haveFileImport %}
                 <h4 class="import-nodetypes-part">{% trans %}check.import.files{% endtrans %}</h4>
                 <table class="install-table import-nodetypes-part1-table uk-table">
                     <tr>
@@ -106,6 +107,7 @@
                         {% endfor %}
                     {% endfor %}
                 </table>
+                {% endif %}
 
             </div>
 

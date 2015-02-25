@@ -39,7 +39,7 @@ use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 
-use RZ\Roadiz\Console\Tools\Configuration;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 
 /**
 * Fixtures class
@@ -250,7 +250,10 @@ class Fixtures
          * Update timezone
          */
         if (!empty($data['timezone'])) {
-            $conf = new Configuration();
+            $conf = new YamlConfiguration();
+            if (false === $conf->load()) {
+                $conf->setConfiguration($conf->getDefaultConfiguration());
+            }
             $config = $conf->getConfiguration();
             $config['timezone'] = $data['timezone'];
 

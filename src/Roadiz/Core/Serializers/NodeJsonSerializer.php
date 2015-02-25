@@ -175,7 +175,9 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         $array = [];
 
         foreach ($datas as $data) {
-            $array[] = static::makeNodeRec($data);
+            if (!empty($data)) {
+                $array[] = static::makeNodeRec($data);
+            }
         }
 
         return $array;

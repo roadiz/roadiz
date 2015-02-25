@@ -1897,7 +1897,7 @@ NodeTree.prototype.$dropdown = null;
 NodeTree.prototype.init = function(){
     var _this = this;
 
-    _this.contentHeight = _this.$content.actual('height');
+    _this.contentHeight = _this.$content.actual('outerHeight');
 
     if(_this.contentHeight >= (Rozier.windowHeight - 400)) _this.dropdownFlip();
 
@@ -4009,14 +4009,33 @@ Lazyload.prototype.loadContent = function(state, location) {
         _this.applyContent(data);
         _this.canvasLoader.hide();
     })
-    .fail(function() {
+    .fail(function(data) {
         console.log("error");
-        UIkit.notify({
-            message : Rozier.messages.forbiddenPage,
-            status  : 'danger',
-            timeout : 3000,
-            pos     : 'top-center'
-        });
+        console.log(data);
+
+        if (typeof data.responseText !== "undefined") {
+            try {
+                var exception = JSON.parse(data.responseText);
+                UIkit.notify({
+                    message : exception.message,
+                    status  : 'danger',
+                    timeout : 3000,
+                    pos     : 'top-center'
+                });
+            } catch (e) {
+                // No valid JsonResponse, need to refresh page
+                window.location.href = location.href;
+            }
+        } else {
+            UIkit.notify({
+                message : Rozier.messages.forbiddenPage,
+                status  : 'danger',
+                timeout : 3000,
+                pos     : 'top-center'
+            });
+        }
+
+        _this.canvasLoader.hide();
     });
 };
 
@@ -5025,8 +5044,12 @@ Rozier.resize = function(){
 	_this.$nodeTreeHead = _this.$mainTrees.find('.nodetree-head');
 	_this.$treeScrollCont = _this.$mainTrees.find('.tree-scroll-cont');
 	_this.$treeScroll = _this.$mainTrees.find('.tree-scroll');
-	_this.nodesSourcesSearchHeight = _this.$nodesSourcesSearch.height();
-	_this.nodeTreeHeadHeight = _this.$nodeTreeHead.height();
+
+	/*
+	 * need actual to get tree height even when they are hidden.
+	 */
+	_this.nodesSourcesSearchHeight = _this.$nodesSourcesSearch.actual('outerHeight');
+	_this.nodeTreeHeadHeight = _this.$nodeTreeHead.actual('outerHeight');
 	_this.treeScrollHeight = _this.windowHeight - (_this.nodesSourcesSearchHeight + _this.nodeTreeHeadHeight);
 
 	if(isMobile.any() !== null) _this.treeScrollHeight = _this.windowHeight - (50 + 50 + _this.nodeTreeHeadHeight); // Menu + tree menu + tree head

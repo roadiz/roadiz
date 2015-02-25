@@ -46,14 +46,16 @@
                         'session' : session,
                         'securityContext' : securityContext,
                         'head' : head,
-                        'themeServices':themeServices
+                        'themeServices':themeServices,
+                        'request':request
                     } only %}
                 </section>
                 <section class="main-container-section" id="admin-menu">
                     {% include 'panels/admin_menu.html.twig' with {
                         'themeServices' : themeServices,
                         'securityContext' : securityContext,
-                        'backofficeEntries':backofficeEntries
+                        'backofficeEntries':backofficeEntries,
+                        'request':request
                     } only %}
                 </section>
                 {% if (securityContext.isGranted('ROLE_ACCESS_NODES') or securityContext.isGranted('ROLE_ACCESS_DOCUMENTS') or securityContext.isGranted('ROLE_ACCESS_TAGS')) %}

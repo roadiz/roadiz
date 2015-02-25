@@ -31,19 +31,30 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use Symfony\Component\Form\AbstractType;
+use RZ\Roadiz\Core\Entities\CustomForm;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 
 class CustomFormsType extends AbstractType
 {
-    private $customForm;
+    protected $customForm;
+    protected $forceExpanded;
 
-    public function __construct($customForm)
+    /**
+     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param boolean $forceExpanded
+     */
+    public function __construct(CustomForm $customForm, $forceExpanded = false)
     {
         $this->customForm = $customForm;
+        $this->forceExpanded = (boolean) $forceExpanded;
     }
 
+    /**
+     * @param  FormBuilderInterface $builder
+     * @param  array                $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $fields = $this->customForm->getFields();
@@ -54,17 +65,20 @@ class CustomFormsType extends AbstractType
             if ($field->isRequired()) {
                 $option['required'] = true;
                 $option['constraints'] = [
-                    new NotBlank()
+                    new NotBlank([
+                        'message' => 'you.need.to.fill.this.required.field'
+                    ])
                 ];
             } else {
                 $option['required'] = false;
             }
             if ($field->getType() == AbstractField::ENUM_T) {
                 $choices = explode(',', $field->getDefaultValues());
+                $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
                 $option["expanded"] = false;
-                if (count($choices) < 4) {
+                if (count($choices) < 4 || $this->forceExpanded) {
                     $option["expanded"] = true;
                 }
                 if ($field->isRequired() === false) {
@@ -73,14 +87,17 @@ class CustomFormsType extends AbstractType
                 $option["choices"] = $choices;
             } elseif ($field->getType() == AbstractField::MULTIPLE_T) {
                 $choices = explode(',', $field->getDefaultValues());
+                $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
                 $option["choices"] = $choices;
                 $option["multiple"] = true;
+
                 $option["expanded"] = false;
-                if (count($choices) < 4) {
+                if (count($choices) < 4 || $this->forceExpanded) {
                     $option["expanded"] = true;
                 }
+
                 if ($field->isRequired() === false) {
                     $option['empty_value'] = 'none';
                 }
@@ -102,6 +119,6 @@ class CustomFormsType extends AbstractType
 
     public function getName()
     {
-        return 'customForms';
+        return 'custom_form_'.$this->customForm->getId();
     }
 }

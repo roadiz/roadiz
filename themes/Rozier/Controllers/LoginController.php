@@ -24,7 +24,6 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * Description
  *
  * @file LoginController.php
  * @author Ambroise Maupate
@@ -35,7 +34,6 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -68,11 +66,7 @@ class LoginController extends RozierApp
 
         $this->assignation['error'] = $error;
 
-        return new Response(
-            $this->getTwig()->render('login/login.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('login/login.html.twig', $this->assignation);
     }
 
     /**
@@ -82,11 +76,7 @@ class LoginController extends RozierApp
      */
     public function checkAction(Request $request)
     {
-        return new Response(
-            $this->getTwig()->render('login/check.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('login/check.html.twig', $this->assignation);
     }
 
     /**
@@ -96,11 +86,7 @@ class LoginController extends RozierApp
      */
     public function logoutAction(Request $request)
     {
-        return new Response(
-            $this->getTwig()->render('login/check.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('login/check.html.twig', $this->assignation);
     }
 
     /**
@@ -136,12 +122,12 @@ class LoginController extends RozierApp
                                 new NotBlank(),
                             ],
                         ])
-            ->add('_password', 'password', [
-                'label' => $this->getTranslator()->trans('password'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ]);
+                        ->add('_password', 'password', [
+                            'label' => $this->getTranslator()->trans('password'),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ]);
 
         return $builder->getForm();
     }

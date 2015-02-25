@@ -184,6 +184,24 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
+     * Combine open flag and closeDate to determine
+     * if current form is still available.
+     *
+     * @return boolean
+     */
+    public function isFormStillOpen()
+    {
+        $nowDate = new \DateTime();
+
+        if ($this->closeDate >= $nowDate &&
+            $this->open === true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * @ORM\Column(type="string", name="color", unique=false, nullable=true)
      */
     protected $color = '#000000';

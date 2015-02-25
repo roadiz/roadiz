@@ -59,6 +59,15 @@ class ControllerMatchedEvent extends Event
         $matchedCtrl = $event->getController()[0];
 
         /*
+         * Do not inject current theme when
+         * Install mode is active.
+         */
+        if (true !== $this->kernel->container['config']['install']) {
+            // No node controller matching in install mode
+            $this->kernel->getRequest()->setTheme($matchedCtrl::getTheme());
+        }
+
+        /*
          * Set request locale if _locale param
          * is present in Route.
          */
@@ -66,8 +75,6 @@ class ControllerMatchedEvent extends Event
         if (!empty($routeParams["_locale"])) {
             $this->kernel->getRequest()->setLocale($routeParams["_locale"]);
         }
-
-
 
         /*
          * Inject current Kernel to the matched Controller

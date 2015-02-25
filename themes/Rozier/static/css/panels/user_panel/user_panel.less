@@ -39,7 +39,14 @@
         height: @global-header-height;
         text-align: center;
         .box-sizing();
-        padding: 34px 0 0;
+        padding: 0;
+
+        &:before {
+            content:"";
+            display: inline-block;
+            vertical-align: middle;
+            height: 100%;
+        }
 
         a {
             font-size: 55px;
@@ -49,11 +56,17 @@
             .opacity(0.95);
             .transition(opacity ease 0.5s);
             -webkit-font-smoothing: subpixel-antialiased;
-            padding-left: 8px;
+            padding-left: 0px;
+            width: 99%; // on Firefox, prevent line-return
+            vertical-align: middle;
 
             img {
                 display: block;
-
+                max-width: 95%;
+                height: auto;
+                width: auto;
+                max-height: 110px;
+                margin: 0 auto;
             }
 
             &:hover {
@@ -162,6 +175,31 @@
         }
     }
 
+    #cms-version {
+        position: absolute;
+        right:0; bottom: 0; left:0;
+        text-align: center;
+        margin: 0 auto;
+        padding: 30px 0 20px;
+
+        a {
+            vertical-align: middle;
+            margin: 0px 3px 12px;
+        }
+        p {
+            font-size: 10px;
+            color: @grey-medium;
+            margin: 5px 0 0;
+            &.cms-version {
+                padding-top: 10px;
+                border-top: 1px solid @user-panel-border-color;
+            }
+        }
+        .uk-icon-rz-rezozero {
+            font-size: 16px;
+            color: @grey-medium;
+        }
+    }
     &.minified {
 
         p, li, h1, h2, h3, h4, h5, h6 {
@@ -196,30 +234,11 @@
                 margin: 2px 0 0;
             }
         }
-    }
 
-    #cms-version {
-        position: absolute;
-        right:0; bottom: 0; left:0;
-        text-align: center;
-        margin: 0 auto;
-        padding: 30px 0 20px;
-
-        a {
-            margin-bottom: 12px;
-        }
-        p {
-            font-size: 10px;
-            color: @grey-medium;
-            margin: 5px 0 0;
-            &.cms-version {
-                padding-top: 10px;
-                border-top: 1px solid @user-panel-border-color;
+        #cms-version {
+            a {
+                display: block;
             }
-        }
-        .uk-icon-rz-rezozero {
-            font-size: 16px;
-            color: @grey-medium;
         }
     }
 }

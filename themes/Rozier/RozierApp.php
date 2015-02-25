@@ -134,11 +134,7 @@ class RozierApp extends BackendController
      */
     public function indexAction(Request $request)
     {
-        return new Response(
-            $this->getTwig()->render('index.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('index.html.twig', $this->assignation);
     }
 
     /**
@@ -149,6 +145,8 @@ class RozierApp extends BackendController
     public function cssAction(Request $request)
     {
         $this->assignation['mainColor'] = SettingsBag::get('main_color');
+        $this->assignation['nodeTypes'] = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                                              ->findBy([]);
 
         return new Response(
             $this->getTwig()->render('css/mainColor.css.twig', $this->assignation),

@@ -190,11 +190,7 @@ class NodeTypesUtilsController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('node-types/import.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('node-types/import.html.twig', $this->assignation);
     }
 
 

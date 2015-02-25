@@ -30,6 +30,7 @@
 namespace Themes\Install\Controllers;
 
 use RZ\Roadiz\Console\Tools\Configuration;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +52,11 @@ class DatabaseController extends InstallApp
      */
     public function databaseAction(Request $request)
     {
-        $config = new Configuration();
+        $config = new YamlConfiguration();
+        if (false === $config->load()) {
+            $config->setConfiguration($config->getDefaultConfiguration());
+        }
+
         $databaseForm = $this->buildDatabaseForm($request, $config);
 
         if ($databaseForm !== null) {
@@ -110,11 +115,7 @@ class DatabaseController extends InstallApp
             $this->assignation['databaseForm'] = $databaseForm->createView();
         }
 
-        return new Response(
-            $this->getTwig()->render('steps/database.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/database.html.twig', $this->assignation);
     }
 
     /**
@@ -166,11 +167,7 @@ class DatabaseController extends InstallApp
             }
         }
 
-        return new Response(
-            $this->getTwig()->render('steps/databaseError.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('steps/databaseError.html.twig', $this->assignation);
     }
 
     /**
@@ -182,20 +179,20 @@ class DatabaseController extends InstallApp
      */
     public function databaseFixturesAction(Request $request)
     {
-        $fixtures = new Fixtures();
-        $fixtures->installFixtures();
+         $fixtures = new Fixtures();
+         $fixtures->installFixtures();
 
-        /*
-         * files to import
-         */
-        $installData = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/Install/config.json"), true);
-        $this->assignation['imports'] = $installData['importFiles'];
+         /*
+          * files to import
+          */
+         $yaml = new YamlConfiguration(ROADIZ_ROOT . "/themes/Install/config.yml");
 
-        return new Response(
-            $this->getTwig()->render('steps/databaseFixtures.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+         $yaml->load();
+
+         $installData = $yaml->getConfiguration();
+         $this->assignation['imports'] = $installData['importFiles'];
+
+         return $this->render('steps/databaseFixtures.html.twig', $this->assignation);
     }
 
     /**
@@ -217,7 +214,7 @@ class DatabaseController extends InstallApp
     /**
      * Build forms
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param Themes\Install\Controllers\Configuration $conf
+     * @param RZ\Roadiz\Console\Tools\Configuration $conf
      *
      * @return Symfony\Component\Form\Forms
      */

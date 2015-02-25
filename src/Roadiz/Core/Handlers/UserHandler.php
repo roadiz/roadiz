@@ -93,43 +93,4 @@ class UserHandler
             $this->user->getSalt()
         );
     }
-
-    /**
-     * @param integer $length Password length
-     *
-     * @return string New password
-     */
-    public static function generatePassword($length = 9)
-    {
-        $lowercase = "qwertyuiopasdfghjklzxcvbnm";
-        $uppercase = "ASDFGHJKLZXCVBNMQWERTYUIOP";
-        $numbers = "1234567890";
-        $specialcharacters = "{}[]:.<>?_+!@#";
-        $randomCode = "";
-        mt_srand(crc32(microtime()));
-        $max = strlen($lowercase) - 1;
-
-        $absLength = abs($length/3);
-
-        for ($x = 0; $x < $absLength; $x++) {
-            $randomCode .= $lowercase{mt_rand(0, $max)};
-        }
-        $max = strlen($uppercase) - 1;
-
-        for ($x = 0; $x < $absLength; $x++) {
-            $randomCode .= $uppercase{mt_rand(0, $max)};
-        }
-        $max = strlen($specialcharacters) - 1;
-
-        for ($x = 0; $x < $absLength; $x++) {
-            $randomCode .= $specialcharacters{mt_rand(0, $max)};
-        }
-        $max = strlen($numbers) - 1;
-
-        for ($x = 0; $x < $absLength; $x++) {
-            $randomCode .= $numbers{mt_rand(0, $max)};
-        }
-
-        return str_shuffle($randomCode);
-    }
 }

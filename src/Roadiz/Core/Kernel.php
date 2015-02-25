@@ -34,37 +34,21 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Pimple\Container;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-use RZ\Roadiz\Core\Routing\MixedUrlMatcher;
-use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
-use RZ\Roadiz\Core\Services\ConfigurationServiceProvider;
-use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
-use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
-use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
-use RZ\Roadiz\Core\Services\FormServiceProvider;
-use RZ\Roadiz\Core\Services\MailerServiceProvider;
-use RZ\Roadiz\Core\Services\RoutingServiceProvider;
-use RZ\Roadiz\Core\Services\SecurityServiceProvider;
-use RZ\Roadiz\Core\Services\SolrServiceProvider;
-use RZ\Roadiz\Core\Services\ThemeServiceProvider;
-use RZ\Roadiz\Core\Services\TranslationServiceProvider;
-use RZ\Roadiz\Core\Services\TwigServiceProvider;
+use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
 use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Main roadiz CMS entry point.
@@ -76,7 +60,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.4.1";
+    public static $cmsVersion = "0.5.0";
     private static $instance = null;
 
     public $container = null;
@@ -145,43 +129,26 @@ class Kernel implements \Pimple\ServiceProviderInterface
 
             return $dispatcher;
         };
-        $container['resolver'] = function ($c) {
-            return new ControllerResolver();
-        };
-        $container['httpKernel'] = function ($c) {
-            return new HttpKernel($c['dispatcher'], $c['resolver']);
-        };
+
         $container['requestContext'] = function ($c) {
             $rc = new RequestContext($this->getResolvedBaseUrl());
             $rc->setHost($this->request->server->get('HTTP_HOST'));
-            $rc->setHttpPort(intval($this->request->server->get('SERVER_PORT')));
+            $rc->setHttpPort((int) $this->request->server->get('SERVER_PORT'));
 
             return $rc;
         };
-        $container['urlMatcher'] = function ($c) {
-            return new MixedUrlMatcher($c['requestContext']);
-        };
-        $container['urlGenerator'] = function ($c) {
-            return new \GlobalUrlGenerator($c['requestContext']);
-        };
-        $container['httpUtils'] = function ($c) {
-            return new HttpUtils($c['urlGenerator'], $c['urlMatcher']);
-        };
 
-        $container->register(new ConfigurationServiceProvider());
-        $container->register(new SecurityServiceProvider());
-        $container->register(new FormServiceProvider());
-        $container->register(new RoutingServiceProvider());
-        $container->register(new DoctrineServiceProvider());
-        $container->register(new SolrServiceProvider());
-        $container->register(new EmbedDocumentsServiceProvider());
-        $container->register(new TwigServiceProvider());
-        $container->register(new EntityApiServiceProvider());
-        $container->register(new BackofficeServiceProvider());
-        $container->register(new ThemeServiceProvider());
-        $container->register(new TranslationServiceProvider());
-        $container->register(new MailerServiceProvider());
-
+        /*
+         * Load service providers from conf/services.yml
+         *
+         * Edit this file if you want to customize Roadiz services
+         * behaviour.
+         */
+        $yaml = new Parser();
+        $services = $yaml->parse(file_get_contents(ROADIZ_ROOT . '/conf/services.yml'));
+        foreach ($services['providers'] as $providerClass) {
+            $container->register(new $providerClass());
+        }
     }
 
     /**
@@ -304,17 +271,28 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function getEmergencyResponse($e)
     {
-        $html = file_get_contents(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views/emerg.html');
-        $html = str_replace('{{ message }}', $e->getMessage(), $html);
+        if ($this->request->isXmlHttpRequest()) {
+            return new \Symfony\Component\HttpFoundation\JsonResponse(
+                [
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                    'exception' => get_class($e),
+                ],
+                Response::HTTP_SERVICE_UNAVAILABLE
+            );
 
-        $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
+        } else {
+            $html = file_get_contents(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views/emerg.html');
+            $html = str_replace('{{ message }}', $e->getMessage(), $html);
+            $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
+            $html = str_replace('{{ details }}', $trace, $html);
 
-        $html = str_replace('{{ details }}', $trace, $html);
-        return new Response(
-            $html,
-            Response::HTTP_SERVICE_UNAVAILABLE,
-            ['content-type' => 'text/html']
-        );
+            return new Response(
+                $html,
+                Response::HTTP_SERVICE_UNAVAILABLE,
+                ['content-type' => 'text/html']
+            );
+        }
     }
 
     /**

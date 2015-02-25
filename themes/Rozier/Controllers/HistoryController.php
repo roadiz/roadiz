@@ -34,10 +34,9 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Themes\Rozier\RozierApp;
-
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Themes\Rozier\RozierApp;
 
 /**
  * Display CMS logs.
@@ -54,7 +53,7 @@ class HistoryController extends RozierApp
         Log::NOTICE => "notice",
         Log::INFO => "info",
         Log::DEBUG => "debug",
-        Log::LOG => "log"
+        Log::LOG => "log",
     ];
 
     /**
@@ -66,6 +65,8 @@ class HistoryController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_BACKEND_USER');
+
         /*
          * Manage get request to filter list
          */
@@ -74,7 +75,7 @@ class HistoryController extends RozierApp
             $this->em(),
             'RZ\Roadiz\Core\Entities\Log',
             [],
-            ['datetime'=> 'DESC']
+            ['datetime' => 'DESC']
         );
         $listManager->setItemPerPage(30);
         $listManager->handle();
@@ -83,11 +84,7 @@ class HistoryController extends RozierApp
         $this->assignation['logs'] = $listManager->getEntities();
         $this->assignation['levels'] = static::$levelToHuman;
 
-        return new Response(
-            $this->getTwig()->render('history/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('history/list.html.twig', $this->assignation);
     }
 
     /**
@@ -100,6 +97,13 @@ class HistoryController extends RozierApp
      */
     public function userAction(Request $request, $userId)
     {
+        $this->validateAccessForRole('ROLE_BACKEND_USER');
+
+        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
+            || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
+            throw new AccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
+        }
+
         $user = $this->em()
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
@@ -111,8 +115,8 @@ class HistoryController extends RozierApp
                 $request,
                 $this->em(),
                 'RZ\Roadiz\Core\Entities\Log',
-                ['user'=>$user],
-                ['datetime'=> 'DESC']
+                ['user' => $user],
+                ['datetime' => 'DESC']
             );
             $listManager->setItemPerPage(30);
             $listManager->handle();
@@ -122,11 +126,7 @@ class HistoryController extends RozierApp
             $this->assignation['levels'] = static::$levelToHuman;
             $this->assignation['user'] = $user;
 
-            return new Response(
-                $this->getTwig()->render('history/list.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('history/list.html.twig', $this->assignation);
 
         } else {
             return $this->throw404();

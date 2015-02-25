@@ -39,7 +39,6 @@ use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Widgets\TagTreeWidget;
@@ -73,11 +72,7 @@ class TagsController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['tags'] = $listManager->getEntities();
 
-        return new Response(
-            $this->getTwig()->render('tags/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('tags/list.html.twig', $this->assignation);
     }
 
     /**
@@ -192,11 +187,7 @@ class TagsController extends RozierApp
                 }
             }
 
-            return new Response(
-                $this->getTwig()->render('tags/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('tags/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -244,11 +235,7 @@ class TagsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('tags/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('tags/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -302,11 +289,7 @@ class TagsController extends RozierApp
             $this->assignation['tag'] = $tag;
             $this->assignation['translation'] = $translation;
 
-            return new Response(
-                $this->getTwig()->render('tags/settings.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('tags/settings.html.twig', $this->assignation);
         }
     }
 
@@ -343,11 +326,7 @@ class TagsController extends RozierApp
             $this->assignation['specificTagTree'] = $widget;
         }
 
-        return new Response(
-            $this->getTwig()->render('tags/tree.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('tags/tree.html.twig', $this->assignation);
     }
 
     /**
@@ -391,11 +370,7 @@ class TagsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('tags/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('tags/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -465,11 +440,7 @@ class TagsController extends RozierApp
             $this->assignation['form'] = $form->createView();
             $this->assignation['parentTag'] = $parentTag;
 
-            return new Response(
-                $this->getTwig()->render('tags/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('tags/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -514,11 +485,7 @@ class TagsController extends RozierApp
 
             $this->assignation['translation'] = $translation;
 
-            return new Response(
-                $this->getTwig()->render('tags/nodes.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('tags/nodes.html.twig', $this->assignation);
 
         } else {
             return $this->throw404();

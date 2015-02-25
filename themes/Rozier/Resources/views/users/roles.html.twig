@@ -4,7 +4,7 @@
 <section class="content-global edit-user">
 
 	<header class="content-header header-user header-user-edit">
-        <h1 class="content-title user-add-title">{{ "edit.user.%name%.roles"|trans({'%name%': user.getUserName })|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title user-add-title">{{ "edit.user.%name%.roles"|trans({'%name%': user.username })|truncate(25, true, '[…]') }}</h1>
 	    {% include 'users/navBar.html.twig' with {'user':user, current:'roles'} %}
     </header>
 

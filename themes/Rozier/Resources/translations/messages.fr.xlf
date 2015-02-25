@@ -653,7 +653,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="57" approved="yes">
         <source>facebookName</source>
-        <target state="translated">Profil Facebook</target>
+        <target state="translated">Nom du profil Facebook</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">734</context>
@@ -5748,7 +5748,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
 
       <trans-unit xml:space="preserve" id="chroot.limited.one">
           <source>chroot.limited.one</source>
-          <target state="translated">Vous ne pouvez choisir qu'un seule nœud racine</target>
+          <target state="translated">Vous ne pouvez choisir qu'un seul nœud racine</target>
       </trans-unit>
 
       <trans-unit xml:space="preserve" id="chroot">
@@ -5759,6 +5759,238 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <trans-unit xml:space="preserve" id="node.noCreation.alreadyExists">
           <source>node.noCreation.alreadyExists</source>
           <target>Le nœud n’a pas été créé car il existe déjà.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="maps_style">
+          <source>maps_style</source>
+          <target>Style par défaut Google Maps</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="user.status">
+          <source>user.status</source>
+          <target>Statut</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.enabled">
+          <source>user.enabled</source>
+          <target>Compte activé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.disabled">
+          <source>user.disabled</source>
+          <target>Compte désactivé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.locked">
+          <source>user.locked</source>
+          <target>Compte verrouillé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.expired">
+          <source>user.expired</source>
+          <target>Compte expiré</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.expiresAt">
+          <source>user.expiresAt</source>
+          <target>Le compte s’expire le :</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.expired">
+          <source>user.force.expired</source>
+          <target>Forcer l’expiration du compte</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.credentialsExpiresAt">
+          <source>user.credentialsExpiresAt</source>
+          <target>Les identifiants du compte s’expirent le :</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.credentialsExpired">
+          <source>user.force.credentialsExpired</source>
+          <target>Forcer l’expiration des identifiants du compte</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user.%name%.security">
+          <source>edit.user.%name%.security</source>
+          <target>Sécurité de “%name%”</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.%name%.security.updated">
+          <source>user.%name%.security.updated</source>
+          <target>Les paramètres de sécurité du compte “%name%” ont été mis à jour.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.account.has-expired">
+          <source>user.account.has-expired</source>
+          <target>Le compte utilisateur a expiré.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.crendentials.has-expired">
+          <source>user.crendentials.has-expired</source>
+          <target>Les identifiants du compte utilisateur ont expiré.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.last-login">
+          <source>user.last-login</source>
+          <target>Date de la dernière connexion</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.password-requested-at">
+          <source>user.password-requested-at</source>
+          <target>Date de la dernière demande de mot de passe</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="never.requested">
+          <source>never.requested</source>
+          <target>Jamais</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="year">
+          <source>year</source>
+          <target>Année</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="month">
+          <source>month</source>
+          <target>Mois</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="day">
+          <source>day</source>
+          <target>Jour</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hour">
+          <source>hour</source>
+          <target>Heure</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="minute">
+          <source>minute</source>
+          <target>Min.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.security">
+          <source>user.security</source>
+          <target>Sécurité</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="your.account.email">
+          <source>your.account.email</source>
+          <target>Email lié à votre compte</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%email%.email.does.not.exist.in.user.account.database">
+          <source>%email%.email.does.not.exist.in.user.account.database</source>
+          <target>L’email “%email%” n’a pas été trouvé dans la base de donnée.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="to.get.new.password.enter.your.account.email">
+          <source>to.get.new.password.enter.your.account.email</source>
+          <target>Pour obtenir un nouveau mot de passe, veuillez entrer l’adresse email liée à votre compte utilisateur.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="request.new.password">
+          <source>request.new.password</source>
+          <target>Envoyer la demande</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.login">
+          <source>back_to.login</source>
+          <target>Revenir à la page de connexion</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.personal.password.reset.link.has.been.sent.to.your.account.email">
+          <source>a.personal.password.reset.link.has.been.sent.to.your.account.email</source>
+          <target>Un lien personnel de réinitialisation de mot de passe vous a été envoyé par email. N’attendez pas trop longtemps, ce lien expirera automatiquement.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.is.invalid">
+          <source>confirmation.token.is.invalid</source>
+          <target>Le jeton de confirmation est invalide.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.has.expired">
+          <source>confirmation.token.has.expired</source>
+          <target>Le jeton de confirmation a expiré.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="choose.a.new.password">
+          <source>choose.a.new.password</source>
+          <target>Choisissez un nouveau mot de passe</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="save.new.password">
+          <source>save.new.password</source>
+          <target>Valider votre mot de passe</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="your.new.password.has.been.saved">
+          <source>your.new.password.has.been.saved</source>
+          <target>Votre nouveau mot de passe a bien été enregistré.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="go_back_to.login.page.to.connect">
+          <source>go_back_to.login.page.to.connect</source>
+          <target>Vous pouvez revenir à la page de connexion.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.confirmation.email.has.already.be.sent">
+          <source>a.confirmation.email.has.already.be.sent</source>
+          <target>Un email de confirmation vous a déjà été envoyé par email, veuillez vérifier dans vos courriers indésirables.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="email.invalid">
+          <source>email.invalid</source>
+          <target>L’email est invalide ou n’existe pas.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="resultCache">
+          <source>resultCache</source>
+          <target>Cache des résultats</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hydratationCache">
+          <source>hydratationCache</source>
+          <target>Cache d’hydratation</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="queryCache">
+          <source>queryCache</source>
+          <target>Cache de requêtes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="metadataCache">
+          <source>metadataCache</source>
+          <target>Cache des méta-données</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.cache.available">
+          <source>no.cache.available</source>
+          <target>Aucune implémentation de cache trouvée.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="home.node.limited.one">
+          <source>home.node.limited.one</source>
+          <target state="translated">Vous ne pouvez choisir qu'un seul nœud d'accueil</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="homeNode">
+          <source>homeNode</source>
+          <target>Nœud d'accueil</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="theme.root.limited.one">
+          <source>theme.root.limited.one</source>
+          <target state="translated">Vous ne pouvez choisir qu'un seul nœud racine</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="themeRoot">
+          <source>themeRoot</source>
+          <target>Nœud racine</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="about.cms">
+          <source>about.cms</source>
+          <target>À propos de Roadiz</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="new.version.release">
+          <source>new.version.release</source>
+          <target>Une nouvelle version de Roadiz est dans les bacs!</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="lastest.version.installed">
+          <source>lastest.version.installed</source>
+          <target>Roadiz est à jour.</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="current.version">
+          <source>current.version</source>
+          <target>Version actuelle</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="last.version">
+          <source>last.version</source>
+          <target>Dernière version</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="changelog">
+          <source>changelog</source>
+          <target>Note de mise à jour</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="download">
+          <source>download</source>
+          <target>Téléchargement de la dernière version.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="not.valid.facebook.name">
+          <source>not.valid.facebook.name</source>
+          <target>Ce n’est pas un nom Facebook valide, copiez seulement la partie après https://www.facebook.com/</target>
       </trans-unit>
   </body>
   </file>

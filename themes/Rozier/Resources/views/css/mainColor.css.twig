@@ -1,20 +1,30 @@
-
 #user-panel #company {
     background-color:{{ head.mainColor }};
 }
-
 #user-panel .uk-icon-button.uk-icon-rz-turn-off{
     border-color:{{ head.mainColor }};
 }
-
 .uk-icon-button:hover{
     border-color:{{ head.mainColor }};
 }
-
 .documents-list .document-border{
     background-color:{{ head.mainColor }};
 }
-
 .documents-widget-sortable-list-item .document-border, .documents-widget-dragging .document-border{
     background-color:{{ head.mainColor }};
 }
+{% for type in nodeTypes %}
+/*
+ * Custom color on node tree
+ * for {{ type.name }}
+ */
+.nodetree-element.{{ type.name|lower }} > .nodetree-element-inner > .uk-nestable-handle:after {
+    border-color:{{ type.color }};
+}
+.nodetree-element.{{ type.name|lower }} > .nodetree-list-item-color {
+    background-color:{{ type.color }};
+}
+.nodetree-element.{{ type.name|lower }} > .nodetree-element-inner > .tree-contextualmenu .vertical-nodetype {
+    background-color:{{ type.color }};
+}
+{% endfor %}

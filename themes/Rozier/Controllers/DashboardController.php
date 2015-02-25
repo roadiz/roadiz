@@ -30,10 +30,8 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use Themes\Rozier\RozierApp;
-
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\RozierApp;
 
 /**
  * Main backoffice entrance.
@@ -47,14 +45,12 @@ class DashboardController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->assignation['latestSources'] = $this->getService('em')
-                                                   ->getRepository("RZ\Roadiz\Core\Entities\NodesSources")
-                                                   ->findByLatestUpdated(4);
+        $this->validateAccessForRole('ROLE_BACKEND_USER');
 
-        return new Response(
-            $this->getTwig()->render('dashboard/index.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        $this->assignation['latestSources'] = $this->getService('em')
+             ->getRepository("RZ\Roadiz\Core\Entities\NodesSources")
+             ->findByLatestUpdated(4);
+
+        return $this->render('dashboard/index.html.twig', $this->assignation);
     }
 }

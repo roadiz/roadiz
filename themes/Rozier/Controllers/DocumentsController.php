@@ -120,11 +120,7 @@ class DocumentsController extends RozierApp
         $this->assignation['documents'] = $listManager->getEntities();
         $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
-        return new Response(
-            $this->getTwig()->render('documents/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('documents/list.html.twig', $this->assignation);
     }
 
     /**
@@ -183,11 +179,7 @@ class DocumentsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('documents/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('documents/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -214,11 +206,7 @@ class DocumentsController extends RozierApp
                 'controls' => true,
             ];
 
-            return new Response(
-                $this->getTwig()->render('documents/preview.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('documents/preview.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -268,11 +256,7 @@ class DocumentsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('documents/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('documents/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -326,11 +310,7 @@ class DocumentsController extends RozierApp
             $this->assignation['action'] = '?' . http_build_query(['documents' => $documentsIds]);
             $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
-            return new Response(
-                $this->getTwig()->render('documents/bulkDelete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('documents/bulkDelete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -383,11 +363,7 @@ class DocumentsController extends RozierApp
             $this->assignation['action'] = '?' . http_build_query(['documents' => $documentsIds]);
             $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
-            return new Response(
-                $this->getTwig()->render('documents/bulkDownload.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('documents/bulkDownload.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -443,11 +419,7 @@ class DocumentsController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('documents/embed.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('documents/embed.html.twig', $this->assignation);
     }
 
     /**
@@ -549,11 +521,7 @@ class DocumentsController extends RozierApp
         $this->assignation['form'] = $form->createView();
         $this->assignation['maxUploadSize'] = \Symfony\Component\HttpFoundation\File\UploadedFile::getMaxFilesize() / 1024 / 1024;
 
-        return new Response(
-            $this->getTwig()->render('documents/upload.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('documents/upload.html.twig', $this->assignation);
     }
 
     /**
@@ -575,11 +543,7 @@ class DocumentsController extends RozierApp
             $this->assignation['document'] = $document;
             $this->assignation['usages'] = $document->getNodesSourcesByFields();
 
-            return new Response(
-                $this->getTwig()->render('documents/usage.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('documents/usage.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

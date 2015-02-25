@@ -38,7 +38,6 @@ use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -77,11 +76,7 @@ class CustomFormAnswersController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['custom_form_answers'] = $listManager->getEntities();
 
-        return new Response(
-            $this->getTwig()->render('custom-form-answers/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('custom-form-answers/list.html.twig', $this->assignation);
     }
 
     /**
@@ -127,11 +122,7 @@ class CustomFormAnswersController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('custom-form-answers/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('custom-form-answers/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

@@ -33,22 +33,19 @@
 
 namespace Themes\Rozier\Controllers;
 
-use \RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\Core\Entities\CustomForm;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Themes\Rozier\RozierApp;
-
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\RozierApp;
+use \RZ\Roadiz\CMS\Forms\MarkdownType;
 
 /**
-* CustomForm controller
-*/
+ * CustomForm controller
+ */
 class CustomFormsController extends RozierApp
 {
     /**
@@ -73,11 +70,7 @@ class CustomFormsController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['custom_forms'] = $listManager->getEntities();
 
-        return new Response(
-            $this->getTwig()->render('custom-forms/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('custom-forms/list.html.twig', $this->assignation);
     }
 
     /**
@@ -92,7 +85,7 @@ class CustomFormsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         $customForm = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                           ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
@@ -105,7 +98,7 @@ class CustomFormsController extends RozierApp
                 try {
                     $this->editCustomForm($form->getData(), $customForm);
 
-                    $msg = $this->getTranslator()->trans('customForm.%name%.updated', ['%name%'=>$customForm->getName()]);
+                    $msg = $this->getTranslator()->trans('customForm.%name%.updated', ['%name%' => $customForm->getName()]);
                     $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
@@ -117,7 +110,7 @@ class CustomFormsController extends RozierApp
                     $this->getService('urlGenerator')->generate(
                         'customFormsHomePage',
                         [
-                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION)
+                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION),
                         ]
                     )
                 );
@@ -128,11 +121,7 @@ class CustomFormsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('custom-forms/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('custom-forms/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -162,7 +151,7 @@ class CustomFormsController extends RozierApp
                 try {
                     $this->addCustomForm($form->getData(), $customForm);
 
-                    $msg = $this->getTranslator()->trans('customForm.%name%.created', ['%name%'=>$customForm->getName()]);
+                    $msg = $this->getTranslator()->trans('customForm.%name%.created', ['%name%' => $customForm->getName()]);
                     $this->publishConfirmMessage($request, $msg);
 
                     /*
@@ -189,11 +178,7 @@ class CustomFormsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('custom-forms/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('custom-forms/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -211,7 +196,7 @@ class CustomFormsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $customForm = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                           ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
@@ -221,10 +206,10 @@ class CustomFormsController extends RozierApp
             $form->handleRequest();
 
             if ($form->isValid() &&
-                $form->getData()['customFormId'] == $customForm->getId() ) {
+                $form->getData()['customFormId'] == $customForm->getId()) {
                 $this->getService("em")->remove($customForm);
 
-                $msg = $this->getTranslator()->trans('customForm.%name%.deleted', ['%name%'=>$customForm->getName()]);
+                $msg = $this->getTranslator()->trans('customForm.%name%.deleted', ['%name%' => $customForm->getName()]);
                 $this->publishConfirmMessage($request, $msg);
                 /*
                  * Redirect to update schema page
@@ -241,11 +226,7 @@ class CustomFormsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('custom-forms/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('custom-forms/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -261,10 +242,10 @@ class CustomFormsController extends RozierApp
     {
         foreach ($data as $key => $value) {
             if (isset($data['name'])) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans('customForm.%name%.cannot_rename_already_exists', ['%name%'=>$customForm->getName()]), 1);
+                throw new EntityAlreadyExistsException($this->getTranslator()->trans('customForm.%name%.cannot_rename_already_exists', ['%name%' => $customForm->getName()]), 1);
             }
-            $setter = 'set'.ucwords($key);
-            $customForm->$setter( $value );
+            $setter = 'set' . ucwords($key);
+            $customForm->$setter($value);
         }
 
         $this->getService('em')->flush();
@@ -281,7 +262,7 @@ class CustomFormsController extends RozierApp
     private function addCustomForm($data, CustomForm $customForm)
     {
         foreach ($data as $key => $value) {
-            $setter = 'set'.ucwords($key);
+            $setter = 'set' . ucwords($key);
             if ($key == "displayName") {
                 $customForm->setName($value);
             }
@@ -289,10 +270,10 @@ class CustomFormsController extends RozierApp
         }
 
         $existing = $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
-            ->findOneBy(['name'=>$customForm->getName()]);
+                         ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
+                         ->findOneBy(['name' => $customForm->getName()]);
         if ($existing !== null) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans('customForm.%name%.already_exists', ['%name%'=>$customForm->getName()]), 1);
+            throw new EntityAlreadyExistsException($this->getTranslator()->trans('customForm.%name%.already_exists', ['%name%' => $customForm->getName()]), 1);
         }
 
         $this->getService('em')->persist($customForm);
@@ -309,45 +290,45 @@ class CustomFormsController extends RozierApp
     private function buildForm(CustomForm $customForm)
     {
         $defaults = [
-            'displayName' =>    $customForm->getDisplayName(),
-            'description' =>    $customForm->getDescription(),
-            'email' =>    $customForm->getEmail(),
-            'open' =>           $customForm->isOpen(),
-            'closeDate' =>      $customForm->getCloseDate(),
-            'color' =>          $customForm->getColor(),
+            'displayName' => $customForm->getDisplayName(),
+            'description' => $customForm->getDescription(),
+            'email' => $customForm->getEmail(),
+            'open' => $customForm->isOpen(),
+            'closeDate' => $customForm->getCloseDate(),
+            'color' => $customForm->getColor(),
         ];
         $builder = $this->getService('formFactory')
-            ->createBuilder('form', $defaults)
-            ->add('displayName', 'text', [
-                'label' => $this->getTranslator()->trans('customForm.displayName'),
-                'constraints' => [
-                    new NotBlank()
-                ]
-            ])
-            ->add('description', new MarkdownType(), [
-                'label' => $this->getTranslator()->trans('description'),
-                'required' => false
-            ])
-            ->add('email', 'email', [
-                'label' => $this->getTranslator()->trans('email'),
-                'required' => false,
-                'constraints' => [
-                    new Email()
-                ]
-            ])
-            ->add('open', 'checkbox', [
-                'label' => $this->getTranslator()->trans('customForm.open'),
-                'required' => false
-            ])
-            ->add('closeDate', 'datetime', [
-                'label' => $this->getTranslator()->trans('customForm.closeDate'),
-                'required' => false
-            ])
-            ->add('color', 'text', [
-                'label' => $this->getTranslator()->trans('customForm.color'),
-                'required' => false,
-                'attr' => ['class'=>'colorpicker-input']
-            ]);
+                        ->createBuilder('form', $defaults)
+                        ->add('displayName', 'text', [
+                            'label' => $this->getTranslator()->trans('customForm.displayName'),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ])
+                        ->add('description', new MarkdownType(), [
+                            'label' => $this->getTranslator()->trans('description'),
+                            'required' => false,
+                        ])
+                        ->add('email', 'email', [
+                            'label' => $this->getTranslator()->trans('email'),
+                            'required' => false,
+                            'constraints' => [
+                                new Email(),
+                            ],
+                        ])
+                        ->add('open', 'checkbox', [
+                            'label' => $this->getTranslator()->trans('customForm.open'),
+                            'required' => false,
+                        ])
+                        ->add('closeDate', 'datetime', [
+                            'label' => $this->getTranslator()->trans('customForm.closeDate'),
+                            'required' => false,
+                        ])
+                        ->add('color', 'text', [
+                            'label' => $this->getTranslator()->trans('customForm.color'),
+                            'required' => false,
+                            'attr' => ['class' => 'colorpicker-input'],
+                        ]);
 
         return $builder->getForm();
     }
@@ -360,13 +341,13 @@ class CustomFormsController extends RozierApp
     private function buildDeleteForm(CustomForm $customForm)
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add('customFormId', 'hidden', [
-                'data' => $customForm->getId(),
-                'constraints' => [
-                    new NotBlank()
-                ]
-            ]);
+                        ->createBuilder('form')
+                        ->add('customFormId', 'hidden', [
+                            'data' => $customForm->getId(),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ]);
 
         return $builder->getForm();
     }

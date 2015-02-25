@@ -128,11 +128,7 @@ class NodesController extends RozierApp
              ]);
         $this->assignation['translation'] = $translation;
 
-        return new Response(
-            $this->getTwig()->render('nodes/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('nodes/list.html.twig', $this->assignation);
     }
 
     /**
@@ -259,11 +255,7 @@ class NodesController extends RozierApp
             $this->assignation['form'] = $form->createView();
             $this->assignation['securityContext'] = $this->getService("securityContext");
 
-            return new Response(
-                $this->getTwig()->render('nodes/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('nodes/edit.html.twig', $this->assignation);
         }
 
         return $this->throw404();
@@ -326,11 +318,7 @@ class NodesController extends RozierApp
 
                 $this->assignation['form'] = $form->createView();
 
-                return new Response(
-                    $this->getTwig()->render('nodes/editTags.html.twig', $this->assignation),
-                    Response::HTTP_OK,
-                    ['content-type' => 'text/html']
-                );
+                return $this->render('nodes/editTags.html.twig', $this->assignation);
             }
         }
 
@@ -383,11 +371,7 @@ class NodesController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('nodes/removeTag.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('nodes/removeTag.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -470,11 +454,7 @@ class NodesController extends RozierApp
             $this->assignation['type'] = $type;
             $this->assignation['nodeTypesCount'] = true;
 
-            return new Response(
-                $this->getTwig()->render('nodes/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('nodes/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -557,11 +537,7 @@ class NodesController extends RozierApp
             $this->assignation['parentNode'] = $parentNode;
             $this->assignation['nodeTypesCount'] = $nodeTypesCount;
 
-            return new Response(
-                $this->getTwig()->render('nodes/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('nodes/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -625,11 +601,7 @@ class NodesController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('nodes/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('nodes/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -677,11 +649,7 @@ class NodesController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('nodes/emptyTrash.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('nodes/emptyTrash.html.twig', $this->assignation);
     }
     /**
      * Return an deletion form for requested node.
@@ -742,11 +710,7 @@ class NodesController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('nodes/undelete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('nodes/undelete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }

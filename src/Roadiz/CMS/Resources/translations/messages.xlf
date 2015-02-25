@@ -3,7 +3,7 @@
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
             <!-- welcome.user.email -->
-            <trans-unit id="welcome.user.email">
+            <trans-unit id="welcome.user.email.%site%">
                 <source>welcome.user.email.%site%</source>
                 <target/>
             </trans-unit>
@@ -92,6 +92,36 @@
             </trans-unit>
             <trans-unit xml:space="preserve" id="none">
                 <source>none</source>
+                <target></target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="reset.password.request">
+              <source>reset.password.request</source>
+              <target></target>
+          </trans-unit>
+            <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%">
+              <source>you.asked.for.a.password.reset.on.%site%</source>
+              <target></target>
+          </trans-unit>
+            <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link">
+              <source>you.need.to.choose.a.new.password.using.following.link</source>
+              <target></target>
+          </trans-unit>
+            <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials">
+              <source>as.a.reminder.here.are.your.credentials</source>
+              <target></target>
+          </trans-unit>
+            <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
+              <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
+              <target></target>
+          </trans-unit>
+
+            <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
+                <source>you.need.to.fill.this.required.field</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="*.required.fields">
+                <source>*.required.fields</source>
                 <target></target>
             </trans-unit>
 

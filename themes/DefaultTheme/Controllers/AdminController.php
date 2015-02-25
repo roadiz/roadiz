@@ -30,9 +30,8 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
-use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\RozierApp;
 
 class AdminController extends RozierApp
 {
@@ -43,10 +42,6 @@ class AdminController extends RozierApp
 
         $this->getService('stopwatch')->start('twigRender');
 
-        return new Response(
-            $this->getTwig()->render('admin/test.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('admin/test.html.twig', $this->assignation);
     }
 }

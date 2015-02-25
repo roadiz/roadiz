@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Finder\Finder;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 
 /**
  * Theme selector form field type.
@@ -55,13 +56,16 @@ class ThemesType extends AbstractType
         // Extracting the PHP files from every Theme folder
         $iterator = $finder
             ->files()
-            ->name('config.json')
+            ->name('config.yml')
             ->depth(1)
             ->in(ROADIZ_ROOT.'/themes');
 
         // And storing it into an array, used in the form
         foreach ($iterator as $file) {
-            $data = json_decode(file_get_contents($file->getPathname()), true);
+            $yaml = new YamlConfiguration($file->getPathname());
+            $yaml->load();
+
+            $data = $yaml->getConfiguration();
 
             $classname = '\Themes\\'.$data['themeDir']."\\".$data['themeDir']."App";
 

@@ -39,7 +39,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
-use RZ\Roadiz\Console\Tools\Configuration;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 
 /**
@@ -97,7 +97,11 @@ class InstallCommand extends Command
              * Import default data
              */
             $installRoot = ROADIZ_ROOT . "/themes/Install";
-            $data = json_decode(file_get_contents($installRoot . "/config.json"), true);
+            $yaml = new YamlConfiguration($installRoot . "/config.yml");
+
+            $yaml->load();
+
+            $data = $yaml->getConfiguration();
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
@@ -158,8 +162,11 @@ class InstallCommand extends Command
                     // install fixtures
                     $array = explode('\\', $input->getOption('with-theme'));
                     $themeRoot = ROADIZ_ROOT . "/themes/". $array[count($array) - 2];
-                    $data = json_decode(file_get_contents($themeRoot . "/config.json"), true);
+                    $yaml = new YamlConfiguration($themeRoot . "/config.yml");
 
+                    $yaml->load();
+
+                    $data = $yaml->getConfiguration();
                     if (false !== $data && isset($data["importFiles"])) {
                         if (isset($data["importFiles"]['roles'])) {
                             foreach ($data["importFiles"]['roles'] as $filename) {
@@ -223,7 +230,10 @@ class InstallCommand extends Command
                 }
             }
 
-            $configuration = new Configuration();
+            $configuration = new YamlConfiguration();
+            if (false === $configuration->load()) {
+                $configuration->setConfiguration($configuration->getDefaultConfiguration());
+            }
             $configuration->setInstall(false);
             $configuration->writeConfiguration();
 

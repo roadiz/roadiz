@@ -34,19 +34,16 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Validator\Constraints\NotBlank;
-
 /**
-* Translation's controller
-*/
+ * Translation's controller
+ */
 class TranslationsController extends RozierApp
 {
     const ITEM_PER_PAGE = 5;
@@ -62,8 +59,8 @@ class TranslationsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
         $translations = $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findAll();
+                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                             ->findAll();
 
         $this->assignation['translations'] = [];
 
@@ -84,7 +81,7 @@ class TranslationsController extends RozierApp
                 $form->getData()['translationId'] == $translation->getId()) {
                 $translation->getHandler()->makeDefault();
 
-                $msg = $this->getTranslator()->trans('translation.%name%.made_default', ['%name%'=>$translation->getName()]);
+                $msg = $this->getTranslator()->trans('translation.%name%.made_default', ['%name%' => $translation->getName()]);
                 $this->publishConfirmMessage($request, $msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -101,15 +98,11 @@ class TranslationsController extends RozierApp
 
             $this->assignation['translations'][] = [
                 'translation' => $translation,
-                'defaultForm' => $form->createView()
+                'defaultForm' => $form->createView(),
             ];
         }
 
-        return new Response(
-            $this->getTwig()->render('translations/list.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('translations/list.html.twig', $this->assignation);
     }
 
     /**
@@ -124,7 +117,7 @@ class TranslationsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
         $translation = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
             $this->assignation['translation'] = $translation;
@@ -136,7 +129,7 @@ class TranslationsController extends RozierApp
                 try {
                     $this->editTranslation($form->getData(), $translation);
 
-                    $msg = $this->getTranslator()->trans('translation.%name%.updated', ['%name%'=>$translation->getName()]);
+                    $msg = $this->getTranslator()->trans('translation.%name%.updated', ['%name%' => $translation->getName()]);
                     $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
@@ -158,11 +151,7 @@ class TranslationsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('translations/edit.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('translations/edit.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -191,7 +180,7 @@ class TranslationsController extends RozierApp
                 try {
                     $this->addTranslation($form->getData(), $translation);
 
-                    $msg = $this->getTranslator()->trans('translation.%name%.created', ['%name%'=>$translation->getName()]);
+                    $msg = $this->getTranslator()->trans('translation.%name%.created', ['%name%' => $translation->getName()]);
                     $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
@@ -209,11 +198,7 @@ class TranslationsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('translations/add.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('translations/add.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -231,7 +216,7 @@ class TranslationsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
         $translation = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if (null !== $translation) {
             $this->assignation['translation'] = $translation;
@@ -245,7 +230,7 @@ class TranslationsController extends RozierApp
                 try {
                     $this->deleteTranslation($form->getData(), $translation);
 
-                    $msg = $this->getTranslator()->trans('translation.%name%.deleted', ['%name%'=>$translation->getName()]);
+                    $msg = $this->getTranslator()->trans('translation.%name%.deleted', ['%name%' => $translation->getName()]);
                     $this->publishConfirmMessage($request, $msg);
                 } catch (\Exception $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
@@ -263,11 +248,7 @@ class TranslationsController extends RozierApp
 
             $this->assignation['form'] = $form->createView();
 
-            return new Response(
-                $this->getTwig()->render('translations/delete.html.twig', $this->assignation),
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+            return $this->render('translations/delete.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -283,8 +264,8 @@ class TranslationsController extends RozierApp
     {
         try {
             foreach ($data as $key => $value) {
-                $setter = 'set'.ucwords($key);
-                $translation->$setter( $value );
+                $setter = 'set' . ucwords($key);
+                $translation->$setter($value);
             }
 
             $this->getService('em')->flush();
@@ -292,7 +273,7 @@ class TranslationsController extends RozierApp
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'translation.%locale%.cannot_update_already_exists',
-                    ['%locale%'=>$translation->getLocale()]
+                    ['%locale%' => $translation->getLocale()]
                 ),
                 1
             );
@@ -309,8 +290,8 @@ class TranslationsController extends RozierApp
     {
         try {
             foreach ($data as $key => $value) {
-                $setter = 'set'.ucwords($key);
-                $translation->$setter( $value );
+                $setter = 'set' . ucwords($key);
+                $translation->$setter($value);
             }
             $this->getService('em')->persist($translation);
             $this->getService('em')->flush();
@@ -318,7 +299,7 @@ class TranslationsController extends RozierApp
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'translation.%locale%.cannot_create_already_exists',
-                    ['%locale%'=>$translation->getLocale()]
+                    ['%locale%' => $translation->getLocale()]
                 ),
                 1
             );
@@ -341,7 +322,7 @@ class TranslationsController extends RozierApp
                 throw new \Exception(
                     $this->getTranslator()->trans(
                         'translation.%name%.cannot_delete_default_translation',
-                        ['%name%'=>$translation->getName()]
+                        ['%name%' => $translation->getName()]
                     ),
                     1
                 );
@@ -357,39 +338,39 @@ class TranslationsController extends RozierApp
     private function buildEditForm(Translation $translation)
     {
         $defaults = [
-            'name' =>           $translation->getName(),
-            'locale' =>         $translation->getLocale(),
-            'available' =>      $translation->isAvailable(),
+            'name' => $translation->getName(),
+            'locale' => $translation->getLocale(),
+            'available' => $translation->isAvailable(),
         ];
         $builder = $this->getService('formFactory')
-            ->createBuilder('form', $defaults)
-            ->add(
-                'name',
-                'text',
-                [
-                    'label'=>$this->getTranslator()->trans('name'),
-                    'constraints' => [
-                        new NotBlank()
-                    ]
-                ]
-            )
-            ->add(
-                'locale',
-                'choice',
-                [
-                    'label'=>$this->getTranslator()->trans('locale'),
-                    'required' => true,
-                    'choices' => Translation::$availableLocales
-                ]
-            )
-            ->add(
-                'available',
-                'checkbox',
-                [
-                    'label'=>$this->getTranslator()->trans('available'),
-                    'required' => false
-                ]
-            );
+                        ->createBuilder('form', $defaults)
+                        ->add(
+                            'name',
+                            'text',
+                            [
+                                'label' => $this->getTranslator()->trans('name'),
+                                'constraints' => [
+                                    new NotBlank(),
+                                ],
+                            ]
+                        )
+                        ->add(
+                            'locale',
+                            'choice',
+                            [
+                                'label' => $this->getTranslator()->trans('locale'),
+                                'required' => true,
+                                'choices' => Translation::$availableLocales,
+                            ]
+                        )
+                        ->add(
+                            'available',
+                            'checkbox',
+                            [
+                                'label' => $this->getTranslator()->trans('available'),
+                                'required' => false,
+                            ]
+                        );
 
         return $builder->getForm();
     }
@@ -402,17 +383,17 @@ class TranslationsController extends RozierApp
     private function buildDeleteForm(Translation $translation)
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add(
-                'translationId',
-                'hidden',
-                [
-                    'data' => $translation->getId(),
-                    'constraints' => [
-                        new NotBlank()
-                    ]
-                ]
-            );
+                        ->createBuilder('form')
+                        ->add(
+                            'translationId',
+                            'hidden',
+                            [
+                                'data' => $translation->getId(),
+                                'constraints' => [
+                                    new NotBlank(),
+                                ],
+                            ]
+                        );
 
         return $builder->getForm();
     }
@@ -425,17 +406,17 @@ class TranslationsController extends RozierApp
     private function buildMakeDefaultForm(Translation $translation)
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add(
-                'translationId',
-                'hidden',
-                [
-                    'data' => $translation->getId(),
-                    'constraints' => [
-                        new NotBlank()
-                    ]
-                ]
-            );
+                        ->createBuilder('form')
+                        ->add(
+                            'translationId',
+                            'hidden',
+                            [
+                                'data' => $translation->getId(),
+                                'constraints' => [
+                                    new NotBlank(),
+                                ],
+                            ]
+                        );
 
         return $builder->getForm();
     }

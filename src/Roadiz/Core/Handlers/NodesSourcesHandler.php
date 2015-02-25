@@ -145,7 +145,9 @@ class NodesSourcesHandler
             $host = Kernel::getInstance()->getResolvedBaseUrl();
         }
 
-        if ($this->nodeSource->getNode()->isHome()) {
+        if ($this->nodeSource->getNode()->isHome()
+            || (Kernel::getInstance()->getRequest()->getTheme()
+                && Kernel::getInstance()->getRequest()->getTheme()->getHomeNode() == $this->nodeSource->getNode())) {
             if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
                 return $host . '/';
             } else {

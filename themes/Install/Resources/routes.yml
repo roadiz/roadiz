@@ -55,7 +55,7 @@ installImportTags:
         themeId: "[0-9]+"
 installImportThemePage:
     path:     /install/import/theme/{id}
-    defaults: { _controller: Themes\Install\InstallApp::importThemeAction }
+    defaults: { _controller: Themes\Install\Controllers\ThemeController::importThemeAction }
     requirements: { id : "[0-9]+" }
 installUserPage:
     path:     /install/user
@@ -66,13 +66,13 @@ installUserSummaryPage:
     requirements: { userId : "[0-9]+" }
 installThemesPage:
     path:     /install/themes
-    defaults: { _controller: Themes\Install\InstallApp::themesAction }
+    defaults: { _controller: Themes\Install\Controllers\ThemeController::themesAction }
 installThemeSummaryPage:
     path:     /install/themes/summary
-    defaults: { _controller: Themes\Install\InstallApp::themeSummaryAction }
+    defaults: { _controller: Themes\Install\Controllers\ThemeController::themeSummaryAction }
 installThemeBasePage:
     path:     /install/themes/base
-    defaults: { _controller: Themes\Install\InstallApp::themeInstallAction }
+    defaults: { _controller: Themes\Install\Controllers\ThemeController::themeInstallAction }
 installDonePage:
     path:     /install/done
     defaults: { _controller: Themes\Install\InstallApp::doneAction }

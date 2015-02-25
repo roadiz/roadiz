@@ -24,51 +24,40 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ConfigurationServiceProvider.php
+ * @file AuthenticationFailureHandler.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Services;
+namespace RZ\Roadiz\Core\Authentification;
 
-use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
-use Pimple\Container;
+use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 /**
- * Register configuration services for dependency injection container.
+ * {@inheritdoc}
  */
-class ConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
+class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
     /**
-     * @param Pimple\Container $container [description]
+     * {@inheritdoc}
      */
-    public function register(Container $container)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        /*
-         * Inject app config
-         */
-        $container['config'] = function ($c) {
-            $configFile = ROADIZ_ROOT.'/conf/config.json';
-            if (file_exists($configFile)) {
-                return json_decode(file_get_contents($configFile), true);
-            } else {
-                throw new NoConfigurationFoundException();
+        if ($exception instanceof BadCredentialsException) {
+            if (null !== $this->logger) {
+                $username = $request->request->get('_username');
+                $user = Kernel::getInstance()->getService('em')
+                                             ->getRepository('RZ\Roadiz\Core\Entities\User')
+                                             ->findOneByUsername($username);
+                if (null !== $user) {
+                    $this->logger->setUser($user);
+                    $this->logger->error($exception->getMessage());
+                }
             }
-        };
+        }
 
-        /*
-         * Every path to parse to find doctrine entities
-         */
-        $container['entitiesPaths'] = function ($c) {
-            if (isset($c['config']['entities'])) {
-                return $c['config']['entities'];
-            } else {
-                return [
-                    "src/Roadiz/Core/Entities",
-                    "src/Roadiz/Core/AbstractEntities",
-                    "gen-src/GeneratedNodeSources"
-                ];
-            }
-        };
-
-        return $container;
+        return parent::onAuthenticationFailure($request, $exception);
     }
 }

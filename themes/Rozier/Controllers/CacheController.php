@@ -31,11 +31,9 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Console\CacheCommand;
-use Themes\Rozier\RozierApp;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Themes\Rozier\RozierApp;
 
 /**
  * {@inheritdoc}
@@ -76,11 +74,22 @@ class CacheController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('cache/deleteDoctrine.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        $this->assignation['cachesInfo'] = [
+            'resultCache' => $this->getService('em')->getConfiguration()->getResultCacheImpl(),
+            'hydratationCache' => $this->getService('em')->getConfiguration()->getHydrationCacheImpl(),
+            'queryCache' => $this->getService('em')->getConfiguration()->getQueryCacheImpl(),
+            'metadataCache' => $this->getService('em')->getConfiguration()->getMetadataCacheImpl(),
+        ];
+
+        foreach ($this->assignation['cachesInfo'] as $key => $value) {
+            if (null !== $value) {
+                $this->assignation['cachesInfo'][$key] = get_class($value);
+            } else {
+                $this->assignation['cachesInfo'][$key] = false;
+            }
+        }
+
+        return $this->render('cache/deleteDoctrine.html.twig', $this->assignation);
     }
 
     /**
@@ -89,7 +98,7 @@ class CacheController extends RozierApp
     private function buildDeleteDoctrineForm()
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form');
+                        ->createBuilder('form');
 
         return $builder->getForm();
     }
@@ -125,11 +134,7 @@ class CacheController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return new Response(
-            $this->getTwig()->render('cache/deleteSLIR.html.twig', $this->assignation),
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        return $this->render('cache/deleteSLIR.html.twig', $this->assignation);
     }
 
     /**
@@ -138,7 +143,7 @@ class CacheController extends RozierApp
     private function buildDeleteSLIRForm()
     {
         $builder = $this->getService('formFactory')
-            ->createBuilder('form');
+                        ->createBuilder('form');
 
         return $builder->getForm();
     }

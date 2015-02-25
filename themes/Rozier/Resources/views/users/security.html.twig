@@ -1,0 +1,59 @@
+{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+
+{% block content %}
+<section class="content-global edit-user">
+
+    <header class="content-header header-user header-user-edit">
+        <h1 class="content-title user-add-title">{{ "edit.user.%name%.security"|trans({'%name%': user.username })|truncate(25, true, '[…]') }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('usersHomePage') }}" title="{% trans %}back_to.users{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+	    {% include 'users/navBar.html.twig' with {'user':user, current:'security'} %}
+    </header>
+
+    <article class="content content-edit">
+
+    	{% form_theme form 'forms.html.twig' %}
+        <form id="edit-user-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+    	    <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-user-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+       		</fieldset>
+    	</form>
+
+
+        <div class="content-table-cont">
+            <table class="content-table users uk-table">
+                {% if not user.isAccountNonExpired %}
+                <tr>
+                    <td colspan="2" class="uk-alert-danger">{% trans %}user.account.has-expired{% endtrans %}</td>
+                </tr>
+                {% endif %}
+                {% if not user.isCredentialsNonExpired %}
+                <tr>
+                    <td colspan="2" class="uk-alert-danger">{% trans %}user.crendentials.has-expired{% endtrans %}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td><strong>{% trans %}user.last-login{% endtrans %}</strong></td>
+                    <td>{{ user.lastLogin|localizeddate('full', 'medium') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>{% trans %}user.password-requested-at{% endtrans %}</strong></td>
+                    {% if user.passwordRequestedAt %}
+                    <td>{{ user.passwordRequestedAt|localizeddate('full', 'medium') }}</td>
+                    {% else %}
+                    <td>{% trans %}never.requested{% endtrans %}</td>
+                    {% endif %}
+                </tr>
+            </table>
+        </div>
+    </article>
+
+    {% include 'users/actionsMenu.html.twig' %}
+</section>
+{% endblock %}
