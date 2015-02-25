@@ -465,7 +465,7 @@ class NodesSourcesHandler
             return $this->getParent()->getHandler()->getLastChild($criteria, $order, $securityContext);
         } else {
             $criteria['node.parent'] = null;
-            return $this->getFirstChild($criteria, $order, $securityContext);
+            return $this->getLastChild($criteria, $order, $securityContext);
         }
     }
 
