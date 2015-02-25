@@ -41,7 +41,13 @@
 </div>
 
 {% set prev = nodeSource.handler.previous(null,null,securityContext) %}
+{% if not prev %}
+{% set prev = nodeSource.handler.lastSibling(null,null,securityContext) %}
+{% endif %}
 {% set next = nodeSource.handler.next(null,null,securityContext) %}
+{% if not next %}
+{% set next = nodeSource.handler.firstSibling(null,null,securityContext) %}
+{% endif %}
 {% if not node.home and (prev or next) %}
 {% spaceless %}
 <nav class="contextual-menu">

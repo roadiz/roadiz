@@ -329,6 +329,129 @@ class NodesSourcesHandler
     }
 
     /**
+     * Get first node-source among current node-source children.
+     *
+     * @param  array|null           $criteria
+     * @param  array|null           $order
+     * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
+     *
+     * @return RZ\Roadiz\Core\Entities\NodesSources
+     */
+    public function getFirstChild(
+        array $criteria = null,
+        array $order = null,
+        SecurityContext $securityContext = null
+    ) {
+        $defaultCrit = [
+            'node.parent' => $this->nodeSource->getNode(),
+            'node.status' => ['<=', Node::PUBLISHED],
+            'translation' => $this->nodeSource->getTranslation(),
+        ];
+
+        if (null !== $order) {
+            $defaultOrder = $order;
+        } else {
+            $defaultOrder = [
+                'node.position' => 'ASC',
+            ];
+        }
+
+        if (null !== $criteria) {
+            $defaultCrit = array_merge($defaultCrit, $criteria);
+        }
+
+        if (null === $securityContext) {
+            $securityContext = Kernel::getService('securityContext');
+        }
+
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->findOneBy(
+                $defaultCrit,
+                $defaultOrder,
+                $securityContext
+            );
+    }
+    /**
+     * Get last node-source among current node-source children.
+     *
+     * @param  array|null           $criteria
+     * @param  array|null           $order
+     * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
+     *
+     * @return RZ\Roadiz\Core\Entities\NodesSources
+     */
+    public function getLastChild(
+        array $criteria = null,
+        array $order = null,
+        SecurityContext $securityContext = null
+    ) {
+        $defaultCrit = [
+            'node.parent' => $this->nodeSource->getNode(),
+            'node.status' => ['<=', Node::PUBLISHED],
+            'translation' => $this->nodeSource->getTranslation(),
+        ];
+
+        if (null !== $order) {
+            $defaultOrder = $order;
+        } else {
+            $defaultOrder = [
+                'node.position' => 'DESC',
+            ];
+        }
+
+        if (null !== $criteria) {
+            $defaultCrit = array_merge($defaultCrit, $criteria);
+        }
+
+        if (null === $securityContext) {
+            $securityContext = Kernel::getService('securityContext');
+        }
+
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->findOneBy(
+                $defaultCrit,
+                $defaultOrder,
+                $securityContext
+            );
+    }
+
+    /**
+     * Get first node-source in the same parent as current node-source.
+     *
+     * @param  array|null           $criteria
+     * @param  array|null           $order
+     * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
+     *
+     * @return RZ\Roadiz\Core\Entities\NodesSources
+     */
+    public function getFirstSibling(
+        array $criteria = null,
+        array $order = null,
+        SecurityContext $securityContext = null
+    ) {
+        return $this->getParent()->getHandler()->getFirstChild($criteria, $order, $securityContext);
+    }
+
+    /**
+     * Get last node-source in the same parent as current node-source.
+     *
+     * @param  array|null           $criteria
+     * @param  array|null           $order
+     * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
+     *
+     * @return RZ\Roadiz\Core\Entities\NodesSources
+     */
+    public function getLastSibling(
+        array $criteria = null,
+        array $order = null,
+        SecurityContext $securityContext = null
+    ) {
+        return $this->getParent()->getHandler()->getLastChild($criteria, $order, $securityContext);
+    }
+
+    /**
      * Get previous node-source from hierarchy.
      *
      * @param  array|null           $criteria
