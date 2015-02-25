@@ -97,7 +97,11 @@ class InstallCommand extends Command
              * Import default data
              */
             $installRoot = ROADIZ_ROOT . "/themes/Install";
-            $data = json_decode(file_get_contents($installRoot . "/config.json"), true);
+            $yaml = new YamlConfiguration($installRoot . "/config.yml");
+
+            $yaml->load();
+
+            $data = $yaml->getConfiguration();
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(

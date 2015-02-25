@@ -179,16 +179,20 @@ class DatabaseController extends InstallApp
      */
     public function databaseFixturesAction(Request $request)
     {
-        $fixtures = new Fixtures();
-        $fixtures->installFixtures();
+         $fixtures = new Fixtures();
+         $fixtures->installFixtures();
 
-        /*
-         * files to import
-         */
-        $installData = json_decode(file_get_contents(ROADIZ_ROOT . "/themes/Install/config.json"), true);
-        $this->assignation['imports'] = $installData['importFiles'];
+         /*
+          * files to import
+          */
+         $yaml = new YamlConfiguration(ROADIZ_ROOT . "/themes/Install/config.yml");
 
-        return $this->render('steps/databaseFixtures.html.twig', $this->assignation);
+         $yaml->load();
+
+         $installData = $yaml->getConfiguration();
+         $this->assignation['imports'] = $installData['importFiles'];
+
+         return $this->render('steps/databaseFixtures.html.twig', $this->assignation);
     }
 
     /**
