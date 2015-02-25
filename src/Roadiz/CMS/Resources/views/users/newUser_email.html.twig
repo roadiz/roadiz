@@ -1,6 +1,6 @@
 {% extends 'base_email.html.twig' %}
 
-{% block title %}<title>{% trans %}welcome.user.email{% endtrans %}</title>{% endblock %}
+{% block title %}<title>{{ 'welcome.user.email.%site%'|trans({'%site%':site})|escape }}</title>{% endblock %}
 
 {% block content_table %}
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -11,7 +11,7 @@
 	</tr>
 	<tr>
 		<td class="content-block">
-			<h2>{% trans %}welcome.user.email.%site%{% endtrans %}</h2>
+			<h2>{{ 'welcome.user.email.%site%'|trans({'%site%':site})|escape }}</h2>
 		</td>
 	</tr>
 	<tr>
@@ -26,16 +26,16 @@
 						<table class="invoice-items" cellpadding="0" cellspacing="0">
 							<tr>
 								<td>{% trans %}username{% endtrans %}</td>
-								<td class="alignright">{{ user.getUsername }}</td>
+								<td class="alignright">{{ user.username|escape }}</td>
 							</tr>
 							<tr>
 								<td>{% trans %}email{% endtrans %}</td>
-								<td class="alignright">{{ user.getEmail }}</td>
+								<td class="alignright">{{ user.email|escape }}</td>
 							</tr>
 							{% if user.getPlainPassword %}
 							<tr>
 								<td>{% trans %}password{% endtrans %}</td>
-								<td class="alignright"><code>{{ user.getPlainPassword }}</code></td>
+								<td class="alignright"><code>{{ user.plainPassword|escape }}</code></td>
 							</tr>
 							{% endif %}
 						</table>

@@ -29,7 +29,7 @@
 				<div class="footer">
 					<table width="100%">
 						<tr>
-							<td class="aligncenter content-block">{% trans %}for.questions.email{% endtrans %} <a href="mailto:{{ mailContact }}">{{ mailContact }}</a></td>
+							<td class="aligncenter content-block">{% trans %}for.questions.email{% endtrans %} <a href="mailto:{{ mailContact }}">{{ mailContact|escape }}</a></td>
 						</tr>
 					</table>
 				</div>

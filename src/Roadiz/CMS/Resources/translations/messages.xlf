@@ -3,7 +3,7 @@
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
             <!-- welcome.user.email -->
-            <trans-unit id="welcome.user.email">
+            <trans-unit id="welcome.user.email.%site%">
                 <source>welcome.user.email.%site%</source>
                 <target/>
             </trans-unit>
