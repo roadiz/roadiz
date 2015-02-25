@@ -35,8 +35,8 @@ use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -103,8 +103,6 @@ class InstallApp extends AppController
      * Welcome screen.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Core\Entities\Node              $node
-     * @param RZ\Roadiz\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -158,8 +156,6 @@ class InstallApp extends AppController
      * Check requirement screen.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Core\Entities\Node              $node
-     * @param RZ\Roadiz\Core\Entities\Translation       $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -373,10 +369,10 @@ class InstallApp extends AppController
      */
     protected function buildInformationsForm(Request $request)
     {
-        $siteName = \RZ\Roadiz\Core\Bags\SettingsBag::get('site_name');
-        $metaDescription = \RZ\Roadiz\Core\Bags\SettingsBag::get('seo_description');
-        $emailSender = \RZ\Roadiz\Core\Bags\SettingsBag::get('email_sender');
-        $emailSenderName = \RZ\Roadiz\Core\Bags\SettingsBag::get('email_sender_name');
+        $siteName = SettingsBag::get('site_name');
+        $metaDescription = SettingsBag::get('seo_description');
+        $emailSender = SettingsBag::get('email_sender');
+        $emailSenderName = SettingsBag::get('email_sender_name');
         $timeZone = $this->getService('config')['timezone'];
 
         $timeZoneList = include dirname(__FILE__) . '/Resources/import/timezones.php';

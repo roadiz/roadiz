@@ -35,6 +35,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Themes\Rozier\RozierApp;
 
 /**
