@@ -85,28 +85,10 @@ class NodeTypesCommand extends Command
                 'Show requested node-type'
             )
             ->addOption(
-                'listFields',
+                'list-fields',
                 null,
                 InputOption::VALUE_NONE,
                 'List requested node-type fields'
-            )
-            ->addOption(
-                'generateEntity',
-                null,
-                InputOption::VALUE_NONE,
-                'Generate requested node-type source entity class'
-            )
-            ->addOption(
-                'generateAllEntities',
-                null,
-                InputOption::VALUE_NONE,
-                'Generate every node-types source entity classes'
-            )
-            ->addOption(
-                'regenerateAllEntities',
-                null,
-                InputOption::VALUE_NONE,
-                'Delete and re-generate every node-types source entity classes'
             );
     }
 
@@ -123,7 +105,6 @@ class NodeTypesCommand extends Command
 
             if ($nodetype !== null) {
                 $text = $nodetype->getOneLineSummary();
-                $text .= $nodetype->getFieldsSummary();
 
                 if ($input->getOption('delete')) {
                     if ($this->dialog->askConfirmation(
@@ -145,10 +126,8 @@ class NodeTypesCommand extends Command
                     Kernel::getService('em')->flush();
 
                     $text .= '<info>'.$nodetype->getName()." showed…</info>".PHP_EOL;
-                } elseif ($input->getOption('listFields')) {
+                } elseif ($input->getOption('list-fields')) {
                     $text .= $nodetype->getFieldsSummary().PHP_EOL;
-                } elseif ($input->getOption('generateEntity')) {
-                    $text .= '<info>'.$nodetype->getHandler()->generateSourceEntityClass().'</info>'.PHP_EOL;
                 }
             } else {
                 if ($input->getOption('create')) {
@@ -161,20 +140,9 @@ class NodeTypesCommand extends Command
                 ->findAll();
 
             if (count($nodetypes) > 0) {
-                if ($input->getOption('generateAllEntities')) {
-                    foreach ($nodetypes as $nt) {
-                        $text .= '<info>'.$nt->getHandler()->generateSourceEntityClass().'</info>'.PHP_EOL;
-                    }
-                } elseif ($input->getOption('regenerateAllEntities')) {
-                    foreach ($nodetypes as $nt) {
-                        $nt->getHandler()->removeSourceEntityClass();
-                        $text .= '<info>'.$nt->getHandler()->generateSourceEntityClass().'</info>'.PHP_EOL;
-                    }
-                } else {
-                    $text = '<info>Existing node-types…</info>'.PHP_EOL;
-                    foreach ($nodetypes as $nt) {
-                        $text .= $nt->getOneLineSummary();
-                    }
+                $text = '<info>Existing node-types…</info>'.PHP_EOL;
+                foreach ($nodetypes as $nt) {
+                    $text .= $nt->getOneLineSummary();
                 }
             } else {
                 $text = '<info>No available node-types…</info>'.PHP_EOL;

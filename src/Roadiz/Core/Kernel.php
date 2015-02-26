@@ -176,6 +176,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
 
         $application->add(new \RZ\Roadiz\Console\TranslationsCommand);
         $application->add(new \RZ\Roadiz\Console\NodeTypesCommand);
+        $application->add(new \RZ\Roadiz\Console\NodesSourcesCommand);
         $application->add(new \RZ\Roadiz\Console\NodesCommand);
         $application->add(new \RZ\Roadiz\Console\ThemesCommand);
         $application->add(new \RZ\Roadiz\Console\InstallCommand);
