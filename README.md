@@ -126,10 +126,10 @@ bin/phpcbf --report=full --report-file=./report.txt \
 ### Migrating with an existing database
 
 When you import your existing database, before performing any database migration,
-you **must** regenerate first all node-types classes.
+you **must** regenerate first all node-sources PHP classes.
 
 ```
-bin/roadiz core:node-types --regenerateAllEntities
+bin/roadiz core:sources --regenerate
 ```
 
 This will parse every node-types from your existing database and recreate PHP classes in `gen-src/GeneratedNodeSources` folder.
@@ -188,7 +188,7 @@ bin/roadiz cache --clear-all;
 After each Roadiz upgrade you should upgrade your node-sources entity classes and upgrade database schema.
 
 ```
-bin/roadiz core:node-types --regenerateAllEntities;
+bin/roadiz core:sources --regenerate
 bin/roadiz orm:schema-tool:update --force
 bin/roadiz cache --clear-all;
 
