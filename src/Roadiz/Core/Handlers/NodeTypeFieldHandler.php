@@ -81,36 +81,54 @@ class NodeTypeFieldHandler
      */
     public function generateSourceField()
     {
-        if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
-            $var = 'private $'.$this->nodeTypeField->getName().';';
-            if ($this->nodeTypeField->getType() === NodeTypeField::BOOLEAN_T) {
-                $var = 'private $'.$this->nodeTypeField->getName().' = false;';
-            }
-            if ($this->nodeTypeField->getType() === NodeTypeField::INTEGER_T) {
-                $var = 'private $'.$this->nodeTypeField->getName().' = 0;';
-            }
-
-            return '
-                /**
-                 * @ORM\Column(type="'.
-                    NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].
-                    '", '.
-                    $this->getDecimalPrecision().
-                    'nullable=true )
-                 */
-                '.$var.PHP_EOL.$this->generateSourceGetter().$this->generateSourceSetter();
-
-        } elseif (AbstractField::DOCUMENTS_T === $this->nodeTypeField->getType()) {
-            return $this->generateSourceGetter();
-        }
-
-        return '';
+        return "    //".$this->nodeTypeField->getLabel().
+               $this->getORMAnnotation().
+               $this->getFieldDeclaration().
+               $this->generateSourceGetter().
+               $this->generateSourceSetter().PHP_EOL;
     }
 
     protected function getDecimalPrecision()
     {
         if ($this->nodeTypeField->getType() == NodeTypeField::DECIMAL_T) {
             return 'precision=10, scale=3, ';
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getORMAnnotation()
+    {
+        if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
+            return '
+    /**
+     * @ORM\Column(type="'.
+            NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].
+            '", '.
+            $this->getDecimalPrecision().
+            'nullable=true )
+     */'.PHP_EOL;
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getFieldDeclaration()
+    {
+        if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
+            if ($this->nodeTypeField->getType() === NodeTypeField::BOOLEAN_T) {
+                return '    private $'.$this->nodeTypeField->getName().' = false;'.PHP_EOL;
+            } elseif ($this->nodeTypeField->getType() === NodeTypeField::INTEGER_T) {
+                return '    private $'.$this->nodeTypeField->getName().' = 0;'.PHP_EOL;
+            } else {
+                return '    private $'.$this->nodeTypeField->getName().';'.PHP_EOL;
+            }
         } else {
             return '';
         }
@@ -181,6 +199,24 @@ class NodeTypeFieldHandler
     public function '.$this->nodeTypeField->getGetterName().'()
     {
         return $this->getHandler()->getDocumentsFromFieldName("'.$this->nodeTypeField->getName().'");
+    }'.PHP_EOL;
+        } elseif (AbstractField::NODES_T === $this->nodeTypeField->getType()) {
+            return '
+    /**
+     * @return array Node array
+     */
+    public function '.$this->nodeTypeField->getGetterName().'()
+    {
+        return $this->getNode()->getHandler()->getNodesFromFieldName("'.$this->nodeTypeField->getName().'");
+    }'.PHP_EOL;
+        } elseif (AbstractField::CUSTOM_FORMS_T === $this->nodeTypeField->getType()) {
+            return '
+    /**
+     * @return array CustomForm array
+     */
+    public function '.$this->nodeTypeField->getGetterName().'()
+    {
+        return $this->getNode()->getHandler()->getCustomFormsFromFieldName("'.$this->nodeTypeField->getName().'");
     }'.PHP_EOL;
         }
 

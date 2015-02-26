@@ -5,7 +5,7 @@
         {% if home.nodeSources.first.title %}
             {% set hometitle = home.nodeSources.first.title %}
         {% else %}
-            {% set hometitle = home.getNodeName %}
+            {% set hometitle = home.nodeName %}
         {% endif %}
     {% else %}
         {% set hometitle = "home"|trans %}
@@ -14,7 +14,7 @@
     {#
      #  Home with a node
      #}
-    <a href="{{ home.getHandler.getUrl }}" class="uk-navbar-brand"><i class="uk-icon-home"></i></a>
+    <a href="{{ home.nodeSources.first|url }}" class="uk-navbar-brand"><i class="uk-icon-home"></i></a>
 
     {#
      # Get home page with no node

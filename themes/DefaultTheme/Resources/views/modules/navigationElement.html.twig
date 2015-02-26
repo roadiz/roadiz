@@ -4,13 +4,13 @@
 	{% set title = source.node.nodeName %}
 {% endif %}
 
-{% set children = source.handler.children(null, null, securityContext) %}
+{% set children = source|children %}
 
 <li data-node-id="{{ source.node.id }}"
 	class="{% if source.node.id == activeId %}active uk-active{% endif %} {% if children|length and level < 1 %}uk-parent{% endif %}"
 	{% if children|length and level < 1 %}data-uk-dropdown{% endif %}>
 
-	<a href="{{ source.handler.url }}">{{ title }}</a>
+	<a href="{{ source|url }}">{{ title }}</a>
 
 	{% if children|length and level < 1 %}
 	<div class="uk-dropdown">
