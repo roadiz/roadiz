@@ -55,7 +55,7 @@ Once you’ve installed Roadiz, just type `/rz-admin` after your server domain n
 
 To connect manually to your database, you can add this to your `config.yml`:
 
-```
+```yml
 doctrine:
     driver: pdo_mysql
     host: localhost
@@ -67,7 +67,7 @@ doctrine:
 
 If you prefer socket:
 
-```
+```yml
 doctrine:
     driver: pdo_mysql
     unix_socket: "/path/to/mysql.socket"
@@ -86,7 +86,7 @@ For more options you can visit *Doctrine* website: http://doctrine-dbal.readthed
 Roadiz can use Apache Solr search-engine to index nodes.
 Add this to your `config.yml` to link your Roadiz install to your Solr server:
 
-```
+```yml
 solr:
     endpoint:
         localhost:
@@ -103,12 +103,12 @@ solr:
 
 * Install *dev* dependencies: `composer update --dev`
 * *PHPUnit tests*:
-```
+```bash
 bin/phpunit -v --bootstrap=tests/bootstrap.php tests/
 ```
 * *Code quality*, use PHP_CodeSniffer with *PSR2 standard*:
 
-```
+```bash
 # Check
 bin/phpcs --report=full --report-file=./report.txt \
                 --extensions=php --warning-severity=0 \
@@ -128,7 +128,7 @@ bin/phpcbf --report=full --report-file=./report.txt \
 When you import your existing database, before performing any database migration,
 you **must** regenerate first all node-sources PHP classes.
 
-```
+```bash
 bin/roadiz core:sources --regenerate
 ```
 
@@ -141,7 +141,7 @@ First **be sure your node-types sources classes exist**.
 If you did not generate them just have a look at *Migrating with an existing database* section.
 Then you can perform migration :
 
-```
+```bash
 bin/roadiz orm:schema-tool:update --dump-sql
 ```
 
@@ -149,7 +149,7 @@ Be careful, check the output to see if any node-source data will be deleted!
 Doctrine will parse every node-type classes to see new and deprecated node-types.
 Then when you are sure to perform migration, just do:
 
-```
+```bash
 bin/roadiz orm:schema-tool:update --force
 bin/roadiz cache --clear-all;
 ```
@@ -162,7 +162,7 @@ The `cache --clear-all` command force Doctrine to purge its metadata cache.
 You can create a theme with your own entities. Just add your `Entities` folder
 to the global configuration file.
 
-```
+```yml
 entities:
     - src/Roadiz/Core/Entities
     - src/Roadiz/Core/AbstractEntities
@@ -172,14 +172,14 @@ entities:
 
 Verify if everything is OK by checking migrations:
 
-```
+```bash
 bin/roadiz orm:schema-tool:update --dump-sql;
 ```
 
 If you see your entities being created and no system database erased, just `--execute` your migration.
 If Doctrine send some error, you probably need to clear metadata cache:
 
-```
+```bash
 bin/roadiz cache --clear-all;
 ```
 
@@ -187,7 +187,7 @@ bin/roadiz cache --clear-all;
 
 After each Roadiz upgrade you should upgrade your node-sources entity classes and upgrade database schema.
 
-```
+```bash
 bin/roadiz core:sources --regenerate
 bin/roadiz orm:schema-tool:update --force
 bin/roadiz cache --clear-all;
