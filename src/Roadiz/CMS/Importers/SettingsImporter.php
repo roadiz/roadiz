@@ -49,6 +49,7 @@ class SettingsImporter implements ImporterInterface
     public static function importJsonFile($serializedData)
     {
         $settingGroups = SettingCollectionJsonSerializer::deserialize($serializedData);
+
         $groupsNames = Kernel::getService('em')
                   ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                   ->findAllNames();
@@ -66,6 +67,7 @@ class SettingsImporter implements ImporterInterface
              */
             foreach ($settingGroup->getSettings() as $setting) {
                 if (!in_array($setting->getName(), $settingsNames)) {
+                    // do nothing
                 } else {
                     $setting = Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Setting')
@@ -94,7 +96,6 @@ class SettingsImporter implements ImporterInterface
                     $settingGroup = Kernel::getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                         ->findOneByName($settingGroup->getName());
-
                 }
             }
             /*

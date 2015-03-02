@@ -82,17 +82,20 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
         }
         $collection = new ArrayCollection();
         $groups = json_decode($jsonString, true);
+
         foreach ($groups as $group) {
-            if (!empty($group['name']) &&
-                isset($group['inMenu'])) {
+            if (!empty($group['name'])) {
                 $newGroup = new SettingGroup();
                 $newGroup->setName($group['name']);
-                $newGroup->setInMenu($group['inMenu']);
+
+                if (isset($group['inMenu'])) {
+                    $newGroup->setInMenu($group['inMenu']);
+                }
 
                 if (!empty($group['settings'])) {
                     foreach ($group['settings'] as $setting) {
-                        if (!empty($setting['name']) &&
-                            !empty($setting['type'])) {
+                        // do not use !empty on type as it can be 0.
+                        if (!empty($setting['name']) && isset($setting['type'])) {
                             $newSetting = new Setting();
                             $newSetting->setName($setting['name']);
                             $newSetting->setType($setting['type']);
