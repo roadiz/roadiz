@@ -66,6 +66,7 @@ class StringHandler
         $string = static::removeDiacritics($string);
         $string = trim(strtolower($string));
         $string = preg_replace('#([^a-zA-Z0-9]+)#', '-', $string);
+        $string = trim($string, "-");
 
         return $string;
     }
@@ -95,6 +96,7 @@ class StringHandler
         $string = trim(strtolower($string));
         $string = static::removeDiacritics($string);
         $string = preg_replace('#([^a-zA-Z0-9\.]+)#', '_', $string);
+        $string = trim($string, "_");
 
         return $string;
     }
