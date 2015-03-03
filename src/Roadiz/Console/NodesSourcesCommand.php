@@ -30,10 +30,7 @@
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,24 +40,21 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NodesSourcesCommand extends Command
 {
-    private $dialog;
-
     protected function configure()
     {
         $this->setName('core:sources')
-            ->setDescription('Manage node-sources')
-            ->addOption(
-                'regenerate',
-                null,
-                InputOption::VALUE_NONE,
-                'Delete and re-generate every nodes-sources entity classes'
-            );
+             ->setDescription('Manage node-sources')
+             ->addOption(
+                 'regenerate',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Delete and re-generate every nodes-sources entity classes'
+             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
-        $text="";
+        $text = "";
 
         $nodetypes = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
@@ -70,11 +64,11 @@ class NodesSourcesCommand extends Command
             if ($input->getOption('regenerate')) {
                 foreach ($nodetypes as $nt) {
                     $nt->getHandler()->removeSourceEntityClass();
-                    $text .= '<info>'.$nt->getHandler()->generateSourceEntityClass().'</info>'.PHP_EOL;
+                    $text .= '<info>' . $nt->getHandler()->generateSourceEntityClass() . '</info>' . PHP_EOL;
                 }
             }
         } else {
-            $text = '<info>No available node-types…</info>'.PHP_EOL;
+            $text = '<info>No available node-types…</info>' . PHP_EOL;
         }
 
         $output->writeln($text);

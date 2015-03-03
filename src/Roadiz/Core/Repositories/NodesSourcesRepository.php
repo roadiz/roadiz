@@ -36,6 +36,8 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Security\Core\SecurityContext;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\QueryException;
 
 /**
  * EntityRepository that implements search engine query with Solr.
@@ -351,7 +353,7 @@ class NodesSourcesRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -411,9 +413,9 @@ class NodesSourcesRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $finalQuery);
         try {
             return $finalQuery->getResult();
-        } catch (\Doctrine\ORM\Query\QueryException $e) {
+        } catch (QueryException $e) {
             return null;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -448,9 +450,9 @@ class NodesSourcesRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleResult();
-        } catch (\Doctrine\ORM\Query\QueryException $e) {
+        } catch (QueryException $e) {
             return null;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -553,15 +555,27 @@ class NodesSourcesRepository extends EntityRepository
      */
     public function findByLatestUpdated($maxResult = 5)
     {
-         $query = $this->_em->createQuery('
-            SELECT DISTINCT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
-            INNER JOIN ns.logs log
-            ORDER BY log.datetime DESC')
-                    ->setMaxResults($maxResult);
+        $query = $this->createQueryBuilder('ns');
+        $query->select('ns, max(log.datetime) as max_date');
+        $query->innerJoin('ns.logs', 'log');
+        $query->groupBy('ns.id');
+        $query->setMaxResults($maxResult);
+        $query->orderBy('max_date', 'DESC');
+        $query = $query->getQuery();
 
         try {
-            return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+            /*
+             * We need to extract only the first value
+             * as the second is 'max_date'
+             */
+            $ns = [];
+            $results = $query->getResult();
+            foreach ($results as $group) {
+                $ns[] = $group[0];
+            }
+
+            return $ns;
+        } catch (NoResultException $e) {
             return null;
         }
     }
