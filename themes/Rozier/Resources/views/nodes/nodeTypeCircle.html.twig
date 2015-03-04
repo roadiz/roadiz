@@ -1,3 +1,6 @@
-<span class="node-edit-node-type-circle" title="{{ node.nodeType.displayName }}" data-uk-tooltip="{animation:true}">
+<a href="{{ path('nodeTypeFieldsListPage', {'nodeTypeId': node.nodeType.id}) }}"
+   class="node-edit-node-type-circle"
+   title="{{ node.nodeType.displayName }}"
+   data-uk-tooltip="{animation:true}">
     <i class="uk-icon-rz-infos"></i>
-</span>
+</a>

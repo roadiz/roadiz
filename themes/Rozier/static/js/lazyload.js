@@ -16,6 +16,10 @@ var Lazyload = function() {
     _this.mainColor = isset(Rozier.mainColor) ? Rozier.mainColor : '#ffffff';
     _this.initLoader();
 
+    /*
+     * Start history with first hard loaded page
+     */
+    history.pushState({}, null, window.location.href);
 };
 
 Lazyload.prototype.$linksSelector = null;
@@ -28,7 +32,6 @@ Lazyload.prototype.HTMLeditorNavToRemove = null;
 Lazyload.prototype.documentsList = null;
 Lazyload.prototype.mainColor = null;
 Lazyload.prototype.$canvasLoaderContainer = null;
-
 
 /**
  * Init loader
