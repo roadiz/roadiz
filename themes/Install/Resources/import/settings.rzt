@@ -136,6 +136,12 @@
                 "visible": true
             },
             {
+                "name": "pinterest_url",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
                 "name": "twitter_url",
                 "value": "",
                 "type": 0,

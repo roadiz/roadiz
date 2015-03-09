@@ -60,7 +60,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.5.0";
+    public static $cmsVersion = "0.6.0";
     private static $instance = null;
 
     public $container = null;
@@ -176,6 +176,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
 
         $application->add(new \RZ\Roadiz\Console\TranslationsCommand);
         $application->add(new \RZ\Roadiz\Console\NodeTypesCommand);
+        $application->add(new \RZ\Roadiz\Console\NodesSourcesCommand);
         $application->add(new \RZ\Roadiz\Console\NodesCommand);
         $application->add(new \RZ\Roadiz\Console\ThemesCommand);
         $application->add(new \RZ\Roadiz\Console\InstallCommand);

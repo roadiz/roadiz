@@ -36,6 +36,8 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Security\Core\SecurityContext;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\QueryException;
 
 /**
  * EntityRepository that implements search engine query with Solr.
@@ -124,9 +126,15 @@ class NodesSourcesRepository extends EntityRepository
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
+     * @param boolean $joinedNode
+     * @param boolean $joinedNodeType
      */
-    protected function filterByCriteria(&$criteria, &$qb, &$joinedNode = false)
-    {
+    protected function filterByCriteria(
+        &$criteria,
+        &$qb,
+        &$joinedNode = false,
+        &$joinedNodeType = false
+    ) {
         /*
          * Reimplementing findBy features…
          */
@@ -143,6 +151,26 @@ class NodesSourcesRepository extends EntityRepository
 
             // Dots are forbidden in field definitions
             $baseKey = str_replace('.', '_', $key);
+
+            if (false !== strpos($key, 'node.nodeType.')) {
+                if (!$joinedNode) {
+                    $qb->innerJoin(
+                        'ns.node',
+                        'n'
+                    );
+                    $joinedNode = true;
+                }
+                if (!$joinedNodeType) {
+                    $qb->innerJoin(
+                        'n.nodeType',
+                        'nt'
+                    );
+                    $joinedNodeType = true;
+                }
+
+                $prefix = 'nt.';
+                $key = str_replace('node.nodeType.', '', $key);
+            }
 
             if (false !== strpos($key, 'node.')) {
                 if (!$joinedNode) {
@@ -229,6 +257,7 @@ class NodesSourcesRepository extends EntityRepository
     ) {
 
         $joinedNode = false;
+        $joinedNodeType = false;
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'ns')
            ->add('from', $this->getEntityName() . ' ns');
@@ -240,7 +269,7 @@ class NodesSourcesRepository extends EntityRepository
          */
         $this->filterByTag($criteria, $qb, $joinedNode);
 
-        $this->filterByCriteria($criteria, $qb, $joinedNode);
+        $this->filterByCriteria($criteria, $qb, $joinedNode, $joinedNodeType);
 
         // Add ordering
         if (null !== $orderBy) {
@@ -324,7 +353,7 @@ class NodesSourcesRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -384,9 +413,9 @@ class NodesSourcesRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $finalQuery);
         try {
             return $finalQuery->getResult();
-        } catch (\Doctrine\ORM\Query\QueryException $e) {
+        } catch (QueryException $e) {
             return null;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -421,9 +450,9 @@ class NodesSourcesRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleResult();
-        } catch (\Doctrine\ORM\Query\QueryException $e) {
+        } catch (QueryException $e) {
             return null;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -526,15 +555,27 @@ class NodesSourcesRepository extends EntityRepository
      */
     public function findByLatestUpdated($maxResult = 5)
     {
-         $query = $this->_em->createQuery('
-            SELECT DISTINCT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
-            INNER JOIN ns.logs log
-            ORDER BY log.datetime DESC')
-                    ->setMaxResults($maxResult);
+        $query = $this->createQueryBuilder('ns');
+        $query->select('ns, max(log.datetime) as max_date');
+        $query->innerJoin('ns.logs', 'log');
+        $query->groupBy('ns.id');
+        $query->setMaxResults($maxResult);
+        $query->orderBy('max_date', 'DESC');
+        $query = $query->getQuery();
 
         try {
-            return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+            /*
+             * We need to extract only the first value
+             * as the second is 'max_date'
+             */
+            $ns = [];
+            $results = $query->getResult();
+            foreach ($results as $group) {
+                $ns[] = $group[0];
+            }
+
+            return $ns;
+        } catch (NoResultException $e) {
             return null;
         }
     }

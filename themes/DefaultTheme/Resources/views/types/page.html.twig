@@ -4,7 +4,7 @@
 	{% if nodeSource.headerImage|length > 0 %}
 	{% set headerImage = nodeSource.headerImage[0] %}
 	<header>
-		<figure style="background-image:url({{ headerImage.viewer.documentUrlByArray(themeServices.imageFormats.headerImage) }})"></figure>
+		<figure style="background-image:url({{ headerImage|url(themeServices.imageFormats.headerImage) }})"></figure>
 	</header>
 	{% else %}
 	{{ parent() }}
@@ -13,12 +13,12 @@
 
 {% block content %}
 {% spaceless %}
-{% set breadcrumb = nodeSource.handler.parents %}
+{% set breadcrumb = nodeSource|parents %}
 <div class="breadcrumb">
 	{% for parent in breadcrumb|reverse %}
 		{% if parent.id == home.id %}
 		{% else %}
-	    <a href="{{ parent.handler.url }}">{{ parent.title }}</a>
+	    <a href="{{ parent|url }}">{{ parent.title }}</a>
 		{% endif %}
 	{% endfor %}
 </div>
@@ -32,7 +32,7 @@
 	{% for document in nodeSource.pictures %}
 		{% set imageMetas = document.documentTranslations.first %}
 		<figure class="uk-thumbnail">
-			{{ document.viewer.documentByArray(themeServices.imageFormats.thumbnail)|raw }}
+			{{ document|display(themeServices.imageFormats.thumbnail) }}
 			{% if imageMetas.name or imageMetas.copyright %}
 			<figcaption>{{ imageMetas.name }} {{ imageMetas.copyright }}</figcaption>
 			{% endif %}
@@ -40,16 +40,21 @@
 	{% endfor %}
 </div>
 
-{% set prev = nodeSource.handler.previous(null,null,securityContext) %}
-{% set next = nodeSource.handler.next(null,null,securityContext) %}
+{% set prev = nodeSource|previous %}
+{% if not prev %}{% set prev = nodeSource|lastSibling %}{% endif %}
+
+{% set next = nodeSource|next %}
+{% if not next %}{% set next = nodeSource|firstSibling %}{% endif %}
+
+
 {% if not node.home and (prev or next) %}
 {% spaceless %}
 <nav class="contextual-menu">
 	{% if prev %}
-		<a class="previous" href="{{ prev.handler.url }}"><i class="uk-icon-arrow-left"></i> {{ prev.title }}</a>
+		<a class="previous" href="{{ prev|url }}"><i class="uk-icon-arrow-left"></i> {{ prev.title }}</a>
 	{% endif %}
 	{% if next %}
-		<a class="next" href="{{ next.handler.url }}">{{ next.title }} <i class="uk-icon-arrow-right"></i></a>
+		<a class="next" href="{{ next|url }}">{{ next.title }} <i class="uk-icon-arrow-right"></i></a>
 	{% endif %}
 </nav>
 {% endspaceless %}

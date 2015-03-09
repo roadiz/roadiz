@@ -40,12 +40,9 @@
 
             {% spaceless %}
                 <a class="uk-button uk-button-bulk uk-button-bulk-deselect uk-button-bulk-deselect-documents" href="#" title="{% trans %}deselect.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-square-o"></i></a>
-
-                <a class="uk-button uk-button-bulk uk-button-danger uk-button-bulk-delete uk-button-bulk-delete-documents" href="#" title="{% trans %}bulk.delete.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
-
                 <a class="uk-button uk-button-bulk uk-button-bulk-download uk-button-bulk-download-documents" href="#" title="{% trans %}bulk.download.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
-
                 <a class="uk-button uk-button-bulk uk-button-bulk-folder uk-button-bulk-folder-documents" href="#" title="{% trans %}bulk.fold.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-folder-tree-mini"></i></a>
+                <a class="uk-button uk-button-bulk uk-button-danger uk-button-bulk-delete uk-button-bulk-delete-documents" href="#" title="{% trans %}bulk.delete.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
 
                 <div class="bulk-folder-cont documents-bulk-folder-cont">
                     {% form_theme joinFolderForm 'forms.html.twig' %}

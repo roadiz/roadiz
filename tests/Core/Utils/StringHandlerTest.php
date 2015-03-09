@@ -147,6 +147,27 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider slugifyProvider
+     */
+    public function testSlugify($input, $expected)
+    {
+        // Assert
+        $this->assertEquals($expected, StringHandler::slugify($input));
+    }
+
+    public function slugifyProvider()
+    {
+        return array(
+            array("Ligula  $* _--Egestas Mattis Nullam$* _  ", "ligula-egestas-mattis-nullam"),
+            array("Véèsti buœlum Rïsus+", "veesti-buoelum-risus"),
+            array("J'aime les sushis!", "j-aime-les-sushis"),
+            array("J'aime les\n sushis!\t\n", "j-aime-les-sushis"),
+            array("?header_image", "header-image"),
+            array("JAime les_sushis", "jaime-les-sushis"),
+        );
+    }
+
+    /**
      * @dataProvider encodeWithSecretProvider
      */
     public function testEncodeWithSecret($input, $secret)

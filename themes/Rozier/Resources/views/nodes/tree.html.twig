@@ -5,7 +5,10 @@
 
     <header class="content-header header-node header-nodes-tree">
         {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
-        <h1 class="content-title node-edit-title">{{ source.getTitle|truncate(25, true, '[…]') }}{% if specificNodeTree.tag %} ({{ specificNodeTree.tag.translatedTags.first.name }}){% endif %}</h1>
+        <h1 class="content-title node-edit-title">
+            {{ source.getTitle|truncate(25, true, '[…]') }}{% if specificNodeTree.tag %} ({{ specificNodeTree.tag.translatedTags.first.name }}){% endif %}
+            {% include 'nodes/nodeTypeCircle.html.twig' %}
+        </h1>
 
         {% include 'widgets/countFiltersBar.html.twig' with {filters: specificNodeTree.filters} only %}
         {% include 'nodes/navBack.html.twig' %}

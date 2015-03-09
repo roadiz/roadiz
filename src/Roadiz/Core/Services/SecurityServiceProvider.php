@@ -37,6 +37,8 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Log\Logger;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
@@ -60,8 +62,40 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 {
     public function register(Container $container)
     {
+        /*
+         * PDO instance only used with SessionStorage
+         */
+        $container['session.pdo'] = function ($c) {
+            $pdo = new \PDO(
+                $c['config']["sessionStorage"]['dsn'],
+                $c['config']["sessionStorage"]['user'],
+                $c['config']["sessionStorage"]['password']
+            );
+            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+            return $pdo;
+        };
+
+        $container['session.storage'] = function ($c) {
+            if ($c['config'] !== null &&
+                isset($c['config']["sessionStorage"])) {
+                if ($c['config']["sessionStorage"]["type"] == "pdo" &&
+                    isset($c['config']["sessionStorage"]["options"])) {
+                    return new NativeSessionStorage(
+                        [],
+                        new PdoSessionHandler(
+                            $c['session.pdo'],
+                            $c['config']["sessionStorage"]["options"]
+                        )
+                    );
+                }
+            } else {
+                return null;
+            }
+        };
+
         $container['session'] = function ($c) {
-            $session = new Session();
+            $session = new Session($c['session.storage']);
             Kernel::getInstance()->getRequest()->setSession($session);
             return $session;
         };
@@ -134,7 +168,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['allBasicRoles'] = function ($c) {
             return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Role')
-                           ->getAllBasicRoleName();
+            ->getAllBasicRoleName();
         };
 
         $container['roleHierarchyVoter'] = function ($c) {

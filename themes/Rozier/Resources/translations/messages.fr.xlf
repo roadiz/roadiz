@@ -3453,7 +3453,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
       <note/></trans-unit>
       <trans-unit xml:space="preserve" id="316" approved="yes">
         <source>statuses</source>
-        <target state="translated">Paramètres</target>
+        <target state="translated">Statuts</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/88/9a/f2a9ab31044ec747813125ad428def2be716184dc2d6462206038ed37577.php</context>
           <context context-type="linenumber">85</context>

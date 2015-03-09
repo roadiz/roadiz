@@ -41,6 +41,21 @@
             {% spaceless %}
                 <a class="uk-button uk-button-bulk uk-button-bulk-deselect uk-button-bulk-deselect-nodes" href="#" title="{% trans %}deselect.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-square-o"></i></a>
 
+
+                {# Links #}
+                {% if tagNodesForm %}
+                    <a class="uk-button uk-button-bulk uk-button-bulk-folder uk-button-bulk-folder-nodes"
+                        href="#"
+                        title="{% trans %}link.tags{% endtrans %}"
+                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-tags"></i></a>
+                {% endif %}
+                {% if statusNodesForm %}
+                    <a class="uk-button uk-button-bulk uk-button-bulk-status uk-button-bulk-status-nodes"
+                        href="#"
+                        title="{% trans %}nodes.status{% endtrans %}"
+                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-published"></i></a>
+                {% endif %}
+
                 {% if deleteNodesForm %}
                     {% form_theme deleteNodesForm 'forms.html.twig' %}
                     <form class="uk-form uk-form-horizontal node-bulk-delete-form" action="{{ path('nodesBulkDeletePage') }}" method="get" {{ form_enctype(deleteNodesForm) }}>
@@ -52,21 +67,6 @@
                             data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i> </button>
                     </form>
                 {% endif %}
-
-                {# Links #}
-                {% if tagNodesForm %}
-                    <a class="uk-button uk-button-bulk uk-button-bulk-folder uk-button-bulk-folder-nodes"
-                        href="#"
-                        title="{% trans %}link.tags{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-folder-tree-mini"></i></a>
-                {% endif %}
-                {% if statusNodesForm %}
-                    <a class="uk-button uk-button-bulk uk-button-bulk-status uk-button-bulk-status-nodes"
-                        href="#"
-                        title="{% trans %}nodes.status{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-published"></i></a>
-                {% endif %}
-
                 {# Forms #}
                 {% if tagNodesForm %}
                     <div class="bulk-folder-cont nodes-bulk-folder-cont">
