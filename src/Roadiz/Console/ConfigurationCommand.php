@@ -71,7 +71,7 @@ class ConfigurationCommand extends Command
                 'Disable the install assistant'
             )
             ->addOption(
-                'generateHtaccess',
+                'generate-htaccess',
                 null,
                 InputOption::VALUE_NONE,
                 'Generate .htaccess files to protect critical directories'
@@ -117,7 +117,7 @@ class ConfigurationCommand extends Command
             $text .= 'Do not forget to empty all cache and purge XCache/APC caches manually.'.PHP_EOL;
         }
 
-        if ($input->getOption('generateHtaccess')) {
+        if ($input->getOption('generate-htaccess')) {
             $text .= '<info>Generating .htaccess files…</info>'.PHP_EOL;
             // Simple deny access files
             $paths = [

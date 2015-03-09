@@ -46,7 +46,7 @@ This is the recommended method if you are expert.
 * Copy `conf/config.default.yml` to `conf/config.yml`. After this command, `bin/roadiz` executable is available.
 * Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
 **If you don’t have any permission to create a virtual host,
-execute `bin/roadiz config --generateHtaccess` to create `.htaccess` files.**
+execute `bin/roadiz config --generate-htaccess` to create `.htaccess` files.**
 * Go to your web-browser to launch Install wizard.
 
 Once you’ve installed Roadiz, just type `/rz-admin` after your server domain name to reach backoffice interface.
