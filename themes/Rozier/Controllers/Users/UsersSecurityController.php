@@ -27,7 +27,7 @@
  * @file UsersSecurityController.php
  * @author Ambroise Maupate
  */
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\Users;
 
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;

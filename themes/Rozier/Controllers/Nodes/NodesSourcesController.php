@@ -28,24 +28,15 @@
  * @file NodesController.php
  * @author Ambroise Maupate
  */
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\Nodes;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-
-use Themes\Rozier\RozierApp;
-use Themes\Rozier\Traits\NodesSourcesTrait;
-
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Translation\Translator;
-
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Themes\Rozier\RozierApp;
+use Themes\Rozier\Traits\NodesSourcesTrait;
 
 /**
  * Nodes sources controller.
@@ -54,7 +45,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class NodesSourcesController extends RozierApp
 {
-
     use NodesSourcesTrait;
 
     /**
@@ -71,7 +61,7 @@ class NodesSourcesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
         $translation = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
             /*
@@ -80,11 +70,11 @@ class NodesSourcesController extends RozierApp
              * that is initialized before calling route method.
              */
             $gnode = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+                          ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
             $source = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                ->findOneBy(['translation'=>$translation, 'node'=>$gnode]);
+                           ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                           ->findOneBy(['translation' => $translation, 'node' => $gnode]);
 
             $this->assignation['securityContext'] = $this->getService("securityContext");
 
@@ -106,8 +96,8 @@ class NodesSourcesController extends RozierApp
                     $this->editNodeSource($form->getData(), $source);
 
                     $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
-                        '%node_source%'=>$source->getNode()->getNodeName(),
-                        '%translation%'=>$source->getTranslation()->getName()
+                        '%node_source%' => $source->getNode()->getNodeName(),
+                        '%translation%' => $source->getTranslation()->getName(),
                     ]);
 
                     $this->publishConfirmMessage($request, $msg, $source);
@@ -115,7 +105,7 @@ class NodesSourcesController extends RozierApp
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesEditSourcePage',
-                            ['nodeId' => $node->getId(), 'translationId'=>$translation->getId()]
+                            ['nodeId' => $node->getId(), 'translationId' => $translation->getId()]
                         )
                     );
                     $response->prepare($request);
@@ -132,13 +122,13 @@ class NodesSourcesController extends RozierApp
     }
 
     /**
-    * Return an remove form for requested nodeSource.
-    *
-    * @param Symfony\Component\HttpFoundation\Request $request
-    * @param int                                      $nodeSourceId
-    *
-    * @return Symfony\Component\HttpFoundation\Response
-    */
+     * Return an remove form for requested nodeSource.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $nodeSourceId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
     public function removeAction(Request $request, $nodeSourceId)
     {
         $ns = $this->getService("em")->find("RZ\Roadiz\Core\Entities\NodesSources", $nodeSourceId);
@@ -146,13 +136,13 @@ class NodesSourcesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
 
         $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add('nodeId', 'hidden', [
-                'data' => $nodeSourceId,
-                'constraints' => [
-                    new NotBlank()
-                ]
-            ]);
+                        ->createBuilder('form')
+                        ->add('nodeId', 'hidden', [
+                            'data' => $nodeSourceId,
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ]);
 
         $form = $builder->getForm();
 
@@ -162,8 +152,8 @@ class NodesSourcesController extends RozierApp
             $node = $ns->getNode();
             if ($node->getNodeSources()->count() <= 1) {
                 $msg = $this->getTranslator()->trans('node_source.%node_source%.%translation%.cant.deleted', [
-                    '%node_source%'=>$node->getNodeName(),
-                    '%translation%'=>$ns->getTranslation()->getName()
+                    '%node_source%' => $node->getNodeName(),
+                    '%translation%' => $ns->getTranslation()->getName(),
                 ]);
 
                 $this->publishErrorMessage($request, $msg);
@@ -174,8 +164,8 @@ class NodesSourcesController extends RozierApp
                 $ns = $node->getNodeSources()->first();
 
                 $msg = $this->getTranslator()->trans('node_source.%node_source%.deleted.%translation%', [
-                    '%node_source%'=>$node->getNodeName(),
-                    '%translation%'=>$ns->getTranslation()->getName()
+                    '%node_source%' => $node->getNodeName(),
+                    '%translation%' => $ns->getTranslation()->getName(),
                 ]);
 
                 $this->publishConfirmMessage($request, $msg);

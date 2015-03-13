@@ -25,13 +25,11 @@
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
- *
- *
  * @file NodeTypesController.php
  * @author Ambroise Maupate
  */
 
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\NodeTypes;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;

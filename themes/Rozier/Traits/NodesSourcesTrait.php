@@ -155,6 +155,8 @@ trait NodesSourcesTrait
     }
 
     /**
+     * Returns a Symfony Form type according to a node-type field.
+     *
      * @param mixed         $nodeSource
      * @param NodeTypeField $field
      * @param AppController $controller
@@ -201,6 +203,16 @@ trait NodesSourcesTrait
         }
     }
 
+    /**
+     * Returns an option array for creating a Symfony Form
+     * according to a node-type field.
+     *
+     * @param  NodesSources  $nodeSource
+     * @param  NodeTypeField $field
+     * @param  Translator    $translator
+     *
+     * @return array
+     */
     public static function getFormOptionsFromFieldType(
         NodesSources $nodeSource,
         NodeTypeField $field,
@@ -295,7 +307,6 @@ trait NodesSourcesTrait
                         'data-max-length' => $field->getMaxLength(),
                     ],
                 ];
-
             default:
                 return [
                     'label' => $field->getLabel(),
@@ -311,6 +322,7 @@ trait NodesSourcesTrait
 
     /**
      * Fill node-source content according to field type.
+     *
      * @param mixed         $dataValue
      * @param NodesSources  $nodeSource
      * @param NodeTypeField $field
