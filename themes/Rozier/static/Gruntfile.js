@@ -11,26 +11,25 @@ module.exports = function(grunt) {
 			},
 			vendor:{
 				'src': [
-					'js/vendor/uikit.min.js',
-
-					'js/vendor/addons/sortable.js',
-					'js/vendor/addons/nestable.js',
-					'js/vendor/addons/pagination.js',
-					'js/vendor/addons/notify.js',
-					'js/vendor/addons/htmleditor.js',
-
-					'js/vendor/jquery-ui.js',
-					'js/vendor/TweenMax.min.js',
-					'js/vendor/bootstrap-switch.js',
-					'js/vendor/mousetrap.min.js',
-					'js/vendor/jquery.minicolors.min.js',
-					'js/vendor/codemirror.js',
-					'js/vendor/mode/markdown/markdown.js',
-					'js/vendor/mode/overlay.js',
-					'js/vendor/mode/xml/xml.js',
-					'js/vendor/mode/gfm/gfm.js',
-					'js/vendor/marked.min.js',
-					'js/vendor/dropzone.js'
+					'bower_components/uikit/js/uikit.js',
+					'bower_components/uikit/js/components/sortable.js',
+					'bower_components/uikit/js/components/nestable.js',
+					'bower_components/uikit/js/components/pagination.js',
+					'bower_components/uikit/js/components/notify.js',
+					'bower_components/jquery-ui/jquery-ui.js',
+					'bower_components/gsap/src/uncompressed/TweenMax.js',
+					'bower_components/bootstrap-switch/dist/js/bootstrap-switch.js',
+					'bower_components/jquery-minicolors/jquery.minicolors.js',
+					'bower_components/mousetrap/mousetrap.js',
+					'bower_components/codemirror/lib/codemirror.js',
+					'bower_components/codemirror/mode/markdown/markdown.js',
+					'bower_components/codemirror/addon/mode/overlay.js',
+					'bower_components/codemirror/mode/xml/xml.js',
+					'bower_components/codemirror/mode/gfm/gfm.js',
+					'bower_components/marked/lib/marked.js',
+					'bower_components/dropzone/dist/dropzone.js',
+					'js/vendor/ScrollToPlugin.js',
+					'js/vendor/addons/htmleditor.js'
 				],
 				dest: 'js/<%= pkg.name %>-vendor.js',
 			},
@@ -38,7 +37,6 @@ module.exports = function(grunt) {
 				'src': [
 					'js/bulk-edits/documentsBulk.js',
 					'js/bulk-edits/nodesBulk.js',
-
 					'js/widgets/documentsList.js',
 					'js/widgets/documentWidget.js',
 					'js/widgets/nodeWidget.js',
@@ -60,13 +58,26 @@ module.exports = function(grunt) {
 					'js/custom-form-fields/customFormFieldsPosition.js',
 					'js/custom-form-fields/customFormFieldEdit.js',
 					'js/panels/entriesPanel.js',
-
 					'js/rozierMobile.js',
 					'js/lazyload.js',
 					'js/plugins.js',
 					'js/main.js'
 				],
 				dest: 'js/<%= pkg.name %>.js',
+			},
+			simple:{
+				'src': [
+					'bower_components/uikit/js/uikit.js',
+					'js/login/login.js'
+				],
+				dest: 'js/<%= pkg.name %>-simple.js',
+			},
+			cforms:{
+				'src': [
+					'bower_components/uikit/js/uikit.js',
+					'bower_components/jquery-ui/jquery-ui.js'
+				],
+				dest: 'js/<%= pkg.name %>-cforms.js',
 			}
 		},
 		uglify: {
@@ -80,6 +91,14 @@ module.exports = function(grunt) {
 			rezozero: {
 				src: 'js/<%= pkg.name %>.js',
 				dest: 'js/<%= pkg.name %>.min.js'
+			},
+			simple: {
+				src: 'js/<%= pkg.name %>-simple.js',
+				dest: 'js/<%= pkg.name %>-simple.min.js'
+			},
+			cforms: {
+				src: 'js/<%= pkg.name %>-cforms.js',
+				dest: 'js/<%= pkg.name %>-cforms.min.js'
 			}
 		},
 		less: {
@@ -92,6 +111,7 @@ module.exports = function(grunt) {
 				},
 				files:
 				{
+					"css/vendor.min.css" : "css/vendor.less",
 				 	"css/style.min.css" : "css/style.less",
 				 	"css/custom-forms-front.min.css" : "css/custom-forms-front.less"
 				}
@@ -105,6 +125,7 @@ module.exports = function(grunt) {
 				},
 				files:
 				{
+					"css/vendor.min.css" : "css/vendor.less",
 				 	"css/style.min.css" : "css/style.less",
 				 	"css/custom-forms-front.min.css" : "css/custom-forms-front.less"
 				}
@@ -133,10 +154,7 @@ module.exports = function(grunt) {
 		    	'!js/plugins.js',
 		    	'!js/vendor/**/*.js',
 				'!js/addons/**/*.js',
-				'!js/<%= pkg.name %>.js',
-				'!js/<%= pkg.name %>.min.js',
-				'!js/<%= pkg.name %>-vendor.js',
-				'!js/<%= pkg.name %>-vendor.min.js'
+				'!js/<%= pkg.name %>*.js'
 			]
 		},
 		imagemin: {
@@ -152,12 +170,6 @@ module.exports = function(grunt) {
 				}]
 			}
 		},
-		// phplint: {
-		// 	core: [
-		// 		"../*.php",
-		// 		"../*/*.php"
-		// 	]
-		// }
 		versioning: {
 			options: {
 				cwd: 'public',
@@ -187,6 +199,16 @@ module.exports = function(grunt) {
 				},
 				{
 					assets: [{
+			            src: [ 'css/vendor.min.css' ],
+			            dest: 'css/vendor.min.css'
+			        }],
+					key: 'global',
+					dest: '',
+					type: 'css',
+					ext: '.css'
+				},
+				{
+					assets: [{
 			            src: [ 'css/style.min.css' ],
 			            dest: 'css/style.min.css'
 			        }],
@@ -194,6 +216,53 @@ module.exports = function(grunt) {
 					dest: '',
 					type: 'css',
 					ext: '.css'
+				},
+				/*
+				 * Simple layout for login
+				 * versioned files
+				 */
+				{
+					assets: [{
+			            src: [ 'js/<%= pkg.name %>-simple.min.js' ],
+			            dest: 'js/<%= pkg.name %>-simple.min.js'
+			        }],
+					key: 'simple',
+					dest: '',
+					type: 'js',
+					ext: '.min.js'
+				},
+				/*
+				 * Custom form versioned files
+				 */
+				{
+					assets: [{
+			            src: [ 'css/vendor.min.css' ],
+			            dest: 'css/vendor.min.css'
+			        }],
+					key: 'custom-forms',
+					dest: '',
+					type: 'css',
+					ext: '.css'
+				},
+				{
+					assets: [{
+			            src: [ 'css/custom-forms-front.min.css' ],
+			            dest: 'css/custom-forms-front.min.css'
+			        }],
+					key: 'custom-forms',
+					dest: '',
+					type: 'css',
+					ext: '.css'
+				},
+				{
+					assets: [{
+			            src: [ 'js/<%= pkg.name %>-cforms.min.js' ],
+			            dest: 'js/<%= pkg.name %>-cforms.min.js'
+			        }],
+					key: 'custom-forms',
+					dest: '',
+					type: 'js',
+					ext: '.min.js'
 				}]
 			}
 		},
@@ -216,13 +285,6 @@ module.exports = function(grunt) {
 			grunt.config('watch.scripts.tasks', ['imagemin']);
 		}
 	});
-
-	// grunt.loadNpmTasks('grunt-contrib-jshint');
-	// grunt.loadNpmTasks('grunt-contrib-watch');
-	// grunt.loadNpmTasks('grunt-contrib-less');
-	// grunt.loadNpmTasks('grunt-contrib-concat');
-	// grunt.loadNpmTasks('grunt-contrib-uglify');
-	// grunt.loadNpmTasks('grunt-contrib-imagemin');
 
 	// Default task(s).
 	grunt.registerTask('default', ['clean','jshint','concat','uglify','less:production','imagemin','versioning']);

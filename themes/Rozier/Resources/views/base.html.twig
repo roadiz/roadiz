@@ -25,12 +25,6 @@
         <link rel="icon" type="image/png" href="{{ head.resourcesUrl }}img/favicon-32x32.png" sizes="32x32" />
         <meta name="msapplication-TileImage" content="{{ head.resourcesUrl }}img/mstile-144x144.png" />
 
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/uikit.gradient.min.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/addons/uikit.addons.min.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/bootstrap3/bootstrap-switch.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/jquery.minicolors.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/codemirror.css" />
-
         {% for cssMin in themeServices.grunt.staticAssets.global.css %}
         <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ cssMin }}" />
         {% endfor %}
@@ -87,32 +81,32 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.1.3.min.js"><\/script>')</script>
 
-        {% if head.devMode %}
-        <script src="{{ head.resourcesUrl }}js/vendor/uikit.js"></script>
-
-        <script src="{{ head.resourcesUrl }}js/vendor/addons/sortable.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/addons/nestable.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/addons/pagination.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/addons/notify.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/addons/htmleditor.js"></script>
-
-        <script src="{{ head.resourcesUrl }}js/vendor/jquery-ui.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/TweenMax.min.js"></script>
+        {# Switch `backDevMode` in RozierApp.php and make sure you run `bower install` #}
+        {% if head.backDevMode %}
+        {# Vendors #}
+        <script src="{{ head.resourcesUrl }}bower_components/uikit/js/uikit.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/uikit/js/components/sortable.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/uikit/js/components/nestable.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/uikit/js/components/pagination.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/uikit/js/components/notify.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/jquery-ui/jquery-ui.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/gsap/src/uncompressed/TweenMax.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/jquery-minicolors/jquery.minicolors.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/mousetrap/mousetrap.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/codemirror/lib/codemirror.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/codemirror/mode/markdown/markdown.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/codemirror/addon/mode/overlay.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/codemirror/mode/xml/xml.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/codemirror/mode/gfm/gfm.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/marked/lib/marked.js"></script>
+        <script src="{{ head.resourcesUrl }}bower_components/dropzone/dist/dropzone.js"></script>
         <script src="{{ head.resourcesUrl }}js/vendor/ScrollToPlugin.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/mousetrap.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/jquery.minicolors.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/codemirror.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/mode/markdown/markdown.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/mode/overlay.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/mode/xml/xml.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/mode/gfm/gfm.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/marked.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/dropzone.js"></script>
+        <script src="{{ head.resourcesUrl }}js/vendor/addons/htmleditor.js"></script> {# Roadiz custom HtmlEditor #}
 
+        {# Roadiz JS #}
         <script src="{{ head.resourcesUrl }}js/bulk-edits/documentsBulk.js"></script>
         <script src="{{ head.resourcesUrl }}js/bulk-edits/nodesBulk.js"></script>
-
         <script src="{{ head.resourcesUrl }}js/widgets/documentsList.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/documentWidget.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/nodeWidget.js"></script>

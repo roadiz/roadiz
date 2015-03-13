@@ -9,8 +9,7 @@
 !/Rozier
 
 ### Bower ###
-# We need to store libs
-# bower_components
+bower_components
 .bower-cache
 .bower-registry
 .bower-tmp
