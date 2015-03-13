@@ -32,12 +32,10 @@ namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -259,122 +257,6 @@ class NodesController extends RozierApp
         }
 
         return $this->throw404();
-    }
-
-    /**
-     * Return tags form for requested node.
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function editTagsAction(Request $request, $nodeId)
-    {
-        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
-
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
-
-        if (null !== $translation) {
-            $source = $this->getService('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                           ->findOneBy([
-                               'translation' => $translation,
-                               'node.id' => (int) $nodeId,
-                           ]);
-
-            if (null !== $source &&
-                null !== $translation) {
-                $node = $source->getNode();
-
-                $this->assignation['translation'] = $translation;
-                $this->assignation['node'] = $node;
-                $this->assignation['source'] = $source;
-
-                $form = $this->buildEditTagsForm($node);
-
-                $form->handleRequest();
-
-                if ($form->isValid()) {
-                    $this->addNodeTag($form->getData(), $node);
-
-                    $msg = $this->getTranslator()->trans('node.%node%.linked.tags', [
-                        '%node%' => $node->getNodeName(),
-                    ]);
-                    $this->publishConfirmMessage($request, $msg);
-
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditTagsPage',
-                            ['nodeId' => $node->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
-                }
-
-                $this->assignation['form'] = $form->createView();
-
-                return $this->render('nodes/editTags.html.twig', $this->assignation);
-            }
-        }
-
-        return $this->throw404();
-    }
-
-    /**
-     * Return a deletion form for requested tag depending on the node.
-     *
-     * @param Symfony\Component\HttpFoundation\Requet $request
-     * @param int                                     $nodeId
-     * @param int                                     $tagId
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function removeTagAction(Request $request, $nodeId, $tagId)
-    {
-        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
-
-        $node = $this->getService('em')
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
-        $tag = $this->getService('em')
-                    ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
-
-        if ($node !== null && $tag !== null) {
-            $this->assignation['node'] = $node;
-            $this->assignation['tag'] = $tag;
-
-            $form = $this->buildRemoveTagForm($node, $tag);
-            $form->handleRequest();
-
-            if ($form->isValid()) {
-                $this->removeNodeTag($form->getData(), $node, $tag);
-                $msg = $this->getTranslator()->trans(
-                    'tag.%name%.removed',
-                    ['%name%' => $tag->getTranslatedTags()->first()->getName()]
-                );
-                $this->publishConfirmMessage($request, $msg);
-
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodesEditTagsPage',
-                        ['nodeId' => $node->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
-            }
-
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('nodes/removeTag.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
-        }
     }
 
     /**
@@ -723,24 +605,30 @@ class NodesController extends RozierApp
         if ($request->get('nodeTypeId') > 0 &&
             $request->get('parentNodeId') > 0) {
             $nodeType = $this->getService('em')
-                            ->find(
-                                'RZ\Roadiz\Core\Entities\NodeType',
-                                (int) $request->get('nodeTypeId')
-                            );
+                             ->find(
+                                 'RZ\Roadiz\Core\Entities\NodeType',
+                                 (int) $request->get('nodeTypeId')
+                             );
 
             $parent = $this->getService('em')
-                            ->find(
-                                'RZ\Roadiz\Core\Entities\Node',
-                                (int) $request->get('parentNodeId')
-                            );
+                           ->find(
+                               'RZ\Roadiz\Core\Entities\Node',
+                               (int) $request->get('parentNodeId')
+                           );
 
             if (null !== $nodeType &&
                 null !== $parent) {
-                $translation = ($request->get('translationId') > 0) ? $this->getService('em')->find(
-                    'RZ\Roadiz\Core\Entities\Translation',
-                    (int) $request->get('translationId')
-                )
-                                                                    : $parent->getNodeSources()->first()->getTranslation();
+                $translation = null;
+
+                if ($request->get('translationId') > 0) {
+                    $translation = $this->getService('em')->find(
+                        'RZ\Roadiz\Core\Entities\Translation',
+                        (int) $request->get('translationId')
+                    );
+                } else {
+                    $translation = $parent->getNodeSources()->first()->getTranslation();
+                }
+
                 if (null === $translation) {
                     $translation = $this->getService('em')
                                         ->getRepository('RZ\Roadiz\Core\Entities\Translation')
@@ -753,7 +641,7 @@ class NodesController extends RozierApp
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
                             'nodesEditSourcePage',
-                            ['nodeId' => $source->getNode()->getId(), 'translationId'=>$translation->getId()]
+                            ['nodeId' => $source->getNode()->getId(), 'translationId' => $translation->getId()]
                         )
                     );
 

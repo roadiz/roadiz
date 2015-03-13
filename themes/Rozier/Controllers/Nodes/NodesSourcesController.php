@@ -45,7 +45,6 @@ use Themes\Rozier\Traits\NodesSourcesTrait;
  */
 class NodesSourcesController extends RozierApp
 {
-
     use NodesSourcesTrait;
 
     /**

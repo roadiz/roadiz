@@ -224,56 +224,6 @@ trait NodesTrait
     }
 
     /**
-     * Link a node with a tag.
-     *
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     *
-     * @return RZ\Roadiz\Core\Entities\Tag $linkedTag
-     */
-    protected function addNodeTag($data, Node $node)
-    {
-        if (!empty($data['tagPaths'])) {
-            $paths = explode(',', $data['tagPaths']);
-            $paths = array_filter($paths);
-
-            foreach ($paths as $path) {
-                $tag = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                            ->findOrCreateByPath($path);
-
-                $node->addTag($tag);
-            }
-        }
-
-        $this->getService('em')->flush();
-
-        $this->updateSolrIndex($node);
-
-        return $tag;
-    }
-
-    /**
-     * @param array                        $data
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     * @param RZ\Roadiz\Core\Entities\Tag  $tag
-     *
-     * @return RZ\Roadiz\Core\Entities\Tag
-     */
-    protected function removeNodeTag($data, Node $node, Tag $tag)
-    {
-        if ($data['nodeId'] == $node->getId() &&
-            $data['tagId'] == $tag->getId()) {
-            $node->removeTag($tag);
-            $this->getService('em')->flush();
-
-            $this->updateSolrIndex($node);
-
-            return $tag;
-        }
-    }
-
-    /**
      * @param RZ\Roadiz\Core\Entities\Node $node
      */
     protected function updateSolrIndex(Node $node)
@@ -466,35 +416,6 @@ trait NodesTrait
         return $builder->getForm();
     }
 
-    /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildEditTagsForm(Node $node)
-    {
-        $defaults = [
-            'nodeId' => $node->getId(),
-        ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
-                        ->add('nodeId', 'hidden', [
-                            'data' => $node->getId(),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-            ->add('tagPaths', 'text', [
-                'label' => $this->getTranslator()->trans('list.tags.to_link'),
-                'attr' => ['class' => 'rz-tag-autocomplete'],
-            ])
-            ->add('separator_1', new SeparatorType(), [
-                'label' => $this->getTranslator()->trans('use.new_or_existing.tags_with_hierarchy'),
-                'attr' => ['class' => 'form-help-static uk-alert uk-alert-large'],
-            ]);
-
-        return $builder->getForm();
-    }
 
     /**
      * @param RZ\Roadiz\Core\Entities\Node $node
@@ -522,32 +443,6 @@ trait NodesTrait
     {
         $builder = $this->getService('formFactory')
                         ->createBuilder('form');
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     * @param RZ\Roadiz\Core\Entities\Tag  $tag
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildRemoveTagForm(Node $node, Tag $tag)
-    {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
-                        ->add('nodeId', 'hidden', [
-                            'data' => $node->getId(),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-            ->add('tagId', 'hidden', [
-                'data' => $tag->getId(),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ]);
 
         return $builder->getForm();
     }

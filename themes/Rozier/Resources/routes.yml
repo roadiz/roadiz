@@ -83,11 +83,11 @@ nodesDeleteSourcePage:
     requirements: {nodeSourceId : "[0-9]+"}
 nodesEditTagsPage:
     path:     /rz-admin/nodes/edit/{nodeId}/tags
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::editTagsAction }
+    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTagsController::editTagsAction }
     requirements: { nodeId : "[0-9]+" }
 nodesRemoveTagsPage:
     path:     /rz-admin/nodes/edit/{nodeId}/tags/{tagId}/remove
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::removeTagAction }
+    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTagsController::removeTagAction }
     requirements: { nodeId : "[0-9]+", tagId : "[0-9]+" }
 nodesEditSEOPage:
     path:     /rz-admin/nodes/edit/{nodeId}/seo/{translationId}
