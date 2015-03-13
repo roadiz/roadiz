@@ -28,7 +28,7 @@
  * @file UrlAliasesController.php
  * @author Ambroise Maupate
  */
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\UrlAlias;

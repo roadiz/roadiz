@@ -28,7 +28,7 @@
  * @file UsersController.php
  * @author Ambroise Maupate
  */
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\Users;
 
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\Role;

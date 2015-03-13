@@ -29,7 +29,7 @@
  * @author Thomas Aufresne
  */
 
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 use Themes\Rozier\RozierApp;
