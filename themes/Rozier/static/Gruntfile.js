@@ -16,6 +16,7 @@ module.exports = function(grunt) {
 					'bower_components/uikit/js/components/nestable.js',
 					'bower_components/uikit/js/components/pagination.js',
 					'bower_components/uikit/js/components/notify.js',
+					'bower_components/uikit/js/components/tooltip.js',
 					'bower_components/jquery-ui/jquery-ui.js',
 					'bower_components/gsap/src/uncompressed/TweenMax.js',
 					'bower_components/bootstrap-switch/dist/js/bootstrap-switch.js',
