@@ -171,7 +171,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @ORM\Column(name="routePrefix",type="string", nullable=true)
+     * @ORM\Column(name="route_prefix",type="string", nullable=true)
      * @var string
      */
     private $routePrefix = '';
