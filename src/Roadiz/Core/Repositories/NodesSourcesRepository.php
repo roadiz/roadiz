@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Security\Core\SecurityContext;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\QueryException;
+use Doctrine\ORM\Query\Expr;
 
 /**
  * EntityRepository that implements search engine query with Solr.
@@ -187,6 +188,73 @@ class NodesSourcesRepository extends EntityRepository
 
             $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
         }
+    }
+
+    /**
+     * Create a Criteria object from a search pattern and additionnal fields.
+     *
+     * @param string                  $pattern  Search pattern
+     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
+     * @param array                   $criteria Additionnal criteria
+     * @param string                  $alias    SQL query table alias
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function createSearchBy(
+        $pattern,
+        \Doctrine\ORM\QueryBuilder $qb,
+        array $criteria = [],
+        $alias = "obj"
+    ) {
+        $this->classicLikeComparison($pattern, $qb, $alias);
+        $qb = $this->directComparison($criteria, $qb, $alias);
+
+        return $qb;
+    }
+
+    /**
+     * Direct bind one single parameter without preparation.
+     *
+     * @param string       $key
+     * @param mixed        $value
+     * @param QueryBuilder $qb
+     * @param string       $alias
+     *
+     * @return QueryBuilder
+     */
+    protected function singleDirectComparison($key, &$value, &$qb, $alias)
+    {
+        if (false !== strpos($key, 'node.')) {
+            if (!$this->hasJoinedNode($qb, $alias)) {
+                $qb->innerJoin($alias.'.node', 'n');
+            }
+
+            $prefix = 'n';
+            $prefixedkey = str_replace('node.', '', $key);
+            return parent::singleDirectComparison($prefixedkey, $value, $qb, $prefix);
+        } else {
+            return parent::singleDirectComparison($key, $value, $qb, $alias);
+        }
+    }
+
+    /**
+     * Ensure that node table is joined only once.
+     *
+     * @param  QueryBuilder $qb
+     * @param  string  $alias
+     * @return boolean
+     */
+    protected function hasJoinedNode(&$qb, $alias)
+    {
+        if (isset($qb->getDQLPart('join')[$alias])) {
+            foreach ($qb->getDQLPart('join')[$alias] as $join) {
+                if (null !== $join && $join->getAlias() == "n") {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

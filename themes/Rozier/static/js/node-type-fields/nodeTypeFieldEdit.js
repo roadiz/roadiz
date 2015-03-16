@@ -1,24 +1,26 @@
 /**
  * NODE TYPE FIELD EDIT
  */
-
 NodeTypeFieldEdit = function(){
     var _this = this;
 
     // Selectors
     _this.$btn = $('.node-type-field-edit-button');
-    _this.$formFieldRow = $('.node-type-field-row');
-    _this.$formFieldCol = $('.node-type-field-col');
 
-    _this.indexOpen = null;
-    _this.openFormDelay = 0;
-    _this.$formCont = null;
-    _this.$form = null;
-    _this.$formIcon = null;
-    _this.$formContHeight = null;
+    if (_this.$btn.length) {
+        _this.$formFieldRow = $('.node-type-field-row');
+        _this.$formFieldCol = $('.node-type-field-col');
 
-    // Methods
-    _this.init();
+        _this.indexOpen = null;
+        _this.openFormDelay = 0;
+        _this.$formCont = null;
+        _this.$form = null;
+        _this.$formIcon = null;
+        _this.$formContHeight = null;
+
+        // Methods
+        _this.init();
+    }
 };
 
 
@@ -31,8 +33,9 @@ NodeTypeFieldEdit.prototype.init = function(){
     var _this = this;
 
     // Events
-    _this.$btn.off('click');
-    _this.$btn.on('click', $.proxy(_this.btnClick, _this));
+    var proxy = $.proxy(_this.btnClick, _this);
+    _this.$btn.off('click', proxy);
+    _this.$btn.on('click', proxy);
 };
 
 

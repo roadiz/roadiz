@@ -200,7 +200,10 @@ Lazyload.prototype.applyContent = function(data) {
 Lazyload.prototype.generalBind = function() {
     var _this = this;
 
-    // console.log('General bind');
+    _this.parseLinks();
+    _this.$linksSelector.off('click', $.proxy(_this.onClick, _this));
+    _this.$linksSelector.on('click', $.proxy(_this.onClick, _this));
+
     new DocumentsBulk();
     new NodesBulk();
     new DocumentWidget();
@@ -224,9 +227,6 @@ Lazyload.prototype.generalBind = function() {
     _this.customFormFieldEdit = new CustomFormFieldEdit();
 
 
-    _this.$linksSelector.off('click', $.proxy(_this.onClick, _this));
-    _this.parseLinks();
-    _this.$linksSelector.on('click', $.proxy(_this.onClick, _this));
 
 
     // Init markdown-preview

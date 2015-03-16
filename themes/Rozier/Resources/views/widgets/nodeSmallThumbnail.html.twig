@@ -1,4 +1,7 @@
-{% set nodeSource = node.getNodeSources.first %}
+{% if not nodeSource %}
+{% set nodeSource = node.nodeSources.first %}
+{% endif %}
+
 {% spaceless %}
 <li class="uk-sortable-list-item nodes-widget-sortable-list-item" data-node-id="{{ node.getId }}">
 	<div class="uk-sortable-handle"></div>

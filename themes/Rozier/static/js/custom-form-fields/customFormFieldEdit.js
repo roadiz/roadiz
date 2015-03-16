@@ -7,18 +7,19 @@ CustomFormFieldEdit = function(){
 
     // Selectors
     _this.$btn = $('.custom-form-field-edit-button');
-    _this.$formFieldRow = $('.custom-form-field-row');
-    _this.$formFieldCol = $('.custom-form-field-col');
-    _this.indexOpen = null;
-    _this.openFormDelay = 0;
-    _this.$formCont = null;
-    _this.$form = null;
-    _this.$formIcon = null;
-    _this.$formContHeight = null;
+    if (_this.$btn.length) {
+        _this.$formFieldRow = $('.custom-form-field-row');
+        _this.$formFieldCol = $('.custom-form-field-col');
+        _this.indexOpen = null;
+        _this.openFormDelay = 0;
+        _this.$formCont = null;
+        _this.$form = null;
+        _this.$formIcon = null;
+        _this.$formContHeight = null;
 
-    // Methods
-    _this.init();
-
+        // Methods
+        _this.init();
+    }
 };
 
 /**
@@ -29,7 +30,9 @@ CustomFormFieldEdit.prototype.init = function(){
     var _this = this;
 
     // Events
-    _this.$btn.on('click', $.proxy(_this.btnClick, _this));
+    var proxy = $.proxy(_this.btnClick, _this);
+    _this.$btn.off('click', proxy);
+    _this.$btn.on('click', proxy);
 };
 
 
@@ -39,6 +42,8 @@ CustomFormFieldEdit.prototype.init = function(){
  */
 CustomFormFieldEdit.prototype.btnClick = function(e){
     var _this = this;
+
+    e.preventDefault();
 
     if(_this.indexOpen !== null){
         _this.closeForm();
