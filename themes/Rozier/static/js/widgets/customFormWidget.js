@@ -10,16 +10,12 @@ var CustomFormWidget = function () {
     _this.$toggleUploaderButtons = $('[data-custom-form-widget-toggle-uploader]');
     _this.$unlinkCustomFormButtons = $('[data-custom-form-widget-unlink-custom-form]');
 
+    _this.$explorer = null;
+    _this.$explorerClose = null;
+    _this.uploader = null;
+
     _this.init();
 };
-
-CustomFormWidget.prototype.$explorer = null;
-CustomFormWidget.prototype.$explorerClose = null;
-CustomFormWidget.prototype.$widgets = null;
-CustomFormWidget.prototype.$toggleExplorerButtons = null;
-CustomFormWidget.prototype.$unlinkCustomFormButtons = null;
-CustomFormWidget.prototype.$sortables = null;
-CustomFormWidget.prototype.uploader = null;
 
 CustomFormWidget.prototype.init = function() {
     var _this = this;

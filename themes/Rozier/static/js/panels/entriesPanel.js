@@ -6,8 +6,6 @@ var EntriesPanel = function () {
     _this.replaceSubNavs();
 };
 
-EntriesPanel.prototype.$adminMenuNav = null;
-
 EntriesPanel.prototype.replaceSubNavs = function() {
     var _this = this;
 

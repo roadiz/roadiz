@@ -9,18 +9,14 @@ DocumentsList = function(){
     _this.$cont = $('.documents-list');
     if(_this.$cont.length) _this.$item = _this.$cont.find('.document-item');
 
+    _this.contWidth = null;
+    _this.itemWidth = 144; // (w : 128 + mr : 16)
+    _this.itemsPerLine = 4;
+    _this.itemsWidth = 576;
+    _this.contMarginLeft = 0;
+
     _this.resize();
 };
-
-
-DocumentsList.prototype.$cont = null;
-DocumentsList.prototype.contWidth = null;
-DocumentsList.prototype.$item = null;
-DocumentsList.prototype.itemWidth = 144; // (w : 128 + mr : 16)
-DocumentsList.prototype.itemsPerLine = 4;
-DocumentsList.prototype.itemsWidth = 576;
-DocumentsList.prototype.contMarginLeft = 0;
-
 
 /**
  * Window resize callback

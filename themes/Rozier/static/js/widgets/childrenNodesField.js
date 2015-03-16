@@ -6,13 +6,10 @@ var ChildrenNodesField = function () {
 
     _this.$fields = $('[data-children-nodes-widget]');
     _this.$quickAddNodeButtons = _this.$fields.find('.children-nodes-quick-creation a');
-    //_this.$switchLangButtons = _this.$fields.find('.nodetree-langs');
 
     _this.init();
     _this.dropDownize();
 };
-ChildrenNodesField.prototype.$fields = null;
-ChildrenNodesField.prototype.$quickAddNodeButtons = null;
 
 ChildrenNodesField.prototype.init = function() {
     var _this = this;

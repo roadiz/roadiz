@@ -9,17 +9,14 @@ var NodeWidget = function () {
     _this.$toggleExplorerButtons = $('[data-node-widget-toggle-explorer]');
     _this.$toggleUploaderButtons = $('[data-node-widget-toggle-uploader]');
     _this.$unlinkNodeButtons = $('[data-node-widget-unlink-node]');
+    _this.$explorer = null;
+    _this.$explorerClose = null;
+    _this.uploader = null;
 
     _this.init();
 };
 
-NodeWidget.prototype.$explorer = null;
-NodeWidget.prototype.$explorerClose = null;
-NodeWidget.prototype.$widgets = null;
-NodeWidget.prototype.$toggleExplorerButtons = null;
-NodeWidget.prototype.$unlinkNodeButtons = null;
-NodeWidget.prototype.$sortables = null;
-NodeWidget.prototype.uploader = null;
+
 
 NodeWidget.prototype.init = function() {
     var _this = this;

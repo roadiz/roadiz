@@ -2,6 +2,7 @@ var GeotagField = function () {
     var _this = this;
 
     _this.$fields = $('input.rz-geotag-field');
+    _this.geocoder = null;
 
     if( _this.$fields.length &&
         Rozier.googleClientId !== ""){
@@ -10,8 +11,6 @@ var GeotagField = function () {
     }
 };
 
-GeotagField.prototype.geocoder = null;
-GeotagField.prototype.$fields = null;
 GeotagField.prototype.init = function() {
     var _this = this;
 

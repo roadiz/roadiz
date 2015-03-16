@@ -5,7 +5,7 @@ var NodeTypeFieldsPosition = function () {
 
     _this.init();
 };
-NodeTypeFieldsPosition.prototype.$list = null;
+
 NodeTypeFieldsPosition.prototype.init = function() {
     var _this = this;
 

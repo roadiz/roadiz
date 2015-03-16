@@ -24,32 +24,16 @@ RozierMobile = function(){
 
     _this.$mainContentOverlay = $('#main-content-overlay');
 
+    _this.menuOpen = false;
+    _this.searchOpen = false;
+    _this.treeOpen = false;
+    _this.adminOpen = false;
+
     // Methods
     _this.init();
 
 };
 
-
-RozierMobile.prototype.$menu = null;
-RozierMobile.prototype.$adminMenu = null;
-RozierMobile.prototype.$adminMenuNavParent = null;
-RozierMobile.prototype.menuOpen = false;
-
-RozierMobile.prototype.$searchButton = null;
-RozierMobile.prototype.$searchPanel = null;
-RozierMobile.prototype.searchOpen = false;
-
-RozierMobile.prototype.$treeButton = null;
-RozierMobile.prototype.$treeWrapper = null;
-RozierMobile.prototype.$treeWrapperLink = null;
-RozierMobile.prototype.treeOpen = false;
-
-RozierMobile.prototype.$userPicture = null;
-RozierMobile.prototype.$userActions = null;
-RozierMobile.prototype.$userActionsLink = null;
-RozierMobile.prototype.adminOpen = false;
-
-RozierMobile.prototype.$mainContentOverlay = null;
 
 
 /**
@@ -71,7 +55,7 @@ RozierMobile.prototype.init = function(){
 
     _this.$treeButton.on('click', $.proxy(_this.treeButtonClick, _this));
     _this.$treeWrapperLink.on('click', $.proxy(_this.treeWrapperLinkClick, _this));
-    
+
     _this.$userPicture.on('click', $.proxy(_this.userPictureClick, _this));
     _this.$userActionsLink.on('click', $.proxy(_this.userActionsLinkClick, _this));
 
@@ -109,7 +93,7 @@ RozierMobile.prototype.adminMenuNavParentClick = function(e){
 
         $ukNavSub[0].style.display = 'block';
         TweenLite.to($ukNavSub, 0.6, {height:ukNavSubHeight, ease:Expo.easeOut, onComplete:function(){
-        }}); 
+        }});
 
         addClass(e.currentTarget, 'nav-open');
 
@@ -119,7 +103,7 @@ RozierMobile.prototype.adminMenuNavParentClick = function(e){
         TweenLite.to($ukNavSub, 0.6, {height:0, ease:Expo.easeOut, onComplete:function(){
             $ukNavSub[0].style.display = 'none';
         }});
-        
+
         removeClass(e.currentTarget, 'nav-open');
     }
 
@@ -155,7 +139,7 @@ RozierMobile.prototype.openMenu = function(){
 
     _this.$mainContentOverlay[0].style.display = 'block';
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0.5, ease:Expo.easeOut});
-     
+
     _this.menuOpen = true;
 };
 
@@ -174,8 +158,8 @@ RozierMobile.prototype.closeMenu = function(){
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0, ease:Expo.easeOut, onComplete:function(){
         _this.$mainContentOverlay[0].style.display = 'none';
     }});
-    
-    _this.menuOpen = false;  
+
+    _this.menuOpen = false;
 };
 
 
@@ -198,7 +182,7 @@ RozierMobile.prototype.searchButtonClick = function(e){
  */
 RozierMobile.prototype.openSearch = function(){
     var _this = this;
-    
+
     // Close panel if open
     if(_this.menuOpen) _this.closeMenu();
     else if(_this.treeOpen) _this.closeTree();
@@ -235,7 +219,7 @@ RozierMobile.prototype.closeSearch = function(){
     // Remove active class
     removeClass(_this.$searchButton[0],'active');
 
-    _this.searchOpen = false;  
+    _this.searchOpen = false;
 };
 
 
@@ -271,7 +255,7 @@ RozierMobile.prototype.treeWrapperLinkClick = function(e){
  */
 RozierMobile.prototype.openTree = function(){
     var _this = this;
-    
+
     // Close panel if open
     if(_this.menuOpen) _this.closeMenu();
     else if(_this.searchOpen) _this.closeSearch();
@@ -282,7 +266,7 @@ RozierMobile.prototype.openTree = function(){
 
     _this.$mainContentOverlay[0].style.display = 'block';
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0.5, ease:Expo.easeOut});
-    
+
     // Add active class
     addClass(_this.$treeButton[0],'active');
 
@@ -307,8 +291,8 @@ RozierMobile.prototype.closeTree = function(){
 
     // Remove active class
     removeClass(_this.$treeButton[0],'active');
-    
-    _this.treeOpen = false;  
+
+    _this.treeOpen = false;
 };
 
 
@@ -356,7 +340,7 @@ RozierMobile.prototype.openUser = function(){
 
     _this.$mainContentOverlay[0].style.display = 'block';
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0.5, ease:Expo.easeOut});
-        
+
     // Add active class
     addClass(_this.$userPicture[0],'active');
 
@@ -381,8 +365,8 @@ RozierMobile.prototype.closeUser = function(){
 
     // Remove active class
     removeClass(_this.$userPicture[0],'active');
-    
-    _this.userOpen = false;  
+
+    _this.userOpen = false;
 };
 
 
