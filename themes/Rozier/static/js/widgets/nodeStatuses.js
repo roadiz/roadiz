@@ -25,6 +25,7 @@ NodeStatuses.prototype.init = function() {
     _this.$inputs.on('change', $.proxy(_this.onChange, _this));
 
     _this.$containers.find(".rz-boolean-checkbox").bootstrapSwitch({
+        size: 'small',
         "onSwitchChange": $.proxy(_this.onChange, _this)
     });
 };
