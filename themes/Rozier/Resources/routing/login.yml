@@ -1,0 +1,28 @@
+
+loginPage:
+    path:     /login
+    defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
+loginRequestPage:
+    path:     /login/request
+    defaults: { _controller: Themes\Rozier\Controllers\LoginRequestController::indexAction }
+loginRequestConfirmPage:
+    path:     /login/request/confirm
+    defaults: { _controller: Themes\Rozier\Controllers\LoginRequestController::confirmAction }
+loginResetConfirmPage:
+    path:     /login/reset/confirm
+    defaults: { _controller: Themes\Rozier\Controllers\LoginResetController::confirmAction }
+loginResetPage:
+    path:     /login/reset/{token}
+    defaults: { _controller: Themes\Rozier\Controllers\LoginResetController::resetAction }
+    requirements: { token : "[^\/]+" }
+loginImagePage:
+    path:     /login/image
+    defaults: { _controller: Themes\Rozier\Controllers\LoginController::imageAction }
+logoutPage:
+    path:     /rz-admin/logout
+    defaults: { _controller: Themes\Rozier\Controllers\LoginController::logoutAction }
+loginFailedPage:
+    path:     /login_failed
+    defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
+loginCheckPage:
+    path:     /rz-admin/login_check

@@ -8,38 +8,13 @@ rozierRemoveTrailingSlash:
         url: .*/$
     methods: [GET]
 
+
 # Home page
 adminHomePage:
     path:     /rz-admin
     defaults: { _controller: Themes\Rozier\Controllers\DashboardController::indexAction }
-
-loginPage:
-    path:     /login
-    defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
-loginRequestPage:
-    path:     /login/request
-    defaults: { _controller: Themes\Rozier\Controllers\LoginRequestController::indexAction }
-loginRequestConfirmPage:
-    path:     /login/request/confirm
-    defaults: { _controller: Themes\Rozier\Controllers\LoginRequestController::confirmAction }
-loginResetConfirmPage:
-    path:     /login/reset/confirm
-    defaults: { _controller: Themes\Rozier\Controllers\LoginResetController::confirmAction }
-loginResetPage:
-    path:     /login/reset/{token}
-    defaults: { _controller: Themes\Rozier\Controllers\LoginResetController::resetAction }
-    requirements: { token : "[^\/]+" }
-loginImagePage:
-    path:     /login/image
-    defaults: { _controller: Themes\Rozier\Controllers\LoginController::imageAction }
-logoutPage:
-    path:     /rz-admin/logout
-    defaults: { _controller: Themes\Rozier\Controllers\LoginController::logoutAction }
-loginFailedPage:
-    path:     /login_failed
-    defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
-loginCheckPage:
-    path:     /rz-admin/login_check
+loginRoutes:
+    resource: "routing/login.yml"
 
 ajaxSessionMessages:
     path:     /rz-admin/session/messages
@@ -57,85 +32,10 @@ deleteSLIRCache:
 nodesHomePage:
     path:     /rz-admin/nodes
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction }
-nodesHomeDraftPage:
-    path:     /rz-admin/nodes/drafts
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction, filter:'draft' }
-nodesHomePendingPage:
-    path:     /rz-admin/nodes/pending
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction, filter:'pending' }
-nodesHomeArchivedPage:
-    path:     /rz-admin/nodes/archived
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction, filter:'archived' }
-nodesHomeDeletedPage:
-    path:     /rz-admin/nodes/deleted
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction, filter:'deleted' }
-nodesEditPage:
-    path:     /rz-admin/nodes/edit/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::editAction }
-    requirements: { nodeId : "[0-9]+" }
-nodesEditSourcePage:
-    path:     /rz-admin/nodes/edit/{nodeId}/source/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesSourcesController::editSourceAction }
-    requirements: { nodeId : "[0-9]+", translationId : "[0-9]+" }
-nodesDeleteSourcePage:
-    path:     /rz-admin/nodes/source/delete/{nodeSourceId}
-    defaults: { _controller : Themes\Rozier\Controllers\Nodes\NodesSourcesController::removeAction }
-    requirements: {nodeSourceId : "[0-9]+"}
-nodesEditTagsPage:
-    path:     /rz-admin/nodes/edit/{nodeId}/tags
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTagsController::editTagsAction }
-    requirements: { nodeId : "[0-9]+" }
-nodesRemoveTagsPage:
-    path:     /rz-admin/nodes/edit/{nodeId}/tags/{tagId}/remove
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTagsController::removeTagAction }
-    requirements: { nodeId : "[0-9]+", tagId : "[0-9]+" }
-nodesEditSEOPage:
-    path:     /rz-admin/nodes/edit/{nodeId}/seo/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\UrlAliasesController::editAliasesAction }
-    requirements: { nodeId : "[0-9]+" }
-nodesTreePage:
-    path:     /rz-admin/nodes/tree/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::treeAction }
-    requirements: { nodeId : "[0-9]+" }
-nodesBulkDeletePage:
-    path:     /rz-admin/nodes/bulk-delete
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::bulkDeleteAction }
-nodesBulkStatusPage:
-    path:     /rz-admin/nodes/bulk-status
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::bulkStatusAction }
-nodesAddPage:
-    path:     /rz-admin/nodes/add/{nodeTypeId}/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::addAction }
-    requirements: { nodeTypeId : "[0-9]+", translationId : "[0-9]+" }
-nodesAddChildPage:
-    path:     /rz-admin/nodes/add-child/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::addChildAction, nodeId:null}
-    requirements: { nodeId : "[0-9]+" }
-nodesDeletePage:
-    path:     /rz-admin/nodes/delete/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::deleteAction }
-    requirements: { nodeId : "[0-9]+" }
-nodesUndeletePage:
-    path:     /rz-admin/nodes/undelete/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::undeleteAction }
-    requirements: { nodeId : "[0-9]+" }
-nodesExportPage:
-    path:     /rz-admin/nodes/export/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesUtilsController::exportAction }
-    requirements: { nodeId : "[0-9]+" }
-nodesExportAllPage:
-    path:     /rz-admin/nodes/export
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesUtilsController::exportAllAction }
-nodesDuplicatePage:
-    path:     /rz-admin/nodes/duplicate/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesUtilsController::duplicateAction }
-    requirements: { nodeId : "[0-9]+" }
-nodesEmptyTrashPage:
-    path:     /rz-admin/nodes/empty-trash
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::emptyTrashAction }
-nodesGenerateAndAddNodeAction:
-    path:     /rz-admin/nodes/create
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::generateAndAddNodeAction }
+nodesRoutes:
+    resource: "routing/nodes.yml"
+    prefix: /rz-admin/nodes
+
 
 ## Ajax
 nodeAjaxEdit:
@@ -155,149 +55,54 @@ nodesTreeAjax:
 nodesQuickAddAjax:
     path:     /rz-admin/ajax/nodes/add
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::quickAddAction }
-# Ajax
 nodesAjaxExplorerPage:
     path:     /rz-admin/ajax/nodes/explore
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesExplorerController::indexAction }
-
-# Node TYPES
-nodeTypesHomePage:
-    path:     /rz-admin/node-types
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::indexAction }
-nodeTypesEditPage:
-    path:     /rz-admin/node-types/edit/{nodeTypeId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::editAction }
-    requirements: { nodeTypeId : "[0-9]+" }
-nodeTypesAddPage:
-    path:     /rz-admin/node-types/add
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::addAction }
-nodeTypesImportPage:
-    path:     /rz-admin/node-types/import
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::importJsonFileAction }
-nodeTypesDeletePage:
-    path:     /rz-admin/node-types/delete/{nodeTypeId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::deleteAction }
-    requirements: { nodeTypeId : "[0-9]+" }
-nodesTypesExportPage:
-    path:     /rz-admin/node-types/export/{nodeTypeId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportJsonFileAction }
-    requirements: { nodeTypeId : "[0-9]+" }
-nodeTypesSchemaUpdate:
-    path:     /rz-admin/node-types/update-schema/{_token}
-    defaults: { _controller: Themes\Rozier\Controllers\SchemaController::updateNodeTypesSchemaAction }
-    requirements: { _token : "[A-z0-9\-\_\$]+" }
-
-# Node type FIELDS
-nodeTypeFieldsListPage:
-    path:     /rz-admin/node-types/fields/{nodeTypeId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::listAction }
-    requirements: { nodeTypeId : "[0-9]+" }
-nodeTypeFieldsEditPage:
-    path:     /rz-admin/node-types/fields/edit/{nodeTypeFieldId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::editAction }
-    requirements: { nodeTypeFieldId : "[0-9]+" }
-nodeTypeFieldsAddPage:
-    path:     /rz-admin/node-types/fields/add/{nodeTypeId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::addAction }
-    requirements: { nodeTypeId : "[0-9]+" }
-nodeTypeFieldsDeletePage:
-    path:     /rz-admin/node-types/fields/delete/{nodeTypeFieldId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypeFieldsController::deleteAction }
-    requirements: { nodeTypeFieldId : "[0-9]+" }
-nodeTypesFieldSchemaUpdate:
-    path:     /rz-admin/node-types/fields/update-schema/{nodeTypeId}/{_token}
-    defaults: { _controller: Themes\Rozier\Controllers\SchemaController::updateNodeTypeFieldsSchemaAction }
-    requirements: { nodeTypeId : "[0-9]+", _token: "[A-z0-9\-\_\$]+" }
-
 nodeTypesFieldAjaxEdit:
     path:     /rz-admin/ajax/node-types/fields/edit/{nodeTypeFieldId}
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypeFieldsController::editAction }
     requirements: { nodeTypeFieldId : "[0-9]+" }
 
+# Node TYPES
+nodeTypesHomePage:
+    path:     /rz-admin/node-types
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::indexAction }
+nodeTypesRoutes:
+    resource: "routing/node-types.yml"
+    prefix: /rz-admin/node-types
+
+# Node type FIELDS
+nodeTypeFieldsRoutes:
+    resource: "routing/node-type-fields.yml"
+    prefix: /rz-admin/node-types/fields
+
+
 # SETTINGS
 settingsHomePage:
     path:     /rz-admin/settings
     defaults: { _controller: Themes\Rozier\Controllers\SettingsController::indexAction }
-settingsEditPage:
-    path:     /rz-admin/settings/edit/{settingId}
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::editAction }
-    requirements: { settingId : "[0-9]+" }
-settingsAddPage:
-    path:     /rz-admin/settings/add
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::addAction }
-settingsDeletePage:
-    path:     /rz-admin/settings/delete/{settingId}
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::deleteAction }
-    requirements: { settingId : "[0-9]+" }
-settingsExportAllPage:
-    path:     /rz-admin/settings/export
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsUtilsController::exportAllAction }
-settingsImportPage:
-    path:     /rz-admin/settings/import
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsUtilsController::importJsonFileAction }
+settingsRoutes:
+    resource: "routing/settings.yml"
+    prefix: /rz-admin/settings
+
 
 # SETTINGS GROUPS
 settingGroupsHomePage:
     path:     /rz-admin/setting-groups
     defaults: { _controller: Themes\Rozier\Controllers\SettingGroupsController::indexAction }
-settingGroupsSettingsPage:
-    path:     /rz-admin/setting-groups/settings/{settingGroupId}
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::byGroupAction }
-    requirements: { settingId : "[0-9]+" }
-settingGroupsEditPage:
-    path:     /rz-admin/setting-groups/edit/{settingGroupId}
-    defaults: { _controller: Themes\Rozier\Controllers\SettingGroupsController::editAction }
-    requirements: { settingId : "[0-9]+" }
-settingGroupsAddPage:
-    path:     /rz-admin/setting-groups/add
-    defaults: { _controller: Themes\Rozier\Controllers\SettingGroupsController::addAction }
-settingGroupsDeletePage:
-    path:     /rz-admin/setting-groups/delete/{settingGroupId}
-    defaults: { _controller: Themes\Rozier\Controllers\SettingGroupsController::deleteAction }
-    requirements: { settingId : "[0-9]+" }
+settingGroupsRoutes:
+    resource: "routing/setting-groups.yml"
+    prefix: /rz-admin/setting-groups
+
 
 # TAGS
 tagsHomePage:
     path:     /rz-admin/tags
     defaults: { _controller: Themes\Rozier\Controllers\TagsController::indexAction }
-tagsEditNodesPage:
-    path:     /rz-admin/tags/edit/{tagId}/nodes
-    defaults: { _controller: Themes\Rozier\Controllers\TagsController::editNodesAction }
-    requirements: { tagId : "[0-9]+" }
-tagsTreePage:
-    path:     /rz-admin/tags/tree/{tagId}
-    defaults: { _controller: Themes\Rozier\Controllers\TagsController::treeAction }
-    requirements: { tagId : "[0-9]+" }
-tagsEditPage:
-    path:     /rz-admin/tags/edit/{tagId}
-    defaults: { _controller: Themes\Rozier\Controllers\TagsController::editTranslatedAction }
-    requirements: { tagId : "[0-9]+" }
-tagsSettingsPage:
-    path:     /rz-admin/tags/edit/{tagId}/settings
-    defaults: { _controller: Themes\Rozier\Controllers\TagsController::editSettingsAction }
-    requirements: { tagId : "[0-9]+" }
-tagsEditTranslatedPage:
-    path:     /rz-admin/tags/edit/{tagId}/translation/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\TagsController::editTranslatedAction }
-    requirements: { tagId : "[0-9]+", translationId : "[0-9]+" }
-tagsAddPage:
-    path:     /rz-admin/tags/add
-    defaults: { _controller: Themes\Rozier\Controllers\TagsController::addAction }
-tagsAddChildPage:
-    path:     /rz-admin/tags/add-child/{tagId}
-    defaults: { _controller: Themes\Rozier\Controllers\TagsController::addChildAction }
-    requirements: { tagId : "[0-9]+" }
-tagsDeletePage:
-    path:     /rz-admin/tags/delete/{tagId}
-    defaults: { _controller: Themes\Rozier\Controllers\TagsController::deleteAction }
-    requirements: { tagId : "[0-9]+" }
-tagsExportPage:
-    path:     /rz-admin/tags/export/{tagId}
-    defaults: { _controller: Themes\Rozier\Controllers\TagsUtilsController::exportAction }
-    requirements: { tagId : "[0-9]+" }
-tagsExportAllPage:
-    path:     /rz-admin/tags/export
-    defaults: { _controller: Themes\Rozier\Controllers\TagsUtilsController::exportAction }
+tagsRoutes:
+    resource: "routing/tags.yml"
+    prefix: /rz-admin/tags
+
 ## Ajax
 tagAjaxEdit:
     path:     /rz-admin/ajax/tag/edit/{tagId}
@@ -311,80 +116,28 @@ tagAjaxSearch:
 usersHomePage:
     path:     /rz-admin/users
     defaults: { _controller: Themes\Rozier\Controllers\Users\UsersController::indexAction }
-usersEditPage:
-    path:     /rz-admin/users/edit/{userId}
-    defaults: { _controller: Themes\Rozier\Controllers\Users\UsersController::editAction }
-    requirements: { userId : "[0-9]+" }
-usersEditRolesPage:
-    path:     /rz-admin/users/edit/{userId}/roles
-    defaults: { _controller: Themes\Rozier\Controllers\Users\UsersRolesController::editRolesAction }
-    requirements: { userId : "[0-9]+" }
-usersRemoveRolesPage:
-    path:     /rz-admin/users/edit/{userId}/roles/{roleId}/remove
-    defaults: { _controller: Themes\Rozier\Controllers\Users\UsersRolesController::removeRoleAction }
-    requirements: { userId : "[0-9]+", roleId : "[0-9]+" }
-usersEditGroupsPage:
-    path:     /rz-admin/users/edit/{userId}/groups
-    defaults: { _controller: Themes\Rozier\Controllers\Users\UsersGroupsController::editGroupsAction }
-    requirements: { userId : "[0-9]+" }
-usersRemoveGroupsPage:
-    path:     /rz-admin/users/edit/{userId}/groups/{groupId}/remove
-    defaults: { _controller: Themes\Rozier\Controllers\Users\UsersGroupsController::removeGroupAction }
-    requirements: { userId : "[0-9]+", groupId : "[0-9]+" }
-usersAddPage:
-    path:     /rz-admin/users/add
-    defaults: { _controller: Themes\Rozier\Controllers\Users\UsersController::addAction }
-usersDeletePage:
-    path:     /rz-admin/users/delete/{userId}
-    defaults: { _controller: Themes\Rozier\Controllers\Users\UsersController::deleteAction }
-    requirements: { userId : "[0-9]+" }
+usersRoutes:
+    resource: "routing/users.yml"
+    prefix: /rz-admin/users
 
-usersSecurityPage:
-    path:     /rz-admin/users/edit/{userId}/security
-    defaults: { _controller: Themes\Rozier\Controllers\Users\UsersSecurityController::securityAction }
-    requirements: { userId : "[0-9]+" }
 
 # FONTS
 fontsHomePage:
     path:     /rz-admin/fonts
     defaults: { _controller: Themes\Rozier\Controllers\FontsController::indexAction }
-fontsEditPage:
-    path:     /rz-admin/fonts/edit/{fontId}
-    defaults: { _controller: Themes\Rozier\Controllers\FontsController::editAction }
-    requirements: { userId : "[0-9]+" }
-fontsDownloadPage:
-    path:     /rz-admin/fonts/download/{fontId}
-    defaults: { _controller: Themes\Rozier\Controllers\FontsController::downloadAction }
-    requirements: { userId : "[0-9]+" }
-fontsAddPage:
-    path:     /rz-admin/fonts/add
-    defaults: { _controller: Themes\Rozier\Controllers\FontsController::addAction }
-    requirements: { userId : "[0-9]+" }
-fontsDeletePage:
-    path:     /rz-admin/fonts/delete/{fontId}
-    defaults: { _controller: Themes\Rozier\Controllers\FontsController::deleteAction }
-    requirements: { userId : "[0-9]+", roleId : "[0-9]+" }
+fontsRoutes:
+    resource: "routing/fonts.yml"
+    prefix: /rz-admin/fonts
+
 
 # FOLDERS
 foldersHomePage:
     path:     /rz-admin/folders
     defaults: { _controller: Themes\Rozier\Controllers\FoldersController::indexAction }
-foldersEditPage:
-    path:     /rz-admin/folders/edit/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::editAction }
-    requirements: { userId : "[0-9]+" }
-foldersDownloadPage:
-    path:     /rz-admin/folders/download/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::downloadAction }
-    requirements: { userId : "[0-9]+" }
-foldersAddPage:
-    path:     /rz-admin/folders/add
-    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::addAction }
-    requirements: { userId : "[0-9]+" }
-foldersDeletePage:
-    path:     /rz-admin/folders/delete/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::deleteAction }
-    requirements: { userId : "[0-9]+", roleId : "[0-9]+" }
+foldersRoutes:
+    resource: "routing/folders.yml"
+    prefix: /rz-admin/folders
+
 
 ## Ajax
 foldersAjaxEdit:
@@ -399,172 +152,53 @@ foldersAjaxSearch:
 translationsHomePage:
     path:     /rz-admin/translations
     defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::indexAction }
-translationsEditPage:
-    path:     /rz-admin/translations/edit/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::editAction }
-    requirements: { translationId : "[0-9]+" }
-translationsSetDefaultPage:
-    path:     /rz-admin/translations/set-default/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::setDefaultAction }
-    requirements: { translationId : "[0-9]+" }
-translationsAddPage:
-    path:     /rz-admin/translations/add
-    defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::addAction }
-translationsDeletePage:
-    path:     /rz-admin/translations/delete/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::deleteAction }
-    requirements: { translationId : "[0-9]+" }
+translationsRoutes:
+    resource: "routing/translations.yml"
+    prefix: /rz-admin/translations
+
 
 # DOCUMENTS
 documentsHomePage:
     path:     /rz-admin/documents/{folderId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::indexAction, folderId:null }
     requirements: { folderId : "[0-9]+" }
-documentsEditPage:
-    path:     /rz-admin/documents/edit/{documentId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::editAction }
-    requirements: { documentId : "[0-9]+" }
-documentsMetaPage:
-    path:     /rz-admin/documents/meta/{documentId}/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentTranslationsController::editAction, translationId : null }
-    requirements: { documentId : "[0-9]+", translationId : "[0-9]+" }
-documentsPreviewPage:
-    path:     /rz-admin/documents/preview/{documentId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::previewAction }
-    requirements: { documentId : "[0-9]+" }
-documentsUsagePage:
-    path:     /rz-admin/documents/usage/{documentId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::usageAction }
-    requirements: { documentId : "[0-9]+" }
-documentsUploadPage:
-    path:     /rz-admin/documents/upload/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::uploadAction, folderId:null }
-    requirements: { folderId : "[0-9]+" }
-documentsRandomPage:
-    path:     /rz-admin/documents/random/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::randomAction, folderId:null }
-    requirements: { folderId : "[0-9]+" }
-documentsEmbedPage:
-    path:     /rz-admin/documents/embed/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::embedAction, folderId:null }
-    requirements: { folderId : "[0-9]+" }
-documentsDeletePage:
-    path:     /rz-admin/documents/delete/{documentId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::deleteAction }
-    requirements: { documentId : "[0-9]+" }
-documentsBulkDeletePage:
-    path:     /rz-admin/documents/bulk-delete
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::bulkDeleteAction }
-documentsBulkDownloadPage:
-    path:     /rz-admin/documents/bulk-download
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::bulkDownloadAction }
+documentsRoutes:
+    resource: "routing/documents.yml"
+    prefix: /rz-admin/documents
 
 # Ajax
 documentsAjaxExplorerPage:
     path:     /rz-admin/ajax/documents/explore
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::indexAction }
 
-# FOLDERS
-foldersAddPage:
-    path:     /rz-admin/folders/add/{parentFolderId}
-    defaults: { _controller: Themes\Rozier\Controllers\FolderController::addAction, parentFolderId:null }
-    requirements: { parentFolderId : "[0-9]+" }
-foldersEditPage:
-    path:     /rz-admin/folders/edit/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\FolderController::editAction }
-    requirements: { folderId : "[0-9]+" }
-foldersExportPage:
-    path:     /rz-admin/folders/export/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\FolderController::exportAction }
-    requirements: { folderId : "[0-9]+" }
-foldersDeletePage:
-    path:     /rz-admin/folders/delete/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\FolderController::deleteAction }
-    requirements: { folderId : "[0-9]+" }
+
 
 # THEMES
 themesHomePage:
     path:     /rz-admin/themes
     defaults: { _controller: Themes\Rozier\Controllers\ThemesController::indexAction }
-themesEditPage:
-    path:     /rz-admin/themes/edit/{themeId}
-    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::editAction }
-    requirements: { themeId : "[0-9]+" }
-themesAddPage:
-    path:     /rz-admin/themes/add
-    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::addAction }
-themesDeletePage:
-    path:     /rz-admin/themes/delete/{themeId}
-    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::deleteAction }
-    requirements: { themeId : "[0-9]+" }
+themesRoutes:
+    resource: "routing/themes.yml"
+    prefix: /rz-admin/themes
+
 
 # ROLES
 rolesHomePage:
     path:     /rz-admin/roles
     defaults: { _controller: Themes\Rozier\Controllers\RolesController::indexAction }
-rolesEditPage:
-    path:     /rz-admin/roles/edit/{roleId}
-    defaults: { _controller: Themes\Rozier\Controllers\RolesController::editAction }
-    requirements: { roleId : "[0-9]+" }
-rolesAddPage:
-    path:     /rz-admin/roles/add
-    defaults: { _controller: Themes\Rozier\Controllers\RolesController::addAction }
-rolesDeletePage:
-    path:     /rz-admin/roles/delete/{roleId}
-    defaults: { _controller: Themes\Rozier\Controllers\RolesController::deleteAction }
-    requirements: { roleId : "[0-9]+" }
-rolesExportAllPage:
-    path:     /rz-admin/roles/export
-    defaults: { _controller: Themes\Rozier\Controllers\RolesUtilsController::exportAllAction }
-rolesExportPage:
-    path:     /rz-admin/roles/export/{roleId}
-    requirements: { roleId : "[0-9]+" }
-    defaults: { _controller: Themes\Rozier\Controllers\RolesUtilsController::exportAction }
-rolesImportPage:
-    path:     /rz-admin/roles/import
-    defaults: { _controller: Themes\Rozier\Controllers\RolesUtilsController::importJsonFileAction }
+rolesRoutes:
+    resource: "routing/roles.yml"
+    prefix: /rz-admin/roles
+
 
 # GROUPS
 groupsHomePage:
     path:     /rz-admin/groups
     defaults: { _controller: Themes\Rozier\Controllers\GroupsController::indexAction }
-groupsEditPage:
-    path:     /rz-admin/groups/edit/{groupId}
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::editAction }
-    requirements: { groupId : "[0-9]+" }
-groupsEditRolesPage:
-    path:     /rz-admin/groups/edit/{groupId}/roles
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::editRolesAction }
-    requirements: { groupId : "[0-9]+" }
-groupsRemoveRolesPage:
-    path:     /rz-admin/groups/edit/{groupId}/roles/{roleId}/remove
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::removeRolesAction }
-    requirements: { groupId : "[0-9]+", roleId : "[0-9]+" }
-groupsAddPage:
-    path:     /rz-admin/groups/add
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::addAction }
-groupsDeletePage:
-    path:     /rz-admin/groups/delete/{groupId}
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::deleteAction }
-    requirements: { groupId : "[0-9]+" }
-groupsImportPage:
-    path:     /rz-admin/groups/import
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsUtilsController::importJsonFileAction }
-groupsEditUsersPage:
-    path:     /rz-admin/groups/edit/{groupId}/users
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::editUsersAction }
-    requirements: { groupId : "[0-9]+" }
-groupsRemoveUsersPage:
-    path:     /rz-admin/groups/edit/{groupId}/users/{userId}/remove
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::removeUsersAction }
-    requirements: { groupId : "[0-9]+", userId : "[0-9]+" }
-groupsExportAllPage:
-    path:     /rz-admin/groups/export
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsUtilsController::exportAllAction }
-groupsExportPage:
-    path:     /rz-admin/groups/export/{groupId}
-    requirements: { groupId : "[0-9]+" }
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsUtilsController::exportAction }
+groupsRoutes:
+    resource: "routing/groups.yml"
+    prefix: /rz-admin/groups
+
 
 #LOGS
 historyHomePage:
@@ -579,69 +213,36 @@ historyUserPage:
 customFormsHomePage:
     path:     /rz-admin/custom-forms
     defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::indexAction }
-customFormsEditPage:
-    path:     /rz-admin/custom-forms/edit/{customFormId}
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::editAction }
-    requirements: { customFormId : "[0-9]+" }
-customFormsAddPage:
-    path:     /rz-admin/custom-forms/add
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::addAction }
-customFormsDeletePage:
-    path:     /rz-admin/custom-forms/delete/{customFormId}
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::deleteAction }
-    requirements: { customFormId : "[0-9]+" }
-customFormsExportPage:
-    path:     /rz-admin/custom-forms/export/{customFormId}
-    requirements: { customFormId : "[0-9]+" }
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsUtilsController::exportAction }
+customFormsRoutes:
+    resource: "routing/custom-forms.yml"
+    prefix: /rz-admin/custom-forms
+
 # Ajax
 customFormsAjaxExplorerPage:
     path:     /rz-admin/ajax/custom-forms/explore
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormsExplorerController::indexAction }
 
 # Custom Form Answer
-customFormAnswersHomePage:
-    path:     /rz-admin/custom-form-answers/{customFormId}
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormAnswersController::listAction }
-    requirements: { customFormId : "[0-9]+" }
+customFormAnswersRoutes:
+    resource: "routing/custom-form-answers.yml"
+    prefix: /rz-admin/custom-form-answers
 
-customFormAnswersDeletePage:
-    path:     /rz-admin/custom-form-answers/delete/{customFormAnswerId}
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormAnswersController::deleteAction }
-    requirements: { customFormAnswerId : "[0-9]+" }
-
-customFormFieldAttributesHomePage:
-    path:     /rz-admin/custom-form-answers/fields/{customFormAnswerId}
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldAttributesController::listAction }
-    requirements: { customFormAnswerId : "[0-9]+" }
 
 # Custom Form FIELDS
-customFormFieldsListPage:
-    path:     /rz-admin/custom-forms/fields/{customFormId}
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldsController::listAction }
-    requirements: { customFormId : "[0-9]+" }
-customFormFieldsEditPage:
-    path:     /rz-admin/custom-forms/fields/edit/{customFormFieldId}
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldsController::editAction }
-    requirements: { customFormFieldId : "[0-9]+" }
-customFormFieldsAddPage:
-    path:     /rz-admin/custom-forms/fields/add/{customFormId}
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldsController::addAction }
-    requirements: { customFormId : "[0-9]+" }
-customFormFieldsDeletePage:
-    path:     /rz-admin/custom-forms/fields/delete/{customFormFieldId}
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldsController::deleteAction }
-    requirements: { customFormFieldId : "[0-9]+" }
+customFormFieldsRoutes:
+    resource: "routing/custom-forms-fields.yml"
+    prefix: /rz-admin/custom-forms/fields
+
 
 customFormFieldAjaxEdit:
     path:     /rz-admin/ajax/custom-forms/fields/edit/{customFormFieldId}
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormFieldsController::editAction }
     requirements: { customFormFieldId : "[0-9]+" }
 
+# SEARCH
 searchNodePage:
     path:     /rz-admin/search
     defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeAction }
-
 searchNodeSourcePage:
     path:     /rz-admin/search/{nodetypeId}
     defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeSourceAction }
@@ -651,34 +252,11 @@ searchNodeSourcePage:
 newslettersIndexPage:
     path:     /rz-admin/newsletter
     defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::listAction }
-newslettersAddPage:
-    path:     /rz-admin/newsletter/add/{nodeTypeId}/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::addAction }
-    requirements:
-        nodetypeId : "[0-9]+"
-        translationId : "[0-9]+"
-newslettersEditPage:
-    path:     /rz-admin/newsletter/edit/{newsletterId}/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::editAction }
-    requirements:
-        newsletterId : "[0-9]+"
-        translationId : "[0-9]+"
-newslettersPreviewPage:
-    path:     /rz-admin/newsletter/preview/{newsletterId}
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::previewAction }
-    requirements:
-        newsletterId : "[0-9]+"
-newslettersDuplicatePage:
-    path:     /rz-admin/newsletter/duplicate/{newsletterId}
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::duplicateAction }
-    requirements:
-        newsletterId : "[0-9]+"
-newslettersExportPage:
-    path:     /rz-admin/newsletter/export/{newsletterId}/{inline}
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::exportAction }
-    requirements:
-        newsletterId : "[0-9]+"
-        inline: 0|1
+newslettersRoutes:
+    resource: "routing/newsletters.yml"
+    prefix: /rz-admin/newsletter
+
+
 # CSS to style with main color
 cssMainColor:
     path : /rz-admin/css/main-color.css
