@@ -4163,7 +4163,9 @@ Lazyload.prototype.generalBind = function() {
     Rozier.nodeStatuses = new NodeStatuses();
 
     // Switch checkboxes
-    $(".rz-boolean-checkbox").bootstrapSwitch();
+    $(".rz-boolean-checkbox").bootstrapSwitch({
+        size: 'small'
+    });
 
     Rozier.getMessages();
 };
