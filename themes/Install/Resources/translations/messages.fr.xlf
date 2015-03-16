@@ -1,425 +1,407 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-    <file source-language="en" datatype="plaintext" original="file.ext" target-language="fr">
-        <body>
-
-            <trans-unit id="1" approved="yes">
-                <source>Node name</source>
-                <target state="translated">Nom du nœud</target>
-            </trans-unit>
-            <trans-unit id="2" approved="yes">
-                <source>See tree</source>
-                <target state="translated">Voir l’arborescence</target>
-            </trans-unit>
-            <trans-unit id="3" approved="yes">
-                <source>_username</source>
-                <target state="translated">Nom d’utilisateur</target>
-            </trans-unit>
-            <trans-unit id="4" approved="yes">
-                <source>_password</source>
-                <target state="translated">Mot de passe</target>
-            </trans-unit>
-            <trans-unit id="password" approved="yes">
-                <source>password</source>
-                <target state="translated">Mot de passe</target>
-            </trans-unit>
-            <trans-unit id="password.verify" approved="yes">
-                <source>password.verify</source>
-                <target state="translated">Vérifiez votre mot de passe</target>
-            </trans-unit>
-
-            <trans-unit id="delete" approved="yes">
-                <source>delete</source>
-                <target state="translated">Supprimer</target>
-            </trans-unit>
-
-            <trans-unit id="status" approved="yes">
-                <source>status</source>
-                <target state="translated">Statut</target>
-            </trans-unit>
-
-
-            <!-- Welcome -->
-            <trans-unit id="welcome.title" approved="yes">
-                <source>welcome.title</source>
-                <target state="translated">Installation de Roadiz CMS</target>
-            </trans-unit>
-            <trans-unit id="welcome.subtitle" approved="yes">
-                <source>welcome.subtitle</source>
-                <target state="translated">Installation de Roadiz CMS</target>
-            </trans-unit>
-            <trans-unit id="welcome.message" approved="yes">
-                <source>welcome.message</source>
-                <target state="translated">&lt;p&gt;Bienvenue dans l'assistant d'installation de Roadiz CMS, quelques petites minutes de configuration et à vous de jouer&lt;/p&gt;</target>
-            </trans-unit>
-
-
-            <!-- Requirements -->
-            <trans-unit id="requirements.title" approved="yes">
-                <source>requirements.title</source>
-                <target state="translated">Pré-requis</target>
-            </trans-unit>
-            <trans-unit id="requirements.message" approved="yes">
-                <source>requirements.message</source>
-                <target state="translated">&lt;p&gt;Pour pouvoir utiliser Roadiz, votre serveur a besoin de quelques pré-requis, notamment concernant PHP. Si vous avez accès au fichier de configuration (php.ini), vous devriez pouvoir en modifier certains.&lt;/p&gt;</target>
-            </trans-unit>
-            <trans-unit id="requirements.spec" approved="yes">
-                <source>requirements.spec</source>
-                <target state="translated">Spécification</target>
-            </trans-unit>
-            <trans-unit id="requirements.requirement" approved="yes">
-                <source>requirements.requirement</source>
-                <target state="translated">Requis</target>
-            </trans-unit>
-            <trans-unit id="requirements.actual_value" approved="yes">
-                <source>requirements.actual_value</source>
-                <target state="translated">Valeur actuelle</target>
-            </trans-unit>
-
-
-            <!-- Database -->
-            <trans-unit id="database.title" approved="yes">
-                <source>database.title</source>
-                <target state="translated">Base de données</target>
-            </trans-unit>
-            <trans-unit id="database.message" approved="yes">
-                <source>database.message</source>
-                <target state="translated">&lt;p&gt;Roadiz a besoin d'une base de données pour stocker vos contenus de qualités. Vous pouvez même sélectionner votre moteur de base de données préféré!&lt;/p&gt;</target>
-            </trans-unit>
-            <trans-unit id="database.cannot_connect" approved="yes">
-                <source>database.cannot_connect</source>
-                <target state="translated">Connexion à la base de données impossible</target>
-            </trans-unit>
-            <trans-unit id="database.build" approved="yes">
-                <source>database.build</source>
-                <target state="translated">Construire la base de données</target>
-            </trans-unit>
-
-
-            <!-- Database done -->
-            <trans-unit id="database_done.title" approved="yes">
-                <source>database_done.title</source>
-                <target state="translated">Base de données installée</target>
-            </trans-unit>
-            <trans-unit id="database_done.message" approved="yes">
-                <source>database_done.message</source>
-                <target state="translated">&lt;p&gt;La base de donnée a bien été installée. Maintenant, nous allons importer des contenus et paramètres de base pour mettre en route votre site.&lt;/p&gt;</target>
-            </trans-unit>
-
-            <!-- Database fail -->
-            <trans-unit id="database_fail.title" approved="yes">
-                <source>database_fail.title</source>
-                <target state="translated">Erreur de base de données</target>
-            </trans-unit>
-            <trans-unit id="database_fail.message" approved="yes">
-                <source>database_fail.message</source>
-                <target state="translated">&lt;p&gt;La base de données n’a pas pu être installée. Veuillez vérifier si les identifiants sont corrects ou si la base n’a pas déjà été installée.&lt;/p&gt;</target>
-            </trans-unit>
-
-
-             <!-- Import -->
-            <trans-unit id="import.title" approved="yes">
-                <source>import.title</source>
-                <target state="translated">Importation</target>
-            </trans-unit>
-            <trans-unit id="import.message" approved="yes">
-                <source>import.message</source>
-                <target state="translated">&lt;p&gt;Si vous le souhaitez vous pouvez importer des paramètres, des rôles et des groupes d'utilisateur de base.</target>
-            </trans-unit>
-            <trans-unit id="import.step_name" approved="yes">
-                <source>import.step_name</source>
-                <target state="translated">Étape</target>
-            </trans-unit>
-
-            <!-- User -->
-            <trans-unit id="user.title" approved="yes">
-                <source>user.title</source>
-                <target state="translated">Création d'un utilisateur</target>
-            </trans-unit>
-            <trans-unit id="user.message" approved="yes">
-                <source>user.message</source>
-                <target state="translated">&lt;p&gt;Créer un utilisateur pour accéder à l'espace d’administration de votre site&lt;/p&gt;</target>
-            </trans-unit>
-            <trans-unit id="user.create" approved="yes">
-                <source>user.create</source>
-                <target state="translated">Créer un utilisateur</target>
-            </trans-unit>
-            <trans-unit id="user.name" approved="yes">
-                <source>user.name</source>
-                <target state="translated">Nom d’utilisateur</target>
-            </trans-unit>
-            <trans-unit id="user.email" approved="yes">
-                <source>user.email</source>
-                <target state="translated">E-mail</target>
-            </trans-unit>
-            <trans-unit id="user.create_another" approved="yes">
-                <source>user.create_another</source>
-                <target state="translated">Créer un autre utilisateur</target>
-            </trans-unit>
-
-
-            <!-- User summary -->
-            <trans-unit id="user_summary.title" approved="yes">
-                <source>user_summary.title</source>
-                <target state="translated">Utilisateur créé avec succès</target>
-            </trans-unit>
-
-
-            <!-- Themes -->
-            <trans-unit id="themes.title" approved="yes">
-                <source>themes.title</source>
-                <target state="translated">Informations</target>
-            </trans-unit>
-            <trans-unit id="themes.message" approved="yes">
-                <source>themes.message</source>
-                <target state="translated">&lt;p&gt;Remplissez les informations de base de votre site&lt;/p&gt;</target>
-            </trans-unit>
-            <trans-unit id="themes.save_informations" approved="yes">
-                <source>themes.save_informations</source>
-                <target state="translated">Sauvegarder les informations</target>
-            </trans-unit>
-            <trans-unit id="themes.frontend.description" approved="yes">
-                <source>themes.frontend.description</source>
-                <target state="translated">Vous pouvez installer un thème et ses contenus par défaut pour votre CMS.</target>
-            </trans-unit>
-
-            <!-- Import node type -->
-            <trans-unit id="import_node_type.title" approved="yes">
-                <source>import_node_type.title</source>
-                <target state="translated">Importation de contenu type</target>
-            </trans-unit>
-            <trans-unit id="import_node_type.message" approved="yes">
-                <source>import_node_type.message</source>
-                <target state="translated">Types de nœud</target>
-            </trans-unit>
-            <trans-unit id="import_node_type.node_type" approved="yes">
-                <source>import_node_type.node_type</source>
-                <target state="translated">Type de nœud</target>
-            </trans-unit>
-            <trans-unit id="import_node_type.node" approved="yes">
-                <source>import_node_type.node</source>
-                <target state="translated">Nœud</target>
-            </trans-unit>
-
-
-
-            <!-- Success -->
-            <trans-unit id="success.title" approved="yes">
-                <source>success.title</source>
-                <target state="translated">Bravo!</target>
-            </trans-unit>
-            <trans-unit id="success.message" approved="yes">
-                <source>success.message</source>
-                <target state="translated">&lt;p&gt;Votre site est prêt à être utilisé. Amusez-vous bien !&lt;/p&gt;</target>
-            </trans-unit>
-            <trans-unit id="success.quit_install" approved="yes">
-                <source>success.quit_install</source>
-                <target state="translated">Quitter l'installation</target>
-            </trans-unit>
-
-
-            <!-- Goto -->
-            <trans-unit id="goto.requirements" approved="yes">
-                <source>goto.requirements</source>
-                <target state="translated">Pré-requis</target>
-            </trans-unit>
-            <trans-unit id="goto.welcome" approved="yes">
-                <source>goto.welcome</source>
-                <target state="translated">Retour à l'accueil</target>
-            </trans-unit>
-            <trans-unit id="goto.database" approved="yes">
-                <source>goto.database</source>
-                <target state="translated">Base de données</target>
-            </trans-unit>
-            <trans-unit id="goto.import" approved="yes">
-                <source>goto.import</source>
-                <target state="translated">Importation</target>
-            </trans-unit>
-            <trans-unit id="goto.user" approved="yes">
-                <source>goto.user</source>
-                <target state="translated">Utilisateur</target>
-            </trans-unit>
-            <trans-unit id="goto.theme" approved="yes">
-                <source>goto.theme</source>
-                <target state="translated">Informations du site</target>
-            </trans-unit>
-            <trans-unit id="goto.informations" approved="yes">
-                <source>goto.informations</source>
-                <target state="translated">Informations</target>
-            </trans-unit>
-            <trans-unit id="skip.user.goto.theme" approved="yes">
-                <source>skip.user.goto.theme</source>
-                <target state="translated">Passer</target>
-            </trans-unit>
-            <trans-unit id="skip.user.goto.done" approved="yes">
-                <source>skip.user.goto.done</source>
-                <target state="translated">Fin</target>
-            </trans-unit>
-            <trans-unit id="skip.database.goto.import" approved="yes">
-                <source>skip.database.goto.import</source>
-                <target state="translated">Passer</target>
-            </trans-unit>
-
-            <trans-unit id="choose.language" approved="yes">
-                <source>choose.language</source>
-                <target state="translated">Choisir la langue</target>
-            </trans-unit>
-            <trans-unit id="choose.a.language" approved="yes">
-                <source>choose.a.language</source>
-                <target state="translated">Veuillez choisir la langue d’installation.</target>
-            </trans-unit>
-
-            <trans-unit id="skip.database.goto.theme" approved="yes">
-                <source>skip.database.goto.theme</source>
-                <target state="translated">Passer</target>
-            </trans-unit>
-
-            <trans-unit xml:space="preserve" id="theme.summary.title" approved="yes">
+  <file source-language="en" datatype="plaintext" original="file.ext" target-language="fr">
+    <body>
+      <trans-unit id="1" approved="yes">
+        <source>Node name</source>
+        <target xml:lang="fr">Nom du n&#x153;ud</target>
+      </trans-unit>
+      <trans-unit id="2" approved="yes">
+        <source>See tree</source>
+        <target xml:lang="fr">Voir l&#x2019;arborescence</target>
+      </trans-unit>
+      <trans-unit id="3" approved="yes">
+        <source>_username</source>
+        <target xml:lang="fr">Nom d&#x2019;utilisateur</target>
+      </trans-unit>
+      <trans-unit id="4" approved="yes">
+        <source>_password</source>
+        <target xml:lang="fr">Mot de passe</target>
+      </trans-unit>
+      <trans-unit id="password.verify" approved="yes">
+        <source>password.verify</source>
+        <target xml:lang="fr">V&#xE9;rifiez votre mot de passe</target>
+      </trans-unit>
+      <trans-unit id="delete" approved="yes">
+        <source>delete</source>
+        <target xml:lang="fr">Supprimer</target>
+      </trans-unit>
+      <trans-unit id="status" approved="yes">
+        <source>status</source>
+        <target xml:lang="fr">Statut</target>
+      </trans-unit>
+      <!-- Welcome -->
+      <trans-unit id="welcome.title" approved="yes">
+        <source>welcome.title</source>
+        <target xml:lang="fr">Installation de Roadiz CMS</target>
+      </trans-unit>
+      <trans-unit id="welcome.subtitle" approved="yes">
+        <source>welcome.subtitle</source>
+        <target xml:lang="fr">Installation de Roadiz CMS</target>
+      </trans-unit>
+      <trans-unit id="welcome.message" approved="yes">
+        <source>welcome.message</source>
+        <target xml:lang="fr">&lt;p&gt;Bienvenue dans l'assistant d'installation de Roadiz CMS, quelques petites minutes de configuration et &#xE0; vous de jouer&lt;/p&gt;</target>
+      </trans-unit>
+      <!-- Requirements -->
+      <trans-unit id="requirements.title" approved="yes">
+        <source>requirements.title</source>
+        <target xml:lang="fr">Pr&#xE9;-requis</target>
+      </trans-unit>
+      <trans-unit id="requirements.message" approved="yes">
+        <source>requirements.message</source>
+        <target xml:lang="fr">&lt;p&gt;Pour pouvoir utiliser Roadiz, votre serveur a besoin de quelques pr&#xE9;-requis, notamment concernant PHP. Si vous avez acc&#xE8;s au fichier de configuration (php.ini), vous devriez pouvoir en modifier certains.&lt;/p&gt;</target>
+      </trans-unit>
+      <trans-unit id="requirements.spec" approved="yes">
+        <source>requirements.spec</source>
+        <target xml:lang="fr">Sp&#xE9;cification</target>
+      </trans-unit>
+      <trans-unit id="requirements.requirement" approved="yes">
+        <source>requirements.requirement</source>
+        <target xml:lang="fr">Requis</target>
+      </trans-unit>
+      <trans-unit id="requirements.actual_value" approved="yes">
+        <source>requirements.actual_value</source>
+        <target xml:lang="fr">Valeur actuelle</target>
+      </trans-unit>
+      <!-- Database -->
+      <trans-unit id="database.title" approved="yes">
+        <source>database.title</source>
+        <target xml:lang="fr">Base de donn&#xE9;es</target>
+      </trans-unit>
+      <trans-unit id="database.message" approved="yes">
+        <source>database.message</source>
+        <target xml:lang="fr">&lt;p&gt;Roadiz a besoin d'une base de donn&#xE9;es pour stocker vos contenus de qualit&#xE9;s. Vous pouvez m&#xEA;me s&#xE9;lectionner votre moteur de base de donn&#xE9;es pr&#xE9;f&#xE9;r&#xE9;!&lt;/p&gt;</target>
+      </trans-unit>
+      <trans-unit id="database.cannot_connect" approved="yes">
+        <source>database.cannot_connect</source>
+        <target xml:lang="fr">Connexion &#xE0; la base de donn&#xE9;es impossible</target>
+      </trans-unit>
+      <trans-unit id="database.build" approved="yes">
+        <source>database.build</source>
+        <target xml:lang="fr">Construire la base de donn&#xE9;es</target>
+      </trans-unit>
+      <!-- Database done -->
+      <trans-unit id="database_done.title" approved="yes">
+        <source>database_done.title</source>
+        <target xml:lang="fr">Base de donn&#xE9;es install&#xE9;e</target>
+      </trans-unit>
+      <trans-unit id="database_done.message" approved="yes">
+        <source>database_done.message</source>
+        <target xml:lang="fr">&lt;p&gt;La base de donn&#xE9;e a bien &#xE9;t&#xE9; install&#xE9;e. Maintenant, nous allons importer des contenus et param&#xE8;tres de base pour mettre en route votre site.&lt;/p&gt;</target>
+      </trans-unit>
+      <!-- Database fail -->
+      <trans-unit id="database_fail.title" approved="yes">
+        <source>database_fail.title</source>
+        <target xml:lang="fr">Erreur de base de donn&#xE9;es</target>
+      </trans-unit>
+      <trans-unit id="database_fail.message" approved="yes">
+        <source>database_fail.message</source>
+        <target xml:lang="fr">&lt;p&gt;La base de donn&#xE9;es n&#x2019;a pas pu &#xEA;tre install&#xE9;e. Veuillez v&#xE9;rifier si les identifiants sont corrects ou si la base n&#x2019;a pas d&#xE9;j&#xE0; &#xE9;t&#xE9; install&#xE9;e.&lt;/p&gt;</target>
+      </trans-unit>
+      <!-- Import -->
+      <trans-unit id="import.title" approved="yes">
+        <source>import.title</source>
+        <target xml:lang="fr">Importation</target>
+      </trans-unit>
+      <trans-unit id="import.message" approved="yes">
+        <source>import.message</source>
+        <target xml:lang="fr">&lt;p&gt;Si vous le souhaitez vous pouvez importer des param&#xE8;tres, des r&#xF4;les et des groupes d'utilisateur de base.</target>
+      </trans-unit>
+      <trans-unit id="import.step_name" approved="yes">
+        <source>import.step_name</source>
+        <target xml:lang="fr">&#xC9;tape</target>
+      </trans-unit>
+      <!-- User -->
+      <trans-unit id="user.title" approved="yes">
+        <source>user.title</source>
+        <target xml:lang="fr">Cr&#xE9;ation d'un utilisateur</target>
+      </trans-unit>
+      <trans-unit id="user.message" approved="yes">
+        <source>user.message</source>
+        <target xml:lang="fr">&lt;p&gt;Cr&#xE9;er un utilisateur pour acc&#xE9;der &#xE0; l'espace d&#x2019;administration de votre site&lt;/p&gt;</target>
+      </trans-unit>
+      <trans-unit id="user.create" approved="yes">
+        <source>user.create</source>
+        <target xml:lang="fr">Cr&#xE9;er un utilisateur</target>
+      </trans-unit>
+      <trans-unit id="user.name" approved="yes">
+        <source>user.name</source>
+        <target xml:lang="fr">Nom d&#x2019;utilisateur</target>
+      </trans-unit>
+      <trans-unit id="user.email" approved="yes">
+        <source>user.email</source>
+        <target xml:lang="fr">E-mail</target>
+      </trans-unit>
+      <trans-unit id="user.create_another" approved="yes">
+        <source>user.create_another</source>
+        <target xml:lang="fr">Cr&#xE9;er un autre utilisateur</target>
+      </trans-unit>
+      <!-- User summary -->
+      <trans-unit id="user_summary.title" approved="yes">
+        <source>user_summary.title</source>
+        <target xml:lang="fr">Utilisateur cr&#xE9;&#xE9; avec succ&#xE8;s</target>
+      </trans-unit>
+      <!-- Themes -->
+      <trans-unit id="themes.title" approved="yes">
+        <source>themes.title</source>
+        <target xml:lang="fr">Informations</target>
+      </trans-unit>
+      <trans-unit id="themes.message" approved="yes">
+        <source>themes.message</source>
+        <target xml:lang="fr">&lt;p&gt;Remplissez les informations de base de votre site&lt;/p&gt;</target>
+      </trans-unit>
+      <trans-unit id="themes.save_informations" approved="yes">
+        <source>themes.save_informations</source>
+        <target xml:lang="fr">Sauvegarder les informations</target>
+      </trans-unit>
+      <trans-unit id="themes.frontend.description" approved="yes">
+        <source>themes.frontend.description</source>
+        <target xml:lang="fr">Vous pouvez installer un th&#xE8;me et ses contenus par d&#xE9;faut pour votre CMS.</target>
+      </trans-unit>
+      <!-- Import node type -->
+      <trans-unit id="import_node_type.title" approved="yes">
+        <source>import_node_type.title</source>
+        <target xml:lang="fr">Importation de contenu type</target>
+      </trans-unit>
+      <trans-unit id="import_node_type.message" approved="yes">
+        <source>import_node_type.message</source>
+        <target xml:lang="fr">Types de n&#x153;ud</target>
+      </trans-unit>
+      <trans-unit id="import_node_type.node_type" approved="yes">
+        <source>import_node_type.node_type</source>
+        <target xml:lang="fr">Type de n&#x153;ud</target>
+      </trans-unit>
+      <trans-unit id="import_node_type.node" approved="yes">
+        <source>import_node_type.node</source>
+        <target xml:lang="fr">N&#x153;ud</target>
+      </trans-unit>
+      <!-- Success -->
+      <trans-unit id="success.title" approved="yes">
+        <source>success.title</source>
+        <target xml:lang="fr">Bravo!</target>
+      </trans-unit>
+      <trans-unit id="success.message" approved="yes">
+        <source>success.message</source>
+        <target xml:lang="fr">&lt;p&gt;Votre site est pr&#xEA;t &#xE0; &#xEA;tre utilis&#xE9;. Amusez-vous bien&#xA0;!&lt;/p&gt;</target>
+      </trans-unit>
+      <trans-unit id="success.quit_install" approved="yes">
+        <source>success.quit_install</source>
+        <target xml:lang="fr">Quitter l'installation</target>
+      </trans-unit>
+      <!-- Goto -->
+      <trans-unit id="goto.requirements" approved="yes">
+        <source>goto.requirements</source>
+        <target xml:lang="fr">Pr&#xE9;-requis</target>
+      </trans-unit>
+      <trans-unit id="goto.welcome" approved="yes">
+        <source>goto.welcome</source>
+        <target xml:lang="fr">Retour &#xE0; l'accueil</target>
+      </trans-unit>
+      <trans-unit id="goto.database" approved="yes">
+        <source>goto.database</source>
+        <target xml:lang="fr">Base de donn&#xE9;es</target>
+      </trans-unit>
+      <trans-unit id="goto.import" approved="yes">
+        <source>goto.import</source>
+        <target xml:lang="fr">Importation</target>
+      </trans-unit>
+      <trans-unit id="goto.user" approved="yes">
+        <source>goto.user</source>
+        <target xml:lang="fr">Utilisateur</target>
+      </trans-unit>
+      <trans-unit id="goto.theme" approved="yes">
+        <source>goto.theme</source>
+        <target xml:lang="fr">Informations du site</target>
+      </trans-unit>
+      <trans-unit id="goto.informations" approved="yes">
+        <source>goto.informations</source>
+        <target xml:lang="fr">Informations</target>
+      </trans-unit>
+      <trans-unit id="skip.user.goto.theme" approved="yes">
+        <source>skip.user.goto.theme</source>
+        <target xml:lang="fr">Passer</target>
+      </trans-unit>
+      <trans-unit id="skip.user.goto.done" approved="yes">
+        <source>skip.user.goto.done</source>
+        <target xml:lang="fr">Fin</target>
+      </trans-unit>
+      <trans-unit id="skip.database.goto.import" approved="yes">
+        <source>skip.database.goto.import</source>
+        <target xml:lang="fr">Passer</target>
+      </trans-unit>
+      <trans-unit id="choose.language" approved="yes">
+        <source>choose.language</source>
+        <target xml:lang="fr">Choisir la langue</target>
+      </trans-unit>
+      <trans-unit id="choose.a.language" approved="yes">
+        <source>choose.a.language</source>
+        <target xml:lang="fr">Veuillez choisir la langue d&#x2019;installation.</target>
+      </trans-unit>
+      <trans-unit id="skip.database.goto.theme" approved="yes">
+        <source>skip.database.goto.theme</source>
+        <target xml:lang="fr">Passer</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="theme.summary.title" approved="yes">
                 <source>theme.summary.title</source>
-                <target state="translated">Validation du thème</target>
+                <target xml:lang="fr">Validation du th&#xE8;me</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="check.version" approved="yes">
+      <trans-unit xml:space="preserve" id="check.version" approved="yes">
                 <source>check.version</source>
-                <target state="translated">Version</target>
+                <target xml:lang="fr">Version</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="theme.name" approved="yes">
+      <trans-unit xml:space="preserve" id="theme.name" approved="yes">
                 <source>theme.name</source>
-                <target state="translated">Nom</target>
+                <target xml:lang="fr">Nom</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="theme.version" approved="yes">
+      <trans-unit xml:space="preserve" id="theme.version" approved="yes">
                 <source>theme.version</source>
-                <target state="translated">Version</target>
+                <target xml:lang="fr">Version</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="cms.version" approved="yes">
+      <trans-unit xml:space="preserve" id="cms.version" approved="yes">
                 <source>cms.version</source>
-                <target state="translated">Version du CMS</target>
+                <target xml:lang="fr">Version du CMS</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="theme.supportedLocale" approved="yes">
+      <trans-unit xml:space="preserve" id="theme.supportedLocale" approved="yes">
                 <source>theme.supportedLocale</source>
-                <target state="translated">Locale disponible</target>
+                <target xml:lang="fr">Locale disponible</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="cms.locale" approved="yes">
+      <trans-unit xml:space="preserve" id="cms.locale" approved="yes">
                 <source>cms.locale</source>
-                <target state="translated">Locale du CMS</target>
+                <target xml:lang="fr">Locale du CMS</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="name" approved="yes">
+      <trans-unit xml:space="preserve" id="name" approved="yes">
                 <source>name</source>
-                <target state="translated">Nom</target>
+                <target xml:lang="fr">Nom</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="filename" approved="yes">
+      <trans-unit xml:space="preserve" id="filename" approved="yes">
                 <source>filename</source>
-                <target state="translated">Nom du fichier</target>
+                <target xml:lang="fr">Nom du fichier</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="nodetypes" approved="yes">
+      <trans-unit xml:space="preserve" id="nodetypes" approved="yes">
                 <source>nodetypes</source>
-                <target state="translated">Types de nœud</target>
+                <target xml:lang="fr">Types de n&#x153;ud</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="nodes" approved="yes">
+      <trans-unit xml:space="preserve" id="nodes" approved="yes">
                 <source>nodes</source>
-                <target state="translated">Nœuds</target>
+                <target xml:lang="fr">N&#x153;uds</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="install.theme" approved="yes">
+      <trans-unit xml:space="preserve" id="install.theme" approved="yes">
                 <source>install.theme</source>
-                <target state="translated">Lancer l’installation</target>
+                <target xml:lang="fr">Lancer l&#x2019;installation</target>
             </trans-unit>
-
-            <trans-unit xml:space="preserve" id="import.theme.content.title" approved="yes">
+      <trans-unit xml:space="preserve" id="import.theme.content.title" approved="yes">
                 <source>import.theme.content.title</source>
-                <target state="translated">Importation du thème</target>
+                <target xml:lang="fr">Importation du th&#xE8;me</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="step.name" approved="yes">
+      <trans-unit xml:space="preserve" id="step.name" approved="yes">
                 <source>step.name</source>
-                <target state="translated">Étape</target>
+                <target xml:lang="fr">&#xC9;tape</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="goto.done" approved="yes">
+      <trans-unit xml:space="preserve" id="goto.done" approved="yes">
                 <source>goto.done</source>
-                <target state="translated">Terminer</target>
+                <target xml:lang="fr">Terminer</target>
             </trans-unit>
-
-            <trans-unit xml:space="preserve" id="import_roles" approved="yes">
+      <trans-unit xml:space="preserve" id="import_roles" approved="yes">
                 <source>import_roles</source>
-                <target state="translated">Rôles</target>
+                <target xml:lang="fr">R&#xF4;les</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="import_groups" approved="yes">
+      <trans-unit xml:space="preserve" id="import_groups" approved="yes">
                 <source>import_groups</source>
-                <target state="translated">Groupes de rôles</target>
+                <target xml:lang="fr">Groupes de r&#xF4;les</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="import_settings" approved="yes">
+      <trans-unit xml:space="preserve" id="import_settings" approved="yes">
                 <source>import_settings</source>
-                <target state="translated">Paramètres</target>
+                <target xml:lang="fr">Param&#xE8;tres</target>
             </trans-unit>
-
-            <trans-unit xml:space="preserve" id="theme.selector" approved="yes">
+      <trans-unit xml:space="preserve" id="theme.selector" approved="yes">
                 <source>theme.selector</source>
-                <target state="translated">Thèmes disponibles</target>
+                <target xml:lang="fr">Th&#xE8;mes disponibles</target>
             </trans-unit>
-
-            <trans-unit xml:space="preserve" id="check.locale" approved="yes">
+      <trans-unit xml:space="preserve" id="check.locale" approved="yes">
                 <source>check.locale</source>
-                <target state="translated">Locale</target>
+                <target xml:lang="fr">Locale</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="check.import.files" approved="yes">
+      <trans-unit xml:space="preserve" id="check.import.files" approved="yes">
                 <source>check.import.files</source>
-                <target state="translated">Fichiers à importer</target>
+                <target xml:lang="fr">Fichiers &#xE0; importer</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="password.must_match" approved="yes">
+      <trans-unit xml:space="preserve" id="password.must_match" approved="yes">
                 <source>password.must_match</source>
-                <target state="translated">Les mots de passe doivent correspondre</target>
+                <target xml:lang="fr">Les mots de passe doivent correspondre</target>
             </trans-unit>
-
-            <trans-unit xml:space="preserve" id="site_name">
+      <trans-unit xml:space="preserve" id="site_name" approved="yes">
                 <source>site_name</source>
-                <target>Nom de votre site</target>
+                <target xml:lang="fr">Nom de votre site</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="email_sender">
+      <trans-unit xml:space="preserve" id="email_sender" approved="yes">
                 <source>email_sender</source>
-                <target>Email principal</target>
+                <target xml:lang="fr">Email principal</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="email_sender_name">
+      <trans-unit xml:space="preserve" id="email_sender_name" approved="yes">
                 <source>email_sender_name</source>
-                <target>Nom du compte lié à l’email</target>
+                <target xml:lang="fr">Nom du compte li&#xE9; &#xE0; l&#x2019;email</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="meta_description">
+      <trans-unit xml:space="preserve" id="meta_description" approved="yes">
                 <source>meta_description</source>
-                <target>Méta description</target>
+                <target xml:lang="fr">M&#xE9;ta description</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="timezone">
+      <trans-unit xml:space="preserve" id="timezone" approved="yes">
                 <source>timezone</source>
-                <target>TImezone</target>
+                <target xml:lang="fr">TImezone</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="install_theme">
+      <trans-unit xml:space="preserve" id="install_theme" approved="yes">
                 <source>install_theme</source>
-                <target>Installer un thème ?</target>
+                <target xml:lang="fr">Installer un th&#xE8;me&#xA0;?</target>
             </trans-unit>
-
-            <trans-unit xml:space="preserve" id="driver">
+      <trans-unit xml:space="preserve" id="driver" approved="yes">
                 <source>driver</source>
-                <target>Moteur de base de donnée</target>
+                <target xml:lang="fr">Moteur de base de donn&#xE9;e</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="host">
+      <trans-unit xml:space="preserve" id="host" approved="yes">
                 <source>host</source>
-                <target>Hôte</target>
+                <target xml:lang="fr">H&#xF4;te</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="port">
+      <trans-unit xml:space="preserve" id="port" approved="yes">
                 <source>port</source>
-                <target>Port</target>
+                <target xml:lang="fr">Port</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="unix_socket">
+      <trans-unit xml:space="preserve" id="unix_socket" approved="yes">
                 <source>unix_socket</source>
-                <target>Socket UNIX</target>
+                <target xml:lang="fr">Socket UNIX</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="path">
+      <trans-unit xml:space="preserve" id="path" approved="yes">
                 <source>path</source>
-                <target>Chemin</target>
+                <target xml:lang="fr">Chemin</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="user">
+      <trans-unit xml:space="preserve" id="user" approved="yes">
                 <source>user</source>
-                <target>Nom d’utilisateur</target>
+                <target xml:lang="fr">Nom d&#x2019;utilisateur</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="dbname">
+      <trans-unit xml:space="preserve" id="password" approved="yes">
+                <source>password</source>
+                <target xml:lang="fr">Mot de passe</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="dbname" approved="yes">
                 <source>dbname</source>
-                <target>Nom de la base</target>
+                <target xml:lang="fr">Nom de la base</target>
             </trans-unit>
-        </body>
-    </file>
+      <trans-unit xml:space="preserve" id="error.locale.message" approved="yes">
+                <source>error.locale.message</source>
+                <target xml:lang="fr">La locale du th&#xE8;me n&#x2019;existe pas sur votre syst&#xE8;me.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="error.modal.title" approved="yes">
+                <source>error.modal.title</source>
+                <target xml:lang="fr">Veuillez corriger les probl&#xE8;mes suivants avant de continuer.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="error.version.message" approved="yes">
+                <source>error.version.message</source>
+                <target xml:lang="fr">Le th&#xE8;me n&#xE9;cessite une version plus r&#xE9;cente de Roadiz.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="warning.theme.continue" approved="yes">
+                <source>warning.theme.continue</source>
+                <target xml:lang="fr">Vous pouvez ignorer ces messages et continuer tout de m&#xEA;me.</target>
+            </trans-unit>
+    </body>
+  </file>
 </xliff>
