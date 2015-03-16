@@ -120,6 +120,12 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                             $theme->getHostname() != '') {
                             $feCollection->setHost($theme->getHostname());
                         }
+                        /*
+                         * Add a global prefix on theme static routes
+                         */
+                        if ($theme->getRoutePrefix() != '') {
+                            $feCollection->addPrefix($theme->getRoutePrefix());
+                        }
                         $rCollection->addCollection($feCollection);
                     }
                 }

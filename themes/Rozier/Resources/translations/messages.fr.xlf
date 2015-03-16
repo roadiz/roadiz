@@ -5992,6 +5992,10 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note></trans-unit>
           <source>not.valid.facebook.name</source>
           <target>Ce n’est pas un nom Facebook valide, copiez seulement la partie après https://www.facebook.com/</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="routePrefix">
+          <source>routePrefix</source>
+          <target>Préfixe des routes statiques</target>
+      </trans-unit>
   </body>
   </file>
 </xliff>
