@@ -10,21 +10,17 @@ NodeTypeFieldEdit = function(){
     _this.$formFieldRow = $('.node-type-field-row');
     _this.$formFieldCol = $('.node-type-field-col');
 
+    _this.indexOpen = null;
+    _this.openFormDelay = 0;
+    _this.$formCont = null;
+    _this.$form = null;
+    _this.$formIcon = null;
+    _this.$formContHeight = null;
+
     // Methods
     _this.init();
-
 };
 
-
-NodeTypeFieldEdit.prototype.$btn = null;
-NodeTypeFieldEdit.prototype.indexOpen = null;
-NodeTypeFieldEdit.prototype.openFormDelay = 0;
-NodeTypeFieldEdit.prototype.$formFieldRow = null;
-NodeTypeFieldEdit.prototype.$formFieldCol = null;
-NodeTypeFieldEdit.prototype.$formCont = null;
-NodeTypeFieldEdit.prototype.$form = null;
-NodeTypeFieldEdit.prototype.$formIcon = null;
-NodeTypeFieldEdit.prototype.$formContHeight = null;
 
 
 /**
@@ -35,6 +31,7 @@ NodeTypeFieldEdit.prototype.init = function(){
     var _this = this;
 
     // Events
+    _this.$btn.off('click');
     _this.$btn.on('click', $.proxy(_this.btnClick, _this));
 };
 
@@ -46,18 +43,20 @@ NodeTypeFieldEdit.prototype.init = function(){
 NodeTypeFieldEdit.prototype.btnClick = function(e){
     var _this = this;
 
+    e.preventDefault();
+
     if(_this.indexOpen !== null){
         _this.closeForm();
         _this.openFormDelay = 500;
     }
     else _this.openFormDelay = 0;
 
-    if(_this.indexOpen !==  parseInt(e.currentTarget.getAttribute('data-index')) ){
+    if(_this.indexOpen !== parseInt(e.currentTarget.getAttribute('data-index')) ){
 
         Rozier.lazyload.canvasLoader.show();
 
         setTimeout(function(){
-
+            console.log('Opening node-type field…');
             _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
 
             $.ajax({
