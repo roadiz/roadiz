@@ -1,0 +1,14 @@
+customFormAnswersHomePage:
+    path:     /{customFormId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormAnswersController::listAction }
+    requirements: { customFormId : "[0-9]+" }
+
+customFormAnswersDeletePage:
+    path:     /delete/{customFormAnswerId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormAnswersController::deleteAction }
+    requirements: { customFormAnswerId : "[0-9]+" }
+
+customFormFieldAttributesHomePage:
+    path:     /fields/{customFormAnswerId}
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormFieldAttributesController::listAction }
+    requirements: { customFormAnswerId : "[0-9]+" }

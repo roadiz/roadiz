@@ -1,0 +1,16 @@
+fontsEditPage:
+    path:     /edit/{fontId}
+    defaults: { _controller: Themes\Rozier\Controllers\FontsController::editAction }
+    requirements: { userId : "[0-9]+" }
+fontsDownloadPage:
+    path:     /download/{fontId}
+    defaults: { _controller: Themes\Rozier\Controllers\FontsController::downloadAction }
+    requirements: { userId : "[0-9]+" }
+fontsAddPage:
+    path:     /add
+    defaults: { _controller: Themes\Rozier\Controllers\FontsController::addAction }
+    requirements: { userId : "[0-9]+" }
+fontsDeletePage:
+    path:     /delete/{fontId}
+    defaults: { _controller: Themes\Rozier\Controllers\FontsController::deleteAction }
+    requirements: { userId : "[0-9]+", roleId : "[0-9]+" }

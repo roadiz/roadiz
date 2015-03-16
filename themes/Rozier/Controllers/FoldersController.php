@@ -76,7 +76,7 @@ class FoldersController extends RozierApp
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, $parentFolderId = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
