@@ -8,10 +8,6 @@ var StackNodeTree = function () {
     _this.init();
 };
 
-StackNodeTree.prototype.$page = null;
-StackNodeTree.prototype.$switchLangButtons = null;
-StackNodeTree.prototype.$quickAddNodeButtons = null;
-
 StackNodeTree.prototype.init = function() {
     var _this = this;
 

@@ -18,9 +18,6 @@ var SaveButtons = function () {
     }
 };
 
-SaveButtons.prototype.$button = null;
-SaveButtons.prototype.$actionMenu = null;
-
 SaveButtons.prototype.init = function() {
     var _this = this;
 

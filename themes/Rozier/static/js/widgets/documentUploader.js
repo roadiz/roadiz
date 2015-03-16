@@ -40,7 +40,6 @@ var DocumentUploader = function (options) {
         _this.init();
     }
 };
-DocumentUploader.prototype.options = null;
 DocumentUploader.prototype.init = function() {
     var _this = this;
 

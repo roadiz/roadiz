@@ -9,23 +9,17 @@ CustomFormFieldEdit = function(){
     _this.$btn = $('.custom-form-field-edit-button');
     _this.$formFieldRow = $('.custom-form-field-row');
     _this.$formFieldCol = $('.custom-form-field-col');
+    _this.indexOpen = null;
+    _this.openFormDelay = 0;
+    _this.$formCont = null;
+    _this.$form = null;
+    _this.$formIcon = null;
+    _this.$formContHeight = null;
 
     // Methods
     _this.init();
 
 };
-
-
-CustomFormFieldEdit.prototype.$btn = null;
-CustomFormFieldEdit.prototype.indexOpen = null;
-CustomFormFieldEdit.prototype.openFormDelay = 0;
-CustomFormFieldEdit.prototype.$formFieldRow = null;
-CustomFormFieldEdit.prototype.$formFieldCol = null;
-CustomFormFieldEdit.prototype.$formCont = null;
-CustomFormFieldEdit.prototype.$form = null;
-CustomFormFieldEdit.prototype.$formIcon = null;
-CustomFormFieldEdit.prototype.$formContHeight = null;
-
 
 /**
  * Init

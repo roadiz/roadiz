@@ -19,25 +19,15 @@ var NodesBulk = function () {
     _this.$nodesSelectAll = $('.uk-button-select-all');
     _this.$nodesDeselectAll = $('.uk-button-bulk-deselect');
 
+    _this.nodesFolderOpen = false;
+    _this.nodesStatusOpen = false;
+    _this.nodesIds = null;
+
     if (_this.$nodesCheckboxes.length) {
         _this.init();
     }
 };
 
-
-NodesBulk.prototype.$nodesCheckboxes = null;
-NodesBulk.prototype.$nodesIdBulkTags = null;
-NodesBulk.prototype.$nodesIdBulkStatus = null;
-NodesBulk.prototype.$actionsMenu = null;
-NodesBulk.prototype.$nodesFolderButton = null;
-NodesBulk.prototype.$nodesFolderCont = null;
-NodesBulk.prototype.nodesFolderOpen = false;
-NodesBulk.prototype.$nodesStatusButton = null;
-NodesBulk.prototype.$nodesStatusCont = null;
-NodesBulk.prototype.nodesStatusOpen = false;
-NodesBulk.prototype.nodesIds = null;
-NodesBulk.prototype.$nodesSelectAll = null;
-NodesBulk.prototype.$nodesDeselectAll = null;
 
 /**
  * Init

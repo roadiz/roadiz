@@ -5,7 +5,7 @@ var CustomFormFieldsPosition = function () {
 
     _this.init();
 };
-CustomFormFieldsPosition.prototype.$list = null;
+
 CustomFormFieldsPosition.prototype.init = function() {
     var _this = this;
 

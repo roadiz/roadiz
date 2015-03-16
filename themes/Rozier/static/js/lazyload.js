@@ -4,9 +4,20 @@
 var Lazyload = function() {
     var _this = this;
 
+    _this.$linksSelector = null;
+    _this.$textAreaHTMLeditor = null;
+    _this.$HTMLeditor = null;
+    _this.htmlEditor = [];
+    _this.$HTMLeditorContent = null;
+    _this.$HTMLeditorNav = null;
+    _this.HTMLeditorNavToRemove = null;
+    _this.documentsList = null;
+    _this.mainColor = null;
+    _this.$canvasLoaderContainer = null;
+
     var onStateChangeProxy = $.proxy(_this.onPopState, _this);
 
-    _this.$linksSelector = $("a:not('[target=_blank]')");
+    _this.parseLinks();
 
     $(window).on('popstate', function (event) {
         _this.onPopState(event);
@@ -22,17 +33,6 @@ var Lazyload = function() {
     history.pushState({}, null, window.location.href);
 };
 
-Lazyload.prototype.$linksSelector = null;
-Lazyload.prototype.$textAreaHTMLeditor = null;
-Lazyload.prototype.$HTMLeditor = null;
-Lazyload.prototype.htmlEditor = [];
-Lazyload.prototype.$HTMLeditorContent = null;
-Lazyload.prototype.$HTMLeditorNav = null;
-Lazyload.prototype.HTMLeditorNavToRemove = null;
-Lazyload.prototype.documentsList = null;
-Lazyload.prototype.mainColor = null;
-Lazyload.prototype.$canvasLoaderContainer = null;
-
 /**
  * Init loader
  * @return {[type]} [description]
@@ -47,9 +47,13 @@ Lazyload.prototype.initLoader = function(){
     _this.canvasLoader.setRange(0.8);
     _this.canvasLoader.setSpeed(4);
     _this.canvasLoader.setFPS(30);
-
 };
 
+Lazyload.prototype.parseLinks = function() {
+    var _this = this;
+
+    _this.$linksSelector = $("a:not('[target=_blank]')").not('.rz-no-ajax-link');
+};
 
 /**
  * Bind links to load pages
@@ -66,7 +70,10 @@ Lazyload.prototype.onClick = function(event) {
         !$link.hasClass('rz-no-ajax-link') &&
         href !== "" &&
         href != "#" &&
-        href.indexOf(Rozier.baseUrl) >= 0){
+        (href.indexOf(Rozier.baseUrl) >= 0 || href.charAt(0) == '?')) {
+
+        event.preventDefault();
+        console.log('Lazyloading…');
 
         history.pushState({}, null, $link.attr('href'));
         _this.onPopState(null);
@@ -103,7 +110,6 @@ Lazyload.prototype.onPopState = function(event) {
         _this.canvasLoader.show();
         _this.loadContent(state, window.location);
     }
-
 };
 
 
@@ -219,7 +225,7 @@ Lazyload.prototype.generalBind = function() {
 
 
     _this.$linksSelector.off('click', $.proxy(_this.onClick, _this));
-    _this.$linksSelector = $("a:not('[target=_blank]')");
+    _this.parseLinks();
     _this.$linksSelector.on('click', $.proxy(_this.onClick, _this));
 
 

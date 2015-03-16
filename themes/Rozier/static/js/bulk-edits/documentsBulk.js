@@ -10,25 +10,17 @@ var DocumentsBulk = function () {
     _this.$actionsMenu = $('.documents-bulk-actions');
     _this.$documentsFolderButton = $('.uk-button-bulk-folder-documents');
     _this.$documentsFolderCont = $('.documents-bulk-folder-cont');
-
     _this.$documentsSelectAll = $('.uk-button-select-all');
     _this.$documentsDeselectAll = $('.uk-button-bulk-deselect');
+
+    _this.documentsFolderOpen = false;
+    _this.documentsIds = null;
 
     if (_this.$documentsCheckboxes.length) {
         _this.init();
     }
 };
 
-
-DocumentsBulk.prototype.$documentsCheckboxes = null;
-DocumentsBulk.prototype.$documentsIdBulkFolders = null;
-DocumentsBulk.prototype.$actionsMenu = null;
-DocumentsBulk.prototype.$documentsFolderButton = null;
-DocumentsBulk.prototype.$documentsFolderCont = null;
-DocumentsBulk.prototype.$documentsSelectAll = null;
-DocumentsBulk.prototype.$documentsDeselectAll = null;
-DocumentsBulk.prototype.documentsFolderOpen = false;
-DocumentsBulk.prototype.documentsIds = null;
 
 /**
  * Init

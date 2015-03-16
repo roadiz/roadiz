@@ -31,7 +31,7 @@ module.exports = function(grunt) {
 					'js/vendor/ScrollToPlugin.js',
 					'js/vendor/addons/htmleditor.js'
 				],
-				dest: 'js/<%= pkg.name %>-vendor.js',
+				dest: 'dist/<%= pkg.name %>-vendor.js',
 			},
 			rezozero:{
 				'src': [
@@ -63,21 +63,21 @@ module.exports = function(grunt) {
 					'js/plugins.js',
 					'js/main.js'
 				],
-				dest: 'js/<%= pkg.name %>.js',
+				dest: 'dist/<%= pkg.name %>.js',
 			},
 			simple:{
 				'src': [
 					'bower_components/uikit/js/uikit.js',
 					'js/login/login.js'
 				],
-				dest: 'js/<%= pkg.name %>-simple.js',
+				dest: 'dist/<%= pkg.name %>-simple.js',
 			},
 			cforms:{
 				'src': [
 					'bower_components/uikit/js/uikit.js',
 					'bower_components/jquery-ui/jquery-ui.js'
 				],
-				dest: 'js/<%= pkg.name %>-cforms.js',
+				dest: 'dist/<%= pkg.name %>-cforms.js',
 			}
 		},
 		uglify: {
@@ -85,20 +85,20 @@ module.exports = function(grunt) {
 				banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %> */\n'
 			},
 			vendor: {
-				src: 'js/<%= pkg.name %>-vendor.js',
-				dest: 'js/<%= pkg.name %>-vendor.min.js'
+				src: 'dist/<%= pkg.name %>-vendor.js',
+				dest: 'dist/<%= pkg.name %>-vendor.min.js'
 			},
 			rezozero: {
-				src: 'js/<%= pkg.name %>.js',
-				dest: 'js/<%= pkg.name %>.min.js'
+				src: 'dist/<%= pkg.name %>.js',
+				dest: 'dist/<%= pkg.name %>.min.js'
 			},
 			simple: {
-				src: 'js/<%= pkg.name %>-simple.js',
-				dest: 'js/<%= pkg.name %>-simple.min.js'
+				src: 'dist/<%= pkg.name %>-simple.js',
+				dest: 'dist/<%= pkg.name %>-simple.min.js'
 			},
 			cforms: {
-				src: 'js/<%= pkg.name %>-cforms.js',
-				dest: 'js/<%= pkg.name %>-cforms.min.js'
+				src: 'dist/<%= pkg.name %>-cforms.js',
+				dest: 'dist/<%= pkg.name %>-cforms.min.js'
 			}
 		},
 		less: {
@@ -137,10 +137,12 @@ module.exports = function(grunt) {
 					'js/**/*.js',
 					'!js/<%= pkg.name %>.js',
 					'!js/<%= pkg.name %>.min.js',
+					'!dist/<%= pkg.name %>.js',
+					'!dist/<%= pkg.name %>.min.js',
 					'css/**/*.less',
 					'src-img/*.{png,jpg,gif}'
 				],
-				tasks: ['less:development', 'jshint', 'concat','uglify'],
+				tasks: ['clean', 'less:development', 'jshint', 'concat','uglify', 'versioning'],
 				options: {
 					event: ['added', 'deleted', 'changed'],
 				},
@@ -154,6 +156,7 @@ module.exports = function(grunt) {
 		    	'!js/plugins.js',
 		    	'!js/vendor/**/*.js',
 				'!js/addons/**/*.js',
+				'!dist/<%= pkg.name %>*.js',
 				'!js/<%= pkg.name %>*.js'
 			]
 		},
@@ -179,8 +182,8 @@ module.exports = function(grunt) {
 			dist: {
 				files: [{
 					assets: [{
-			            src: [ 'js/<%= pkg.name %>.min.js' ],
-			            dest: 'js/<%= pkg.name %>.min.js'
+			            src: [ 'dist/<%= pkg.name %>.min.js' ],
+			            dest: 'dist/<%= pkg.name %>.min.js'
 			        }],
 					key: 'global',
 					dest: '',
@@ -189,8 +192,8 @@ module.exports = function(grunt) {
 				},
 				{
 					assets: [{
-			            src: [ 'js/<%= pkg.name %>-vendor.min.js' ],
-			            dest: 'js/<%= pkg.name %>-vendor.min.js'
+			            src: [ 'dist/<%= pkg.name %>-vendor.min.js' ],
+			            dest: 'dist/<%= pkg.name %>-vendor.min.js'
 			        }],
 					key: 'global',
 					dest: '',
@@ -223,8 +226,8 @@ module.exports = function(grunt) {
 				 */
 				{
 					assets: [{
-			            src: [ 'js/<%= pkg.name %>-simple.min.js' ],
-			            dest: 'js/<%= pkg.name %>-simple.min.js'
+			            src: [ 'dist/<%= pkg.name %>-simple.min.js' ],
+			            dest: 'dist/<%= pkg.name %>-simple.min.js'
 			        }],
 					key: 'simple',
 					dest: '',
@@ -256,8 +259,8 @@ module.exports = function(grunt) {
 				},
 				{
 					assets: [{
-			            src: [ 'js/<%= pkg.name %>-cforms.min.js' ],
-			            dest: 'js/<%= pkg.name %>-cforms.min.js'
+			            src: [ 'dist/<%= pkg.name %>-cforms.min.js' ],
+			            dest: 'dist/<%= pkg.name %>-cforms.min.js'
 			        }],
 					key: 'custom-forms',
 					dest: '',
@@ -266,7 +269,7 @@ module.exports = function(grunt) {
 				}]
 			}
 		},
-		clean: ["public"]
+		clean: ["public", "dist"]
 	});
 
 	/*
@@ -274,7 +277,7 @@ module.exports = function(grunt) {
 	 */
 	grunt.event.on('watch', function(action, filepath) {
 		if (filepath.indexOf('.js') > -1 ) {
-			grunt.config('watch.scripts.tasks', ['clean','jshint','uglify:rezozero', 'concat:rezozero', 'versioning']); // 'uglify',
+			grunt.config('watch.scripts.tasks', ['clean', 'jshint', 'concat', 'uglify', 'versioning']); // 'uglify',
 		}
 		else if(filepath.indexOf('.less') > -1 ){
 			grunt.config('watch.scripts.tasks', ['clean','less:development', 'versioning']);
