@@ -5752,7 +5752,7 @@
           <source>user.expired</source>
           <target></target>
       </trans-unit>
-      <trans-unit Xml:space="preserve" id="user.expiresAt">
+      <trans-unit xml:space="preserve" id="user.expiresAt">
           <source>user.expiresAt</source>
           <target></target>
       </trans-unit>
