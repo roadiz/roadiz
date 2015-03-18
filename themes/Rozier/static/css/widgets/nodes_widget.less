@@ -9,6 +9,8 @@
 @nodes-widget-btn-border :     #bfbfbf;
 @nodes-widget-btn-color :      #2d2d2d;
 
+@nodes-widget-height : 40px;
+
 
 /* -------- STYLES -------- */
 
@@ -84,20 +86,22 @@
     }
 }
 
-.nodes-widget-sortable-list-item, .nodes-widget-dragging{
+.nodes-widget-sortable-list-item,
+.nodes-widget-dragging{
     position: relative;
     display: inline-block;
-    width:205px; height:32px;
+    width:225px; height:@nodes-widget-height;
     margin:0 20px 8px 0;
-    padding-left:15px;
+    padding: 7px 0 6px 15px;
     background: #E5E5E5;
     color:#666;
-    font-size:12px; line-height:32px;
+    font-size:12px; line-height:@nodes-widget-height;
     font-weight: 600;
     overflow: hidden;
     cursor: default;
     .border-radius(3px, 3px, 0, 0);
     .transition(0.4s background @easeOutExpo);
+    .box-sizing();
 
     &:hover{
         background: darken(#DDD, 3%);
@@ -125,14 +129,14 @@
 
     .node-links{
         position:absolute;
-        width:64px; height:32px;
-        top:0; right:-64px;
+        width:@nodes-widget-height*2; height:@nodes-widget-height;
+        top:0; right:-@nodes-widget-height*2;
         overflow: hidden;
         .transition(0.4s right @easeOutExpo);
 
         .node-link{ // a
             display: inline-block;
-            width:32px; height:32px;
+            width:@nodes-widget-height; height:@nodes-widget-height;
             .rounded(0);
             color:#333;
             .opacity(0.95);
@@ -151,13 +155,26 @@
 
             i{
                 margin:0;
-                line-height:32px;
+                line-height:@nodes-widget-height;
             }
 
             .label{
                 display: none;
             }
         }
+    }
+    .parent-node-name {
+        font-size: 9px;
+        text-transform: uppercase;
+        display: block;
+        line-height: 11px;
+        color: rgba(0, 0, 0, 0.6);
+        letter-spacing: 0.03em;
+        font-weight: 700;
+    }
+    .node-name {
+        line-height: 16px;
+        display: block;
     }
 
     .link-button{
