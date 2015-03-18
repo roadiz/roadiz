@@ -126,6 +126,7 @@ class ConfigurationCommand extends Command
                 "/samples",
                 "/gen-src",
                 "/files/fonts",
+                "/files/private",
                 "/bin",
                 "/tests",
                 "/cache",

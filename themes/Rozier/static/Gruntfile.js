@@ -270,7 +270,7 @@ module.exports = function(grunt) {
 				}]
 			}
 		},
-		clean: ["public", "dist"]
+		clean: ["public"]
 	});
 
 	/*

@@ -13,19 +13,22 @@
     <article class="content content-document-preview">
 
         <div class="content-inner">
-            {% if document.image or document.video %}
-            <figure class="uk-thumbnail">{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}</figure>
-            {% endif %}
-            <div class="document-source"><code>{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}</code></div>
+            {% if not document.private %}
+                {% if document.image or document.video %}
+                <figure class="uk-thumbnail">{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}</figure>
+                {% endif %}
+                <div class="document-source"><code>{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}</code></div>
 
-            {% if document.isEmbed and document.getViewer.getEmbedFinder %}
-            <hr />
-            <h3>{% trans %}embed.preview{% endtrans %}</h3>
-            <figure class="uk-thumbnail">{{ document.getViewer.getEmbedByArray(thumbnailFormat)|raw }}</figure>
-            <div class="document-source"><code>{{ document.getViewer.getEmbedFinder.getSource }}</code></div>
+                {% if document.isEmbed and document.getViewer.getEmbedFinder %}
+                <hr />
+                <h3>{% trans %}embed.preview{% endtrans %}</h3>
+                <figure class="uk-thumbnail">{{ document.getViewer.getEmbedByArray(thumbnailFormat)|raw }}</figure>
+                <div class="document-source"><code>{{ document.getViewer.getEmbedFinder.getSource }}</code></div>
+                {% endif %}
+            {% else %}
+            <p class="uk-alert uk-alert-warning"><i class="uk-icon-warning"></i> {% trans %}current.document.is.private.you.cannot.preview.it{% endtrans %}</p>
             {% endif %}
         </div>
-
     </article>
 
 	{% include 'documents/actionsMenu.html.twig' %}

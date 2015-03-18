@@ -240,5 +240,26 @@ table.documents {
         }
 
     }
+}
 
+.content-document-edit {
+    .document-paths {
+
+        dt, dd {
+            font-size: 12px;
+            color: #555555;
+        }
+
+        dt {
+            &:before {
+              content: "— ";
+              color: #bbbbbb;
+            }
+        }
+        dd {
+            margin: 5px 0px 20px 0px;
+            font-weight: lighter;
+            letter-spacing: 0.03em;
+        }
+    }
 }

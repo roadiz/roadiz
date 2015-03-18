@@ -40,6 +40,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Finder\Finder;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -148,16 +150,24 @@ class DocumentsController extends RozierApp
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                if ($document !== null) {
+                /*
+                 * Update document file
+                 * if present
+                 */
+                if ($document !== null && !empty($data['newDocument'])) {
                     $document = $this->updateDocument($data, $document);
                     $data["filename"] = $document->getFilename();
-                    unset($data['newDocument']);
 
                     $msg = $this->getTranslator()->trans('document.file.%name%.updated', [
                         '%name%' => $document->getFilename(),
                     ]);
                     $this->publishConfirmMessage($request, $msg);
                 }
+                unset($data['newDocument']);
+
+                /*
+                 * Update document common data
+                 */
                 $this->editDocument($data, $document);
                 $msg = $this->getTranslator()->trans('document.%name%.updated', [
                     '%name%' => $document->getFilename(),
@@ -456,6 +466,29 @@ class DocumentsController extends RozierApp
         $response->prepare($request);
 
         return $response->send();
+    }
+
+    /**
+     * Download document file.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function downloadAction(Request $request, $documentId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        $document = $this->getService('em')
+                         ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+
+        if ($document !== null) {
+            $response = $document->getHandler()->getDownloadResponse();
+
+            return $response->send();
+        } else {
+            return $this->throw404();
+        }
     }
 
     /**
@@ -923,21 +956,37 @@ class DocumentsController extends RozierApp
      */
     private function editDocument($data, Document $document)
     {
+        /*
+         * Rename document file
+         */
         if (!empty($data['filename']) &&
             $data['filename'] != $document->getFilename()) {
             $oldUrl = $document->getAbsolutePath();
-
+            $fs = new Filesystem();
             /*
              * If file exists, just rename it
              */
             // set filename to clean given string before renaming file.
             $document->setFilename($data['filename']);
-            rename(
+            $fs->rename(
                 $oldUrl,
                 $document->getAbsolutePath()
             );
 
             unset($data['filename']);
+        }
+
+        /*
+         * Change privacy document status
+         */
+        if ($data['private'] != $document->isPrivate()) {
+            if ($data['private'] === true) {
+                $document->getHandler()->makePrivate();
+            } else {
+                $document->getHandler()->makePublic();
+            }
+
+            unset($data['private']);
         }
 
         foreach ($data as $key => $value) {
@@ -955,7 +1004,7 @@ class DocumentsController extends RozierApp
         if (!empty($data['newDocument'])) {
             $file = $data['newDocument'];
 
-            $uploadedFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
+            $uploadedFile = new UploadedFile(
                 $file['tmp_name'],
                 $file['name'],
                 $file['type'],
@@ -969,16 +1018,16 @@ class DocumentsController extends RozierApp
                 /*
                  * In case file already exists
                  */
-                if (file_exists($document->getAbsolutePath())) {
+                if ($fs->exists($document->getAbsolutePath())) {
                     $fs->remove($document->getAbsolutePath());
                 }
 
                 if (StringHandler::cleanForFilename($uploadedFile->getClientOriginalName()) == $document->getFilename()) {
-                    $finder = new \Symfony\Component\Finder\Finder();
+                    $finder = new Finder();
 
                     $previousFolder = $document->getFilesFolder() . '/' . $document->getFolder();
 
-                    if (file_exists($previousFolder)) {
+                    if ($fs->exists($previousFolder)) {
                         $finder->files()->in($previousFolder);
                         // Remove Precious folder if it's empty
                         if ($finder->count() == 0) {
@@ -999,7 +1048,7 @@ class DocumentsController extends RozierApp
             }
         }
 
-        return false;
+        return $document;
     }
     /**
      * Handle upload form data to create a Document.
@@ -1013,7 +1062,7 @@ class DocumentsController extends RozierApp
         if (!empty($data['attachment'])) {
             $file = $data['attachment']->getData();
 
-            $uploadedFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
+            $uploadedFile = new UploadedFile(
                 $file['tmp_name'],
                 $file['name'],
                 $file['type'],

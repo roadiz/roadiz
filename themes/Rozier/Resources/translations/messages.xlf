@@ -5597,10 +5597,6 @@
           <source>add.a.newsletter</source>
           <target></target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="no.nodeType.available.create_one_first">
-          <source>no.nodeType.available.create_one_first</source>
-          <target></target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="edit.newsletter.%name%">
           <source>edit.newsletter.%name%</source>
           <target></target>
@@ -5760,7 +5756,7 @@
           <source>user.force.expired</source>
           <target></target>
       </trans-unit>
-      <trans-unit xml:Space="Preserve" id="user.credentialsExpiresAt">
+      <trans-unit xml:space="preserve" id="user.credentialsExpiresAt">
           <source>user.credentialsExpiresAt</source>
           <target></target>
       </trans-unit>
@@ -5963,7 +5959,22 @@
           <source>routePrefix</source>
           <target></target>
       </trans-unit>
-
+      <trans-unit xml:space="preserve" id="current.document.is.private.you.cannot.preview.it">
+          <source>current.document.is.private.you.cannot.preview.it</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.public_url">
+          <source>document.public_url</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.filepath">
+          <source>document.filepath</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="download.document">
+          <source>download.document</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

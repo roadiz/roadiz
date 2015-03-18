@@ -10,6 +10,10 @@ documentsPreviewPage:
     path:     /preview/{documentId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::previewAction }
     requirements: { documentId : "[0-9]+" }
+documentsDownloadPage:
+    path:     /download/{documentId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::downloadAction }
+    requirements: { documentId : "[0-9]+" }
 documentsUsagePage:
     path:     /usage/{documentId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::usageAction }
