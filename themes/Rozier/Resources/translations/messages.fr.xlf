@@ -5861,6 +5861,10 @@
           <source>document.filepath</source>
           <target xml:lang="fr" state="translated">Chemin absolu du fichier</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="download.document">
+          <source>download.document</source>
+          <target xml:lang="fr" state="translated">Télécharger le document</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

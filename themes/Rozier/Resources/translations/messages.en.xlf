@@ -5513,10 +5513,6 @@
           <source>add.a.newsletter</source>
           <target xml:lang="en" state="translated">Add a newsletter</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="no.nodeType.available.create_one_first" approved="yes">
-          <source>no.nodeType.available.create_one_first</source>
-          <target xml:lang="en">No node-type have been found. Please create one before adding a node.</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="edit.newsletter.%name%">
           <source>edit.newsletter.%name%</source>
           <target xml:lang="en" state="translated">Edit newsletter “%name%”</target>
@@ -5665,9 +5661,9 @@
           <source>user.force.expired</source>
           <target xml:lang="en" state="translated">Force account expiration</target>
       </trans-unit>
-      <trans-unit xml:Space="Preserve" id="user.credentialsExpiresAt">
-        <source>user.credentialsExpiresAt</source>
-        <target xml:lang="en" state="translated">Account credentials will expire at:</target>
+      <trans-unit xml:space="preserve" id="user.credentialsExpiresAt">
+          <source>user.credentialsExpiresAt</source>
+          <target xml:lang="en" state="translated">Account credentials will expire at:</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="user.force.credentialsExpired">
           <source>user.force.credentialsExpired</source>
@@ -5864,6 +5860,10 @@
       <trans-unit xml:space="preserve" id="document.filepath">
           <source>document.filepath</source>
           <target xml:lang="en" state="translated">Absolute file path</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="download.document">
+          <source>download.document</source>
+          <target xml:lang="en" state="translated">Download document</target>
       </trans-unit>
     </body>
   </file>

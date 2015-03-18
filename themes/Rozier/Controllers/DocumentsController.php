@@ -469,6 +469,29 @@ class DocumentsController extends RozierApp
     }
 
     /**
+     * Download document file.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function downloadAction(Request $request, $documentId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        $document = $this->getService('em')
+                         ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+
+        if ($document !== null) {
+            $response = $document->getHandler()->getDownloadResponse();
+
+            return $response->send();
+        } else {
+            return $this->throw404();
+        }
+    }
+
+    /**
      * @param Symfony\Component\HttpFoundation\Request $request
      *
      * @return Symfony\Component\HttpFoundation\Response

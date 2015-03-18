@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Handle operations with documents entities.
@@ -110,6 +111,31 @@ class DocumentHandler
         } else {
             throw new \RuntimeException("Can’t make public an already public document.", 1);
         }
+    }
+
+    /**
+     * Get a Response object to force download document.
+     *
+     * This method works for both private and public documents.
+     *
+     * **Be careful, this method will send headers.**
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function getDownloadResponse()
+    {
+        $response = new Response();
+        // Set headers
+        $response->headers->set('Cache-Control', 'private');
+        $response->headers->set('Content-type', mime_content_type($this->document->getAbsolutePath()));
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($this->document->getAbsolutePath()) . '";');
+        $response->headers->set('Content-length', filesize($this->document->getAbsolutePath()));
+        // Send headers before outputting anything
+        $response->sendHeaders();
+        // Set content
+        $response->setContent(readfile($this->document->getAbsolutePath()));
+
+        return $response;
     }
 
     /**
