@@ -5963,6 +5963,10 @@
           <source>routePrefix</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="current.document.is.private.you.cannot.preview.it">
+          <source>current.document.is.private.you.cannot.preview.it</source>
+          <target></target>
+      </trans-unit>
 
     </body>
   </file>

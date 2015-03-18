@@ -27,7 +27,7 @@
             <li class="document-item">
                 <div class="document-border"></div>
                 <figure class="document-image">
-                    {% if document.isImage %}
+                    {% if not document.private and document.isImage %}
                         {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
                     {% else %}
                         <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>
@@ -42,9 +42,16 @@
                     </div>
                     {% if document.isEmbed %}
                         <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
+                        {% if document.private %}
+                        <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
+                        {% else %}
                         <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
+                        {% endif %}
                     {% else %}
                         <div class="document-mime-type">{{ document.getShortMimeType }}</div>
+                        {% if document.private %}
+                        <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
+                        {% endif %}
                     {% endif %}
                 </div>
             </li>

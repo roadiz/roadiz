@@ -241,12 +241,37 @@ class Document extends AbstractDateTimed
     }
 
     /**
+     * Return absolute file path according to its
+     * privacy status.
+     *
      * @return string
      */
     public function getAbsolutePath()
     {
+        return $this->isPrivate() ? $this->getPrivateAbsolutePath() : $this->getPublicAbsolutePath();
+    }
+    /**
+     * Only return public absolute file path.
+     *
+     * @return string
+     */
+    public function getPublicAbsolutePath()
+    {
         if (null !== $this->filename) {
             return static::getFilesFolder() . '/' . $this->getRelativeUrl();
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Only return private absolute file path.
+     *
+     * @return string
+     */
+    public function getPrivateAbsolutePath()
+    {
+        if (null !== $this->filename) {
+            return static::getPrivateFilesFolder() . '/' . $this->getRelativeUrl();
         } else {
             return null;
         }
@@ -437,5 +462,19 @@ class Document extends AbstractDateTimed
     public static function getFilesFolderName()
     {
         return 'files';
+    }
+    /**
+     * @return string
+     */
+    public static function getPrivateFilesFolder()
+    {
+        return ROADIZ_ROOT . '/' . static::getPrivateFilesFolderName();
+    }
+    /**
+     * @return string
+     */
+    public static function getPrivateFilesFolderName()
+    {
+        return 'files/private';
     }
 }
