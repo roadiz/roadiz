@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * DocumentViewer
@@ -256,6 +257,9 @@ class DocumentViewer implements ViewableInterface
     /**
      * Generate a resampled document Url.
      *
+     * Generated URL will be **absolute** and **static** if
+     * a static domain name has been setup.
+     *
      * - width
      * - height
      * - crop ({w}x{h}, for example : 100x200)
@@ -274,8 +278,7 @@ class DocumentViewer implements ViewableInterface
         if ($args === null ||
             (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
-            return Kernel::getInstance()->getRequest()
-                                        ->getBaseUrl() . '/files/' . $this->document->getRelativeUrl();
+            return Kernel::getInstance()->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl();
         } else {
             $slirArgs = [];
 
@@ -304,10 +307,12 @@ class DocumentViewer implements ViewableInterface
                 $slirArgs['p'] = 'p1';
             }
 
-            return Kernel::getService('urlGenerator')->generate('SLIRProcess', [
+            $url = Kernel::getService('urlGenerator')->generate('SLIRProcess', [
                 'queryString' => implode('-', $slirArgs),
                 'filename' => $this->document->getRelativeUrl(),
-            ]);
+            ], UrlGenerator::ABSOLUTE_PATH);
+
+            return Kernel::getInstance()->convertUrlToStaticDomainUrl($url);
         }
     }
 }

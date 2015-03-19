@@ -116,6 +116,12 @@
                 "value": null,
                 "type": 9,
                 "visible": true
+            },
+            {
+                "name": "static_domain_name",
+                "value": "",
+                "type": 0,
+                "visible": true
             }
         ]
     },

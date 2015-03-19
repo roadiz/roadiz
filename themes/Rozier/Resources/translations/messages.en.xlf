@@ -5865,6 +5865,10 @@
           <source>download.document</source>
           <target xml:lang="en" state="translated">Download document</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="static_domain_name">
+          <source>static_domain_name</source>
+          <target xml:lang="en" state="translated">Static domain name</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
