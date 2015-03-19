@@ -5975,6 +5975,10 @@
           <source>download.document</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="static_domain_name">
+          <source>static_domain_name</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
