@@ -291,8 +291,15 @@ class AppController implements ViewableInterface
      */
     public function getStaticResourcesUrl()
     {
-        return $this->kernel->getRequest()->getBaseUrl() .
-        '/themes/' . static::$themeDir . '/static/';
+        $staticDomain = SettingsBag::get('static_domain_name');
+
+        if (!empty($staticDomain)) {
+            return $this->kernel->getStaticBaseUrl() .
+                    '/themes/' . static::$themeDir . '/static/';
+        } else {
+            return $this->kernel->getRequest()->getBaseUrl() .
+                    '/themes/' . static::$themeDir . '/static/';
+        }
     }
 
     /**

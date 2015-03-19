@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * DocumentViewer
@@ -304,10 +305,12 @@ class DocumentViewer implements ViewableInterface
                 $slirArgs['p'] = 'p1';
             }
 
-            return Kernel::getService('urlGenerator')->generate('SLIRProcess', [
+            $url = Kernel::getService('urlGenerator')->generate('SLIRProcess', [
                 'queryString' => implode('-', $slirArgs),
                 'filename' => $this->document->getRelativeUrl(),
-            ]);
+            ], UrlGenerator::ABSOLUTE_PATH);
+
+            return Kernel::getInstance()->convertUrlToStaticDomainUrl($url);
         }
     }
 }
