@@ -257,6 +257,9 @@ class DocumentViewer implements ViewableInterface
     /**
      * Generate a resampled document Url.
      *
+     * Generated URL will be **absolute** and **static** if
+     * a static domain name has been setup.
+     *
      * - width
      * - height
      * - crop ({w}x{h}, for example : 100x200)
@@ -275,8 +278,7 @@ class DocumentViewer implements ViewableInterface
         if ($args === null ||
             (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
-            return Kernel::getInstance()->getRequest()
-                                        ->getBaseUrl() . '/files/' . $this->document->getRelativeUrl();
+            return Kernel::getInstance()->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl();
         } else {
             $slirArgs = [];
 
