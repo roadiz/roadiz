@@ -4879,7 +4879,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="folder.name" approved="yes">
           <source>folder.name</source>
-          <target xml:lang="en">Nom du dossier</target>
+          <target xml:lang="en">Folder name</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="nodeType.color" approved="yes">
           <source>nodeType.color</source>
@@ -5479,8 +5479,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="nodeType.not_visible">
           <source>nodeType.not_visible</source>
-          <target xml:lang="en" state="translated">Unvisible node-type</target>
-      </trans-unit>
+          <target xml:lang="en" state="translated">Invisible node-type</target>
+      <alt-trans><target xml:lang="en">Unvisible node-type</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="newsletter.nodeType">
           <source>newsletter.nodeType</source>
           <target xml:lang="en" state="translated">Newsletters reserved type</target>
@@ -5837,9 +5837,9 @@
           <source>changelog</source>
           <target xml:lang="en" state="translated">Changelog</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="download">
-          <source>download</source>
-          <target xml:lang="en" state="translated">Download lastest Roadiz release.</target>
+      <trans-unit xml:space="preserve" id="download.folder.content" approved="yes">
+          <source>download.folder.content</source>
+          <target xml:lang="en">Download folder content</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="not.valid.facebook.name">
           <source>not.valid.facebook.name</source>

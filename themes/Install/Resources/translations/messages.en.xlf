@@ -50,7 +50,7 @@
       </trans-unit>
       <trans-unit id="requirements.message" approved="yes">
         <source>requirements.message</source>
-        <target xml:lang="en">&lt;p&gt;To use Roadiz, your server need some requirements, particularly in PHP. If you have access to your configuration file (php.ini), you could modify some of them.&lt;/p&gt;</target>
+        <target xml:lang="en">&lt;p&gt;To use Roadiz, your server needs some requirements, especially with PHP. If you have access to your configuration file (php.ini), you could modify some of them.&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="requirements.spec" approved="yes">
         <source>requirements.spec</source>
@@ -145,7 +145,7 @@
       <!-- Themes -->
       <trans-unit id="themes.title" approved="yes">
         <source>themes.title</source>
-        <target xml:lang="en">Informations</target>
+        <target xml:lang="en">Information</target>
       </trans-unit>
       <trans-unit id="themes.message" approved="yes">
         <source>themes.message</source>
@@ -334,73 +334,73 @@
                 <source>site_name</source>
                 <target xml:lang="en">Your website name</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="email_sender">
+      <trans-unit xml:space="preserve" id="email_sender" approved="yes">
                 <source>email_sender</source>
-                <target xml:lang="en" state="translated">Main email</target>
+                <target xml:lang="en">Main email</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="email_sender_name">
+      <trans-unit xml:space="preserve" id="email_sender_name" approved="yes">
                 <source>email_sender_name</source>
-                <target xml:lang="en" state="translated">Main email account name</target>
+                <target xml:lang="en">Main email account name</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="meta_description">
+      <trans-unit xml:space="preserve" id="meta_description" approved="yes">
                 <source>meta_description</source>
-                <target xml:lang="en" state="translated">SEO&#xA0;Description</target>
+                <target xml:lang="en">SEO&#xA0;Description</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="timezone">
+      <trans-unit xml:space="preserve" id="timezone" approved="yes">
                 <source>timezone</source>
-                <target xml:lang="en" state="translated">TImezone</target>
+                <target xml:lang="en">TImezone</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="install_theme">
+      <trans-unit xml:space="preserve" id="install_theme" approved="yes">
                 <source>install_theme</source>
-                <target xml:lang="en" state="translated">Install a theme?</target>
+                <target xml:lang="en">Install a theme?</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="driver">
+      <trans-unit xml:space="preserve" id="driver" approved="yes">
                 <source>driver</source>
-                <target xml:lang="en" state="translated">Driver</target>
+                <target xml:lang="en">Driver</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="host">
+      <trans-unit xml:space="preserve" id="host" approved="yes">
                 <source>host</source>
-                <target xml:lang="en" state="translated">Host</target>
+                <target xml:lang="en">Host</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="port">
+      <trans-unit xml:space="preserve" id="port" approved="yes">
                 <source>port</source>
-                <target xml:lang="en" state="translated">Port</target>
+                <target xml:lang="en">Port</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="unix_socket">
+      <trans-unit xml:space="preserve" id="unix_socket" approved="yes">
                 <source>unix_socket</source>
-                <target xml:lang="en" state="translated">UNIX socket</target>
+                <target xml:lang="en">UNIX socket</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="path">
+      <trans-unit xml:space="preserve" id="path" approved="yes">
                 <source>path</source>
-                <target xml:lang="en" state="translated">Path</target>
+                <target xml:lang="en">Path</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="user">
+      <trans-unit xml:space="preserve" id="user" approved="yes">
                 <source>user</source>
-                <target xml:lang="en" state="translated">Username</target>
+                <target xml:lang="en">Username</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="password" approved="yes">
                 <source>password</source>
                 <target xml:lang="en">Password</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="dbname">
+      <trans-unit xml:space="preserve" id="dbname" approved="yes">
                 <source>dbname</source>
-                <target xml:lang="en" state="translated">Database name</target>
+                <target xml:lang="en">Database name</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="error.locale.message">
+      <trans-unit xml:space="preserve" id="error.locale.message" approved="yes">
                 <source>error.locale.message</source>
-                <target xml:lang="en" state="translated">Theme locale does not exist on your system.</target>
+                <target xml:lang="en">Theme locale does not exist on your system.</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="error.modal.title">
+      <trans-unit xml:space="preserve" id="error.modal.title" approved="yes">
                 <source>error.modal.title</source>
-                <target xml:lang="en" state="translated">Please fix the following issues before installing theme.</target>
+                <target xml:lang="en">Please fix the following issues before installing theme.</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="error.version.message">
+      <trans-unit xml:space="preserve" id="error.version.message" approved="yes">
                 <source>error.version.message</source>
-                <target xml:lang="en" state="translated">This theme needs a newer version of Roadiz.</target>
+                <target xml:lang="en">This theme needs a newer version of Roadiz.</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="warning.theme.continue">
+      <trans-unit xml:space="preserve" id="warning.theme.continue" approved="yes">
                 <source>warning.theme.continue</source>
-                <target xml:lang="en" state="translated">You can ignore theses messages and continue anyway.</target>
+                <target xml:lang="en">You can ignore theses messages and continue anyway.</target>
             </trans-unit>
     </body>
   </file>

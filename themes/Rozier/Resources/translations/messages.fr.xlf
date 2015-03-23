@@ -5737,69 +5737,69 @@
           <source>request.new.password</source>
           <target xml:lang="fr">Envoyer la demande</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="back_to.login">
+      <trans-unit xml:space="preserve" id="back_to.login" approved="yes">
           <source>back_to.login</source>
-          <target xml:lang="fr" state="translated">Revenir à la page de connexion</target>
+          <target xml:lang="fr">Revenir à la page de connexion</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="a.personal.password.reset.link.has.been.sent.to.your.account.email" approved="yes">
           <source>a.personal.password.reset.link.has.been.sent.to.your.account.email</source>
           <target xml:lang="fr">Un lien personnel de réinitialisation de mot de passe vous a été envoyé par email. N’attendez pas trop longtemps, ce lien expirera automatiquement.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="confirmation.token.is.invalid">
+      <trans-unit xml:space="preserve" id="confirmation.token.is.invalid" approved="yes">
           <source>confirmation.token.is.invalid</source>
-          <target xml:lang="fr" state="translated">Le jeton de confirmation est invalide.</target>
+          <target xml:lang="fr">Le jeton de confirmation est invalide.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="confirmation.token.has.expired">
+      <trans-unit xml:space="preserve" id="confirmation.token.has.expired" approved="yes">
           <source>confirmation.token.has.expired</source>
-          <target xml:lang="fr" state="translated">Le jeton de confirmation a expiré.</target>
+          <target xml:lang="fr">Le jeton de confirmation a expiré.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="choose.a.new.password">
+      <trans-unit xml:space="preserve" id="choose.a.new.password" approved="yes">
           <source>choose.a.new.password</source>
-          <target xml:lang="fr" state="translated">Choisissez un nouveau mot de passe</target>
+          <target xml:lang="fr">Choisissez un nouveau mot de passe</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="save.new.password">
+      <trans-unit xml:space="preserve" id="save.new.password" approved="yes">
           <source>save.new.password</source>
-          <target xml:lang="fr" state="translated">Valider votre mot de passe</target>
+          <target xml:lang="fr">Valider votre mot de passe</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="your.new.password.has.been.saved">
+      <trans-unit xml:space="preserve" id="your.new.password.has.been.saved" approved="yes">
           <source>your.new.password.has.been.saved</source>
-          <target xml:lang="fr" state="translated">Votre nouveau mot de passe a bien été enregistré.</target>
+          <target xml:lang="fr">Votre nouveau mot de passe a bien été enregistré.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="go_back_to.login.page.to.connect">
+      <trans-unit xml:space="preserve" id="go_back_to.login.page.to.connect" approved="yes">
           <source>go_back_to.login.page.to.connect</source>
-          <target xml:lang="fr" state="translated">Vous pouvez revenir à la page de connexion.</target>
+          <target xml:lang="fr">Vous pouvez revenir à la page de connexion.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="a.confirmation.email.has.already.be.sent">
+      <trans-unit xml:space="preserve" id="a.confirmation.email.has.already.be.sent" approved="yes">
           <source>a.confirmation.email.has.already.be.sent</source>
-          <target xml:lang="fr" state="translated">Un email de confirmation vous a déjà été envoyé par email, veuillez vérifier dans vos courriers indésirables.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="email.invalid">
+          <target xml:lang="fr">Un email de confirmation vous a déjà été envoyé, veuillez vérifier dans vos courriers indésirables.</target>
+      <alt-trans><target xml:lang="fr">Un email de confirmation vous a déjà été envoyé par email, veuillez vérifier dans vos courriers indésirables.</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="email.invalid" approved="yes">
           <source>email.invalid</source>
-          <target xml:lang="fr" state="translated">L’email est invalide ou n’existe pas.</target>
+          <target xml:lang="fr">L’email est invalide ou n’existe pas.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="resultCache">
+      <trans-unit xml:space="preserve" id="resultCache" approved="yes">
           <source>resultCache</source>
-          <target xml:lang="fr" state="translated">Cache des résultats</target>
+          <target xml:lang="fr">Cache des résultats</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="hydratationCache">
+      <trans-unit xml:space="preserve" id="hydratationCache" approved="yes">
           <source>hydratationCache</source>
-          <target xml:lang="fr" state="translated">Cache d’hydratation</target>
+          <target xml:lang="fr">Cache d’hydratation</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="queryCache">
+      <trans-unit xml:space="preserve" id="queryCache" approved="yes">
           <source>queryCache</source>
-          <target xml:lang="fr" state="translated">Cache de requêtes</target>
+          <target xml:lang="fr">Cache de requêtes</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="metadataCache">
+      <trans-unit xml:space="preserve" id="metadataCache" approved="yes">
           <source>metadataCache</source>
-          <target xml:lang="fr" state="translated">Cache des méta-données</target>
+          <target xml:lang="fr">Cache des méta-données</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="no.cache.available">
+      <trans-unit xml:space="preserve" id="no.cache.available" approved="yes">
           <source>no.cache.available</source>
-          <target xml:lang="fr" state="translated">Aucune implémentation de cache trouvée.</target>
+          <target xml:lang="fr">Aucune implémentation de cache trouvée.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="homeNode.limited.one">
+      <trans-unit xml:space="preserve" id="homeNode.limited.one" approved="yes">
           <source>homeNode.limited.one</source>
-          <target xml:lang="fr" state="translated">Vous ne pouvez choisir qu'un seul nœud d'accueil</target>
+          <target xml:lang="fr">Vous ne pouvez choisir qu'un seul nœud d'accueil</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="NodeNode" approved="yes">
           <source>homeNode</source>
@@ -5809,65 +5809,65 @@
           <source>theme.root.limited.one</source>
           <target xml:lang="fr">Vous ne pouvez choisir qu'un seul nœud racine</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="themeRoot">
+      <trans-unit xml:space="preserve" id="themeRoot" approved="yes">
           <source>themeRoot</source>
-          <target xml:lang="fr" state="translated">Nœud racine</target>
+          <target xml:lang="fr">Nœud racine</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="about.cms">
+      <trans-unit xml:space="preserve" id="about.cms" approved="yes">
           <source>about.cms</source>
-          <target xml:lang="fr" state="translated">À propos de Roadiz</target>
+          <target xml:lang="fr">À propos de Roadiz</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="news.version.release">
+      <trans-unit xml:space="preserve" id="news.version.release" approved="yes">
           <source>news.version.release</source>
-          <target xml:lang="fr" state="translated">Une nouvelle version de Roadiz est dans les bacs</target>
+          <target xml:lang="fr">Une nouvelle version de Roadiz est dans les bacs</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="lastest.version.installed">
+      <trans-unit xml:space="preserve" id="lastest.version.installed" approved="yes">
           <source>lastest.version.installed</source>
-          <target xml:lang="fr" state="translated">Roadiz est à jour.</target>
+          <target xml:lang="fr">Roadiz est à jour.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="current.version">
+      <trans-unit xml:space="preserve" id="current.version" approved="yes">
           <source>current.version</source>
-          <target xml:lang="fr" state="translated">Version actuelle</target>
+          <target xml:lang="fr">Version actuelle</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="last.version">
+      <trans-unit xml:space="preserve" id="last.version" approved="yes">
           <source>last.version</source>
-          <target xml:lang="fr" state="translated">Dernière version</target>
+          <target xml:lang="fr">Dernière version</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="changelog">
+      <trans-unit xml:space="preserve" id="changelog" approved="yes">
           <source>changelog</source>
-          <target xml:lang="fr" state="translated">Note de mise à jour</target>
+          <target xml:lang="fr">Notes de mise à jour</target>
+      <alt-trans><target xml:lang="fr">Note de mise à jour</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="download.folder.content" approved="yes">
+          <source>download.folder.content</source>
+          <target xml:lang="fr">Télécharger le contenu du dossier</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="download">
-          <source>download</source>
-          <target xml:lang="fr" state="translated">Téléchargement de la dernière version.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="not.valid.facebook.name">
+      <trans-unit xml:space="preserve" id="not.valid.facebook.name" approved="yes">
           <source>not.valid.facebook.name</source>
-          <target xml:lang="fr" state="translated">Ce n’est pas un nom Facebook valide, copiez seulement la partie après https://www.facebook.com/</target>
+          <target xml:lang="fr">Ce n’est pas un nom Facebook valide, copiez seulement la partie après https://www.facebook.com/</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="routePrefix">
+      <trans-unit xml:space="preserve" id="routePrefix" approved="yes">
           <source>routePrefix</source>
-          <target xml:lang="fr" state="translated">Préfixe des routes statiques</target>
+          <target xml:lang="fr">Préfixe des routes statiques</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="current.document.is.private.you.cannot.preview.it">
+      <trans-unit xml:space="preserve" id="current.document.is.private.you.cannot.preview.it" approved="yes">
           <source>current.document.is.private.you.cannot.preview.it</source>
-          <target xml:lang="fr" state="translated">Le document actuel est marqué comme privé, vous ne pouvez pas afficher son aperçu.</target>
+          <target xml:lang="fr">Le document actuel est marqué comme privé, vous ne pouvez pas afficher son aperçu.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="document.public_url">
+      <trans-unit xml:space="preserve" id="document.public_url" approved="yes">
           <source>document.public_url</source>
-          <target xml:lang="fr" state="translated">URL publique</target>
+          <target xml:lang="fr">URL publique</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="document.filepath">
+      <trans-unit xml:space="preserve" id="document.filepath" approved="yes">
           <source>document.filepath</source>
-          <target xml:lang="fr" state="translated">Chemin absolu du fichier</target>
+          <target xml:lang="fr">Chemin absolu du fichier</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="download.document">
+      <trans-unit xml:space="preserve" id="download.document" approved="yes">
           <source>download.document</source>
-          <target xml:lang="fr" state="translated">Télécharger le document</target>
+          <target xml:lang="fr">Télécharger le document</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="static_domain_name">
+      <trans-unit xml:space="preserve" id="static_domain_name" approved="yes">
           <source>static_domain_name</source>
-          <target xml:lang="fr" state="translated">Nom de domaine statique</target>
+          <target xml:lang="fr">Nom de domaine statique</target>
       </trans-unit>
     </body>
   </file>
