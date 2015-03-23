@@ -5947,8 +5947,8 @@
           <target></target>
       </trans-unit>
 
-      <trans-unit xml:space="preserve" id="download">
-          <source>download</source>
+      <trans-unit xml:space="preserve" id="download.folder.content">
+          <source>download.folder.content</source>
           <target></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="not.valid.facebook.name">
