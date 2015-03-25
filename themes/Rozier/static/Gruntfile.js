@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 			vendor:{
 				'src': [
 					'bower_components/uikit/js/uikit.js',
-					'bower_components/uikit/js/components/sortable.js',
+					'js/vendor/addons/sortable.js',
 					'bower_components/uikit/js/components/nestable.js',
 					'bower_components/uikit/js/components/pagination.js',
 					'bower_components/uikit/js/components/notify.js',
@@ -278,7 +278,7 @@ module.exports = function(grunt) {
 	 */
 	grunt.event.on('watch', function(action, filepath) {
 		if (filepath.indexOf('.js') > -1 ) {
-			grunt.config('watch.scripts.tasks', ['clean', 'jshint', 'concat', 'uglify', 'versioning']); // 'uglify',
+			grunt.config('watch.scripts.tasks', ['clean', 'jshint', 'concat:rezozero', 'uglify:rezozero', 'versioning']); // 'uglify',
 		}
 		else if(filepath.indexOf('.less') > -1 ){
 			grunt.config('watch.scripts.tasks', ['clean','less:development', 'versioning']);

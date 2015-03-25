@@ -105,6 +105,12 @@ CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
     // Remove class to pause sortable actions
     _this.$formFieldCol.removeClass('custom-form-field-col');
 
+    // Switch checkboxes
+    $(".rz-boolean-checkbox").bootstrapSwitch({
+        size: 'small'
+    });
+    Rozier.lazyload.initMarkdownEditors();
+
     setTimeout(function(){
         _this.$formCont = $('.custom-form-field-edit-form-cont');
         _this.formContHeight = _this.$formCont.actual('height');

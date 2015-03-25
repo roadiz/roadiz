@@ -19,9 +19,8 @@ var Lazyload = function() {
 
     _this.parseLinks();
 
-    $(window).on('popstate', function (event) {
-        _this.onPopState(event);
-    });
+    $(window).off('popstate', onStateChangeProxy);
+    $(window).on('popstate', onStateChangeProxy);
 
     _this.$canvasLoaderContainer = $('#canvasloader-container');
     _this.mainColor = isset(Rozier.mainColor) ? Rozier.mainColor : '#ffffff';
@@ -73,7 +72,6 @@ Lazyload.prototype.onClick = function(event) {
         (href.indexOf(Rozier.baseUrl) >= 0 || href.charAt(0) == '?')) {
 
         event.preventDefault();
-        console.log('Lazyloading…');
 
         history.pushState({}, null, $link.attr('href'));
         _this.onPopState(null);
@@ -201,8 +199,10 @@ Lazyload.prototype.generalBind = function() {
     var _this = this;
 
     _this.parseLinks();
-    _this.$linksSelector.off('click', $.proxy(_this.onClick, _this));
-    _this.$linksSelector.on('click', $.proxy(_this.onClick, _this));
+
+    var onClickProxy = $.proxy(_this.onClick, _this);
+    _this.$linksSelector.off('click', onClickProxy);
+    _this.$linksSelector.on('click', onClickProxy);
 
     new DocumentsBulk();
     new NodesBulk();
@@ -226,8 +226,33 @@ Lazyload.prototype.generalBind = function() {
     _this.nodeTree = new NodeTree();
     _this.customFormFieldEdit = new CustomFormFieldEdit();
 
+    // Init markdown-preview
+    _this.initMarkdownEditors();
 
+    // Init colorpicker
+    if($('.colorpicker-input').length){
+        $('.colorpicker-input').minicolors();
+    }
 
+    // Animate actions menu
+    if($('.actions-menu').length && isMobile.any() === null){
+        TweenLite.to('.actions-menu', 0.5, {right:0, delay:0.4, ease:Expo.easeOut});
+    }
+
+    Rozier.initNestables();
+    Rozier.bindMainTrees();
+    Rozier.nodeStatuses = new NodeStatuses();
+
+    // Switch checkboxes
+    $(".rz-boolean-checkbox").bootstrapSwitch({
+        size: 'small'
+    });
+
+    Rozier.getMessages();
+};
+
+Lazyload.prototype.initMarkdownEditors = function() {
+    var _this = this;
 
     // Init markdown-preview
     _this.$textAreaHTMLeditor = $('textarea[data-uk-htmleditor], textarea[data-uk-rz-htmleditor]').not('[data-uk-check-display]');
@@ -265,31 +290,8 @@ Lazyload.prototype.generalBind = function() {
             }, 0);
 
         }, 0);
-
     }
-
-    // Init colorpicker
-    if($('.colorpicker-input').length){
-        $('.colorpicker-input').minicolors();
-    }
-
-    // Animate actions menu
-    if($('.actions-menu').length && isMobile.any() === null){
-        TweenLite.to('.actions-menu', 0.5, {right:0, delay:0.4, ease:Expo.easeOut});
-    }
-
-    Rozier.initNestables();
-    Rozier.bindMainTrees();
-    Rozier.nodeStatuses = new NodeStatuses();
-
-    // Switch checkboxes
-    $(".rz-boolean-checkbox").bootstrapSwitch({
-        size: 'small'
-    });
-
-    Rozier.getMessages();
 };
-
 
 /**
  * Resize

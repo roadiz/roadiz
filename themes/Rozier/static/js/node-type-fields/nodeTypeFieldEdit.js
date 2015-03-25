@@ -24,7 +24,6 @@ NodeTypeFieldEdit = function(){
 };
 
 
-
 /**
  * Init
  * @return {[type]} [description]
@@ -34,7 +33,7 @@ NodeTypeFieldEdit.prototype.init = function(){
 
     // Events
     var proxy = $.proxy(_this.btnClick, _this);
-    _this.$btn.off('click', proxy);
+    _this.$btn.off('click');
     _this.$btn.on('click', proxy);
 };
 
@@ -54,8 +53,7 @@ NodeTypeFieldEdit.prototype.btnClick = function(e){
     }
     else _this.openFormDelay = 0;
 
-    if(_this.indexOpen !== parseInt(e.currentTarget.getAttribute('data-index')) ){
-
+    if(_this.indexOpen !== parseInt(e.currentTarget.getAttribute('data-index'))) {
         Rozier.lazyload.canvasLoader.show();
 
         setTimeout(function(){
@@ -82,9 +80,7 @@ NodeTypeFieldEdit.prototype.btnClick = function(e){
             .always(function () {
                 Rozier.lazyload.canvasLoader.hide();
             });
-
         }, _this.openFormDelay);
-
     }
 
     return false;
@@ -93,7 +89,6 @@ NodeTypeFieldEdit.prototype.btnClick = function(e){
 
 /**
  * Apply content
- * @return {[type]} [description]
  */
 NodeTypeFieldEdit.prototype.applyContent = function(target, data, url){
     var _this = this;
@@ -113,6 +108,13 @@ NodeTypeFieldEdit.prototype.applyContent = function(target, data, url){
     // Remove class to pause sortable actions
     _this.$formFieldCol.removeClass('node-type-field-col');
 
+    // Switch checkboxes
+    $(".rz-boolean-checkbox").bootstrapSwitch({
+        size: 'small'
+    });
+
+    Rozier.lazyload.initMarkdownEditors();
+
     setTimeout(function(){
         _this.$formCont = $('.node-type-field-edit-form-cont');
         _this.formContHeight = _this.$formCont.actual('height');
@@ -128,7 +130,6 @@ NodeTypeFieldEdit.prototype.applyContent = function(target, data, url){
         TweenLite.to(_this.$form, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
         TweenLite.to(_this.$formCont, 0.6, {height:_this.formContHeight, ease:Expo.easeOut});
     }, 200);
-
 };
 
 
