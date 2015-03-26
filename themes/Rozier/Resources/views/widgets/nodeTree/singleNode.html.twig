@@ -25,9 +25,9 @@
 
 			{% if not mainNodeTree and not nodeTree.isStackTree %}
 				{% set thumbnail = source.getDocumentsByFields.first.getDocument %}
-				{% if thumbnail and thumbnail.image %}
+				{% if thumbnail and thumbnail.image and not thumbnail.private %}
 				<figure class="nodetree-element-img">
-					<img src="{{ thumbnail.getViewer.getDocumentUrlByArray({"width":60, "crop":"1x1", "quality":80}) }}" alt="">
+					{{ thumbnail|display({"width":60, "crop":"1x1", "quality":80}) }}
 				</figure>
 				{% endif %}
 			{% endif %}
