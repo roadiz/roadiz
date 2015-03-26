@@ -231,7 +231,6 @@ class EntityListManager
      */
     public function handle($disabled = false)
     {
-        $this->createPaginator();
 
         if (false === $disabled) {
             if ($this->request->query->get('field') &&
@@ -247,6 +246,10 @@ class EntityListManager
                 $this->paginator->setSearchPattern($this->request->query->get('search'));
             }
 
+            if ($this->request->query->get('item_per_page') != "") {
+                $this->itemPerPage = (int) $this->request->query->get('item_per_page');
+            }
+
             $this->currentPage = $this->request->query->get('page');
             if (!($this->currentPage > 1)) {
                 $this->currentPage = 1;
@@ -254,6 +257,8 @@ class EntityListManager
         } else {
             $this->currentPage = 1;
         }
+
+        $this->createPaginator();
     }
 
     /**

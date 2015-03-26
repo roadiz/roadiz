@@ -77,7 +77,6 @@ class HistoryController extends RozierApp
             [],
             ['datetime' => 'DESC']
         );
-        $listManager->setItemPerPage(30);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

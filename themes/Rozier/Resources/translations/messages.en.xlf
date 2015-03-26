@@ -3452,12 +3452,12 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="321" approved="yes">
         <source>sterile-status</source>
-        <target xml:lang="en">Sterile status</target>
+        <target xml:lang="en">Forbid children</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/88/9a/f2a9ab31044ec747813125ad428def2be716184dc2d6462206038ed37577.php</context>
           <context context-type="linenumber">152</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Sterile status</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="322" approved="yes">
         <source>archive-status</source>
         <target xml:lang="en">Archive status</target>
@@ -5868,6 +5868,10 @@
       <trans-unit xml:space="preserve" id="static_domain_name">
           <source>static_domain_name</source>
           <target xml:lang="en" state="translated">Static domain name</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="item-per-page.display.count" approved="yes">
+          <source>item-per-page.display.count</source>
+          <target xml:lang="en">Display:</target>
       </trans-unit>
     </body>
   </file>

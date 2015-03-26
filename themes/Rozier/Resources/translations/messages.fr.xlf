@@ -5869,6 +5869,10 @@
           <source>static_domain_name</source>
           <target xml:lang="fr">Nom de domaine statique</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="item-per-page.display.count" approved="yes">
+          <source>item-per-page.display.count</source>
+          <target xml:lang="fr">Afficher :</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

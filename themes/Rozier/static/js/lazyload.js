@@ -228,6 +228,7 @@ Lazyload.prototype.generalBind = function() {
 
     // Init markdown-preview
     _this.initMarkdownEditors();
+    _this.initFilterBars();
 
     // Init colorpicker
     if($('.colorpicker-input').length){
@@ -290,6 +291,19 @@ Lazyload.prototype.initMarkdownEditors = function() {
             }, 0);
 
         }, 0);
+    }
+};
+
+Lazyload.prototype.initFilterBars = function() {
+    var _this = this;
+
+    var $selectItemPerPage = $('select.item-per-page');
+
+    if($selectItemPerPage.length){
+        $selectItemPerPage.off('change');
+        $selectItemPerPage.on('change', function (event) {
+            var $form = $(event.currentTarget).parents('form').submit();
+        });
     }
 };
 

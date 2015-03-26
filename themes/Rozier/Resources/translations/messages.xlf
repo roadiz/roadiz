@@ -5979,6 +5979,11 @@
           <source>static_domain_name</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="item-per-page.display.count">
+          <source>item-per-page.display.count</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
