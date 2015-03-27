@@ -5873,6 +5873,14 @@
           <source>item-per-page.display.count</source>
           <target xml:lang="en">Display:</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="move.node.to.first.position">
+          <source>move.node.to.first.position</source>
+          <target xml:lang="en" state="translated">Move to first position</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="move.node.to.last.position">
+          <source>move.node.to.last.position</source>
+          <target xml:lang="en" state="translated">Move to last position</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

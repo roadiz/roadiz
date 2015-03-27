@@ -5987,6 +5987,10 @@
           <source>move.node.to.first.position</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="move.node.to.last.position">
+          <source>move.node.to.last.position</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -70,7 +70,6 @@ Lazyload.prototype.onClick = function(event) {
         href !== "" &&
         href != "#" &&
         (href.indexOf(Rozier.baseUrl) >= 0 || href.charAt(0) == '?')) {
-
         event.preventDefault();
 
         history.pushState({}, null, $link.attr('href'));
@@ -210,9 +209,9 @@ Lazyload.prototype.generalBind = function() {
     new NodeWidget();
     new CustomFormWidget();
     new DocumentUploader(Rozier.messages.dropzone);
-    new ChildrenNodesField();
+    _this.childrenNodesFields = new ChildrenNodesField();
     new GeotagField();
-    new StackNodeTree();
+    _this.stackNodeTrees = new StackNodeTree();
     if(isMobile.any() === null) new SaveButtons();
     new TagAutocomplete();
     new FolderAutocomplete();

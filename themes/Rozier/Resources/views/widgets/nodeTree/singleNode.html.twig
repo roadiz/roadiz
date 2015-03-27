@@ -89,8 +89,13 @@
 			            	</a>
 			            </p>
 			            <p>
-			            	<a title="{% trans %}move.node.to.first.position{% endtrans %}" href="#">
+			            	<a class="move-node-first-position smaller-text" title="{% trans %}move.node.to.first.position{% endtrans %}" href="#">
 			            		<i class="uk-icon-arrow-up"></i> {% trans %}move.node.to.first.position{% endtrans %}
+			            	</a>
+			            </p>
+			            <p>
+			            	<a class="move-node-last-position smaller-text" title="{% trans %}move.node.to.last.position{% endtrans %}" href="#">
+			            		<i class="uk-icon-arrow-down"></i> {% trans %}move.node.to.last.position{% endtrans %}
 			            	</a>
 			            </p>
 			            {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE')) %}

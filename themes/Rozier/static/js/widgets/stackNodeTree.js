@@ -20,13 +20,18 @@ StackNodeTree.prototype.init = function() {
 
         if(_this.$switchLangButtons.length){
             var proxiedChangeLang = $.proxy(_this.onChangeLangClick, _this);
-            _this.$switchLangButtons.off("click", proxiedChangeLang);
+            _this.$switchLangButtons.off("click");
             _this.$switchLangButtons.on("click", proxiedChangeLang);
         }
     }
 };
 StackNodeTree.prototype.onChangeLangClick = function(event) {
     var _this = this;
+
+    event.preventDefault();
+
+    console.log('Changed lang on stack tree');
+
     var $link = $(event.currentTarget);
 
     var $nodeTree = _this.$page.find('.nodetree-widget');
@@ -102,11 +107,30 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
     return false;
 };
 
-StackNodeTree.prototype.refreshNodeTree = function( rootNodeId, translationId, tagId) {
+StackNodeTree.prototype.treeAvailable  = function() {
+    var _this = this;
+
+    var $nodeTree = _this.$page.find('.nodetree-widget');
+
+    if($nodeTree.length) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
+StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, tagId) {
     var _this = this;
     var $nodeTree = _this.$page.find('.nodetree-widget');
 
     if($nodeTree.length){
+
+        var $rootTree = $($nodeTree.find('.root-tree')[0]);
+
+        if (typeof rootNodeId === "undefined") {
+            rootNodeId = parseInt($rootTree.attr("data-parent-node-id"));
+        }
+
         Rozier.lazyload.canvasLoader.show();
         var postData = {
             "_token":       Rozier.ajaxToken,
@@ -118,6 +142,7 @@ StackNodeTree.prototype.refreshNodeTree = function( rootNodeId, translationId, t
         var url = Rozier.routes.nodesTreeAjax;
         if(isset(translationId) && translationId > 0){
             url += '/'+translationId;
+            postData.translationId = parseInt(translationId);
         }
 
         //data-filter-tag
