@@ -31,17 +31,15 @@
 
 namespace Themes\Rozier\Traits;
 
-use RZ\Roadiz\CMS\Forms\SeparatorType;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Validator\Constraints\NotBlank;
-
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 trait NodesTrait
 {
@@ -294,11 +292,11 @@ trait NodesTrait
                                     new NotBlank(),
                                 ],
                             ])
-                ->add('translationId', 'choice', [
-                    'label' => $this->getTranslator()->trans('translation'),
-                    'choices' => $choices,
-                    'required' => true,
-                ]);
+                            ->add('translationId', 'choice', [
+                                'label' => $this->getTranslator()->trans('translation'),
+                                'choices' => $choices,
+                                'required' => true,
+                            ]);
 
             return $builder->getForm();
         } else {
@@ -347,9 +345,9 @@ trait NodesTrait
                                 new NotBlank(),
                             ],
                         ])
-            ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), [
-                'label' => $this->getTranslator()->trans('nodeType'),
-            ]);
+                        ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), [
+                            'label' => $this->getTranslator()->trans('nodeType'),
+                        ]);
 
         if (null !== $parentNode) {
             $builder->add('parentId', 'hidden', [
@@ -386,36 +384,35 @@ trait NodesTrait
                                 'constraints' => [new NotBlank()],
                             ]
                         )
-            ->add(
-                'priority',
-                'number',
-                [
-                    'label' => $this->getTranslator()->trans('priority'),
-                    'constraints' => [new NotBlank()],
-                ]
-            )
-            ->add(
-                'home',
-                'checkbox',
-                [
-                    'label' => $this->getTranslator()->trans('node.isHome'),
-                    'required' => false,
-                    'attr' => ['class' => 'rz-boolean-checkbox'],
-                ]
-            )
-            ->add(
-                'dynamicNodeName',
-                'checkbox',
-                [
-                    'label' => $this->getTranslator()->trans('node.dynamicNodeName'),
-                    'required' => false,
-                    'attr' => ['class' => 'rz-boolean-checkbox'],
-                ]
-            );
+                        ->add(
+                            'priority',
+                            'number',
+                            [
+                                'label' => $this->getTranslator()->trans('priority'),
+                                'constraints' => [new NotBlank()],
+                            ]
+                        )
+                        ->add(
+                            'home',
+                            'checkbox',
+                            [
+                                'label' => $this->getTranslator()->trans('node.isHome'),
+                                'required' => false,
+                                'attr' => ['class' => 'rz-boolean-checkbox'],
+                            ]
+                        )
+                        ->add(
+                            'dynamicNodeName',
+                            'checkbox',
+                            [
+                                'label' => $this->getTranslator()->trans('node.dynamicNodeName'),
+                                'required' => false,
+                                'attr' => ['class' => 'rz-boolean-checkbox'],
+                            ]
+                        );
 
         return $builder->getForm();
     }
-
 
     /**
      * @param RZ\Roadiz\Core\Entities\Node $node
@@ -465,7 +462,7 @@ trait NodesTrait
         Translation $translation,
         Tag $tag = null
     ) {
-        $name = $nodeType->getDisplayName()." ".uniqid();
+        $name = $nodeType->getDisplayName() . " " . uniqid();
 
         $node = new Node($nodeType);
         $node->setParent($parent);
@@ -479,7 +476,7 @@ trait NodesTrait
             $node->setPosition(0.5);
         }
 
-        $sourceClass = "GeneratedNodeSources\\".$nodeType->getSourceEntityClassName();
+        $sourceClass = "GeneratedNodeSources\\" . $nodeType->getSourceEntityClassName();
         $source = new $sourceClass($node, $translation);
         $source->setTitle($name);
         Kernel::getService('em')->persist($source);

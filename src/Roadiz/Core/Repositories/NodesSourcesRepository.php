@@ -30,15 +30,14 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\QueryException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Security\Core\SecurityContext;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\QueryException;
-use Doctrine\ORM\Query\Expr;
 
 /**
  * EntityRepository that implements search engine query with Solr.
@@ -226,7 +225,7 @@ class NodesSourcesRepository extends EntityRepository
     {
         if (false !== strpos($key, 'node.')) {
             if (!$this->hasJoinedNode($qb, $alias)) {
-                $qb->innerJoin($alias.'.node', 'n');
+                $qb->innerJoin($alias . '.node', 'n');
             }
 
             $prefix = 'n';
@@ -293,7 +292,7 @@ class NodesSourcesRepository extends EntityRepository
             $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->eq('n.status', Node::PUBLISHED));
             return true;
         } elseif (null !== $securityContext &&
-                $securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
             /*
              * Forbid deleted node for backend user when securityContext not null.
              */
