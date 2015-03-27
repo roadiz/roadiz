@@ -5,6 +5,7 @@ var ChildrenNodesField = function () {
     var _this = this;
 
     _this.$fields = $('[data-children-nodes-widget]');
+    _this.$nodeTrees = _this.$fields.find('.nodetree-widget');
     _this.$quickAddNodeButtons = _this.$fields.find('.children-nodes-quick-creation a');
 
     _this.init();
@@ -22,6 +23,18 @@ ChildrenNodesField.prototype.init = function() {
     }
 
     _this.$fields.find('.nodetree-langs').remove();
+};
+
+ChildrenNodesField.prototype.treeAvailable  = function() {
+    var _this = this;
+
+    var $nodeTree = _this.$fields.find('.nodetree-widget');
+
+    if($nodeTree.length) {
+        return true;
+    } else {
+        return false;
+    }
 };
 
 ChildrenNodesField.prototype.onQuickAddClick = function(event) {
@@ -106,10 +119,15 @@ ChildrenNodesField.prototype.dropDownize = function() {
     }
 };
 
-ChildrenNodesField.prototype.refreshNodeTree = function( $nodeTree, rootNodeId, translationId ) {
+ChildrenNodesField.prototype.refreshNodeTree = function($nodeTree, rootNodeId, translationId) {
     var _this = this;
 
     if($nodeTree.length){
+
+        if (typeof rootNodeId === "undefined") {
+            var $rootTree = $($nodeTree.find('.root-tree')[0]);
+            rootNodeId = parseInt($rootTree.attr("data-parent-node-id"));
+        }
 
         Rozier.lazyload.canvasLoader.show();
         var postData = {

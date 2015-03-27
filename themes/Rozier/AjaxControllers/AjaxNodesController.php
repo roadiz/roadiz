@@ -156,6 +156,12 @@ class AjaxNodesController extends AbstractAjaxController
             if ($prevNode !== null) {
                 $node->setPosition($prevNode->getPosition() + 0.5);
             }
+        } elseif (!empty($parameters['firstPosition']) &&
+            $parameters['firstPosition'] == true) {
+            $node->setPosition(-0.5);
+        } elseif (!empty($parameters['lastPosition']) &&
+            $parameters['lastPosition'] == true) {
+            $node->setPosition(9999999);
         }
         // Apply position update before cleaning
         $this->getService('em')->flush();

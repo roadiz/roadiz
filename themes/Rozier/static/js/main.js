@@ -114,6 +114,14 @@ Rozier.onDocumentReady = function(event) {
 Rozier.initNestables = function  () {
 	var _this = this;
 
+	var nodeMoveFirstLinks = $('a.move-node-first-position');
+	nodeMoveFirstLinks.off('click', $.proxy(_this.moveNodeToPosition, _this, "first"));
+	nodeMoveFirstLinks.on('click', $.proxy(_this.moveNodeToPosition, _this, "first"));
+
+	var nodeMoveLastLinks = $('a.move-node-last-position');
+	nodeMoveLastLinks.off('click', $.proxy(_this.moveNodeToPosition, _this, "last"));
+	nodeMoveLastLinks.on('click', $.proxy(_this.moveNodeToPosition, _this, "last"));
+
 	$('.uk-nestable').each(function (index, element) {
         UIkit.nestable(element);
     });
@@ -235,6 +243,29 @@ Rozier.getMessages = function () {
 	});
 };
 
+Rozier.refreshAllNodeTrees = function (translationId) {
+	var _this = this;
+
+	_this.refreshMainNodeTree(translationId);
+
+	/*
+	 * Stack trees
+	 */
+	if(_this.lazyload.stackNodeTrees.treeAvailable()){
+    	_this.lazyload.stackNodeTrees.refreshNodeTree();
+	}
+
+	/*
+	 * Children node fields widgets;
+	 */
+	if(_this.lazyload.childrenNodesFields.treeAvailable()) {
+
+		for (var i = _this.lazyload.childrenNodesFields.$nodeTrees.length - 1; i >= 0; i--) {
+			var $nodeTree = $(_this.lazyload.childrenNodesFields.$nodeTrees[i]);
+    		_this.lazyload.childrenNodesFields.refreshNodeTree($nodeTree);
+		}
+	}
+};
 
 /**
  * Refresh only main nodeTree.
@@ -471,6 +502,67 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 	})
 	.done(function( data ) {
 		console.log(data);
+		UIkit.notify({
+			message : data.responseText,
+			status  : data.status,
+			timeout : 3000,
+			pos     : 'top-center'
+		});
+
+	})
+	.fail(function( data ) {
+		console.log(data);
+	});
+};
+
+/**
+ * Move a node to the position.
+ *
+ * @param  Event event
+ */
+Rozier.moveNodeToPosition = function (position, event) {
+	var _this = this;
+
+	var element = $($(event.currentTarget).parents('.nodetree-element')[0]);
+	var node_id = parseInt(element.data('node-id'));
+	var parent_node_id = parseInt(element.parents('ul').first().data('parent-node-id'));
+
+	var postData = {
+		_token: Rozier.ajaxToken,
+		_action: 'updatePosition',
+		nodeId: node_id
+	};
+
+	/*
+	 * Force to first position
+	 */
+	if (typeof position !== "undefined" && position == "first") {
+		postData.firstPosition = true;
+	} else if (typeof position !== "undefined" && position == "last") {
+		postData.lastPosition = true;
+	}
+
+	/*
+	 * When dropping to root
+	 * set parentNodeId to NULL
+	 */
+	if(isNaN(parent_node_id)){
+		parent_node_id = null;
+	}
+	postData.newParent = parent_node_id;
+
+	console.log(postData);
+	$.ajax({
+		url: Rozier.routes.nodeAjaxEdit.replace("%nodeId%", node_id),
+		type: 'POST',
+		dataType: 'json',
+		data: postData
+	})
+	.done(function( data ) {
+		console.log(data);
+
+		_this.refreshAllNodeTrees();
+
 		UIkit.notify({
 			message : data.responseText,
 			status  : data.status,
