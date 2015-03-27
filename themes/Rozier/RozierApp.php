@@ -71,7 +71,7 @@ class RozierApp extends BackendController
         /*
          * Switch this to true to use uncompressed JS and CSS files
          */
-        $this->assignation['head']['backDevMode'] = true;
+        $this->assignation['head']['backDevMode'] = false;
         //Settings
         $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' backstage';
         $this->assignation['head']['mapsStyle'] = SettingsBag::get('maps_style');
