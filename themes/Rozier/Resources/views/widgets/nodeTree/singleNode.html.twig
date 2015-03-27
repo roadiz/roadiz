@@ -88,6 +88,11 @@
 			            		<i class="uk-icon-rz-pencil"></i> {% trans %}edit.node{% endtrans %}
 			            	</a>
 			            </p>
+			            <p>
+			            	<a title="{% trans %}move.node.to.first.position{% endtrans %}" href="#">
+			            		<i class="uk-icon-arrow-up"></i> {% trans %}move.node.to.first.position{% endtrans %}
+			            	</a>
+			            </p>
 			            {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE')) %}
 			            <p>
 			            	<a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">
