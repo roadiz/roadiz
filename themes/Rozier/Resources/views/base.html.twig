@@ -58,7 +58,8 @@
                     <div id="main-trees-container">
                         {% include 'panels/tree_panel.html.twig' with {
                             'securityContext': securityContext,
-                            'themeServices': themeServices
+                            'themeServices': themeServices,
+                            "nodeStatuses":nodeStatuses
                         } only %}
                     </div>
                 </section>
@@ -106,6 +107,7 @@
         <script src="{{ head.resourcesUrl }}js/vendor/addons/htmleditor.js"></script> {# Roadiz custom HtmlEditor #}
 
         {# Roadiz JS #}
+        <script src="{{ head.resourcesUrl }}js/trees/nodeTreeContextActions.js"></script>
         <script src="{{ head.resourcesUrl }}js/bulk-edits/documentsBulk.js"></script>
         <script src="{{ head.resourcesUrl }}js/bulk-edits/nodesBulk.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/documentsList.js"></script>

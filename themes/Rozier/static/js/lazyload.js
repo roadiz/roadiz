@@ -217,6 +217,7 @@ Lazyload.prototype.generalBind = function() {
     new FolderAutocomplete();
     new NodeTypeFieldsPosition();
     new CustomFormFieldsPosition();
+    _this.nodeTreeContextActions = new NodeTreeContextActions();
 
     _this.documentsList = new DocumentsList();
     _this.settingsSaveButtons = new SettingsSaveButtons();

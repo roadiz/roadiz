@@ -14,6 +14,12 @@
         </div>
     {% endif %}
     <ul class="root-tree">
-        {% include 'widgets/nodeTree/singleNode.html.twig' with { "node":node, "nodeTree":null, "securityContext":securityContext, "mainNodeTree":null} only %}
+        {% include 'widgets/nodeTree/singleNode.html.twig' with {
+            "node":node,
+            "nodeTree":null,
+            "securityContext":securityContext,
+            "mainNodeTree":null,
+            "nodeStatuses":nodeStatuses
+        } only %}
     </ul>
 </nav>

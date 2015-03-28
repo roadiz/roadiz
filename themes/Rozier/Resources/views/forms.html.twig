@@ -182,7 +182,13 @@
             </div>
         </nav>
         <div class="children-nodes-tree">
-            {% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':false, "securityContext":securityContext} only %}
+            {% include 'widgets/nodeTree/nodeTree.html.twig' with {
+                "nodeTree":nodeTree,
+                "node":nodeTree.getRootNode,
+                'mainNodeTree':false,
+                "securityContext":securityContext,
+                "nodeStatuses":nodeStatuses
+            } only %}
         </div>
     </div>
     {% endspaceless %}
