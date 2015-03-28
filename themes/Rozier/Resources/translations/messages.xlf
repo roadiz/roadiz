@@ -5991,6 +5991,28 @@
           <source>move.node.to.last.position</source>
           <target></target>
       </trans-unit>
+
+      <!-- Node tree contextual menu commands -->
+      <trans-unit xml:space="preserve" id="node.hide">
+          <source>node.hide</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.show">
+          <source>node.show</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.publish">
+          <source>node.publish</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.unpublish">
+          <source>node.unpublish</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.duplicate">
+          <source>node.duplicate</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

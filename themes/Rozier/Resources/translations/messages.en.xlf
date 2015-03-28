@@ -5881,6 +5881,27 @@
           <source>move.node.to.last.position</source>
           <target xml:lang="en" state="translated">Move to last position</target>
       </trans-unit>
+      <!-- Node tree contextual menu commands -->
+      <trans-unit xml:space="preserve" id="node.hide">
+          <source>node.hide</source>
+          <target xml:lang="en" state="translated">Hide</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.show">
+          <source>node.show</source>
+          <target xml:lang="en" state="translated">Show</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.publish">
+          <source>node.publish</source>
+          <target xml:lang="en" state="translated">Publish</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.unpublish">
+          <source>node.unpublish</source>
+          <target xml:lang="en" state="translated">Unpublish</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.duplicate">
+          <source>node.duplicate</source>
+          <target xml:lang="en" state="translated">Duplicate</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

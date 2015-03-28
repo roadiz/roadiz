@@ -80,6 +80,16 @@ class AjaxNodesController extends AbstractAjaxController
                 case 'updatePosition':
                     $responseArray = $this->updatePosition($request->request->all(), $node);
                     break;
+                case 'duplicate':
+                    $node->getHandler()->duplicate();
+                    $responseArray = [
+                        'statusCode' => '200',
+                        'status' => 'success',
+                        'responseText' => $this->getTranslator()->trans('duplicated.node.%name%', [
+                            '%name%' => $node->getNodeName()
+                        ])
+                    ];
+                    break;
             }
 
             if ($responseArray === null) {

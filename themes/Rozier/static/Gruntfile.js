@@ -36,6 +36,7 @@ module.exports = function(grunt) {
 			},
 			rezozero:{
 				'src': [
+					'js/trees/nodeTreeContextActions.js',
 					'js/bulk-edits/documentsBulk.js',
 					'js/bulk-edits/nodesBulk.js',
 					'js/widgets/documentsList.js',

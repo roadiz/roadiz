@@ -36,7 +36,13 @@
                 {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}>
             {% for cnode in nodeTree.getNodes %}
                 {% if not cnode.nodetype.newsletterType %}
-                    {% include 'widgets/nodeTree/singleNode.html.twig' with { "node":cnode, "nodeTree":nodeTree, "securityContext":securityContext, "mainNodeTree":mainNodeTree} only %}
+                    {% include 'widgets/nodeTree/singleNode.html.twig' with {
+                        "node":cnode,
+                        "nodeTree":nodeTree,
+                        "securityContext":securityContext,
+                        "mainNodeTree":mainNodeTree,
+                        "nodeStatuses":nodeStatuses
+                    } only %}
                 {% endif %}
             {% endfor %}
             </ul>
