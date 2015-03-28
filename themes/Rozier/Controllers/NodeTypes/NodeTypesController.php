@@ -311,6 +311,8 @@ class NodeTypesController extends RozierApp
                             'label' => $this->getTranslator()->trans('name'),
                             'constraints' => [
                                 new NotBlank(),
+                                new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
+                                new \RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString()
                             ],
                         ]);
 

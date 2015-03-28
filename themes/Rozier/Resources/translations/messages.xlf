@@ -6013,6 +6013,21 @@
           <source>node.duplicate</source>
           <target></target>
       </trans-unit>
+
+      <!-- Some constraints messages -->
+      <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters">
+          <source>string.should.only.contain.latin.characters</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word">
+          <source>string.should.not.be.a.sql.reserved.word</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="This value should not be blank.">
+          <source>This value should not be blank.</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

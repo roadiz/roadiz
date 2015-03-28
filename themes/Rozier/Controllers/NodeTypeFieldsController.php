@@ -296,16 +296,6 @@ class NodeTypeFieldsController extends RozierApp
     ) {
 
         /*
-         * Check reserved words
-         */
-        if (in_array(strtolower($data['name']), NodeTypeField::$forbiddenNames)) {
-            throw new ReservedSQLWordException($this->getTranslator()->trans(
-                "%field%.is.reserved.word",
-                ['%field%' => $data['name']]
-            ), 1);
-        }
-
-        /*
          * Check existing
          */
         $existing = $this->getService('em')
@@ -359,6 +349,8 @@ class NodeTypeFieldsController extends RozierApp
                             'label' => $this->getTranslator()->trans('name'),
                             'constraints' => [
                                 new NotBlank(),
+                                new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
+                                new \RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString()
                             ],
                         ])
                         ->add('label', 'text', [

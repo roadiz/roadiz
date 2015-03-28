@@ -279,17 +279,6 @@ class CustomFormFieldsController extends RozierApp
         CustomFormField $field,
         CustomForm $customForm
     ) {
-
-        /*
-         * Check reserved words
-         */
-        if (in_array(strtolower($data['name']), CustomFormField::$forbiddenNames)) {
-            throw new ReservedSQLWordException($this->getTranslator()->trans(
-                "%field%.is.reserved.word",
-                ['%field%' => $data['name']]
-            ), 1);
-        }
-
         /*
          * Check existing
          */
@@ -339,6 +328,8 @@ class CustomFormFieldsController extends RozierApp
                             'label' => $this->getTranslator()->trans('name'),
                             'constraints' => [
                                 new NotBlank(),
+                                new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
+                                new \RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString()
                             ],
                         ])
                         ->add('label', 'text', [

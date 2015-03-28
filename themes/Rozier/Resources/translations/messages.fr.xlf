@@ -5902,6 +5902,19 @@
           <source>node.duplicate</source>
           <target xml:lang="fr" state="translated">Dupliquer</target>
       </trans-unit>
+      <!-- Some constraints messages -->
+      <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters">
+          <source>string.should.only.contain.latin.characters</source>
+          <target xml:lang="fr" state="translated">La chaîne de caractère ne devrait contenir que des caractères latin non-accentués</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word">
+          <source>string.should.not.be.a.sql.reserved.word</source>
+          <target xml:lang="fr" state="translated">La chaîne de caractères ne devrait pas être un mot réservé pour SQL</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="This value should not be blank.">
+          <source>This value should not be blank.</source>
+          <target xml:lang="fr" state="translated">Cette valeur ne devrait pas être vide.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
