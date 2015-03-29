@@ -34,7 +34,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\ReservedSQLWordException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
@@ -350,7 +349,7 @@ class NodeTypeFieldsController extends RozierApp
                             'constraints' => [
                                 new NotBlank(),
                                 new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
-                                new \RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString()
+                                new \RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString(),
                             ],
                         ])
                         ->add('label', 'text', [

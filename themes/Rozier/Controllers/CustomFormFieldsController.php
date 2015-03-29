@@ -34,7 +34,6 @@ use \RZ\Roadiz\CMS\Forms\MarkdownType;
 use \RZ\Roadiz\Core\Entities\CustomForm;
 use \RZ\Roadiz\Core\Entities\CustomFormField;
 use \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use \RZ\Roadiz\Core\Exceptions\ReservedSQLWordException;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\Validator\Constraints\NotBlank;
@@ -329,7 +328,7 @@ class CustomFormFieldsController extends RozierApp
                             'constraints' => [
                                 new NotBlank(),
                                 new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
-                                new \RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString()
+                                new \RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString(),
                             ],
                         ])
                         ->add('label', 'text', [
@@ -338,14 +337,14 @@ class CustomFormFieldsController extends RozierApp
                                 new NotBlank(),
                             ],
                         ])
+                        ->add('description', new MarkdownType(), [
+                            'label' => $this->getTranslator()->trans('description'),
+                            'required' => false,
+                        ])
                         ->add('type', 'choice', [
                             'label' => $this->getTranslator()->trans('type'),
                             'required' => true,
                             'choices' => CustomFormField::$typeToHuman,
-                        ])
-                        ->add('description', new MarkdownType(), [
-                            'label' => $this->getTranslator()->trans('description'),
-                            'required' => false,
                         ])
                         ->add('required', 'checkbox', [
                             'label' => $this->getTranslator()->trans('required'),
