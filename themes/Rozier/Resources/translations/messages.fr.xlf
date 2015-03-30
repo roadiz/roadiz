@@ -5417,10 +5417,6 @@
           <source>User account is disabled.</source>
           <target xml:lang="fr">Votre compte utilisateur est désactivé.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="change.status.nodes" approved="yes">
-          <source>change.status.nodes</source>
-          <target xml:lang="fr">Changement de statut groupé</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="change.nodes.status" approved="yes">
           <source>change.nodes.status</source>
           <target xml:lang="fr">Changement de statut groupé</target>

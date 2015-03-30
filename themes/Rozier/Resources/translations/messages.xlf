@@ -5493,11 +5493,6 @@
           <target></target>
       </trans-unit>
 
-
-      <trans-unit xml:space="preserve" id="change.status.nodes">
-          <source>change.status.nodes</source>
-          <target></target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="change.nodes.status">
           <source>change.nodes.status</source>
           <target></target>
