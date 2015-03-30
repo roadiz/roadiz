@@ -8,8 +8,13 @@
 
 [![Join the chat at https://gitter.im/roadiz/roadiz](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/roadiz/roadiz?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Roadiz is a polymorphic CMS based on a node system which can handle many types of services.
-It’s based on Symfony components and Doctrine ORM for maximum performances and security.
+Roadiz is a modern CMS based on a polymorphic node system which can handle many types of services and contents.
+Its back-office has been developed with a high sense of design and user experience.
+Its theming system is built to live independantly from back-office allowing easy switching
+and multiple themes for one content basis. For example, it allows you to create one theme
+for your desktop website and another one for your mobile, using the same node hierarchy.
+Roadiz is released under MIT license, so you can reuse
+and distribute its code for personal and commercial projects.
 
 ### Documentation
 
@@ -19,40 +24,67 @@ It’s based on Symfony components and Doctrine ORM for maximum performances and
 
 ### Installation
 
+The following instructions are a summary for our documentation [*Getting started* section](http://docs.roadiz.io/en/latest/intro/getting_started.html).
+
 #### Requirements
 
+Roadiz uses advanced PHP features and needs to run on a recent version
+of PHP with a op-code cache.
+
 * *Nginx* or *Apache* server
-* PHP 5.4.3+
+* **PHP 5.4.3+**
 * ``php5-gd`` extension
 * ``php5-intl`` extension
 * ``php5-curl`` extension
-* PHP cache (APC/XCache) + Var cache (strongly recommended)
+* PHP cache (*APC/XCache*) + Var cache (strongly recommended) or *Memcached*
+* Be sure that PHP has a read/write access to:
+    * `/cache` folder
+    * `/conf` folder
+    * `/files` folder
 
-#### From bundle
+##### For Apache users
+
+* Requires `mod_rewrite` extension. Once Roadiz files and vendor are ready you’ll be able to
+generate `.htaccess` files for you Apache server configuration:
+
+```shell
+bin/roadiz config --generate-htaccess
+```
+
+But it’s better if you can directly define rules in your virtual host configuration.
+Use one of our templates in `/samples` folder.
+
+* Requires `mod_expires` for managing your assets caching lifetime.
+
+#### Install from bundle
 
 Here is a simple install process if you already have a ready webserver.
+For the moment no automatic update tool is available, if you want to regularly update
+Roadiz against *Github*, prefer *install from sources*.
 
-* Download Roadiz ZIP bundle from our [website](http://www.roadiz.io) or from [github releases](https://github.com/roadiz/roadiz/releases) section.
+* Download Roadiz ZIP bundle from our [website](http://www.roadiz.io)
+or from [github releases](https://github.com/roadiz/roadiz/releases) section.
 * Unzip it into your server root folder (eg. `www/`)
 * Go to your web-browser to launch Install wizard.
 
-#### From sources
+#### Install from sources
 
-This process needs an *SSH* connexion to your server with *Git* and [*Composer*](https://getcomposer.org/doc/00-intro.md#globally).
+This process needs an *SSH* connexion to your server with *Git*
+and [*Composer*](https://getcomposer.org/doc/00-intro.md#globally).
 It will enable you to make Roadiz updates more easily than with the bundle version.
-This is the recommended method if you are expert.
+This is the **recommended** method if you are expert.
 
 * Clone current repository to your web root
-* Install dependencies with *Composer*: `composer install -n --no-dev`
+* Install dependencies with *Composer*: `composer install --no-dev`
 * Copy `conf/config.default.yml` to `conf/config.yml`. After this command, `bin/roadiz` executable is available.
 * Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
 **If you don’t have any permission to create a virtual host,
 execute `bin/roadiz config --generate-htaccess` to create `.htaccess` files.**
 * Go to your web-browser to launch Install wizard.
 
-Once you’ve installed Roadiz, just type `/rz-admin` after your server domain name to reach backoffice interface.
+Once you’ve installed *Roadiz*, just type `/rz-admin` after your server domain name to reach backoffice interface.
 
-#### Database connexion
+### Database connexion
 
 To connect manually to your database, you can add this to your `config.yml`:
 
