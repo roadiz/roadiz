@@ -6,12 +6,13 @@
 
     <div class="document-border"></div>
 
-	{% if document.isImage %}
+	{% if document.isImage and not document.private %}
 	   <img class="document-image" src="{{ document.getViewer.getDocumentUrlByArray({"width":80, "crop":"1x1", "quality":50}) }}" />
+    {% elseif document.private %}
+        <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
     {% else %}
         <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>
     {% endif %}
-
 	<input type="hidden" name="{{ full_name }}" value="{{ document.getId }}" />
     <div class="document-overflow">
         <div class="document-links">

@@ -1,0 +1,42 @@
+documentsEditPage:
+    path:     /edit/{documentId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::editAction }
+    requirements: { documentId : "[0-9]+" }
+documentsMetaPage:
+    path:     /meta/{documentId}/{translationId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentTranslationsController::editAction, translationId : null }
+    requirements: { documentId : "[0-9]+", translationId : "[0-9]+" }
+documentsPreviewPage:
+    path:     /preview/{documentId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::previewAction }
+    requirements: { documentId : "[0-9]+" }
+documentsDownloadPage:
+    path:     /download/{documentId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::downloadAction }
+    requirements: { documentId : "[0-9]+" }
+documentsUsagePage:
+    path:     /usage/{documentId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::usageAction }
+    requirements: { documentId : "[0-9]+" }
+documentsUploadPage:
+    path:     /upload/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::uploadAction, folderId:null }
+    requirements: { folderId : "[0-9]+" }
+documentsRandomPage:
+    path:     /random/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::randomAction, folderId:null }
+    requirements: { folderId : "[0-9]+" }
+documentsEmbedPage:
+    path:     /embed/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::embedAction, folderId:null }
+    requirements: { folderId : "[0-9]+" }
+documentsDeletePage:
+    path:     /delete/{documentId}
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::deleteAction }
+    requirements: { documentId : "[0-9]+" }
+documentsBulkDeletePage:
+    path:     /bulk-delete
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::bulkDeleteAction }
+documentsBulkDownloadPage:
+    path:     /bulk-download
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::bulkDownloadAction }

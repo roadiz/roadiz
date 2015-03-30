@@ -31,17 +31,15 @@
 
 namespace Themes\Rozier\Traits;
 
-use RZ\Roadiz\CMS\Forms\SeparatorType;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Validator\Constraints\NotBlank;
-
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 trait NodesTrait
 {
@@ -224,56 +222,6 @@ trait NodesTrait
     }
 
     /**
-     * Link a node with a tag.
-     *
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     *
-     * @return RZ\Roadiz\Core\Entities\Tag $linkedTag
-     */
-    protected function addNodeTag($data, Node $node)
-    {
-        if (!empty($data['tagPaths'])) {
-            $paths = explode(',', $data['tagPaths']);
-            $paths = array_filter($paths);
-
-            foreach ($paths as $path) {
-                $tag = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                            ->findOrCreateByPath($path);
-
-                $node->addTag($tag);
-            }
-        }
-
-        $this->getService('em')->flush();
-
-        $this->updateSolrIndex($node);
-
-        return $tag;
-    }
-
-    /**
-     * @param array                        $data
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     * @param RZ\Roadiz\Core\Entities\Tag  $tag
-     *
-     * @return RZ\Roadiz\Core\Entities\Tag
-     */
-    protected function removeNodeTag($data, Node $node, Tag $tag)
-    {
-        if ($data['nodeId'] == $node->getId() &&
-            $data['tagId'] == $tag->getId()) {
-            $node->removeTag($tag);
-            $this->getService('em')->flush();
-
-            $this->updateSolrIndex($node);
-
-            return $tag;
-        }
-    }
-
-    /**
      * @param RZ\Roadiz\Core\Entities\Node $node
      */
     protected function updateSolrIndex(Node $node)
@@ -344,11 +292,11 @@ trait NodesTrait
                                     new NotBlank(),
                                 ],
                             ])
-                ->add('translationId', 'choice', [
-                    'label' => $this->getTranslator()->trans('translation'),
-                    'choices' => $choices,
-                    'required' => true,
-                ]);
+                            ->add('translationId', 'choice', [
+                                'label' => $this->getTranslator()->trans('translation'),
+                                'choices' => $choices,
+                                'required' => true,
+                            ]);
 
             return $builder->getForm();
         } else {
@@ -397,9 +345,9 @@ trait NodesTrait
                                 new NotBlank(),
                             ],
                         ])
-            ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), [
-                'label' => $this->getTranslator()->trans('nodeType'),
-            ]);
+                        ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), [
+                            'label' => $this->getTranslator()->trans('nodeType'),
+                        ]);
 
         if (null !== $parentNode) {
             $builder->add('parentId', 'hidden', [
@@ -436,62 +384,32 @@ trait NodesTrait
                                 'constraints' => [new NotBlank()],
                             ]
                         )
-            ->add(
-                'priority',
-                'number',
-                [
-                    'label' => $this->getTranslator()->trans('priority'),
-                    'constraints' => [new NotBlank()],
-                ]
-            )
-            ->add(
-                'home',
-                'checkbox',
-                [
-                    'label' => $this->getTranslator()->trans('node.isHome'),
-                    'required' => false,
-                    'attr' => ['class' => 'rz-boolean-checkbox'],
-                ]
-            )
-            ->add(
-                'dynamicNodeName',
-                'checkbox',
-                [
-                    'label' => $this->getTranslator()->trans('node.dynamicNodeName'),
-                    'required' => false,
-                    'attr' => ['class' => 'rz-boolean-checkbox'],
-                ]
-            );
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildEditTagsForm(Node $node)
-    {
-        $defaults = [
-            'nodeId' => $node->getId(),
-        ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
-                        ->add('nodeId', 'hidden', [
-                            'data' => $node->getId(),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-            ->add('tagPaths', 'text', [
-                'label' => $this->getTranslator()->trans('list.tags.to_link'),
-                'attr' => ['class' => 'rz-tag-autocomplete'],
-            ])
-            ->add('separator_1', new SeparatorType(), [
-                'label' => $this->getTranslator()->trans('use.new_or_existing.tags_with_hierarchy'),
-                'attr' => ['class' => 'form-help-static uk-alert uk-alert-large'],
-            ]);
+                        ->add(
+                            'priority',
+                            'number',
+                            [
+                                'label' => $this->getTranslator()->trans('priority'),
+                                'constraints' => [new NotBlank()],
+                            ]
+                        )
+                        ->add(
+                            'home',
+                            'checkbox',
+                            [
+                                'label' => $this->getTranslator()->trans('node.isHome'),
+                                'required' => false,
+                                'attr' => ['class' => 'rz-boolean-checkbox'],
+                            ]
+                        )
+                        ->add(
+                            'dynamicNodeName',
+                            'checkbox',
+                            [
+                                'label' => $this->getTranslator()->trans('node.dynamicNodeName'),
+                                'required' => false,
+                                'attr' => ['class' => 'rz-boolean-checkbox'],
+                            ]
+                        );
 
         return $builder->getForm();
     }
@@ -527,32 +445,6 @@ trait NodesTrait
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     * @param RZ\Roadiz\Core\Entities\Tag  $tag
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildRemoveTagForm(Node $node, Tag $tag)
-    {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
-                        ->add('nodeId', 'hidden', [
-                            'data' => $node->getId(),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-            ->add('tagId', 'hidden', [
-                'data' => $tag->getId(),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ]);
-
-        return $builder->getForm();
-    }
-
-    /**
      * Generate node with given nodetype and translation
      *
      * @param Symfony\Component\HttpFoundation\Request  $request
@@ -570,7 +462,7 @@ trait NodesTrait
         Translation $translation,
         Tag $tag = null
     ) {
-        $name = $nodeType->getDisplayName()." ".uniqid();
+        $name = $nodeType->getDisplayName() . " " . uniqid();
 
         $node = new Node($nodeType);
         $node->setParent($parent);
@@ -584,7 +476,7 @@ trait NodesTrait
             $node->setPosition(0.5);
         }
 
-        $sourceClass = "GeneratedNodeSources\\".$nodeType->getSourceEntityClassName();
+        $sourceClass = "GeneratedNodeSources\\" . $nodeType->getSourceEntityClassName();
         $source = new $sourceClass($node, $translation);
         $source->setTitle($name);
         Kernel::getService('em')->persist($source);

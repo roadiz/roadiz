@@ -235,6 +235,29 @@ Rozier.getMessages = function () {
 	});
 };
 
+Rozier.refreshAllNodeTrees = function (translationId) {
+	var _this = this;
+
+	_this.refreshMainNodeTree(translationId);
+
+	/*
+	 * Stack trees
+	 */
+	if(_this.lazyload.stackNodeTrees.treeAvailable()){
+    	_this.lazyload.stackNodeTrees.refreshNodeTree();
+	}
+
+	/*
+	 * Children node fields widgets;
+	 */
+	if(_this.lazyload.childrenNodesFields.treeAvailable()) {
+
+		for (var i = _this.lazyload.childrenNodesFields.$nodeTrees.length - 1; i >= 0; i--) {
+			var $nodeTree = $(_this.lazyload.childrenNodesFields.$nodeTrees[i]);
+    		_this.lazyload.childrenNodesFields.refreshNodeTree($nodeTree);
+		}
+	}
+};
 
 /**
  * Refresh only main nodeTree.

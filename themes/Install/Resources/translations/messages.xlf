@@ -2,7 +2,6 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
-
             <trans-unit id="1">
                 <source>Node name</source>
                 <target />
@@ -19,15 +18,10 @@
                 <source>_password</source>
                 <target />
             </trans-unit>
-            <trans-unit id="password">
-                <source>password</source>
-                <target />
-            </trans-unit>
             <trans-unit id="password.verify">
                 <source>password.verify</source>
                 <target />
             </trans-unit>
-
             <trans-unit id="delete">
                 <source>delete</source>
                 <target />
@@ -37,8 +31,6 @@
                 <source>status</source>
                 <target />
             </trans-unit>
-
-
             <!-- Welcome -->
             <trans-unit id="welcome.title">
                 <source>welcome.title</source>
@@ -52,8 +44,6 @@
                 <source>welcome.message</source>
                 <target />
             </trans-unit>
-
-
             <!-- Requirements -->
             <trans-unit id="requirements.title">
                 <source>requirements.title</source>
@@ -75,8 +65,6 @@
                 <source>requirements.actual_value</source>
                 <target />
             </trans-unit>
-
-
             <!-- Database -->
             <trans-unit id="database.title">
                 <source>database.title</source>
@@ -422,6 +410,23 @@
             </trans-unit>
             <trans-unit xml:space="preserve" id="dbname">
                 <source>dbname</source>
+                <target></target>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="error.locale.message">
+                <source>error.locale.message</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="error.modal.title">
+                <source>error.modal.title</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="error.version.message">
+                <source>error.version.message</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="warning.theme.continue">
+                <source>warning.theme.continue</source>
                 <target></target>
             </trans-unit>
         </body>

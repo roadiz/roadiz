@@ -3,11 +3,17 @@
     {# Delete current node #}
     {% if (securityContext.Granted('ROLE_ACCESS_DOCUMENTS_DELETE')) %}
         {% if document.getId %}
-        <a class="uk-button uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId}) }}">
+        <a class="uk-button uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.id}) }}">
             <span class="icon-container"><i class="uk-icon-rz-trash-mini-o"></i></span>
             <span class="label"><span class="label-text">{% trans %}delete.document{% endtrans %}</span></span>
         </a>
         {% endif %}
+    {% endif %}
+    {% if document.getId %}
+    <a class="uk-button rz-no-ajax-link" href="{{ path('documentsDownloadPage', { documentId: document.id}) }}">
+        <span class="icon-container"><i class="uk-icon-cloud-download"></i></span>
+        <span class="label"><span class="label-text">{% trans %}download.document{% endtrans %}</span></span>
+    </a>
     {% endif %}
 </nav>
 {% endspaceless %}

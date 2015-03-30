@@ -7,6 +7,9 @@ NodeEditSource = function(){
 
     // Selectors
     _this.$content = $('.content-node-edit-source');
+    _this.$formRow = null;
+    _this.$dropdown = null;
+    _this.$input = null;
 
     // Methods
     if(_this.$content.length){
@@ -15,13 +18,6 @@ NodeEditSource = function(){
     }
 
 };
-
-
-NodeEditSource.prototype.$content = null;
-NodeEditSource.prototype.$formRow = null;
-NodeEditSource.prototype.$dropdown = null;
-NodeEditSource.prototype.$input = null;
-
 
 /**
  * Init
@@ -58,7 +54,7 @@ NodeEditSource.prototype.init = function(){
 
 
 /**
- * Flip children node widget 
+ * Flip children node widget
  * @param  {[type]} index [description]
  * @return {[type]}       [description]
  */

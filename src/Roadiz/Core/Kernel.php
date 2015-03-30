@@ -60,7 +60,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.6.0";
+    public static $cmsVersion = "0.7.0";
     private static $instance = null;
 
     public $container = null;
@@ -492,6 +492,35 @@ class Kernel implements \Pimple\ServiceProviderInterface
             return $pageURL;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Get a FQDN base url for static resources.
+     *
+     * You should fill “static_domain_name” setting after your
+     * static domain name. Do not forget to create a virtual host
+     * for this domain to serve the same content as your primary domain.
+     *
+     * @return string
+     */
+    public function getStaticBaseUrl()
+    {
+        return $this->convertUrlToStaticDomainUrl($this->getResolvedBaseUrl());
+    }
+
+    /**
+     * @param  string $url Absolute Url with primary domain.
+     * @return string      Absolute Url with static domain.
+     */
+    public function convertUrlToStaticDomainUrl($url)
+    {
+        $staticDomain = SettingsBag::get('static_domain_name');
+
+        if (!empty($staticDomain)) {
+            return preg_replace('#://([^:^/]+)#', '://' . $staticDomain, $url);
+        } else {
+            return $url;
         }
     }
 

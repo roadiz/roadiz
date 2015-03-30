@@ -68,6 +68,10 @@ class RozierApp extends BackendController
         $this->themeContainer = $this->getService();
         $this->assignation['themeServices'] = $this->themeContainer;
 
+        /*
+         * Switch this to true to use uncompressed JS and CSS files
+         */
+        $this->assignation['head']['backDevMode'] = false;
         //Settings
         $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' backstage';
         $this->assignation['head']['mapsStyle'] = SettingsBag::get('maps_style');
@@ -90,10 +94,6 @@ class RozierApp extends BackendController
         };
         $this->themeContainer['maxFilesize'] = function ($c) {
             return min(intval(ini_get('post_max_size')), intval(ini_get('upload_max_filesize')));
-        };
-
-        $this->themeContainer['grunt'] = function ($c) {
-            return include(dirname(__FILE__).'/static/public/config/assets.config.php');
         };
 
         $this->themeContainer['grunt'] = function ($c) {

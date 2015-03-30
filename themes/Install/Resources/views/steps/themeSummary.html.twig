@@ -45,7 +45,7 @@
                                 {% endif %}
                             </td>
                             {% if status.version == false %}
-                                <tr><td class="uk-alert uk-alert-danger" colspan="5">{% trans %} error.version {% endtrans %}</td></tr>
+                                <tr><td class="uk-alert uk-alert-danger" colspan="5">{% trans %}error.version.message{% endtrans %}</td></tr>
                             {% endif %}
                         </tr>
                 </table>
@@ -73,7 +73,7 @@
                             </td>
                         </tr>
                         {% if status.locale == false %}
-                            <tr><td class="uk-alert uk-alert-danger" colspan="5">{% trans %} error.locale {% endtrans %}</td></tr>
+                            <tr><td class="uk-alert uk-alert-danger" colspan="5">{% trans %}error.locale.message{% endtrans %}</td></tr>
                         {% endif %}
                 </table>
 
@@ -129,13 +129,12 @@
 <div id="error" class="uk-modal">
     <div class="uk-modal-dialog">
         <h3 class="import-nodetypes-part">{% trans %}error.modal.title{% endtrans %}</h3>
-        <h4 class="import-nodetypes-part">{% trans %}Error{% endtrans %}:</h4>
         <lu class="import-nodetypes-part">
             {% if not status.version %}
-                <li>{% trans %} error.version {% endtrans %}</li>
+                <li>{% trans %}error.version.message{% endtrans %}</li>
             {% endif %}
             {% if not status.locale %}
-                <li>{% trans %} error.locale {% endtrans %}</li>
+                <li>{% trans %}error.locale.message{% endtrans %}</li>
             {% endif %}
             {% for name, filenames in theme.imports %}
                 {% for filename in filenames %}
@@ -145,7 +144,7 @@
                 {% endfor %}
             {% endfor %}
         </lu>
-        <p>Warning.theme.continue</p>
+        <p>{% trans %}warning.theme.continue{% endtrans %}</p>
         <a class="content-button uk-button uk-button-primary" href="{{ path('installThemeBasePage') ~ '?classname=' ~ classname|url_encode }}">{% trans %}install.theme{% endtrans %} <i class="uk-icon-arrow-circle-right icon-right"></i></a>
     </div>
 </div>

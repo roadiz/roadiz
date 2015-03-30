@@ -142,70 +142,87 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     protected function directComparison(&$criteria, &$qb, $alias)
     {
         foreach ($criteria as $key => $value) {
-            if (is_object($value) && $value instanceof PersistableInterface) {
-                $res = $qb->expr()->eq($alias . '.' .$key, $value->getId());
-            } elseif (is_array($value)) {
-                /*
-                 * array
-                 *
-                 * ['<=', $value]
-                 * ['<', $value]
-                 * ['>=', $value]
-                 * ['>', $value]
-                 * ['BETWEEN', $value, $value]
-                 * ['LIKE', $value]
-                 * in [$value, $value]
-                 */
-                if (count($value) > 1) {
-                    switch ($value[0]) {
-                        case '!=':
-                            # neq
-                            $res = $qb->expr()->neq($alias . '.' .$key, $value[1]);
-                            break;
-                        case '<=':
-                            # lte
-                            $res = $qb->expr()->lte($alias . '.' .$key, $value[1]);
-                            break;
-                        case '<':
-                            # lt
-                            $res = $qb->expr()->lt($alias . '.' .$key, $value[1]);
-                            break;
-                        case '>=':
-                            # gte
-                            $res = $qb->expr()->gte($alias . '.' .$key, $value[1]);
-                            break;
-                        case '>':
-                            # gt
-                            $res = $qb->expr()->gt($alias . '.' .$key, $value[1]);
-                            break;
-                        case 'BETWEEN':
-                            $res = $qb->expr()->between(
-                                $alias . '.' .$key,
-                                $value[1],
-                                $value[2]
-                            );
-                            break;
-                        case 'LIKE':
-                            $res = $qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value[1]));
-                            break;
-                        default:
-                            $res = $qb->expr()->in($alias . '.' .$key, $value);
-                            break;
-                    }
-                } else {
-                    $res = $qb->expr()->in($alias . '.' .$key, $value);
-                }
+            $qb = $this->singleDirectComparison($key, $value, $qb, $alias);
+        }
 
-            } elseif (is_array($value)) {
-                $res = $qb->expr()->in($alias . '.' .$key, $value);
-            } elseif (is_bool($value)) {
-                $res = $qb->expr()->eq($alias . '.' .$key, (boolean) $value);
+        return $qb;
+    }
+
+    /**
+     * Direct bind one single parameter without preparation.
+     *
+     * @param string       $key
+     * @param mixed        $value
+     * @param QueryBuilder $qb
+     * @param string       $alias
+     *
+     * @return QueryBuilder
+     */
+    protected function singleDirectComparison($key, &$value, &$qb, $alias)
+    {
+        if (is_object($value) && $value instanceof PersistableInterface) {
+            $res = $qb->expr()->eq($alias . '.' .$key, $value->getId());
+        } elseif (is_array($value)) {
+            /*
+             * array
+             *
+             * ['<=', $value]
+             * ['<', $value]
+             * ['>=', $value]
+             * ['>', $value]
+             * ['BETWEEN', $value, $value]
+             * ['LIKE', $value]
+             * in [$value, $value]
+             */
+            if (count($value) > 1) {
+                switch ($value[0]) {
+                    case '!=':
+                        # neq
+                        $res = $qb->expr()->neq($alias . '.' .$key, $value[1]);
+                        break;
+                    case '<=':
+                        # lte
+                        $res = $qb->expr()->lte($alias . '.' .$key, $value[1]);
+                        break;
+                    case '<':
+                        # lt
+                        $res = $qb->expr()->lt($alias . '.' .$key, $value[1]);
+                        break;
+                    case '>=':
+                        # gte
+                        $res = $qb->expr()->gte($alias . '.' .$key, $value[1]);
+                        break;
+                    case '>':
+                        # gt
+                        $res = $qb->expr()->gt($alias . '.' .$key, $value[1]);
+                        break;
+                    case 'BETWEEN':
+                        $res = $qb->expr()->between(
+                            $alias . '.' .$key,
+                            $value[1],
+                            $value[2]
+                        );
+                        break;
+                    case 'LIKE':
+                        $res = $qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value[1]));
+                        break;
+                    default:
+                        $res = $qb->expr()->in($alias . '.' .$key, $value);
+                        break;
+                }
             } else {
-                $res = $qb->expr()->eq($alias . '.' .$key, $value);
+                $res = $qb->expr()->in($alias . '.' .$key, $value);
             }
 
-            $qb->andWhere($res);
+        } elseif (is_array($value)) {
+            $res = $qb->expr()->in($alias . '.' .$key, $value);
+        } elseif (is_bool($value)) {
+            $res = $qb->expr()->eq($alias . '.' .$key, (boolean) $value);
+        } else {
+            $res = $qb->expr()->eq($alias . '.' .$key, $value);
         }
+
+        $qb->andWhere($res);
 
         return $qb;
     }

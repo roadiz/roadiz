@@ -25,9 +25,9 @@
 
 			{% if not mainNodeTree and not nodeTree.isStackTree %}
 				{% set thumbnail = source.getDocumentsByFields.first.getDocument %}
-				{% if thumbnail and thumbnail.image %}
+				{% if thumbnail and thumbnail.image and not thumbnail.private %}
 				<figure class="nodetree-element-img">
-					<img src="{{ thumbnail.getViewer.getDocumentUrlByArray({"width":60, "crop":"1x1", "quality":80}) }}" alt="">
+					{{ thumbnail|display({"width":60, "crop":"1x1", "quality":80}) }}
 				</figure>
 				{% endif %}
 			{% endif %}
@@ -88,6 +88,16 @@
 			            		<i class="uk-icon-rz-pencil"></i> {% trans %}edit.node{% endtrans %}
 			            	</a>
 			            </p>
+			            <p>
+			            	<a class="move-node-first-position smaller-text" title="{% trans %}move.node.to.first.position{% endtrans %}" href="#">
+			            		<i class="uk-icon-arrow-up"></i> {% trans %}move.node.to.first.position{% endtrans %}
+			            	</a>
+			            </p>
+			            <p>
+			            	<a class="move-node-last-position smaller-text" title="{% trans %}move.node.to.last.position{% endtrans %}" href="#">
+			            		<i class="uk-icon-arrow-down"></i> {% trans %}move.node.to.last.position{% endtrans %}
+			            	</a>
+			            </p>
 			            {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE')) %}
 			            <p>
 			            	<a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">
@@ -96,19 +106,28 @@
 			            </p>
 			            {% endif %}
 		        	</div>
-		        	{# Node Actions coming soon #}
-					{# <div class="wrapper">
+					<div class="wrapper node-actions">
 						<header class="uk-nav-header">Statuses</header>
 					    <p>
-					    	<a title="" href="#"><i class="uk-icon-rz-visibility-mini-off uk-rz-coming-soon"></i> Hide</a>
+					    	{% if node.visible %}
+					    	<a data-action="hide" data-status="visible" data-value="0" class="hide-node" title="{% trans %}node.hide{% endtrans %}" href="#"><i class="uk-icon-eye-slash"></i> {% trans %}node.hide{% endtrans %}</a>
+					    	{% else %}
+					    	<a data-action="show" data-status="visible" data-value="1" class="show-node" title="{% trans %}node.show{% endtrans %}" href="#"><i class="uk-icon-rz-visibility-mini"></i> {% trans %}node.show{% endtrans %}</a>
+					    	{% endif %}
 					    </p>
+					    {% if securityContext.Granted('ROLE_ACCESS_NODES_STATUS')%}
 					    <p>
-					    	<a title="" href="#"><i class="uk-icon-rz-unpublished-mini uk-rz-coming-soon"></i> Unpublished</a>
+					    	{% if not node.published %}
+					    	<a data-action="publish" data-status="status" data-value="{{ nodeStatuses.published }}" class="publish-node" title="{% trans %}node.publish{% endtrans %}" href="#"><i class="uk-icon-rz-published-mini"></i> {% trans %}node.publish{% endtrans %}</a>
+					    	{% else %}
+					    	<a data-action="unpublish" data-status="status" data-value="{{ nodeStatuses.draft }}" class="unpublish-node" title="{% trans %}node.unpublish{% endtrans %}" href="#"><i class="uk-icon-rz-draft-nodes"></i> {% trans %}node.unpublish{% endtrans %}</a>
+					    	{% endif %}
 					    </p>
+					    {% endif %}
 					    <p>
-					    	<a title="" href="#"><i class="uk-icon-rz-archive-mini uk-rz-coming-soon"></i> Archive</a>
+					    	<a data-action="duplicate" class="duplicate-node" title="{% trans %}node.duplicate{% endtrans %}" href="#"><i class="uk-icon-rz-duplicate"></i> {% trans %}node.duplicate{% endtrans %}</a>
 					    </p>
-					</div> #}
+					</div>
 		        </div>
 		    </nav>
 		</div>
@@ -125,7 +144,14 @@
 	 #}
 	{% if not node.isHidingChildren and not node.nodeType.isHidingNodes %}
 		{% for subNode in nodeTree.getChildrenNodes(node) %}
-			{% include 'widgets/nodeTree/singleNode.html.twig' with {"node":subNode, "parent":node, "nodeTree":nodeTree, "mainNodeTree":mainNodeTree} only %}
+			{% include 'widgets/nodeTree/singleNode.html.twig' with {
+				"node":subNode,
+				"parent":node,
+				"nodeTree":nodeTree,
+				"mainNodeTree":mainNodeTree,
+				"securityContext":securityContext,
+				"nodeStatuses":nodeStatuses
+			} only %}
 		{% endfor %}
 	{% endif %}
 	</ul>

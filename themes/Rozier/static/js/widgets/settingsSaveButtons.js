@@ -11,12 +11,7 @@ SettingsSaveButtons = function(){
     // Methods
     if(_this.$button.length) _this.init();
 
-    
-
 };
-
-
-SettingsSaveButtons.prototype.$button = null;
 
 
 /**

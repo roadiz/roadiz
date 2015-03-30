@@ -631,6 +631,11 @@ class NodeHandler
         return $node;
     }
 
+    /**
+     * Duplicate current node with all its children.
+     *
+     * @return Node $newNode
+     */
     public function duplicate()
     {
         Kernel::getService('em')->refresh($this->node);

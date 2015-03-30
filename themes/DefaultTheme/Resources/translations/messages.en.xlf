@@ -1,53 +1,51 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
- <file original="none" source-language="en-US" datatype="plaintext">
-  <body>
-   <trans-unit id="hello.world">
-    <source>hello.world</source>
-    <target>Hello world!</target>
-   </trans-unit>
-   <!-- This is node : %name% -->
-   <trans-unit id="nodeName">
-    <source>node.name.is.%name%</source>
-    <target>This is “%name%” node</target>
-   </trans-unit>
-   <trans-unit id="translationName">
-    <source>translation.is.%name%</source>
-    <target>This is “%name%” translation</target>
-   </trans-unit>
-
-   <trans-unit id="contact">
-    <source>contact</source>
-    <target>Contact</target>
-   </trans-unit>
-   <trans-unit id="contact.us">
-    <source>contact.us</source>
-    <target>Contact us</target>
-   </trans-unit>
-   <trans-unit id="your.email">
-    <source>your.email</source>
-    <target>Your email</target>
-   </trans-unit>
-   <trans-unit id="your.name">
-    <source>your.name</source>
-    <target>Your name</target>
-   </trans-unit>
-   <trans-unit id="your.message">
-    <source>your.message</source>
-    <target>Your message</target>
-   </trans-unit>
-   <trans-unit id="call.me.back">
-    <source>call.me.back</source>
-    <target>Call me back</target>
-   </trans-unit>
-   <trans-unit id="send.contact.form">
-    <source>send.contact.form</source>
-    <target>Send form</target>
-   </trans-unit>
-   <trans-unit id="document">
-    <source>document</source>
-    <target><![CDATA[Attach an image or a PDF (< 5 MB)]]></target>
-   </trans-unit>
-  </body>
- </file>
+  <file original="none" source-language="en" datatype="plaintext" target-language="en">
+    <body>
+      <trans-unit id="hello.world" approved="yes">
+        <source>hello.world</source>
+        <target xml:lang="en">Hello world!</target>
+      </trans-unit>
+      <trans-unit id="nodeName" approved="yes">
+        <source>node.name.is.%name%</source>
+        <target xml:lang="en">This is “%name%” node</target>
+      </trans-unit>
+      <trans-unit id="translationName" approved="yes">
+        <source>translation.is.%name%</source>
+        <target xml:lang="en">This is “%name%” translation</target>
+      </trans-unit>
+      <trans-unit id="contact" approved="yes">
+        <source>contact</source>
+        <target xml:lang="en">Contact</target>
+      </trans-unit>
+      <trans-unit id="contact.us" approved="yes">
+        <source>contact.us</source>
+        <target xml:lang="en">Contact us</target>
+      </trans-unit>
+      <trans-unit id="your.email" approved="yes">
+        <source>your.email</source>
+        <target xml:lang="en">Your email</target>
+      </trans-unit>
+      <trans-unit id="your.name" approved="yes">
+        <source>your.name</source>
+        <target xml:lang="en">Your name</target>
+      </trans-unit>
+      <trans-unit id="your.message" approved="yes">
+        <source>your.message</source>
+        <target xml:lang="en">Your message</target>
+      </trans-unit>
+      <trans-unit id="call.me.back" approved="yes">
+        <source>call.me.back</source>
+        <target xml:lang="en">Call me back</target>
+      </trans-unit>
+      <trans-unit id="send.contact.form" approved="yes">
+        <source>send.contact.form</source>
+        <target xml:lang="en">Send form</target>
+      </trans-unit>
+      <trans-unit id="document" approved="yes">
+        <source>document</source>
+        <target xml:lang="en"><![CDATA[Attach an image or a PDF (< 5 MB)]]></target>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>

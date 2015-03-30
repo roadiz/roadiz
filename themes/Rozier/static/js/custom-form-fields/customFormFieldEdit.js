@@ -7,25 +7,20 @@ CustomFormFieldEdit = function(){
 
     // Selectors
     _this.$btn = $('.custom-form-field-edit-button');
-    _this.$formFieldRow = $('.custom-form-field-row');
-    _this.$formFieldCol = $('.custom-form-field-col');
+    if (_this.$btn.length) {
+        _this.$formFieldRow = $('.custom-form-field-row');
+        _this.$formFieldCol = $('.custom-form-field-col');
+        _this.indexOpen = null;
+        _this.openFormDelay = 0;
+        _this.$formCont = null;
+        _this.$form = null;
+        _this.$formIcon = null;
+        _this.$formContHeight = null;
 
-    // Methods
-    _this.init();
-
+        // Methods
+        _this.init();
+    }
 };
-
-
-CustomFormFieldEdit.prototype.$btn = null;
-CustomFormFieldEdit.prototype.indexOpen = null;
-CustomFormFieldEdit.prototype.openFormDelay = 0;
-CustomFormFieldEdit.prototype.$formFieldRow = null;
-CustomFormFieldEdit.prototype.$formFieldCol = null;
-CustomFormFieldEdit.prototype.$formCont = null;
-CustomFormFieldEdit.prototype.$form = null;
-CustomFormFieldEdit.prototype.$formIcon = null;
-CustomFormFieldEdit.prototype.$formContHeight = null;
-
 
 /**
  * Init
@@ -35,7 +30,9 @@ CustomFormFieldEdit.prototype.init = function(){
     var _this = this;
 
     // Events
-    _this.$btn.on('click', $.proxy(_this.btnClick, _this));
+    var proxy = $.proxy(_this.btnClick, _this);
+    _this.$btn.off('click', proxy);
+    _this.$btn.on('click', proxy);
 };
 
 
@@ -45,6 +42,8 @@ CustomFormFieldEdit.prototype.init = function(){
  */
 CustomFormFieldEdit.prototype.btnClick = function(e){
     var _this = this;
+
+    e.preventDefault();
 
     if(_this.indexOpen !== null){
         _this.closeForm();
@@ -105,6 +104,12 @@ CustomFormFieldEdit.prototype.applyContent = function(target, data, url){
 
     // Remove class to pause sortable actions
     _this.$formFieldCol.removeClass('custom-form-field-col');
+
+    // Switch checkboxes
+    $(".rz-boolean-checkbox").bootstrapSwitch({
+        size: 'small'
+    });
+    Rozier.lazyload.initMarkdownEditors();
 
     setTimeout(function(){
         _this.$formCont = $('.custom-form-field-edit-form-cont');

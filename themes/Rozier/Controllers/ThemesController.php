@@ -273,6 +273,7 @@ class ThemesController extends RozierApp
             'className' => $theme->getClassName(),
             'staticTheme' => $theme->isStaticTheme(),
             'hostname' => $theme->getHostname(),
+            'routePrefix' => $theme->getRoutePrefix(),
             'backendTheme' => $theme->isBackendTheme(),
             'homeNode' => ($n !== null) ? $n->getId() : null,
             'root' => ($r !== null) ? $r->getId() : null,
@@ -297,6 +298,10 @@ class ThemesController extends RozierApp
                         )
                         ->add('hostname', 'text', [
                             'label' => $this->getTranslator()->trans('hostname'),
+                        ])
+                        ->add('routePrefix', 'text', [
+                            'label' => $this->getTranslator()->trans('routePrefix'),
+                            'required' => false,
                         ])
                         ->add('backendTheme', 'checkbox', [
                             'label' => $this->getTranslator()->trans('backendTheme'),
@@ -403,7 +408,7 @@ class ThemesController extends RozierApp
      *
      * @return boolean
      */
-    private function editTheme(Request $request, array &$data, Theme $theme)
+    private function editTheme(Request $request, array $data, Theme $theme)
     {
         $this->setThemeValue($request, $data, $theme);
 

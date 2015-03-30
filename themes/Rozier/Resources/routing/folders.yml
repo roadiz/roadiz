@@ -1,0 +1,20 @@
+foldersEditPage:
+    path:     /edit/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::editAction }
+    requirements: { userId : "[0-9]+" }
+foldersDownloadPage:
+    path:     /download/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::downloadAction }
+    requirements: { userId : "[0-9]+" }
+foldersDeletePage:
+    path:     /delete/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::deleteAction }
+    requirements: { userId : "[0-9]+", roleId : "[0-9]+" }
+foldersAddPage:
+    path:     /add/{parentFolderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::addAction, parentFolderId:null }
+    requirements: { parentFolderId : "[0-9]+" }
+foldersExportPage:
+    path:     /export/{folderId}
+    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::exportAction }
+    requirements: { folderId : "[0-9]+" }

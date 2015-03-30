@@ -33,7 +33,7 @@ namespace Themes\Rozier\AjaxControllers;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-use Themes\Rozier\Controllers\NodesController;
+use Themes\Rozier\Controllers\Nodes\NodesController;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,6 +79,16 @@ class AjaxNodesController extends AbstractAjaxController
             switch ($request->get('_action')) {
                 case 'updatePosition':
                     $responseArray = $this->updatePosition($request->request->all(), $node);
+                    break;
+                case 'duplicate':
+                    $node->getHandler()->duplicate();
+                    $responseArray = [
+                        'statusCode' => '200',
+                        'status' => 'success',
+                        'responseText' => $this->getTranslator()->trans('duplicated.node.%name%', [
+                            '%name%' => $node->getNodeName()
+                        ])
+                    ];
                     break;
             }
 
@@ -156,6 +166,12 @@ class AjaxNodesController extends AbstractAjaxController
             if ($prevNode !== null) {
                 $node->setPosition($prevNode->getPosition() + 0.5);
             }
+        } elseif (!empty($parameters['firstPosition']) &&
+            (boolean) $parameters['firstPosition'] === true) {
+            $node->setPosition(-0.5);
+        } elseif (!empty($parameters['lastPosition']) &&
+            (boolean) $parameters['lastPosition'] === true) {
+            $node->setPosition(9999999);
         }
         // Apply position update before cleaning
         $this->getService('em')->flush();

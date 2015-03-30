@@ -23,6 +23,15 @@
                 {% endspaceless %}
        		</fieldset>
     	</form>
+
+        <dl class="document-paths">
+            {% if not document.private %}
+            <dt>{% trans %}document.public_url{% endtrans %}</dt>
+            <dd>{{ document.viewer.documentUrlByArray() }}</dd>
+            {% endif %}
+            <dt>{% trans %}document.filepath{% endtrans %}</dt>
+            <dd>{{ document.absolutePath }}</dd>
+        </dl>
     </article>
 
 	{% include 'documents/actionsMenu.html.twig' %}

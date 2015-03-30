@@ -4,13 +4,23 @@
 var Lazyload = function() {
     var _this = this;
 
+    _this.$linksSelector = null;
+    _this.$textAreaHTMLeditor = null;
+    _this.$HTMLeditor = null;
+    _this.htmlEditor = [];
+    _this.$HTMLeditorContent = null;
+    _this.$HTMLeditorNav = null;
+    _this.HTMLeditorNavToRemove = null;
+    _this.documentsList = null;
+    _this.mainColor = null;
+    _this.$canvasLoaderContainer = null;
+
     var onStateChangeProxy = $.proxy(_this.onPopState, _this);
 
-    _this.$linksSelector = $("a:not('[target=_blank]')");
+    _this.parseLinks();
 
-    $(window).on('popstate', function (event) {
-        _this.onPopState(event);
-    });
+    $(window).off('popstate', onStateChangeProxy);
+    $(window).on('popstate', onStateChangeProxy);
 
     _this.$canvasLoaderContainer = $('#canvasloader-container');
     _this.mainColor = isset(Rozier.mainColor) ? Rozier.mainColor : '#ffffff';
@@ -21,17 +31,6 @@ var Lazyload = function() {
      */
     history.pushState({}, null, window.location.href);
 };
-
-Lazyload.prototype.$linksSelector = null;
-Lazyload.prototype.$textAreaHTMLeditor = null;
-Lazyload.prototype.$HTMLeditor = null;
-Lazyload.prototype.htmlEditor = [];
-Lazyload.prototype.$HTMLeditorContent = null;
-Lazyload.prototype.$HTMLeditorNav = null;
-Lazyload.prototype.HTMLeditorNavToRemove = null;
-Lazyload.prototype.documentsList = null;
-Lazyload.prototype.mainColor = null;
-Lazyload.prototype.$canvasLoaderContainer = null;
 
 /**
  * Init loader
@@ -47,9 +46,13 @@ Lazyload.prototype.initLoader = function(){
     _this.canvasLoader.setRange(0.8);
     _this.canvasLoader.setSpeed(4);
     _this.canvasLoader.setFPS(30);
-
 };
 
+Lazyload.prototype.parseLinks = function() {
+    var _this = this;
+
+    _this.$linksSelector = $("a:not('[target=_blank]')").not('.rz-no-ajax-link');
+};
 
 /**
  * Bind links to load pages
@@ -66,7 +69,8 @@ Lazyload.prototype.onClick = function(event) {
         !$link.hasClass('rz-no-ajax-link') &&
         href !== "" &&
         href != "#" &&
-        href.indexOf(Rozier.baseUrl) >= 0){
+        (href.indexOf(Rozier.baseUrl) >= 0 || href.charAt(0) == '?')) {
+        event.preventDefault();
 
         history.pushState({}, null, $link.attr('href'));
         _this.onPopState(null);
@@ -103,7 +107,6 @@ Lazyload.prototype.onPopState = function(event) {
         _this.canvasLoader.show();
         _this.loadContent(state, window.location);
     }
-
 };
 
 
@@ -194,21 +197,27 @@ Lazyload.prototype.applyContent = function(data) {
 Lazyload.prototype.generalBind = function() {
     var _this = this;
 
-    // console.log('General bind');
+    _this.parseLinks();
+
+    var onClickProxy = $.proxy(_this.onClick, _this);
+    _this.$linksSelector.off('click', onClickProxy);
+    _this.$linksSelector.on('click', onClickProxy);
+
     new DocumentsBulk();
     new NodesBulk();
     new DocumentWidget();
     new NodeWidget();
     new CustomFormWidget();
     new DocumentUploader(Rozier.messages.dropzone);
-    new ChildrenNodesField();
+    _this.childrenNodesFields = new ChildrenNodesField();
     new GeotagField();
-    new StackNodeTree();
+    _this.stackNodeTrees = new StackNodeTree();
     if(isMobile.any() === null) new SaveButtons();
     new TagAutocomplete();
     new FolderAutocomplete();
     new NodeTypeFieldsPosition();
     new CustomFormFieldsPosition();
+    _this.nodeTreeContextActions = new NodeTreeContextActions();
 
     _this.documentsList = new DocumentsList();
     _this.settingsSaveButtons = new SettingsSaveButtons();
@@ -217,11 +226,34 @@ Lazyload.prototype.generalBind = function() {
     _this.nodeTree = new NodeTree();
     _this.customFormFieldEdit = new CustomFormFieldEdit();
 
+    // Init markdown-preview
+    _this.initMarkdownEditors();
+    _this.initFilterBars();
 
-    _this.$linksSelector.off('click', $.proxy(_this.onClick, _this));
-    _this.$linksSelector = $("a:not('[target=_blank]')");
-    _this.$linksSelector.on('click', $.proxy(_this.onClick, _this));
+    // Init colorpicker
+    if($('.colorpicker-input').length){
+        $('.colorpicker-input').minicolors();
+    }
 
+    // Animate actions menu
+    if($('.actions-menu').length && isMobile.any() === null){
+        TweenLite.to('.actions-menu', 0.5, {right:0, delay:0.4, ease:Expo.easeOut});
+    }
+
+    Rozier.initNestables();
+    Rozier.bindMainTrees();
+    Rozier.nodeStatuses = new NodeStatuses();
+
+    // Switch checkboxes
+    $(".rz-boolean-checkbox").bootstrapSwitch({
+        size: 'small'
+    });
+
+    Rozier.getMessages();
+};
+
+Lazyload.prototype.initMarkdownEditors = function() {
+    var _this = this;
 
     // Init markdown-preview
     _this.$textAreaHTMLeditor = $('textarea[data-uk-htmleditor], textarea[data-uk-rz-htmleditor]').not('[data-uk-check-display]');
@@ -259,29 +291,21 @@ Lazyload.prototype.generalBind = function() {
             }, 0);
 
         }, 0);
-
     }
-
-    // Init colorpicker
-    if($('.colorpicker-input').length){
-        $('.colorpicker-input').minicolors();
-    }
-
-    // Animate actions menu
-    if($('.actions-menu').length && isMobile.any() === null){
-        TweenLite.to('.actions-menu', 0.5, {right:0, delay:0.4, ease:Expo.easeOut});
-    }
-
-    Rozier.initNestables();
-    Rozier.bindMainTrees();
-    Rozier.nodeStatuses = new NodeStatuses();
-
-    // Switch checkboxes
-    $(".rz-boolean-checkbox").bootstrapSwitch();
-
-    Rozier.getMessages();
 };
 
+Lazyload.prototype.initFilterBars = function() {
+    var _this = this;
+
+    var $selectItemPerPage = $('select.item-per-page');
+
+    if($selectItemPerPage.length){
+        $selectItemPerPage.off('change');
+        $selectItemPerPage.on('change', function (event) {
+            var $form = $(event.currentTarget).parents('form').submit();
+        });
+    }
+};
 
 /**
  * Resize

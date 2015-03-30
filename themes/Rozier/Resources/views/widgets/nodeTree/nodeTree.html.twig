@@ -20,6 +20,7 @@
                 {% for lang in nodeTree.availableTranslations %}
                 <li class="{% if lang.id == nodeTree.translation.id %}active{% endif %}">
                     <a href="#"
+                        class="rz-no-ajax-link"
                        {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}
                        data-children-parent-node="{{ nodeTree.rootNode.id }}"
                        data-translation-id="{{ lang.id }}">{{ lang.locale|capitalize }}</a>
@@ -35,7 +36,13 @@
                 {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}>
             {% for cnode in nodeTree.getNodes %}
                 {% if not cnode.nodetype.newsletterType %}
-                    {% include 'widgets/nodeTree/singleNode.html.twig' with { "node":cnode, "nodeTree":nodeTree, "securityContext":securityContext, "mainNodeTree":mainNodeTree} only %}
+                    {% include 'widgets/nodeTree/singleNode.html.twig' with {
+                        "node":cnode,
+                        "nodeTree":nodeTree,
+                        "securityContext":securityContext,
+                        "mainNodeTree":mainNodeTree,
+                        "nodeStatuses":nodeStatuses
+                    } only %}
                 {% endif %}
             {% endfor %}
             </ul>

@@ -30,14 +30,14 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\QueryException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Security\Core\SecurityContext;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\QueryException;
 
 /**
  * EntityRepository that implements search engine query with Solr.
@@ -190,6 +190,73 @@ class NodesSourcesRepository extends EntityRepository
     }
 
     /**
+     * Create a Criteria object from a search pattern and additionnal fields.
+     *
+     * @param string                  $pattern  Search pattern
+     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
+     * @param array                   $criteria Additionnal criteria
+     * @param string                  $alias    SQL query table alias
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function createSearchBy(
+        $pattern,
+        \Doctrine\ORM\QueryBuilder $qb,
+        array $criteria = [],
+        $alias = "obj"
+    ) {
+        $this->classicLikeComparison($pattern, $qb, $alias);
+        $qb = $this->directComparison($criteria, $qb, $alias);
+
+        return $qb;
+    }
+
+    /**
+     * Direct bind one single parameter without preparation.
+     *
+     * @param string       $key
+     * @param mixed        $value
+     * @param QueryBuilder $qb
+     * @param string       $alias
+     *
+     * @return QueryBuilder
+     */
+    protected function singleDirectComparison($key, &$value, &$qb, $alias)
+    {
+        if (false !== strpos($key, 'node.')) {
+            if (!$this->hasJoinedNode($qb, $alias)) {
+                $qb->innerJoin($alias . '.node', 'n');
+            }
+
+            $prefix = 'n';
+            $prefixedkey = str_replace('node.', '', $key);
+            return parent::singleDirectComparison($prefixedkey, $value, $qb, $prefix);
+        } else {
+            return parent::singleDirectComparison($key, $value, $qb, $alias);
+        }
+    }
+
+    /**
+     * Ensure that node table is joined only once.
+     *
+     * @param  QueryBuilder $qb
+     * @param  string  $alias
+     * @return boolean
+     */
+    protected function hasJoinedNode(&$qb, $alias)
+    {
+        if (isset($qb->getDQLPart('join')[$alias])) {
+            foreach ($qb->getDQLPart('join')[$alias] as $join) {
+                if (null !== $join && $join->getAlias() == "n") {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Bind parameters to generated query.
      *
      * @param array $criteria
@@ -225,7 +292,7 @@ class NodesSourcesRepository extends EntityRepository
             $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->eq('n.status', Node::PUBLISHED));
             return true;
         } elseif (null !== $securityContext &&
-                $securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
+            $securityContext->isGranted(Role::ROLE_BACKEND_USER)) {
             /*
              * Forbid deleted node for backend user when securityContext not null.
              */

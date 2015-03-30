@@ -2,42 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en-US" datatype="plaintext">
     <body>
-      <trans-unit xml:space="preserve" id="1" approved="no" restype="x-gettext-domain-header">
-        <source>Project-Id-Version: PACKAGE VERSION
-Report-Msgid-Bugs-To:
-POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE
-Last-Translator: FULL NAME &lt;EMAIL@ADDRESS&gt;
-Language-Team: LANGUAGE &lt;LL@li.org&gt;
-Language:
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Generator: Translate Toolkit 1.9.0
-</source>
-        <target state="translated">Project-Id-Version: PACKAGE VERSION
-Report-Msgid-Bugs-To:
-POT-Creation-Date: 2014-10-02 15:29+0200
-PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE
-Last-Translator: FULL NAME &lt;EMAIL@ADDRESS&gt;
-Language-Team: LANGUAGE &lt;LL@li.org&gt;
-Language:
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Generator: Translate Toolkit 1.9.0
-</target>
-        <context-group name="po-entry" purpose="information">
-          <context context-type="x-po-trancomment">SOME DESCRIPTIVE TITLE.
-Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-This file is distributed under the same license as the PACKAGE package.
-FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</context>
-        </context-group>
-        <note from="po-translator">SOME DESCRIPTIVE TITLE.
-Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-This file is distributed under the same license as the PACKAGE package.
-FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="2">
         <source>node.%name%.updated</source>
         <target></target>
@@ -5633,10 +5597,6 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>add.a.newsletter</source>
           <target></target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="no.nodeType.available.create_one_first">
-          <source>no.nodeType.available.create_one_first</source>
-          <target></target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="edit.newsletter.%name%">
           <source>edit.newsletter.%name%</source>
           <target></target>
@@ -5788,7 +5748,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>user.expired</source>
           <target></target>
       </trans-unit>
-      <trans-unit Xml:space="preserve" id="user.expiresAt">
+      <trans-unit xml:space="preserve" id="user.expiresAt">
           <source>user.expiresAt</source>
           <target></target>
       </trans-unit>
@@ -5796,7 +5756,7 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <source>user.force.expired</source>
           <target></target>
       </trans-unit>
-      <trans-unit xml:Space="Preserve" id="user.credentialsExpiresAt">
+      <trans-unit xml:space="preserve" id="user.credentialsExpiresAt">
           <source>user.credentialsExpiresAt</source>
           <target></target>
       </trans-unit>
@@ -5987,12 +5947,84 @@ FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</note>
           <target></target>
       </trans-unit>
 
-      <trans-unit xml:space="preserve" id="download">
-          <source>download</source>
+      <trans-unit xml:space="preserve" id="download.folder.content">
+          <source>download.folder.content</source>
           <target></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="not.valid.facebook.name">
           <source>not.valid.facebook.name</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="routePrefix">
+          <source>routePrefix</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="current.document.is.private.you.cannot.preview.it">
+          <source>current.document.is.private.you.cannot.preview.it</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.public_url">
+          <source>document.public_url</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.filepath">
+          <source>document.filepath</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="download.document">
+          <source>download.document</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="static_domain_name">
+          <source>static_domain_name</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="item-per-page.display.count">
+          <source>item-per-page.display.count</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="move.node.to.first.position">
+          <source>move.node.to.first.position</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="move.node.to.last.position">
+          <source>move.node.to.last.position</source>
+          <target></target>
+      </trans-unit>
+
+      <!-- Node tree contextual menu commands -->
+      <trans-unit xml:space="preserve" id="node.hide">
+          <source>node.hide</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.show">
+          <source>node.show</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.publish">
+          <source>node.publish</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.unpublish">
+          <source>node.unpublish</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.duplicate">
+          <source>node.duplicate</source>
+          <target></target>
+      </trans-unit>
+
+      <!-- Some constraints messages -->
+      <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters">
+          <source>string.should.only.contain.latin.characters</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word">
+          <source>string.should.not.be.a.sql.reserved.word</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="This value should not be blank.">
+          <source>This value should not be blank.</source>
           <target></target>
       </trans-unit>
 

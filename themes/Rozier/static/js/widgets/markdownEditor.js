@@ -8,6 +8,17 @@ MarkdownEditor = function(){
     // Selectors
     _this.$cont = $('.uk-htmleditor');
     _this.$textarea = _this.$cont.find('.markdown_textarea');
+    _this.$buttonCode = null;
+    _this.$buttonPreview = null;
+    _this.$buttonFullscreen = null;
+    _this.$count = null;
+    _this.$countCurrent = null;
+    _this.limit = [];
+    _this.countMinLimit = [];
+    _this.countMaxLimit = [];
+    _this.$countMaxLimitText = null;
+    _this.countAlertActive = [];
+    _this.fullscreenActive = [];
 
     // Methods
     setTimeout(function(){
@@ -15,21 +26,6 @@ MarkdownEditor = function(){
     }, 0);
 
 };
-
-
-MarkdownEditor.prototype.$cont = null;
-MarkdownEditor.prototype.$textarea = null;
-MarkdownEditor.prototype.$buttonCode = null;
-MarkdownEditor.prototype.$buttonPreview = null;
-MarkdownEditor.prototype.$buttonFullscreen = null;
-MarkdownEditor.prototype.$count = null;
-MarkdownEditor.prototype.$countCurrent = null;
-MarkdownEditor.prototype.limit = [];
-MarkdownEditor.prototype.countMinLimit = [];
-MarkdownEditor.prototype.countMaxLimit = [];
-MarkdownEditor.prototype.$countMaxLimitText = null;
-MarkdownEditor.prototype.countAlertActive = [];
-MarkdownEditor.prototype.fullscreenActive = [];
 
 
 /**
@@ -63,9 +59,9 @@ MarkdownEditor.prototype.init = function(){
                 $(_this.$cont[i]).find('.count-current')[0].innerHTML = stripTags(Rozier.lazyload.htmlEditor[i].currentvalue).length;
                 $(_this.$cont[i]).find('.count-limit')[0].innerHTML = _this.$textarea[i].getAttribute('data-max-length');
                 $(_this.$cont[i]).find('.uk-htmleditor-count')[0].style.display = 'block';
-                
+
             }
-            
+
             if(_this.$textarea[i].getAttribute('data-min-length') !== ''){
 
                 _this.limit[i] = true;
@@ -92,12 +88,12 @@ MarkdownEditor.prototype.init = function(){
                     _this.countAlertActive[i] = true;
                     addClass(_this.$cont[i], 'content-limit');
                 }
-                else _this.countAlertActive[i] = false;   
+                else _this.countAlertActive[i] = false;
             }
 
             $(_this.$cont[i]).find('.CodeMirror').on('keyup', $.proxy(_this.textareaChange, _this));
         }
-        
+
 
         // Selectors
         _this.$content = _this.$cont.find('.uk-htmleditor-content');
@@ -108,13 +104,13 @@ MarkdownEditor.prototype.init = function(){
         _this.$countCurrent = _this.$cont.find('.count-current');
         _this.$countMaxLimitText = _this.$cont.find('.count-limit');
 
-             
+
 
         // Events
         for(var j = 0; j < Rozier.lazyload.$textAreaHTMLeditor.length; j++) {
             Rozier.lazyload.htmlEditor[j].editor.on('focus', $.proxy(_this.textareaFocus, _this));
             Rozier.lazyload.htmlEditor[j].editor.on('blur', $.proxy(_this.textareaFocusOut, _this));
-        }  
+        }
         _this.$buttonPreview.on('click', $.proxy(_this.buttonPreviewClick, _this));
         _this.$buttonCode.on('click', $.proxy(_this.buttonCodeClick, _this));
         _this.$buttonFullscreen.on('click', $.proxy(_this.buttonFullscreenClick, _this));
@@ -136,7 +132,7 @@ MarkdownEditor.prototype.textareaChange = function(e){
 
     if(_this.limit[index]){
         setTimeout(function(){
-         
+
             var textareaVal = Rozier.lazyload.htmlEditor[index].currentvalue,
                 textareaValStripped = stripTags(textareaVal),
                 textareaValLength = textareaValStripped.length;
@@ -163,7 +159,7 @@ MarkdownEditor.prototype.textareaChange = function(e){
                 }
             }
         }, 100);
-    }    
+    }
 
 };
 
@@ -262,13 +258,13 @@ MarkdownEditor.prototype.echapKey = function(e){
     if(e.keyCode == 27){
 
         for(var i = 0; i < _this.$cont.length; i++) {
-            
+
             if(_this.fullscreenActive[i]){
                 $(_this.$buttonFullscreen[i]).find('a').trigger('click');
                 break;
             }
         }
-        
+
 
     }
 

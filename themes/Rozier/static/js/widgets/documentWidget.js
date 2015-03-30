@@ -10,17 +10,12 @@ var DocumentWidget = function () {
     _this.$toggleUploaderButtons = $('[data-document-widget-toggle-uploader]');
     _this.$unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
 
+    _this.$explorer = null;
+    _this.$explorerClose = null;
+    _this.uploader = null;
+
     _this.init();
 };
-
-DocumentWidget.prototype.$explorer = null;
-DocumentWidget.prototype.$explorerClose = null;
-DocumentWidget.prototype.$widgets = null;
-DocumentWidget.prototype.$toggleExplorerButtons = null;
-DocumentWidget.prototype.$unlinkDocumentButtons = null;
-DocumentWidget.prototype.$sortables = null;
-DocumentWidget.prototype.uploader = null;
-
 
 /**
  * Init.

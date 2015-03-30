@@ -414,28 +414,12 @@ class FrontendController extends AppController
             $ns = $this->node->getNodeSources()->first();
 
             if (null !== $ns) {
-                return [
-                    'title' => ($ns->getMetaTitle() != "") ?
-                    $ns->getMetaTitle() :
-                    $ns->getTitle() . ' – ' . SettingsBag::get('site_name'),
-                    'description' => ($ns->getMetaDescription() != "") ?
-                    $ns->getMetaDescription() :
-                    $ns->getTitle() . ', ' . SettingsBag::get('seo_description'),
-                    'keywords' => $ns->getMetaKeywords(),
-                ];
+                return $ns->getHandler()->getSEO();
             }
         }
 
         if (null !== $fallbackNodeSource) {
-            return [
-                'title' => ($fallbackNodeSource->getMetaTitle() != "") ?
-                $fallbackNodeSource->getMetaTitle() :
-                $fallbackNodeSource->getTitle() . ' – ' . SettingsBag::get('site_name'),
-                'description' => ($fallbackNodeSource->getMetaDescription() != "") ?
-                $fallbackNodeSource->getMetaDescription() :
-                $fallbackNodeSource->getTitle() . ', ' . SettingsBag::get('seo_description'),
-                'keywords' => $fallbackNodeSource->getMetaKeywords(),
-            ];
+            return $fallbackNodeSource->getHandler()->getSEO();
         }
 
         return [];

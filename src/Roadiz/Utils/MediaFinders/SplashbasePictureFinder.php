@@ -48,7 +48,7 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
     public function getRandom()
     {
         try {
-            $response = $this->client->get('http://www.splashbase.co/api/v1/images/random');
+            $response = $this->client->get('http://www.splashbase.co/api/v1/images/random?images_only=true');
             $this->feed = $response->json();
 
             if (false !== strpos($this->feed['url'], '.jpg')) {

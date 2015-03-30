@@ -1,8 +1,16 @@
-{% set nodeSource = node.getNodeSources.first %}
+{% if not nodeSource %}
+{% set nodeSource = node.nodeSources.first %}
+{% endif %}
+
+{% set parent = nodeSource|parent %}
+
 {% spaceless %}
 <li class="uk-sortable-list-item nodes-widget-sortable-list-item" data-node-id="{{ node.getId }}">
 	<div class="uk-sortable-handle"></div>
     <div class="node-border" style="background-color:{{ node.nodeType.color }};"></div>
+    {% if parent %}
+    <span class="parent-node-name">{% if parent.title %}{{ parent.title|truncate(26, false, '[…]') }}{% else %}{{ parent.node.nodeName|truncate(26, false, '[…]') }}{% endif %}</span>
+    {% endif %}
 	<span class="node-name">{% if nodeSource.title %}{{ nodeSource.title|truncate(26, false, '[…]') }}{% else %}{{ node.nodeName|truncate(26, false, '[…]') }}{% endif %}</span>
 	<input type="hidden" name="{{ full_name }}" value="{{ node.getId }}" />
 

@@ -7,20 +7,15 @@ NodeTree = function(){
 
     // Selectors
     _this.$content = $('.content-node-tree');
+    _this.$elements = null;
+    _this.$dropdown = null;
 
     // Methods
     if(_this.$content.length){
         _this.$dropdown = _this.$content.find('.uk-dropdown-small');
         _this.init();
     }
-
 };
-
-
-NodeTree.prototype.$content = null;
-NodeTree.prototype.$elements = null;
-NodeTree.prototype.$dropdown = null;
-
 
 /**
  * Init

@@ -76,7 +76,7 @@ class FoldersController extends RozierApp
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, $parentFolderId = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
@@ -234,22 +234,20 @@ class FoldersController extends RozierApp
             $zip = new \ZipArchive();
             $zip->open($file, \ZipArchive::OVERWRITE);
 
-            if ("" != $folder->getEOTFilename()) {
-                $zip->addFile($folder->getEOTAbsolutePath(), $folder->getEOTFilename());
+            $documents = $this->getService('em')
+                       ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                       ->findBy([
+                            'folders' => [$folder]
+                        ]);
+
+            foreach ($documents as $document) {
+                $zip->addFile($document->getAbsolutePath(), $document->getFilename());
             }
-            if ("" != $folder->getSVGFilename()) {
-                $zip->addFile($folder->getSVGAbsolutePath(), $folder->getSVGFilename());
-            }
-            if ("" != $folder->getWOFFFilename()) {
-                $zip->addFile($folder->getWOFFAbsolutePath(), $folder->getWOFFFilename());
-            }
-            if ("" != $folder->getOTFFilename()) {
-                $zip->addFile($folder->getOTFAbsolutePath(), $folder->getOTFFilename());
-            }
+
             // Close and send to users
             $zip->close();
 
-            $filename = StringHandler::slugify($folder->getName() . ' ' . $folder->getReadableVariant()) . '.zip';
+            $filename = StringHandler::slugify($folder->getName()) .'.zip';
 
             $response = new Response(
                 file_get_contents($file),

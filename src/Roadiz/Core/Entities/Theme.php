@@ -171,6 +171,32 @@ class Theme extends AbstractEntity
     }
 
     /**
+     * @ORM\Column(name="route_prefix",type="string", nullable=true)
+     * @var string
+     */
+    private $routePrefix = '';
+
+    /**
+     * @return string
+     */
+    public function getRoutePrefix()
+    {
+        return $this->routePrefix;
+    }
+
+    /**
+     * @param string $routePrefix
+     *
+     * @return $this
+     */
+    public function setRoutePrefix($routePrefix)
+    {
+        $this->routePrefix = $routePrefix;
+
+        return $this;
+    }
+
+    /**
      * @ORM\Column(name="backend", type="boolean")
      * @var boolean
      */

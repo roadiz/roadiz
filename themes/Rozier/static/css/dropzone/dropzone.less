@@ -92,6 +92,9 @@
     border:none;
     box-shadow: none;
     font-size:13px;
+    min-width: 120px;
+    min-height: 120px;
+    background-color: rgba(0,0,0,0.1);
     //overflow: hidden; //prevent error messages to be viewed
 
     .dz-progress{
@@ -122,14 +125,18 @@
     // Success-error icon zone
     .dz-success-mark,
     .dz-error-mark{
-        top:50px; right:0;
+        /*top:50px; right:0;
         width:100%;
         height:30px;
         font-size:16px;
         line-height:30px;
         text-align: center;
         background:#BBBBBB;
-        color:#333;
+        color:#333;*/
+
+        svg {
+            display: none;
+        }
     }
 
     // Error icon
@@ -166,6 +173,7 @@
     }
 }
 
+.dz-details,
 .dz-filename,
 .dz-size{
     display: none;

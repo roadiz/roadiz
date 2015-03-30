@@ -22,7 +22,10 @@
                 {% endspaceless %}
         	</form>
         {% else %}
-            <p class="uk-alert uk-alert-warning">{% trans %}no.nodeType.available.create_one_first{% endtrans %}</p>
+            <div class="content-inner">
+                <p class="uk-alert uk-alert-warning">{% trans %}no.nodeType.available.create_one_first{% endtrans %}</p>
+                <p><a href="{{ path('nodeTypesAddPage') }}" class="uk-button uk-button-primary"><i class="uk-icon-plus"></i> {% trans %}add.a.nodeType{% endtrans %}</a></p>
+            </div>
         {% endif %}
     </article>
 

@@ -34,7 +34,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\ReservedSQLWordException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
@@ -296,16 +295,6 @@ class NodeTypeFieldsController extends RozierApp
     ) {
 
         /*
-         * Check reserved words
-         */
-        if (in_array(strtolower($data['name']), NodeTypeField::$forbiddenNames)) {
-            throw new ReservedSQLWordException($this->getTranslator()->trans(
-                "%field%.is.reserved.word",
-                ['%field%' => $data['name']]
-            ), 1);
-        }
-
-        /*
          * Check existing
          */
         $existing = $this->getService('em')
@@ -359,6 +348,8 @@ class NodeTypeFieldsController extends RozierApp
                             'label' => $this->getTranslator()->trans('name'),
                             'constraints' => [
                                 new NotBlank(),
+                                new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
+                                new \RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString(),
                             ],
                         ])
                         ->add('label', 'text', [

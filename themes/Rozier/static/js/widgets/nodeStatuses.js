@@ -5,15 +5,10 @@ var NodeStatuses = function () {
     _this.$icon = $('.node-status header i');
     _this.$inputs = _this.$containers.find('input[type="checkbox"], input[type="radio"]');
     _this.$item = _this.$containers.find('.node-statuses-item');
+    _this.locked = false;
 
     _this.init();
 };
-
-NodeStatuses.prototype.$containers = null;
-NodeStatuses.prototype.$icon = null;
-NodeStatuses.prototype.$inputs = null;
-NodeStatuses.prototype.$item = null;
-NodeStatuses.prototype.locked = false;
 
 NodeStatuses.prototype.init = function() {
     var _this = this;
@@ -25,6 +20,7 @@ NodeStatuses.prototype.init = function() {
     _this.$inputs.on('change', $.proxy(_this.onChange, _this));
 
     _this.$containers.find(".rz-boolean-checkbox").bootstrapSwitch({
+        size: 'small',
         "onSwitchChange": $.proxy(_this.onChange, _this)
     });
 };
