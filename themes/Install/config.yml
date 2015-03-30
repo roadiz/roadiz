@@ -6,7 +6,7 @@ themeDir: "Install"
 supportedLocale:
     - "en"
     - "fr"
-versionRequire: "0.6.0"
+versionRequire: "0.7.0"
 importFiles:
     roles:
         - "Resources/import/roles.rzt"
