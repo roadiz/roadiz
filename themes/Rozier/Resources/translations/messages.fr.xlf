@@ -1522,6 +1522,10 @@
           <context context-type="linenumber">370</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="font.woff2File" approved="yes">
+        <source>font.woff2File</source>
+        <target xml:lang="fr">Fichier WOFF2</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="145" approved="yes">
         <source>font.otfFile</source>
         <target xml:lang="fr">Fichier OTF/TTF</target>
@@ -5878,38 +5882,63 @@
           <target xml:lang="fr">Déplacer en fin de liste</target>
       </trans-unit>
       <!-- Node tree contextual menu commands -->
-      <trans-unit xml:space="preserve" id="node.hide">
+      <trans-unit xml:space="preserve" id="node.hide" approved="yes">
           <source>node.hide</source>
-          <target xml:lang="fr" state="translated">Cacher</target>
+          <target xml:lang="fr">Cacher</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.show">
+      <trans-unit xml:space="preserve" id="node.show" approved="yes">
           <source>node.show</source>
-          <target xml:lang="fr" state="translated">Rendre visible</target>
+          <target xml:lang="fr">Rendre visible</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.publish">
+      <trans-unit xml:space="preserve" id="node.publish" approved="yes">
           <source>node.publish</source>
-          <target xml:lang="fr" state="translated">Publier</target>
+          <target xml:lang="fr">Publier</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.unpublish">
+      <trans-unit xml:space="preserve" id="node.unpublish" approved="yes">
           <source>node.unpublish</source>
-          <target xml:lang="fr" state="translated">Dépublier</target>
+          <target xml:lang="fr">Dépublier</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.duplicate">
+      <trans-unit xml:space="preserve" id="node.duplicate" approved="yes">
           <source>node.duplicate</source>
-          <target xml:lang="fr" state="translated">Dupliquer</target>
+          <target xml:lang="fr">Dupliquer</target>
       </trans-unit>
       <!-- Some constraints messages -->
-      <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters">
+      <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters" approved="yes">
           <source>string.should.only.contain.latin.characters</source>
-          <target xml:lang="fr" state="translated">La chaîne de caractère ne devrait contenir que des caractères latin non-accentués</target>
+          <target xml:lang="fr">La chaîne de caractères ne devrait contenir que des caractères latins non-accentués</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word">
+      <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word" approved="yes">
           <source>string.should.not.be.a.sql.reserved.word</source>
-          <target xml:lang="fr" state="translated">La chaîne de caractères ne devrait pas être un mot réservé pour SQL</target>
+          <target xml:lang="fr">La chaîne de caractères ne devrait pas être un mot réservé pour SQL</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="This value should not be blank.">
+      <trans-unit xml:space="preserve" id="This value should not be blank." approved="yes">
           <source>This value should not be blank.</source>
-          <target xml:lang="fr" state="translated">Cette valeur ne devrait pas être vide.</target>
+          <target xml:lang="fr">Cette valeur ne devrait pas être vide.</target>
+      </trans-unit>
+      <!-- Font variantes -->
+      <trans-unit xml:space="preserve" id="font_variant.regular">
+          <source>font_variant.regular</source>
+          <target xml:lang="fr" state="translated">Regular</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.italic">
+          <source>font_variant.italic</source>
+          <target xml:lang="fr" state="translated">Italique</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold">
+          <source>font_variant.bold</source>
+          <target xml:lang="fr" state="translated">Gras</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold.italic">
+          <source>font_variant.bold.italic</source>
+          <target xml:lang="fr" state="translated">Gras italique</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light">
+          <source>font_variant.light</source>
+          <target xml:lang="fr" state="translated">Light</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light.italic">
+          <source>font_variant.light.italic</source>
+          <target xml:lang="fr" state="translated">Light italique</target>
       </trans-unit>
     </body>
   </file>

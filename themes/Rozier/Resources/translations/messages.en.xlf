@@ -1522,6 +1522,10 @@
           <context context-type="linenumber">370</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="font.woff2File">
+        <source>font.woff2File</source>
+        <target xml:lang="en" state="translated">WOFF2 font file</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="145" approved="yes">
         <source>font.otfFile</source>
         <target xml:lang="en">OTF font file</target>
@@ -5413,9 +5417,9 @@
           <source>User credentials have expired.</source>
           <target xml:lang="en">User credentials have expired.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="User account is disabled.">
+      <trans-unit xml:space="preserve" id="User account is disabled." approved="yes">
           <source>User account is disabled.</source>
-          <target xml:lang="en" state="translated">User account is disabled.</target>
+          <target xml:lang="en">User account is disabled.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="change.nodes.status" approved="yes">
           <source>change.nodes.status</source>
@@ -5477,29 +5481,29 @@
           <source>nodeType.not_visible</source>
           <target xml:lang="en" state="translated">Invisible node-type</target>
       <alt-trans><target xml:lang="en">Unvisible node-type</target></alt-trans></trans-unit>
-      <trans-unit xml:space="preserve" id="newsletter.nodeType">
+      <trans-unit xml:space="preserve" id="newsletter.nodeType" approved="yes">
           <source>newsletter.nodeType</source>
-          <target xml:lang="en" state="translated">Newsletters reserved type</target>
+          <target xml:lang="en">Newsletters reserved type</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="nodeType.hiding_nodes">
           <source>nodeType.hiding_nodes</source>
           <target xml:lang="en" state="translated">This type hides its node-tree</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="newsletter.%name%.created">
+      <trans-unit xml:space="preserve" id="newsletter.%name%.created" approved="yes">
           <source>newsletter.%name%.created</source>
-          <target xml:lang="en" state="translated">Newsletter “%name%” created.</target>
+          <target xml:lang="en">Newsletter “%name%” created.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="newsletter.%newsletter%.updated.%translation%">
+      <trans-unit xml:space="preserve" id="newsletter.%newsletter%.updated.%translation%" approved="yes">
           <source>newsletter.%newsletter%.updated.%translation%</source>
-          <target xml:lang="en" state="translated">Newsletter “%newsletter%” has been updated for %translation% translation</target>
+          <target xml:lang="en">Newsletter “%newsletter%” has been updated for %translation% translation</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="duplicated.newsletter.%name%">
+      <trans-unit xml:space="preserve" id="duplicated.newsletter.%name%" approved="yes">
           <source>duplicated.newsletter.%name%</source>
-          <target xml:lang="en" state="translated">Newsletter “%name%” duplicated.</target>
+          <target xml:lang="en">Newsletter “%name%” duplicated.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="impossible.duplicate.newsletter.%name%">
+      <trans-unit xml:space="preserve" id="impossible.duplicate.newsletter.%name%" approved="yes">
           <source>impossible.duplicate.newsletter.%name%</source>
-          <target xml:lang="en" state="translated">Impossible to duplicate newsletter “%name%”</target>
+          <target xml:lang="en">Impossible to duplicate newsletter “%name%”</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="see.newsletter">
           <source>see.newsletter</source>
@@ -5910,6 +5914,31 @@
       <trans-unit xml:space="preserve" id="This value should not be blank.">
           <source>This value should not be blank.</source>
           <target xml:lang="en" state="translated">This value should not be blank.</target>
+      </trans-unit>
+      <!-- Font variantes -->
+      <trans-unit xml:space="preserve" id="font_variant.regular">
+          <source>font_variant.regular</source>
+          <target xml:lang="en" state="translated">Regular</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.italic">
+          <source>font_variant.italic</source>
+          <target xml:lang="en" state="translated">Italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold">
+          <source>font_variant.bold</source>
+          <target xml:lang="en" state="translated">Bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold.italic">
+          <source>font_variant.bold.italic</source>
+          <target xml:lang="en" state="translated">Bold italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light">
+          <source>font_variant.light</source>
+          <target xml:lang="en" state="translated">Light</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light.italic">
+          <source>font_variant.light.italic</source>
+          <target xml:lang="en" state="translated">Light italic</target>
       </trans-unit>
     </body>
   </file>
