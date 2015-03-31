@@ -114,6 +114,8 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                 foreach ($c['frontendThemes'] as $theme) {
                     $feClass = $theme->getClassName();
                     $feCollection = $feClass::getRoutes();
+                    $feBackendCollection = $feClass::getBackendRoutes();
+
                     if ($feCollection !== null) {
                         // set host pattern if defined
                         if ($theme->getHostname() != '*' &&
@@ -127,6 +129,12 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                             $feCollection->addPrefix($theme->getRoutePrefix());
                         }
                         $rCollection->addCollection($feCollection);
+                    }
+                    if ($feBackendCollection !== null) {
+                        /*
+                         * Do not prefix or hostname admin routes.
+                         */
+                        $rCollection->addCollection($feBackendCollection);
                     }
                 }
 

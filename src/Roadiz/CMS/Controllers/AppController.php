@@ -271,6 +271,25 @@ class AppController implements ViewableInterface
 
         return null;
     }
+    /**
+     * These routes are used to extend Roadiz back-office.
+     *
+     * @return RouteCollection
+     */
+    public static function getBackendRoutes()
+    {
+        $locator = new FileLocator([
+            static::getResourcesFolder(),
+        ]);
+
+        if (file_exists(static::getResourcesFolder() . '/backend-routes.yml')) {
+            $loader = new YamlFileLoader($locator);
+
+            return $loader->load('backend-routes.yml');
+        }
+
+        return null;
+    }
 
     /**
      * @return string
