@@ -35,7 +35,11 @@
     } only %}
 
     <article class="content content-node-tree">
-        {% include 'widgets/nodeTree/nodeTree.html.twig' with { "nodeTree":specificNodeTree, "node":specificNodeTree.getRootNode } only %}
+        {% include 'widgets/nodeTree/nodeTree.html.twig' with {
+            "nodeTree":specificNodeTree,
+            "node":specificNodeTree.getRootNode,
+            "securityContext":securityContext
+        } only %}
     </article>
 
     {% include 'nodes/actionsMenu.html.twig' %}
