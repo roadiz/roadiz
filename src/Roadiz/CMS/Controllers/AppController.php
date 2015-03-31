@@ -400,10 +400,11 @@ class AppController implements ViewableInterface
      * @param  string        $view       Template file path
      * @param  array         $parameters Twig assigntion array
      * @param  Response|null $response   Optional Response object to customize response parameters
+     * @param  string        $namespace  Twig loader namespace
      *
      * @return Response
      */
-    public function render($view, array $parameters = [], Response $response = null)
+    public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
         if (null === $response) {
             $response = new Response(
@@ -411,6 +412,10 @@ class AppController implements ViewableInterface
                 Response::HTTP_OK,
                 ['content-type' => 'text/html']
             );
+        }
+
+        if ($namespace != "") {
+            $view = '@'.$namespace.'/'.$view;
         }
 
         $response->setContent($this->kernel->container['twig.environment']->render($view, $parameters));

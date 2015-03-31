@@ -31,6 +31,7 @@
 namespace Themes\DefaultTheme\Controllers;
 
 use Symfony\Component\HttpFoundation\Request;
+use Themes\DefaultTheme\DefaultThemeApp;
 use Themes\Rozier\RozierApp;
 
 class AdminController extends RozierApp
@@ -41,7 +42,10 @@ class AdminController extends RozierApp
     ) {
 
         $this->getService('stopwatch')->start('twigRender');
-
-        return $this->render('admin/test.html.twig', $this->assignation);
+        /*
+         * Use a namespace to force using this theme template
+         * and not a other theme one if its filename is the same.
+         */
+        return $this->render('admin/test.html.twig', $this->assignation, null, DefaultThemeApp::getThemeDir());
     }
 }

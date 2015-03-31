@@ -184,7 +184,7 @@ class DefaultThemeApp extends FrontendController
      */
     public static function setupDependencyInjection(Container $container)
     {
-        FrontendController::setupDependencyInjection($container);
+        parent::setupDependencyInjection($container);
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
 
