@@ -31,7 +31,7 @@
 						<td>
 							<a href="{{ path('fontsEditPage', { fontId: font.getId }) }}">{{ font.getName }}</a>
 						</td>
-						<td>{{ font.getReadableVariant }}</td>
+						<td>{{ font.getReadableVariant|trans }}</td>
 						<td class="mobile-hidden">
 							{% if font.getEOTFilename %}<div class="uk-badge uk-badge-table">EOT</div>{% endif %}
 							{% if font.getWOFFFilename %}<div class="uk-badge uk-badge-table">WOFF</div>{% endif %}

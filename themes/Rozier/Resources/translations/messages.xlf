@@ -6023,6 +6023,31 @@
           <target></target>
       </trans-unit>
 
+      <!-- Font variantes -->
+      <trans-unit xml:space="preserve" id="font_variant.regular">
+          <source>font_variant.regular</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.italic">
+          <source>font_variant.italic</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold">
+          <source>font_variant.bold</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold.italic">
+          <source>font_variant.bold.italic</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light">
+          <source>font_variant.light</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light.italic">
+          <source>font_variant.light.italic</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

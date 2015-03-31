@@ -44,14 +44,7 @@ class FontVariantsType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $choices = [
-            Font::REGULAR      => 'regular',
-            Font::BOLD         => 'bold',
-            Font::ITALIC       => 'italic',
-            Font::BOLD_ITALIC  => 'bold italic',
-            Font::LIGHT        => 'light',
-            Font::LIGHT_ITALIC => 'light italic',
-        ];
+        $choices = Font::$variantToHuman;
 
         $resolver->setDefaults([
             'choices' => $choices
