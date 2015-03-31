@@ -89,7 +89,8 @@ class ThemesController extends RozierApp
 
         if ($form->isValid()) {
             try {
-                $this->addTheme($request, $form->getData(), $theme);
+                $data = $form->getData();
+                $this->addTheme($request, $data, $theme);
                 $msg = $this->getTranslator()->trans(
                     'theme.%name%.created',
                     ['%name%' => $theme->getClassName()]
