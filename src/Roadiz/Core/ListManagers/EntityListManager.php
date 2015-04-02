@@ -231,7 +231,6 @@ class EntityListManager
      */
     public function handle($disabled = false)
     {
-
         if (false === $disabled) {
             if ($this->request->query->get('field') &&
                 $this->request->query->get('ordering')) {
@@ -243,7 +242,6 @@ class EntityListManager
             if ($this->request->query->get('search') != "") {
                 $this->searchPattern = $this->request->query->get('search');
                 $this->queryArray['search'] = $this->request->query->get('search');
-                $this->paginator->setSearchPattern($this->request->query->get('search'));
             }
 
             if ($this->request->query->get('item_per_page') != "") {
@@ -259,6 +257,12 @@ class EntityListManager
         }
 
         $this->createPaginator();
+
+        if (false === $disabled) {
+            if ($this->request->query->get('search') != "") {
+                $this->paginator->setSearchPattern($this->request->query->get('search'));
+            }
+        }
     }
 
     /**

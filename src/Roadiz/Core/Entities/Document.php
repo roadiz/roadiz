@@ -81,6 +81,7 @@ class Document extends AbstractDateTimed
         'video/mp4' => 'video',
         'video/quicktime' => 'video',
         'video/x-flv' => 'video',
+        'application/epub+zip' => 'epub',
         'application/gzip' => 'archive',
         'application/zip' => 'archive',
         'application/x-bzip2' => 'archive',
@@ -183,7 +184,7 @@ class Document extends AbstractDateTimed
      */
     public function isImage()
     {
-        return static::$mimeToIcon[$this->getMimeType()] == 'image';
+        return isset(static::$mimeToIcon[$this->getMimeType()]) && static::$mimeToIcon[$this->getMimeType()] == 'image';
     }
     /**
      * Is current document a video.
@@ -192,7 +193,7 @@ class Document extends AbstractDateTimed
      */
     public function isVideo()
     {
-        return static::$mimeToIcon[$this->getMimeType()] == 'video';
+        return isset(static::$mimeToIcon[$this->getMimeType()]) && static::$mimeToIcon[$this->getMimeType()] == 'video';
     }
     /**
      * Is current document an audio file.
@@ -201,7 +202,7 @@ class Document extends AbstractDateTimed
      */
     public function isAudio()
     {
-        return static::$mimeToIcon[$this->getMimeType()] == 'audio';
+        return isset(static::$mimeToIcon[$this->getMimeType()]) && static::$mimeToIcon[$this->getMimeType()] == 'audio';
     }
 
     /**
