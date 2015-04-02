@@ -202,7 +202,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             /*
              * If the only url token is for language, return Home page
              */
-            if (in_array($tokens[0], Translation::getAvailableLocalesShortcuts()) &&
+            if (in_array($tokens[0], Translation::getAvailableLocales()) &&
                 count($tokens) == 1) {
                 if ($this->getThemeController()->getHomeNode() !== null) {
                     $node = $this->getThemeController()->getHomeNode();
@@ -255,7 +255,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             /*
              * If the only url token if for language, return no url alias !
              */
-            if (in_array($tokens[0], Translation::getAvailableLocalesShortcuts()) &&
+            if (in_array($tokens[0], Translation::getAvailableLocales()) &&
                 count($tokens) == 1) {
                 return null;
             } else {

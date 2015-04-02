@@ -30,10 +30,10 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\TranslationHandler;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Translations describe language locales to be used by Nodes,
@@ -53,56 +53,195 @@ class Translation extends AbstractDateTimed
      * @var array
      */
     public static $availableLocales = [
-        "fr"         => "French", // France
-        "en"         => "English",
-        "it"         => "Italian",
-        "es"         => "Spanish",
-        "nl"         => "Dutch",
-        "de"         => "German",
-        "zh"         => "Chinese (China)",
-        "ja"         => "Japanese"
+        'aa' => 'Afar',
+        'ab' => 'Abkhaz',
+        'ae' => 'Avestan',
+        'af' => 'Afrikaans',
+        'ak' => 'Akan',
+        'am' => 'Amharic',
+        'an' => 'Aragonese',
+        'ar' => 'Arabic',
+        'as' => 'Assamese',
+        'av' => 'Avaric',
+        'ay' => 'Aymara',
+        'az' => 'Azerbaijani',
+        'ba' => 'Bashkir',
+        'be' => 'Belarusian',
+        'bg' => 'Bulgarian',
+        'bh' => 'Bihari',
+        'bi' => 'Bislama',
+        'bm' => 'Bambara',
+        'bn' => 'Bengali',
+        'bo' => 'Tibetan Standard, Tibetan, Central',
+        'br' => 'Breton',
+        'bs' => 'Bosnian',
+        'ca' => 'Catalan; Valencian',
+        'ce' => 'Chechen',
+        'ch' => 'Chamorro',
+        'co' => 'Corsican',
+        'cr' => 'Cree',
+        'cs' => 'Czech',
+        'cv' => 'Chuvash',
+        'cy' => 'Welsh',
+        'da' => 'Danish',
+        'de' => 'German',
+        'dv' => 'Divehi; Dhivehi; Maldivian;',
+        'dz' => 'Dzongkha',
+        'ee' => 'Ewe',
+        'el' => 'Greek, Modern',
+        'en' => 'English',
+        'eo' => 'Esperanto',
+        'es' => 'Spanish; Castilian',
+        'et' => 'Estonian',
+        'eu' => 'Basque',
+        'fa' => 'Persian',
+        'ff' => 'Fula; Fulah; Pulaar; Pular',
+        'fi' => 'Finnish',
+        'fj' => 'Fijian',
+        'fo' => 'Faroese',
+        'fr' => 'French',
+        'fy' => 'Western Frisian',
+        'ga' => 'Irish',
+        'gd' => 'Scottish Gaelic; Gaelic',
+        'gl' => 'Galician',
+        'gn' => 'GuaranÃ­',
+        'gu' => 'Gujarati',
+        'gv' => 'Manx',
+        'ha' => 'Hausa',
+        'he' => 'Hebrew (modern)',
+        'hi' => 'Hindi',
+        'ho' => 'Hiri Motu',
+        'hr' => 'Croatian',
+        'ht' => 'Haitian; Haitian Creole',
+        'hu' => 'Hungarian',
+        'hy' => 'Armenian',
+        'hz' => 'Herero',
+        'ia' => 'Interlingua',
+        'id' => 'Indonesian',
+        'ie' => 'Interlingue',
+        'ig' => 'Igbo',
+        'ii' => 'Nuosu',
+        'ik' => 'Inupiaq',
+        'io' => 'Ido',
+        'is' => 'Icelandic',
+        'it' => 'Italian',
+        'iu' => 'Inuktitut',
+        'ja' => 'Japanese (ja)',
+        'jv' => 'Javanese (jv)',
+        'ka' => 'Georgian',
+        'kg' => 'Kongo',
+        'ki' => 'Kikuyu, Gikuyu',
+        'kj' => 'Kwanyama, Kuanyama',
+        'kk' => 'Kazakh',
+        'kl' => 'Kalaallisut, Greenlandic',
+        'km' => 'Khmer',
+        'kn' => 'Kannada',
+        'ko' => 'Korean',
+        'kr' => 'Kanuri',
+        'ks' => 'Kashmiri',
+        'ku' => 'Kurdish',
+        'kv' => 'Komi',
+        'kw' => 'Cornish',
+        'ky' => 'Kirghiz, Kyrgyz',
+        'la' => 'Latin',
+        'lb' => 'Luxembourgish, Letzeburgesch',
+        'lg' => 'Luganda',
+        'li' => 'Limburgish, Limburgan, Limburger',
+        'ln' => 'Lingala',
+        'lo' => 'Lao',
+        'lt' => 'Lithuanian',
+        'lu' => 'Luba-Katanga',
+        'lv' => 'Latvian',
+        'mg' => 'Malagasy',
+        'mh' => 'Marshallese',
+        'mi' => 'Maori',
+        'mk' => 'Macedonian',
+        'ml' => 'Malayalam',
+        'mn' => 'Mongolian',
+        'mr' => 'Marathi (Mara?hi)',
+        'ms' => 'Malay',
+        'mt' => 'Maltese',
+        'my' => 'Burmese',
+        'na' => 'Nauru',
+        'nb' => 'Norwegian BokmÃ¥l',
+        'nd' => 'North Ndebele',
+        'ne' => 'Nepali',
+        'ng' => 'Ndonga',
+        'nl' => 'Dutch',
+        'nn' => 'Norwegian Nynorsk',
+        'no' => 'Norwegian',
+        'nr' => 'South Ndebele',
+        'nv' => 'Navajo, Navaho',
+        'ny' => 'Chichewa; Chewa; Nyanja',
+        'oc' => 'Occitan',
+        'oj' => 'Ojibwe, Ojibwa',
+        'om' => 'Oromo',
+        'or' => 'Oriya',
+        'os' => 'Ossetian, Ossetic',
+        'pa' => 'Panjabi, Punjabi',
+        'pi' => 'Pali',
+        'pl' => 'Polish',
+        'ps' => 'Pashto, Pushto',
+        'pt' => 'Portuguese',
+        'qu' => 'Quechua',
+        'rm' => 'Romansh',
+        'rn' => 'Kirundi',
+        'ro' => 'Romanian, Moldavian, Moldovan',
+        'ru' => 'Russian',
+        'rw' => 'Kinyarwanda',
+        'sa' => 'Sanskrit (Sa?sk?ta)',
+        'sc' => 'Sardinian',
+        'sd' => 'Sindhi',
+        'se' => 'Northern Sami',
+        'sg' => 'Sango',
+        'si' => 'Sinhala, Sinhalese',
+        'sk' => 'Slovak',
+        'sl' => 'Slovene',
+        'sm' => 'Samoan',
+        'sn' => 'Shona',
+        'so' => 'Somali',
+        'sq' => 'Albanian',
+        'sr' => 'Serbian',
+        'ss' => 'Swati',
+        'st' => 'Southern Sotho',
+        'su' => 'Sundanese',
+        'sv' => 'Swedish',
+        'sw' => 'Swahili',
+        'ta' => 'Tamil',
+        'te' => 'Telugu',
+        'tg' => 'Tajik',
+        'th' => 'Thai',
+        'ti' => 'Tigrinya',
+        'tk' => 'Turkmen',
+        'tl' => 'Tagalog',
+        'tn' => 'Tswana',
+        'to' => 'Tonga (Tonga Islands)',
+        'tr' => 'Turkish',
+        'ts' => 'Tsonga',
+        'tt' => 'Tatar',
+        'tw' => 'Twi',
+        'ty' => 'Tahitian',
+        'ug' => 'Uighur, Uyghur',
+        'uk' => 'Ukrainian',
+        'ur' => 'Urdu',
+        'uz' => 'Uzbek',
+        've' => 'Venda',
+        'vi' => 'Vietnamese',
+        'vo' => 'VolapÃ¼k',
+        'wa' => 'Walloon',
+        'wo' => 'Wolof',
+        'xh' => 'Xhosa',
+        'yi' => 'Yiddish',
+        'yo' => 'Yoruba',
+        'za' => 'Zhuang, Chuang',
+        'zh' => 'Chinese',
+        'zu' => 'Zulu',
     ];
-    /**
-     * Associates locales to *famfamfam* flag files names.
-     *
-     * @var array
-     */
-    public static $availableLocalesFlags = [
-        "fr"         => "fr.png", // France
-        "en"         => "us.png",
-        "it"         => "it.png",
-        "es"         => "es.png",
-        "nl"         => "nl.png",
-        "de"         => "de.png",
-        "zh"         => "cn.png",
-        "ja"         => "jp.png"
-    ];
-
-    /**
-     * Associates short locales (2 letters)
-     * with locales (language_Country).
-     *
-     * @var array
-     */
-    public static $availableLocalesShortcut = [
-        'fr' => "fr_FR", // France
-        'en' => "en_US",
-        'it' => "it_IT",
-        'es' => "es_ES",
-        'nl' => "nl_NL",
-        'de' => "de_DE",
-        'zh' => "zh_CN",
-        'sg' => "zh_SG",
-        'hk' => "zh_HK",
-        'tw' => "zh_TW",
-        'jp' => "ja_JP"
-    ];
-
 
     /**
      * Language locale
      *
-     * fr_FR or en_US for example
+     * fr or en for example
      *
      * @ORM\Column(type="string", unique=true, length=10)
      */
@@ -126,14 +265,6 @@ class Translation extends AbstractDateTimed
         $this->locale = $locale;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLongLocale()
-    {
-        return static::$availableLocalesShortcut[$this->getLocale()];
     }
 
     /**
@@ -214,10 +345,9 @@ class Translation extends AbstractDateTimed
      */
     public function getOneLineSummary()
     {
-        return $this->getId()." — ".$this->getName()." — ".$this->getLocale().
-            " — Available : ".($this->isAvailable()?'true':'false').PHP_EOL;
+        return $this->getId() . " — " . $this->getName() . " — " . $this->getLocale() .
+        " — Available : " . ($this->isAvailable() ? 'true' : 'false') . PHP_EOL;
     }
-
 
     /**
      * Return available locales in an array.
@@ -227,16 +357,6 @@ class Translation extends AbstractDateTimed
     public static function getAvailableLocales()
     {
         return array_keys(static::$availableLocales);
-    }
-
-    /**
-     * Return available locales shotcuts in an array.
-     *
-     * @return array
-     */
-    public static function getAvailableLocalesShortcuts()
-    {
-        return array_keys(static::$availableLocalesShortcut);
     }
 
     /**
@@ -287,8 +407,8 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-    * @return TranslationViewer
-    */
+     * @return TranslationViewer
+     */
     public function getViewer()
     {
         return new TranslationViewer($this);
