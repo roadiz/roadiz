@@ -6,6 +6,7 @@ themeDir: "Install"
 supportedLocale:
     - "en"
     - "fr"
+    - "ru"
 versionRequire: "0.7.0"
 importFiles:
     roles:

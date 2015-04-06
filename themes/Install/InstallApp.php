@@ -308,6 +308,7 @@ class InstallApp extends AppController
                             'choices' => [
                                 'en' => 'English',
                                 'fr' => 'Français',
+                                'ru' => 'Русский язык'
                             ],
                             'constraints' => [
                                 new NotBlank(),
