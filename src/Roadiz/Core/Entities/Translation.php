@@ -42,7 +42,9 @@ use RZ\Roadiz\Core\Viewers\TranslationViewer;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\TranslationRepository")
  * @ORM\Table(name="translations", indexes={
  *     @ORM\Index(columns={"available"}),
- *     @ORM\Index(columns={"default_translation"})
+ *     @ORM\Index(columns={"default_translation"}),
+ *     @ORM\Index(columns={"created_at"}),
+ *     @ORM\Index(columns={"updated_at"})
  * })
  */
 class Translation extends AbstractDateTimed

@@ -36,7 +36,10 @@ use Doctrine\ORM\Mapping as ORM;
  * Log Entity
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @ORM\Table(name="log")
+ * @ORM\Table(name="log", indexes={
+ *     @ORM\Index(columns={"datetime"}),
+ *     @ORM\Index(columns={"level"})
+ * })
  * @ORM\HasLifecycleCallbacks
  */
 class Log extends AbstractEntity

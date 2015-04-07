@@ -35,8 +35,6 @@ use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
- *
- *
  * @ORM\MappedSuperclass
  */
 abstract class AbstractField extends AbstractPositioned implements PersistableInterface

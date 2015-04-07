@@ -48,6 +48,8 @@ use RZ\Roadiz\Utils\StringHandler;
  *     @ORM\Index(columns={"locked"}),
  *     @ORM\Index(columns={"sterile"}),
  *     @ORM\Index(columns={"position"}),
+ *     @ORM\Index(columns={"created_at"}),
+ *     @ORM\Index(columns={"updated_at"}),
  *     @ORM\Index(columns={"hide_children"}),
  *     @ORM\Index(columns={"home"})
  * })
