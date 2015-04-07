@@ -671,10 +671,10 @@ class AppController implements ViewableInterface
 
         switch ($level) {
             case 'error':
-                $this->getService('logger')->error($msg, [], $source);
+                $this->getService('logger')->error($msg, ['source' => $source]);
                 break;
             default:
-                $this->getService('logger')->info($msg, [], $source);
+                $this->getService('logger')->info($msg, ['source' => $source]);
                 break;
         }
     }

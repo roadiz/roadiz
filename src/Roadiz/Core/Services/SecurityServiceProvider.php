@@ -33,8 +33,8 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\UserProvider;
+use RZ\Roadiz\Core\Log\DoctrineHandler;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Log\Logger;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -54,6 +54,8 @@ use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 /**
  * Register security services for dependency injection container.
@@ -108,10 +110,16 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['logger'] = function ($c) {
-            $logger = new Logger();
-            $logger->setSecurityContext($c['securityContext']);
+            $log = new Logger('roadiz');
+            $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz.log', Logger::WARNING));
+            $log->pushHandler(new DoctrineHandler(
+                $c['em'],
+                $c['securityContext'],
+                Kernel::getInstance()->getRequest(),
+                Logger::INFO
+            ));
 
-            return $logger;
+            return $log;
         };
 
         $container['contextListener'] = function ($c) {
