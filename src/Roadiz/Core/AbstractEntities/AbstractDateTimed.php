@@ -37,6 +37,10 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
+ * @ORM\Table(indexes={
+ *     @ORM\Index(columns={"created_at"}),
+ *     @ORM\Index(columns={"updated_at"})
+ * })
  */
 abstract class AbstractDateTimed extends AbstractEntity
 {

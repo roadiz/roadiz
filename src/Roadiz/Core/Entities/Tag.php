@@ -44,7 +44,9 @@ use RZ\Roadiz\Utils\StringHandler;
  * @ORM\Table(name="tags", indexes={
  *     @ORM\Index(columns={"visible"}),
  *     @ORM\Index(columns={"locked"}),
- *     @ORM\Index(columns={"position"})
+ *     @ORM\Index(columns={"position"}),
+ *     @ORM\Index(columns={"created_at"}),
+ *     @ORM\Index(columns={"updated_at"})
  * })
  */
 class Tag extends AbstractDateTimedPositioned
