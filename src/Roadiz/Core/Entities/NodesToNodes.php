@@ -41,7 +41,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesToNodesRepository")
  * @ORM\Table(name="nodes_to_nodes", indexes={
- *     @ORM\Index(name="position_nodestonodes_idx", columns={"position"})
+ *     @ORM\Index(columns={"position"})
  * })
  */
 class NodesToNodes extends AbstractPositioned implements PersistableInterface

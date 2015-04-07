@@ -42,7 +42,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesCustomFormsRepository")
  * @ORM\Table(name="nodes_custom_forms", indexes={
- *     @ORM\Index(name="position_nodescustomforms_idx", columns={"position"})
+ *     @ORM\Index(columns={"position"})
  * })
  */
 class NodesCustomForms extends AbstractPositioned implements PersistableInterface

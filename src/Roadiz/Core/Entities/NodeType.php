@@ -41,9 +41,9 @@ use RZ\Roadiz\Utils\StringHandler;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodeTypeRepository")
  * @ORM\Table(name="node_types", indexes={
- *     @ORM\Index(name="visible_nodetype_idx",         columns={"visible"}),
- *     @ORM\Index(name="newsletter_type_nodetype_idx", columns={"newsletter_type"}),
- *     @ORM\Index(name="hiding_nodes_nodetype_idx",    columns={"hiding_nodes"})
+ *     @ORM\Index(columns={"visible"}),
+ *     @ORM\Index(columns={"newsletter_type"}),
+ *     @ORM\Index(columns={"hiding_nodes"})
  * })
  */
 class NodeType extends AbstractEntity

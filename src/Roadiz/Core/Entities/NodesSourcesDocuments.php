@@ -41,7 +41,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesDocumentsRepository")
  * @ORM\Table(name="nodes_sources_documents", indexes={
- *     @ORM\Index(name="position_nodessourcesdocuments_idx", columns={"position"})
+ *     @ORM\Index(columns={"position"})
  * })
  */
 class NodesSourcesDocuments extends AbstractPositioned implements PersistableInterface

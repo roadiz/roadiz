@@ -38,9 +38,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\ThemeRepository")
  * @ORM\Table(name="themes", indexes={
- *      @ORM\Index(name="backend_theme_idx", columns={"backend"}),
- *      @ORM\Index(name="available_theme_idx", columns={"available"}),
- *      @ORM\Index(name="static_theme_theme_idx", columns={"static_theme"})
+ *      @ORM\Index(columns={"backend"}),
+ *      @ORM\Index(columns={"available"}),
+ *      @ORM\Index(columns={"static_theme"})
  * })
  */
 class Theme extends AbstractEntity

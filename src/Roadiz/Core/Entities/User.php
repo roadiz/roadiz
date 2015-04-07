@@ -46,9 +46,9 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\UserRepository")
  * @ORM\Table(name="users", indexes={
- *     @ORM\Index(name="enabled_users_idx",   columns={"enabled"}),
- *     @ORM\Index(name="expired_users_idx",   columns={"expired"}),
- *     @ORM\Index(name="expiresat_users_idx", columns={"expires_at"})
+ *     @ORM\Index(columns={"enabled"}),
+ *     @ORM\Index(columns={"expired"}),
+ *     @ORM\Index(columns={"expires_at"})
  * })
  * @ORM\HasLifecycleCallbacks
  */

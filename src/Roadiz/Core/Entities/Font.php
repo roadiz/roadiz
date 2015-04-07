@@ -39,7 +39,7 @@ use RZ\Roadiz\Utils\StringHandler;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FontRepository")
  * @ORM\Table(name="fonts",uniqueConstraints={
- *     @ORM\UniqueConstraint(name="name_variant_idx", columns={"name", "variant"})})
+ *     @ORM\UniqueConstraint(columns={"name", "variant"})})
  */
 class Font extends AbstractDateTimed
 {
