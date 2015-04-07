@@ -171,7 +171,7 @@ class DefaultThemeApp extends FrontendController
         $this->assignation['errorMessage'] = $message;
 
         return new Response(
-            $this->getTwig()->render('404.html.twig', $this->assignation),
+            $this->getTwig()->render('@DefaultTheme/404.html.twig', $this->assignation),
             Response::HTTP_NOT_FOUND,
             ['content-type' => 'text/html']
         );

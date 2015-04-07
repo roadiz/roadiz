@@ -20,7 +20,7 @@
     </header>
 
     <article class="content content-node-edit">
-        {% form_theme form 'forms.html.twig' %}
+        {% form_theme form '@Rozier/forms.html.twig' %}
         <form id="edit-node-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
@@ -54,7 +54,7 @@
         <hr />
         <h2 id="add-node-translation">{% trans %}add.stack.type{% endtrans %}</h2>
 
-        {% form_theme stackTypesForm 'forms.html.twig' %}
+        {% form_theme stackTypesForm '@Rozier/forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(stackTypesForm) }}>
             {{ form_widget(stackTypesForm) }}
             <fieldset data-uk-margin>
@@ -83,7 +83,7 @@
         {% if translationForm %}
         <hr />
         <h2 id="add-node-translation">{% trans %}translate.node{% endtrans %}</h2>
-        {% form_theme translationForm 'forms.html.twig' %}
+        {% form_theme translationForm '@Rozier/forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(translationForm) }}>
             {{ form_widget(translationForm) }}
             <fieldset data-uk-margin>

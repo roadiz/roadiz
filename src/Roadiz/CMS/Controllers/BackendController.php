@@ -60,6 +60,8 @@ class BackendController extends AppController
      */
     public static function setupDependencyInjection(Container $container)
     {
+        parent::setupDependencyInjection($container);
+
         $container->extend('firewallMap', function (FirewallMap $map, $c) {
 
             /*

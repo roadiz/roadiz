@@ -435,6 +435,8 @@ class FrontendController extends AppController
      */
     public static function setupDependencyInjection(Container $container)
     {
+        parent::setupDependencyInjection($container);
+
         $container->extend('firewallMap', function (FirewallMap $map, Container $c) {
             /*
              * Prepare app firewall
@@ -454,20 +456,6 @@ class FrontendController extends AppController
             $map->add($requestMatcher, $listeners, $c['firewallExceptionListener']);
 
             return $map;
-        });
-
-        /*
-         * Enable frontend theme to extends backoffice and using FrontendTheme twig templates.
-         */
-        $container->extend('twig.loaderFileSystem', function (\Twig_Loader_Filesystem $loader, $c) {
-            if (!in_array(static::getViewsFolder(), $loader->getPaths())) {
-                $loader->addPath(static::getViewsFolder());
-                // Add path into a namespaced loader to enable using same template name
-                // over different static themes.
-                $loader->addPath(static::getViewsFolder(), static::getThemeDir());
-            }
-
-            return $loader;
         });
     }
 }

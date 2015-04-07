@@ -4,12 +4,12 @@
 <section class="content-global">
 
     <header class="content-header header-setting header-setting-add">
-        <h1 class="content-title setting-list-title">{% trans %}add.a.setting{% endtrans %}</h1>  
+        <h1 class="content-title setting-list-title">{% trans %}add.a.setting{% endtrans %}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('settingsHomePage') }}" title="{% trans %}back_to.settings{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-setting-add">
-    	{% form_theme form 'forms.html.twig' %}
+    	{% form_theme form '@Rozier/forms.html.twig' %}
         <form id="add-setting-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
     	    <fieldset data-uk-margin>

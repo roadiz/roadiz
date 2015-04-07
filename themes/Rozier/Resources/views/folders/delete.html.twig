@@ -6,7 +6,7 @@
         <h1 class="content-title document-delete-title">{{ "delete.folder.%name%"|trans({'%name%': folder.getName})|truncate(25, true, '[…]') }}</h1>
     </header>
     <article class="content content-delete content-no-action-menu">
-		{% form_theme form 'forms.html.twig' %}
+		{% form_theme form '@Rozier/forms.html.twig' %}
 		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}
 		    <fieldset data-uk-margin>

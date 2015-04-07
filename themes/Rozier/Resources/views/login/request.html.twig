@@ -26,7 +26,7 @@
         <div data-uk-alert class="uk-alert uk-alert-danger">{{ error }}</div>
         {% endif %}
 
-       	{% form_theme form 'forms.html.twig' %}
+       	{% form_theme form '@Rozier/forms.html.twig' %}
         <form method="post" id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
     	    <fieldset>

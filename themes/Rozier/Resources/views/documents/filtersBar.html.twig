@@ -47,7 +47,7 @@
                 <a class="uk-button uk-button-bulk uk-button-danger uk-button-bulk-delete uk-button-bulk-delete-documents" href="#" title="{% trans %}bulk.delete.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
 
                 <div class="bulk-folder-cont documents-bulk-folder-cont">
-                    {% form_theme joinFolderForm 'forms.html.twig' %}
+                    {% form_theme joinFolderForm '@Rozier/forms.html.twig' %}
                     <form class="uk-form uk-form-horizontal document-bulk-folder-form" action="#" method="post" {{ form_enctype(joinFolderForm) }}>
                         {{ form_widget(joinFolderForm) }}
                     </form>

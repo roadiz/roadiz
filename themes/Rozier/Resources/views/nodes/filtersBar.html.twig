@@ -59,7 +59,7 @@
                 {% endif %}
 
                 {% if deleteNodesForm %}
-                    {% form_theme deleteNodesForm 'forms.html.twig' %}
+                    {% form_theme deleteNodesForm '@Rozier/forms.html.twig' %}
                     <form class="uk-form uk-form-horizontal node-bulk-delete-form" action="{{ path('nodesBulkDeletePage') }}" method="get" {{ form_enctype(deleteNodesForm) }}>
                         {{ form_widget(deleteNodesForm) }}
 
@@ -72,7 +72,7 @@
                 {# Forms #}
                 {% if tagNodesForm %}
                     <div class="bulk-folder-cont nodes-bulk-folder-cont">
-                        {% form_theme tagNodesForm 'forms.html.twig' %}
+                        {% form_theme tagNodesForm '@Rozier/forms.html.twig' %}
                         <form class="uk-form uk-form-horizontal node-bulk-tag-form" action="#" method="post" {{ form_enctype(tagNodesForm) }}>
                             {{ form_widget(tagNodesForm) }}
                         </form>
@@ -80,7 +80,7 @@
                 {% endif %}
                 {% if statusNodesForm %}
                     <div class="bulk-status-cont nodes-bulk-status-cont">
-                        {% form_theme statusNodesForm 'forms.html.twig' %}
+                        {% form_theme statusNodesForm '@Rozier/forms.html.twig' %}
                         <form class="uk-form uk-form-horizontal node-bulk-status-form" action="{{ path('nodesBulkStatusPage') }}" method="get" {{ form_enctype(statusNodesForm) }}>
                             {{ form_widget(statusNodesForm) }}
                         </form>
