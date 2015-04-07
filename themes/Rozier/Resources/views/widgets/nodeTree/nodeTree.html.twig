@@ -36,7 +36,7 @@
                 {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}>
             {% for cnode in nodeTree.getNodes %}
                 {% if not cnode.nodetype.newsletterType %}
-                    {% include 'widgets/nodeTree/singleNode.html.twig' with {
+                    {% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
                         "node":cnode,
                         "nodeTree":nodeTree,
                         "securityContext":securityContext,

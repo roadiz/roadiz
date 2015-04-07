@@ -5,7 +5,7 @@
 
     <header class="content-header header-tags header-tags-add">
         <h1 class="content-title nodes-list-title">{% trans %}add.a.tag{% endtrans %}</h1>
-        {% include 'tags/navBack.html.twig' with {} only %}
+        {% include '@Rozier/tags/navBack.html.twig' with {} only %}
     </header>
 
     <article class="content content-tags-add">
@@ -23,6 +23,6 @@
     	</form>
     </article>
 
-    {% include 'tags/actionsMenu.html.twig' %}
+    {% include '@Rozier/tags/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

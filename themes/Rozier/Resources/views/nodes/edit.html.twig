@@ -10,13 +10,13 @@
 <section class="content-global manage-node">
 
     <header class="content-header header-node header-node-edit">
-        {% include 'nodes/breadcrumb.html.twig' with {"node": node, "securityContext": securityContext} only %}
+        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node, "securityContext": securityContext} only %}
         <h1 class="content-title node-edit-title">
             {{ "edit.node.%name%"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
-            {% include 'nodes/nodeTypeCircle.html.twig' %}
+            {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
-        {% include 'nodes/navBack.html.twig' %}
-        {% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}
+        {% include '@Rozier/nodes/navBack.html.twig' %}
+        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'edit'} %}
     </header>
 
     <article class="content content-node-edit">
@@ -95,6 +95,6 @@
         {% endif %}
     </article>
 
-    {% include 'nodes/actionsMenu.html.twig' %}
+    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

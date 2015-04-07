@@ -6,8 +6,8 @@
 
     <header class="content-header header-document header-document-edit">
         <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.getFilename})|truncate(25, true, '[…]') }}</h1>
-        {% include 'documents/navBar.html.twig' with {'document':document, current:'metas'} %}
-        {% include 'document-translations/translationBar.html.twig' with {"current": translation.getId} %}
+        {% include '@Rozier/documents/navBar.html.twig' with {'document':document, current:'metas'} %}
+        {% include '@Rozier/document-translations/translationBar.html.twig' with {"current": translation.getId} %}
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('documentsHomePage') }}" title="{% trans %}back_to.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
@@ -26,6 +26,6 @@
     	</form>
     </article>
 
-	{% include 'documents/actionsMenu.html.twig' %}
+	{% include '@Rozier/documents/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

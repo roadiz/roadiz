@@ -144,7 +144,7 @@
 	 #}
 	{% if not node.isHidingChildren and not node.nodeType.isHidingNodes %}
 		{% for subNode in nodeTree.getChildrenNodes(node) %}
-			{% include 'widgets/nodeTree/singleNode.html.twig' with {
+			{% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
 				"node":subNode,
 				"parent":node,
 				"nodeTree":nodeTree,

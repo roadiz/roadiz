@@ -7,7 +7,7 @@
     <header class="content-header header-user header-user-edit">
         <h1 class="content-title user-add-title">{{ "edit.user.%name%"|trans({'%name%': user.username })|truncate(25, true, '[…]') }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('usersHomePage') }}" title="{% trans %}back_to.users{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
-	    {% include 'users/navBar.html.twig' with {'user':user, current:'edit'} %}
+	    {% include '@Rozier/users/navBar.html.twig' with {'user':user, current:'edit'} %}
     </header>
 
     <article class="content content-edit">
@@ -25,6 +25,6 @@
     	</form>
     </article>
 
-    {% include 'users/actionsMenu.html.twig' %}
+    {% include '@Rozier/users/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

@@ -6,7 +6,7 @@
     {% if settingGroup %}
     <header class="content-header header-setting header-setting-add">
 	   <h1 class="content-title setting-list-title">{{ "%group%.settings"|trans({'%group%':settingGroup.getName}) }}</h1>
-	   {% include 'widgets/countFiltersBar.html.twig' %}
+	   {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
     </header>
     {% else %}
     <header class="content-header header-setting header-setting-add">
@@ -18,11 +18,11 @@
 	        	<a class="uk-button rz-no-ajax-link" href="{{ path('settingsExportAllPage') }}"><i class="uk-icon-rz-download"></i> {% trans %}export{% endtrans %}</a>
 	        </nav>
 	   </div>
-	   {% include 'widgets/countFiltersBar.html.twig' %}
+	   {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
     </header>
     {% endif %}
 
-	{% include 'widgets/filtersBar.html.twig' %}
+	{% include '@Rozier/widgets/filtersBar.html.twig' %}
 
 	<article class="content content-no-action-menu content-settings-list">
         <div class="content-table-cont">

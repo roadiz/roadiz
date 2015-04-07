@@ -46,7 +46,7 @@
 	 # We will have to check after OR inside drag status
 	 #}
 	{% for subNode in tagTree.getChildrenTags(tag) %}
-		{% include 'widgets/tagTree/singleTag.html.twig' with {"tag":subNode, "parent":tag, "tagTree":tagTree} %}
+		{% include '@Rozier/widgets/tagTree/singleTag.html.twig' with {"tag":subNode, "parent":tag, "tagTree":tagTree} %}
 	{% endfor %}
 	</ul>
 </li>

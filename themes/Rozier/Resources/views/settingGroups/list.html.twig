@@ -5,7 +5,7 @@
 <section class="content-global content-nav-and-filters">
 	<header class="content-header header-settingGroup header-settingGroup-add">
 	   <h1 class="content-title settingGroup-list-title">{% trans %}settingGroups{% endtrans %}</h1>
-	   {% include 'widgets/countFiltersBar.html.twig' %}
+	   {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
 	   <div class="content-header-action-menu">
 	        <nav>
 	        	<a class="uk-button" href="{{ path('settingGroupsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.a.settingGroup{% endtrans %}</a>
@@ -13,7 +13,7 @@
 	   </div>
     </header>
 
-	{% include 'widgets/filtersBar.html.twig' %}
+	{% include '@Rozier/widgets/filtersBar.html.twig' %}
 
 	<article class="content content-no-action-menu content-settingGroups-list">
         <div class="content-table-cont">

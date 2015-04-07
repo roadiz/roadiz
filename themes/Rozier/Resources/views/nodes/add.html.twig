@@ -7,7 +7,7 @@
     	<h1 class="content-title">{% trans %}add.a.node{% endtrans %}</h1>
     	{% if type %}<h2><em>{{ type.getDisplayName }}</em></h2>{% endif %}
     	{% if parentNode %}<h2><em>{% trans %}In{% endtrans %}</em> {{ parentNode.getNodeName }}</h2>{% endif %}
-        {% include 'nodes/navBack.html.twig' %}
+        {% include '@Rozier/nodes/navBack.html.twig' %}
     </header>
 
     <article class="content content-no-action-menu">

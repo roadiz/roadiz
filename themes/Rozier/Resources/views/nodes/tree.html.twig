@@ -4,15 +4,15 @@
 <section class="content-global stack-tree">
 
     <header class="content-header header-node header-nodes-tree">
-        {% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node} only %}
         <h1 class="content-title node-edit-title">
             {{ source.getTitle|truncate(25, true, '[…]') }}{% if specificNodeTree.tag %} ({{ specificNodeTree.tag.translatedTags.first.name }}){% endif %}
-            {% include 'nodes/nodeTypeCircle.html.twig' %}
+            {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
 
-        {% include 'widgets/countFiltersBar.html.twig' with {filters: specificNodeTree.filters} only %}
-        {% include 'nodes/navBack.html.twig' %}
-        {% include 'nodes/navBar.html.twig' with {"current": 'tree'} %}
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' with {filters: specificNodeTree.filters} only %}
+        {% include '@Rozier/nodes/navBack.html.twig' %}
+        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tree'} %}
 
         {% if node.stackTypes|length %}
         <div class="content-header-action-menu stack-tree-quick-creation">
@@ -27,7 +27,7 @@
         {% endif %}
     </header>
 
-    {% include 'nodes/filtersBar.html.twig' with {
+    {% include '@Rozier/nodes/filtersBar.html.twig' with {
         filters:         specificNodeTree.filters,
         deleteNodesForm: deleteNodesForm,
         tagNodesForm:    tagNodesForm,
@@ -35,14 +35,14 @@
     } only %}
 
     <article class="content content-node-tree">
-        {% include 'widgets/nodeTree/nodeTree.html.twig' with {
+        {% include '@Rozier/widgets/nodeTree/nodeTree.html.twig' with {
             "nodeTree":specificNodeTree,
             "node":specificNodeTree.getRootNode,
             "securityContext":securityContext
         } only %}
     </article>
 
-    {% include 'nodes/actionsMenu.html.twig' %}
+    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
 
 </section>
 {% endblock %}

@@ -5,7 +5,7 @@
 
 	<header class="content-header header-user header-user-edit">
         <h1 class="content-title user-add-title">{{ "edit.user.%name%.groups"|trans({'%name%': user.username })|truncate(25, true, '[…]') }}</h1>
-	    {% include 'users/navBar.html.twig' with {'user':user, current:'groups'} %}
+	    {% include '@Rozier/users/navBar.html.twig' with {'user':user, current:'groups'} %}
     </header>
 
     <article class="content content-user-groups">
@@ -43,6 +43,6 @@
 	   		</fieldset>
 		</form>
 	</article>
-	{% include 'users/actionsMenu.html.twig' %}
+	{% include '@Rozier/users/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

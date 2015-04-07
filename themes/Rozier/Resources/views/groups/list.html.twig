@@ -5,7 +5,7 @@
 
     <header class="content-header header-group header-group-list">
         <h1 class="content-title group-list-title">{% trans %}groups{% endtrans %}</h1>
-        {% include 'widgets/countFiltersBar.html.twig' %}
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <a class="uk-button" href="{{ path('groupsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.group{% endtrans %}</a>
             <a class="uk-button" href="{{ path('groupsImportPage') }}"><i class="uk-icon-rz-upload"></i> {% trans %}import.group{% endtrans %}</a>
@@ -13,7 +13,7 @@
         </div>
     </header>
 
-    {% include 'widgets/filtersBar.html.twig' %}
+    {% include '@Rozier/widgets/filtersBar.html.twig' %}
     <article class="content content-no-action-menu">
         <div class="content-table-cont">
             <table class="groups content-table uk-table">

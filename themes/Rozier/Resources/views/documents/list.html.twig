@@ -8,7 +8,7 @@
         {% else %}
         <h1 class="content-title">{% trans %}documents{% endtrans %}</h1>
         {% endif %}
-        {% include 'widgets/countFiltersBar.html.twig' %}
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <a class="uk-button" href="{{ path('documentsUploadPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-upload"></i> {% trans %}upload.document{% endtrans %}</a>
            	<a class="uk-button" href="{{ path('documentsEmbedPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-embed"></i> {% trans %}embed.document{% endtrans %}</a>
@@ -16,7 +16,7 @@
         </div>
     </header>
 
-    {% include 'documents/filtersBar.html.twig' %}
+    {% include '@Rozier/documents/filtersBar.html.twig' %}
 
     <article class="content content-no-action-menu">
 

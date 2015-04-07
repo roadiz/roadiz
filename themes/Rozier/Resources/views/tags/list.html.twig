@@ -5,13 +5,13 @@
 
     <header class="content-header header-tags header-nodes-list">
         <h1 class="content-title tags-list-title">{% trans %}tags{% endtrans %}</h1>
-        {% include 'widgets/countFiltersBar.html.twig' %}
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <nav><a class="uk-button" href="{{ path('tagsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.tag{% endtrans %}</a></nav>
         </div>
     </header>
 
-    {% include 'widgets/filtersBar.html.twig' %}
+    {% include '@Rozier/widgets/filtersBar.html.twig' %}
 
     <article class="content content-no-action-menu content-tags-list">
         <div class="content-table-cont">

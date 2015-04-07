@@ -5,7 +5,7 @@
 
     <header class="content-header header-role header-role-list">
         <h1 class="content-title role-title">{% trans %}roles{% endtrans %}</h1>
-        {% include 'widgets/countFiltersBar.html.twig' %}
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <nav>
         		<a class="uk-button" href="{{ path('rolesAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.role{% endtrans %}</a>
@@ -15,7 +15,7 @@
         </div>
     </header>
 
-	{% include 'widgets/filtersBar.html.twig' %}
+	{% include '@Rozier/widgets/filtersBar.html.twig' %}
 	<article class="content content-no-action-menu content-node-types-list">
         <div class="content-table-cont">
 			<table class="content-table roles uk-table">

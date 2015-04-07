@@ -12,9 +12,9 @@
 	<header class="content-header header-node header-node-edit-source">
 		<h1 class="content-title node-edit-source-title">
 			{{ "edit.newsletter.%name%"|trans({'%name%': currentTitle})|truncate(25, false, '[…]') }}
-            {% include 'nodes/nodeTypeCircle.html.twig' %}
+            {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
 		</h1>
-		{% include 'newsletters/navBack.html.twig' %}
+		{% include '@Rozier/newsletters/navBack.html.twig' %}
 	</header>
 
 	<article class="content content-node-edit-source">
@@ -32,6 +32,6 @@
 		</form>
 	</article>
 
-	{% include 'newsletters/actionsMenu.html.twig' %}
+	{% include '@Rozier/newsletters/actionsMenu.html.twig' %}
 </section>
 {% endblock %}
