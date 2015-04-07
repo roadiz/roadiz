@@ -39,7 +39,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FolderRepository")
  * @ORM\Table(name="folders", indexes={
- *     @ORM\Index(name="position_folder_idx", columns={"position"})
+ *     @ORM\Index(columns={"position"})
  * })
  */
 class Folder extends AbstractDateTimedPositioned

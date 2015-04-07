@@ -68,7 +68,7 @@ class NodeTypeFieldHandler
     public function generateSourceFieldIndex()
     {
         if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
-            return '@ORM\Index(name="'.$this->nodeTypeField->getName().'_idx", columns={"'.$this->nodeTypeField->getName().'"})';
+            return '@ORM\Index(columns={"'.$this->nodeTypeField->getName().'"})';
         } else {
             return '';
         }

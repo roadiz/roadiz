@@ -41,8 +41,8 @@ use RZ\Roadiz\Core\Viewers\TranslationViewer;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\TranslationRepository")
  * @ORM\Table(name="translations", indexes={
- *     @ORM\Index(name="available_translation_idx", columns={"available"}),
- *     @ORM\Index(name="default_translation_idx", columns={"default_translation"})
+ *     @ORM\Index(columns={"available"}),
+ *     @ORM\Index(columns={"default_translation"})
  * })
  */
 class Translation extends AbstractDateTimed

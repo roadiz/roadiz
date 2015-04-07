@@ -39,10 +39,10 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
  * @ORM\Table(name="node_type_fields",  indexes={
- *         @ORM\Index(name="visible_nodetypefield_idx",  columns={"visible"}),
- *         @ORM\Index(name="indexed_nodetypefield_idx",  columns={"indexed"}),
- *         @ORM\Index(name="position_nodetypefield_idx", columns={"position"}),
- *         @ORM\Index(name="type_nodetypefield_idx",     columns={"type"})
+ *         @ORM\Index(columns={"visible"}),
+ *         @ORM\Index(columns={"indexed"}),
+ *         @ORM\Index(columns={"position"}),
+ *         @ORM\Index(columns={"type"})
  *     },
  *     uniqueConstraints={@ORM\UniqueConstraint(columns={"name", "node_type_id"})}
  * )

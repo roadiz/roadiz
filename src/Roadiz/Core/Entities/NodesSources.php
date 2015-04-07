@@ -39,7 +39,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
  * @ORM\Table(name="nodes_sources", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="sources_nodetrans_constraint", columns={"node_id", "translation_id"})
+ *     @ORM\UniqueConstraint(columns={"node_id", "translation_id"})
  * })
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
