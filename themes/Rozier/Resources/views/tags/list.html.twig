@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global content-nav-and-filters">
@@ -31,8 +31,8 @@
                             <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
                             <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
                             <td>
-                                {% spaceless %}                                
-                                    <a class="uk-button uk-button-content uk-button-small" href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}" title="{% trans %}edit.tag{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>                            
+                                {% spaceless %}
+                                    <a class="uk-button uk-button-content uk-button-small" href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}" title="{% trans %}edit.tag{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                                     {% if securityContext.Granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
                                         <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}" title="{% trans %}delete.tag{% endtrans %}" data-uk-tooltip="{animation:true}">
                                             <i class="uk-icon-rz-trash-o"></i>
@@ -46,8 +46,8 @@
                             <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">{{ tag.getId }}</a></td>
                             <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">tag_{{ tag.getId }} <span class="uk-badge uk-badge-warning">{% trans %}notranslation_available.tag{% endtrans %}</span></a></td>
                             <td>
-                            {% spaceless %}                                
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('tagsEditPage', { tagId: tag.getId }) }}" title="{% trans %}edit.tag{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>                            
+                            {% spaceless %}
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('tagsEditPage', { tagId: tag.getId }) }}" title="{% trans %}edit.tag{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
 
                                 {% if securityContext.Granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
                                     <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}" title="{% trans %}delete.tag{% endtrans %}" data-uk-tooltip="{animation:true}">

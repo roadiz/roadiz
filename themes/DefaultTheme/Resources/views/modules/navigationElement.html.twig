@@ -16,7 +16,7 @@
 	<div class="uk-dropdown">
 		<ul class="uk-nav uk-nav-dropdown">
 			{% for subsource in children %}
-			{% include 'modules/navigationElement.html.twig' with {
+			{% include '@DefaultTheme/modules/navigationElement.html.twig' with {
 				'source' : subsource,
 				'activeId' : activeId,
 				'level':(1 + level),

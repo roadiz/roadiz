@@ -98,7 +98,7 @@ class ContactController extends DefaultThemeApp
              */
             $this->assignation['route'] = $_route;
 
-            return $this->render('contact.html.twig', $this->assignation);
+            return $this->render('contact.html.twig', $this->assignation, null, static::getThemeDir());
         } catch (NoTranslationAvailableException $e) {
             return $this->throw404();
         }
