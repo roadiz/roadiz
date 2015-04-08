@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Authorization;
 
-use RZ\Roadiz\Core\Log\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,9 +49,9 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
 
     /**
      * @param UrlGenerator $urlGenerator
-     * @param Logger       $logger
+     * @param LoggerInterface $logger
      */
-    public function __construct(UrlGenerator $urlGenerator, Logger $logger)
+    public function __construct(UrlGenerator $urlGenerator, LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->urlGenerator = $urlGenerator;

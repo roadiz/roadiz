@@ -4,24 +4,24 @@
 {% set currentTitle = node.getNodeName %}
 {% endif %}
 
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global">
 
 	<header class="content-header header-node header-node-edit-tags">
-		{% include 'nodes/breadcrumb.html.twig' with {"node": node} only %}
+		{% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node} only %}
 		<h1 class="content-title node-edit-tags-title">
 			{{ "edit.node.%name%.tags"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
-            {% include 'nodes/nodeTypeCircle.html.twig' %}
+            {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
 		</h1>
-		{% include 'nodes/navBack.html.twig' %}
-		{% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
+		{% include '@Rozier/nodes/navBack.html.twig' %}
+		{% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tags'} %}
 	</header>
 
 	<article class="content content-node-edit-tags">
 		<h2 class="content-subtitle">{% trans %}add.a.tag{% endtrans %}</h2>
-		{% form_theme form 'forms.html.twig' %}
+		{% form_theme form '@Rozier/forms.html.twig' %}
 		<form id="edit-node-tags-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}
 		    <fieldset data-uk-margin>
@@ -57,6 +57,6 @@
 		</div>
 	</article>
 
-	{% include 'nodes/actionsMenu.html.twig' %}
+	{% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

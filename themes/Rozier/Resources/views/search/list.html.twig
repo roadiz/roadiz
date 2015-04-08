@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global content-nav-and-filters">
@@ -7,7 +7,7 @@
         <h1 class="content-title">
             {% trans %}search{% endtrans %}
         </h1>
-        {% include 'widgets/countFiltersBar.html.twig' %}
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         {# Add node control #}
 {#         {% if nodeTypes|length %}
         <div class="content-header-action-menu">
@@ -30,19 +30,19 @@
         {% endif %} #}
     </header>
 
-    {% include 'widgets/filtersBar.html.twig' %}
+    {% include '@Rozier/widgets/filtersBar.html.twig' %}
 
     <article class="content content-no-action-menu">
 
 
-        {% form_theme nodeTypeForm 'forms.html.twig' %}
+        {% form_theme nodeTypeForm '@Rozier/forms.html.twig' %}
         <form class="uk-form uk-form-stacked" id="search-node-type-form" action="#" method="get" {{ form_enctype(nodeTypeForm) }}>
             {{ form_widget(nodeTypeForm) }}
         </form>
 
 
 
-        {% form_theme form 'forms.html.twig' %}
+        {% form_theme form '@Rozier/forms.html.twig' %}
         <form class="uk-form uk-form-stacked" id="search-node-form" action="#" method="get" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
         </form>

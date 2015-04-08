@@ -50,6 +50,9 @@ composer.lock
 logs
 *.log
 
+# Except for logs folder
+!/logs
+
 # Runtime data
 pids
 *.pid

@@ -162,7 +162,7 @@ class RozierApp extends BackendController
      */
     public static function setupDependencyInjection(Container $container)
     {
-        BackendController::setupDependencyInjection($container);
+        parent::setupDependencyInjection($container);
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
 

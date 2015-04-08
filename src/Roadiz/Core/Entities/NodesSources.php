@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 
 /**
  * NodesSources store Node content according to a translation and a NodeType.
@@ -150,7 +150,6 @@ class NodesSources extends AbstractEntity
     {
         return $this->logs;
     }
-
 
     /**
      * @ORM\Column(type="string", name="title", unique=false, nullable=true)
@@ -274,6 +273,13 @@ class NodesSources extends AbstractEntity
         $this->urlAliases = new ArrayCollection();
         $this->documentsByFields = new ArrayCollection();
         $this->logs = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return 'NodesSources #' . $this->getId() .
+        ' <' . $this->getTitle() . '>[' . $this->getTranslation()->getLocale() .
+        '], type="' . $this->getNode()->getNodeType()->getName() . '"';
     }
 
     /**

@@ -36,7 +36,7 @@
         <div id="main-container" >
             <div id="main-container-inner">
                 <section class="main-container-section" id="user-panel">
-                    {% include 'panels/user_panel.html.twig' with {
+                    {% include '@Rozier/panels/user_panel.html.twig' with {
                         'session' : session,
                         'securityContext' : securityContext,
                         'head' : head,
@@ -45,7 +45,7 @@
                     } only %}
                 </section>
                 <section class="main-container-section" id="admin-menu">
-                    {% include 'panels/admin_menu.html.twig' with {
+                    {% include '@Rozier/panels/admin_menu.html.twig' with {
                         'themeServices' : themeServices,
                         'securityContext' : securityContext,
                         'backofficeEntries':backofficeEntries,
@@ -56,7 +56,7 @@
                 <section id="main-trees" class="main-container-section">
                     <div id="main-trees-overlay"></div>
                     <div id="main-trees-container">
-                        {% include 'panels/tree_panel.html.twig' with {
+                        {% include '@Rozier/panels/tree_panel.html.twig' with {
                             'securityContext': securityContext,
                             'themeServices': themeServices,
                             "nodeStatuses":nodeStatuses

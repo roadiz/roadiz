@@ -4,23 +4,23 @@
 {% set currentTitle = node.getNodeName %}
 {% endif %}
 
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global manage-node">
 
     <header class="content-header header-node header-node-edit">
-        {% include 'nodes/breadcrumb.html.twig' with {"node": node, "securityContext": securityContext} only %}
+        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node, "securityContext": securityContext} only %}
         <h1 class="content-title node-edit-title">
             {{ "edit.node.%name%"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
-            {% include 'nodes/nodeTypeCircle.html.twig' %}
+            {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
-        {% include 'nodes/navBack.html.twig' %}
-        {% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}
+        {% include '@Rozier/nodes/navBack.html.twig' %}
+        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'edit'} %}
     </header>
 
     <article class="content content-node-edit">
-        {% form_theme form 'forms.html.twig' %}
+        {% form_theme form '@Rozier/forms.html.twig' %}
         <form id="edit-node-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
@@ -54,7 +54,7 @@
         <hr />
         <h2 id="add-node-translation">{% trans %}add.stack.type{% endtrans %}</h2>
 
-        {% form_theme stackTypesForm 'forms.html.twig' %}
+        {% form_theme stackTypesForm '@Rozier/forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(stackTypesForm) }}>
             {{ form_widget(stackTypesForm) }}
             <fieldset data-uk-margin>
@@ -83,7 +83,7 @@
         {% if translationForm %}
         <hr />
         <h2 id="add-node-translation">{% trans %}translate.node{% endtrans %}</h2>
-        {% form_theme translationForm 'forms.html.twig' %}
+        {% form_theme translationForm '@Rozier/forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(translationForm) }}>
             {{ form_widget(translationForm) }}
             <fieldset data-uk-margin>
@@ -95,6 +95,6 @@
         {% endif %}
     </article>
 
-    {% include 'nodes/actionsMenu.html.twig' %}
+    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

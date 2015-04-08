@@ -4,24 +4,24 @@
 {% set currentTitle = node.getNodeName %}
 {% endif %}
 
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global">
 
 	<header class="content-header header-node header-node-edit-source">
-		{% include 'nodes/breadcrumb.html.twig' with {"node": node, "securityContext": securityContext} only %}
+		{% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node, "securityContext": securityContext} only %}
 		<h1 class="content-title node-edit-source-title">
 			{{ "edit.nodeSource.%name%"|trans({'%name%': currentTitle})|truncate(25, false, '[…]') }}
-            {% include 'nodes/nodeTypeCircle.html.twig' %}
+            {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
 		</h1>
-		{% include 'nodes/navBack.html.twig' %}
-		{% include 'nodes/navBar.html.twig' with {"current": 'source'} %}
-		{% include 'nodes/translationBar.html.twig' with {"current": translation.getId} %}
+		{% include '@Rozier/nodes/navBack.html.twig' %}
+		{% include '@Rozier/nodes/navBar.html.twig' with {"current": 'source'} %}
+		{% include '@Rozier/nodes/translationBar.html.twig' with {"current": translation.getId} %}
 	</header>
 
 	<article class="content content-node-edit-source">
-		{% form_theme form 'forms.html.twig' %}
+		{% form_theme form '@Rozier/forms.html.twig' %}
 		<form id="edit-node-source-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}
 		    <fieldset data-uk-margin>
@@ -35,6 +35,6 @@
 		</form>
 	</article>
 
-	{% include 'nodes/actionsMenu.html.twig' %}
+	{% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

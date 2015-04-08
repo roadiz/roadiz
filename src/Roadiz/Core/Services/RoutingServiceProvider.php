@@ -72,6 +72,8 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                 $rCollection = new RouteCollection();
                 $rCollection->addCollection($feCollection);
 
+                $installClassname::setupDependencyInjection($c);
+
                 return $rCollection;
             };
         } else {

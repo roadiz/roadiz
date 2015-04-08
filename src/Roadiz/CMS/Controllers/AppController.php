@@ -322,23 +322,12 @@ class AppController implements ViewableInterface
     }
 
     /**
-     * Return every paths to search for twig templates.
-     *
-     * Extend this method in your custom theme if you need to
-     * search additionnal templates.
+     * Setup twig parameters at runtime.
      *
      * @return $this
      */
     public function getTwigLoader()
     {
-        $this->getService()->extend(
-            'twig.loaderFileSystem',
-            function (\Twig_Loader_Filesystem $loader, $c) {
-                $loader->prependPath(static::getViewsFolder());
-                return $loader;
-            }
-        );
-
         $this->getService('twig.environment')->addExtension(new TranslationExtension($this->getService('translator')));
         $this->getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
 
@@ -610,7 +599,20 @@ class AppController implements ViewableInterface
      */
     public static function setupDependencyInjection(Container $container)
     {
+        /*
+         * Enable theme templates in main namespace and in its own theme namespace.
+         */
+        $container->extend('twig.loaderFileSystem', function (\Twig_Loader_Filesystem $loader, $c) {
 
+            if (!in_array(static::getViewsFolder(), $loader->getPaths())) {
+                $loader->addPath(static::getViewsFolder());
+                // Add path into a namespaced loader to enable using same template name
+                // over different static themes.
+                $loader->addPath(static::getViewsFolder(), static::getThemeDir());
+            }
+
+            return $loader;
+        });
     }
 
     protected function getHome(Translation $translation = null)
@@ -669,10 +671,10 @@ class AppController implements ViewableInterface
 
         switch ($level) {
             case 'error':
-                $this->getService('logger')->error($msg, [], $source);
+                $this->getService('logger')->error($msg, ['source' => $source]);
                 break;
             default:
-                $this->getService('logger')->info($msg, [], $source);
+                $this->getService('logger')->info($msg, ['source' => $source]);
                 break;
         }
     }

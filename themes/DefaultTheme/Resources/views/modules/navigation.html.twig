@@ -33,7 +33,7 @@
 		{% for cnode in themeServices.navigation %}
 			{% set source = cnode.nodeSources.first %}
             {% set level = 0 %}
-			{% include 'modules/navigationElement.html.twig' with {
+			{% include '@DefaultTheme/modules/navigationElement.html.twig' with {
                 'source' : source,
                 'activeId' : node.id,
                 'level' : level,

@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 
 {% block content %}
@@ -7,11 +7,11 @@
     <header class="content-header header-group header-group-edit">
         <h1 class="content-title group-add-title">{{ "edit.group.%name%"|trans({'%name%': group.getName})|truncate(25, true, '[…]') }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
-        {% include 'groups/navBar.html.twig' with {'group':group, current:'edit'} %}
+        {% include '@Rozier/groups/navBar.html.twig' with {'group':group, current:'edit'} %}
     </header>
 
     <article class="content content-edit">
-        {% form_theme form 'forms.html.twig' %}
+        {% form_theme form '@Rozier/forms.html.twig' %}
         <form id="edit-group-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
@@ -25,6 +25,6 @@
         </form>
     </article>
 
-    {% include 'groups/actionsMenu.html.twig' %}
+    {% include '@Rozier/groups/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

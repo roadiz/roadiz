@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% if session.user.getFirstName %}
 {% set displayName = session.user.getFirstName %}
@@ -10,7 +10,7 @@
 <section class="content-global">
     <header class="content-header dashboard-header">
         <h1 class="content-title dashboard-title">{{ "hello.%name%"|trans({'%name%': displayName}) }}</h1>
-        {% include 'dashboard/navBar.html.twig' with {'current':'dashboard'} %}
+        {% include '@Rozier/dashboard/navBar.html.twig' with {'current':'dashboard'} %}
     </header>
 
     <article class="content content-dashboard">

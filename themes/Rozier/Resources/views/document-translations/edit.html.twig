@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 
 {% block content %}
@@ -6,13 +6,13 @@
 
     <header class="content-header header-document header-document-edit">
         <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.getFilename})|truncate(25, true, '[…]') }}</h1>
-        {% include 'documents/navBar.html.twig' with {'document':document, current:'metas'} %}
-        {% include 'document-translations/translationBar.html.twig' with {"current": translation.getId} %}
+        {% include '@Rozier/documents/navBar.html.twig' with {'document':document, current:'metas'} %}
+        {% include '@Rozier/document-translations/translationBar.html.twig' with {"current": translation.getId} %}
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('documentsHomePage') }}" title="{% trans %}back_to.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-document-edit">
-    	{% form_theme form 'forms.html.twig' %}
+    	{% form_theme form '@Rozier/forms.html.twig' %}
     	<form id="edit-document-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
     	    {{ form_widget(form) }}
     	    <fieldset data-uk-margin>
@@ -26,6 +26,6 @@
     	</form>
     </article>
 
-	{% include 'documents/actionsMenu.html.twig' %}
+	{% include '@Rozier/documents/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

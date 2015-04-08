@@ -34,7 +34,7 @@
         </nav>
         <ul class="uk-sortable documents-widget-sortable" data-uk-sortable="{group:'documents-widget', dragCustomClass:'documents-widget-dragging'}" data-input-name="{{ name }}">
             {% for doc in data %}
-            {% include 'widgets/documentSmallThumbnail.html.twig' with {
+            {% include '@Rozier/widgets/documentSmallThumbnail.html.twig' with {
                 'document':doc,
                 'name': name,
                 'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
@@ -68,7 +68,7 @@
         </nav>
         <ul class="uk-sortable nodes-widget-sortable" data-uk-sortable="{group:'nodes-widget', dragCustomClass:'nodes-widget-dragging'}" data-input-name="{{ name }}">
             {% for node in data %}
-            {% include 'widgets/nodeSmallThumbnail.html.twig' with {
+            {% include '@Rozier/widgets/nodeSmallThumbnail.html.twig' with {
                 'node':node,
                 'name': name,
                 'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
@@ -102,7 +102,7 @@
         </nav>
         <ul class="uk-sortable custom-forms-widget-sortable" data-uk-sortable="{group:'custom-forms-widget', dragCustomClass:'custom-forms-widget-dragging'}" data-input-name="{{ name }}">
             {% for customForm in data %}
-            {% include 'widgets/customFormSmallThumbnail.html.twig' with {
+            {% include '@Rozier/widgets/customFormSmallThumbnail.html.twig' with {
                 'customForm':customForm,
                 'name': name,
                 'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
@@ -182,7 +182,7 @@
             </div>
         </nav>
         <div class="children-nodes-tree">
-            {% include 'widgets/nodeTree/nodeTree.html.twig' with {
+            {% include '@Rozier/widgets/nodeTree/nodeTree.html.twig' with {
                 "nodeTree":nodeTree,
                 "node":nodeTree.getRootNode,
                 'mainNodeTree':false,

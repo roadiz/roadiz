@@ -130,6 +130,7 @@ class ConfigurationCommand extends Command
                 "/bin",
                 "/tests",
                 "/cache",
+                "/logs",
             ];
 
             foreach ($paths as $path) {
