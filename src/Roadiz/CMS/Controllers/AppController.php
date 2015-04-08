@@ -387,7 +387,7 @@ class AppController implements ViewableInterface
      * @see http://api.symfony.com/2.6/Symfony/Bundle/FrameworkBundle/Controller/Controller.html#method_render
      *
      * @param  string        $view       Template file path
-     * @param  array         $parameters Twig assigntion array
+     * @param  array         $parameters Twig assignation array
      * @param  Response|null $response   Optional Response object to customize response parameters
      * @param  string        $namespace  Twig loader namespace
      *
@@ -405,6 +405,10 @@ class AppController implements ViewableInterface
 
         if ($namespace != "") {
             $view = '@'.$namespace.'/'.$view;
+        } else {
+            // when no namespace is used
+            // use current theme directory
+            $view = '@'.static::getThemeDir().'/'.$view;
         }
 
         $response->setContent($this->kernel->container['twig.environment']->render($view, $parameters));
