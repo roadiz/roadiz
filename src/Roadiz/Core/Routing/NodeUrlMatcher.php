@@ -143,7 +143,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      */
     protected function parseFromUrlAlias(&$tokens)
     {
-        if (null !== $this->parseUrlAlias($tokens)) {
+        if (null !== $ua = $this->parseUrlAlias($tokens)) {
             return $this->repository->findOneWithUrlAlias($ua);
         }
 
