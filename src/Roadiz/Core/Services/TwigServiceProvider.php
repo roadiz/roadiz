@@ -161,14 +161,25 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 if ($mixed instanceof Document) {
                     return $mixed->getViewer()->getDocumentUrlByArray($criteria);
                 } elseif ($mixed instanceof NodesSources) {
-                    $urlGenerator = new NodesSourcesUrlGenerator(Kernel::getInstance()->getRequest(), $mixed);
-
+                    $urlGenerator = new NodesSourcesUrlGenerator(
+                        Kernel::getInstance()->getRequest(),
+                        $mixed
+                    );
+                    if (isset($criteria['absolute'])) {
+                        return $urlGenerator->getUrl((boolean) $criteria['absolute']);
+                    }
+                    return $urlGenerator->getUrl(false);
+                } elseif ($mixed instanceof Node) {
+                    $urlGenerator = new NodesSourcesUrlGenerator(
+                        Kernel::getInstance()->getRequest(),
+                        $mixed->getNodeSources()->first()
+                    );
                     if (isset($criteria['absolute'])) {
                         return $urlGenerator->getUrl((boolean) $criteria['absolute']);
                     }
                     return $urlGenerator->getUrl(false);
                 } else {
-                    throw new \RunException("Twig “url” filter can be only used with a Document or a NodesSources", 1);
+                    throw new \RuntimeException("Twig “url” filter can be only used with a Document, a NodesSources or a Node", 1);
                 }
             });
         };
