@@ -421,7 +421,7 @@ class AppController implements ViewableInterface
                 'devMode' => (boolean) $this->kernel->container['config']['devMode'],
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
-                'baseUrl' => $this->kernel->getResolvedBaseUrl(), //$this->kernel->getRequest()->getBaseUrl(),
+                'baseUrl' => $this->kernel->getRequest()->getResolvedBaseUrl(),
                 'filesUrl' => $this->kernel
                                    ->getRequest()
                                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),

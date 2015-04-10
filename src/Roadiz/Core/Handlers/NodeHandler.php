@@ -196,21 +196,6 @@ class NodeHandler
     }
 
     /**
-     * Alias for NodesSourcesHandler::getUrl.
-     *
-     * @return string
-     * @see RZ\Roadiz\Core\Handlers\NodesSourcesHandler::getUrl
-     */
-    public function getUrl()
-    {
-        return $this->node
-                    ->getNodeSources()
-                    ->first()
-                    ->getHandler()
-                    ->getUrl();
-    }
-
-    /**
      * Get node source by translation.
      *
      * @param RZ\Roadiz\Core\Entities\Translation $translation

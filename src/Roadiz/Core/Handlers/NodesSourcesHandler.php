@@ -137,57 +137,6 @@ class NodesSourcesHandler
     }
 
     /**
-     * @return string Current node-source URL
-     */
-    public function getUrl($forceHost = false)
-    {
-        $host = Kernel::getInstance()->getRequest()->getBaseUrl();
-        if ($forceHost === true) {
-            $host = Kernel::getInstance()->getResolvedBaseUrl();
-        }
-
-        if ($this->nodeSource->getNode()->isHome()
-            || (Kernel::getInstance()->getRequest()->getTheme()
-                && Kernel::getInstance()->getRequest()->getTheme()->getHomeNode() == $this->nodeSource->getNode())) {
-            if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
-                return $host . '/';
-            } else {
-                return $host .
-                '/' . $this->nodeSource->getTranslation()->getLocale();
-            }
-        }
-
-        $urlTokens = [];
-        $urlTokens[] = $this->getIdentifier();
-
-        $parent = $this->getParent();
-        if ($parent !== null &&
-            !$parent->getNode()->isHome()) {
-            do {
-                if ($parent->getNode()->isVisible()) {
-                    $handler = $parent->getHandler();
-                    $urlTokens[] = $handler->getIdentifier();
-                }
-                $parent = $parent->getHandler()->getParent();
-            } while ($parent !== null && !$parent->getNode()->isHome());
-        }
-
-        /*
-         * If using node-name, we must use shortLocale when current
-         * translation is not the default one.
-         */
-        if ($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
-            !$this->nodeSource->getTranslation()->isDefaultTranslation()) {
-            $urlTokens[] = $this->nodeSource->getTranslation()->getLocale();
-        }
-
-        $urlTokens[] = $host;
-        $urlTokens = array_reverse($urlTokens);
-
-        return implode('/', $urlTokens);
-    }
-
-    /**
      * Get a string describing uniquely the curent nodeSource.
      *
      * Can be the urlAlias or the nodeName

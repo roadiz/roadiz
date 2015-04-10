@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Services;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use RZ\Roadiz\Core\Kernel;
 use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
@@ -160,10 +161,12 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 if ($mixed instanceof Document) {
                     return $mixed->getViewer()->getDocumentUrlByArray($criteria);
                 } elseif ($mixed instanceof NodesSources) {
+                    $urlGenerator = new NodesSourcesUrlGenerator(Kernel::getInstance()->getRequest(), $mixed);
+
                     if (isset($criteria['absolute'])) {
-                        return $mixed->getHandler()->getUrl((boolean) $criteria['absolute']);
+                        return $urlGenerator->getUrl((boolean) $criteria['absolute']);
                     }
-                    return $mixed->getHandler()->getUrl(false);
+                    return $urlGenerator->getUrl(false);
                 } else {
                     throw new \RunException("Twig “url” filter can be only used with a Document or a NodesSources", 1);
                 }
