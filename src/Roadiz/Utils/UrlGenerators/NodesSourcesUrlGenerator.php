@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\UrlGenerators;
 
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 
 class NodesSourcesUrlGenerator implements UrlGeneratorInterface
@@ -42,7 +43,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      * @param RZ\Roadiz\Core\HttpFoundation\Request $request
      * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      */
-    public function __construct(Request $request, NodesSources $nodeSource)
+    public function __construct(Request $request = null, NodesSources $nodeSource = null)
     {
         $this->request = $request;
         $this->nodeSource = $nodeSource;
@@ -51,54 +52,75 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      * Get a resource Url.
      *
      * @param boolean $absolute Use Url with domain name [default: false]
+     *
      * @return string
      */
     public function getUrl($absolute = false)
     {
-        $host = $this->request->getBaseUrl();
+        if (null !== $this->request) {
+            $host = $this->request->getBaseUrl();
 
-        if ($absolute === true) {
-            $host = $this->request->getResolvedBaseUrl();
-        }
-
-        if ($this->nodeSource->getNode()->isHome()
-            || ($this->request->getTheme()
-                && $this->request->getTheme()->getHomeNode() == $this->nodeSource->getNode())) {
-            if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
-                return $host . '/';
-            } else {
-                return $host .
-                '/' . $this->nodeSource->getTranslation()->getLocale();
+            if ($absolute === true) {
+                $host = $this->request->getResolvedBaseUrl();
             }
+
+            return $host . '/' . $this->getNonContextualUrl($this->request->getTheme());
+        } else {
+            return $this->getNonContextualUrl();
         }
+    }
 
-        $urlTokens = [];
-        $urlTokens[] = $this->nodeSource->getHandler()->getIdentifier();
-
-        $parent = $this->nodeSource->getHandler()->getParent();
-        if ($parent !== null &&
-            !$parent->getNode()->isHome()) {
-            do {
-                if ($parent->getNode()->isVisible()) {
-                    $handler = $parent->getHandler();
-                    $urlTokens[] = $handler->getIdentifier();
+    /**
+     * Return a NodesSources url without hostname and without
+     * root folder.
+     *
+     * It returns a relative url to Roadiz, not relative to your server root.
+     *
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
+     *
+     * @return string
+     */
+    public function getNonContextualUrl(Theme $theme = null)
+    {
+        if (null !== $this->nodeSource) {
+            if ($this->nodeSource->getNode()->isHome()
+                || (null !== $theme && $theme->getHomeNode() == $this->nodeSource->getNode())) {
+                if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
+                    return '';
+                } else {
+                    return $this->nodeSource->getTranslation()->getLocale();
                 }
-                $parent = $parent->getHandler()->getParent();
-            } while ($parent !== null && !$parent->getNode()->isHome());
+            }
+
+            $urlTokens = [];
+            $urlTokens[] = $this->nodeSource->getHandler()->getIdentifier();
+
+            $parent = $this->nodeSource->getHandler()->getParent();
+            if ($parent !== null &&
+                !$parent->getNode()->isHome()) {
+                do {
+                    if ($parent->getNode()->isVisible()) {
+                        $handler = $parent->getHandler();
+                        $urlTokens[] = $handler->getIdentifier();
+                    }
+                    $parent = $parent->getHandler()->getParent();
+                } while ($parent !== null && !$parent->getNode()->isHome());
+            }
+
+            /*
+             * If using node-name, we must use shortLocale when current
+             * translation is not the default one.
+             */
+            if ($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
+                !$this->nodeSource->getTranslation()->isDefaultTranslation()) {
+                $urlTokens[] = $this->nodeSource->getTranslation()->getLocale();
+            }
+
+            $urlTokens = array_reverse($urlTokens);
+
+            return implode('/', $urlTokens);
+        } else {
+            throw new \RuntimeException("Cannot generate Url for a NULL NodesSources", 1);
         }
-
-        /*
-         * If using node-name, we must use shortLocale when current
-         * translation is not the default one.
-         */
-        if ($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
-            !$this->nodeSource->getTranslation()->isDefaultTranslation()) {
-            $urlTokens[] = $this->nodeSource->getTranslation()->getLocale();
-        }
-
-        $urlTokens[] = $host;
-        $urlTokens = array_reverse($urlTokens);
-
-        return implode('/', $urlTokens);
     }
 }
