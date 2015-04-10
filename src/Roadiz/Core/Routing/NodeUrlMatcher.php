@@ -52,7 +52,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
         if (false !== $ret = $this->matchNode($decodedUrl)) {
             return $ret;
         } else {
-
             if (null !== $this->theme) {
                 $ctrl = $this->theme->getClassName();
             } else {

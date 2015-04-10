@@ -59,7 +59,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             return parent::match($pathinfo);
 
         } catch (ResourceNotFoundException $e) {
-
             /*
              * Try nodes routes
              */
