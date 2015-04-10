@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Services;
 
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
