@@ -112,12 +112,15 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         $container['logger'] = function ($c) {
             $log = new Logger('roadiz');
             $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz.log', Logger::WARNING));
-            $log->pushHandler(new DoctrineHandler(
-                $c['em'],
-                $c['securityContext'],
-                Kernel::getInstance()->getRequest(),
-                Logger::INFO
-            ));
+
+            if (null !== $c['em']) {
+                $log->pushHandler(new DoctrineHandler(
+                    $c['em'],
+                    $c['securityContext'],
+                    Kernel::getInstance()->getRequest(),
+                    Logger::INFO
+                ));
+            }
 
             return $log;
         };
@@ -248,7 +251,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 $feClass = $theme->getClassName();
                 $feClass::setupDependencyInjection($c);
             }
-            $c['stopwatch']->stop('initThemes');
             $c['stopwatch']->start('firewall');
             $firewall = new Firewall($c['firewallMap'], $c['dispatcher']);
             $c['stopwatch']->stop('firewall');

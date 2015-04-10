@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\MixedUrlMatcher;
+use RZ\Roadiz\Core\Routing\NodeUrlMatcher;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\RouteCollection;
@@ -51,7 +52,13 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
             return new HttpKernel($c['dispatcher'], $c['resolver']);
         };
         $container['urlMatcher'] = function ($c) {
-            return new MixedUrlMatcher($c['requestContext']);
+            return new MixedUrlMatcher($c['requestContext'], $c['dynamicUrlMatcher']);
+        };
+        $container['dynamicUrlMatcher'] = function ($c) {
+            return new NodeUrlMatcher(
+                $c['requestContext'],
+                $c['em']
+            );
         };
         $container['urlGenerator'] = function ($c) {
             return new \GlobalUrlGenerator($c['requestContext']);

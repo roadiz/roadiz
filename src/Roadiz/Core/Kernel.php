@@ -272,6 +272,14 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function getEmergencyResponse($e)
     {
+        /*
+         * Log error before displaying a fallback page.
+         */
+        $this->container['logger']->emerg($e->getMessage(), [
+            'trace' => $e->getTraceAsString(),
+            'exception' => get_class($e),
+        ]);
+
         if ($this->request->isXmlHttpRequest()) {
             return new \Symfony\Component\HttpFoundation\JsonResponse(
                 [
@@ -285,8 +293,13 @@ class Kernel implements \Pimple\ServiceProviderInterface
         } else {
             $html = file_get_contents(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views/emerg.html');
             $html = str_replace('{{ message }}', $e->getMessage(), $html);
-            $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
-            $html = str_replace('{{ details }}', $trace, $html);
+
+            if ($this->isDebug()) {
+                $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
+                $html = str_replace('{{ details }}', $trace, $html);
+            } else {
+                $html = str_replace('{{ details }}', '', $html);
+            }
 
             return new Response(
                 $html,
@@ -350,11 +363,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     private function prepareRequestHandling()
     {
-        $this->container['stopwatch']->start('prepareTranslation');
         $this->prepareTranslation();
-        $this->container['stopwatch']->stop('prepareTranslation');
-
-        $this->container['stopwatch']->start('initThemes');
 
         /*
          * Events
@@ -362,32 +371,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
         $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
             [
-                $this,
-                'onStartKernelRequest',
-            ]
-        );
-        $this->container['dispatcher']->addListener(
-            KernelEvents::REQUEST,
-            [
                 $this->container['firewall'],
                 'onKernelRequest',
-            ]
-        );
-        /*
-         * Register after controller matched listener
-         */
-        $this->container['dispatcher']->addListener(
-            KernelEvents::CONTROLLER,
-            [
-                $this,
-                'onControllerMatched',
-            ]
-        );
-        $this->container['dispatcher']->addListener(
-            KernelEvents::TERMINATE,
-            [
-                $this,
-                'onKernelTerminate',
             ]
         );
 
@@ -395,6 +380,30 @@ class Kernel implements \Pimple\ServiceProviderInterface
          * If debug, alter HTML responses to append Debug panel to view
          */
         if (true === (boolean) SettingsBag::get('display_debug_panel')) {
+            $this->container['dispatcher']->addListener(
+                KernelEvents::REQUEST,
+                [
+                    $this,
+                    'onStartKernelRequest',
+                ]
+            );
+            /*
+             * Register after controller matched listener
+             */
+            $this->container['dispatcher']->addListener(
+                KernelEvents::CONTROLLER,
+                [
+                    $this,
+                    'onControllerMatched',
+                ]
+            );
+            $this->container['dispatcher']->addListener(
+                KernelEvents::TERMINATE,
+                [
+                    $this,
+                    'onKernelTerminate',
+                ]
+            );
             $this->container['dispatcher']->addSubscriber(new DebugPanel($this->container));
         }
     }
@@ -404,6 +413,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
     public function onStartKernelRequest()
     {
         $this->container['stopwatch']->start('requestHandling');
+        $this->container['stopwatch']->start('matchingRoute');
     }
     /**
      * Stop request-handling stopwatch event and

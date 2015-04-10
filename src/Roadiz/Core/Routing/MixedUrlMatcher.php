@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Routing;
 
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * Extends compiled UrlMatcher to add a dynamic routing feature which deals
@@ -38,12 +38,22 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
  */
 class MixedUrlMatcher extends \GlobalUrlMatcher
 {
+    protected $dynamicUrlMatcher;
+
+    /**
+     * @param RequestContext  $context
+     * @param DynamicUrlMatcher $dynamicUrlMatcher
+     */
+    public function __construct(RequestContext $context, DynamicUrlMatcher $dynamicUrlMatcher)
+    {
+        $this->context = $context;
+        $this->dynamicUrlMatcher = $dynamicUrlMatcher;
+    }
     /**
      * {@inheritdoc}
      */
     public function match($pathinfo)
     {
-        Kernel::getService('stopwatch')->start('matchingRoute');
         if (isset($container['config']['install']) &&
             true === $container['config']['install']) {
             // No node controller matching in install mode
@@ -60,14 +70,9 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
 
         } catch (ResourceNotFoundException $e) {
             /*
-             * Try nodes routes
+             * Try dynamic routes
              */
-            $nodeUrlMatcher = new NodeUrlMatcher(
-                $this->context,
-                Kernel::getService('em')
-            );
-
-            return $nodeUrlMatcher->match($pathinfo);
+            return $this->dynamicUrlMatcher->match($pathinfo);
         }
     }
 }
