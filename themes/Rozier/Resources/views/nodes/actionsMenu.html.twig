@@ -31,7 +31,7 @@
             <header><i class="uk-icon-rz-actions"></i><span class="label"><span class="label-text">{% trans %}actions{% endtrans %}</span></span></header>
             <nav>
                 {% if source %}
-                <a class="uk-button" target="_blank" href="{{ source.getHandler.getUrl }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
+                <a class="uk-button" target="_blank" href="{{ source|url }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
                 {% endif %}
                 <a class="uk-button rz-no-ajax-link" href="{{ path('nodesDuplicatePage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-duplicate"></i><span class="label">{% trans %}duplicate{% endtrans %}</span></a>
                 <a class="uk-button" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-plus"></i><span class="label">{% trans %}add.child{% endtrans %}</span></a>

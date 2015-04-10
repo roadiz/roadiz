@@ -131,7 +131,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
         };
 
         $container['requestContext'] = function ($c) {
-            $rc = new RequestContext($this->getResolvedBaseUrl());
+            $rc = new RequestContext($this->request->getResolvedBaseUrl());
             $rc->setHost($this->request->server->get('HTTP_HOST'));
             $rc->setHttpPort((int) $this->request->server->get('SERVER_PORT'));
 
@@ -459,53 +459,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
     }
 
     /**
-     * Resolve current front controller URL.
-     *
-     * This method is the base of every URL building methods in RZ-CMS.
-     * Be careful with handling it.
-     *
-     * @return string
-     */
-    public function getResolvedBaseUrl()
-    {
-        if ($this->request->server->get('SERVER_NAME')) {
-            // Remove everything after index.php in php_self
-            // when using PHP dev servers
-            $url = pathinfo(substr(
-                $this->request->server->get('PHP_SELF'),
-                0,
-                strpos($this->request->server->get('PHP_SELF'), '.php')
-            ));
-
-            // Protocol
-            $pageURL = 'http';
-            if ($this->request->server->get('HTTPS') &&
-                $this->request->server->get('HTTPS') == "on") {
-                $pageURL .= "s";
-            }
-            $pageURL .= "://";
-            // Port
-            if ($this->request->server->get('SERVER_PORT') &&
-                $this->request->server->get('SERVER_PORT') != "80") {
-                $pageURL .= $this->request->server->get('SERVER_NAME') .
-                ":" .
-                $this->request->server->get('SERVER_PORT');
-            } else {
-                $pageURL .= $this->request->server->get('SERVER_NAME');
-            }
-            // Non root folder
-            if (!empty($url["dirname"]) &&
-                $url["dirname"] != '/') {
-                $pageURL .= $url["dirname"];
-            }
-
-            return $pageURL;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Get a FQDN base url for static resources.
      *
      * You should fill “static_domain_name” setting after your
@@ -516,7 +469,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function getStaticBaseUrl()
     {
-        return $this->convertUrlToStaticDomainUrl($this->getResolvedBaseUrl());
+        return $this->convertUrlToStaticDomainUrl($this->request->getResolvedBaseUrl());
     }
 
     /**
