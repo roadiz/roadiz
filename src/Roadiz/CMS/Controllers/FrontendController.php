@@ -82,6 +82,7 @@ class FrontendController extends AppController
     ];
 
     protected $node = null;
+    protected $nodeSource = null;
     protected $translation = null;
     protected $themeContainer = null;
 
@@ -128,19 +129,22 @@ class FrontendController extends AppController
      * Default action for any node URL.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Core\Entities\Node              $node
-     * @param RZ\Roadiz\Core\Entities\Translation       $translation
+     * @param RZ\Roadiz\Core\Entities\Node             $node
+     * @param RZ\Roadiz\Core\Entities\Translation      $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request, Node $node = null, Translation $translation = null)
-    {
+    public function indexAction(
+        Request $request,
+        Node $node = null,
+        Translation $translation = null
+    ) {
         Kernel::getService('stopwatch')->start('handleNodeController');
         $this->node = $node;
         $this->translation = $translation;
 
         //  Main node based routing method
-        return $this->handle($request);
+        return $this->handle($request, $this->node, $this->translation);
     }
 
     /**
@@ -159,26 +163,12 @@ class FrontendController extends AppController
          *
          * Get language from static route
          */
-        if (null !== $_locale) {
-            $request->setLocale($_locale);
-            $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findOneBy(
-                                    [
-                                        'locale' => $_locale,
-                                    ]
-                                );
-        } else {
-            $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
-        }
+        $translation = $this->bindLocaleFromRoute($request, $_locale);
 
         /*
          * Grab home flagged node
          */
         $node = $this->getHome($translation);
-
         $this->prepareThemeAssignation($node, $translation);
 
         return $this->render('home.html.twig', $this->assignation);
@@ -205,11 +195,12 @@ class FrontendController extends AppController
         $this->node = $node;
         $this->translation = $translation;
 
-        $this->assignation['translation'] = $translation;
+        $this->assignation['translation'] = $this->translation;
 
-        if ($node !== null) {
-            $this->assignation['node'] = $node;
-            $this->assignation['nodeSource'] = $node->getNodeSources()->first();
+        if (null !== $this->node) {
+            $this->nodeSource = $this->node->getNodeSources()->first();
+            $this->assignation['node'] = $this->node;
+            $this->assignation['nodeSource'] = $this->nodeSource;
         }
 
         $this->assignation['pageMeta'] = $this->getNodeSEO();
@@ -232,13 +223,13 @@ class FrontendController extends AppController
          * Determine if we look for a node-type named controller or
          * a node-named controller.
          */
-        if (in_array($this->getRequestedNode()->getNodeName(), static::$specificNodesControllers)) {
+        if (in_array($node->getNodeName(), static::$specificNodesControllers)) {
             return $namespace . '\\' .
-            StringHandler::classify($this->getRequestedNode()->getNodeName()) .
+            StringHandler::classify($node->getNodeName()) .
             'Controller';
         } else {
             return $namespace . '\\' .
-            StringHandler::classify($this->getRequestedNode()->getNodeType()->getName()) .
+            StringHandler::classify($node->getNodeType()->getName()) .
             'Controller';
         }
     }
@@ -274,6 +265,21 @@ class FrontendController extends AppController
     }
 
     /**
+     * Initialize controller with environment from an other controller
+     * in order to avoid initializing same componant again.
+     *
+     * @param Translator                                       $translator
+     * @param array                                            $baseAssignation
+     */
+    public function __initFromOtherController(
+        array &$baseAssignation = null,
+        Container $themeContainer = null
+    ) {
+        $this->assignation = $baseAssignation;
+        $this->themeContainer = $themeContainer;
+    }
+
+    /**
      * Handle node based routing, returns a Response object
      * for a node-based request.
      *
@@ -283,14 +289,17 @@ class FrontendController extends AppController
      *
      * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
      */
-    protected function handle(Request $request)
-    {
-        Kernel::getService('stopwatch')->start('handleNodeController');
+    protected function handle(
+        Request $request,
+        Node $node = null,
+        Translation $translation = null
+    ) {
+        $this->getService('stopwatch')->start('handleNodeController');
 
-        if ($this->getRequestedNode() !== null) {
+        if ($node !== null) {
             if (true !== $resp = $this->validateAccessForNodeWithStatus(
-                $this->getRequestedNode(),
-                $this->getSecurityContext()
+                $node,
+                $this->getService('securityContext')
             )) {
                 return $resp;
             }
@@ -299,7 +308,7 @@ class FrontendController extends AppController
              * Determine if we look for a node-type named controller or
              * a node-named controller.
              */
-            $controllerPath = $this->getControllerForNode($this->getRequestedNode());
+            $controllerPath = $this->getControllerForNode($node);
 
             if (class_exists($controllerPath) &&
                 method_exists($controllerPath, 'indexAction')) {
@@ -307,7 +316,7 @@ class FrontendController extends AppController
             } else {
                 return $this->throw404(
                     "No front-end controller found for '" .
-                    $this->getRequestedNode()->getNodeName() .
+                    $node->getNodeName() .
                     "' node. You need to create a " . $controllerPath . "."
                 );
             }
@@ -324,34 +333,19 @@ class FrontendController extends AppController
                  * environment to the next level.
                  */
                 $ctrl->__initFromOtherController(
-                    $this->translator,
-                    $this->assignation
+                    $this->assignation,
+                    $this->themeContainer
                 );
             }
-            Kernel::getService('stopwatch')->stop('handleNodeController');
+            $this->getService('stopwatch')->stop('handleNodeController');
             return $ctrl->indexAction(
                 $request,
-                $this->getRequestedNode(),
-                $this->getRequestedTranslation()
+                $node,
+                $translation
             );
         } else {
             return $this->throw404("No front-end controller found");
         }
-    }
-
-    /**
-     * @return RZ\Roadiz\Core\Entities\Node
-     */
-    public function getRequestedNode()
-    {
-        return $this->node;
-    }
-    /**
-     * @return RZ\Roadiz\Core\Entities\Translation
-     */
-    public function getRequestedTranslation()
-    {
-        return $this->translation;
     }
 
     /**
@@ -410,12 +404,8 @@ class FrontendController extends AppController
      */
     public function getNodeSEO($fallbackNodeSource = null)
     {
-        if (null !== $this->node) {
-            $ns = $this->node->getNodeSources()->first();
-
-            if (null !== $ns) {
-                return $ns->getHandler()->getSEO();
-            }
+        if (null !== $this->nodeSource) {
+            return $this->nodeSource->getHandler()->getSEO();
         }
 
         if (null !== $fallbackNodeSource) {

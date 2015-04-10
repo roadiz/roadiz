@@ -36,6 +36,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use \InlineStyle\InlineStyle;
 
@@ -50,15 +51,6 @@ class EntryPointsController extends AppController
         'email',
         'message',
     ];
-
-    /**
-     * Initialize controller with NO twig environment.
-     */
-    public function __init()
-    {
-        $this->getTwigLoader()
-             ->prepareBaseAssignation();
-    }
 
     /**
      * @return string
@@ -133,10 +125,9 @@ class EntryPointsController extends AppController
     public function contactFormAction(Request $request, $_locale = null)
     {
         if (true !== $validation = $this->validateRequest($request)) {
-            return new Response(
-                json_encode($validation),
-                Response::HTTP_FORBIDDEN,
-                ['content-type' => 'application/javascript']
+            return new JsonResponse(
+                $validation,
+                Response::HTTP_FORBIDDEN
             );
         }
         $canSend = true;
@@ -316,11 +307,7 @@ class EntryPointsController extends AppController
             return $response->send();
 
         } else {
-            return new Response(
-                json_encode($responseArray),
-                Response::HTTP_OK,
-                ['content-type' => 'application/javascript']
-            );
+            return new JsonResponse($responseArray);
         }
     }
 

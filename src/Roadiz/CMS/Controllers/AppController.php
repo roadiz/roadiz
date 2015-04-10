@@ -217,10 +217,6 @@ class AppController implements ViewableInterface
     protected $assignation = [];
 
     /**
-     * @var Symfony\Component\Translation\Translator
-     */
-    protected $translator = null;
-    /**
      * @return Symfony\Component\Translation\Translator
      */
     public function getTranslator()
@@ -235,23 +231,7 @@ class AppController implements ViewableInterface
      */
     public function __init()
     {
-        $this->getTwigLoader()
-             ->prepareBaseAssignation();
-    }
-
-    /**
-     * Initialize controller with environment from an other controller
-     * in order to avoid initializing same componant again.
-     *
-     * @param Translator                                       $translator
-     * @param array                                            $baseAssignation
-     */
-    public function __initFromOtherController(
-        Translator $translator = null,
-        array $baseAssignation = null
-    ) {
-        $this->translator = $translator;
-        $this->assignation = $baseAssignation;
+        $this->prepareBaseAssignation();
     }
 
     /**
@@ -322,19 +302,6 @@ class AppController implements ViewableInterface
     }
 
     /**
-     * Setup twig parameters at runtime.
-     *
-     * @return $this
-     */
-    public function getTwigLoader()
-    {
-        $this->getService('twig.environment')->addExtension(new TranslationExtension($this->getService('translator')));
-        $this->getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
-
-        return $this;
-    }
-
-    /**
      * Force current AppController twig templates compilation.
      *
      * @return boolean
@@ -344,7 +311,6 @@ class AppController implements ViewableInterface
         if (file_exists(static::getViewsFolder())) {
             $ctrl = new static();
             $ctrl->setKernel(Kernel::getInstance());
-            $ctrl->getTwigLoader();
 
             try {
                 $fs = new Filesystem();

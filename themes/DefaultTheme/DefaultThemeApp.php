@@ -69,9 +69,8 @@ class DefaultThemeApp extends FrontendController
         try {
             $translation = $this->bindLocaleFromRoute($request, $_locale);
             $home = $this->getHome($translation);
-            $this->prepareThemeAssignation($home, $translation);
 
-            return $this->handle($request);
+            return $this->handle($request, $home, $translation);
         } catch (NoTranslationAvailableException $e) {
             return $this->throw404();
         }
