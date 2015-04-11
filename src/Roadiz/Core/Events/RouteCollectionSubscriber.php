@@ -64,6 +64,13 @@ class RouteCollectionSubscriber implements EventSubscriberInterface
         ];
     }
 
+    public static function needToDumpUrlTools()
+    {
+        $fs = new Filesystem();
+        return (!$fs->exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php') ||
+                !$fs->exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php'));
+    }
+
     /**
      *
      */
@@ -71,29 +78,26 @@ class RouteCollectionSubscriber implements EventSubscriberInterface
     {
         $this->stopwatch->start('dumpUrlUtils');
 
-        if (!$this->fs->exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php') ||
-            !$this->fs->exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php')) {
-            if (!$this->fs->exists(ROADIZ_ROOT . '/gen-src/Compiled')) {
-                $this->fs->mkdir(ROADIZ_ROOT . '/gen-src/Compiled', 0755);
-            }
-            /*
-             * Generate custom UrlMatcher
-             */
-            $dumper = new PhpMatcherDumper($this->routeCollection);
-            $class = $dumper->dump([
-                'class' => 'GlobalUrlMatcher',
-            ]);
-            $this->fs->dumpFile(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php', $class);
-
-            /*
-             * Generate custom UrlGenerator
-             */
-            $dumper = new PhpGeneratorDumper($this->routeCollection);
-            $class = $dumper->dump([
-                'class' => 'GlobalUrlGenerator',
-            ]);
-            $this->fs->dumpFile(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php', $class);
+        if (!$this->fs->exists(ROADIZ_ROOT . '/gen-src/Compiled')) {
+            $this->fs->mkdir(ROADIZ_ROOT . '/gen-src/Compiled', 0755);
         }
+        /*
+         * Generate custom UrlMatcher
+         */
+        $dumper = new PhpMatcherDumper($this->routeCollection);
+        $class = $dumper->dump([
+            'class' => 'GlobalUrlMatcher',
+        ]);
+        $this->fs->dumpFile(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php', $class);
+
+        /*
+         * Generate custom UrlGenerator
+         */
+        $dumper = new PhpGeneratorDumper($this->routeCollection);
+        $class = $dumper->dump([
+            'class' => 'GlobalUrlGenerator',
+        ]);
+        $this->fs->dumpFile(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php', $class);
 
         $this->stopwatch->stop('dumpUrlUtils');
     }

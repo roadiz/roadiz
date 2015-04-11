@@ -92,9 +92,7 @@ class Kernel implements ServiceProviderInterface
         $this->container->register($this);
         $this->container['stopwatch']->openSection();
 
-        if (!$this->isInstallMode()) {
-            $this->initEvents();
-        }
+        $this->initEvents();
     }
 
     /**
@@ -125,18 +123,7 @@ class Kernel implements ServiceProviderInterface
         };
 
         $container['dispatcher'] = function ($c) {
-
-            $dispatcher = new EventDispatcher();
-            $dispatcher->addSubscriber(new RouterListener($c['urlMatcher']));
-            $dispatcher->addListener(
-                KernelEvents::CONTROLLER,
-                [
-                    new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this),
-                    'onControllerMatched',
-                ]
-            );
-
-            return $dispatcher;
+            return new EventDispatcher();
         };
 
         $container['requestContext'] = function ($c) {
@@ -325,6 +312,21 @@ class Kernel implements ServiceProviderInterface
             $this->request->setLocale($shortLocale);
             \Locale::setDefault($shortLocale);
         }
+
+        /*
+         * Register Themes dependency injection
+         */
+        if (!$this->isInstallMode()) {
+            // Register back-end security scheme
+            $beClass = $this->container['backendClass'];
+            $beClass::setupDependencyInjection($this->container);
+        }
+
+        // Register front-end security scheme
+        foreach ($this->container['frontendThemes'] as $theme) {
+            $feClass = $theme->getClassName();
+            $feClass::setupDependencyInjection($this->container);
+        }
     }
 
     public function onKernelResponse(FilterResponseEvent $event)
@@ -341,9 +343,24 @@ class Kernel implements ServiceProviderInterface
      */
     private function initEvents()
     {
+        if ($this->isDebug() || RouteCollectionSubscriber::needToDumpUrlTools()) {
+            $this->container['dispatcher']->addSubscriber(
+                new RouteCollectionSubscriber($this->container['routeCollection'], $this->container['stopwatch'])
+            );
+        }
+
+        $this->container['dispatcher']->addSubscriber(new RouterListener($this->container['urlMatcher']));
+
         /*
          * Events
          */
+        $this->container['dispatcher']->addListener(
+            KernelEvents::REQUEST,
+            [
+                $this,
+                'onKernelRequest',
+            ]
+        );
         $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
             [
@@ -352,10 +369,10 @@ class Kernel implements ServiceProviderInterface
             ]
         );
         $this->container['dispatcher']->addListener(
-            KernelEvents::REQUEST,
+            KernelEvents::CONTROLLER,
             [
-                $this,
-                'onKernelRequest',
+                new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this),
+                'onControllerMatched',
             ]
         );
         $this->container['dispatcher']->addListener(
@@ -371,11 +388,6 @@ class Kernel implements ServiceProviderInterface
          */
         if (true === (boolean) SettingsBag::get('display_debug_panel')) {
             $this->container['dispatcher']->addSubscriber($this->container['debugPanel']);
-        }
-        if ($this->isDebug()) {
-            $this->container['dispatcher']->addSubscriber(
-                new RouteCollectionSubscriber($this->container['routeCollection'], $this->container['stopwatch'])
-            );
         }
     }
 

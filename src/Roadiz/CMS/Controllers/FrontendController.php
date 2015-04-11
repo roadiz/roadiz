@@ -427,25 +427,22 @@ class FrontendController extends AppController
     {
         parent::setupDependencyInjection($container);
 
-        $container->extend('firewallMap', function (FirewallMap $map, Container $c) {
-            /*
-             * Prepare app firewall
-             */
-            $requestMatcher = new RequestMatcher('^/');
+        /*
+         * Prepare app firewall
+         */
+        $requestMatcher = new RequestMatcher('^/');
 
-            $listeners = [
-                // manages the SecurityContext persistence through a session
-                $c['contextListener'],
-                // automatically adds a Token if none is already present.
-                new AnonymousAuthenticationListener($c['securityContext'], ''), // $key
-                $c["switchUser"],
-            ];
-            /*
-             * Inject a new firewall map element
-             */
-            $map->add($requestMatcher, $listeners, $c['firewallExceptionListener']);
+        $listeners = [
+            // manages the SecurityContext persistence through a session
+            $container['contextListener'],
+            // automatically adds a Token if none is already present.
+            new AnonymousAuthenticationListener($container['securityContext'], ''), // $key
+            $container["switchUser"],
+        ];
 
-            return $map;
-        });
+        /*
+         * Inject a new firewall map element
+         */
+        $container['firewallMap']->add($requestMatcher, $listeners, $container['firewallExceptionListener']);
     }
 }

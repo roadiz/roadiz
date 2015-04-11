@@ -572,17 +572,10 @@ class AppController implements ViewableInterface
         /*
          * Enable theme templates in main namespace and in its own theme namespace.
          */
-        $container->extend('twig.loaderFileSystem', function (\Twig_Loader_Filesystem $loader, $c) {
-
-            if (!in_array(static::getViewsFolder(), $loader->getPaths())) {
-                $loader->addPath(static::getViewsFolder());
-                // Add path into a namespaced loader to enable using same template name
-                // over different static themes.
-                $loader->addPath(static::getViewsFolder(), static::getThemeDir());
-            }
-
-            return $loader;
-        });
+        $container['twig.loaderFileSystem']->addPath(static::getViewsFolder());
+        // Add path into a namespaced loader to enable using same template name
+        // over different static themes.
+        $container['twig.loaderFileSystem']->addPath(static::getViewsFolder(), static::getThemeDir());
     }
 
     protected function getHome(Translation $translation = null)
