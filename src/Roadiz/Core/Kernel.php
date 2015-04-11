@@ -272,10 +272,12 @@ class Kernel implements ServiceProviderInterface
         /*
          * Log error before displaying a fallback page.
          */
-        $this->container['logger']->emerg($e->getMessage(), [
-            'trace' => $e->getTraceAsString(),
-            'exception' => get_class($e),
-        ]);
+        if (isset($this->container['logger'])) {
+            $this->container['logger']->emerg($e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'exception' => get_class($e),
+            ]);
+        }
 
         if ($this->request->isXmlHttpRequest()) {
             return new \Symfony\Component\HttpFoundation\JsonResponse(
