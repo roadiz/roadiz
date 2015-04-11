@@ -33,12 +33,13 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Kernel;
+use Solarium\Client;
 
 class FullTextSearchHandler
 {
     protected $client = null;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         $this->client = $client;
     }

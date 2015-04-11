@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Core\Kernel;
 use Solarium\QueryType\Update\Query\Document\DocumentInterface;
 use Solarium\QueryType\Update\Query\Query;
+use Solarium\Client;
 
 /**
  * Wrap a Solarium and a NodeSource together to ease indexing.
@@ -62,7 +63,7 @@ class SolariumNodeSource
      *
      * @throws RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException If Solr server does not respond.
      */
-    public function __construct($nodeSource, \Solarium\Client $client = null)
+    public function __construct($nodeSource, Client $client = null)
     {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
