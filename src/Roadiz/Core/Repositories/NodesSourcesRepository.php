@@ -535,7 +535,7 @@ class NodesSourcesRepository extends EntityRepository
     public function findBySearchQuery($query, $limit = 0)
     {
         // Update Solr Serach engine if setup
-        if (true === Kernel::getInstance()->pingSolrServer()) {
+        if (true === Kernel::getService('solr.ready')) {
             $service = Kernel::getService('solr');
 
             $queryObj = $service->createSelect();
@@ -581,7 +581,7 @@ class NodesSourcesRepository extends EntityRepository
     public function findBySearchQueryAndTranslation($query, Translation $translation)
     {
         // Update Solr Serach engine if setup
-        if (true === Kernel::getInstance()->pingSolrServer()) {
+        if (true === Kernel::getService('solr.ready')) {
             $service = Kernel::getService('solr');
 
             $queryObj = $service->createSelect();

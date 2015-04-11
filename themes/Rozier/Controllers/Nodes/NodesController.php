@@ -478,18 +478,6 @@ class NodesController extends RozierApp
                 $node->getHandler()->softRemoveWithChildren();
                 $this->getService('em')->flush();
 
-                // Update Solr Search engine if setup
-                if (true === $this->getKernel()->pingSolrServer()) {
-                    foreach ($node->getNodeSources() as $nodeSource) {
-                        $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
-                            $nodeSource,
-                            $this->getService('solr')
-                        );
-                        $solrSource->getDocumentFromIndex();
-                        $solrSource->updateAndCommit();
-                    }
-                }
-
                 $msg = $this->getTranslator()->trans(
                     'node.%name%.deleted',
                     ['%name%' => $node->getNodeName()]
@@ -590,18 +578,6 @@ class NodesController extends RozierApp
 
                 $node->getHandler()->softUnremoveWithChildren();
                 $this->getService('em')->flush();
-
-                // Update Solr Search engine if setup
-                if (true === $this->getKernel()->pingSolrServer()) {
-                    foreach ($node->getNodeSources() as $nodeSource) {
-                        $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
-                            $nodeSource,
-                            $this->getService('solr')
-                        );
-                        $solrSource->getDocumentFromIndex();
-                        $solrSource->updateAndCommit();
-                    }
-                }
 
                 $msg = $this->getTranslator()->trans(
                     'node.%name%.undeleted',

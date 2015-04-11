@@ -71,7 +71,7 @@ class SolrCommand extends Command
         $solr = Kernel::getService('solr');
 
         if (null !== $solr) {
-            if (true === Kernel::getInstance()->pingSolrServer()) {
+            if (true === Kernel::getService('solr.ready')) {
                 if ($input->getOption('reset')) {
                     if ($this->dialog->askConfirmation(
                         $output,

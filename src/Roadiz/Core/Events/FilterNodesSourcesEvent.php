@@ -44,7 +44,7 @@ class FilterNodesSourcesEvent extends Event
         $this->nodeSource = $nodeSource;
     }
 
-    public function getNodesSources()
+    public function getNodeSource()
     {
         return $this->nodeSource;
     }

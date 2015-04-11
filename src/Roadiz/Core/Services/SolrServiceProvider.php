@@ -53,6 +53,22 @@ class SolrServiceProvider implements \Pimple\ServiceProviderInterface
             }
         };
 
+        $container['solr.ready'] = function ($c) {
+            if (null !== $c['solr']) {
+                // create a ping query
+                $ping = $c['solr']->createPing();
+                // execute the ping query
+                try {
+                    $c['solr']->ping($ping);
+                    return true;
+                } catch (\Exception $e) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        };
+
         $container['solr.search.nodeSource'] = function ($c) {
             if (null !== $c['solr']) {
                 $searchNodesource = new FullTextSearchHandler($c['solr']);

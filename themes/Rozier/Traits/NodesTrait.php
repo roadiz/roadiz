@@ -224,24 +224,6 @@ trait NodesTrait
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     */
-    protected function updateSolrIndex(Node $node)
-    {
-        // Update Solr Search engine if available
-        if (true === $this->getKernel()->pingSolrServer()) {
-            foreach ($node->getNodeSources() as $nodeSource) {
-                $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
-                    $nodeSource,
-                    $this->getService('solr')
-                );
-                $solrSource->getDocumentFromIndex();
-                $solrSource->updateAndCommit();
-            }
-        }
-    }
-
-    /**
      * Create a new node-source for given translation.
      *
      * @param array                        $data

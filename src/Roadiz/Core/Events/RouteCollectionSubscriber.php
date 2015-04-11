@@ -24,7 +24,7 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RouteCollectionEvent.php
+ * @file RouteCollectionSubscriber.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Events;
@@ -41,7 +41,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Events for route collection generations.
  */
-class RouteCollectionEvent implements EventSubscriberInterface
+class RouteCollectionSubscriber implements EventSubscriberInterface
 {
     protected $routeCollection;
     protected $stopwatch;

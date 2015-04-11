@@ -267,17 +267,6 @@ class AjaxNodesController extends AbstractAjaxController
 
                                 $this->em()->flush();
 
-                                // Update Solr Search engine if setup
-                                if (true === $this->getKernel()->pingSolrServer()) {
-                                    foreach ($node->getNodeSources() as $nodeSource) {
-                                        $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
-                                            $nodeSource,
-                                            $this->getService('solr')
-                                        );
-                                        $solrSource->getDocumentFromIndex();
-                                        $solrSource->updateAndCommit();
-                                    }
-                                }
                                 /*
                                  * Dispatch event
                                  */

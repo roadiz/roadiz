@@ -205,8 +205,6 @@ class NodesTagsController extends RozierApp
 
         $this->getService('em')->flush();
 
-        $this->updateSolrIndex($node);
-
         return $tag;
     }
 
@@ -223,8 +221,6 @@ class NodesTagsController extends RozierApp
             $data['tagId'] == $tag->getId()) {
             $node->removeTag($tag);
             $this->getService('em')->flush();
-
-            $this->updateSolrIndex($node);
 
             return $tag;
         }

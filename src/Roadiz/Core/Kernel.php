@@ -35,7 +35,7 @@ use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-use RZ\Roadiz\Core\Events\RouteCollectionEvent;
+use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
@@ -372,31 +372,9 @@ class Kernel implements ServiceProviderInterface
         }
         if ($this->isDebug()) {
             $this->container['dispatcher']->addSubscriber(
-                new RouteCollectionEvent($this->container['routeCollection'], $this->container['stopwatch'])
+                new RouteCollectionSubscriber($this->container['routeCollection'], $this->container['stopwatch'])
             );
         }
-    }
-
-    /**
-     * Ping current Solr server.
-     *
-     * @return boolean
-     */
-    public function pingSolrServer()
-    {
-        if (null !== $this->container['solr']) {
-            // create a ping query
-            $ping = $this->container['solr']->createPing();
-            // execute the ping query
-            try {
-                $this->container['solr']->ping($ping);
-                return true;
-            } catch (\Exception $e) {
-                return false;
-            }
-        }
-
-        return false;
     }
 
     /**
