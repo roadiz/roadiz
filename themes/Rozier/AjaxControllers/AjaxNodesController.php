@@ -31,12 +31,13 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 use Themes\Rozier\Controllers\Nodes\NodesController;
-
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * {@inheritdoc}
@@ -68,7 +69,7 @@ class AjaxNodesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $node = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if ($node !== null) {
             $responseArray = null;
@@ -81,13 +82,19 @@ class AjaxNodesController extends AbstractAjaxController
                     $responseArray = $this->updatePosition($request->request->all(), $node);
                     break;
                 case 'duplicate':
-                    $node->getHandler()->duplicate();
+                    $newNode = $node->getHandler()->duplicate();
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($newNode);
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+
                     $responseArray = [
                         'statusCode' => '200',
                         'status' => 'success',
                         'responseText' => $this->getTranslator()->trans('duplicated.node.%name%', [
-                            '%name%' => $node->getNodeName()
-                        ])
+                            '%name%' => $node->getNodeName(),
+                        ]),
                     ];
                     break;
             }
@@ -97,8 +104,8 @@ class AjaxNodesController extends AbstractAjaxController
                     'statusCode' => '200',
                     'status' => 'success',
                     'responseText' => $this->getTranslator()->trans('node.%name%.updated', [
-                        '%name%' => $node->getNodeName()
-                    ])
+                        '%name%' => $node->getNodeName(),
+                    ]),
                 ];
             }
 
@@ -109,13 +116,12 @@ class AjaxNodesController extends AbstractAjaxController
             );
         }
 
-
         $responseArray = [
             'statusCode' => '403',
-            'status'    => 'danger',
+            'status' => 'danger',
             'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', [
-                '%nodeId%' => $nodeId
-            ])
+                '%nodeId%' => $nodeId,
+            ]),
         ];
 
         return new Response(
@@ -139,7 +145,7 @@ class AjaxNodesController extends AbstractAjaxController
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
             $parent = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['newParent']);
+                           ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $node->setParent($parent);
@@ -155,14 +161,14 @@ class AjaxNodesController extends AbstractAjaxController
         if (!empty($parameters['nextNodeId']) &&
             $parameters['nextNodeId'] > 0) {
             $nextNode = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['nextNodeId']);
+                             ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['nextNodeId']);
             if ($nextNode !== null) {
                 $node->setPosition($nextNode->getPosition() - 0.5);
             }
         } elseif (!empty($parameters['prevNodeId']) &&
             $parameters['prevNodeId'] > 0) {
             $prevNode = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['prevNodeId']);
+                             ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['prevNodeId']);
             if ($prevNode !== null) {
                 $node->setPosition($prevNode->getPosition() + 0.5);
             }
@@ -181,6 +187,12 @@ class AjaxNodesController extends AbstractAjaxController
         } else {
             NodeHandler::cleanRootNodesPositions();
         }
+
+        /*
+         * Dispatch event
+         */
+        $event = new FilterNodeEvent($node);
+        $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
     }
 
     /**
@@ -212,7 +224,7 @@ class AjaxNodesController extends AbstractAjaxController
             'status' => 'setStatus',
             'locked' => 'setLocked',
             'hideChildren' => 'setHidingChildren',
-            'sterile' => 'setSterile'
+            'sterile' => 'setSterile',
         ];
 
         if ("nodeChangeStatus" == $request->get('_action') &&
@@ -223,8 +235,8 @@ class AjaxNodesController extends AbstractAjaxController
                 !$this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_STATUS')) {
                 $responseArray = [
                     'statusCode' => Response::HTTP_FORBIDDEN,
-                    'status'    => 'danger',
-                    'responseText' => $this->getTranslator()->trans('role.cannot.update.status')
+                    'status' => 'danger',
+                    'responseText' => $this->getTranslator()->trans('role.cannot.update.status'),
                 ];
 
             } else {
@@ -266,63 +278,66 @@ class AjaxNodesController extends AbstractAjaxController
                                         $solrSource->updateAndCommit();
                                     }
                                 }
+                                /*
+                                 * Dispatch event
+                                 */
+                                $event = new FilterNodeEvent($node);
+                                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
 
                                 $responseArray = [
                                     'statusCode' => Response::HTTP_OK,
-                                    'status'    => 'success',
+                                    'status' => 'success',
                                     'responseText' => $this->getTranslator()->trans('node.%name%.%field%.updated', [
                                         '%name%' => $node->getNodeName(),
-                                        '%field%' => $request->get('statusName')
+                                        '%field%' => $request->get('statusName'),
                                     ]),
                                     'name' => $request->get('statusName'),
-                                    'value' => $value
+                                    'value' => $value,
                                 ];
                             } else {
                                 $responseArray = [
                                     'statusCode' => Response::HTTP_FORBIDDEN,
-                                    'status'    => 'danger',
-                                    'responseText' => $this->getTranslator()->trans('role.cannot.update.status')
+                                    'status' => 'danger',
+                                    'responseText' => $this->getTranslator()->trans('role.cannot.update.status'),
                                 ];
                             }
-
 
                         } else {
                             $responseArray = [
                                 'statusCode' => Response::HTTP_FORBIDDEN,
-                                'status'    => 'danger',
+                                'status' => 'danger',
                                 'responseText' => $this->getTranslator()->trans('node.has_no.field.%field%', [
-                                    '%field%' => $request->get('statusName')
-                                ])
+                                    '%field%' => $request->get('statusName'),
+                                ]),
                             ];
                         }
 
                     } else {
                         $responseArray = [
                             'statusCode' => Response::HTTP_FORBIDDEN,
-                            'status'    => 'danger',
+                            'status' => 'danger',
                             'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', [
-                                '%nodeId%' => $request->get('nodeId')
-                            ])
+                                '%nodeId%' => $request->get('nodeId'),
+                            ]),
                         ];
                     }
 
                 } else {
                     $responseArray = [
                         'statusCode' => Response::HTTP_FORBIDDEN,
-                        'status'    => 'danger',
-                        'responseText' => $this->getTranslator()->trans('node.id.not_specified')
+                        'status' => 'danger',
+                        'responseText' => $this->getTranslator()->trans('node.id.not_specified'),
                     ];
                 }
             }
 
-
         } else {
             $responseArray = [
                 'statusCode' => Response::HTTP_FORBIDDEN,
-                'status'    => 'danger',
+                'status' => 'danger',
                 'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', [
-                    '%nodeId%' => $request->get('nodeId')
-                ])
+                    '%nodeId%' => $request->get('nodeId'),
+                ]),
             ];
         }
 
@@ -353,22 +368,22 @@ class AjaxNodesController extends AbstractAjaxController
         if ($request->get('nodeTypeId') > 0 &&
             $request->get('parentNodeId') > 0) {
             $nodeType = $this->getService('em')
-                            ->find(
-                                'RZ\Roadiz\Core\Entities\NodeType',
-                                (int) $request->get('nodeTypeId')
-                            );
+                             ->find(
+                                 'RZ\Roadiz\Core\Entities\NodeType',
+                                 (int) $request->get('nodeTypeId')
+                             );
 
             $parent = $this->getService('em')
-                            ->find(
-                                'RZ\Roadiz\Core\Entities\Node',
-                                (int) $request->get('parentNodeId')
-                            );
+                           ->find(
+                               'RZ\Roadiz\Core\Entities\Node',
+                               (int) $request->get('parentNodeId')
+                           );
 
             if (null !== $nodeType &&
                 null !== $parent) {
                 if ($request->get('translationId') > 0) {
                     $translation = $this->getService('em')
-                                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $request->get('translationId'));
+                                        ->find('RZ\Roadiz\Core\Entities\Translation', (int) $request->get('translationId'));
 
                 } else {
                     $translation = $parent->getNodeSources()->first()->getTranslation();
@@ -390,15 +405,21 @@ class AjaxNodesController extends AbstractAjaxController
                 try {
                     $source = NodesController::generateUniqueNodeWithTypeAndTranslation($request, $nodeType, $parent, $translation, $tag);
 
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($source->getNode());
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+
                     $responseArray = [
                         'statusCode' => Response::HTTP_OK,
-                        'status'    => 'success',
+                        'status' => 'success',
                         'responseText' => $this->getTranslator()->trans(
                             'added.node.%name%',
                             [
-                                '%name%' => $source->getTitle()
+                                '%name%' => $source->getTitle(),
                             ]
-                        )
+                        ),
                     ];
 
                 } catch (\Exception $e) {
@@ -406,25 +427,24 @@ class AjaxNodesController extends AbstractAjaxController
 
                     $responseArray = [
                         'statusCode' => Response::HTTP_FORBIDDEN,
-                        'status'    => 'danger',
-                        'responseText' => $msg
+                        'status' => 'danger',
+                        'responseText' => $msg,
                     ];
                 }
-
 
             } else {
                 $responseArray = [
                     'statusCode' => Response::HTTP_FORBIDDEN,
-                    'status'    => 'danger',
-                    'responseText' => $this->getTranslator()->trans('bad.request')
+                    'status' => 'danger',
+                    'responseText' => $this->getTranslator()->trans('bad.request'),
                 ];
             }
 
         } else {
             $responseArray = [
                 'statusCode' => Response::HTTP_FORBIDDEN,
-                'status'    => 'danger',
-                'responseText' => $this->getTranslator()->trans('bad.request')
+                'status' => 'danger',
+                'responseText' => $this->getTranslator()->trans('bad.request'),
             ];
         }
 

@@ -35,6 +35,8 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
@@ -267,6 +269,12 @@ trait NodesTrait
 
         $this->getService('em')->persist($source);
         $this->getService('em')->flush();
+
+        /*
+         * Dispatch event
+         */
+        $event = new FilterNodesSourcesEvent($source);
+        $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_CREATED, $event);
     }
 
     /**

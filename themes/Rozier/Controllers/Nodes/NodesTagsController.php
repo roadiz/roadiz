@@ -33,6 +33,8 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\NodeEvents;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -88,6 +90,12 @@ class NodesTagsController extends RozierApp
                 if ($form->isValid()) {
                     $this->addNodeTag($form->getData(), $node);
 
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($node);
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
+
                     $msg = $this->getTranslator()->trans('node.%node%.linked.tags', [
                         '%node%' => $node->getNodeName(),
                     ]);
@@ -140,6 +148,13 @@ class NodesTagsController extends RozierApp
 
             if ($form->isValid()) {
                 $this->removeNodeTag($form->getData(), $node, $tag);
+
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodeEvent($node);
+                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
+
                 $msg = $this->getTranslator()->trans(
                     'tag.%name%.removed',
                     ['%name%' => $tag->getTranslatedTags()->first()->getName()]
