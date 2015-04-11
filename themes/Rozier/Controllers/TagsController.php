@@ -33,6 +33,8 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\FilterTagEvent;
+use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
@@ -130,6 +132,12 @@ class TagsController extends RozierApp
                 if ($form->isValid()) {
                     $this->editTag($form->getData(), $tt);
 
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterTagEvent($tag);
+                    $this->getService('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
+
                     $msg = $this->getTranslator()->trans('tag.%name%.updated', [
                         '%name%' => $tag->getTranslatedTags()->first()->getName(),
                     ]);
@@ -168,6 +176,12 @@ class TagsController extends RozierApp
                     }
                     $this->getService('em')->persist($translatedTag);
                     $this->getService('em')->flush();
+
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterTagEvent($gtag);
+                    $this->getService('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
@@ -219,6 +233,11 @@ class TagsController extends RozierApp
 
             if ($form->isValid()) {
                 $this->addTag($form->getData(), $tag, $translation);
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterTagEvent($tag);
+                $this->getService('dispatcher')->dispatch(TagEvents::TAG_CREATED, $event);
 
                 $msg = $this->getTranslator()->trans('tag.%name%.created', ['%name%' => $tag->getTagName()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -267,6 +286,11 @@ class TagsController extends RozierApp
 
             if ($form->isValid()) {
                 $this->editTagSettings($form->getData(), $tag);
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterTagEvent($tag);
+                $this->getService('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
 
                 $msg = $this->getTranslator()->trans('tag.%name%.updated', ['%name%' => $tag->getTagName()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -353,7 +377,14 @@ class TagsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['tagId'] == $tag->getId()) {
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterTagEvent($tag);
+                $this->getService('dispatcher')->dispatch(TagEvents::TAG_DELETED, $event);
+
                 $this->deleteTag($form->getData(), $tag);
+
                 $msg = $this->getTranslator()->trans('tag.%name%.deleted', ['%name%' => $tag->getTranslatedTags()->first()->getName()]);
                 $this->publishConfirmMessage($request, $msg);
 
@@ -408,6 +439,11 @@ class TagsController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $tag = $this->addChildTag($form->getData(), $parentTag, $translation);
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterTagEvent($tag);
+                    $this->getService('dispatcher')->dispatch(TagEvents::TAG_CREATED, $event);
 
                     $msg = $this->getTranslator()->trans('child.tag.%name%.created', ['%name%' => $tag->getTagName()]);
                     $this->publishConfirmMessage($request, $msg);

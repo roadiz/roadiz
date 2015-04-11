@@ -31,6 +31,8 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Events\FilterTagEvent;
+use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -210,5 +212,11 @@ class AjaxTagsController extends AbstractAjaxController
         } else {
             TagHandler::cleanRootTagsPositions();
         }
+
+        /*
+         * Dispatch event
+         */
+        $event = new FilterTagEvent($tag);
+        $this->getService('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
     }
 }

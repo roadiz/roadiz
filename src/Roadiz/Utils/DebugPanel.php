@@ -29,20 +29,23 @@
  */
 namespace RZ\Roadiz\Utils;
 
-use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Event subscriber which append a debug console after any HTML output.
  */
 class DebugPanel implements EventSubscriberInterface
 {
-    protected $container = null;
+    protected $twig = null;
+    protected $stopwatch = null;
 
-    public function __construct(Container $container)
+    public function __construct(\Twig_Environment $twig, Stopwatch $stopwatch)
     {
-        $this->container = $container;
+        $this->stopwatch = $stopwatch;
+        $this->twig = $twig;
     }
 
     /**
@@ -50,7 +53,11 @@ class DebugPanel implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return ['kernel.response' => 'onKernelResponse'];
+        return [
+            KernelEvents::REQUEST => 'onKernelRequest',
+            KernelEvents::RESPONSE => 'onKernelResponse',
+            KernelEvents::CONTROLLER => 'onControllerMatched',
+        ];
     }
 
     /**
@@ -58,6 +65,10 @@ class DebugPanel implements EventSubscriberInterface
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
+        if ($this->stopwatch->isStarted('controllerHandling')) {
+            $this->stopwatch->stop('controllerHandling');
+        }
+
         $response = $event->getResponse();
 
         if (false !== strpos($response->getContent(), '<!-- ##debug_panel## -->')) {
@@ -71,14 +82,33 @@ class DebugPanel implements EventSubscriberInterface
         }
     }
 
+    /**
+     * Start a stopwatch event when a kernel start handling.
+     */
+    public function onKernelRequest()
+    {
+        $this->stopwatch->start('requestHandling');
+        $this->stopwatch->start('matchingRoute');
+    }
+    /**
+     * Stop request-handling stopwatch event and
+     * start a new stopwatch event when a controller is instanciated.
+     */
+    public function onControllerMatched()
+    {
+        $this->stopwatch->stop('matchingRoute');
+        $this->stopwatch->stop('requestHandling');
+        $this->stopwatch->start('controllerHandling');
+    }
+
     private function getDebugView()
     {
-        $this->container['stopwatch']->stopSection('runtime');
+        $this->stopwatch->stopSection('runtime');
 
         $assignation = [
-            'stopwatch' => $this->container['stopwatch'],
+            'stopwatch' => $this->stopwatch,
         ];
 
-        return $this->container['twig.environment']->render('debug-panel.html.twig', $assignation);
+        return $this->twig->render('debug-panel.html.twig', $assignation);
     }
 }

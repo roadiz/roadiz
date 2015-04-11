@@ -51,7 +51,6 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
                     $this->assertEquals($document->node_source_id_i, $nodeSource->getId());
                 }
             } catch (SolrServerNotAvailableException $e) {
-                echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
                 return;
             }
         }
@@ -76,7 +75,6 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue($solrDoc->getDocumentFromIndex());
 
             } catch (SolrServerNotAvailableException $e) {
-                echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
                 return;
             }
         }
@@ -103,7 +101,6 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
 
             } catch (SolrServerNotAvailableException $e) {
             } catch (HttpException $e) {
-                echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
                 return;
             }
         }
@@ -142,7 +139,6 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
                 $result = $solr->update($update);
             }
         } catch (HttpException $e) {
-            echo PHP_EOL. 'No Solr server available.'.PHP_EOL;
             return;
         }
     }

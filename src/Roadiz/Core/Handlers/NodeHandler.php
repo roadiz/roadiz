@@ -229,23 +229,7 @@ class NodeHandler
      */
     public function removeAssociations()
     {
-        $ping = Kernel::getInstance()->pingSolrServer();
-
         foreach ($this->node->getNodeSources() as $ns) {
-            // Update Solr Search engine if setup
-            if (true === $ping) {
-                try {
-                    $solrSource = new SolariumNodeSource(
-                        $ns,
-                        Kernel::getService('solr')
-                    );
-                    $solrSource->getDocumentFromIndex();
-                    $solrSource->cleanAndCommit();
-                } catch (\Exception $e) {
-                    // Do nothing
-                }
-            }
-
             Kernel::getService('em')->remove($ns);
         }
 

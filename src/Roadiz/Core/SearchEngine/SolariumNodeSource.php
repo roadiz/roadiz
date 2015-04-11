@@ -66,8 +66,6 @@ class SolariumNodeSource
     {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
-        } elseif (false === Kernel::getInstance()->pingSolrServer()) {
-            throw new SolrServerNotAvailableException("No Solr server available", 1);
         }
 
         $this->client = $client;

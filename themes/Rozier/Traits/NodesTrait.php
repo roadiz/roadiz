@@ -35,6 +35,8 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
@@ -222,24 +224,6 @@ trait NodesTrait
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     */
-    protected function updateSolrIndex(Node $node)
-    {
-        // Update Solr Search engine if available
-        if (true === $this->getKernel()->pingSolrServer()) {
-            foreach ($node->getNodeSources() as $nodeSource) {
-                $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
-                    $nodeSource,
-                    $this->getService('solr')
-                );
-                $solrSource->getDocumentFromIndex();
-                $solrSource->updateAndCommit();
-            }
-        }
-    }
-
-    /**
      * Create a new node-source for given translation.
      *
      * @param array                        $data
@@ -267,6 +251,12 @@ trait NodesTrait
 
         $this->getService('em')->persist($source);
         $this->getService('em')->flush();
+
+        /*
+         * Dispatch event
+         */
+        $event = new FilterNodesSourcesEvent($source);
+        $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_CREATED, $event);
     }
 
     /**

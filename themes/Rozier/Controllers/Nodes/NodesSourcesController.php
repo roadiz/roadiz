@@ -31,6 +31,8 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -95,6 +97,12 @@ class NodesSourcesController extends RozierApp
                 if ($form->isValid()) {
                     $this->editNodeSource($form->getData(), $source);
 
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodesSourcesEvent($source);
+                    $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+
                     $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
                         '%node_source%' => $source->getNode()->getNodeName(),
                         '%translation%' => $source->getTranslation()->getName(),
@@ -158,6 +166,12 @@ class NodesSourcesController extends RozierApp
 
                 $this->publishErrorMessage($request, $msg);
             } else {
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodesSourcesEvent($ns);
+                $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_DELETED, $event);
+
                 $this->getService("em")->remove($ns);
                 $this->getService("em")->flush();
 

@@ -33,7 +33,9 @@ use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
@@ -43,9 +45,8 @@ use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
-use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Yaml\Parser;
@@ -53,7 +54,7 @@ use Symfony\Component\Yaml\Parser;
 /**
  * Main roadiz CMS entry point.
  */
-class Kernel implements \Pimple\ServiceProviderInterface
+class Kernel implements ServiceProviderInterface
 {
     const CMS_VERSION = 'alpha';
     const SECURITY_DOMAIN = 'roadiz_domain';
@@ -90,6 +91,10 @@ class Kernel implements \Pimple\ServiceProviderInterface
          */
         $this->container->register($this);
         $this->container['stopwatch']->openSection();
+
+        if (!$this->isInstallMode()) {
+            $this->initEvents();
+        }
     }
 
     /**
@@ -113,6 +118,10 @@ class Kernel implements \Pimple\ServiceProviderInterface
     {
         $container['stopwatch'] = function ($c) {
             return new Stopwatch();
+        };
+
+        $container['debugPanel'] = function ($c) {
+            return new DebugPanel($c['twig.environment'], $c['stopwatch']);
         };
 
         $container['dispatcher'] = function ($c) {
@@ -218,13 +227,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
     public function runApp()
     {
         try {
-            if ($this->isDebug() ||
-                !file_exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php') ||
-                !file_exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php')) {
-                $this->container['stopwatch']->start('dumpUrlUtils');
-                $this->dumpUrlUtils();
-                $this->container['stopwatch']->stop('dumpUrlUtils');
-            }
             /*
              * Define a request wide timezone
              */
@@ -232,10 +234,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
                 date_default_timezone_set($this->container['config']["timezone"]);
             } else {
                 date_default_timezone_set("Europe/Paris");
-            }
-
-            if (!$this->isInstallMode()) {
-                $this->prepareRequestHandling();
             }
 
             /*
@@ -255,7 +253,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
             $this->response = $this->getEmergencyResponse($e);
         }
 
-        $this->response->setCharset('UTF-8');
         $this->response->prepare($this->request);
         $this->response->send();
         $this->container['httpKernel']->terminate($this->request, $this->response);
@@ -275,10 +272,12 @@ class Kernel implements \Pimple\ServiceProviderInterface
         /*
          * Log error before displaying a fallback page.
          */
-        $this->container['logger']->emerg($e->getMessage(), [
-            'trace' => $e->getTraceAsString(),
-            'exception' => get_class($e),
-        ]);
+        if (isset($this->container['logger'])) {
+            $this->container['logger']->emerg($e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'exception' => get_class($e),
+            ]);
+        }
 
         if ($this->request->isXmlHttpRequest()) {
             return new \Symfony\Component\HttpFoundation\JsonResponse(
@@ -310,40 +309,12 @@ class Kernel implements \Pimple\ServiceProviderInterface
     }
 
     /**
-     * Save a compiled version of UrlMatcher and UrlGenerator.
-     */
-    protected function dumpUrlUtils()
-    {
-        if (!file_exists(ROADIZ_ROOT . '/gen-src/Compiled')) {
-            mkdir(ROADIZ_ROOT . '/gen-src/Compiled', 0755, true);
-        }
-
-        /*
-         * Generate custom UrlMatcher
-         */
-        $dumper = new PhpMatcherDumper($this->container['routeCollection']);
-        $class = $dumper->dump([
-            'class' => 'GlobalUrlMatcher',
-        ]);
-        file_put_contents(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php', $class);
-
-        /*
-         * Generate custom UrlGenerator
-         */
-        $dumper = new PhpGeneratorDumper($this->container['routeCollection']);
-        $class = $dumper->dump([
-            'class' => 'GlobalUrlGenerator',
-        ]);
-        file_put_contents(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php', $class);
-    }
-
-    /**
      * Prepare Translation generation tools.
      */
-    private function prepareTranslation()
+    public function onKernelRequest()
     {
         /*
-         * set default locale
+         * Set default locale
          */
         $translation = $this->container['em']
                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
@@ -356,15 +327,20 @@ class Kernel implements \Pimple\ServiceProviderInterface
         }
     }
 
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        $response = $event->getResponse();
+        $response->setCharset('UTF-8');
+        $event->setResponse($response);
+    }
+
     /**
      * Prepare backend and frontend routes and logic.
      *
      * @return boolean
      */
-    private function prepareRequestHandling()
+    private function initEvents()
     {
-        $this->prepareTranslation();
-
         /*
          * Events
          */
@@ -375,87 +351,32 @@ class Kernel implements \Pimple\ServiceProviderInterface
                 'onKernelRequest',
             ]
         );
+        $this->container['dispatcher']->addListener(
+            KernelEvents::REQUEST,
+            [
+                $this,
+                'onKernelRequest',
+            ]
+        );
+        $this->container['dispatcher']->addListener(
+            KernelEvents::RESPONSE,
+            [
+                $this,
+                'onKernelResponse',
+            ]
+        );
 
         /*
          * If debug, alter HTML responses to append Debug panel to view
          */
         if (true === (boolean) SettingsBag::get('display_debug_panel')) {
-            $this->container['dispatcher']->addListener(
-                KernelEvents::REQUEST,
-                [
-                    $this,
-                    'onStartKernelRequest',
-                ]
-            );
-            /*
-             * Register after controller matched listener
-             */
-            $this->container['dispatcher']->addListener(
-                KernelEvents::CONTROLLER,
-                [
-                    $this,
-                    'onControllerMatched',
-                ]
-            );
-            $this->container['dispatcher']->addListener(
-                KernelEvents::TERMINATE,
-                [
-                    $this,
-                    'onKernelTerminate',
-                ]
-            );
-            $this->container['dispatcher']->addSubscriber(new DebugPanel($this->container));
+            $this->container['dispatcher']->addSubscriber($this->container['debugPanel']);
         }
-    }
-    /**
-     * Start a stopwatch event when a kernel start handling.
-     */
-    public function onStartKernelRequest()
-    {
-        $this->container['stopwatch']->start('requestHandling');
-        $this->container['stopwatch']->start('matchingRoute');
-    }
-    /**
-     * Stop request-handling stopwatch event and
-     * start a new stopwatch event when a controller is instanciated.
-     */
-    public function onControllerMatched()
-    {
-        $this->container['stopwatch']->stop('matchingRoute');
-        $this->container['stopwatch']->stop('requestHandling');
-        $this->container['stopwatch']->start('controllerHandling');
-    }
-    /**
-     * Stop controller handling stopwatch event.
-     */
-    public function onKernelTerminate()
-    {
-        if ($this->container['stopwatch']->isStarted('controllerHandling')) {
-            $this->container['stopwatch']->stop('controllerHandling');
+        if ($this->isDebug()) {
+            $this->container['dispatcher']->addSubscriber(
+                new RouteCollectionSubscriber($this->container['routeCollection'], $this->container['stopwatch'])
+            );
         }
-    }
-
-    /**
-     * Ping current Solr server.
-     *
-     * @return boolean
-     */
-    public function pingSolrServer()
-    {
-        if ($this->isSolrAvailable()) {
-            // create a ping query
-            $ping = $this->container['solr']->createPing();
-            // execute the ping query
-            try {
-                $this->container['solr']->ping($ping);
-
-                return true;
-            } catch (\Exception $e) {
-                return false;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -504,17 +425,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
     {
         return (boolean) $this->container['config']['devMode'] ||
         (boolean) $this->container['config']['install'];
-    }
-
-    /**
-     * Tell if an Apache Solr server is available,
-     * for advanced search engine.
-     *
-     * @return boolean
-     */
-    public function isSolrAvailable()
-    {
-        return isset($this->container['solr']) && null !== $this->container['solr'];
     }
 
     /**

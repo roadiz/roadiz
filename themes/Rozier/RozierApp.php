@@ -30,27 +30,26 @@
 
 namespace Themes\Rozier;
 
+use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\BackendController;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-
+use RZ\Roadiz\Core\Entities\Node;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\Events\SolariumSubscriber;
+use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;
-use Themes\Rozier\Widgets\FolderTreeWidget;
-
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Pimple\Container;
 
 /**
  * Rozier main theme application
  */
 class RozierApp extends BackendController
 {
-    protected static $themeName =      'Rozier Backstage theme';
-    protected static $themeAuthor =    'Ambroise Maupate, Julien Blanchet';
+    protected static $themeName = 'Rozier Backstage theme';
+    protected static $themeAuthor = 'Ambroise Maupate, Julien Blanchet';
     protected static $themeCopyright = 'REZO ZERO';
-    protected static $themeDir =       'Rozier';
+    protected static $themeDir = 'Rozier';
 
     protected $formFactory = null;
     protected $themeContainer = null;
@@ -73,7 +72,7 @@ class RozierApp extends BackendController
          */
         $this->assignation['head']['backDevMode'] = false;
         //Settings
-        $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name').' backstage';
+        $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name') . ' backstage';
         $this->assignation['head']['mapsStyle'] = SettingsBag::get('maps_style');
         $this->assignation['head']['mainColor'] = SettingsBag::get('main_color');
         $this->assignation['head']['googleClientId'] = SettingsBag::get('google_client_id') ? SettingsBag::get('google_client_id') : "";
@@ -97,31 +96,30 @@ class RozierApp extends BackendController
         };
 
         $this->themeContainer['grunt'] = function ($c) {
-            return include(dirname(__FILE__).'/static/public/config/assets.config.php');
+            return include dirname(__FILE__) . '/static/public/config/assets.config.php';
         };
 
         $this->themeContainer['settingGroups'] = function ($c) {
             return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-                                          ->findBy(
-                                              ['inMenu' => true],
-                                              ['name'=>'ASC']
-                                          );
+                 ->findBy(
+                     ['inMenu' => true],
+                     ['name' => 'ASC']
+                 );
         };
 
         $this->themeContainer['adminImage'] = function ($c) {
-            /*
+                 /*
              * Get admin image
              */
             return SettingsBag::getDocument('admin_image');
         };
-
 
         $this->assignation['nodeStatuses'] = [
             'draft' => Node::DRAFT,
             'pending' => Node::PENDING,
             'published' => Node::PUBLISHED,
             'archived' => Node::ARCHIVED,
-            'deleted' => Node::DELETED
+            'deleted' => Node::DELETED,
         ];
 
         return $this;
@@ -146,7 +144,7 @@ class RozierApp extends BackendController
     {
         $this->assignation['mainColor'] = SettingsBag::get('main_color');
         $this->assignation['nodeTypes'] = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                                              ->findBy([]);
+             ->findBy([]);
 
         return new Response(
             $this->getTwig()->render('css/mainColor.css.twig', $this->assignation),
@@ -164,6 +162,15 @@ class RozierApp extends BackendController
     {
         parent::setupDependencyInjection($container);
 
+        /*
+         * Add custom event subscribers to the general dispatcher.
+         */
+        if ($container['solr.ready']) {
+            $container['dispatcher']->addSubscriber(
+                new SolariumSubscriber($container['solr'], $container['logger'])
+            );
+        }
+
         $container->extend('backoffice.entries', function (array $entries, $c) {
 
             $entries['dashboard'] = [
@@ -171,7 +178,7 @@ class RozierApp extends BackendController
                 'path' => $c['urlGenerator']->generate('adminHomePage'),
                 'icon' => 'uk-icon-rz-dashboard',
                 'roles' => null,
-                'subentries' => null
+                'subentries' => null,
             ];
             $entries['nodes'] = [
                 'name' => 'nodes',
@@ -183,53 +190,53 @@ class RozierApp extends BackendController
                         'name' => 'all.nodes',
                         'path' => $c['urlGenerator']->generate('nodesHomePage'),
                         'icon' => 'uk-icon-rz-all-nodes',
-                        'roles' => null
+                        'roles' => null,
                     ],
                     'draft.nodes' => [
                         'name' => 'draft.nodes',
                         'path' => $c['urlGenerator']->generate('nodesHomeDraftPage'),
                         'icon' => 'uk-icon-rz-draft-nodes',
-                        'roles' => null
+                        'roles' => null,
                     ],
                     'pending.nodes' => [
                         'name' => 'pending.nodes',
                         'path' => $c['urlGenerator']->generate('nodesHomePendingPage'),
                         'icon' => 'uk-icon-rz-pending-nodes',
-                        'roles' => null
+                        'roles' => null,
                     ],
                     'archived.nodes' => [
                         'name' => 'archived.nodes',
                         'path' => $c['urlGenerator']->generate('nodesHomeArchivedPage'),
                         'icon' => 'uk-icon-rz-archives-nodes',
-                        'roles' => null
+                        'roles' => null,
                     ],
                     'deleted.nodes' => [
                         'name' => 'deleted.nodes',
                         'path' => $c['urlGenerator']->generate('nodesHomeDeletedPage'),
                         'icon' => 'uk-icon-rz-deleted-nodes',
-                        'roles' => null
+                        'roles' => null,
                     ],
                     'search.nodes' => [
                         'name' => 'search.nodes',
                         'path' => $c['urlGenerator']->generate('searchNodePage'),
                         'icon' => 'uk-icon-search',
-                        'roles' => null
+                        'roles' => null,
                     ],
-                ]
+                ],
             ];
             $entries['manage.documents'] = [
                 'name' => 'manage.documents',
                 'path' => $c['urlGenerator']->generate('documentsHomePage'),
                 'icon' => 'uk-icon-rz-documents',
                 'roles' => ['ROLE_ACCESS_DOCUMENTS'],
-                'subentries' => null
+                'subentries' => null,
             ];
             $entries['manage.tags'] = [
                 'name' => 'manage.tags',
                 'path' => $c['urlGenerator']->generate('tagsHomePage'),
                 'icon' => 'uk-icon-rz-tags',
                 'roles' => ['ROLE_ACCESS_TAGS'],
-                'subentries' => null
+                'subentries' => null,
             ];
             $entries['construction'] = [
                 'name' => 'construction',
@@ -241,27 +248,27 @@ class RozierApp extends BackendController
                         'name' => 'manage.nodeTypes',
                         'path' => $c['urlGenerator']->generate('nodeTypesHomePage'),
                         'icon' => 'uk-icon-rz-manage-nodes',
-                        'roles' => ['ROLE_ACCESS_NODETYPES']
+                        'roles' => ['ROLE_ACCESS_NODETYPES'],
                     ],
                     'manage.translations' => [
                         'name' => 'manage.translations',
                         'path' => $c['urlGenerator']->generate('translationsHomePage'),
                         'icon' => 'uk-icon-rz-translate',
-                        'roles' => ['ROLE_ACCESS_TRANSLATIONS']
+                        'roles' => ['ROLE_ACCESS_TRANSLATIONS'],
                     ],
                     'manage.themes' => [
                         'name' => 'manage.themes',
                         'path' => $c['urlGenerator']->generate('themesHomePage'),
                         'icon' => 'uk-icon-rz-themes',
-                        'roles' => ['ROLE_ACCESS_THEMES']
+                        'roles' => ['ROLE_ACCESS_THEMES'],
                     ],
                     'manage.fonts' => [
                         'name' => 'manage.fonts',
                         'path' => $c['urlGenerator']->generate('fontsHomePage'),
                         'icon' => 'uk-icon-rz-fontes',
-                        'roles' => ['ROLE_ACCESS_FONTS']
+                        'roles' => ['ROLE_ACCESS_FONTS'],
                     ],
-                ]
+                ],
             ];
 
             $entries['user.system'] = [
@@ -274,21 +281,21 @@ class RozierApp extends BackendController
                         'name' => 'manage.users',
                         'path' => $c['urlGenerator']->generate('usersHomePage'),
                         'icon' => 'uk-icon-rz-user',
-                        'roles' => ['ROLE_ACCESS_USERS']
+                        'roles' => ['ROLE_ACCESS_USERS'],
                     ],
                     'manage.roles' => [
                         'name' => 'manage.roles',
                         'path' => $c['urlGenerator']->generate('rolesHomePage'),
                         'icon' => 'uk-icon-rz-roles',
-                        'roles' => ['ROLE_ACCESS_ROLES']
+                        'roles' => ['ROLE_ACCESS_ROLES'],
                     ],
                     'manage.groups' => [
                         'name' => 'manage.groups',
                         'path' => $c['urlGenerator']->generate('groupsHomePage'),
                         'icon' => 'uk-icon-rz-groups',
-                        'roles' => ['ROLE_ACCESS_GROUPS']
-                    ]
-                ]
+                        'roles' => ['ROLE_ACCESS_GROUPS'],
+                    ],
+                ],
             ];
 
             $entries['interactions'] = [
@@ -299,34 +306,34 @@ class RozierApp extends BackendController
                     'ROLE_ACCESS_CUSTOMFORMS',
                     'ROLE_ACCESS_NEWSLETTERS',
                     'ROLE_ACCESS_MANAGE_SUBSCRIBERS',
-                    'ROLE_ACCESS_COMMENTS'
+                    'ROLE_ACCESS_COMMENTS',
                 ],
                 'subentries' => [
                     'manage.customForms' => [
                         'name' => 'manage.customForms',
                         'path' => $c['urlGenerator']->generate('customFormsHomePage'),
                         'icon' => 'uk-icon-rz-surveys',
-                        'roles' => ['ROLE_ACCESS_CUSTOMFORMS']
+                        'roles' => ['ROLE_ACCESS_CUSTOMFORMS'],
                     ],
                     'manage.newsletters' => [
                         'name' => 'manage.newsletters',
                         'path' => $c['urlGenerator']->generate('newslettersIndexPage'),
                         'icon' => 'uk-icon-rz-newsletters',
-                        'roles' => ['ROLE_ACCESS_NEWSLETTERS']
+                        'roles' => ['ROLE_ACCESS_NEWSLETTERS'],
                     ],
                     'manage.subscribers' => [
                         'name' => 'manage.subscribers',
                         'path' => null,
                         'icon' => 'uk-icon-rz-subscribers',
-                        'roles' => ['ROLE_ACCESS_MANAGE_SUBSCRIBERS']
+                        'roles' => ['ROLE_ACCESS_MANAGE_SUBSCRIBERS'],
                     ],
                     'manage.comments' => [
                         'name' => 'manage.comments',
                         'path' => null,
                         'icon' => 'uk-icon-rz-comments',
-                        'roles' => ['ROLE_ACCESS_COMMENTS']
+                        'roles' => ['ROLE_ACCESS_COMMENTS'],
                     ],
-                ]
+                ],
             ];
 
             $entries['settings'] = [
@@ -339,7 +346,7 @@ class RozierApp extends BackendController
                         'name' => 'all.settings',
                         'path' => $c['urlGenerator']->generate('settingsHomePage'),
                         'icon' => 'uk-icon-rz-settings-general',
-                        'roles' => null
+                        'roles' => null,
                     ],
                     /*
                      * This entry is dynamic
@@ -348,15 +355,15 @@ class RozierApp extends BackendController
                         'name' => 'setting.groups.dynamic',
                         'path' => 'settingGroupsSettingsPage',
                         'icon' => 'uk-icon-rz-settings-group',
-                        'roles' => null
+                        'roles' => null,
                     ],
                     'setting.groups' => [
                         'name' => 'setting.groups',
                         'path' => $c['urlGenerator']->generate('settingGroupsHomePage'),
                         'icon' => 'uk-icon-rz-settings-groups',
-                        'roles' => null
-                    ]
-                ]
+                        'roles' => null,
+                    ],
+                ],
             ];
 
             return $entries;

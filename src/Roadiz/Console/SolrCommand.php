@@ -71,7 +71,7 @@ class SolrCommand extends Command
         $solr = Kernel::getService('solr');
 
         if (null !== $solr) {
-            if (true === Kernel::getInstance()->pingSolrServer()) {
+            if (true === Kernel::getService('solr.ready')) {
                 if ($input->getOption('reset')) {
                     if ($this->dialog->askConfirmation(
                         $output,
@@ -111,17 +111,17 @@ class SolrCommand extends Command
         } else {
             $text .= '<error>No Solr search engine server has been configured…</error>' . PHP_EOL;
             $text .= 'Personnalize your config.yml file to enable Solr (sample):' . PHP_EOL;
-            $text .=
-            'solr:
-                endpoint:
-                    localhost:
-                        host:"localhost"
-                        port:"8983"
-                        path:"/solr"
-                        core:"mycore"
-                        timeout:3
-                        username:""
-                        password:""
+            $text .= '
+solr:
+    endpoint:
+        localhost:
+            host:"localhost"
+            port:"8983"
+            path:"/solr"
+            core:"mycore"
+            timeout:3
+            username:""
+            password:""
             ';
         }
 

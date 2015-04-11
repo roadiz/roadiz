@@ -31,13 +31,12 @@ namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\CMS\Controllers\AppController;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
  * Event dispatched after a route has been matched.
  */
-class ControllerMatchedEvent extends Event
+class ControllerMatchedEvent
 {
     private $kernel;
 

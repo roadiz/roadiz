@@ -33,6 +33,8 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -232,6 +234,12 @@ class NodesController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $this->editNode($form->getData(), $node);
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($node);
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+
                     $msg = $this->getTranslator()->trans('node.%name%.updated', [
                         '%name%' => $node->getNodeName(),
                     ]);
@@ -300,6 +308,12 @@ class NodesController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $node = $this->createNode($form->getData(), $type, $translation);
+
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($node);
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
                     $msg = $this->getTranslator()->trans(
                         'node.%name%.created',
@@ -383,6 +397,11 @@ class NodesController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $node = $this->createChildNode($form->getData(), $parentNode, $translation);
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($node);
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
                     $msg = $this->getTranslator()->trans(
                         'node.%name%.created',
@@ -450,20 +469,14 @@ class NodesController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['nodeId'] == $node->getId()) {
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodeEvent($node);
+                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_DELETED, $event);
+
                 $node->getHandler()->softRemoveWithChildren();
                 $this->getService('em')->flush();
-
-                // Update Solr Search engine if setup
-                if (true === $this->getKernel()->pingSolrServer()) {
-                    foreach ($node->getNodeSources() as $nodeSource) {
-                        $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
-                            $nodeSource,
-                            $this->getService('solr')
-                        );
-                        $solrSource->getDocumentFromIndex();
-                        $solrSource->updateAndCommit();
-                    }
-                }
 
                 $msg = $this->getTranslator()->trans(
                     'node.%name%.deleted',
@@ -557,20 +570,14 @@ class NodesController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['nodeId'] == $node->getId()) {
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodeEvent($node);
+                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UNDELETED, $event);
+
                 $node->getHandler()->softUnremoveWithChildren();
                 $this->getService('em')->flush();
-
-                // Update Solr Search engine if setup
-                if (true === $this->getKernel()->pingSolrServer()) {
-                    foreach ($node->getNodeSources() as $nodeSource) {
-                        $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
-                            $nodeSource,
-                            $this->getService('solr')
-                        );
-                        $solrSource->getDocumentFromIndex();
-                        $solrSource->updateAndCommit();
-                    }
-                }
 
                 $msg = $this->getTranslator()->trans(
                     'node.%name%.undeleted',
@@ -637,6 +644,12 @@ class NodesController extends RozierApp
 
                 try {
                     $source = static::generateUniqueNodeWithTypeAndTranslation($request, $nodeType, $parent, $translation, null);
+
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($source->getNode());
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
                     $response = new RedirectResponse(
                         $this->getService('urlGenerator')->generate(
