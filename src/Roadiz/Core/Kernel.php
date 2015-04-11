@@ -33,6 +33,7 @@ use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\DebugPanel;
@@ -53,7 +54,7 @@ use Symfony\Component\Yaml\Parser;
 /**
  * Main roadiz CMS entry point.
  */
-class Kernel implements \Pimple\ServiceProviderInterface
+class Kernel implements ServiceProviderInterface
 {
     const CMS_VERSION = 'alpha';
     const SECURITY_DOMAIN = 'roadiz_domain';
@@ -90,6 +91,10 @@ class Kernel implements \Pimple\ServiceProviderInterface
          */
         $this->container->register($this);
         $this->container['stopwatch']->openSection();
+
+        if (!$this->isInstallMode()) {
+            $this->initEvents();
+        }
     }
 
     /**
@@ -113,6 +118,10 @@ class Kernel implements \Pimple\ServiceProviderInterface
     {
         $container['stopwatch'] = function ($c) {
             return new Stopwatch();
+        };
+
+        $container['debugPanel'] = function ($c) {
+            return new DebugPanel($c['twig.environment'], $c['stopwatch']);
         };
 
         $container['dispatcher'] = function ($c) {
@@ -234,10 +243,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
                 date_default_timezone_set("Europe/Paris");
             }
 
-            if (!$this->isInstallMode()) {
-                $this->prepareRequestHandling();
-            }
-
             /*
              * ----------------------------
              * Main Framework handle call
@@ -340,7 +345,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
     /**
      * Prepare Translation generation tools.
      */
-    private function prepareTranslation()
+    public function onPrepareTranslation()
     {
         /*
          * set default locale
@@ -361,10 +366,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
      *
      * @return boolean
      */
-    private function prepareRequestHandling()
+    private function initEvents()
     {
-        $this->prepareTranslation();
-
         /*
          * Events
          */
@@ -375,63 +378,19 @@ class Kernel implements \Pimple\ServiceProviderInterface
                 'onKernelRequest',
             ]
         );
+        $this->container['dispatcher']->addListener(
+            KernelEvents::REQUEST,
+            [
+                $this,
+                'onPrepareTranslation',
+            ]
+        );
 
         /*
          * If debug, alter HTML responses to append Debug panel to view
          */
         if (true === (boolean) SettingsBag::get('display_debug_panel')) {
-            $this->container['dispatcher']->addListener(
-                KernelEvents::REQUEST,
-                [
-                    $this,
-                    'onStartKernelRequest',
-                ]
-            );
-            /*
-             * Register after controller matched listener
-             */
-            $this->container['dispatcher']->addListener(
-                KernelEvents::CONTROLLER,
-                [
-                    $this,
-                    'onControllerMatched',
-                ]
-            );
-            $this->container['dispatcher']->addListener(
-                KernelEvents::TERMINATE,
-                [
-                    $this,
-                    'onKernelTerminate',
-                ]
-            );
-            $this->container['dispatcher']->addSubscriber(new DebugPanel($this->container));
-        }
-    }
-    /**
-     * Start a stopwatch event when a kernel start handling.
-     */
-    public function onStartKernelRequest()
-    {
-        $this->container['stopwatch']->start('requestHandling');
-        $this->container['stopwatch']->start('matchingRoute');
-    }
-    /**
-     * Stop request-handling stopwatch event and
-     * start a new stopwatch event when a controller is instanciated.
-     */
-    public function onControllerMatched()
-    {
-        $this->container['stopwatch']->stop('matchingRoute');
-        $this->container['stopwatch']->stop('requestHandling');
-        $this->container['stopwatch']->start('controllerHandling');
-    }
-    /**
-     * Stop controller handling stopwatch event.
-     */
-    public function onKernelTerminate()
-    {
-        if ($this->container['stopwatch']->isStarted('controllerHandling')) {
-            $this->container['stopwatch']->stop('controllerHandling');
+            $this->container['dispatcher']->addSubscriber($this->container['debugPanel']);
         }
     }
 
