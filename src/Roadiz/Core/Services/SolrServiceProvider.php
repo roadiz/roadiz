@@ -43,20 +43,24 @@ class SolrServiceProvider implements \Pimple\ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        if (isset($container['config']['solr']['endpoint'])) {
-            $container['solr'] = function ($c) {
+        $container['solr'] = function ($c) {
+            if (isset($c['config']['solr']['endpoint'])) {
                 $solrService = new \Solarium\Client($c['config']['solr']);
                 $solrService->setDefaultEndpoint('localhost');
                 return $solrService;
-            };
-            $container['solr.search.nodeSource'] = function ($c) {
+            } else {
+                return null;
+            }
+        };
+
+        $container['solr.search.nodeSource'] = function ($c) {
+            if (null !== $c['solr']) {
                 $searchNodesource = new FullTextSearchHandler($c['solr']);
                 return $searchNodesource;
-            };
-        } else {
-            $container['solr'] = null;
-            $container['solr.search.nodeSource'] = null;
-        }
+            } else {
+                return null;
+            }
+        };
 
         return $container;
     }

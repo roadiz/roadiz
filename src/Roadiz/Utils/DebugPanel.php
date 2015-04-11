@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Utils;
 
-use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -58,7 +57,6 @@ class DebugPanel implements EventSubscriberInterface
             KernelEvents::REQUEST => 'onKernelRequest',
             KernelEvents::RESPONSE => 'onKernelResponse',
             KernelEvents::CONTROLLER => 'onControllerMatched',
-            KernelEvents::TERMINATE => 'onKernelTerminate',
         ];
     }
 
@@ -67,6 +65,10 @@ class DebugPanel implements EventSubscriberInterface
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
+        if ($this->stopwatch->isStarted('controllerHandling')) {
+            $this->stopwatch->stop('controllerHandling');
+        }
+
         $response = $event->getResponse();
 
         if (false !== strpos($response->getContent(), '<!-- ##debug_panel## -->')) {
@@ -97,15 +99,6 @@ class DebugPanel implements EventSubscriberInterface
         $this->stopwatch->stop('matchingRoute');
         $this->stopwatch->stop('requestHandling');
         $this->stopwatch->start('controllerHandling');
-    }
-    /**
-     * Stop controller handling stopwatch event.
-     */
-    public function onKernelTerminate()
-    {
-        if ($this->stopwatch->isStarted('controllerHandling')) {
-            $this->stopwatch->stop('controllerHandling');
-        }
     }
 
     private function getDebugView()

@@ -35,6 +35,7 @@ use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Events\RouteCollectionEvent;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
@@ -44,9 +45,8 @@ use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
-use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Yaml\Parser;
@@ -227,13 +227,6 @@ class Kernel implements ServiceProviderInterface
     public function runApp()
     {
         try {
-            if ($this->isDebug() ||
-                !file_exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php') ||
-                !file_exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php')) {
-                $this->container['stopwatch']->start('dumpUrlUtils');
-                $this->dumpUrlUtils();
-                $this->container['stopwatch']->stop('dumpUrlUtils');
-            }
             /*
              * Define a request wide timezone
              */
@@ -260,7 +253,6 @@ class Kernel implements ServiceProviderInterface
             $this->response = $this->getEmergencyResponse($e);
         }
 
-        $this->response->setCharset('UTF-8');
         $this->response->prepare($this->request);
         $this->response->send();
         $this->container['httpKernel']->terminate($this->request, $this->response);
@@ -315,40 +307,12 @@ class Kernel implements ServiceProviderInterface
     }
 
     /**
-     * Save a compiled version of UrlMatcher and UrlGenerator.
-     */
-    protected function dumpUrlUtils()
-    {
-        if (!file_exists(ROADIZ_ROOT . '/gen-src/Compiled')) {
-            mkdir(ROADIZ_ROOT . '/gen-src/Compiled', 0755, true);
-        }
-
-        /*
-         * Generate custom UrlMatcher
-         */
-        $dumper = new PhpMatcherDumper($this->container['routeCollection']);
-        $class = $dumper->dump([
-            'class' => 'GlobalUrlMatcher',
-        ]);
-        file_put_contents(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php', $class);
-
-        /*
-         * Generate custom UrlGenerator
-         */
-        $dumper = new PhpGeneratorDumper($this->container['routeCollection']);
-        $class = $dumper->dump([
-            'class' => 'GlobalUrlGenerator',
-        ]);
-        file_put_contents(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php', $class);
-    }
-
-    /**
      * Prepare Translation generation tools.
      */
-    public function onPrepareTranslation()
+    public function onKernelRequest()
     {
         /*
-         * set default locale
+         * Set default locale
          */
         $translation = $this->container['em']
                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
@@ -359,6 +323,13 @@ class Kernel implements ServiceProviderInterface
             $this->request->setLocale($shortLocale);
             \Locale::setDefault($shortLocale);
         }
+    }
+
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        $response = $event->getResponse();
+        $response->setCharset('UTF-8');
+        $event->setResponse($response);
     }
 
     /**
@@ -382,7 +353,14 @@ class Kernel implements ServiceProviderInterface
             KernelEvents::REQUEST,
             [
                 $this,
-                'onPrepareTranslation',
+                'onKernelRequest',
+            ]
+        );
+        $this->container['dispatcher']->addListener(
+            KernelEvents::RESPONSE,
+            [
+                $this,
+                'onKernelResponse',
             ]
         );
 
@@ -391,6 +369,11 @@ class Kernel implements ServiceProviderInterface
          */
         if (true === (boolean) SettingsBag::get('display_debug_panel')) {
             $this->container['dispatcher']->addSubscriber($this->container['debugPanel']);
+        }
+        if ($this->isDebug()) {
+            $this->container['dispatcher']->addSubscriber(
+                new RouteCollectionEvent($this->container['routeCollection'], $this->container['stopwatch'])
+            );
         }
     }
 
@@ -401,13 +384,12 @@ class Kernel implements ServiceProviderInterface
      */
     public function pingSolrServer()
     {
-        if ($this->isSolrAvailable()) {
+        if (null !== $this->container['solr']) {
             // create a ping query
             $ping = $this->container['solr']->createPing();
             // execute the ping query
             try {
                 $this->container['solr']->ping($ping);
-
                 return true;
             } catch (\Exception $e) {
                 return false;
@@ -463,17 +445,6 @@ class Kernel implements ServiceProviderInterface
     {
         return (boolean) $this->container['config']['devMode'] ||
         (boolean) $this->container['config']['install'];
-    }
-
-    /**
-     * Tell if an Apache Solr server is available,
-     * for advanced search engine.
-     *
-     * @return boolean
-     */
-    public function isSolrAvailable()
-    {
-        return isset($this->container['solr']) && null !== $this->container['solr'];
     }
 
     /**
