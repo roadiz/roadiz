@@ -48,13 +48,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
         if ($exception instanceof BadCredentialsException) {
             if (null !== $this->logger) {
                 $username = $request->request->get('_username');
-                $user = Kernel::getInstance()->getService('em')
-                                             ->getRepository('RZ\Roadiz\Core\Entities\User')
-                                             ->findOneByUsername($username);
-                if (null !== $user) {
-                    $this->logger->setUser($user);
-                    $this->logger->error($exception->getMessage());
-                }
+                $this->logger->error($exception->getMessage(), ['username' => $username]);
             }
         }
 
