@@ -666,6 +666,45 @@ class AppController implements ViewableInterface
     }
 
     /**
+     * Make translation variable with the good localization.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param string                                   $_locale
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     * @throws RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException
+     */
+    protected function bindLocaleFromRoute(Request $request, $_locale = null)
+    {
+        /*
+         * If you use a static route for Home page
+         * we need to grab manually language.
+         *
+         * Get language from static route
+         */
+        if (null !== $_locale) {
+            $request->setLocale($_locale);
+            $translation = $this->getService('em')
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findOneBy(
+                                    [
+                                        'locale' => $_locale,
+                                        'available' => true,
+                                    ]
+                                );
+            if ($translation === null) {
+                throw new NoTranslationAvailableException();
+            }
+        } else {
+            $translation = $this->getService('em')
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findDefault();
+            $request->setLocale($translation->getLocale());
+        }
+        return $translation;
+    }
+
+    /**
      * Custom route for redirecting routes with a trailing slash.
      *
      * @param  Request $request [description]
