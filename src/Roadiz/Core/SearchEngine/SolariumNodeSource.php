@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\SearchEngine;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Document\DocumentInterface;
@@ -60,7 +59,7 @@ class SolariumNodeSource
      * @param NodesSources     $nodeSource
      * @param \Solarium_Client $client
      *
-     * @throws RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException If Solr server does not respond.
+     * @throws RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException If Solr server does not respond.
      */
     public function __construct($nodeSource, Client $client = null)
     {
