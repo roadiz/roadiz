@@ -299,9 +299,10 @@ html{font:400 14px / 20px "Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-te
     height: 24px;
 }
 .input-group .minicolors-theme-bootstrap:not(:first-child) .minicolors-input {
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-}/* BASICS */
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+/* BASICS */
 
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
