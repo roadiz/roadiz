@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Viewers\ViewableInterface;
 use RZ\Roadiz\Utils\StringHandler;

@@ -29,11 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Authentification;
 
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
 
 /**
  * {@inheritdoc}
