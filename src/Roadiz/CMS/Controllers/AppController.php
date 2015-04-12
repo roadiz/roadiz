@@ -454,6 +454,7 @@ class AppController implements ViewableInterface
      */
     public function throw404($message = "")
     {
+        $this->getService('logger')->error($message);
         $this->assignation['errorMessage'] = $message;
 
         return new Response(

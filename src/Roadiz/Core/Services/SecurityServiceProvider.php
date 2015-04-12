@@ -29,12 +29,16 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Pimple\Container;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\UserProvider;
-use RZ\Roadiz\Core\Log\DoctrineHandler;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Log\DoctrineHandler;
+use RZ\Roadiz\Utils\LogProcessors\RequestProcessor;
+use RZ\Roadiz\Utils\LogProcessors\SecurityContextProcessor;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -54,8 +58,6 @@ use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 /**
  * Register security services for dependency injection container.
@@ -123,6 +125,12 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 ));
             }
 
+            /*
+             * Add processors
+             */
+            $log->pushProcessor(new RequestProcessor(Kernel::getInstance()->getRequest()));
+            $log->pushProcessor(new SecurityContextProcessor($c['securityContext']));
+
             return $log;
         };
 
@@ -180,7 +188,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['allBasicRoles'] = function ($c) {
             return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Role')
-                           ->getAllBasicRoleName();
+            ->getAllBasicRoleName();
         };
 
         $container['roleHierarchyVoter'] = function ($c) {
