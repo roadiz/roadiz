@@ -138,6 +138,11 @@ class DatabaseController extends InstallApp
 
         } else {
             try {
+                /*
+                 * Very important !
+                 * Use updateSchema instead of create to enable upgrading
+                 * Roadiz database using Install theme.
+                 */
                 SchemaCommand::updateSchema();
                 CacheCommand::clearDoctrine();
 

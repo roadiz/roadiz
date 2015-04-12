@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends '@Install/base.html.twig' %}
 
 {% block content %}
 
@@ -33,7 +33,7 @@
             </div>
             {% endif %}
 
-            {% form_theme databaseForm 'forms.html.twig' %}
+            {% form_theme databaseForm '@Install/forms.html.twig' %}
             <form id="databaseForm" class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(databaseForm) }}>
 
                 <div class="content-text content-text-form">
