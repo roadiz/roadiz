@@ -1138,6 +1138,10 @@
           <context context-type="linenumber">561</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="child_node.%name%.created">
+        <source>child_node.%name%.created</source>
+        <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="107">
         <source>node.%name%.deleted</source>
         <target></target>

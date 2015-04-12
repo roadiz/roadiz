@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Http\AccessMap;
-use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
@@ -121,7 +120,7 @@ class BackendController extends AppController
                 ],
                 $container['logger'], // A LoggerInterface instance
                 $container['dispatcher'],
-                null //$container['csrfProvider']//csrfTokenManager
+                null//$container['csrfProvider']//csrfTokenManager
             ),
             // enforces access control rules
             new AccessListener(

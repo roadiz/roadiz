@@ -1138,6 +1138,10 @@
           <context context-type="linenumber">561</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="child_node.%name%.created">
+        <source>child_node.%name%.created</source>
+        <target xml:lang="fr" state="translated">Le nœud enfant «%name%» a été créé.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="107" approved="yes">
         <source>node.%name%.deleted</source>
         <target xml:lang="fr">Le nœud «%name%» a été supprimé.</target>
@@ -5916,29 +5920,29 @@
           <target xml:lang="fr">Cette valeur ne devrait pas être vide.</target>
       </trans-unit>
       <!-- Font variantes -->
-      <trans-unit xml:space="preserve" id="font_variant.regular">
+      <trans-unit xml:space="preserve" id="font_variant.regular" approved="yes">
           <source>font_variant.regular</source>
-          <target xml:lang="fr" state="translated">Regular</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.italic">
+          <target xml:lang="fr">Normal</target>
+      <alt-trans><target xml:lang="fr">Regular</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.italic" approved="yes">
           <source>font_variant.italic</source>
-          <target xml:lang="fr" state="translated">Italique</target>
+          <target xml:lang="fr">Italique</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.bold">
+      <trans-unit xml:space="preserve" id="font_variant.bold" approved="yes">
           <source>font_variant.bold</source>
-          <target xml:lang="fr" state="translated">Gras</target>
+          <target xml:lang="fr">Gras</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.bold.italic">
+      <trans-unit xml:space="preserve" id="font_variant.bold.italic" approved="yes">
           <source>font_variant.bold.italic</source>
-          <target xml:lang="fr" state="translated">Gras italique</target>
+          <target xml:lang="fr">Gras italique</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.light">
+      <trans-unit xml:space="preserve" id="font_variant.light" approved="yes">
           <source>font_variant.light</source>
-          <target xml:lang="fr" state="translated">Light</target>
+          <target xml:lang="fr">Light</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.light.italic">
+      <trans-unit xml:space="preserve" id="font_variant.light.italic" approved="yes">
           <source>font_variant.light.italic</source>
-          <target xml:lang="fr" state="translated">Light italique</target>
+          <target xml:lang="fr">Light italique</target>
       </trans-unit>
     </body>
   </file>

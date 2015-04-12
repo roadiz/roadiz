@@ -30,13 +30,12 @@
 namespace RZ\Roadiz\Core\Events;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
 use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Events for route collection generations.
@@ -68,7 +67,7 @@ class RouteCollectionSubscriber implements EventSubscriberInterface
     {
         $fs = new Filesystem();
         return (!$fs->exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php') ||
-                !$fs->exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php'));
+            !$fs->exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php'));
     }
 
     /**

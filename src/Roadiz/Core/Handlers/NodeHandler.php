@@ -38,7 +38,6 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Security\Core\SecurityContext;
-use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 
 /**
  * Handle operations with nodes entities.

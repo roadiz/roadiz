@@ -308,7 +308,6 @@ class NodesController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $node = $this->createNode($form->getData(), $type, $translation);
-
                     /*
                      * Dispatch event
                      */
@@ -404,7 +403,7 @@ class NodesController extends RozierApp
                     $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
                     $msg = $this->getTranslator()->trans(
-                        'node.%name%.created',
+                        'child_node.%name%.created',
                         ['%name%' => $node->getNodeName()]
                     );
                     $this->publishConfirmMessage($request, $msg);

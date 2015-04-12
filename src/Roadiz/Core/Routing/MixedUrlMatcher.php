@@ -60,8 +60,6 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             return parent::match($pathinfo);
         }
 
-        $decodedUrl = rawurldecode($pathinfo);
-
         try {
             /*
              * Try STATIC routes

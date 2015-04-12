@@ -34,10 +34,9 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
-use RZ\Roadiz\Core\Kernel;
+use Solarium\Client;
 use Solarium\QueryType\Update\Query\Document\DocumentInterface;
 use Solarium\QueryType\Update\Query\Query;
-use Solarium\Client;
 
 /**
  * Wrap a Solarium and a NodeSource together to ease indexing.

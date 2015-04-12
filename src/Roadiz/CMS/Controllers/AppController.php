@@ -39,7 +39,6 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Viewers\ViewableInterface;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -50,7 +49,6 @@ use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\Translator;
 
 /**
  * Base class for Roadiz themes.
@@ -294,10 +292,10 @@ class AppController implements ViewableInterface
 
         if (!empty($staticDomain)) {
             return $this->kernel->getStaticBaseUrl() .
-                    '/themes/' . static::$themeDir . '/static/';
+            '/themes/' . static::$themeDir . '/static/';
         } else {
             return $this->kernel->getRequest()->getBaseUrl() .
-                    '/themes/' . static::$themeDir . '/static/';
+            '/themes/' . static::$themeDir . '/static/';
         }
     }
 
@@ -370,11 +368,11 @@ class AppController implements ViewableInterface
         }
 
         if ($namespace != "") {
-            $view = '@'.$namespace.'/'.$view;
+            $view = '@' . $namespace . '/' . $view;
         } else {
             // when no namespace is used
             // use current theme directory
-            $view = '@'.static::getThemeDir().'/'.$view;
+            $view = '@' . static::getThemeDir() . '/' . $view;
         }
 
         $response->setContent($this->kernel->container['twig.environment']->render($view, $parameters));
@@ -561,7 +559,6 @@ class AppController implements ViewableInterface
         return false;
     }
 
-
     /**
      * Append objects to the global dependency injection container.
      *
@@ -587,29 +584,29 @@ class AppController implements ViewableInterface
             if ($home !== null) {
                 if ($translation !== null) {
                     return $this->getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                                   ->findWithTranslation(
-                                                       $home->getId(),
-                                                       $translation,
-                                                       $this->getService("securityContext")
-                                                   );
+                                ->findWithTranslation(
+                                    $home->getId(),
+                                    $translation,
+                                    $this->getService("securityContext")
+                                );
                 } else {
                     return $this->getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                                   ->findWithDefaultTranslation(
-                                                       $home->getId(),
-                                                       $this->getService("securityContext")
-                                                   );
+                                ->findWithDefaultTranslation(
+                                    $home->getId(),
+                                    $this->getService("securityContext")
+                                );
                 }
             }
         }
         if ($translation !== null) {
             return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                           ->findHomeWithTranslation(
-                                               $translation,
-                                               $this->getService("securityContext")
-                                           );
+                        ->findHomeWithTranslation(
+                            $translation,
+                            $this->getService("securityContext")
+                        );
         } else {
             return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                           ->findHomeWithDefaultTranslation($this->getService("securityContext"));
+                        ->findHomeWithDefaultTranslation($this->getService("securityContext"));
         }
     }
 
@@ -716,7 +713,7 @@ class AppController implements ViewableInterface
     {
         $user = $this->getService("securityContext")->getToken()->getUser();
         $node = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if (null !== $node) {
             $this->getService('em')->refresh($node);
@@ -730,7 +727,6 @@ class AppController implements ViewableInterface
             $parents = [];
             $isNewsletterFriend = false;
         }
-
 
         if ($isNewsletterFriend &&
             !$this->getService('securityContext')->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
