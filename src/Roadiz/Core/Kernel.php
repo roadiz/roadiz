@@ -127,7 +127,7 @@ class Kernel implements ServiceProviderInterface
         };
 
         $container['requestContext'] = function ($c) {
-            $rc = new RequestContext($this->request->getResolvedBaseUrl());
+            $rc = new RequestContext($this->request->getResolvedBasePath());
             $rc->setHost($this->request->server->get('HTTP_HOST'));
             $rc->setHttpPort((int) $this->request->server->get('SERVER_PORT'));
 

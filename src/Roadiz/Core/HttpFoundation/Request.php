@@ -100,4 +100,29 @@ class Request extends BaseRequest
             return false;
         }
     }
+
+    /**
+     * Resolve current front controller path.
+     *
+     * @return string
+     */
+    public function getResolvedBasePath()
+    {
+        if ($this->server->get('SERVER_NAME')) {
+            // Remove everything after index.php in php_self
+            // when using PHP dev servers
+            $url = pathinfo(substr(
+                $this->server->get('PHP_SELF'),
+                0,
+                strpos($this->server->get('PHP_SELF'), '.php')
+            ));
+
+            // Non root folder
+            if (!empty($url["dirname"]) &&
+                $url["dirname"] != '/') {
+                return $url["dirname"];
+            }
+        }
+        return null;
+    }
 }
