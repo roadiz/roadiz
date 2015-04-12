@@ -42,8 +42,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class ThemeController extends InstallApp
 {
-
-
     /**
      * Import theme screen.
      *

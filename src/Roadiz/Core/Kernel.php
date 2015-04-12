@@ -300,18 +300,6 @@ class Kernel implements ServiceProviderInterface
      */
     public function onKernelRequest()
     {
-        /*
-         * Set default locale
-         */
-        $translation = $this->container['em']
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
-
-        if ($translation !== null) {
-            $shortLocale = $translation->getLocale();
-            $this->request->setLocale($shortLocale);
-            \Locale::setDefault($shortLocale);
-        }
 
         /*
          * Register Themes dependency injection
@@ -320,6 +308,19 @@ class Kernel implements ServiceProviderInterface
             // Register back-end security scheme
             $beClass = $this->container['backendClass'];
             $beClass::setupDependencyInjection($this->container);
+
+            /*
+             * Set default locale
+             */
+            $translation = $this->container['em']
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findDefault();
+
+            if ($translation !== null) {
+                $shortLocale = $translation->getLocale();
+                $this->request->setLocale($shortLocale);
+                \Locale::setDefault($shortLocale);
+            }
         }
 
         // Register front-end security scheme

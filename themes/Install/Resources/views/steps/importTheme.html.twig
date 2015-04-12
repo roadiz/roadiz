@@ -181,6 +181,7 @@
         {% endfor %}
         {% for nodetype in nodetypes %}
         Install.importNodeTypeRoutes.push({
+            'postUpdate': "{{ path('installUpdateSchema') }}",
             'url': "{{ path('installImportNodeTypes', {'themeId': themeId}) }}",
             'id':'{{ nodetype|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ nodetype }}'
@@ -195,7 +196,6 @@
         {% endfor %}
         {% for node in nodes %}
         Install.importNodeTypeRoutes.push({
-            'update': "{{ path('installUpdateSchema') }}",
             'url': "{{ path('installImportNodes', {'themeId': themeId}) }}",
             'id':'{{ node|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ node }}'

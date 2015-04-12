@@ -29,9 +29,11 @@
  */
 namespace Themes\Install\Controllers;
 
+use RZ\Roadiz\Console\CacheCommand;
+use RZ\Roadiz\Console\SchemaCommand;
 use RZ\Roadiz\Console\Tools\Configuration;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Console\Tools\Fixtures;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -136,8 +138,8 @@ class DatabaseController extends InstallApp
 
         } else {
             try {
-                \RZ\Roadiz\Console\SchemaCommand::createSchema();
-                \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
+                SchemaCommand::updateSchema();
+                CacheCommand::clearDoctrine();
 
                 /*
                  * Force redirect to install fixtures
@@ -179,20 +181,20 @@ class DatabaseController extends InstallApp
      */
     public function databaseFixturesAction(Request $request)
     {
-         $fixtures = new Fixtures();
-         $fixtures->installFixtures();
+        $fixtures = new Fixtures();
+        $fixtures->installFixtures();
 
-         /*
-          * files to import
-          */
-         $yaml = new YamlConfiguration(ROADIZ_ROOT . "/themes/Install/config.yml");
+        /*
+         * files to import
+         */
+        $yaml = new YamlConfiguration(ROADIZ_ROOT . "/themes/Install/config.yml");
 
-         $yaml->load();
+        $yaml->load();
 
-         $installData = $yaml->getConfiguration();
-         $this->assignation['imports'] = $installData['importFiles'];
+        $installData = $yaml->getConfiguration();
+        $this->assignation['imports'] = $installData['importFiles'];
 
-         return $this->render('steps/databaseFixtures.html.twig', $this->assignation);
+        return $this->render('steps/databaseFixtures.html.twig', $this->assignation);
     }
 
     /**
@@ -203,7 +205,8 @@ class DatabaseController extends InstallApp
      */
     public function updateSchemaAction(Request $request)
     {
-        \RZ\Roadiz\Console\SchemaCommand::updateSchema();
+        SchemaCommand::updateSchema();
+
         return new Response(
             json_encode(['status' => true]),
             Response::HTTP_OK,
@@ -243,64 +246,64 @@ class DatabaseController extends InstallApp
                                 "id" => "choice",
                             ],
                         ])
-            ->add('host', 'text', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('host'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => "host",
-                ],
-            ])
-            ->add('port', 'integer', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('port'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => "port",
-                ],
-            ])
-            ->add('unix_socket', 'text', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('unix_socket'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => "unix_socket",
-                ],
-            ])
-            ->add('path', 'text', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('path'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => "path",
-                ],
-            ])
-            ->add('user', 'text', [
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => "user",
-                ],
-                'label' => $this->getTranslator()->trans('username'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('password', 'password', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('password'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => 'password',
-                ],
-            ])
-            ->add('dbname', 'text', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('dbname'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => 'dbname',
-                ],
-            ]);
+                        ->add('host', 'text', [
+                            "required" => false,
+                            'label' => $this->getTranslator()->trans('host'),
+                            'attr' => [
+                                "autocomplete" => "off",
+                                'id' => "host",
+                            ],
+                        ])
+                        ->add('port', 'integer', [
+                            "required" => false,
+                            'label' => $this->getTranslator()->trans('port'),
+                            'attr' => [
+                                "autocomplete" => "off",
+                                'id' => "port",
+                            ],
+                        ])
+                        ->add('unix_socket', 'text', [
+                            "required" => false,
+                            'label' => $this->getTranslator()->trans('unix_socket'),
+                            'attr' => [
+                                "autocomplete" => "off",
+                                'id' => "unix_socket",
+                            ],
+                        ])
+                        ->add('path', 'text', [
+                            "required" => false,
+                            'label' => $this->getTranslator()->trans('path'),
+                            'attr' => [
+                                "autocomplete" => "off",
+                                'id' => "path",
+                            ],
+                        ])
+                        ->add('user', 'text', [
+                            'attr' => [
+                                "autocomplete" => "off",
+                                'id' => "user",
+                            ],
+                            'label' => $this->getTranslator()->trans('username'),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ])
+                        ->add('password', 'password', [
+                            "required" => false,
+                            'label' => $this->getTranslator()->trans('password'),
+                            'attr' => [
+                                "autocomplete" => "off",
+                                'id' => 'password',
+                            ],
+                        ])
+                        ->add('dbname', 'text', [
+                            "required" => false,
+                            'label' => $this->getTranslator()->trans('dbname'),
+                            'attr' => [
+                                "autocomplete" => "off",
+                                'id' => 'dbname',
+                            ],
+                        ]);
 
         return $builder->getForm();
     }

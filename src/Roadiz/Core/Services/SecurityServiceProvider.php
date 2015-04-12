@@ -113,7 +113,8 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             $log = new Logger('roadiz');
             $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz.log', Logger::WARNING));
 
-            if (null !== $c['em']) {
+            if (null !== $c['em'] &&
+                true !== $c['config']['install']) {
                 $log->pushHandler(new DoctrineHandler(
                     $c['em'],
                     $c['securityContext'],

@@ -20,7 +20,7 @@ module.exports = function(grunt) {
 					"js/resizeContainer.js",
 					"js/main.js"
 				],
-				dest: 'js/<%= pkg.name %>.js',
+				dest: 'dist/<%= pkg.name %>.js',
 			},
 		},
 		uglify: {
@@ -28,8 +28,8 @@ module.exports = function(grunt) {
 			banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %> */\n'
 		  },
 		  build: {
-			src: 'js/<%= pkg.name %>.js',
-			dest: 'js/<%= pkg.name %>.min.js'
+			src: 'dist/<%= pkg.name %>.js',
+			dest: 'dist/<%= pkg.name %>.min.js'
 		  }
 		},
 		less: {
@@ -41,7 +41,7 @@ module.exports = function(grunt) {
 			},
 			files: {
 				src : "css/style.less",
-				dest : "css/style.css"
+				dest : "dist/style.css"
 			}
 		},
 		watch: {
@@ -92,8 +92,8 @@ module.exports = function(grunt) {
 			dist: {
 				files: [{
 					assets: [{
-			            src: [ 'js/<%= pkg.name %>.min.js' ],
-			            dest: 'js/<%= pkg.name %>.min.js'
+			            src: [ 'dist/<%= pkg.name %>.min.js' ],
+			            dest: 'dist/<%= pkg.name %>.min.js'
 			        }],
 					key: 'global',
 					dest: '',
@@ -101,8 +101,8 @@ module.exports = function(grunt) {
 					ext: '.min.js'
 				}, {
 					assets: [{
-			            src: [ 'css/style.css' ],
-			            dest: 'css/style.css'
+			            src: [ 'dist/style.css' ],
+			            dest: 'dist/style.css'
 			        }],
 					key: 'global',
 					dest: '',

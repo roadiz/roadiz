@@ -32,6 +32,7 @@ namespace Themes\Install;
 
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
+use RZ\Roadiz\Console\CacheCommand;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
@@ -262,9 +263,6 @@ class InstallApp extends AppController
 
                     $config->writeConfiguration();
 
-                    \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
-                    \RZ\Roadiz\Console\CacheCommand::clearTranslations();
-
                     /*
                      * Close Session for security and temp translation
                      */
@@ -278,8 +276,12 @@ class InstallApp extends AppController
                             'installHomePage'
                         )
                     );
-                    $response->prepare($request);
 
+                    CacheCommand::clearDoctrine();
+                    CacheCommand::clearTranslations();
+                    CacheCommand::clearRouteCollections();
+
+                    $response->prepare($request);
                     return $response->send();
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
@@ -308,7 +310,7 @@ class InstallApp extends AppController
                             'choices' => [
                                 'en' => 'English',
                                 'fr' => 'Français',
-                                'ru' => 'Русский язык'
+                                'ru' => 'Русский язык',
                             ],
                             'constraints' => [
                                 new NotBlank(),

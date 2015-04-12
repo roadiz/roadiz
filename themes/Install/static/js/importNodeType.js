@@ -13,10 +13,10 @@ ImportNodeType.prototype.always = function( index) {
     var _this = this;
 
     if(_this.routes.length > index) {
-        if (typeof _this.routes[index].update != "undefined") {
+        if (typeof _this.routes[index].update !== "undefined") {
             $.ajax({
                 url:_this.routes[index].update,
-                type: 'GET',
+                type: 'POST',
                 dataType: 'json',
                 complete: function() {
                     console.log("updateSchema");
@@ -54,6 +54,20 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
             $icon.removeClass('uk-icon-spinner');
             $icon.addClass('uk-icon-check');
             $row.addClass('uk-badge-success');
+
+            /*
+             * Call post-update route
+             */
+            if (typeof _this.routes[index].postUpdate !== "undefined") {
+                $.ajax({
+                    url:_this.routes[index].postUpdate,
+                    type: 'POST',
+                    dataType: 'json',
+                    complete: function() {
+                        console.log("updateSchema");
+                    }
+                });
+            }
         },
         error: function(data) {
             console.log(data);
@@ -73,5 +87,4 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
             _this.always(index + 1);
         }
     });
-    //}
 };
