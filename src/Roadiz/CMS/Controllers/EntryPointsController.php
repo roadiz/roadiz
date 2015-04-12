@@ -30,13 +30,14 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use \InlineStyle\InlineStyle;
 
@@ -122,7 +123,7 @@ class EntryPointsController extends AppController
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function contactFormAction(Request $request, $_locale = null)
+    public function contactFormAction(Request $request)
     {
         if (true !== $validation = $this->validateRequest($request)) {
             return new JsonResponse(
@@ -130,44 +131,205 @@ class EntryPointsController extends AppController
                 Response::HTTP_FORBIDDEN
             );
         }
-        $canSend = true;
-        $responseArray = [
-            'statusCode' => Response::HTTP_OK,
-            'status' => 'success',
-            'field_error' => null,
-        ];
 
-        foreach (static::$mandatoryContactFields as $mandatoryField) {
-            if (empty($request->get('form')[$mandatoryField])) {
-                $responseArray['statusCode'] = Response::HTTP_FORBIDDEN;
-                $responseArray['status'] = 'danger';
-                $responseArray['field_error'] = $mandatoryField;
-                $responseArray['message'] = $this->getTranslator()->trans(
-                    '%field%.is.mandatory',
-                    ['%field%' => ucwords($mandatoryField)]
-                );
+        try {
+            $this->validateMandatoryFields($request);
+            $this->validateEmail($request);
+            $uploadedFiles = $this->getUploadedFiles($request);
+            $subject = $this->getSubject($request);
+            $receiver = $this->getReceiver($request);
 
-                $request->getSession()->getFlashBag()->add('error', $responseArray['message']);
-                $this->getService('logger')->error($responseArray['message']);
+            $assignation = [
+                'mailContact' => SettingsBag::get('email_sender'),
+                'title' => $this->getTranslator()->trans(
+                    'new.contact.form.%site%',
+                    ['%site%' => SettingsBag::get('site_name')]
+                ),
+                'email' => $request->get('form')['email'],
+                'fields' => $this->prepareFieldsAssignation($request, $uploadedFiles),
+            ];
 
-                $canSend = false;
+            /*
+             * Send contact form email
+             */
+            $this->sendContactForm($assignation, $receiver, $subject, $uploadedFiles);
+
+            $responseArray = [
+                'statusCode' => Response::HTTP_OK,
+                'status' => 'success',
+                'field_error' => null,
+                'message' => $this->getTranslator()->trans(
+                    'form.successfully.sent'
+                ),
+            ];
+            $request->getSession()->getFlashBag()->add('confirm', $responseArray['message']);
+            $this->getService('logger')->info($responseArray['message']);
+
+            if (empty($request->get('form')['_redirect'])) {
+                return new JsonResponse($responseArray);
+            }
+        } catch (BadFormRequestException $e) {
+            $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->getService('logger')->warning($e->getMessage());
+
+            if (empty($request->get('form')['_redirect'])) {
+                return new JsonResponse([
+                    'statusCode' => $e->getCode(),
+                    'status' => $e->getStatusText(),
+                    'field_error' => $e->getFieldErrored(),
+                    'message' => $e->getMessage(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->getService('logger')->warning($e->getMessage());
+
+            if (empty($request->get('form')['_redirect'])) {
+                return new JsonResponse([
+                    'statusCode' => $e->getCode(),
+                    'message' => $e->getMessage(),
+                ]);
             }
         }
 
+        /*
+         * If no AJAX and a redirect URL is present,
+         * just redirect.
+         */
+        $response = new RedirectResponse($request->get('form')['_redirect']);
+        $response->prepare($request);
+        return $response->send();
+    }
+    /**
+     * @param Request $request
+     */
+    protected function validateMandatoryFields(Request $request)
+    {
+        foreach (static::$mandatoryContactFields as $mandatoryField) {
+            if (empty($request->get('form')[$mandatoryField])) {
+                throw new BadFormRequestException(
+                    $this->getTranslator()->trans(
+                        '%field%.is.mandatory',
+                        ['%field%' => ucwords($mandatoryField)]
+                    ),
+                    Response::HTTP_FORBIDDEN,
+                    'danger',
+                    $mandatoryField
+                );
+            }
+        }
+    }
+
+    /**
+     * @param Request $request
+     */
+    protected function validateEmail(Request $request)
+    {
         if (false === filter_var($request->get('form')['email'], FILTER_VALIDATE_EMAIL)) {
-            $responseArray['statusCode'] = Response::HTTP_FORBIDDEN;
-            $responseArray['status'] = 'danger';
-            $responseArray['field_error'] = 'email';
-            $responseArray['message'] = $this->getTranslator()->trans(
-                'email.not.valid'
+            throw new BadFormRequestException(
+                $this->getTranslator()->trans(
+                    'email.not.valid'
+                ),
+                Response::HTTP_FORBIDDEN,
+                'danger',
+                'email'
             );
+        }
+    }
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param array $uploadedFiles
+     *
+     * @return array
+     */
+    protected function prepareFieldsAssignation(Request $request, array $uploadedFiles = [])
+    {
+        $fields = [];
+        /*
+         * text values
+         */
+        foreach ($request->get('form') as $key => $value) {
+            if ($key[0] == '_') {
+                continue;
+            } elseif (!empty($value)) {
+                $fields[] = [
+                    'name' => strip_tags($key),
+                    'value' => (strip_tags($value)),
+                ];
+            }
+        }
+        /*
+         * Files values
+         */
+        foreach ($uploadedFiles as $key => $uploadedFile) {
+            $fields[] = [
+                'name' => strip_tags($key),
+                'value' => (strip_tags($uploadedFile->getClientOriginalName()) .
+                    ' [' . $uploadedFile->guessExtension() . ']'),
+            ];
+        }
+        /*
+         *  Date
+         */
+        $fields[] = [
+            'name' => $this->getTranslator()->trans('date'),
+            'value' => (new \DateTime())->format('Y-m-d H:i:s'),
+        ];
+        /*
+         *  IP
+         */
+        $fields[] = [
+            'name' => $this->getTranslator()->trans('ip.address'),
+            'value' => $request->getClientIp(),
+        ];
 
-            $request->getSession()->getFlashBag()->add('error', $responseArray['message']);
-            $this->getService('logger')->error($responseArray['message']);
-
-            $canSend = false;
+        return $fields;
+    }
+    /**
+     * @param  Request $request
+     * @return string
+     */
+    protected function getSubject(Request $request)
+    {
+        /*
+         * Custom subject
+         */
+        if (!empty($request->get('form')['_emailSubject'])) {
+            return StringHandler::decodeWithSecret(
+                $request->get('form')['_emailSubject'],
+                $this->getService('config')['security']['secret']
+            );
+        } else {
+            return null;
+        }
+    }
+    /**
+     * @param  Request $request
+     * @return string
+     */
+    protected function getReceiver(Request $request)
+    {
+        /*
+         * Custom receiver
+         */
+        if (!empty($request->get('form')['_emailReceiver'])) {
+            $email = StringHandler::decodeWithSecret(
+                $request->get('form')['_emailReceiver'],
+                $this->getService('config')['security']['secret']
+            );
+            if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return $email;
+            }
         }
 
+        return SettingsBag::get('email_sender');
+    }
+    /**
+     * @param  Request $request
+     * @return array
+     */
+    protected function getUploadedFiles(Request $request)
+    {
         $allowedMimeTypes = [
             'application/pdf',
             'application/x-pdf',
@@ -186,16 +348,14 @@ class EntryPointsController extends AppController
                     if (!$uploadedFile->isValid() ||
                         !in_array($uploadedFile->getMimeType(), $allowedMimeTypes) ||
                         $uploadedFile->getClientSize() > $maxFileSize) {
-                        $responseArray['statusCode'] = Response::HTTP_FORBIDDEN;
-                        $responseArray['status'] = 'danger';
-                        $responseArray['field_error'] = $name;
-                        $responseArray['message'] = $this->getTranslator()->trans(
-                            'file.not.accepted'
+                        throw new BadFormRequestException(
+                            $this->getTranslator()->trans(
+                                'file.not.accepted'
+                            ),
+                            Response::HTTP_FORBIDDEN,
+                            'danger',
+                            $name
                         );
-
-                        $request->getSession()->getFlashBag()->add('error', $responseArray['message']);
-                        $this->getService('logger')->error($responseArray['message']);
-                        $canSend = false;
                     } else {
                         $uploadedFiles[$name] = $uploadedFile;
                     }
@@ -203,112 +363,7 @@ class EntryPointsController extends AppController
             }
         }
 
-        /*
-         * if no error, create Email
-         */
-        if ($canSend) {
-            $receiver = SettingsBag::get('email_sender');
-
-            $assignation = [
-                'mailContact' => SettingsBag::get('email_sender'),
-                'title' => $this->getTranslator()->trans(
-                    'new.contact.form.%site%',
-                    ['%site%' => SettingsBag::get('site_name')]
-                ),
-                'email' => $request->get('form')['email'],
-                'fields' => [],
-            ];
-
-            /*
-             * text values
-             */
-            foreach ($request->get('form') as $key => $value) {
-                if ($key[0] == '_') {
-                    continue;
-                } elseif (!empty($value)) {
-                    $assignation['fields'][] = [
-                        'name' => strip_tags($key),
-                        'value' => (strip_tags($value)),
-                    ];
-                }
-            }
-
-            /*
-             * Files values
-             */
-            foreach ($uploadedFiles as $key => $uploadedFile) {
-                $assignation['fields'][] = [
-                    'name' => strip_tags($key),
-                    'value' => (strip_tags($uploadedFile->getClientOriginalName()) . ' [' . $uploadedFile->guessExtension() . ']'),
-                ];
-            }
-
-            /*
-             *  Date
-             */
-            $assignation['fields'][] = [
-                'name' => $this->getTranslator()->trans('date'),
-                'value' => (new \DateTime())->format('Y-m-d H:i:s'),
-            ];
-            /*
-             *  IP
-             */
-            $assignation['fields'][] = [
-                'name' => $this->getTranslator()->trans('ip.address'),
-                'value' => $request->getClientIp(),
-            ];
-
-            /*
-             * Custom receiver
-             */
-            if (!empty($request->get('form')['_emailReceiver'])) {
-                $email = StringHandler::decodeWithSecret(
-                    $request->get('form')['_emailReceiver'],
-                    $this->getService('config')['security']['secret']
-                );
-                if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    $receiver = $email;
-                }
-            }
-
-            /*
-             * Custom subject
-             */
-            if (!empty($request->get('form')['_emailSubject'])) {
-                $subject = StringHandler::decodeWithSecret(
-                    $request->get('form')['_emailSubject'],
-                    $this->getService('config')['security']['secret']
-                );
-            } else {
-                $subject = null;
-            }
-
-            /*
-             * Send contact form email
-             */
-            $this->sendContactForm($assignation, $receiver, $subject, $uploadedFiles);
-
-            $responseArray['message'] = $this->getTranslator()->trans(
-                'form.successfully.sent'
-            );
-
-            $request->getSession()->getFlashBag()->add('confirm', $responseArray['message']);
-            $this->getService('logger')->info($responseArray['message']);
-        }
-
-        /*
-         * If no AJAX and a redirect URL is present,
-         * just redirect.
-         */
-        if (!empty($request->get('form')['_redirect'])) {
-            $response = new RedirectResponse($request->get('form')['_redirect']);
-            $response->prepare($request);
-
-            return $response->send();
-
-        } else {
-            return new JsonResponse($responseArray);
-        }
+        return $uploadedFiles;
     }
 
     /**
