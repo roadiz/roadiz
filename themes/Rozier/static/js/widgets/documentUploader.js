@@ -94,4 +94,9 @@ DocumentUploader.prototype.init = function() {
         _this.options.selector,
         Dropzone.options.uploadDropzoneDocument
     );
+
+    var $dzMessage = $(_this.options.selector).find('.dz-message');
+
+    $dzMessage.append('<div class=\"circles-icons\"><div class=\"circle circle-1\"></div><div class=\"circle circle-2\"></div><div class=\"circle circle-3\"></div><div class=\"circle circle-4\"></div><div class=\"circle circle-5\"></div><i class=\"uk-icon-rz-file\"></i></div>'); 
+
 };
