@@ -1138,9 +1138,9 @@
           <context context-type="linenumber">561</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="child_node.%name%.created">
+      <trans-unit xml:space="preserve" id="child_node.%name%.created" approved="yes">
         <source>child_node.%name%.created</source>
-        <target xml:lang="fr" state="translated">Le nœud enfant «%name%» a été créé.</target>
+        <target xml:lang="fr">Le nœud enfant «%name%» a été créé.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="107" approved="yes">
         <source>node.%name%.deleted</source>
@@ -4275,6 +4275,10 @@
       <trans-unit xml:space="preserve" id="434" approved="yes">
         <source>date-time.type</source>
         <target xml:lang="fr">Date et heure</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="date.type" approved="yes">
+        <source>date.type</source>
+        <target xml:lang="fr">Date</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="435" approved="yes">
         <source>text.type</source>

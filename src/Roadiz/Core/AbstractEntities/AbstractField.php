@@ -140,6 +140,11 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
      * multiple Latitude and Longitude with names and icon options.
      */
     const MULTI_GEOTAG_T = 21;
+    /**
+     *
+     * @see \DateTime
+     */
+    const DATE_T = 22;
 
     /**
      * Associates node-type field type to a readable string.
@@ -160,6 +165,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::ENUM_T => 'single-choice.type',
         AbstractField::MULTIPLE_T => 'multiple-choice.type',
         AbstractField::DOCUMENTS_T => 'documents.type',
+        AbstractField::DATE_T => 'date.type',
     ];
     /**
      * Associates node-type field type to a Doctrine type.
@@ -169,6 +175,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     public static $typeToDoctrine = [
         AbstractField::STRING_T => 'string',
         AbstractField::DATETIME_T => 'datetime',
+        AbstractField::DATE_T => 'datetime',
         AbstractField::RICHTEXT_T => 'text',
         AbstractField::TEXT_T => 'text',
         AbstractField::MARKDOWN_T => 'text',
@@ -188,6 +195,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     public static $typeToForm = [
         AbstractField::STRING_T => 'text',
         AbstractField::DATETIME_T => 'datetime',
+        AbstractField::DATE_T => 'date',
         AbstractField::RICHTEXT_T => 'textarea',
         AbstractField::TEXT_T => 'textarea',
         AbstractField::MARKDOWN_T => 'markdown',
