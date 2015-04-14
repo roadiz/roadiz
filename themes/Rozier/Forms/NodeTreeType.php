@@ -31,13 +31,14 @@
  */
 namespace Themes\Rozier\Forms;
 
+use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Themes\Rozier\Widgets\NodeTreeWidget;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Themes\Rozier\Widgets\NodeTreeWidget;
 
 /**
  * Node tree embedded type in a node source form.
@@ -57,12 +58,12 @@ class NodeTreeType extends AbstractType
      *
      * @param RZ\Roadiz\Core\Entities\NodesSources     $source
      * @param RZ\Roadiz\Core\Entities\NodeTypeField    $field
-     * @param \RZ\Roadiz\CMS\Controllers\AppController $refereeController
+     * @param RZ\Roadiz\CMS\Controllers\Controller $refereeController
      */
     public function __construct(
         NodesSources $source,
         NodeTypeField $field,
-        $refereeController
+        Controller $refereeController
     ) {
         $this->nodeSource = $source;
         $this->field = $field;
@@ -89,7 +90,7 @@ class NodeTreeType extends AbstractType
          * Inject data as plain documents entities
          */
         $view->vars['nodeTree'] = new NodeTreeWidget(
-            $this->controller->getKernel()->getRequest(),
+            $this->controller->getRequest(),
             $this->controller,
             $this->nodeSource->getNode(),
             $this->nodeSource->getTranslation()
@@ -104,8 +105,8 @@ class NodeTreeType extends AbstractType
         }
 
         $nodeTypes = $this->controller->getService('em')
-                                      ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                                      ->findBy(['name' => $defaultValues]);
+                          ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                          ->findBy(['name' => $defaultValues]);
 
         $view->vars['linkedTypes'] = $nodeTypes;
     }

@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Widgets;
 
+use RZ\Roadiz\CMS\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -49,7 +50,7 @@ abstract class AbstractWidget
         return $this->request;
     }
     /**
-     * @return RZ\Roadiz\CMS\Controller\AppController
+     * @return RZ\Roadiz\CMS\Controller\Controller
      */
     protected function getController()
     {
@@ -57,10 +58,10 @@ abstract class AbstractWidget
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request           Current kernel request
-     * @param RZ\Roadiz\CMS\Controller\AppController   $refereeController Referee controller to get Twig, security context from.
+     * @param Symfony\Component\HttpFoundation\Request $request Current kernel request
+     * @param RZ\Roadiz\CMS\Controller\Controller $refereeController Referee controller to get Twig, security context from.
      */
-    public function __construct(Request $request, $refereeController)
+    public function __construct(Request $request, Controller $refereeController)
     {
         if ($refereeController === null) {
             throw new \RuntimeException("Referee AppController cannot be null to instanciate a new Widget", 1);
