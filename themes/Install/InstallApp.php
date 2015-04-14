@@ -68,8 +68,7 @@ class InstallApp extends AppController
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => false,
                 'baseUrl' => $this->getRequest()->getResolvedBaseUrl(),
-                'filesUrl' => $this->kernel
-                                   ->getRequest()
+                'filesUrl' => $this->getRequest()
                                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->getService('csrfProvider')

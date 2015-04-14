@@ -98,7 +98,7 @@ class FrontendController extends AppController
         Node $node = null,
         Translation $translation = null
     ) {
-        Kernel::getService('stopwatch')->start('handleNodeController');
+        $this->getService('stopwatch')->start('handleNodeController');
         $this->node = $node;
         $this->translation = $translation;
 

@@ -111,7 +111,7 @@ class TranslationViewer implements ViewableInterface
         foreach ($translations as $translation) {
             if ($node) {
                 $urlGenerator = new NodesSourcesUrlGenerator(
-                    Kernel::getInstance()->getRequest(),
+                    $request,
                     $node->getHandler()->getNodeSourceByTranslation($translation)
                 );
                 $url = $urlGenerator->getUrl();

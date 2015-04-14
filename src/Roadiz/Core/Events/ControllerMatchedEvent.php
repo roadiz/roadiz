@@ -49,7 +49,7 @@ class ControllerMatchedEvent
     }
     /**
      * After a controller has been matched. We need to inject current
-     * Kernel instance and securityContext.
+     * Kernel instance and main DI container.
      *
      * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
      */

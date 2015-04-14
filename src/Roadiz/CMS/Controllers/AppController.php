@@ -356,7 +356,7 @@ class AppController extends Controller
         }
         $theme = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(['className' => $className]);
+            ->findOneByClassName($className);
         return $theme;
     }
 

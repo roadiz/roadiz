@@ -51,7 +51,7 @@ class DocumentRepository extends EntityRepository
             if (is_array($criteria['folders'])) {
                 if (in_array("folderExclusive", array_keys($criteria))
                     && $criteria["folderExclusive"] === true) {
-                    $documents = static::getDocumentIdsByFolderExcl($criteria['folders']);
+                    $documents = $this->getDocumentIdsByFolderExcl($criteria['folders']);
                     $criteria["id"] = $documents;
                     unset($criteria["folderExclusive"]);
                     unset($criteria['folders']);
@@ -80,10 +80,9 @@ class DocumentRepository extends EntityRepository
      * @param  array     $folders
      * @return array
      */
-
-    public static function getDocumentIdsByFolderExcl($folders)
+    public function getDocumentIdsByFolderExcl($folders)
     {
-        $qb = Kernel::getInstance()->getService('em')->createQueryBuilder();
+        $qb = $this->_em->createQueryBuilder();
 
         $qb->select("d.id")
            ->addSelect("COUNT(fd.id) as num")

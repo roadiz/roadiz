@@ -297,7 +297,7 @@ class RolesController extends RozierApp
             $this->getService('em')->flush();
 
             // Clear result cache
-            $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+            $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }
@@ -335,7 +335,7 @@ class RolesController extends RozierApp
             $this->getService('em')->flush();
 
             // Clear result cache
-            $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+            $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }

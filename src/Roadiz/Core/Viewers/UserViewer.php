@@ -53,9 +53,6 @@ class UserViewer implements ViewableInterface
     public function __construct(User $user)
     {
         $this->user = $user;
-
-        Kernel::getService('twig.environment')->addExtension(new TranslationExtension(Kernel::getService('translator')));
-        Kernel::getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
     }
 
     /**

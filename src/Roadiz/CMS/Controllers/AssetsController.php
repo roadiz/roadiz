@@ -86,8 +86,6 @@ class AssetsController extends AppController
     {
         define('SLIR_CONFIG_CLASSNAME', '\RZ\Roadiz\CMS\Utils\SLIRConfig');
 
-        Kernel::getService('em')->close();
-
         $slir = new \SLIR\SLIR();
         $slir->processRequestFromURL();
 
@@ -106,7 +104,7 @@ class AssetsController extends AppController
      */
     public function fontFileAction(Request $request, $filename, $variant, $extension, $token)
     {
-        $font = Kernel::getService('em')
+        $font = $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Font')
             ->findOneBy(['hash'=>$filename, 'variant'=>$variant]);
 
@@ -174,9 +172,8 @@ class AssetsController extends AppController
      */
     public function fontFacesAction(Request $request, $token)
     {
-        $lastMod = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Font')
-            ->getLatestUpdateDate();
+        $repository = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Font');
+        $lastMod = $repository->getLatestUpdateDate();
 
         $response = new Response(
             '',
@@ -194,10 +191,7 @@ class AssetsController extends AppController
             return $response;
         }
 
-        $fonts = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Font')
-            ->findAll();
-
+        $fonts = $repository->findAll();
 
         $fontOutput = [];
 
