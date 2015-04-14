@@ -147,7 +147,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     const DATE_T = 22;
 
     /**
-     * Associates node-type field type to a readable string.
+     * Associates abstract field type to a readable string.
      *
      * These string will be used as translation key.
      *
@@ -156,6 +156,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     public static $typeToHuman = [
         AbstractField::STRING_T => 'string.type',
         AbstractField::DATETIME_T => 'date-time.type',
+        AbstractField::DATE_T => 'date.type',
         AbstractField::TEXT_T => 'text.type',
         AbstractField::MARKDOWN_T => 'markdown.type',
         AbstractField::BOOLEAN_T => 'boolean.type',
@@ -165,10 +166,14 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::ENUM_T => 'single-choice.type',
         AbstractField::MULTIPLE_T => 'multiple-choice.type',
         AbstractField::DOCUMENTS_T => 'documents.type',
-        AbstractField::DATE_T => 'date.type',
+        AbstractField::NODES_T => 'nodes.type',
+        AbstractField::CHILDREN_T => 'children-nodes.type',
+        AbstractField::COLOUR_T => 'colour.type',
+        AbstractField::GEOTAG_T => 'geographic.coordinates.type',
+        AbstractField::CUSTOM_FORMS_T => 'custom-forms.type',
     ];
     /**
-     * Associates node-type field type to a Doctrine type.
+     * Associates abstract field type to a Doctrine type.
      *
      * @var array
      */
@@ -186,9 +191,14 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::ENUM_T => 'string',
         AbstractField::MULTIPLE_T => 'simple_array',
         AbstractField::DOCUMENTS_T => null,
+        AbstractField::NODES_T => null,
+        AbstractField::CHILDREN_T => null,
+        AbstractField::COLOUR_T => 'string',
+        AbstractField::GEOTAG_T => 'string',
+        AbstractField::CUSTOM_FORMS_T => null,
     ];
     /**
-     * Associates node-type field type to a Symfony Form type.
+     * Associates abstract field type to a Symfony Form type.
      *
      * @var array
      */
@@ -206,6 +216,11 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::ENUM_T => 'enumeration',
         AbstractField::MULTIPLE_T => 'multiple_enumeration',
         AbstractField::DOCUMENTS_T => 'documents',
+        AbstractField::NODES_T => 'referenced_nodes',
+        AbstractField::CHILDREN_T => 'children_nodes',
+        AbstractField::COLOUR_T => 'text',
+        AbstractField::GEOTAG_T => 'text',
+        AbstractField::CUSTOM_FORMS_T => 'custom_forms',
     ];
 
     /**

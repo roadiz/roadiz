@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
+use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
