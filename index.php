@@ -43,9 +43,9 @@ if (php_sapi_name() == 'cli') {
     echo 'Use "bin/roadiz" as an executable instead of calling index.php' . PHP_EOL;
 } else {
     try {
-        $request = Kernel::getInstance()->getRequest();
-
         Kernel::getInstance()->boot();
+
+        $request = Kernel::getInstance()->getRequest();
         /*
          * Bypass Roadiz kernel to directly serve SLIR assets
          */

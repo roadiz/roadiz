@@ -64,7 +64,7 @@ class RozierApp extends BackendController
         /*
          * Use kernel DI container to delay API requuests
          */
-        $this->themeContainer = $this->getService();
+        $this->themeContainer = $this->getContainer();
         $this->assignation['themeServices'] = $this->themeContainer;
 
         /*
@@ -83,13 +83,13 @@ class RozierApp extends BackendController
             } else {
                 $parent = null;
             }
-            return new NodeTreeWidget($this->getKernel()->getRequest(), $this, $parent);
+            return new NodeTreeWidget($this->getRequest(), $this, $parent);
         };
         $this->themeContainer['tagTree'] = function ($c) {
-            return new TagTreeWidget($this->getKernel()->getRequest(), $this);
+            return new TagTreeWidget($this->getRequest(), $this);
         };
         $this->themeContainer['folderTree'] = function ($c) {
-            return new FolderTreeWidget($this->getKernel()->getRequest(), $this);
+            return new FolderTreeWidget($this->getRequest(), $this);
         };
         $this->themeContainer['maxFilesize'] = function ($c) {
             return min(intval(ini_get('post_max_size')), intval(ini_get('upload_max_filesize')));

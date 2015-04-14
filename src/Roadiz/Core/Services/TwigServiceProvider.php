@@ -163,7 +163,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                     return $mixed->getViewer()->getDocumentUrlByArray($criteria);
                 } elseif ($mixed instanceof NodesSources) {
                     $urlGenerator = new NodesSourcesUrlGenerator(
-                        Kernel::getInstance()->getRequest(),
+                        Kernel::getService('request'),
                         $mixed
                     );
                     if (isset($criteria['absolute'])) {
@@ -172,7 +172,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                     return $urlGenerator->getUrl(false);
                 } elseif ($mixed instanceof Node) {
                     $urlGenerator = new NodesSourcesUrlGenerator(
-                        Kernel::getInstance()->getRequest(),
+                        Kernel::getService('request'),
                         $mixed->getNodeSources()->first()
                     );
                     if (isset($criteria['absolute'])) {

@@ -138,6 +138,7 @@ class NewslettersUtilsController extends RozierApp
         // get html from the controller
         $front = new $classname();
         $front->setKernel($this->kernel);
+        $front->setContainer($this->kernel->getContainer());
         $front->prepareBaseAssignation();
         return $front->makeHtml($request, $newsletter);
     }

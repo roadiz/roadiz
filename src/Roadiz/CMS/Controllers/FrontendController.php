@@ -284,7 +284,8 @@ class FrontendController extends AppController
              * Inject current Kernel to the matched Controller
              */
             if ($ctrl instanceof AppController) {
-                $ctrl->setKernel($this->getKernel());
+                $ctrl->setKernel($this->kernel);
+                $ctrl->setContainer($this->container);
 
                 /*
                  * As we are creating an other controller

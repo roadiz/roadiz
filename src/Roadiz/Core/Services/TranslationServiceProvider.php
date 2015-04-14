@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator;
 
@@ -56,7 +55,7 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
             if ($c['session']->get('_locale') != "") {
                 return $c['session']->get('_locale');
             } else {
-                return Kernel::getInstance()->getRequest()->getLocale();
+                return $c['request']->getLocale();
             }
         };
 
