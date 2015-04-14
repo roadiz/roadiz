@@ -34,7 +34,6 @@ use RZ\Roadiz\Console\SchemaCommand;
 use RZ\Roadiz\Console\Tools\Configuration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -86,14 +85,9 @@ class DatabaseController extends InstallApp
                         /*
                          * Force redirect to avoid resending form when refreshing page
                          */
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate(
-                                'installDatabaseSchemaPage'
-                            )
-                        );
-                        $response->prepare($request);
-
-                        return $response->send();
+                        return $this->redirect($this->generateUrl(
+                            'installDatabaseSchemaPage'
+                        ));
                     } catch (\PDOException $e) {
                         $message = "";
                         if (strstr($e->getMessage(), 'SQLSTATE[')) {
@@ -149,14 +143,9 @@ class DatabaseController extends InstallApp
                 /*
                  * Force redirect to install fixtures
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'installDatabaseFixturesPage'
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'installDatabaseFixturesPage'
+                ));
 
             } catch (\PDOException $e) {
                 $message = "";

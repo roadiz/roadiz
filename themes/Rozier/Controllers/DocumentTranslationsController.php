@@ -33,7 +33,6 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -102,18 +101,13 @@ class DocumentTranslationsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'documentsMetaPage',
-                        [
-                            'documentId' => $document->getId(),
-                            'translationId' => $translationId,
-                        ]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'documentsMetaPage',
+                    [
+                        'documentId' => $document->getId(),
+                        'translationId' => $translationId,
+                    ]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -185,15 +179,10 @@ class DocumentTranslationsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'documentsEditPage',
-                        ['documentId' => $document->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'documentsEditPage',
+                    ['documentId' => $document->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();

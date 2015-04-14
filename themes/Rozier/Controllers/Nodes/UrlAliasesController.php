@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -103,15 +102,10 @@ class UrlAliasesController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodesEditSEOPage',
-                        ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodesEditSEOPage',
+                    ['nodeId' => $node->getId(), 'translationId' => $translationId]
+                ));
             }
 
             /*
@@ -136,15 +130,10 @@ class UrlAliasesController extends RozierApp
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditSEOPage',
-                            ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditSEOPage',
+                        ['nodeId' => $node->getId(), 'translationId' => $translationId]
+                    ));
                 }
 
                 // Match delete
@@ -158,15 +147,10 @@ class UrlAliasesController extends RozierApp
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditSEOPage',
-                            ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditSEOPage',
+                        ['nodeId' => $node->getId(), 'translationId' => $translationId]
+                    ));
                 }
 
                 $this->assignation['aliases'][] = [
@@ -200,15 +184,10 @@ class UrlAliasesController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodesEditSEOPage',
-                        ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodesEditSEOPage',
+                    ['nodeId' => $node->getId(), 'translationId' => $translationId]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();

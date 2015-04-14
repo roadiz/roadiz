@@ -31,7 +31,6 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -110,15 +109,10 @@ class NodesTreesController extends RozierApp
 
                 $this->publishConfirmMessage($request, $msg);
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodesTreePage',
-                        ['nodeId' => $nodeId, 'translationId' => $translationId]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodesTreePage',
+                    ['nodeId' => $nodeId, 'translationId' => $translationId]
+                ));
             }
             $this->assignation['tagNodesForm'] = $tagNodesForm->createView();
 
@@ -177,15 +171,10 @@ class NodesTreesController extends RozierApp
                     $this->publishConfirmMessage($request, $msg);
 
                     if (!empty($form->getData()['referer'])) {
-                        $response = new RedirectResponse($form->getData()['referer']);
+                        return $this->redirect($form->getData()['referer']);
                     } else {
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate('nodesHomePage')
-                        );
+                        return $this->redirect($this->generateUrl('nodesHomePage'));
                     }
-                    $response->prepare($request);
-
-                    return $response->send();
                 }
 
                 $this->assignation['nodes'] = $nodes;
@@ -238,15 +227,10 @@ class NodesTreesController extends RozierApp
                     $this->publishConfirmMessage($request, $msg);
 
                     if (!empty($form->getData()['referer'])) {
-                        $response = new RedirectResponse($form->getData()['referer']);
+                        return $this->redirect($form->getData()['referer']);
                     } else {
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate('nodesHomePage')
-                        );
+                        return $this->redirect($this->generateUrl('nodesHomePage'));
                     }
-                    $response->prepare($request);
-
-                    return $response->send();
                 }
 
                 $this->assignation['nodes'] = $nodes;

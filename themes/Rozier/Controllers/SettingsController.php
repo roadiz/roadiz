@@ -37,7 +37,6 @@ use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -133,23 +132,15 @@ class SettingsController extends RozierApp
                 }
 
                 if (null !== $settingGroup) {
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'settingGroupsSettingsPage',
-                            ['settingGroupId' => $settingGroup->getId()]
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'settingGroupsSettingsPage',
+                        ['settingGroupId' => $settingGroup->getId()]
+                    ));
                 } else {
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'settingsHomePage'
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'settingsHomePage'
+                    ));
                 }
-
-                $response->prepare($request);
-
-                return $response;
             }
 
             $document = null;
@@ -199,15 +190,10 @@ class SettingsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'settingsEditPage',
-                        ['settingId' => $setting->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'settingsEditPage',
+                    ['settingId' => $setting->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -250,12 +236,7 @@ class SettingsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('settingsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('settingsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -297,12 +278,7 @@ class SettingsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('settingsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('settingsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();

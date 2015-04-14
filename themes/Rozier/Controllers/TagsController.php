@@ -39,7 +39,6 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -145,15 +144,10 @@ class TagsController extends RozierApp
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'tagsEditTranslatedPage',
-                            ['tagId' => $tag->getId(), 'translationId' => $translation->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'tagsEditTranslatedPage',
+                        ['tagId' => $tag->getId(), 'translationId' => $translation->getId()]
+                    ));
                 }
 
                 $this->assignation['form'] = $form->createView();
@@ -183,18 +177,13 @@ class TagsController extends RozierApp
                     $event = new FilterTagEvent($gtag);
                     $this->getService('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'tagsEditTranslatedPage',
-                            [
-                                'tagId' => $gtag->getId(),
-                                'translationId' => $translation->getId(),
-                            ]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'tagsEditTranslatedPage',
+                        [
+                            'tagId' => $gtag->getId(),
+                            'translationId' => $translation->getId(),
+                        ]
+                    ));
 
                 } else {
                     return $this->throw404();
@@ -244,12 +233,7 @@ class TagsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('tagsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('tagsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -298,15 +282,10 @@ class TagsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'tagsSettingsPage',
-                        ['tagId' => $tag->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'tagsSettingsPage',
+                    ['tagId' => $tag->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -391,12 +370,7 @@ class TagsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('tagsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('tagsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -448,27 +422,17 @@ class TagsController extends RozierApp
                     $msg = $this->getTranslator()->trans('child.tag.%name%.created', ['%name%' => $tag->getTagName()]);
                     $this->publishConfirmMessage($request, $msg);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'tagsEditPage',
-                            ['tagId' => $tag->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'tagsEditPage',
+                        ['tagId' => $tag->getId()]
+                    ));
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'tagsAddChildPage',
-                            ['tagId' => $tagId, 'translationId' => $translationId]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'tagsAddChildPage',
+                        ['tagId' => $tagId, 'translationId' => $translationId]
+                    ));
                 }
             }
 

@@ -34,7 +34,6 @@ use \RZ\Roadiz\CMS\Forms\MarkdownType;
 use \RZ\Roadiz\Core\Entities\CustomForm;
 use \RZ\Roadiz\Core\Entities\CustomFormField;
 use \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\Validator\Constraints\NotBlank;
 use \Themes\Rozier\RozierApp;
@@ -48,7 +47,7 @@ class CustomFormFieldsController extends RozierApp
      * List every node-type-fields.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $customFormId
+     * @param int $customFormId
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -101,17 +100,12 @@ class CustomFormFieldsController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'customFormFieldsListPage',
-                        [
-                            'customFormId' => $field->getCustomForm()->getId(),
-                        ]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'customFormFieldsListPage',
+                    [
+                        'customFormId' => $field->getCustomForm()->getId(),
+                    ]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -158,14 +152,12 @@ class CustomFormFieldsController extends RozierApp
                     /*
                      * Redirect to update schema page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'customFormFieldsListPage',
-                            [
-                                'customFormId' => $customFormId,
-                            ]
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'customFormFieldsListPage',
+                        [
+                            'customFormId' => $customFormId,
+                        ]
+                    ));
 
                 } catch (\Exception $e) {
                     $msg = $e->getMessage();
@@ -174,16 +166,11 @@ class CustomFormFieldsController extends RozierApp
                     /*
                      * Redirect to add page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'customFormFieldsAddPage',
-                            ['customFormId' => $customFormId]
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'customFormFieldsAddPage',
+                        ['customFormId' => $customFormId]
+                    ));
                 }
-
-                $response->prepare($request);
-                return $response->send();
             }
 
             $this->assignation['form'] = $form->createView();
@@ -233,17 +220,12 @@ class CustomFormFieldsController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'customFormFieldsListPage',
-                        [
-                            'customFormId' => $customFormId,
-                        ]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'customFormFieldsListPage',
+                    [
+                        'customFormId' => $customFormId,
+                    ]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();

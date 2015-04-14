@@ -37,7 +37,6 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\XlsxExporter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -216,8 +215,7 @@ class SearchController extends RozierApp
         $nodeTypeForm->handleRequest();
 
         if (null !== $response = $this->handleNodeTypeForm($nodeTypeForm)) {
-            $response->prepare($request);
-            return $response->send();
+            return $response;
         }
 
         if ($form->isValid()) {
@@ -323,14 +321,14 @@ class SearchController extends RozierApp
                                     ["method" => "get"]
                                 );
         $builderNodeType->add(
-            "nodetype",
-            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-            [
+                            "nodetype",
+                            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+                            [
                                 'empty_value' => "",
                                 'required' => false,
                                 'data' => $nodetypeId,
                             ]
-        )
+                        )
                         ->add("nodetypeSubmit", "submit", [
                             "label" => $this->getTranslator()->trans("select.nodetype"),
                             "attr" => ["class" => "uk-button uk-button-primary"],
@@ -343,18 +341,14 @@ class SearchController extends RozierApp
     {
         if ($nodeTypeForm->isValid()) {
             if (empty($nodeTypeForm->getData()['nodetype'])) {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('searchNodePage')
-                );
+                return $this->redirect($this->generateUrl('searchNodePage'));
             } else {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'searchNodeSourcePage',
-                        [
-                            "nodetypeId" => $nodeTypeForm->getData()['nodetype'],
-                        ]
-                    )
-                );
+                return $this->redirect($this->generateUrl(
+                    'searchNodeSourcePage',
+                    [
+                        "nodetypeId" => $nodeTypeForm->getData()['nodetype'],
+                    ]
+                ));
             }
 
             return $response;

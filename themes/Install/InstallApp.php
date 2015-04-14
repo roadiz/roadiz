@@ -39,7 +39,6 @@ use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -119,13 +118,9 @@ class InstallApp extends AppController
             /*
              * Force redirect to avoid resending form when refreshing page
              */
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate(
-                    'installHomePage'
-                )
-            );
-            $response->prepare($request);
-            return $response->send();
+            return $this->redirect($this->generateUrl(
+                'installHomePage'
+            ));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -142,15 +137,9 @@ class InstallApp extends AppController
      */
     public function redirectIndexAction(Request $request)
     {
-        $response = new RedirectResponse(
-            $this->getService('urlGenerator')->generate(
-                'installHomePage'
-            )
-        );
-
-        $response->prepare($request);
-
-        return $response->send();
+        return $this->redirect($this->generateUrl(
+            'installHomePage'
+        ));
     }
 
     /**
@@ -196,15 +185,10 @@ class InstallApp extends AppController
                                  ->getRepository('RZ\Roadiz\Core\Entities\User')
                                  ->findOneBy(['username' => $userForm->getData()['username']]);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'installUserSummaryPage',
-                            ["userId" => $user->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'installUserSummaryPage',
+                        ["userId" => $user->getId()]
+                    ));
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage();
@@ -268,21 +252,13 @@ class InstallApp extends AppController
                      */
                     $this->getService('session')->invalidate();
 
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'installHomePage'
-                        )
-                    );
-
                     CacheCommand::clearDoctrine();
                     CacheCommand::clearTranslations();
                     CacheCommand::clearRouteCollections();
-
-                    $response->prepare($request);
-                    return $response->send();
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    return $this->redirect($this->generateUrl('installHomePage'));
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();

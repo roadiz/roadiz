@@ -30,7 +30,6 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountConfirmationToken;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -44,8 +43,8 @@ class LoginResetController extends RozierApp
     public function resetAction(Request $request, $token)
     {
         $user = $this->getService('em')
-                         ->getRepository('RZ\Roadiz\Core\Entities\User')
-                         ->findOneByConfirmationToken($token);
+                     ->getRepository('RZ\Roadiz\Core\Entities\User')
+                     ->findOneByConfirmationToken($token);
 
         if (null !== $user) {
             $form = $this->buildLoginResetForm($token);
@@ -57,14 +56,9 @@ class LoginResetController extends RozierApp
 
                 $this->getService('em')->flush();
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'loginResetConfirmPage'
-                    )
-                );
-                $response->prepare($request);
-
-                return $response;
+                return $this->redirect($this->generateUrl(
+                    'loginResetConfirmPage'
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -96,27 +90,27 @@ class LoginResetController extends RozierApp
                         ->createBuilder('form')
                         ->add('token', 'hidden', [
                             'required' => true,
-                            'data' =>$token,
+                            'data' => $token,
                             'label' => false,
                             'constraints' => [
                                 new ValidAccountConfirmationToken([
                                     'entityManager' => $this->getService('em'),
                                     'ttl' => LoginRequestController::CONFIRMATION_TTL,
                                     'message' => $this->getTranslator()->trans('confirmation.token.is.invalid'),
-                                    'expiredMessage' => $this->getTranslator()->trans('confirmation.token.has.expired')
+                                    'expiredMessage' => $this->getTranslator()->trans('confirmation.token.has.expired'),
                                 ]),
                             ],
                         ])
                         ->add('plainPassword', 'repeated', [
                             'type' => 'password',
                             'invalid_message' => $this->getTranslator()->trans('password.must.match'),
-                            'first_options'  => [
-                                'label'=>$this->getTranslator()->trans('choose.a.new.password'),
+                            'first_options' => [
+                                'label' => $this->getTranslator()->trans('choose.a.new.password'),
                             ],
                             'second_options' => [
-                                'label'=>$this->getTranslator()->trans('passwordVerify'),
+                                'label' => $this->getTranslator()->trans('passwordVerify'),
                             ],
-                            'required' => true
+                            'required' => true,
                         ]);
 
         return $builder->getForm();

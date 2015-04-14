@@ -32,12 +32,10 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
-use Themes\Rozier\RozierApp;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Themes\Rozier\RozierApp;
 
 /**
  * {@inheritdoc}
@@ -58,11 +56,11 @@ class NodesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $existingNode = $this->getService('em')
-                              ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+                             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         $this->getService('em')->refresh($existingNode);
         $node = NodeJsonSerializer::serialize([$existingNode]);
 
-        $response =  new Response(
+        $response = new Response(
             $node,
             Response::HTTP_OK,
             []
@@ -72,7 +70,7 @@ class NodesUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'node-' . $existingNode->getNodeName() . '-' . date("YmdHis")  . '.rzn'
+                'node-' . $existingNode->getNodeName() . '-' . date("YmdHis") . '.rzn'
             )
         ); // Rezo-Zero Type
 
@@ -94,7 +92,7 @@ class NodesUtilsController extends RozierApp
 
         $existingNodes = $this->getService('em')
                               ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                              ->findBy(["parent"=>null]);
+                              ->findBy(["parent" => null]);
 
         foreach ($existingNodes as $existingNode) {
             $this->getService('em')->refresh($existingNode);
@@ -102,7 +100,7 @@ class NodesUtilsController extends RozierApp
 
         $node = NodeJsonSerializer::serialize($existingNodes);
 
-        $response =  new Response(
+        $response = new Response(
             $node,
             Response::HTTP_OK,
             []
@@ -112,9 +110,9 @@ class NodesUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'node-all-' . date("YmdHis")  . '.rzn'
+                'node-all-' . date("YmdHis") . '.rzn'
             )
-        ); // Rezo-Zero Type
+        );
 
         $response->prepare($request);
 
@@ -135,41 +133,35 @@ class NodesUtilsController extends RozierApp
 
         try {
             $existingNode = $this->getService('em')
-                                  ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+                                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
             $newNode = $existingNode->getHandler()->duplicate();
 
             $msg = $this->getTranslator()->trans("duplicated.node.%name%", [
-                '%name%' => $existingNode->getNodeName()
+                '%name%' => $existingNode->getNodeName(),
             ]);
 
             $this->publishConfirmMessage($request, $msg);
 
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')
-                    ->generate(
-                        'nodesEditPage',
-                        ["nodeId" => $newNode->getId()]
-                    )
-            );
+            return $this->redirect($this->getService('urlGenerator')
+                                            ->generate(
+                                                'nodesEditPage',
+                                                ["nodeId" => $newNode->getId()]
+                                            ));
 
         } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add(
                 'error',
                 $this->getTranslator()->trans("impossible.duplicate.node.%name%", [
-                    '%name%' => $existingNode->getNodeName()
+                    '%name%' => $existingNode->getNodeName(),
                 ])
             );
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
 
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')
-                    ->generate(
-                        'nodesEditPage',
-                        ["nodeId" => $existingNode->getId()]
-                    )
-            );
+            return $this->redirect($this->getService('urlGenerator')
+                                            ->generate(
+                                                'nodesEditPage',
+                                                ["nodeId" => $existingNode->getId()]
+                                            ));
         }
-        $response->prepare($request);
-        return $response->send();
     }
 }

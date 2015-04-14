@@ -34,7 +34,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 use \Symfony\Component\Validator\Constraints\NotBlank;
@@ -101,20 +100,15 @@ class NodeTypeFieldsController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodeTypesFieldSchemaUpdate',
-                        [
-                            'nodeTypeId' => $field->getNodeType()->getId(),
-                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(
-                                static::SCHEMA_TOKEN_INTENTION
-                            ),
-                        ]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodeTypesFieldSchemaUpdate',
+                    [
+                        'nodeTypeId' => $field->getNodeType()->getId(),
+                        '_token' => $this->getService('csrfProvider')->generateCsrfToken(
+                            static::SCHEMA_TOKEN_INTENTION
+                        ),
+                    ]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -161,17 +155,15 @@ class NodeTypeFieldsController extends RozierApp
                     /*
                      * Redirect to update schema page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodeTypesFieldSchemaUpdate',
-                            [
-                                'nodeTypeId' => $nodeTypeId,
-                                '_token' => $this->getService('csrfProvider')->generateCsrfToken(
-                                    static::SCHEMA_TOKEN_INTENTION
-                                ),
-                            ]
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'nodeTypesFieldSchemaUpdate',
+                        [
+                            'nodeTypeId' => $nodeTypeId,
+                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(
+                                static::SCHEMA_TOKEN_INTENTION
+                            ),
+                        ]
+                    ));
 
                 } catch (\Exception $e) {
                     $msg = $e->getMessage();
@@ -180,16 +172,11 @@ class NodeTypeFieldsController extends RozierApp
                     /*
                      * Redirect to add page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodeTypeFieldsAddPage',
-                            ['nodeTypeId' => $nodeTypeId]
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'nodeTypeFieldsAddPage',
+                        ['nodeTypeId' => $nodeTypeId]
+                    ));
                 }
-
-                $response->prepare($request);
-                return $response->send();
             }
 
             $this->assignation['form'] = $form->createView();
@@ -244,20 +231,15 @@ class NodeTypeFieldsController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodeTypesFieldSchemaUpdate',
-                        [
-                            'nodeTypeId' => $nodeTypeId,
-                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(
-                                static::SCHEMA_TOKEN_INTENTION
-                            ),
-                        ]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodeTypesFieldSchemaUpdate',
+                    [
+                        'nodeTypeId' => $nodeTypeId,
+                        '_token' => $this->getService('csrfProvider')->generateCsrfToken(
+                            static::SCHEMA_TOKEN_INTENTION
+                        ),
+                    ]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();

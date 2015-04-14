@@ -31,7 +31,6 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Console\CacheCommand;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -64,12 +63,7 @@ class CacheController extends RozierApp
             /*
              * Force redirect to avoid resending form when refreshing page
              */
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate('adminHomePage')
-            );
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl('adminHomePage'));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -124,12 +118,7 @@ class CacheController extends RozierApp
             /*
              * Force redirect to avoid resending form when refreshing page
              */
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate('adminHomePage')
-            );
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl('adminHomePage'));
         }
 
         $this->assignation['form'] = $form->createView();

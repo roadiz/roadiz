@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -99,12 +98,7 @@ class GroupsController extends RozierApp
                 $this->publishErrorMessage($request, $e->getMessage());
             }
 
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate('groupsHomePage')
-            );
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl('groupsHomePage'));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -143,12 +137,7 @@ class GroupsController extends RozierApp
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('groupsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('groupsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -195,12 +184,7 @@ class GroupsController extends RozierApp
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('groupsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('groupsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -240,15 +224,10 @@ class GroupsController extends RozierApp
                 ]);
                 $this->publishConfirmMessage($request, $msg);
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'groupsEditRolesPage',
-                        ['groupId' => $group->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'groupsEditRolesPage',
+                    ['groupId' => $group->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -291,15 +270,10 @@ class GroupsController extends RozierApp
                 ]);
                 $this->publishConfirmMessage($request, $msg);
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'groupsEditRolesPage',
-                        ['groupId' => $group->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'groupsEditRolesPage',
+                    ['groupId' => $group->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -337,15 +311,10 @@ class GroupsController extends RozierApp
                 ]);
                 $this->publishConfirmMessage($request, $msg);
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'groupsEditUsersPage',
-                        ['groupId' => $group->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'groupsEditUsersPage',
+                    ['groupId' => $group->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -388,16 +357,11 @@ class GroupsController extends RozierApp
                 ]);
                 $this->publishConfirmMessage($request, $msg);
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'groupsEditUsersPage',
-                        ['groupId' => $group->getId(),
-                            'userId' => $user->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'groupsEditUsersPage',
+                    ['groupId' => $group->getId(),
+                        'userId' => $user->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();

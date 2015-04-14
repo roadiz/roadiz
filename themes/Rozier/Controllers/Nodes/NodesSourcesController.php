@@ -33,7 +33,6 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -110,15 +109,10 @@ class NodesSourcesController extends RozierApp
 
                     $this->publishConfirmMessage($request, $msg, $source);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditSourcePage',
-                            ['nodeId' => $node->getId(), 'translationId' => $translation->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditSourcePage',
+                        ['nodeId' => $node->getId(), 'translationId' => $translation->getId()]
+                    ));
                 }
 
                 $this->assignation['form'] = $form->createView();
@@ -184,16 +178,10 @@ class NodesSourcesController extends RozierApp
 
                 $this->publishConfirmMessage($request, $msg);
             }
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate(
-                    'nodesEditSourcePage',
-                    ['nodeId' => $node->getId(), "translationId" => $ns->getTranslation()->getId()]
-                )
-            );
-
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl(
+                'nodesEditSourcePage',
+                ['nodeId' => $node->getId(), "translationId" => $ns->getTranslation()->getId()]
+            ));
         }
 
         $this->assignation["nodeSource"] = $ns;

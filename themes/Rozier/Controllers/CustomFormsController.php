@@ -36,7 +36,6 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -106,17 +105,12 @@ class CustomFormsController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'customFormsHomePage',
-                        [
-                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION),
-                        ]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'customFormsHomePage',
+                    [
+                        '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION),
+                    ]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -157,23 +151,16 @@ class CustomFormsController extends RozierApp
                     /*
                      * Redirect to update schema page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'customFormsHomePage'
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'customFormsHomePage'
+                    ));
 
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'customFormsAddPage'
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'customFormsAddPage'
+                    ));
                 }
-                $response->prepare($request);
-
-                return $response->send();
             }
 
             $this->assignation['form'] = $form->createView();
@@ -214,14 +201,9 @@ class CustomFormsController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'customFormsHomePage'
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'customFormsHomePage'
+                ));
             }
 
             $this->assignation['form'] = $form->createView();

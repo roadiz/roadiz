@@ -32,10 +32,8 @@
 
 namespace Themes\Rozier\Controllers;
 
-use Themes\Rozier\RozierApp;
-
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Themes\Rozier\RozierApp;
 
 /**
  * Redirection controller use to update database schema.
@@ -64,14 +62,9 @@ class SchemaController extends RozierApp
 
         $this->updateSchema($request, $_token);
 
-        $response = new RedirectResponse(
-            $this->getService('urlGenerator')->generate(
-                'nodeTypesHomePage'
-            )
-        );
-        $response->prepare($request);
-
-        return $response->send();
+        return $this->redirect($this->generateUrl(
+            'nodeTypesHomePage'
+        ));
     }
 
     /**
@@ -87,24 +80,19 @@ class SchemaController extends RozierApp
 
         $this->updateSchema($request, $_token);
 
-        $response = new RedirectResponse(
-            $this->getService('urlGenerator')->generate(
-                'nodeTypeFieldsListPage',
-                [
-                    'nodeTypeId' => $nodeTypeId
-                ]
-            )
-        );
-        $response->prepare($request);
-
-        return $response->send();
+        return $this->redirect($this->generateUrl(
+            'nodeTypeFieldsListPage',
+            [
+                'nodeTypeId' => $nodeTypeId,
+            ]
+        ));
     }
 
     protected function updateSchema(Request $request, $_token)
     {
 
         if ($this->getService('csrfProvider')
-                ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
+            ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
             \RZ\Roadiz\Console\SchemaCommand::updateSchema();
 
             $msg = $this->getTranslator()->trans('database.schema.updated');

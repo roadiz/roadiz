@@ -161,6 +161,19 @@ class Controller
         return $this->container['urlGenerator']->generate($route, $parameters, $absolute);
     }
 
+    /**
+     * Returns a RedirectResponse to the given URL.
+     *
+     * @param  string $url
+     * @param  integer $status
+     *
+     * @return Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function redirect($url, $status = Response::HTTP_FOUND)
+    {
+        return new RedirectResponse($url, $status);
+    }
+
     public static function getCalledClass()
     {
         $className = get_called_class();
@@ -199,10 +212,7 @@ class Controller
 
         $url = str_replace($pathInfo, rtrim($pathInfo, ' /'), $requestUri);
 
-        $response = new RedirectResponse($url, 301);
-        $response->prepare($request);
-
-        return $response->send();
+        return $this->redirect($url, Response::HTTP_MOVED_PERMANENTLY);
     }
 
     /**

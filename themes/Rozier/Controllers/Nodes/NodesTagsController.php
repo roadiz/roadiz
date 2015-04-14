@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -101,15 +100,10 @@ class NodesTagsController extends RozierApp
                     ]);
                     $this->publishConfirmMessage($request, $msg);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditTagsPage',
-                            ['nodeId' => $node->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditTagsPage',
+                        ['nodeId' => $node->getId()]
+                    ));
                 }
 
                 $this->assignation['form'] = $form->createView();
@@ -161,15 +155,10 @@ class NodesTagsController extends RozierApp
                 );
                 $this->publishConfirmMessage($request, $msg);
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodesEditTagsPage',
-                        ['nodeId' => $node->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodesEditTagsPage',
+                    ['nodeId' => $node->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();

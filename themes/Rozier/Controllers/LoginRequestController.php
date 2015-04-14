@@ -31,7 +31,6 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountEmail;
 use RZ\Roadiz\Utils\Security\TokenGenerator;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Email;
 use Themes\Rozier\RozierApp;
@@ -67,14 +66,9 @@ class LoginRequestController extends RozierApp
                     $this->getService('em')->flush();
                     $user->getViewer()->sendPasswordResetLink($this->getService('urlGenerator'));
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'loginRequestConfirmPage'
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response;
+                    return $this->redirect($this->generateUrl(
+                        'loginRequestConfirmPage'
+                    ));
                 } else {
                     $this->assignation['error'] = $this->getTranslator()->trans('a.confirmation.email.has.already.be.sent');
                 }

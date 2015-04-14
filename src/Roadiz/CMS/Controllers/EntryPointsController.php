@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
@@ -196,9 +195,7 @@ class EntryPointsController extends AppController
          * If no AJAX and a redirect URL is present,
          * just redirect.
          */
-        $response = new RedirectResponse($request->get('form')['_redirect']);
-        $response->prepare($request);
-        return $response->send();
+        return $this->redirect($request->get('form')['_redirect']);
     }
     /**
      * @param Request $request

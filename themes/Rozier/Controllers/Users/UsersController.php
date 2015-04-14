@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\FacebookUsernameNotFoundException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -116,15 +115,10 @@ class UsersController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'usersEditPage',
-                        ['userId' => $user->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'usersEditPage',
+                    ['userId' => $user->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -162,12 +156,7 @@ class UsersController extends RozierApp
                     $msg = $this->getTranslator()->trans('user.%name%.created', ['%name%' => $user->getUsername()]);
                     $this->publishConfirmMessage($request, $msg);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate('usersHomePage')
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl('usersHomePage'));
                 } catch (FacebookUsernameNotFoundException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 } catch (EntityAlreadyExistsException $e) {
@@ -221,12 +210,7 @@ class UsersController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('usersHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('usersHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -376,7 +360,6 @@ class UsersController extends RozierApp
 
         return $builder->getForm();
     }
-
 
     /**
      * @param RZ\Roadiz\Core\Entities\User $user
