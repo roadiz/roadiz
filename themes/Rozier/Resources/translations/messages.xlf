@@ -4285,6 +4285,10 @@
         <source>date-time.type</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="date.type">
+        <source>date.type</source>
+        <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="435">
         <source>text.type</source>
         <target></target>

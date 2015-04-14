@@ -65,7 +65,6 @@ class Kernel implements ServiceProviderInterface
     private static $instance = null;
 
     public $container = null;
-    protected $request = null;
     protected $response = null;
 
     /**
@@ -76,7 +75,6 @@ class Kernel implements ServiceProviderInterface
     final private function __construct()
     {
         $this->container = new Container();
-        $this->request = Request::createFromGlobals();
     }
 
     /**
@@ -126,10 +124,14 @@ class Kernel implements ServiceProviderInterface
             return new EventDispatcher();
         };
 
+        $container['request'] = function ($c) {
+            return Request::createFromGlobals();
+        };
+
         $container['requestContext'] = function ($c) {
-            $rc = new RequestContext($this->request->getResolvedBasePath());
-            $rc->setHost($this->request->server->get('HTTP_HOST'));
-            $rc->setHttpPort((int) $this->request->server->get('SERVER_PORT'));
+            $rc = new RequestContext($c['request']->getResolvedBasePath());
+            $rc->setHost($c['request']->server->get('HTTP_HOST'));
+            $rc->setHttpPort((int) $c['request']->server->get('SERVER_PORT'));
 
             return $rc;
         };
@@ -228,7 +230,7 @@ class Kernel implements ServiceProviderInterface
              * Main Framework handle call
              * ----------------------------
              */
-            $this->response = $this->container['httpKernel']->handle($this->request);
+            $this->response = $this->container['httpKernel']->handle($this->container['request']);
 
         } catch (\RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException $e) {
             $this->response = $this->getEmergencyResponse($e);
@@ -240,9 +242,9 @@ class Kernel implements ServiceProviderInterface
             $this->response = $this->getEmergencyResponse($e);
         }
 
-        $this->response->prepare($this->request);
+        $this->response->prepare($this->container['request']);
         $this->response->send();
-        $this->container['httpKernel']->terminate($this->request, $this->response);
+        $this->container['httpKernel']->terminate($this->container['request'], $this->response);
 
         return $this;
     }
@@ -266,7 +268,7 @@ class Kernel implements ServiceProviderInterface
             ]);
         }
 
-        if ($this->request->isXmlHttpRequest()) {
+        if ($this->container['request']->isXmlHttpRequest()) {
             return new \Symfony\Component\HttpFoundation\JsonResponse(
                 [
                     'message' => $e->getMessage(),
@@ -300,7 +302,6 @@ class Kernel implements ServiceProviderInterface
      */
     public function onKernelRequest()
     {
-
         /*
          * Register Themes dependency injection
          */
@@ -318,7 +319,7 @@ class Kernel implements ServiceProviderInterface
 
             if ($translation !== null) {
                 $shortLocale = $translation->getLocale();
-                $this->request->setLocale($shortLocale);
+                $this->container['request']->setLocale($shortLocale);
                 \Locale::setDefault($shortLocale);
             }
         }
@@ -403,7 +404,7 @@ class Kernel implements ServiceProviderInterface
      */
     public function getStaticBaseUrl()
     {
-        return $this->convertUrlToStaticDomainUrl($this->request->getResolvedBaseUrl());
+        return $this->convertUrlToStaticDomainUrl($this->container['request']->getResolvedBaseUrl());
     }
 
     /**
@@ -422,11 +423,19 @@ class Kernel implements ServiceProviderInterface
     }
 
     /**
+     * @return Pimple\Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
      * @return Symfony\Component\HttpFoundation\Request
      */
     public function getRequest()
     {
-        return $this->request;
+        return $this->container['request'];
     }
 
     /**

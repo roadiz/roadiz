@@ -904,7 +904,7 @@ class DocumentsController extends RozierApp
             $finder = new $class($data['embedId']);
 
             if ($finder->exists()) {
-                $document = $finder->createDocumentFromFeed($this->getService());
+                $document = $finder->createDocumentFromFeed($this->getContainer());
 
                 if (null !== $document &&
                     null !== $folderId &&
@@ -935,7 +935,7 @@ class DocumentsController extends RozierApp
     public function randomDocument($folderId = null)
     {
         $finder = new SplashbasePictureFinder();
-        $document = $finder->createDocumentFromFeed($this->getService());
+        $document = $finder->createDocumentFromFeed($this->getContainer());
 
         if (null !== $document &&
             null !== $folderId &&

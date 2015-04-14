@@ -49,30 +49,6 @@ class ThemesCommand extends Command
                 'classname',
                 InputArgument::OPTIONAL,
                 'Main theme classname'
-            )
-            ->addOption(
-                'setup',
-                null,
-                InputOption::VALUE_NONE,
-                'Setup theme'
-            )
-            ->addOption(
-                'disable',
-                null,
-                InputOption::VALUE_NONE,
-                'Disable theme'
-            )
-            ->addOption(
-                'force-twig-compilation',
-                null,
-                InputOption::VALUE_NONE,
-                'Force Twig templates compilation'
-            )
-            ->addOption(
-                'enable',
-                null,
-                InputOption::VALUE_NONE,
-                'Enable theme'
             );
     }
 
@@ -86,34 +62,6 @@ class ThemesCommand extends Command
                 ->getRepository('RZ\Roadiz\Core\Entities\Theme')
                 ->findOneBy(['className'=>$name]);
 
-            if ($theme !== null) {
-                if ($input->getOption('enable')) {
-                    if ($theme !== null && $name::enable()) {
-                        $text = '<info>Theme enabled…</info>'.PHP_EOL;
-                    } else {
-                        $text = '<error>Requested theme is not setup yet…</error>'.PHP_EOL;
-                    }
-                }
-                if ($input->getOption('disable')) {
-                    if ($theme !== null && $name::disable()) {
-                        $text = '<info>Theme disabled…</info>'.PHP_EOL;
-                    } else {
-                        $text = '<error>Requested theme is not setup yet…</error>'.PHP_EOL;
-                    }
-                }
-
-                if ($input->getOption('force-twig-compilation')) {
-                    if (true === $name::forceTwigCompilation()) {
-                        $text = '<info>Twig templates have been compiled…</info>'.PHP_EOL;
-                    }
-                }
-            } else {
-                if ($name::setup() === true) {
-                    $text = '<info>Theme setup sucessfully…</info>'.PHP_EOL;
-                } else {
-                    $text = '<error>Cannot setup theme…</error>'.PHP_EOL;
-                }
-            }
         } else {
             $text = '<info>Installed theme…</info>'.PHP_EOL;
             $themes = Kernel::getService('em')

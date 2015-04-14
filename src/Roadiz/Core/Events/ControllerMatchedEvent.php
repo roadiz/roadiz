@@ -80,6 +80,7 @@ class ControllerMatchedEvent
          */
         if ($matchedCtrl instanceof AppController) {
             $matchedCtrl->setKernel($this->kernel);
+            $matchedCtrl->setContainer($this->kernel->getContainer());
             $matchedCtrl->__init();
         }
     }

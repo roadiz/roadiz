@@ -100,7 +100,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['session'] = function ($c) {
             $session = new Session($c['session.storage']);
-            Kernel::getInstance()->getRequest()->setSession($session);
+            $c['request']->setSession($session);
             return $session;
         };
 
@@ -120,7 +120,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 $log->pushHandler(new DoctrineHandler(
                     $c['em'],
                     $c['securityContext'],
-                    Kernel::getInstance()->getRequest(),
+                    $c['request'],
                     Logger::INFO
                 ));
             }
@@ -128,7 +128,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             /*
              * Add processors
              */
-            $log->pushProcessor(new RequestProcessor(Kernel::getInstance()->getRequest()));
+            $log->pushProcessor(new RequestProcessor($c['request']));
             $log->pushProcessor(new SecurityContextProcessor($c['securityContext']));
 
             return $log;

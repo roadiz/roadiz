@@ -61,14 +61,14 @@ class InstallApp extends AppController
     public function prepareBaseAssignation()
     {
         $this->assignation = [
-            'request' => $this->kernel->getRequest(),
+            'request' => $this->getRequest(),
             'head' => [
-                'ajax' => $this->kernel->getRequest()->isXmlHttpRequest(),
+                'ajax' => $this->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => false,
-                'baseUrl' => $this->kernel->getRequest()->getResolvedBaseUrl(),
+                'baseUrl' => $this->getRequest()->getResolvedBaseUrl(),
                 'filesUrl' => $this->kernel
                                    ->getRequest()
                                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
@@ -79,7 +79,7 @@ class InstallApp extends AppController
                                     ->generateCsrfToken(static::FONT_TOKEN_INTENTION),
             ],
             'session' => [
-                'id' => $this->kernel->getRequest()->getSession()->getId(),
+                'id' => $this->getRequest()->getSession()->getId(),
             ],
         ];
 
@@ -93,7 +93,7 @@ class InstallApp extends AppController
      */
     public function initializeTranslator()
     {
-        $this->getKernel()->getRequest()->setLocale(
+        $this->getRequest()->setLocale(
             $this->getService('session')->get('_locale', 'en')
         );
 

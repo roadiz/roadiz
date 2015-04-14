@@ -4276,6 +4276,10 @@
         <source>date-time.type</source>
         <target xml:lang="en">Date and time</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="date.type">
+        <source>date.type</source>
+        <target xml:lang="en" state="translated">Date</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="435" approved="yes">
         <source>text.type</source>
         <target xml:lang="en">Basic text</target>
