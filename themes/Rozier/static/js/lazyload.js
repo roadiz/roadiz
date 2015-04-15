@@ -204,6 +204,7 @@ Lazyload.prototype.generalBind = function() {
     _this.$linksSelector.on('click', onClickProxy);
 
     new DocumentsBulk();
+    new AutoUpdate();
     new NodesBulk();
     new DocumentWidget();
     new NodeWidget();

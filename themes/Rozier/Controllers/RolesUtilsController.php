@@ -32,7 +32,6 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Importers\RolesImporter;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
