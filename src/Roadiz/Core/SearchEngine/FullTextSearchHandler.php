@@ -29,11 +29,10 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Kernel;
-use Doctrine\ORM\EntityManager;
 use Solarium\Client;
 
 class FullTextSearchHandler

@@ -30,18 +30,18 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use Doctrine\ORM\Tools\SchemaTool;
 use GuzzleHttp\Client;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
+use RZ\Roadiz\Console\CacheCommand;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
-use RZ\Roadiz\Console\CacheCommand;
-use Doctrine\ORM\Tools\SchemaTool;
 
 class AboutController extends RozierApp
 {
@@ -225,7 +225,7 @@ class AboutController extends RozierApp
         $stream = Stream::factory($resource);
 
         $client = new Client();
-        $response = $client->get($downloadUrl, [
+        $client->get($downloadUrl, [
             'save_to' => $stream,
         ]);
 

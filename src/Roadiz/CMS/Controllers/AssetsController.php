@@ -29,13 +29,10 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
-
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Config\FileLocator;
 
 /**
  * Special controller app file for assets managment with SLIR.
@@ -64,10 +61,10 @@ class AssetsController extends AppController
     public static function getRoutes()
     {
         $locator = new FileLocator([
-            ROADIZ_ROOT.'/src/Roadiz/CMS/Resources'
+            ROADIZ_ROOT . '/src/Roadiz/CMS/Resources',
         ]);
 
-        if (file_exists(ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/assetsRoutes.yml')) {
+        if (file_exists(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/assetsRoutes.yml')) {
             $loader = new YamlFileLoader($locator);
 
             return $loader->load('assetsRoutes.yml');
@@ -105,11 +102,11 @@ class AssetsController extends AppController
     public function fontFileAction(Request $request, $filename, $variant, $extension, $token)
     {
         $font = $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Font')
-            ->findOneBy(['hash'=>$filename, 'variant'=>$variant]);
+                     ->getRepository('RZ\Roadiz\Core\Entities\Font')
+                     ->findOneBy(['hash' => $filename, 'variant' => $variant]);
 
         if (null !== $font) {
-            if ($this->getService('csrfProvider')->isCsrfTokenValid($font->getHash().$font->getVariant(), $token)) {
+            if ($this->getService('csrfProvider')->isCsrfTokenValid($font->getHash() . $font->getVariant(), $token)) {
                 switch ($extension) {
                     case 'eot':
                         $fontpath = $font->getEOTAbsolutePath();
@@ -147,7 +144,7 @@ class AssetsController extends AppController
                 }
             } else {
                 return new Response(
-                    "Font Fail ".$token,
+                    "Font Fail " . $token,
                     Response::HTTP_NOT_FOUND,
                     ['content-type' => 'text/html']
                 );
@@ -155,7 +152,7 @@ class AssetsController extends AppController
 
         } else {
             return new Response(
-                "Font doesn't exist ".$filename,
+                "Font doesn't exist " . $filename,
                 Response::HTTP_NOT_FOUND,
                 ['content-type' => 'text/html']
             );
@@ -182,9 +179,9 @@ class AssetsController extends AppController
         );
         $response->setCache([
             'last_modified' => new \DateTime($lastMod),
-            'max_age'       => 1800,
-            's_maxage'      => 600,
-            'public'        => true
+            'max_age' => 1800,
+            's_maxage' => 600,
+            'public' => true,
         ]);
 
         if ($response->isNotModified($request)) {
