@@ -5948,6 +5948,86 @@
           <source>font_variant.light.italic</source>
           <target xml:lang="fr">Light italique</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="update.roadiz">
+          <source>update.roadiz</source>
+          <target xml:lang="fr" state="translated">Mettre à jour Roadiz</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.please_wait">
+          <source>update.please_wait</source>
+          <target xml:lang="fr" state="translated">Mise à jour en cours, veuillez patienter…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.done.back_to_home">
+          <source>update.done.back_to_home</source>
+          <target xml:lang="fr" state="translated">Revenir à l’accueil</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.download_archive">
+          <source>update_roadiz.download_archive</source>
+          <target xml:lang="fr" state="translated">Roadiz est en train de télécharger la dernière archive disponible…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.unarchive">
+          <source>update_roadiz.unarchive</source>
+          <target xml:lang="fr" state="translated">Roadiz est en train de décompresser l’archive de mise à jour…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.move_new_files">
+          <source>update_roadiz.move_new_files</source>
+          <target xml:lang="fr" state="translated">Roadiz jongle avec ses fichiers pour mettre à jour votre CMS favori…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.clear_cache">
+          <source>update_roadiz.clear_cache</source>
+          <target xml:lang="fr" state="translated">Roadiz est en train de vider son cache…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.update_schema">
+          <source>update_roadiz.update_schema</source>
+          <target xml:lang="fr" state="translated">Roadiz est en train de migrer le schéma de sa base de données…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.update_complete">
+          <source>update_roadiz.update_complete</source>
+          <target xml:lang="fr" state="translated">La mise à jour de Roadiz est maintenant terminée !</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="automatic.upgrade">
+          <source>automatic.upgrade</source>
+          <target xml:lang="fr" state="translated">Mise à jour automatisée</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="always.make.a.database.backup.before.upgrade">
+          <source>always.make.a.database.backup.before.upgrade</source>
+          <target xml:lang="fr" state="translated">Vous devriez toujours effectuer une sauvegarde de la base de donnée avant d’utiliser la mise à jour automatisée.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_git">
+          <source>cannot_update_roadiz.using_git</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, vous l’avez installé avec Git. Veuillez mettre à jour manuellement…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_symlink">
+          <source>cannot_update_roadiz.using_symlink</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, vous l’avez installé avec des liens symboliques. Veuillez mettre à jour manuellement…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_release_available">
+          <source>cannot_update_roadiz.no_release_available</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, aucune mise à jour n’est disponible…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_archive_to_download">
+          <source>cannot_update_roadiz.no_archive_to_download</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, il n’y a aucune archive à télécharger…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.temp_archive_does_not_exist">
+          <source>cannot_update_roadiz.temp_archive_does_not_exist</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, l’archive temporaire est introuvable…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_open_archive">
+          <source>cannot_update_roadiz.cant_open_archive</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, l’archive ne peut pas être décompressée…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_create_temp_dir">
+          <source>cannot_update_roadiz.cant_create_temp_dir</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, il ne peut pas créer de dossier temporaire…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_does_not_exist">
+          <source>cannot_update_roadiz.destination_folder_does_not_exist</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, le dossier de destination n’existe pas…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_is_not_writable">
+          <source>cannot_update_roadiz.destination_folder_is_not_writable</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, le dossier de destination n’est pas inscriptible…</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
