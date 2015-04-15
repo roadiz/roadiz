@@ -25,10 +25,13 @@
         </div>
     </article>
 </section>
-{% if nextStepRoute %}
 <script type="text/javascript">
+{% if nextStepRoute %}
     var nextStep = "{{ nextStepRoute }}";
     var nextStepDescription = "{% trans %}update_roadiz.download_archive{% endtrans %}";
-</script>
+{% else %}
+    var nextStep = null;
+    var nextStepDescription = null;
 {% endif %}
+</script>
 {% endblock %}

@@ -12,7 +12,9 @@ AutoUpdate.prototype.init = function() {
     var _this = this;
 
     if(typeof(nextStep) !== "undefined" &&
-       typeof(nextStepDescription) !== "undefined"){
+       typeof(nextStepDescription) !== "undefined" &&
+       nextStep !== null &&
+       nextStepDescription !== null){
 
         _this.$button = _this.$section.find("#update-done-button");
         _this.$buttonIcon = _this.$button.find("i");

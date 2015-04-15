@@ -207,6 +207,7 @@ class AboutController extends RozierApp
     public function downloadAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_SUPERADMIN');
+        $this->canAutomaticUpdate();
 
         $lastRelease = $this->getLatestRelease();
 
@@ -249,6 +250,7 @@ class AboutController extends RozierApp
     public function unarchiveAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_SUPERADMIN');
+        $this->canAutomaticUpdate();
 
         if ($request->getSession()->get('roadiz_update_archive') !== "") {
             $tmpFile = $request->getSession()->get('roadiz_update_archive');
@@ -293,6 +295,7 @@ class AboutController extends RozierApp
     public function moveFilesAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_SUPERADMIN');
+        $this->canAutomaticUpdate();
 
         /*
          * Define a files root that can be different than real root
@@ -361,6 +364,7 @@ class AboutController extends RozierApp
     public function clearCacheAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_SUPERADMIN');
+        $this->canAutomaticUpdate();
 
         CacheCommand::clearDoctrine();
         CacheCommand::clearRouteCollections();
@@ -384,6 +388,7 @@ class AboutController extends RozierApp
     public function updateSchemaAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_SUPERADMIN');
+        $this->canAutomaticUpdate();
 
         $schemaTool = new SchemaTool($this->getService('em'));
         $metadatas = $this->getService('em')->getMetadataFactory()->getAllMetadata();
