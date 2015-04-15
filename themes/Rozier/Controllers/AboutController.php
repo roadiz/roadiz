@@ -40,6 +40,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
+use RZ\Roadiz\Console\CacheCommand;
+use Doctrine\ORM\Tools\SchemaTool;
 
 class AboutController extends RozierApp
 {
@@ -49,7 +51,7 @@ class AboutController extends RozierApp
      *
      * For prod environment, set this to false.
      */
-    const UPDATE_WITH_GIT = true;
+    const UPDATE_WITH_GIT = false;
     const UPDATE_STEPS = 5;
     /**
      * Destination folder for updated files.
@@ -58,7 +60,7 @@ class AboutController extends RozierApp
      *
      * For prod environment, set this to "" (empty).
      */
-    const UPDATE_DEST_DIR = "/testDir";
+    const UPDATE_DEST_DIR = "";
     /**
      * Trash folder in which old files will be moved
      * and kept until an other upgrade request is performed.
@@ -360,6 +362,11 @@ class AboutController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_SUPERADMIN');
 
+        CacheCommand::clearDoctrine();
+        CacheCommand::clearRouteCollections();
+        CacheCommand::clearTranslations();
+        CacheCommand::clearTemplates();
+
         return new JsonResponse([
             'progress' => (100 / static::UPDATE_STEPS) * 4,
             'nextStepRoute' => $this->generateUrl('aboutUpdateSchemaPage'),
@@ -377,6 +384,10 @@ class AboutController extends RozierApp
     public function updateSchemaAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_SUPERADMIN');
+
+        $schemaTool = new SchemaTool($this->getService('em'));
+        $metadatas = $this->getService('em')->getMetadataFactory()->getAllMetadata();
+        $schemaTool->updateSchema($metadatas, true);
 
         return new JsonResponse([
             'progress' => (100 / static::UPDATE_STEPS) * 5,

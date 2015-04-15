@@ -19,6 +19,8 @@
             <div id="update-progress-bar" class="uk-progress uk-progress-striped uk-active">
                 <div class="uk-progress-bar" style="width: 0%;">0%</div>
             </div>
+
+            <a id="update-done-button" data-done-text="{% trans %}update.done.back_to_home{% endtrans %}" href="{{ path('adminHomePage') }}" class="uk-button rz-no-ajax-link" disabled><i class="uk-icon-refresh uk-icon-spin"></i> <span class="text">{% trans %}update.please_wait{% endtrans %}</span></a>
             {% endif %}
         </div>
     </article>
