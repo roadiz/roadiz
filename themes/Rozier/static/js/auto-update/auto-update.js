@@ -21,6 +21,7 @@ AutoUpdate.prototype.init = function() {
         _this.$buttonText = _this.$button.find(".text");
         _this.$progressBar = $("#update-progress-bar");
         _this.$progressBarInner = _this.$progressBar.find(".uk-progress-bar");
+        _this.$progressMessage = _this.$section.find("#update-progress-message");
 
         // disable back button
         _this.$button.on("click", function (event) {
@@ -74,7 +75,7 @@ AutoUpdate.prototype.displayProgress = function(progress, description) {
     var _this = this;
 
     _this.$progressBarInner.width(progress+'%');
-    _this.$progressBarInner.html(description);
+    _this.$progressMessage.html(description);
 };
 
 AutoUpdate.prototype.finish = function(progress, description) {
