@@ -75,7 +75,7 @@ class AboutController extends RozierApp
      */
     const UPDATE_ZIP_FOLDER = "/roadiz-master";
 
-    static $filesToUpgrade = [
+    protected static $filesToUpgrade = [
         'index.php',
         'bootstrap.php',
         'cli-config.php',
@@ -84,7 +84,7 @@ class AboutController extends RozierApp
         'bin',
         'tests',
     ];
-    static $themesToUpgrade = [
+    protected static $themesToUpgrade = [
         'themes/Install',
         'themes/Rozier',
         'themes/DefaultTheme',
@@ -462,7 +462,7 @@ class AboutController extends RozierApp
      *
      * @return array
      */
-    protected function replaceFiles($array = [], $tmpDir, $rootPath, $trashDir)
+    protected function replaceFiles($array, $tmpDir, $rootPath, $trashDir)
     {
         $filesLog = [];
         $fs = new Filesystem();
