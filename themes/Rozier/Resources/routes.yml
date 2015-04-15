@@ -62,6 +62,32 @@ nodeTypesFieldAjaxEdit:
     path:     /rz-admin/ajax/node-types/fields/edit/{nodeTypeFieldId}
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypeFieldsController::editAction }
     requirements: { nodeTypeFieldId : "[0-9]+" }
+# Ajax
+documentsAjaxExplorerPage:
+    path:     /rz-admin/ajax/documents/explore
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::indexAction }
+## Ajax
+tagAjaxEdit:
+    path:     /rz-admin/ajax/tag/edit/{tagId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::editAction }
+    requirements: { tagId : "[0-9]+" }
+tagAjaxSearch:
+    path:     /rz-admin/ajax/tag/search
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::searchAction }
+## Ajax
+foldersAjaxEdit:
+    path:     /rz-admin/ajax/folder/edit/{folderId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxFoldersController::editAction }
+    requirements: { tagId : "[0-9]+" }
+foldersAjaxSearch:
+    path:     /rz-admin/ajax/folder/search
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxFoldersController::searchAction }
+
+customFormFieldAjaxEdit:
+    path:     /rz-admin/ajax/custom-forms/fields/edit/{customFormFieldId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormFieldsController::editAction }
+    requirements: { customFormFieldId : "[0-9]+" }
+
 
 # Node TYPES
 nodeTypesHomePage:
@@ -103,15 +129,6 @@ tagsRoutes:
     resource: "routing/tags.yml"
     prefix: /rz-admin/tags
 
-## Ajax
-tagAjaxEdit:
-    path:     /rz-admin/ajax/tag/edit/{tagId}
-    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::editAction }
-    requirements: { tagId : "[0-9]+" }
-tagAjaxSearch:
-    path:     /rz-admin/ajax/tag/search
-    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::searchAction }
-
 # USERS
 usersHomePage:
     path:     /rz-admin/users
@@ -139,15 +156,6 @@ foldersRoutes:
     prefix: /rz-admin/folders
 
 
-## Ajax
-foldersAjaxEdit:
-    path:     /rz-admin/ajax/folder/edit/{folderId}
-    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxFoldersController::editAction }
-    requirements: { tagId : "[0-9]+" }
-foldersAjaxSearch:
-    path:     /rz-admin/ajax/folder/search
-    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxFoldersController::searchAction }
-
 # TRANSLATIONS
 translationsHomePage:
     path:     /rz-admin/translations
@@ -165,13 +173,6 @@ documentsHomePage:
 documentsRoutes:
     resource: "routing/documents.yml"
     prefix: /rz-admin/documents
-
-# Ajax
-documentsAjaxExplorerPage:
-    path:     /rz-admin/ajax/documents/explore
-    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::indexAction }
-
-
 
 # THEMES
 themesHomePage:
@@ -234,11 +235,6 @@ customFormFieldsRoutes:
     prefix: /rz-admin/custom-forms/fields
 
 
-customFormFieldAjaxEdit:
-    path:     /rz-admin/ajax/custom-forms/fields/edit/{customFormFieldId}
-    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormFieldsController::editAction }
-    requirements: { customFormFieldId : "[0-9]+" }
-
 # SEARCH
 searchNodePage:
     path:     /rz-admin/search
@@ -265,7 +261,16 @@ cssMainColor:
 aboutPage:
     path: /rz-admin/about
     defaults: { _controller: Themes\Rozier\Controllers\AboutController::indexAction }
+aboutUpdatePage:
+    path: /rz-admin/about/update
+    defaults: { _controller: Themes\Rozier\Controllers\AboutController::updateAction }
+aboutUpdateDownloadPage:
+    path: /rz-admin/about/update/download
+    defaults: { _controller: Themes\Rozier\Controllers\AboutController::downloadAction }
+aboutUpdateUnarchivePage:
+    path: /rz-admin/about/update/unarchive
+    defaults: { _controller: Themes\Rozier\Controllers\AboutController::unarchiveAction }
+aboutUpdateMovePage:
+    path: /rz-admin/about/update/move-files
+    defaults: { _controller: Themes\Rozier\Controllers\AboutController::moveFilesAction }
 
-# searchPage:
-#     path:     /rz-admin/search/{q}
-#     defaults: { _controller: RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler::searchAction }
