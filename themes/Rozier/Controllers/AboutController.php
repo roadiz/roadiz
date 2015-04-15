@@ -30,39 +30,62 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
-use GuzzleHttp\Stream\Stream;
-use GuzzleHttp\Client;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Themes\Rozier\RozierApp;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 class AboutController extends RozierApp
 {
+    /**
+     * Allow upgrade even if roadiz has been
+     * setuped with Git.
+     *
+     * For prod environment, set this to false.
+     */
     const UPDATE_WITH_GIT = true;
+    const UPDATE_STEPS = 5;
     /**
      * Destination folder for updated files.
      * When doing test set this as /testDir or something
-     * else than "/".
+     * else than "".
+     *
+     * For prod environment, set this to "" (empty).
      */
     const UPDATE_DEST_DIR = "/testDir";
+    /**
+     * Trash folder in which old files will be moved
+     * and kept until an other upgrade request is performed.
+     */
+    const UPDATE_TRASH_DIR = "/old";
+    /**
+     * This is the folder name when archive is extracted.
+     *
+     * roadiz.zip
+     *  |__ /roadiz-master
+     *       |__ files…
+     */
+    const UPDATE_ZIP_FOLDER = "/roadiz-master";
 
-    static $filesToUpload = [
-        'vendor',
+    static $filesToUpgrade = [
         'index.php',
+        'bootstrap.php',
+        'cli-config.php',
+        'vendor',
         'src',
+        'bin',
+        'tests',
+    ];
+    static $themesToUpgrade = [
         'themes/Install',
         'themes/Rozier',
         'themes/DefaultTheme',
-        'bootstrap.php',
-        'bin',
-        'cli-config.php',
-        'tests',
     ];
 
     protected function getGithubReleases()
@@ -95,11 +118,11 @@ class AboutController extends RozierApp
         $fs = new Filesystem();
 
         if (!static::UPDATE_WITH_GIT && $fs->exists(ROADIZ_ROOT . '/.git')) {
-            throw new \Exception("cannot_update_roadiz.using_git", 1);
+            throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.using_git'), 1);
         }
         if (is_link(ROADIZ_ROOT . '/vendor') ||
             is_link(ROADIZ_ROOT . '/src')) {
-            throw new \Exception("cannot_update_roadiz.using_symlink", 1);
+            throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.using_symlink'), 1);
         }
     }
 
@@ -118,7 +141,13 @@ class AboutController extends RozierApp
         return null;
     }
 
-
+    /**
+     * About action to display some useful informations.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function indexAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_SUPERADMIN');
@@ -139,7 +168,15 @@ class AboutController extends RozierApp
         return $this->render('about/index.html.twig', $this->assignation);
     }
 
-
+    /**
+     * Update action is the upgrade tunnel entry point.
+     *
+     * Every following action will be performed with Ajax requests.
+     *
+     * @param  Request $request
+     *
+     * @return Response
+     */
     public function updateAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_SUPERADMIN');
@@ -172,28 +209,31 @@ class AboutController extends RozierApp
         $lastRelease = $this->getLatestRelease();
 
         if (null === $lastRelease) {
-            throw new \Exception("cannot_update_roadiz.no_release_available", 1);
+            throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.no_release_available'), 1);
         }
         if (!isset($lastRelease->assets[0]) || empty($lastRelease->assets[0]->browser_download_url)) {
-            throw new \Exception("cannot_update_roadiz.no_archive_to_download", 1);
+            throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.no_archive_to_download'), 1);
         }
 
         $downloadUrl = $lastRelease->assets[0]->browser_download_url;
 
-
         $tmpFile = tempnam(sys_get_temp_dir(), "roadiz_update.zip");
         $resource = fopen($tmpFile, 'w');
+        $stream = Stream::factory($resource);
 
         $client = new Client();
         $response = $client->get($downloadUrl, [
-            'body' => $resource
+            'save_to' => $stream,
         ]);
 
         $request->getSession()->set('roadiz_update_archive', $tmpFile);
 
         return new JsonResponse([
+            'downloadUrl' => $downloadUrl,
             'tmpFile' => $tmpFile,
-            'nextStepRoute' => $this->generateUrl('aboutUpdateUnarchivePage')
+            'progress' => (100 / static::UPDATE_STEPS) * 1,
+            'nextStepRoute' => $this->generateUrl('aboutUpdateUnarchivePage'),
+            'nextStepDescription' => $this->getTranslator()->trans('update_roadiz.unarchive'),
         ]);
     }
 
@@ -213,19 +253,41 @@ class AboutController extends RozierApp
             $fs = new Filesystem();
 
             if (!$fs->exists($tmpFile) || !is_readable($tmpFile)) {
-                throw new \Exception("cannot_update_roadiz.temp_archive_does_not_exist", 1);
+                throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.temp_archive_does_not_exist'), 1);
             }
 
+            $zip = new \ZipArchive();
 
+            if (!$zip->open($tmpFile)) {
+                throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.cant_open_archive'), 1);
+            }
+
+            $dir = $this->mktemp();
+            $zip->extractTo($dir . '/');
+            $zip->close();
+
+            $request->getSession()->set('roadiz_update_folder', $dir);
 
         } else {
-            throw new \Exception("cannot_update_roadiz.temp_archive_does_not_exist", 1);
+            throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.temp_archive_does_not_exist'), 1);
         }
 
         return new JsonResponse([
-            'nextStepRoute' => $this->generateUrl('aboutUpdateMovePage')
+            'tmpFolder' => $dir,
+            'progress' => (100 / static::UPDATE_STEPS) * 2,
+            'nextStepRoute' => $this->generateUrl('aboutUpdateMovePage'),
+            'nextStepDescription' => $this->getTranslator()->trans('update_roadiz.move_new_files'),
         ]);
     }
+    /**
+     * Move files from temporary folder to their dest folder.
+     *
+     * Old files are kept in old/ folder.
+     *
+     * @param  Request $request
+     *
+     * @return JsonResponse
+     */
     public function moveFilesAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_SUPERADMIN');
@@ -235,12 +297,170 @@ class AboutController extends RozierApp
          * for testing purposes.
          */
         $rootPath = ROADIZ_ROOT . static::UPDATE_DEST_DIR;
+        $fs = new Filesystem();
 
+        $tmpDir = $request->getSession()->get('roadiz_update_folder');
+        // look into wrapper folder
+        $tmpDir .= static::UPDATE_ZIP_FOLDER;
 
+        $filesLog = [];
+
+        if (!$fs->exists($tmpDir)) {
+            throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.temp_archive_does_not_exist'), 1);
+        }
+        if (!$fs->exists($rootPath)) {
+            throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.destination_folder_does_not_exist'), 1);
+        }
+        if (!is_writable($rootPath)) {
+            throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.destination_folder_is_not_writable'), 1);
+        }
+
+        $trashDir = $rootPath . static::UPDATE_TRASH_DIR;
+        // Remove trash folder if exists
+        if ($fs->exists($trashDir)) {
+            $fs->remove($trashDir);
+        }
+        $fs->mkdir($trashDir);
+
+        /*
+         * Upgrade root level files
+         */
+        $rootFilesLog = $this->replaceFiles(static::$filesToUpgrade, $tmpDir, $rootPath, $trashDir);
+        $filesLog = array_merge($filesLog, $rootFilesLog);
+
+        /*
+         * Upgrade theme level files
+         */
+        // Create themes/ folder if not exist
+        if (!$fs->exists($rootPath . '/themes')) {
+            $fs->mkdir($rootPath . '/themes');
+        }
+        if (!$fs->exists($trashDir . '/themes')) {
+            $fs->mkdir($trashDir . '/themes');
+        }
+        $themeFilesLog = $this->replaceFiles(static::$themesToUpgrade, $tmpDir, $rootPath, $trashDir);
+        $filesLog = array_merge($filesLog, $themeFilesLog);
 
         return new JsonResponse([
-            'nextStepRoute' => $this->generateUrl('aboutUpdateMoveNewPage')
+            'files' => $filesLog,
+            'progress' => (100 / static::UPDATE_STEPS) * 3,
+            'nextStepRoute' => $this->generateUrl('aboutUpdateClearCachePage'),
+            'nextStepDescription' => $this->getTranslator()->trans('update_roadiz.clear_cache'),
         ]);
     }
 
+    /**
+     * Clear all cache before upgrading database schema.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function clearCacheAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_SUPERADMIN');
+
+        return new JsonResponse([
+            'progress' => (100 / static::UPDATE_STEPS) * 4,
+            'nextStepRoute' => $this->generateUrl('aboutUpdateSchemaPage'),
+            'nextStepDescription' => $this->getTranslator()->trans('update_roadiz.update_schema'),
+        ]);
+    }
+
+    /**
+     * Upgrade doctrine database schema.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function updateSchemaAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_SUPERADMIN');
+
+        return new JsonResponse([
+            'progress' => (100 / static::UPDATE_STEPS) * 5,
+            'nextStepRoute' => null,
+            'nextStepDescription' => $this->getTranslator()->trans('update_roadiz.update_complete'),
+            'complete' => true,
+        ]);
+    }
+
+    protected function mktemp()
+    {
+        $fs = new Filesystem();
+        $tempfile = tempnam(sys_get_temp_dir(), 'roadiz_update');
+
+        if ($fs->exists($tempfile)) {
+            unlink($tempfile);
+        }
+        $fs->mkdir($tempfile);
+
+        if (is_dir($tempfile)) {
+            return $tempfile;
+        } else {
+            throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.cant_create_temp_dir'), 1);
+        }
+    }
+
+    protected function replaceOneFile($file, $sourceDir, $destDir, $trashDir)
+    {
+        $fs = new Filesystem();
+        $tempFile = $sourceDir . "/" . $file;
+        $newFile = $destDir . "/" . $file;
+        $trashFile = $trashDir . "/" . $file;
+
+        /*
+         * Move old files to trash
+         */
+        if ($fs->exists($newFile)) {
+            $fs->rename($newFile, $trashFile);
+            $this->getService('logger')->notice('Trash file', [
+                'src' => $newFile,
+                'dest' => $trashFile,
+            ]);
+        } else {
+            $this->getService('logger')->notice('File does not exist', [
+                'src' => $newFile,
+            ]);
+        }
+
+        /*
+         * Move new files in place
+         */
+        if ($fs->exists($tempFile)) {
+            $fs->rename($tempFile, $newFile);
+            $this->getService('logger')->notice('Moved file', [
+                'src' => $tempFile,
+                'dest' => $newFile,
+            ]);
+        }
+    }
+
+    /**
+     *
+     * @param  array $array
+     * @param  string $tmpDir
+     * @param  string $rootPath
+     * @param  string $trashDir
+     *
+     * @return array
+     */
+    protected function replaceFiles($array = [], $tmpDir, $rootPath, $trashDir)
+    {
+        $filesLog = [];
+        $fs = new Filesystem();
+
+        foreach ($array as $file) {
+            if ($fs->exists($tmpDir . '/' . $file)) {
+                $this->replaceOneFile($file, $tmpDir, $rootPath, $trashDir);
+                $filesLog[] = [
+                    'tmp' => $tmpDir . '/' . $file,
+                    'dest' => $rootPath . '/' . $file,
+                ];
+            }
+        }
+
+        return $filesLog;
+    }
 }

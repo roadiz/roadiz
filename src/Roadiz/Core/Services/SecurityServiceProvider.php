@@ -113,7 +113,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['logger'] = function ($c) {
             $log = new Logger('roadiz');
-            $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz.log', Logger::WARNING));
+            $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz.log', Logger::NOTICE));
 
             if (null !== $c['em'] &&
                 true !== $c['config']['install']) {

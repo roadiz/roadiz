@@ -1,0 +1,50 @@
+## Ajax
+nodeAjaxEdit:
+    path:     /node/edit/{nodeId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::editAction }
+    requirements: { nodeId : "[0-9]+" }
+searchNodesSourcesAjax:
+    path:     /nodes-sources/search
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxSearchNodesSourcesController::searchAction }
+nodesStatusesAjax:
+    path:     /nodes/statuses
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::statusesAction }
+nodesTreeAjax:
+    path:     /nodes/tree/{translationId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodeTreeController::getTreeAction, translationId:null }
+    requirements: { translationId : "[0-9]+" }
+nodesQuickAddAjax:
+    path:     /nodes/add
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::quickAddAction }
+nodesAjaxExplorerPage:
+    path:     /nodes/explore
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesExplorerController::indexAction }
+nodeTypesFieldAjaxEdit:
+    path:     /node-types/fields/edit/{nodeTypeFieldId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypeFieldsController::editAction }
+    requirements: { nodeTypeFieldId : "[0-9]+" }
+# Ajax
+documentsAjaxExplorerPage:
+    path:     /documents/explore
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::indexAction }
+## Ajax
+tagAjaxEdit:
+    path:     /tag/edit/{tagId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::editAction }
+    requirements: { tagId : "[0-9]+" }
+tagAjaxSearch:
+    path:     /tag/search
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::searchAction }
+## Ajax
+foldersAjaxEdit:
+    path:     /folder/edit/{folderId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxFoldersController::editAction }
+    requirements: { tagId : "[0-9]+" }
+foldersAjaxSearch:
+    path:     /folder/search
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxFoldersController::searchAction }
+
+customFormFieldAjaxEdit:
+    path:     /custom-forms/fields/edit/{customFormFieldId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormFieldsController::editAction }
+    requirements: { customFormFieldId : "[0-9]+" }

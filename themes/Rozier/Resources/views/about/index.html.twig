@@ -27,13 +27,16 @@
             </table>
             {# {% if newVersion %} #}
             <hr/>
-            <h1><i class="uk-icon-file-text-o"></i> {% trans %}changelog{% endtrans %}:</h1>
+            <h2><i class="uk-icon-file-text-o"></i> {% trans %}changelog{% endtrans %}:</h2>
             <p>{{ changelog|markdown }}</p>
             {# {% if downloadUrl %} #}
             <a href="{{ downloadUrl }}" class="uk-button"><i class="uk-icon-download"></i> {% trans %}download{% endtrans %}</a>
+            {# {% endif %} #}
+            {# {% endif %} #}
+            <hr />
+            <h2><i class="uk-icon-refresh"></i> {% trans %}automatic.upgrade{% endtrans %}:</h2>
+            <p class="uk-alert uk-alert-warning"><i class="uk-icon-warning"></i> {% trans %}always.make.a.database.backup.before.upgrade{% endtrans %}</p>
             <a href="{{ path('aboutUpdatePage') }}" class="uk-button"><i class="uk-icon-refresh"></i> {% trans %}update.roadiz{% endtrans %}</a>
-            {# {% endif %} #}
-            {# {% endif %} #}
         </div>
     </article>
 </section>
