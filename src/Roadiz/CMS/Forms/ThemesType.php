@@ -55,6 +55,7 @@ class ThemesType extends AbstractType
 
         // Extracting the PHP files from every Theme folder
         $iterator = $finder
+            ->followLinks()
             ->files()
             ->name('config.yml')
             ->depth(1)
