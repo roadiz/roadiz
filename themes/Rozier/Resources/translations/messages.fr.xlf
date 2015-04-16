@@ -5923,6 +5923,10 @@
           <source>This value should not be blank.</source>
           <target xml:lang="fr">Cette valeur ne devrait pas être vide.</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="This value is not valid.">
+          <source>This value is not valid.</source>
+          <target xml:lang="fr" state="translated">Cette valeur n'est pas valide.</target>
+      </trans-unit>
       <!-- Font variantes -->
       <trans-unit xml:space="preserve" id="font_variant.regular" approved="yes">
           <source>font_variant.regular</source>

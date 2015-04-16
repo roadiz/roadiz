@@ -6034,6 +6034,10 @@
           <source>This value should not be blank.</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="This value is not valid.">
+          <source>This value is not valid.</source>
+          <target></target>
+      </trans-unit>
 
       <!-- Font variantes -->
       <trans-unit xml:space="preserve" id="font_variant.regular">
