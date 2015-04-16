@@ -5,6 +5,21 @@
  # Markdown, document and childrenNodeTree fields
  #
  #}
+ {%- block date_widget -%}
+    {%- if widget == 'single_text' -%}
+        {%- set type = type|default('text') -%}
+        <input data-uk-datepicker="{format:'YYYY-MM-DD'}" type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {%- else -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{- date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month),
+                '{{ day }}':   form_widget(form.day),
+            })|raw -}}
+        </div>
+    {%- endif -%}
+{%- endblock date_widget -%}
+
 {% block markdown_widget %}
     {% spaceless %}
         {# just let the textarea widget render the select tag #}

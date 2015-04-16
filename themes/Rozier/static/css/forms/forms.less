@@ -33,7 +33,8 @@
     input[type="search"],
     input[type="password"],
     input[type="submit"],
-    input[type="image"] {
+    input[type="image"],
+    input[type="date"] {
         -webkit-appearance:none;
         -moz-appearance:none;
         appearance:none;
@@ -52,6 +53,7 @@
     input[type="search"],
     input[type="email"],
     input[type="number"],
+    input[type="date"],
     textarea {
         font-size: 12px;
         line-height: 16px;
@@ -268,6 +270,7 @@
     input[type="password"],
     input[type="search"],
     input[type="email"],
+    input[type="date"],
     input[type="number"] {
         height: 36px;
     }
@@ -356,4 +359,11 @@
     font-size: 13px;
     color: #969696;
     line-height: 24px;
+}
+
+input::-webkit-calendar-picker-indicator{
+    display: none;
+}
+input[type="date"]::-webkit-input-placeholder{
+    visibility: hidden !important;
 }

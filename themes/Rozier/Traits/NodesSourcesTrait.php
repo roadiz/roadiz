@@ -219,20 +219,30 @@ trait NodesSourcesTrait
                 ];
             case NodeTypeField::DATETIME_T:
                 return [
+                    'date_widget' => 'single_text',
+                    'date_format' => 'yyyy-MM-dd',
                     'label' => $field->getLabel(),
-                    'years' => range(date('Y') - 10, date('Y') + 10),
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
                         'class' => 'rz-datetime-field',
                     ],
                     'empty_value' => [
-                        'year' => $translator->trans('year'),
-                        'month' => $translator->trans('month'),
-                        'day' => $translator->trans('day'),
                         'hour' => $translator->trans('hour'),
                         'minute' => $translator->trans('minute'),
                     ],
+                ];
+            case NodeTypeField::DATE_T:
+                return [
+                    'widget' => 'single_text',
+                    'format' => 'yyyy-MM-dd',
+                    'label' => $field->getLabel(),
+                    'required' => false,
+                    'attr' => [
+                        'data-desc' => $field->getDescription(),
+                        'class' => 'rz-date-field',
+                    ],
+                    'empty_value' => '',
                 ];
             case NodeTypeField::INTEGER_T:
                 return [
