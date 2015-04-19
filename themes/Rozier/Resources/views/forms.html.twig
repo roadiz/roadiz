@@ -37,7 +37,7 @@
         <nav class="documents-widget-nav uk-navbar">
             <ul class="uk-navbar-nav">
                 <li class="uk-navbar-brand"><i class="uk-icon-rz-documents"></i></li>
-                <li class="uk-navbar-brand label">{{ label }}</li>
+                <li class="uk-navbar-brand label">{{ label|trans }}</li>
             </ul>
             <div class="uk-navbar-content uk-navbar-flip">
                 <div class="documents-widget-quick-creation uk-button-group">
@@ -73,7 +73,7 @@
         <nav class="nodes-widget-nav uk-navbar">
             <ul class="uk-navbar-nav">
                 <li class="uk-navbar-brand"><i class="uk-icon-rz-global-nodes"></i></li>
-                <li class="uk-navbar-brand label">{{ label }}</li>
+                <li class="uk-navbar-brand label">{{ label|trans }}</li>
             </ul>
             <div class="uk-navbar-content uk-navbar-flip">
                 <div class="nodes-widget-quick-creation uk-button-group">
@@ -107,7 +107,7 @@
         <nav class="custom-forms-widget-nav uk-navbar">
             <ul class="uk-navbar-nav">
                 <li class="uk-navbar-brand"><i class="uk-icon-rz-surveys-big"></i></li>
-                <li class="uk-navbar-brand label">{{ label }}</li>
+                <li class="uk-navbar-brand label">{{ label|trans }}</li>
             </ul>
             <div class="uk-navbar-content uk-navbar-flip">
                 <div class="custom-forms-widget-quick-creation uk-button-group">
@@ -143,7 +143,7 @@
 {% block separator_widget %}
     {% spaceless %}
         {# just let the textarea widget render the select tag #}
-        <p {{ block('widget_attributes') }}>{{label}}</p>
+        <p {{ block('widget_attributes') }}>{{ label|trans }}</p>
     {% endspaceless %}
 {% endblock separator_widget %}
 
@@ -180,7 +180,7 @@
         <nav class="children-nodes-nav uk-navbar">
             <ul class="uk-navbar-nav">
                 <li class="uk-navbar-brand"><i class="uk-icon-rz-node-tree"></i></li>
-                <li class="uk-navbar-brand label">{{ label }}</li>
+                <li class="uk-navbar-brand label">{{ label|trans }}</li>
             </ul>
             <div class="uk-navbar-content uk-navbar-flip">
                 <div class="children-nodes-quick-creation uk-button-group">

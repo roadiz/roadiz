@@ -193,7 +193,7 @@ class RolesUtilsController extends RozierApp
     {
         $builder = $this->createFormBuilder()
                         ->add('role_file', 'file', [
-                            'label' => $this->getTranslator()->trans('role.file'),
+                            'label' => 'role.file',
                         ]);
 
         return $builder->getForm();

@@ -259,7 +259,7 @@ class FoldersController extends RozierApp
     {
         $builder = $this->createFormBuilder()
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('folder.name'),
+                            'label' => 'folder.name',
                         ]);
 
         return $builder->getForm();
@@ -292,13 +292,12 @@ class FoldersController extends RozierApp
         $defaults = [
             'name' => $folder->getName(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('folder_id', 'hidden', [
                             'data' => $folder->getId(),
                         ])
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('folder.name'),
+                            'label' => 'folder.name',
                         ]);
 
         return $builder->getForm();

@@ -299,8 +299,7 @@ class FontsController extends RozierApp
             'name' => $font->getName(),
             'variant' => $font->getVariant(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('fontId', 'hidden', [
                             'data' => $font->getId(),
                         ]);
@@ -318,33 +317,33 @@ class FontsController extends RozierApp
     private function buildCommonFormFields(&$builder)
     {
         $builder->add('name', 'text', [
-                    'label' => $this->getTranslator()->trans('font.name'),
+                    'label' => 'font.name',
                 ])
                 ->add('eotFile', 'file', [
-                    'label' => $this->getTranslator()->trans('font.eotFile'),
+                    'label' => 'font.eotFile',
                     'required' => false,
                 ])
                 ->add('svgFile', 'file', [
-                    'label' => $this->getTranslator()->trans('font.svgFile'),
+                    'label' => 'font.svgFile',
                     'required' => false,
                 ])
                 ->add('otfFile', 'file', [
-                    'label' => $this->getTranslator()->trans('font.otfFile'),
+                    'label' => 'font.otfFile',
                     'required' => false,
                 ])
                 ->add('woffFile', 'file', [
-                    'label' => $this->getTranslator()->trans('font.woffFile'),
+                    'label' => 'font.woffFile',
                     'required' => false,
                 ])
                 ->add('woff2File', 'file', [
-                    'label' => $this->getTranslator()->trans('font.woff2File'),
+                    'label' => 'font.woff2File',
                     'required' => false,
                 ])
                 ->add(
                     'variant',
                     new \RZ\Roadiz\CMS\Forms\FontVariantsType(),
                     [
-                        'label' => $this->getTranslator()->trans('font.variant'),
+                        'label' => 'font.variant',
                     ]
                 );
 

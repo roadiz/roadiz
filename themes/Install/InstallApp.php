@@ -361,8 +361,7 @@ class InstallApp extends AppController
             'install_frontend' => true,
             'timezone' => $timeZone != '' ? $timeZone : "Europe/Paris",
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('site_name', 'text', [
                             'required' => true,
                             'label' => $this->getTranslator()->trans('site_name'),

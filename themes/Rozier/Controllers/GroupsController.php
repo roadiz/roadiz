@@ -381,7 +381,7 @@ class GroupsController extends RozierApp
     {
         $builder = $this->createFormBuilder()
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('group.name'),
+                            'label' => 'group.name',
                             'constraints' => [
                                 new NotBlank(),
                             ],
@@ -402,8 +402,7 @@ class GroupsController extends RozierApp
         $defaults = [
             'name' => $group->getName(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('groupId', 'hidden', [
                             'data' => $group->getId(),
                             'constraints' => [
@@ -411,7 +410,7 @@ class GroupsController extends RozierApp
                             ],
                         ])
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('group.name'),
+                            'label' => 'group.name',
                             'data' => $group->getName(),
                             'constraints' => [
                                 new NotBlank(),
@@ -451,8 +450,7 @@ class GroupsController extends RozierApp
         $defaults = [
             'groupId' => $group->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('groupId', 'hidden', [
                             'data' => $group->getId(),
                             'constraints' => [
@@ -462,7 +460,7 @@ class GroupsController extends RozierApp
                         ->add(
                             'roleId',
                             new \RZ\Roadiz\CMS\Forms\RolesType($group->getRolesEntities()),
-                            ['label' => $this->getTranslator()->trans('choose.role')]
+                            ['label' => 'choose.role']
                         );
 
         return $builder->getForm();
@@ -478,8 +476,7 @@ class GroupsController extends RozierApp
         $defaults = [
             'groupId' => $group->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('groupId', 'hidden', [
                             'data' => $group->getId(),
                             'constraints' => [
@@ -490,7 +487,7 @@ class GroupsController extends RozierApp
                             'userId',
                             new \RZ\Roadiz\CMS\Forms\UsersType($group->getUsers()),
                             [
-                                'label' => $this->getTranslator()->trans('choose.user'),
+                                'label' => 'choose.user',
                                 'constraints' => [
                                     new NotBlank(),
                                 ],

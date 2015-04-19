@@ -159,7 +159,7 @@ class SettingsUtilsController extends RozierApp
     {
         $builder = $this->createFormBuilder()
                         ->add('setting_file', 'file', [
-                            'label' => $this->getTranslator()->trans('settingFile'),
+                            'label' => 'settingFile',
                         ]);
 
         return $builder->getForm();

@@ -203,8 +203,7 @@ class DocumentTranslationsController extends RozierApp
         $defaults = [
             'documentTranslationId' => $doc->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('documentTranslationId', 'hidden', [
                             'data' => $doc->getId(),
                             'constraints' => [
@@ -227,18 +226,17 @@ class DocumentTranslationsController extends RozierApp
             'copyright' => $document->getCopyright(),
         ];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'required' => false,
                         ])
                         ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
-                            'label' => $this->getTranslator()->trans('description'),
+                            'label' => 'description',
                             'required' => false,
                         ])
                         ->add('copyright', 'text', [
-                            'label' => $this->getTranslator()->trans('copyright'),
+                            'label' => 'copyright',
                             'required' => false,
                         ]);
 

@@ -173,7 +173,7 @@ class GroupsUtilsController extends RozierApp
     {
         $builder = $this->createFormBuilder()
                         ->add('group_file', 'file', [
-                            'label' => $this->getTranslator()->trans('group.file'),
+                            'label' => 'group.file',
                         ]);
 
         return $builder->getForm();

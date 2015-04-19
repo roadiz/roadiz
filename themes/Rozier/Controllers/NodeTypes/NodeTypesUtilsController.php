@@ -182,7 +182,7 @@ class NodeTypesUtilsController extends RozierApp
     {
         $builder = $this->createFormBuilder()
                         ->add('node_type_file', 'file', [
-                            'label' => $this->getTranslator()->trans('nodeType.file'),
+                            'label' => 'nodeType.file',
                         ]);
 
         return $builder->getForm();

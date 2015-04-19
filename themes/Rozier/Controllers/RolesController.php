@@ -209,11 +209,11 @@ class RolesController extends RozierApp
     {
         $builder = $this->createFormBuilder()
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new Regex([
                                     'pattern' => '#^ROLE_([A-Z\_]+)$#',
-                                    'message' => $this->getTranslator()->trans('role.name.must_comply_with_standard'),
+                                    'message' => 'role.name.must_comply_with_standard',
                                 ]),
                             ],
                         ]);
@@ -253,8 +253,7 @@ class RolesController extends RozierApp
         $defaults = [
             'name' => $role->getName(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('roleId', 'hidden', [
                             'data' => $role->getId(),
                             'constraints' => [
@@ -263,11 +262,11 @@ class RolesController extends RozierApp
                         ])
                         ->add('name', 'text', [
                             'data' => $role->getName(),
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new Regex([
                                     'pattern' => '#^ROLE_([A-Z\_]+)$#',
-                                    'message' => $this->getTranslator()->trans('role.name.must_comply_with_standard'),
+                                    'message' => 'role.name.must_comply_with_standard',
                                 ]),
                             ],
                         ]);

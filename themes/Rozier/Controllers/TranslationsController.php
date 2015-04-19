@@ -321,13 +321,12 @@ class TranslationsController extends RozierApp
             'locale' => $translation->getLocale(),
             'available' => $translation->isAvailable(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'name',
                             'text',
                             [
-                                'label' => $this->getTranslator()->trans('name'),
+                                'label' => 'name',
                                 'constraints' => [
                                     new NotBlank(),
                                 ],
@@ -337,7 +336,7 @@ class TranslationsController extends RozierApp
                             'locale',
                             'choice',
                             [
-                                'label' => $this->getTranslator()->trans('locale'),
+                                'label' => 'locale',
                                 'required' => true,
                                 'choices' => Translation::$availableLocales,
                             ]
@@ -346,7 +345,7 @@ class TranslationsController extends RozierApp
                             'available',
                             'checkbox',
                             [
-                                'label' => $this->getTranslator()->trans('available'),
+                                'label' => 'available',
                                 'required' => false,
                             ]
                         );

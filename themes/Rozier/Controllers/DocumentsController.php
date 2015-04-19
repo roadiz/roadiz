@@ -556,8 +556,7 @@ class DocumentsController extends RozierApp
         $defaults = [
             'documentId' => $doc->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('documentId', 'hidden', [
                             'data' => $doc->getId(),
                             'constraints' => [
@@ -575,8 +574,7 @@ class DocumentsController extends RozierApp
     private function buildBulkDeleteForm($documentsIds)
     {
         $defaults = [];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('checksum', 'hidden', [
                             'data' => md5(serialize($documentsIds)),
                             'constraints' => [
@@ -595,8 +593,7 @@ class DocumentsController extends RozierApp
     private function buildBulkDownloadForm($documentsIds)
     {
         $defaults = [];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('checksum', 'hidden', [
                             'data' => md5(serialize($documentsIds)),
                             'constraints' => [
@@ -620,18 +617,17 @@ class DocumentsController extends RozierApp
             'newDocument' => null,
         ];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('filename', 'text', [
-                            'label' => $this->getTranslator()->trans('filename'),
+                            'label' => 'filename',
                             'required' => false,
                         ])
                         ->add('private', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('private'),
+                            'label' => 'private',
                             'required' => false,
                         ])
                         ->add('newDocument', 'file', [
-                            'label' => $this->getTranslator()->trans('overwrite.document'),
+                            'label' => 'overwrite.document',
                             'required' => false,
                         ]);
 
@@ -651,7 +647,7 @@ class DocumentsController extends RozierApp
                             'intention' => static::AJAX_TOKEN_INTENTION,
                         ])
                         ->add('attachment', 'file', [
-                            'label' => $this->getTranslator()->trans('choose.documents.to_upload'),
+                            'label' => 'choose.documents.to_upload',
                         ]);
 
         if (null !== $folderId &&
@@ -676,10 +672,10 @@ class DocumentsController extends RozierApp
 
         $builder = $this->createFormBuilder()
                         ->add('embedId', 'text', [
-                            'label' => $this->getTranslator()->trans('document.embedId'),
+                            'label' => 'document.embedId',
                         ])
                         ->add('embedPlatform', 'choice', [
-                            'label' => $this->getTranslator()->trans('document.platform'),
+                            'label' => 'document.platform',
                             'choices' => $services,
                         ]);
 
@@ -705,25 +701,25 @@ class DocumentsController extends RozierApp
                             'label' => false,
                             'attr' => [
                                 'class' => 'rz-folder-autocomplete',
-                                'placeholder' => $this->getTranslator()->trans('list.folders.to_link'),
+                                'placeholder' => 'list.folders.to_link',
                             ],
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('submitFolder', 'submit', [
-                            'label' => $this->getTranslator()->trans('link.folders'),
+                            'label' => 'link.folders',
                             'attr' => [
                                 'class' => 'uk-button uk-button-primary',
-                                'title' => $this->getTranslator()->trans('link.folders'),
+                                'title' => 'link.folders',
                                 'data-uk-tooltip' => "{animation:true}",
                             ],
                         ])
                         ->add('submitUnfolder', 'submit', [
-                            'label' => $this->getTranslator()->trans('unlink.folders'),
+                            'label' => 'unlink.folders',
                             'attr' => [
                                 'class' => 'uk-button',
-                                'title' => $this->getTranslator()->trans('unlink.folders'),
+                                'title' => 'unlink.folders',
                                 'data-uk-tooltip' => "{animation:true}",
                             ],
                         ]);

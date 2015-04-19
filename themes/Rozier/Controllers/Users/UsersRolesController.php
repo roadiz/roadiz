@@ -192,8 +192,7 @@ class UsersRolesController extends RozierApp
         $defaults = [
             'userId' => $user->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'userId',
                             'hidden',

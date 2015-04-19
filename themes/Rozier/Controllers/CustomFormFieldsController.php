@@ -303,10 +303,9 @@ class CustomFormFieldsController extends RozierApp
             'required' => $field->isRequired(),
             'defaultValues' => $field->getDefaultValues(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                                 new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
@@ -314,32 +313,32 @@ class CustomFormFieldsController extends RozierApp
                             ],
                         ])
                         ->add('label', 'text', [
-                            'label' => $this->getTranslator()->trans('label'),
+                            'label' => 'label',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('description', new MarkdownType(), [
-                            'label' => $this->getTranslator()->trans('description'),
+                            'label' => 'description',
                             'required' => false,
                         ])
                         ->add('type', 'choice', [
-                            'label' => $this->getTranslator()->trans('type'),
+                            'label' => 'type',
                             'required' => true,
                             'choices' => CustomFormField::$typeToHuman,
                         ])
                         ->add('required', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('required'),
+                            'label' => 'required',
                             'required' => false,
                         ])
                         ->add(
                             'defaultValues',
                             'text',
                             [
-                                'label' => $this->getTranslator()->trans('defaultValues'),
+                                'label' => 'defaultValues',
                                 'required' => false,
                                 'attr' => [
-                                    'placeholder' => $this->getTranslator()->trans('enter_values_comma_separated'),
+                                    'placeholder' => 'enter_values_comma_separated',
                                 ],
                             ]
                         );

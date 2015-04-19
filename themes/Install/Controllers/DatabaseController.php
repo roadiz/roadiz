@@ -223,8 +223,7 @@ class DatabaseController extends InstallApp
             $defaults = [];
         }
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('driver', 'choice', [
                             'choices' => [
                                 'pdo_mysql' => 'pdo_mysql',

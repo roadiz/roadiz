@@ -327,8 +327,7 @@ trait NodesTrait
     {
         $defaults = [];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('nodeName', 'text', [
                             'label' => $this->getTranslator()->trans('nodeName'),
                             'constraints' => [
@@ -364,8 +363,7 @@ trait NodesTrait
             'priority' => $node->getPriority(),
             'dynamicNodeName' => $node->isDynamicNodeName(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'nodeName',
                             'text',
