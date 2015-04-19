@@ -303,15 +303,12 @@ class AppController extends Controller
             ],
             'session' => [
                 'id' => $this->getRequest()->getSession()->getId(),
+                'user' => $this->getUser(),
             ],
         ];
 
-        if ($this->container['securityContext'] !== null &&
-            $this->container['securityContext']->getToken() !== null) {
+        if ($this->container['securityContext'] !== null) {
             $this->assignation['securityContext'] = $this->container['securityContext'];
-            $this->assignation['session']['user'] = $this->container['securityContext']
-                 ->getToken()
-                 ->getUser();
         }
 
         return $this;

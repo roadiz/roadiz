@@ -35,12 +35,14 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Base controller.
  */
-class Controller
+abstract class Controller
 {
     protected $container = null;
     protected $kernel = null;
@@ -193,7 +195,7 @@ class Controller
      */
     public function validateAccessForRole($role)
     {
-        if (!$this->container['securityContext']->isGranted($role)) {
+        if (!$this->isGranted($role)) {
             throw new AccessDeniedException("You don't have access to this page:" . $role);
         }
     }
@@ -296,5 +298,120 @@ class Controller
         $response->setContent($this->renderView($view, $parameters));
 
         return $response;
+    }
+
+    /**
+     * Forwards the request to another controller.
+     *
+     * @param string $controller The controller name (a string like BlogBundle:Post:index)
+     * @param array  $path       An array of path parameters
+     * @param array  $query      An array of query parameters
+     *
+     * @return Response A Response instance
+     */
+    protected function forward($controller, array $path = array(), array $query = array())
+    {
+        $path['_controller'] = $controller;
+        $subRequest = $this->container['request']->duplicate($query, null, $path);
+        return $this->container['httpKernel']->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+    }
+
+    /**
+     * Returns a NotFoundHttpException.
+     *
+     * This will result in a 404 response code. Usage example:
+     *
+     *     throw $this->createNotFoundException('Page not found!');
+     *
+     * @param string          $message  A message
+     * @param \Exception|null $previous The previous exception
+     *
+     * @return NotFoundHttpException
+     */
+    protected function createNotFoundException($message = 'Not Found', \Exception $previous = null)
+    {
+        return new NotFoundHttpException($message, $previous);
+    }
+    /**
+     * Returns an AccessDeniedException.
+     *
+     * This will result in a 403 response code. Usage example:
+     *
+     *     throw $this->createAccessDeniedException('Unable to access this page!');
+     *
+     * @param string          $message  A message
+     * @param \Exception|null $previous The previous exception
+     *
+     * @return AccessDeniedException
+     */
+    protected function createAccessDeniedException($message = 'Access Denied', \Exception $previous = null)
+    {
+        return new AccessDeniedException($message, $previous);
+    }
+    /**
+     * Creates and returns a Form instance from the type of the form.
+     *
+     * @param string|FormTypeInterface $type    The built type of the form
+     * @param mixed                    $data    The initial data for the form
+     * @param array                    $options Options for the form
+     *
+     * @return Form
+     */
+    protected function createForm($type, $data = null, array $options = array())
+    {
+        return $this->container['formFactory']->create($type, $data, $options);
+    }
+    /**
+     * Creates and returns a form builder instance.
+     *
+     * @param mixed $data    The initial data for the form
+     * @param array $options Options for the form
+     *
+     * @return FormBuilder
+     */
+    protected function createFormBuilder($data = null, array $options = array())
+    {
+        return $this->container['formFactory']->createBuilder('form', $data, $options);
+    }
+
+    /**
+     * Get a user from the securityContext.
+     *
+     * @return mixed
+     *
+     * @throws \LogicException If securityContext is not available
+     *
+     * @see TokenInterface::getUser()
+     */
+    protected function getUser()
+    {
+        if (!isset($this->container['securityContext'])) {
+            throw new \LogicException('The SecurityBundle is not registered in your application.');
+        }
+        if (null === $token = $this->container['securityContext']->getToken()) {
+            return;
+        }
+        if (!is_object($user = $token->getUser())) {
+            // e.g. anonymous authentication
+            return;
+        }
+        return $user;
+    }
+
+    /**
+     * Checks if the attributes are granted against the current authentication token and optionally supplied object.
+     *
+     * @param mixed $attributes The attributes
+     * @param mixed $object     The object
+     *
+     * @throws \LogicException
+     * @return bool
+     */
+    protected function isGranted($attributes, $object = null)
+    {
+        if (!isset($this->container['securityContext'])) {
+            throw new \LogicException('The SecurityBundle is not registered in your application.');
+        }
+        return $this->container['securityContext']->isGranted($attributes, $object);
     }
 }

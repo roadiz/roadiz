@@ -31,10 +31,9 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}
@@ -78,8 +77,8 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
                     'statusCode' => '200',
                     'status' => 'success',
                     'responseText' => $this->getTranslator()->trans('field.%name%.updated', [
-                        '%name%' => $field->getName()
-                    ])
+                        '%name%' => $field->getName(),
+                    ]),
                 ];
             }
 

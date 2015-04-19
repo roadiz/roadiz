@@ -27,7 +27,6 @@
  * @file BackendController.php
  * @author Ambroise Maupate
  */
-
 namespace Themes\Rozier;
 
 use Pimple\Container;
