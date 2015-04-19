@@ -129,8 +129,7 @@ class CustomFormAnswersController extends RozierApp
      */
     private function buildDeleteForm(CustomFormAnswer $customFormAnswer)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('customFormAnswerId', 'hidden', [
                             'data' => $customFormAnswer->getId(),
                             'constraints' => [

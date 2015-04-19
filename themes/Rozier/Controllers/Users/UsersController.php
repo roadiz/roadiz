@@ -353,8 +353,7 @@ class UsersController extends RozierApp
      */
     private function buildAddForm(User $user)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form');
+        $builder = $this->createFormBuilder();
 
         $this->buildCommonFormFields($builder, $user);
 
@@ -456,8 +455,7 @@ class UsersController extends RozierApp
      */
     private function buildDeleteForm(User $user)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add(
                             'userId',
                             'hidden',

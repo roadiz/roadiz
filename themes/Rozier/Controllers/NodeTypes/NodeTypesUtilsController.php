@@ -180,8 +180,7 @@ class NodeTypesUtilsController extends RozierApp
      */
     private function buildImportJsonFileForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('node_type_file', 'file', [
                             'label' => $this->getTranslator()->trans('nodeType.file'),
                         ]);

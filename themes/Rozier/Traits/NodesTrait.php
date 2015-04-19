@@ -411,8 +411,7 @@ trait NodesTrait
      */
     protected function buildDeleteForm(Node $node)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
                             'constraints' => [
@@ -428,8 +427,7 @@ trait NodesTrait
      */
     protected function buildEmptyTrashForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form');
+        $builder = $this->createFormBuilder();
 
         return $builder->getForm();
     }

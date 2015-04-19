@@ -354,8 +354,7 @@ class CustomFormFieldsController extends RozierApp
      */
     private function buildDeleteForm(CustomFormField $field)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('customFormFieldId', 'hidden', [
                             'data' => $field->getId(),
                             'constraints' => [

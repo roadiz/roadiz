@@ -382,8 +382,7 @@ class SettingGroupsController extends RozierApp
      */
     private function buildDeleteForm(SettingGroup $settingGroup)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('settingGroupId', 'hidden', [
                             'data' => $settingGroup->getId(),
                             'constraints' => [

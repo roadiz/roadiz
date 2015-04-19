@@ -253,8 +253,7 @@ class NodesTagsController extends RozierApp
      */
     protected function buildRemoveTagForm(Node $node, Tag $tag)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
                             'constraints' => [

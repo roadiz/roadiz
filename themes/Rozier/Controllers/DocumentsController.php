@@ -674,8 +674,7 @@ class DocumentsController extends RozierApp
             $services[$value] = ucwords($value);
         }
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('embedId', 'text', [
                             'label' => $this->getTranslator()->trans('document.embedId'),
                         ])

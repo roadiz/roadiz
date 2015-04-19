@@ -361,8 +361,7 @@ class TranslationsController extends RozierApp
      */
     private function buildDeleteForm(Translation $translation)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add(
                             'translationId',
                             'hidden',
@@ -384,8 +383,7 @@ class TranslationsController extends RozierApp
      */
     private function buildMakeDefaultForm(Translation $translation)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add(
                             'translationId',
                             'hidden',

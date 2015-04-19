@@ -807,8 +807,7 @@ class TagsController extends RozierApp
      */
     private function buildDeleteForm(Tag $tag)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('tagId', 'hidden', [
                             'data' => $tag->getId(),
                             'constraints' => [

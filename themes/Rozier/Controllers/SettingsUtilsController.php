@@ -157,8 +157,7 @@ class SettingsUtilsController extends RozierApp
      */
     private function buildImportJsonFileForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('setting_file', 'file', [
                             'label' => $this->getTranslator()->trans('settingFile'),
                         ]);

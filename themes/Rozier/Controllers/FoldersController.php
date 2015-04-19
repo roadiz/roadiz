@@ -257,8 +257,7 @@ class FoldersController extends RozierApp
      */
     protected function buildAddForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('name', 'text', [
                             'label' => $this->getTranslator()->trans('folder.name'),
                         ]);
@@ -274,8 +273,7 @@ class FoldersController extends RozierApp
      */
     protected function buildDeleteForm(Folder $folder)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('folder_id', 'hidden', [
                             'data' => $folder->getId(),
                         ]);

@@ -221,8 +221,7 @@ class UsersRolesController extends RozierApp
      */
     private function buildRemoveRoleForm(User $user, Role $role)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add(
                             'userId',
                             'hidden',

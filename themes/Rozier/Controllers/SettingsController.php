@@ -584,8 +584,7 @@ class SettingsController extends RozierApp
      */
     private function buildDeleteForm(Setting $setting)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('settingId', 'hidden', [
                             'data' => $setting->getId(),
                             'constraints' => [

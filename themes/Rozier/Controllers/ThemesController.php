@@ -319,8 +319,7 @@ class ThemesController extends RozierApp
      */
     protected function buildDeleteForm(Theme $theme)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('themeId', 'hidden', [
                             'data' => $theme->getId(),
                         ]);

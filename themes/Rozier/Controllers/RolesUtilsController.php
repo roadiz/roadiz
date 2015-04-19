@@ -191,8 +191,7 @@ class RolesUtilsController extends RozierApp
      */
     private function buildImportJsonFileForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('role_file', 'file', [
                             'label' => $this->getTranslator()->trans('role.file'),
                         ]);

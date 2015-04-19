@@ -207,8 +207,7 @@ class RolesController extends RozierApp
      */
     protected function buildAddForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('name', 'text', [
                             'label' => $this->getTranslator()->trans('name'),
                             'constraints' => [
@@ -231,8 +230,7 @@ class RolesController extends RozierApp
      */
     protected function buildDeleteForm(Role $role)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('roleId', 'hidden', [
                             'data' => $role->getId(),
                             'constraints' => [

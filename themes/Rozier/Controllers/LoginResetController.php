@@ -86,8 +86,7 @@ class LoginResetController extends RozierApp
      */
     private function buildLoginResetForm($token)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('token', 'hidden', [
                             'required' => true,
                             'data' => $token,

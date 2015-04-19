@@ -171,8 +171,7 @@ class GroupsUtilsController extends RozierApp
      */
     private function buildImportJsonFileForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('group_file', 'file', [
                             'label' => $this->getTranslator()->trans('group.file'),
                         ]);

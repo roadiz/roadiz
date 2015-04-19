@@ -371,8 +371,7 @@ class NodeTypesController extends RozierApp
      */
     private function buildDeleteForm(NodeType $nodeType)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('nodeTypeId', 'hidden', [
                             'data' => $nodeType->getId(),
                             'constraints' => [

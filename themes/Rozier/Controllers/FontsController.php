@@ -264,8 +264,7 @@ class FontsController extends RozierApp
      */
     protected function buildAddForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form');
+        $builder = $this->createFormBuilder();
 
         $this->buildCommonFormFields($builder);
 
@@ -280,8 +279,7 @@ class FontsController extends RozierApp
      */
     protected function buildDeleteForm(Font $font)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('fontId', 'hidden', [
                             'data' => $font->getId(),
                         ]);
