@@ -87,7 +87,6 @@ class UsersController extends RozierApp
 
         if (!($this->isGranted('ROLE_ACCESS_USERS')
             || $this->getUser()->getId() == $userId)) {
-
             throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
 
