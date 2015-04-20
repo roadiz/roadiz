@@ -219,7 +219,7 @@ class ThemesController extends RozierApp
             'className',
             new \RZ\Roadiz\CMS\Forms\ThemesType(),
             [
-                'label' => $this->getTranslator()->trans('themeClass'),
+                'label' => 'themeClass',
                 'required' => true,
                 'constraints' => [
                     new \Symfony\Component\Validator\Constraints\NotNull(),
@@ -267,43 +267,43 @@ class ThemesController extends RozierApp
         $builder = $this->getService('formFactory')
                         ->createNamedBuilder('source', 'form', $defaults)
                         ->add('available', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('available'),
+                            'label' => 'available',
                             'required' => false,
                         ])
                         ->add(
                             'staticTheme',
                             'checkbox',
                             [
-                                'label' => $this->getTranslator()->trans('staticTheme'),
+                                'label' => 'staticTheme',
                                 'required' => false,
                                 'attr' => [
-                                    'data-desc' => $this->getTranslator()->trans('staticTheme.does_not.allow.node_url_routes'),
+                                    'data-desc' => 'staticTheme.does_not.allow.node_url_routes',
                                 ],
                             ]
                         )
                         ->add('hostname', 'text', [
-                            'label' => $this->getTranslator()->trans('hostname'),
+                            'label' => 'hostname',
                         ])
                         ->add('routePrefix', 'text', [
-                            'label' => $this->getTranslator()->trans('routePrefix'),
+                            'label' => 'routePrefix',
                             'required' => false,
                         ])
                         ->add('backendTheme', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('backendTheme'),
+                            'label' => 'backendTheme',
                             'required' => false,
                         ]);
 
         $d = ($n !== null) ? [$n] : [];
 
         $builder->add('homeNode', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
-            'label' => $this->getTranslator()->trans('homeNode'),
+            'label' => 'homeNode',
             'required' => false,
         ]);
 
         $d = ($r !== null) ? [$r] : [];
 
         $builder->add('root', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
-            'label' => $this->getTranslator()->trans('themeRoot'),
+            'label' => 'themeRoot',
             'required' => false,
         ]);
 
@@ -319,8 +319,7 @@ class ThemesController extends RozierApp
      */
     protected function buildDeleteForm(Theme $theme)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('themeId', 'hidden', [
                             'data' => $theme->getId(),
                         ]);

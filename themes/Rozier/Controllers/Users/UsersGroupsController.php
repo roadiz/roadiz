@@ -193,8 +193,7 @@ class UsersGroupsController extends RozierApp
         $defaults = [
             'userId' => $user->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'userId',
                             'hidden',
@@ -222,8 +221,7 @@ class UsersGroupsController extends RozierApp
      */
     private function buildRemoveGroupForm(User $user, Group $group)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add(
                             'userId',
                             'hidden',

@@ -279,35 +279,34 @@ class CustomFormsController extends RozierApp
             'closeDate' => $customForm->getCloseDate(),
             'color' => $customForm->getColor(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('displayName', 'text', [
-                            'label' => $this->getTranslator()->trans('customForm.displayName'),
+                            'label' => 'customForm.displayName',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('description', new MarkdownType(), [
-                            'label' => $this->getTranslator()->trans('description'),
+                            'label' => 'description',
                             'required' => false,
                         ])
                         ->add('email', 'email', [
-                            'label' => $this->getTranslator()->trans('email'),
+                            'label' => 'email',
                             'required' => false,
                             'constraints' => [
                                 new Email(),
                             ],
                         ])
                         ->add('open', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('customForm.open'),
+                            'label' => 'customForm.open',
                             'required' => false,
                         ])
                         ->add('closeDate', 'datetime', [
-                            'label' => $this->getTranslator()->trans('customForm.closeDate'),
+                            'label' => 'customForm.closeDate',
                             'required' => false,
                         ])
                         ->add('color', 'text', [
-                            'label' => $this->getTranslator()->trans('customForm.color'),
+                            'label' => 'customForm.color',
                             'required' => false,
                             'attr' => ['class' => 'colorpicker-input'],
                         ]);
@@ -322,8 +321,7 @@ class CustomFormsController extends RozierApp
      */
     private function buildDeleteForm(CustomForm $customForm)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('customFormId', 'hidden', [
                             'data' => $customForm->getId(),
                             'constraints' => [

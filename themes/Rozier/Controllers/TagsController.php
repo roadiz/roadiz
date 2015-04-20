@@ -673,24 +673,23 @@ class TagsController extends RozierApp
             'locked' => $tag->isLocked(),
         ];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('locked', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('locked'),
+                            'label' => 'locked',
                             'required' => false,
                         ])
                         ->add('visible', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('visible'),
+                            'label' => 'visible',
                             'required' => false,
                         ])
                         ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
-                            'label' => $this->getTranslator()->trans('description'),
+                            'label' => 'description',
                             'required' => false,
                         ]);
 
@@ -708,24 +707,23 @@ class TagsController extends RozierApp
             'visible' => $tag->isVisible(),
         ];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('visible', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('visible'),
+                            'label' => 'visible',
                             'required' => false,
                         ])
                         ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
-                            'label' => $this->getTranslator()->trans('description'),
+                            'label' => 'description',
                             'required' => false,
                         ])
                         ->add('parent_tagId', 'hidden', [
-                            'label' => $this->getTranslator()->trans('parent_tagId'),
+                            'label' => 'parent_tagId',
                             "data" => $tag->getId(),
                             'required' => true,
                         ]);
@@ -747,16 +745,15 @@ class TagsController extends RozierApp
             'translation' => $tt->getTranslation()->getId(),
         ];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
-                            'label' => $this->getTranslator()->trans('description'),
+                            'label' => 'description',
                             'required' => false,
                         ])
                         ->add('translation', 'hidden', [
@@ -780,20 +777,19 @@ class TagsController extends RozierApp
             'locked' => $tag->isLocked(),
         ];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('tagName', 'text', [
-                            'label' => $this->getTranslator()->trans('tagName'),
+                            'label' => 'tagName',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('visible', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('visible'),
+                            'label' => 'visible',
                             'required' => false,
                         ])
                         ->add('locked', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('locked'),
+                            'label' => 'locked',
                             'required' => false,
                         ]);
 
@@ -807,8 +803,7 @@ class TagsController extends RozierApp
      */
     private function buildDeleteForm(Tag $tag)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('tagId', 'hidden', [
                             'data' => $tag->getId(),
                             'constraints' => [

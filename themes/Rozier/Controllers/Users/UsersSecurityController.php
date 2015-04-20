@@ -106,43 +106,43 @@ class UsersSecurityController extends RozierApp
                         ->createNamedBuilder('source', 'form', $defaults);
 
         $builder->add('enabled', 'checkbox', [
-                    'label' => $this->getTranslator()->trans('user.enabled'),
+                    'label' => 'user.enabled',
                     'required' => false,
                 ])
                 ->add('locked', 'checkbox', [
-                    'label' => $this->getTranslator()->trans('user.locked'),
+                    'label' => 'user.locked',
                     'required' => false,
                 ])
                 ->add('expiresAt', 'datetime', [
-                    'label' => $this->getTranslator()->trans('user.expiresAt'),
+                    'label' => 'user.expiresAt',
                     'required' => false,
                     'years' => range(date('Y'), date('Y') + 2),
                     'empty_value' => [
-                        'year' => $this->getTranslator()->trans('year'),
-                        'month' => $this->getTranslator()->trans('month'),
-                        'day' => $this->getTranslator()->trans('day'),
-                        'hour' => $this->getTranslator()->trans('hour'),
-                        'minute' => $this->getTranslator()->trans('minute'),
+                        'year' => 'year',
+                        'month' => 'month',
+                        'day' => 'day',
+                        'hour' => 'hour',
+                        'minute' => 'minute',
                     ],
                 ])
                 ->add('expired', 'checkbox', [
-                    'label' => $this->getTranslator()->trans('user.force.expired'),
+                    'label' => 'user.force.expired',
                     'required' => false,
                 ])
                 ->add('credentialsExpiresAt', 'datetime', [
-                    'label' => $this->getTranslator()->trans('user.credentialsExpiresAt'),
+                    'label' => 'user.credentialsExpiresAt',
                     'required' => false,
                     'years' => range(date('Y'), date('Y') + 2),
                     'empty_value' => [
-                        'year' => $this->getTranslator()->trans('year'),
-                        'month' => $this->getTranslator()->trans('month'),
-                        'day' => $this->getTranslator()->trans('day'),
-                        'hour' => $this->getTranslator()->trans('hour'),
-                        'minute' => $this->getTranslator()->trans('minute'),
+                        'year' => 'year',
+                        'month' => 'month',
+                        'day' => 'day',
+                        'hour' => 'hour',
+                        'minute' => 'minute',
                     ],
                 ])
                 ->add('credentialsExpired', 'checkbox', [
-                    'label' => $this->getTranslator()->trans('user.force.credentialsExpired'),
+                    'label' => 'user.force.credentialsExpired',
                     'required' => false,
                 ]);
 
@@ -150,7 +150,7 @@ class UsersSecurityController extends RozierApp
             $n = $user->getChroot();
             $n = ($n !== null) ? [$n] : [];
             $builder->add('chroot', new \RZ\Roadiz\CMS\Forms\NodesType($n), [
-                'label' => $this->getTranslator()->trans('chroot'),
+                'label' => 'chroot',
                 'required' => false,
             ]);
         }

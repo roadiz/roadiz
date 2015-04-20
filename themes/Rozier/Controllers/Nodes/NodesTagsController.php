@@ -225,8 +225,7 @@ class NodesTagsController extends RozierApp
         $defaults = [
             'nodeId' => $node->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
                             'constraints' => [
@@ -234,11 +233,11 @@ class NodesTagsController extends RozierApp
                             ],
                         ])
                         ->add('tagPaths', 'text', [
-                            'label' => $this->getTranslator()->trans('list.tags.to_link'),
+                            'label' => 'list.tags.to_link',
                             'attr' => ['class' => 'rz-tag-autocomplete'],
                         ])
                         ->add('separator_1', new SeparatorType(), [
-                            'label' => $this->getTranslator()->trans('use.new_or_existing.tags_with_hierarchy'),
+                            'label' => 'use.new_or_existing.tags_with_hierarchy',
                             'attr' => ['class' => 'form-help-static uk-alert uk-alert-large'],
                         ]);
 
@@ -253,8 +252,7 @@ class NodesTagsController extends RozierApp
      */
     protected function buildRemoveTagForm(Node $node, Tag $tag)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
                             'constraints' => [

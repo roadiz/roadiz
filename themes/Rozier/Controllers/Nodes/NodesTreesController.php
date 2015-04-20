@@ -349,25 +349,25 @@ class NodesTreesController extends RozierApp
                             'label' => false,
                             'attr' => [
                                 'class' => 'rz-tag-autocomplete',
-                                'placeholder' => $this->getTranslator()->trans('list.tags.to_link.or_unlink'),
+                                'placeholder' => 'list.tags.to_link.or_unlink',
                             ],
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('submitTag', 'submit', [
-                            'label' => $this->getTranslator()->trans('link.tags'),
+                            'label' => 'link.tags',
                             'attr' => [
                                 'class' => 'uk-button uk-button-primary',
-                                'title' => $this->getTranslator()->trans('link.tags'),
+                                'title' => 'link.tags',
                                 'data-uk-tooltip' => "{animation:true}",
                             ],
                         ])
                         ->add('submitUntag', 'submit', [
-                            'label' => $this->getTranslator()->trans('unlink.tags'),
+                            'label' => 'unlink.tags',
                             'attr' => [
                                 'class' => 'uk-button',
-                                'title' => $this->getTranslator()->trans('unlink.tags'),
+                                'title' => 'unlink.tags',
                                 'data-uk-tooltip' => "{animation:true}",
                             ],
                         ]);
@@ -479,10 +479,10 @@ class NodesTreesController extends RozierApp
                             'label' => false,
                             'data' => $status,
                             'choices' => [
-                                Node::DRAFT => $this->getTranslator()->trans('draft'),
-                                Node::PENDING => $this->getTranslator()->trans('pending'),
-                                Node::PUBLISHED => $this->getTranslator()->trans('published'),
-                                Node::ARCHIVED => $this->getTranslator()->trans('archived'),
+                                Node::DRAFT => 'draft',
+                                Node::PENDING => 'pending',
+                                Node::PUBLISHED => 'published',
+                                Node::ARCHIVED => 'archived',
                             ],
                             'constraints' => [
                                 new NotBlank(),
@@ -496,10 +496,10 @@ class NodesTreesController extends RozierApp
         }
         if (true === $submit) {
             $builder->add('submitStatus', 'submit', [
-                'label' => $this->getTranslator()->trans('change.nodes.status'),
+                'label' => 'change.nodes.status',
                 'attr' => [
                     'class' => 'uk-button uk-button-primary',
-                    'title' => $this->getTranslator()->trans('change.nodes.status'),
+                    'title' => 'change.nodes.status',
                     'data-uk-tooltip' => "{animation:true}",
                 ],
             ]);

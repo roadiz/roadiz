@@ -91,8 +91,7 @@ class CacheController extends RozierApp
      */
     private function buildDeleteDoctrineForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form');
+        $builder = $this->createFormBuilder();
 
         return $builder->getForm();
     }
@@ -131,8 +130,7 @@ class CacheController extends RozierApp
      */
     private function buildDeleteSLIRForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form');
+        $builder = $this->createFormBuilder();
 
         return $builder->getForm();
     }

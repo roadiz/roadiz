@@ -327,8 +327,7 @@ trait NodesTrait
     {
         $defaults = [];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('nodeName', 'text', [
                             'label' => $this->getTranslator()->trans('nodeName'),
                             'constraints' => [
@@ -364,8 +363,7 @@ trait NodesTrait
             'priority' => $node->getPriority(),
             'dynamicNodeName' => $node->isDynamicNodeName(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'nodeName',
                             'text',
@@ -411,8 +409,7 @@ trait NodesTrait
      */
     protected function buildDeleteForm(Node $node)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
                             'constraints' => [
@@ -428,8 +425,7 @@ trait NodesTrait
      */
     protected function buildEmptyTrashForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form');
+        $builder = $this->createFormBuilder();
 
         return $builder->getForm();
     }

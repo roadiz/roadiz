@@ -379,10 +379,9 @@ class GroupsController extends RozierApp
      */
     protected function buildAddForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('group.name'),
+                            'label' => 'group.name',
                             'constraints' => [
                                 new NotBlank(),
                             ],
@@ -403,8 +402,7 @@ class GroupsController extends RozierApp
         $defaults = [
             'name' => $group->getName(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('groupId', 'hidden', [
                             'data' => $group->getId(),
                             'constraints' => [
@@ -412,7 +410,7 @@ class GroupsController extends RozierApp
                             ],
                         ])
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('group.name'),
+                            'label' => 'group.name',
                             'data' => $group->getName(),
                             'constraints' => [
                                 new NotBlank(),
@@ -431,8 +429,7 @@ class GroupsController extends RozierApp
      */
     protected function buildDeleteForm(Group $group)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('groupId', 'hidden', [
                             'data' => $group->getId(),
                             'constraints' => [
@@ -453,8 +450,7 @@ class GroupsController extends RozierApp
         $defaults = [
             'groupId' => $group->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('groupId', 'hidden', [
                             'data' => $group->getId(),
                             'constraints' => [
@@ -464,7 +460,7 @@ class GroupsController extends RozierApp
                         ->add(
                             'roleId',
                             new \RZ\Roadiz\CMS\Forms\RolesType($group->getRolesEntities()),
-                            ['label' => $this->getTranslator()->trans('choose.role')]
+                            ['label' => 'choose.role']
                         );
 
         return $builder->getForm();
@@ -480,8 +476,7 @@ class GroupsController extends RozierApp
         $defaults = [
             'groupId' => $group->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('groupId', 'hidden', [
                             'data' => $group->getId(),
                             'constraints' => [
@@ -492,7 +487,7 @@ class GroupsController extends RozierApp
                             'userId',
                             new \RZ\Roadiz\CMS\Forms\UsersType($group->getUsers()),
                             [
-                                'label' => $this->getTranslator()->trans('choose.user'),
+                                'label' => 'choose.user',
                                 'constraints' => [
                                     new NotBlank(),
                                 ],
@@ -510,8 +505,7 @@ class GroupsController extends RozierApp
      */
     private function buildRemoveRoleForm(Group $group, Role $role)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('groupId', 'hidden', [
                             'data' => $group->getId(),
                             'constraints' => [
@@ -536,8 +530,7 @@ class GroupsController extends RozierApp
      */
     private function buildRemoveUserForm(Group $group, User $user)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('groupId', 'hidden', [
                             'data' => $group->getId(),
                             'constraints' => [

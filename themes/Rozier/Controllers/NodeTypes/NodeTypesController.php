@@ -287,10 +287,9 @@ class NodeTypesController extends RozierApp
             'hidingNodes' => $nodeType->isHidingNodes(),
             'color' => $nodeType->getColor(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                                 new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
@@ -318,8 +317,7 @@ class NodeTypesController extends RozierApp
             'hidingNodes' => $nodeType->isHidingNodes(),
             'color' => $nodeType->getColor(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults);
+        $builder = $this->createFormBuilder($defaults);
 
         $this->buildCommonFormFields($builder);
 
@@ -334,29 +332,29 @@ class NodeTypesController extends RozierApp
     private function buildCommonFormFields(&$builder)
     {
         $builder->add('displayName', 'text', [
-                    'label' => $this->getTranslator()->trans('nodeType.displayName'),
+                    'label' => 'nodeType.displayName',
                     'constraints' => [
                         new NotBlank(),
                     ],
                 ])
                 ->add('description', 'text', [
-                    'label' => $this->getTranslator()->trans('description'),
+                    'label' => 'description',
                     'required' => false,
                 ])
                 ->add('visible', 'checkbox', [
-                    'label' => $this->getTranslator()->trans('visible'),
+                    'label' => 'visible',
                     'required' => false,
                 ])
                 ->add('newsletterType', 'checkbox', [
-                    'label' => $this->getTranslator()->trans('nodeType.newsletterType'),
+                    'label' => 'nodeType.newsletterType',
                     'required' => false,
                 ])
                 ->add('hidingNodes', 'checkbox', [
-                    'label' => $this->getTranslator()->trans('nodeType.hidingNodes'),
+                    'label' => 'nodeType.hidingNodes',
                     'required' => false,
                 ])
                 ->add('color', 'text', [
-                    'label' => $this->getTranslator()->trans('nodeType.color'),
+                    'label' => 'nodeType.color',
                     'required' => false,
                     'attr' => ['class' => 'colorpicker-input'],
                 ]);
@@ -371,8 +369,7 @@ class NodeTypesController extends RozierApp
      */
     private function buildDeleteForm(NodeType $nodeType)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('nodeTypeId', 'hidden', [
                             'data' => $nodeType->getId(),
                             'constraints' => [

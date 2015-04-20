@@ -315,16 +315,15 @@ class SettingGroupsController extends RozierApp
             'name' => $settingGroup->getName(),
             'inMenu' => $settingGroup->isInMenu(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('inMenu', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('settingGroup.in.menu'),
+                            'label' => 'settingGroup.in.menu',
                             'required' => false,
                         ])
         ;
@@ -345,13 +344,12 @@ class SettingGroupsController extends RozierApp
             'inMenu' => $settingGroup->isInMenu(),
         ];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'name',
                             'text',
                             [
-                                'label' => $this->getTranslator()->trans('name'),
+                                'label' => 'name',
                                 'constraints' => [new NotBlank()],
                             ]
                         )
@@ -367,7 +365,7 @@ class SettingGroupsController extends RozierApp
                             'inMenu',
                             'checkbox',
                             [
-                                'label' => $this->getTranslator()->trans('settingGroup.in.menu'),
+                                'label' => 'settingGroup.in.menu',
                                 'required' => false,
                             ]
                         );
@@ -382,8 +380,7 @@ class SettingGroupsController extends RozierApp
      */
     private function buildDeleteForm(SettingGroup $settingGroup)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('settingGroupId', 'hidden', [
                             'data' => $settingGroup->getId(),
                             'constraints' => [

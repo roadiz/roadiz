@@ -98,14 +98,13 @@ class LoginRequestController extends RozierApp
      */
     private function buildLoginRequestForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('email', 'email', [
                             'required' => true,
-                            'label' => $this->getTranslator()->trans('your.account.email'),
+                            'label' => 'your.account.email',
                             'constraints' => [
                                 new Email([
-                                    'message' => $this->getTranslator()->trans('email.invalid'),
+                                    'message' => 'email.invalid',
                                     'checkMX' => true,
                                 ]),
                                 new ValidAccountEmail([

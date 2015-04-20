@@ -85,9 +85,9 @@ class UsersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_BACKEND_USER');
 
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-            || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
-            throw new AccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
+        if (!($this->isGranted('ROLE_ACCESS_USERS')
+            || $this->getUser()->getId() == $userId)) {
+            throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
 
         $user = $this->getService('em')
@@ -353,8 +353,7 @@ class UsersController extends RozierApp
      */
     private function buildAddForm(User $user)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form');
+        $builder = $this->createFormBuilder();
 
         $this->buildCommonFormFields($builder, $user);
 
@@ -395,53 +394,53 @@ class UsersController extends RozierApp
     private function buildCommonFormFields(&$builder, User $user)
     {
         $builder->add('email', 'email', [
-                    'label' => $this->getTranslator()->trans('email'),
+                    'label' => 'email',
                     'constraints' => [
                         new NotBlank(),
                     ],
                 ])
                 ->add('username', 'text', [
-                    'label' => $this->getTranslator()->trans('username'),
+                    'label' => 'username',
                     'constraints' => [
                         new NotBlank(),
                     ],
                 ])
                 ->add('plainPassword', 'repeated', [
                     'type' => 'password',
-                    'invalid_message' => $this->getTranslator()->trans('password.must.match'),
+                    'invalid_message' => 'password.must.match',
                     'first_options' => [
-                        'label' => $this->getTranslator()->trans('password'),
+                        'label' => 'password',
                     ],
                     'second_options' => [
-                        'label' => $this->getTranslator()->trans('passwordVerify'),
+                        'label' => 'passwordVerify',
                     ],
                     'required' => false,
                 ])
                 ->add('firstName', 'text', [
-                    'label' => $this->getTranslator()->trans('firstName'),
+                    'label' => 'firstName',
                     'required' => false,
                 ])
                 ->add('lastName', 'text', [
-                    'label' => $this->getTranslator()->trans('lastName'),
+                    'label' => 'lastName',
                     'required' => false,
                 ])
                 ->add('facebookName', 'text', [
-                    'label' => $this->getTranslator()->trans('facebookName'),
+                    'label' => 'facebookName',
                     'required' => false,
                     'constraints' => [
                         new ValidFacebookName(),
                     ],
                 ])
                 ->add('company', 'text', [
-                    'label' => $this->getTranslator()->trans('company'),
+                    'label' => 'company',
                     'required' => false,
                 ])
                 ->add('job', 'text', [
-                    'label' => $this->getTranslator()->trans('job'),
+                    'label' => 'job',
                     'required' => false,
                 ])
                 ->add('birthday', 'date', [
-                    'label' => $this->getTranslator()->trans('birthday'),
+                    'label' => 'birthday',
                     'required' => false,
                     'years' => range(1920, date('Y') - 6),
                 ]);
@@ -456,8 +455,7 @@ class UsersController extends RozierApp
      */
     private function buildDeleteForm(User $user)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add(
                             'userId',
                             'hidden',

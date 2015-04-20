@@ -324,10 +324,9 @@ class NodeTypeFieldsController extends RozierApp
             'minLength' => $field->getMinLength(),
             'maxLength' => $field->getMaxLength(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                                 new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
@@ -335,36 +334,36 @@ class NodeTypeFieldsController extends RozierApp
                             ],
                         ])
                         ->add('label', 'text', [
-                            'label' => $this->getTranslator()->trans('label'),
+                            'label' => 'label',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('type', 'choice', [
-                            'label' => $this->getTranslator()->trans('type'),
+                            'label' => 'type',
                             'required' => true,
                             'choices' => NodeTypeField::$typeToHuman,
                         ])
                         ->add('description', 'text', [
-                            'label' => $this->getTranslator()->trans('description'),
+                            'label' => 'description',
                             'required' => false,
                         ])
                         ->add('visible', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('visible'),
+                            'label' => 'visible',
                             'required' => false,
                         ])
                         ->add('indexed', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('indexed'),
+                            'label' => 'indexed',
                             'required' => false,
                         ])
                         ->add(
                             'defaultValues',
                             'text',
                             [
-                                'label' => $this->getTranslator()->trans('defaultValues'),
+                                'label' => 'defaultValues',
                                 'required' => false,
                                 'attr' => [
-                                    'placeholder' => $this->getTranslator()->trans('enter_values_comma_separated'),
+                                    'placeholder' => 'enter_values_comma_separated',
                                 ],
                             ]
                         )
@@ -372,7 +371,7 @@ class NodeTypeFieldsController extends RozierApp
                             'minLength',
                             'integer',
                             [
-                                'label' => $this->getTranslator()->trans('nodeTypeField.minLength'),
+                                'label' => 'nodeTypeField.minLength',
                                 'required' => false,
                             ]
                         )
@@ -380,7 +379,7 @@ class NodeTypeFieldsController extends RozierApp
                             'maxLength',
                             'integer',
                             [
-                                'label' => $this->getTranslator()->trans('nodeTypeField.maxLength'),
+                                'label' => 'nodeTypeField.maxLength',
                                 'required' => false,
                             ]
                         );
@@ -395,8 +394,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     private function buildDeleteForm(NodeTypeField $field)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('nodeTypeFieldId', 'hidden', [
                             'data' => $field->getId(),
                             'constraints' => [
