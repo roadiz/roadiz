@@ -240,9 +240,9 @@ class AppController extends Controller
             );
         }
 
-        if ($namespace != "") {
+        if ($namespace !== "" && $namespace !== "/") {
             $view = '@' . $namespace . '/' . $view;
-        } else {
+        } elseif (static::getThemeDir() !== "" && $namespace !== "/") {
             // when no namespace is used
             // use current theme directory
             $view = '@' . static::getThemeDir() . '/' . $view;

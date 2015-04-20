@@ -291,7 +291,7 @@ abstract class Controller
             );
         }
 
-        if ($namespace != "") {
+        if ($namespace !== "" && $namespace !== "/") {
             $view = '@' . $namespace . '/' . $view;
         }
 

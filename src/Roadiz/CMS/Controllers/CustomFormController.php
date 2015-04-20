@@ -47,14 +47,27 @@ use \InlineStyle\InlineStyle;
 
 class CustomFormController extends AppController
 {
-    public static $themeDir = 'Rozier';
-
     /**
      * @return string
      */
     public static function getResourcesFolder()
     {
         return ROADIZ_ROOT . '/src/Roadiz/CMS/Resources';
+    }
+    /**
+     * @return string
+     */
+    public function getStaticResourcesUrl()
+    {
+        $staticDomain = SettingsBag::get('static_domain_name');
+
+        if (!empty($staticDomain)) {
+            return $this->kernel->getStaticBaseUrl() .
+            '/themes/Rozier/static/';
+        } else {
+            return $this->getRequest()->getBaseUrl() .
+            '/themes/Rozier/static/';
+        }
     }
 
     /**
@@ -350,6 +363,7 @@ class CustomFormController extends AppController
                  */
                 static::sendAnswer(
                     [
+                        'mailContact' => $assignation['mailContact'],
                         'fields' => $assignation["emailFields"],
                         'customForm' => $customFormsEntity,
                         'title' => $translator->trans(
