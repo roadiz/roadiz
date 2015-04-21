@@ -73,9 +73,12 @@ class TranslationViewer implements ViewableInterface
      *             'active' => boolean false
      *             'translation' => string 'Spanish' (length=2)
      *
+     * @param Request $request
+     * @param boolean $absolute Generate absolute url or relative paths
+     *
      * @return $this
      */
-    public function getTranslationMenuAssignation(Request $request)
+    public function getTranslationMenuAssignation(Request $request, $absolute = false)
     {
         $attr = $request->attributes->all();
         $query = $request->query->all();
@@ -114,7 +117,7 @@ class TranslationViewer implements ViewableInterface
                     $request,
                     $node->getHandler()->getNodeSourceByTranslation($translation)
                 );
-                $url = $urlGenerator->getUrl();
+                $url = $urlGenerator->getUrl($absolute);
                 if (!empty($query)) {
                     $url .= "?" . http_build_query($query);
                 }
@@ -131,13 +134,15 @@ class TranslationViewer implements ViewableInterface
                 }
                 $url = Kernel::getService("urlGenerator")->generate(
                     $name,
-                    array_merge($attr["_route_params"], $query)
+                    array_merge($attr["_route_params"], $query),
+                    $absolute
                 );
             }
 
             $return[$translation->getLocale()] = [
                 'name' => $name,
                 'url' => $url,
+                'locale' => $translation->getLocale(),
                 'active' => ($this->translation == $translation) ? true : false,
                 'translation' => $translation->getName(),
             ];
