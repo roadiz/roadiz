@@ -181,7 +181,7 @@
         {% endfor %}
         {% for nodetype in nodetypes %}
         Install.importNodeTypeRoutes.push({
-            'postUpdate': "{{ path('installUpdateSchema') }}",
+            'postUpdate': ["{{ path('installClearCacheSchema') }}", "{{ path('installUpdateSchema') }}"],
             'url': "{{ path('installImportNodeTypes', {'themeId': themeId}) }}",
             'id':'{{ nodetype|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ nodetype }}'

@@ -34,6 +34,7 @@ use RZ\Roadiz\Console\SchemaCommand;
 use RZ\Roadiz\Console\Tools\Configuration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -202,11 +203,19 @@ class DatabaseController extends InstallApp
         CacheCommand::clearDoctrine();
         SchemaCommand::updateSchema();
 
-        return new Response(
-            json_encode(['status' => true]),
-            Response::HTTP_OK,
-            ['content-type' => 'application/javascript']
-        );
+        return new JsonResponse(['status' => true]);
+    }
+    /**
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function clearDoctrineCacheAction(Request $request)
+    {
+        CacheCommand::clearDoctrine();
+
+        return new JsonResponse(['status' => true]);
     }
 
     /**
